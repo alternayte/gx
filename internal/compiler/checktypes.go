@@ -253,8 +253,11 @@ func writeProbe(b *bytes.Buffer, ns []Node, synth string, pr *probe) {
 		case *Element:
 			for i := range t.Attrs {
 				a := &t.Attrs[i]
-				if a.Kind == AttrExpr {
+				switch a.Kind {
+				case AttrExpr:
 					writeProbeExpr(b, a.Value, a.ValueAt, synth, pr, a)
+				case AttrSpread:
+					writeProbeSpread(b, a.Value, a.ValueAt, synth)
 				}
 			}
 			if !t.HasRaw {
@@ -316,6 +319,19 @@ func writeProbeExpr(b *bytes.Buffer, expr string, at Pos, synth string, pr *prob
 		col = 1
 	}
 	fmt.Fprintf(b, "//line %s:%d:%d\n_=%s\n", synth, at.Line, col, expr)
+}
+
+func writeProbeSpread(b *bytes.Buffer, expr string, at Pos, synth string) {
+	expr = strings.TrimSpace(expr)
+	if expr == "" || strings.Contains(expr, "$") || at.Line <= 0 {
+		return
+	}
+	const prefix = "var _ gx.Attrs = "
+	col := at.Col - len(prefix)
+	if col < 1 {
+		col = 1
+	}
+	fmt.Fprintf(b, "//line %s:%d:%d\n%s%s\n", synth, at.Line, col, prefix, expr)
 }
 
 func lineDirective(b *bytes.Buffer, synth string, at Pos) {

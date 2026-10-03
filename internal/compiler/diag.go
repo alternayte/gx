@@ -17,6 +17,7 @@ const (
 
 	CodeType = "GX2000"
 
+	CodeSpread       = "GX2005"
 	CodeSignal       = "GX2010"
 	CodeUnrenderable = "GX2013"
 )

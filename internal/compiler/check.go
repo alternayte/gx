@@ -106,7 +106,17 @@ func (l *loader) checkElement(p *Package, file *File, el *Element, diags []Diagn
 
 	provided := map[string]bool{}
 	for _, a := range el.Attrs {
-		if a.Kind == AttrFragment || a.Kind == AttrSpread || isDirective(a.Name) {
+		if a.Kind == AttrSpread {
+			diags = append(diags, Diagnostic{
+				Code: CodeSpread,
+				File: file.File,
+				Line: a.At.Line,
+				Col:  a.At.Col,
+				Msg:  "attributes cannot spread onto <" + el.Name + ">; pass a gx.Attrs prop instead",
+			})
+			continue
+		}
+		if a.Kind == AttrFragment || isDirective(a.Name) {
 			continue
 		}
 		prop, ok := findProp(comp, a.Name)

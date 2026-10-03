@@ -319,18 +319,29 @@ func (g *gen) childExprs(ns []Node) string {
 
 func (g *gen) attrsExpr(el *Element) string {
 	var parts []string
+	var static []string
+	flush := func() {
+		if len(static) == 0 {
+			return
+		}
+		parts = append(parts, "gx.Attrs{"+strings.Join(static, ", ")+"}")
+		static = nil
+	}
 	for i := range el.Attrs {
 		a := &el.Attrs[i]
 		switch a.Kind {
+		case AttrSpread:
+			flush()
+			parts = append(parts, strings.TrimSpace(a.Value))
 		case AttrString:
 			kind := "gx.AttrText"
 			if isURLAttr(a.Name) {
 				kind = "gx.AttrURL"
 			}
-			parts = append(parts, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: %s}",
+			static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: %s}",
 				strconv.Quote(a.Name), strconv.Quote(a.Value), kind))
 		case AttrBool:
-			parts = append(parts, fmt.Sprintf("gx.Bool(%s, true)", strconv.Quote(a.Name)))
+			static = append(static, fmt.Sprintf("gx.Bool(%s, true)", strconv.Quote(a.Name)))
 		case AttrExpr:
 			target := a.Name
 			if rest, ok := strings.CutPrefix(target, "attr:"); ok {
@@ -338,7 +349,7 @@ func (g *gen) attrsExpr(el *Element) string {
 			}
 			value := strings.TrimSpace(a.Value)
 			if isBoolAttr(target) && g.isBoolType(a) && !strings.Contains(value, "$") {
-				parts = append(parts, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
+				static = append(static, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
 				continue
 			}
 			if isDirective(a.Name) {
@@ -348,14 +359,19 @@ func (g *gen) attrsExpr(el *Element) string {
 			if !ok {
 				continue
 			}
-			parts = append(parts, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
+			static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
 				strconv.Quote(a.Name), value))
 		}
 	}
-	if len(parts) == 0 {
+	flush()
+	switch len(parts) {
+	case 0:
 		return "nil"
+	case 1:
+		return parts[0]
+	default:
+		return "gx.JoinAttrs(" + strings.Join(parts, ", ") + ")"
 	}
-	return "gx.Attrs{" + strings.Join(parts, ", ") + "}"
 }
 
 func (g *gen) attrValueExpr(n any, raw string) (string, bool) {

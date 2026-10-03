@@ -106,6 +106,22 @@ func TextValue(v any) string {
 	return fmt.Sprint(v)
 }
 
+// JoinAttrs concatenates attribute lists in order (REQ-AUT-09).
+func JoinAttrs(parts ...Attrs) Attrs {
+	n := 0
+	for _, p := range parts {
+		n += len(p)
+	}
+	if n == 0 {
+		return nil
+	}
+	out := make(Attrs, 0, n)
+	for _, p := range parts {
+		out = append(out, p...)
+	}
+	return out
+}
+
 // Attrs is an ordered attribute list.
 type Attrs []Attr
 
