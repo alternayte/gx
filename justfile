@@ -47,6 +47,10 @@ bench-dev:
 bench-lsp:
     go test ./internal/lsp -run TestNFR_06 -v
 
+# The VS Code extension smoke test (REQ-TLS-05). Needs node.
+vscode-smoke:
+    "scripts/vscode-smoke.sh"
+
 evidence:
     go run ./internal/build/evidence --write
 

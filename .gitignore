@@ -15,3 +15,5 @@ node_modules/
 
 # golangci-lint custom binary output
 bin/
+# VS Code test download
+editors/vscode/.vscode-test/

@@ -1,0 +1,204 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Gx",
+  "scopeName": "source.gx",
+  "fileTypes": ["gx"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#goBlocks" },
+    { "include": "#rawScripts" },
+    { "include": "#tags" },
+    { "include": "#directives" },
+    { "include": "#signals" },
+    { "include": "#fragments" },
+    { "include": "#controlFlow" },
+    { "include": "#keywords" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.gx",
+          "begin": "\\{/\\*",
+          "end": "\\*/\\}"
+        },
+        {
+          "name": "comment.block.html.gx",
+          "begin": "<!--",
+          "end": "-->"
+        },
+        {
+          "name": "comment.line.double-slash.go",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "goBlocks": {
+      "patterns": [
+        {
+          "name": "meta.embedded.block.go",
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [{ "include": "source.go" }]
+        },
+        {
+          "name": "meta.embedded.block.go",
+          "begin": "^\\s*(package|import)\\b",
+          "end": "$",
+          "patterns": [{ "include": "source.go" }]
+        },
+        {
+          "name": "meta.embedded.block.go",
+          "begin": "^\\s*(props|signals)\\s*\\{",
+          "end": "^\\s*\\}",
+          "patterns": [{ "include": "source.go" }]
+        }
+      ]
+    },
+    "rawScripts": {
+      "patterns": [
+        {
+          "name": "meta.embedded.block.typescript",
+          "begin": "(<script\\b[^>]*\\blang=[\"']ts[\"'][^>]*>)",
+          "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.html" } },
+          "end": "(</script>)",
+          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
+          "patterns": [{ "include": "source.ts" }]
+        },
+        {
+          "name": "meta.embedded.block.javascript",
+          "begin": "(<script\\b[^>]*>)",
+          "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.html" } },
+          "end": "(</script>)",
+          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
+          "patterns": [{ "include": "source.js" }]
+        },
+        {
+          "name": "meta.embedded.block.css",
+          "begin": "(<style\\b[^>]*>)",
+          "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.html" } },
+          "end": "(</style>)",
+          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
+          "patterns": [{ "include": "source.css" }]
+        }
+      ]
+    },
+    "tags": {
+      "patterns": [
+        {
+          "name": "meta.tag.component.gx",
+          "begin": "(</?)([A-Z][A-Za-z0-9_]*(?:\\.[A-Z][A-Za-z0-9_]*)?)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.component.gx" }
+          },
+          "end": "(/?>)",
+          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
+          "patterns": [{ "include": "#attributes" }]
+        },
+        {
+          "name": "meta.tag.custom.gx",
+          "begin": "(</?)([a-z][a-z0-9]*-[a-z0-9-]*)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.custom.gx" }
+          },
+          "end": "(/?>)",
+          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
+          "patterns": [{ "include": "#attributes" }]
+        },
+        {
+          "name": "meta.tag.gx",
+          "begin": "(</?)([a-z][a-z0-9]*)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.gx" }
+          },
+          "end": "(/?>)",
+          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
+          "patterns": [{ "include": "#attributes" }]
+        },
+        {
+          "name": "meta.tag.slot.gx",
+          "match": "(</?)(:[a-zA-Z][A-Za-z0-9_]*)(\\s*/?>)",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.slot.gx" },
+            "3": { "name": "punctuation.definition.tag.end.html" }
+          }
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        { "include": "#directives" },
+        {
+          "name": "entity.other.attribute-name.gx",
+          "match": "\\b([a-zA-Z_:][-a-zA-Z0-9_:.]*)(?=\\s*=)"
+        },
+        {
+          "name": "string.quoted.double.gx",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "include": "#goBlocks" }]
+        },
+        {
+          "name": "string.quoted.single.gx",
+          "begin": "'",
+          "end": "'",
+          "patterns": [{ "include": "#goBlocks" }]
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.gx",
+          "match": "\\b(show|text|key|transition)\\b(?=\\s*=)"
+        },
+        {
+          "name": "keyword.control.directive.gx",
+          "match": "\\b(bind|class|attr):[a-zA-Z-]+"
+        },
+        {
+          "name": "keyword.control.directive.gx",
+          "match": "\\bon:[a-z]+(?:\\.[a-z]+(?:\\([^)]*\\))?)*"
+        }
+      ]
+    },
+    "signals": {
+      "patterns": [
+        {
+          "name": "variable.other.signal.gx",
+          "match": "\\$[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "fragments": {
+      "patterns": [
+        {
+          "name": "entity.name.function.fragment.gx",
+          "match": "#[A-Za-z_][A-Za-z0-9_]*(?=\\s*[({])"
+        }
+      ]
+    },
+    "controlFlow": {
+      "patterns": [
+        {
+          "name": "meta.embedded.block.go",
+          "begin": "^\\s*(if|else|for|switch|case|default)\\b.*\\{\\s*$",
+          "end": "^\\s*\\}",
+          "patterns": [{ "include": "source.go" }]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.other.gx",
+          "match": "\\b(let|slot)\\b"
+        }
+      ]
+    }
+  }
+}
