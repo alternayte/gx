@@ -108,7 +108,59 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			l.collectTypes(res, pkg, file, pr)
 		}
 	}
+	diags = append(diags, l.checkClassConditions(res, dirs)...)
 	return res, diags
+}
+
+// checkClassConditions reports a class:<name> directive whose expression is
+// not a bool (REQ-AUT-10).
+func (l *loader) checkClassConditions(res *typesResult, dirs []string) []Diagnostic {
+	var out []Diagnostic
+	for _, dir := range dirs {
+		p := l.load(dir)
+		for _, f := range p.Files {
+			walkElements(f.Body, func(el *Element) {
+				for i := range el.Attrs {
+					a := &el.Attrs[i]
+					if a.Kind != AttrExpr || !strings.HasPrefix(a.Name, "class:") {
+						continue
+					}
+					if strings.Contains(a.Value, "$") {
+						continue
+					}
+					t := res.types[a]
+					if t == nil || t.String() == "bool" {
+						continue
+					}
+					out = append(out, Diagnostic{
+						Code: CodeType,
+						File: f.File,
+						Line: a.At.Line,
+						Col:  a.At.Col,
+						Msg:  "attribute " + Quoted(a.Name) + " needs a bool expression, got " + t.String(),
+					})
+				}
+			})
+		}
+	}
+	return out
+}
+
+// walkElements calls fn for every element below ns.
+func walkElements(ns []Node, fn func(*Element)) {
+	for _, n := range ns {
+		switch t := n.(type) {
+		case *Element:
+			fn(t)
+			walkElements(t.Children, fn)
+		case *Control:
+			walkElements(t.Body, fn)
+			walkElements(t.Else, fn)
+			for _, c := range t.Cases {
+				walkElements(c.Body, fn)
+			}
+		}
+	}
 }
 
 // collectTypes reads the types of the probe sites and the package-owned

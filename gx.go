@@ -122,6 +122,40 @@ func JoinAttrs(parts ...Attrs) Attrs {
 	return out
 }
 
+// When returns name when on is true, and the empty string otherwise.
+func When(name string, on bool) string {
+	if on {
+		return name
+	}
+	return ""
+}
+
+// Classes joins the non-empty parts with single spaces, in source order
+// (REQ-AUT-10). Resolve conflicts with gx.Cx.
+func Classes(parts ...string) string {
+	n := 0
+	for _, p := range parts {
+		if p != "" {
+			n += len(p) + 1
+		}
+	}
+	if n == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.Grow(n)
+	for _, p := range parts {
+		if p == "" {
+			continue
+		}
+		if b.Len() > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(p)
+	}
+	return b.String()
+}
+
 // Attrs is an ordered attribute list.
 type Attrs []Attr
 

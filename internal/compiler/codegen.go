@@ -128,15 +128,33 @@ func (g *gen) newBuilder() string {
 	return fmt.Sprintf("_b%d", g.nest)
 }
 
-func (g *gen) errorf(n any, context string, format string, args ...any) {
+func (g *gen) fail(n any, code, context string, format string, args ...any) {
 	at := posOf(n)
 	g.diags = append(g.diags, Diagnostic{
-		Code: CodeUnrenderable,
+		Code: code,
 		File: g.file.File,
 		Line: at.Line,
 		Col:  at.Col,
 		Msg:  context + ": " + fmt.Sprintf(format, args...),
 	})
+}
+
+func (g *gen) errorf(n any, context string, format string, args ...any) {
+	g.fail(n, CodeUnrenderable, context, format, args...)
+}
+
+// classCondition returns the bool expression of a class:<name> attribute.
+func (g *gen) classCondition(a *Attr) string {
+	expr := strings.TrimSpace(a.Value)
+	if strings.Contains(expr, "$") {
+		g.fail(a, CodeSignal, "attribute "+strconv.Quote(a.Name), "a signal is only valid in a client expression")
+		return ""
+	}
+	if g.isBoolType(a) {
+		return expr
+	}
+	g.fail(a, CodeType, "attribute "+strconv.Quote(a.Name), "needs a bool expression")
+	return ""
 }
 
 func (g *gen) add(builder, expr string) {
@@ -320,6 +338,8 @@ func (g *gen) childExprs(ns []Node) string {
 func (g *gen) attrsExpr(el *Element) string {
 	var parts []string
 	var static []string
+	var classParts []string
+	spread := false
 	flush := func() {
 		if len(static) == 0 {
 			return
@@ -329,8 +349,36 @@ func (g *gen) attrsExpr(el *Element) string {
 	}
 	for i := range el.Attrs {
 		a := &el.Attrs[i]
+		// The class attribute and the class:<name> directives join in
+		// source order (REQ-AUT-10).
+		switch a.Kind {
+		case AttrString:
+			if a.Name == "class" {
+				classParts = append(classParts, strconv.Quote(a.Value))
+				continue
+			}
+		case AttrBool:
+			if rest, ok := strings.CutPrefix(a.Name, "class:"); ok {
+				classParts = append(classParts, strconv.Quote(rest))
+				continue
+			}
+		case AttrExpr:
+			if rest, ok := strings.CutPrefix(a.Name, "class:"); ok {
+				if cond := g.classCondition(a); cond != "" {
+					classParts = append(classParts, fmt.Sprintf("gx.When(%s, %s)", strconv.Quote(rest), cond))
+				}
+				continue
+			}
+			if a.Name == "class" {
+				if v, ok := g.attrValueExpr(a, a.Value); ok {
+					classParts = append(classParts, v)
+				}
+				continue
+			}
+		}
 		switch a.Kind {
 		case AttrSpread:
+			spread = true
 			flush()
 			parts = append(parts, strings.TrimSpace(a.Value))
 		case AttrString:
@@ -363,6 +411,14 @@ func (g *gen) attrsExpr(el *Element) string {
 				strconv.Quote(a.Name), value))
 		}
 	}
+	if len(classParts) > 0 {
+		classAttr := fmt.Sprintf("gx.Attr{Key: \"class\", Value: %s, Kind: gx.AttrText}", classExpr(classParts))
+		if spread {
+			parts = append([]string{"gx.Attrs{" + classAttr + "}"}, parts...)
+		} else {
+			static = append([]string{classAttr}, static...)
+		}
+	}
 	flush()
 	switch len(parts) {
 	case 0:
@@ -372,6 +428,14 @@ func (g *gen) attrsExpr(el *Element) string {
 	default:
 		return "gx.JoinAttrs(" + strings.Join(parts, ", ") + ")"
 	}
+}
+
+// classExpr returns the Go expression of a class value.
+func classExpr(parts []string) string {
+	if len(parts) == 1 {
+		return parts[0]
+	}
+	return "gx.Classes(" + strings.Join(parts, ", ") + ")"
 }
 
 func (g *gen) attrValueExpr(n any, raw string) (string, bool) {
