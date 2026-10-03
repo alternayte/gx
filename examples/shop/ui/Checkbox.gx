@@ -1,0 +1,16 @@
+package ui
+
+props {
+  Field    gx.FieldView
+  Children gx.Node
+}
+
+<div class="field">
+  <label>
+    <input {...p.Field.Attrs()} type="checkbox" />
+    {p.Children}
+  </label>
+  if p.Field.FieldError() != "" {
+    <p id={p.Field.FieldID() + "-error"} role="alert">{p.Field.FieldError()}</p>
+  }
+</div>

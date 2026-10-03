@@ -6,7 +6,8 @@ import "github.com/alternayte/gx"
 // Add patches the total of the invoking cart instance.
 type Add struct {
 	gx.Route `POST /cart/add`
-	Qty      int `signal:"qty"`
+	gx.Unchecked
+	Qty int `signal:"qty"`
 }
 
 // Set sets the signals of the invoking cart instance.

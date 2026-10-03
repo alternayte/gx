@@ -1,6 +1,9 @@
 package shop
 
-import "github.com/alternayte/gx/examples/shop/route"
+import (
+  "github.com/alternayte/gx/examples/shop/route"
+  signuproute "github.com/alternayte/gx/examples/shop/signup/route"
+)
 
 props {
   Children gx.Node
@@ -11,6 +14,7 @@ props {
   <nav>
     <a href={route.Home{}}>Home</a>
     <a href={route.About{}}>About</a>
+    <a href={signuproute.Page{}}>Sign up</a>
   </nav>
 </header>
 <main>{p.Children}</main>

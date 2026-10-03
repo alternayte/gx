@@ -1,0 +1,16 @@
+package ui
+
+props {
+  Field    gx.FieldView
+  Label    string
+  Type     string = "text"
+  Validate string = ""
+}
+
+<div class="field">
+  <label for={p.Field.FieldID()}>{p.Label}</label>
+  <input {...p.Field.Attrs()} type={p.Field.FieldInputType(p.Type)} data-gx-validate={p.Validate} />
+  if p.Field.FieldError() != "" {
+    <p id={p.Field.FieldID() + "-error"} role="alert">{p.Field.FieldError()}</p>
+  }
+</div>

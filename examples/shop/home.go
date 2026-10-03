@@ -5,6 +5,7 @@ import (
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/examples/shop/cart"
 	"github.com/alternayte/gx/examples/shop/route"
+	"github.com/alternayte/gx/examples/shop/signup"
 )
 
 // ShellLayout wraps every page in the shell (REQ-RTE-08).
@@ -25,4 +26,4 @@ var AboutPage = gx.Page(
 	About)
 
 // Routes collects every page and action of the shop.
-var Routes = append(gx.Collect(HomePage, AboutPage), cart.Routes...)
+var Routes = append(append(gx.Collect(HomePage, AboutPage), cart.Routes...), signup.Routes...)

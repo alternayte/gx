@@ -17,8 +17,10 @@ type typesResult struct {
 	types       map[any]types.Type
 	quals       map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
 	nodeIface   *types.Interface
+	formIface   *types.Interface
 	errIface    *types.Interface
 	stringer    *types.Interface
+	propTypes   map[*File][]types.Type  // props field types, in declaration order
 	routeFiles  map[string][]byte       // generated route code, keyed by output path
 	urlRoutes   map[string]bool         // package.Type of GET route structs
 	routes      []*routeDef             // every route struct
@@ -69,6 +71,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		routeMeth:  map[string]string{},
 		actions:    map[string][]token.Position{},
 		routeDefs:  map[string]*routeDef{},
+		propTypes:  map[*File][]types.Type{},
 		sigTypes:   map[*File]map[string]types.Type{},
 		sigActions: map[string]bool{},
 		exprTypes:  map[ast.Expr]types.Type{},
@@ -114,6 +117,18 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	if err != nil {
 		return res, nil
 	}
+	// First pass: render the route files, so a .gx view that names a
+	// generated form type type-checks in the second pass (REQ-FRM-03).
+	first := &typesResult{actions: map[string][]token.Position{}}
+	first.collectActions(pkgs)
+	if firstRoutes, _ := collectRoutes(pkgs, first.actions); hasFormRoute(firstRoutes) {
+		for path, src := range renderRouteFiles(firstRoutes) {
+			overlay[path] = src
+		}
+		if pkgs2, err := packages.Load(cfg, "./..."); err == nil {
+			pkgs = pkgs2
+		}
+	}
 	res.pkgs = pkgs
 	res.fillInterfaces(pkgs)
 
@@ -155,6 +170,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 				continue
 			}
 			l.collectTypes(res, pkg, file, pr)
+			l.collectPropTypes(res, pkg, pr)
 		}
 	}
 	for _, pr := range parseProbe {
@@ -193,6 +209,16 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, checkSafeHTML(pkgs)...)
 	diags = append(diags, checkRoutePackages(pkgs)...)
 	return res, diags
+}
+
+// hasFormRoute reports whether any route is a form input (REQ-FRM-01).
+func hasFormRoute(defs []*routeDef) bool {
+	for _, d := range defs {
+		if d.form {
+			return true
+		}
+	}
+	return false
 }
 
 // checkSafeHTML reports a conversion of a non-constant value to gx.SafeHTML
@@ -613,6 +639,29 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 	}
 }
 
+// collectPropTypes records the Go type of every props field from the probe
+// struct, in declaration order (REQ-FRM-03).
+func (l *loader) collectPropTypes(res *typesResult, pkg *packages.Package, pr *probe) {
+	name := componentName(pr.file) + "Props"
+	obj := pkg.Types.Scope().Lookup(name)
+	if obj == nil {
+		return
+	}
+	named, ok := obj.Type().(*types.Named)
+	if !ok {
+		return
+	}
+	st, ok := named.Underlying().(*types.Struct)
+	if !ok {
+		return
+	}
+	out := make([]types.Type, st.NumFields())
+	for i := 0; i < st.NumFields(); i++ {
+		out[i] = st.Field(i).Type()
+	}
+	res.propTypes[pr.file] = out
+}
+
 // collectSignalTypes records the Go type of every gx signal declaration in
 // a probe file, keyed by the lower-first signal name (REQ-ACT-03).
 func (l *loader) collectSignalTypes(res *typesResult, pkg *packages.Package, f *File, gd *ast.GenDecl) {
@@ -651,6 +700,9 @@ func (r *typesResult) fillInterfaces(pkgs []*packages.Package) {
 		if p.PkgPath == "github.com/alternayte/gx" && p.Types != nil {
 			if obj := p.Types.Scope().Lookup("Node"); obj != nil {
 				r.nodeIface, _ = obj.Type().Underlying().(*types.Interface)
+			}
+			if obj := p.Types.Scope().Lookup("FormValue"); obj != nil {
+				r.formIface, _ = obj.Type().Underlying().(*types.Interface)
 			}
 		}
 		for _, imp := range p.Imports {

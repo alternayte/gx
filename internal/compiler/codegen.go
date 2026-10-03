@@ -170,6 +170,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 	}
 	g.ind--
 	g.write("}")
+	g.emitFormSetter(f, name)
 	if len(f.Signals) > 0 {
 		g.write("")
 		g.write("type %sSignals struct {", name)
@@ -205,6 +206,28 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		})
 	}
 	return src, g.diags
+}
+
+// emitFormSetter writes the GxSetForm method of a view props struct when a
+// prop holds a generated form value (REQ-FRM-03).
+func (g *gen) emitFormSetter(f *File, name string) {
+	pt := g.res.propTypes[f]
+	if pt == nil || g.res.formIface == nil {
+		return
+	}
+	for i, fld := range f.Props {
+		if i >= len(pt) || pt[i] == nil || !types.Implements(pt[i], g.res.formIface) {
+			continue
+		}
+		g.write("")
+		g.write("// GxSetForm fills the form value prop %s (REQ-FRM-03).", fld.Name)
+		g.write("func (p *%sProps) GxSetForm(v gx.FormValue) {", name)
+		g.ind++
+		g.write("p.%s = v.(%s)", fld.Name, fld.Type)
+		g.ind--
+		g.write("}")
+		return
+	}
 }
 
 func (g *gen) write(format string, args ...any) {

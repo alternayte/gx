@@ -5,6 +5,7 @@ package shop
 import (
 	gx "github.com/alternayte/gx"
 	"github.com/alternayte/gx/examples/shop/route"
+	signuproute "github.com/alternayte/gx/examples/shop/signup/route"
 )
 
 type ShellProps struct {
@@ -13,21 +14,21 @@ type ShellProps struct {
 
 func Shell(p ShellProps) gx.Node {
 	var _b gx.Builder
-//line Shell.gx:9:1
+//line Shell.gx:12:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop", Meta: nil, Links: nil}))
-//line Shell.gx:9:28
+//line Shell.gx:12:28
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:10:1
-	_b.Add(gx.El("header", nil, gx.Frag(gx.Text("\n  "), gx.El("nav", nil, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n  "))), gx.Text("\n"))))
-//line Shell.gx:15:10
+//line Shell.gx:13:1
+	_b.Add(gx.El("header", nil, gx.Frag(gx.Text("\n  "), gx.El("nav", nil, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Sign up")), gx.Text("\n  "))), gx.Text("\n"))))
+//line Shell.gx:19:10
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:16:1
+//line Shell.gx:20:1
 	_b.Add(gx.El("main", nil, p.Children))
-//line Shell.gx:16:26
+//line Shell.gx:20:26
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:17:1
+//line Shell.gx:21:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "gx-toaster", Kind: gx.AttrText}, gx.Attr{Key: "aria-live", Value: "polite", Kind: gx.AttrText}, gx.Attr{Key: "aria-atomic", Value: "true", Kind: gx.AttrText}}))
-//line Shell.gx:17:66
+//line Shell.gx:21:66
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -15,13 +15,14 @@ import (
 // zero value alone; Required rejects it.
 type Rule struct {
 	key      string
+	ptr      any
 	check    func(v any) error
 	checkCtx func(ctx context.Context, v any) error
 }
 
 // Field binds rules to one field. All rules must pass.
 func Field[T any](v *T, rules ...Rule) Rule {
-	return Rule{key: "field", check: func(any) error {
+	return Rule{key: "field", ptr: any(v), check: func(any) error {
 		val := any(*v)
 		for _, r := range rules {
 			if r.checkCtx != nil {
@@ -260,6 +261,7 @@ func RunRulesContext(ctx context.Context, v any) *FieldViolation {
 	if !ok {
 		return nil
 	}
+	namer, _ := v.(interface{ GxFieldName(any) string })
 	for _, rule := range r.Rules() {
 		var err error
 		if rule.checkCtx != nil {
@@ -268,13 +270,56 @@ func RunRulesContext(ctx context.Context, v any) *FieldViolation {
 			err = rule.check(nil)
 		}
 		if err != nil {
-			if fv, ok := err.(*FieldViolation); ok {
-				return fv
-			}
-			return &FieldViolation{Key: rule.key, Message: err.Error()}
+			return nameViolation(err, rule, namer)
 		}
 	}
 	return nil
+}
+
+// RunAllRulesContext runs every field rule and returns one failure per
+// failing field, in rule order (REQ-FRM-02). The form handler shows the
+// whole error list.
+func RunAllRulesContext(ctx context.Context, v any) []*FieldViolation {
+	r, ok := v.(interface{ Rules() Rules })
+	if !ok {
+		return nil
+	}
+	namer, _ := v.(interface{ GxFieldName(any) string })
+	seen := map[string]bool{}
+	var out []*FieldViolation
+	for _, rule := range r.Rules() {
+		var err error
+		if rule.checkCtx != nil {
+			err = rule.checkCtx(ctx, nil)
+		} else {
+			err = rule.check(nil)
+		}
+		if err == nil {
+			continue
+		}
+		fv := nameViolation(err, rule, namer)
+		if fv.Field != "" {
+			if seen[fv.Field] {
+				continue
+			}
+			seen[fv.Field] = true
+		}
+		out = append(out, fv)
+	}
+	return out
+}
+
+// nameViolation turns a rule error into a field violation and fills the
+// field name through the generated GxFieldName method.
+func nameViolation(err error, rule Rule, namer interface{ GxFieldName(any) string }) *FieldViolation {
+	fv, ok := err.(*FieldViolation)
+	if !ok {
+		fv = &FieldViolation{Key: rule.key, Message: err.Error()}
+	}
+	if fv.Field == "" && namer != nil && rule.ptr != nil {
+		fv.Field = namer.GxFieldName(rule.ptr)
+	}
+	return fv
 }
 
 // asInt64 converts the integer kinds to int64.

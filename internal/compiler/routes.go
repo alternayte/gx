@@ -25,6 +25,19 @@ type routeDef struct {
 	pos        token.Position
 	action     bool
 	hasSignals bool
+	// form marks a route struct with Rules(), the input of a gx.Form
+	// (REQ-FRM-01).
+	form bool
+	// formRules holds the native constraints of every field, parsed from
+	// the Rules method body (REQ-FRM-04).
+	formRules map[string][]formConstraint
+}
+
+// formConstraint is one native constraint a rule maps to (REQ-FRM-04).
+type formConstraint struct {
+	key    string
+	value  string
+	isBool bool
 }
 
 // routeField is one bindable field of a route struct.
@@ -50,6 +63,18 @@ func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position
 	var defs []*routeDef
 	var diags []Diagnostic
 	for _, pkg := range pkgs {
+		rulesMethods := map[string]*ast.FuncDecl{}
+		for _, file := range pkg.Syntax {
+			for _, decl := range file.Decls {
+				fn, ok := decl.(*ast.FuncDecl)
+				if !ok || fn.Name.Name != "Rules" || fn.Recv == nil || len(fn.Recv.List) == 0 {
+					continue
+				}
+				if name := receiverTypeName(fn.Recv.List[0].Type); name != "" {
+					rulesMethods[name] = fn
+				}
+			}
+		}
 		for _, file := range pkg.Syntax {
 			path := pkg.Fset.Position(file.Pos()).Filename
 			if strings.HasSuffix(path, "_gx.go") || strings.HasSuffix(path, "_test.go") {
@@ -93,6 +118,10 @@ func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position
 						pos:     pkg.Fset.Position(ts.Pos()),
 					}
 					def.action = len(actions[def.pkg.PkgPath+"."+def.name]) > 0
+					def.form = hasFormRules(named)
+					if def.form {
+						def.formRules = parseFormRules(pkg, rulesMethods[def.name])
+					}
 					diags = append(diags, routeFields(def, stype)...)
 					defs = append(defs, def)
 				}
@@ -100,6 +129,183 @@ func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position
 		}
 	}
 	return defs, diags
+}
+
+// receiverTypeName returns the type name of a method receiver expression.
+func receiverTypeName(expr ast.Expr) string {
+	switch t := expr.(type) {
+	case *ast.Ident:
+		return t.Name
+	case *ast.StarExpr:
+		return receiverTypeName(t.X)
+	case *ast.IndexExpr:
+		return receiverTypeName(t.X)
+	}
+	return ""
+}
+
+// hasFormRules reports whether the type has a Rules() gx.Rules method
+// (REQ-FRM-01).
+func hasFormRules(named *types.Named) bool {
+	sel := types.NewMethodSet(types.NewPointer(named)).Lookup(nil, "Rules")
+	if sel == nil {
+		return false
+	}
+	sig, ok := sel.Obj().Type().(*types.Signature)
+	if !ok || sig.Params().Len() != 0 || sig.Results().Len() != 1 {
+		return false
+	}
+	return sig.Results().At(0).Type().String() == "github.com/alternayte/gx.Rules"
+}
+
+// parseFormRules reads the Rules method body and maps every Go field name to
+// the native constraints of its rules (REQ-FRM-04).
+func parseFormRules(pkg *packages.Package, fn *ast.FuncDecl) map[string][]formConstraint {
+	out := map[string][]formConstraint{}
+	if fn == nil || fn.Body == nil {
+		return out
+	}
+	ast.Inspect(fn.Body, func(n ast.Node) bool {
+		call, ok := n.(*ast.CallExpr)
+		if !ok || !isGxFunc(pkg, call.Fun, "Field") || len(call.Args) < 2 {
+			return true
+		}
+		name := fieldArgName(call.Args[0])
+		if name == "" {
+			return true
+		}
+		for _, arg := range call.Args[1:] {
+			out[name] = append(out[name], ruleConstraints(pkg, arg)...)
+		}
+		return true
+	})
+	return out
+}
+
+// fieldArgName returns the Go field name of a gx.Field call argument.
+func fieldArgName(expr ast.Expr) string {
+	unary, ok := expr.(*ast.UnaryExpr)
+	if !ok || unary.Op != token.AND {
+		return ""
+	}
+	sel, ok := unary.X.(*ast.SelectorExpr)
+	if !ok {
+		return ""
+	}
+	return sel.Sel.Name
+}
+
+// ruleConstraints maps one rule value to its native constraints. Rules
+// without a native form give none (REQ-FRM-04).
+func ruleConstraints(pkg *packages.Package, expr ast.Expr) []formConstraint {
+	switch t := expr.(type) {
+	case *ast.SelectorExpr:
+		switch ruleName(pkg, t) {
+		case "Required":
+			return []formConstraint{{key: "required", isBool: true}}
+		case "Email":
+			return []formConstraint{{key: "type", value: "email"}}
+		case "IsURL":
+			return []formConstraint{{key: "type", value: "url"}}
+		}
+	case *ast.CallExpr:
+		sel, ok := t.Fun.(*ast.SelectorExpr)
+		if !ok {
+			return nil
+		}
+		switch ruleName(pkg, sel) {
+		case "MinLen":
+			return intConstraint(pkg, t, "minlength")
+		case "MaxLen":
+			return intConstraint(pkg, t, "maxlength")
+		case "Min":
+			return intConstraint(pkg, t, "min")
+		case "Max":
+			return intConstraint(pkg, t, "max")
+		case "True":
+			return []formConstraint{{key: "required", isBool: true}}
+		case "Pattern":
+			if re := patternLiteral(pkg, t); re != "" {
+				return []formConstraint{{key: "pattern", value: re}}
+			}
+		}
+	}
+	return nil
+}
+
+// ruleName returns the gx name of a rule expression, or "".
+func ruleName(pkg *packages.Package, sel *ast.SelectorExpr) string {
+	obj := pkg.TypesInfo.Uses[sel.Sel]
+	if obj == nil || obj.Pkg() == nil || obj.Pkg().Path() != "github.com/alternayte/gx" {
+		return ""
+	}
+	return obj.Name()
+}
+
+// intConstraint returns the numeric native constraint of a rule call.
+func intConstraint(pkg *packages.Package, call *ast.CallExpr, key string) []formConstraint {
+	if len(call.Args) != 1 {
+		return nil
+	}
+	tv, ok := pkg.TypesInfo.Types[call.Args[0]]
+	if !ok || tv.Value == nil {
+		return nil
+	}
+	return []formConstraint{{key: key, value: tv.Value.ExactString()}}
+}
+
+// patternLiteral returns the source of a constant regexp rule value, or "".
+func patternLiteral(pkg *packages.Package, call *ast.CallExpr) string {
+	if len(call.Args) != 1 {
+		return ""
+	}
+	return regexpSource(pkg, call.Args[0])
+}
+
+// regexpSource returns the pattern of a regexp expression.
+func regexpSource(pkg *packages.Package, expr ast.Expr) string {
+	switch t := expr.(type) {
+	case *ast.BasicLit:
+		if t.Kind != token.STRING {
+			return ""
+		}
+		s, err := strconv.Unquote(t.Value)
+		if err != nil {
+			return ""
+		}
+		return s
+	case *ast.CallExpr:
+		sel, ok := t.Fun.(*ast.SelectorExpr)
+		if !ok || sel.Sel.Name != "MustCompile" {
+			return ""
+		}
+		if len(t.Args) != 1 {
+			return ""
+		}
+		return regexpSource(pkg, t.Args[0])
+	case *ast.Ident:
+		// A package-level var holds the compiled regexp.
+		for _, file := range pkg.Syntax {
+			for _, decl := range file.Decls {
+				gd, ok := decl.(*ast.GenDecl)
+				if !ok || gd.Tok != token.VAR {
+					continue
+				}
+				for _, spec := range gd.Specs {
+					vs, ok := spec.(*ast.ValueSpec)
+					if !ok || len(vs.Values) != len(vs.Names) {
+						continue
+					}
+					for i, id := range vs.Names {
+						if id.Name == t.Name {
+							return regexpSource(pkg, vs.Values[i])
+						}
+					}
+				}
+			}
+		}
+	}
+	return ""
 }
 
 // routePattern returns the pattern of an embedded gx.Route field.
@@ -169,7 +375,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 				Msg:  "field " + Quoted(f.Name()) + " binds path " + Quoted(tag.Get("path")) + " which the pattern has no variable for",
 			})
 		}
-		if !isPath && queryName == "" && signalName == "" && !def.action {
+		if !isPath && queryName == "" && signalName == "" && !def.action && !def.form {
 			continue // not a request-bound field
 		}
 		kind, ok := bindKind(f.Type())
@@ -185,7 +391,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		}
 		field := routeField{
 			name:     f.Name(),
-			typeText: types.TypeString(f.Type(), nil),
+			typeText: types.TypeString(f.Type(), typeQualifier(def.pkg)),
 			typ:      f.Type(),
 			kind:     kind,
 			query:    queryName,
@@ -198,9 +404,9 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 			bound[strings.ToLower(pathName)] = true
 		} else if formName != "" {
 			field.form = formName
-		} else if queryName == "" && signalName == "" && def.action {
-			// An untagged action field binds from a form field
-			// (REQ-ACT-03).
+		} else if queryName == "" && signalName == "" && (def.action || def.form) {
+			// An untagged action or form field binds from a form field
+			// (REQ-ACT-03, REQ-FRM-02).
 			field.form = lowerFirst(f.Name())
 		}
 		if signalName != "" {
@@ -224,6 +430,16 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 }
 
 // bindKind returns the basic kind of a bindable field type.
+// typeQualifier prints same-package type names without a qualifier.
+func typeQualifier(pkg *packages.Package) types.Qualifier {
+	return func(p *types.Package) string {
+		if p == nil || (pkg != nil && p.Path() == pkg.PkgPath) {
+			return ""
+		}
+		return p.Name()
+	}
+}
+
 func bindKind(t types.Type) (types.BasicKind, bool) {
 	b, ok := t.Underlying().(*types.Basic)
 	if !ok {
@@ -327,6 +543,31 @@ func checkRoutePackages(pkgs []*packages.Package) []Diagnostic {
 		if !strings.HasSuffix(pkg.PkgPath, "/route") {
 			continue
 		}
+		routeNames := map[string]bool{}
+		for _, file := range pkg.Syntax {
+			if strings.HasSuffix(pkg.Fset.Position(file.Pos()).Filename, "_gx.go") {
+				continue
+			}
+			for _, decl := range file.Decls {
+				gen, ok := decl.(*ast.GenDecl)
+				if !ok || gen.Tok != token.TYPE {
+					continue
+				}
+				for _, spec := range gen.Specs {
+					ts, ok := spec.(*ast.TypeSpec)
+					if !ok {
+						continue
+					}
+					st, ok := ts.Type.(*ast.StructType)
+					if !ok {
+						continue
+					}
+					if _, isRoute := routePattern(pkg, st); isRoute {
+						routeNames[ts.Name.Name] = true
+					}
+				}
+			}
+		}
 		for _, file := range pkg.Syntax {
 			if strings.HasSuffix(pkg.Fset.Position(file.Pos()).Filename, "_gx.go") {
 				continue
@@ -385,6 +626,11 @@ func checkRoutePackages(pkgs []*packages.Package) []Diagnostic {
 						})
 					}
 				case *ast.FuncDecl:
+					// A method of a route type belongs to the route
+					// type (REQ-FRM-01 gives the input type Rules).
+					if d.Recv != nil && len(d.Recv.List) == 1 && routeNames[receiverTypeName(d.Recv.List[0].Type)] {
+						continue
+					}
 					pos := pkg.Fset.Position(d.Pos())
 					out = append(out, Diagnostic{
 						Code: CodeRoutePkg,
@@ -462,6 +708,9 @@ func renderRouteFile(defs []*routeDef) []byte {
 		// Every route has a URL method: typed links use GET routes and
 		// action invocations use every method (REQ-RTE-05, REQ-ACT-02).
 		needGx = true
+		if d.form {
+			needFmt, needStrconv = true, true
+		}
 		for _, f := range d.fields {
 			if f.path != "" || f.query != "" {
 				needURL = true
@@ -494,45 +743,191 @@ func renderRouteFile(defs []*routeDef) []byte {
 	for _, d := range defs {
 		b.WriteString("// Pattern returns the method and pattern of " + d.name + ".\n")
 		b.WriteString("func (" + d.name + ") Pattern() string { return " + strconv.Quote(d.pattern) + " }\n\n")
-		b.WriteString("// Bind fills " + d.name + " from the request.\n")
-		b.WriteString("func (in *" + d.name + ") Bind(r *http.Request) error {\n")
-		if d.hasSignals {
-			b.WriteString("\tsignals, err := gx.Signals(r)\n\tif err != nil {\n\t\treturn err\n\t}\n")
+		if d.form {
+			renderFormBind(&b, d)
+		} else {
+			renderBindFunc(&b, d)
 		}
-		for _, f := range d.fields {
-			switch {
-			case f.signal != "":
-				b.WriteString("\tif err := gx.BindSignal(signals, gx.Scope(r), " + strconv.Quote(f.signal) + ", &in." + f.name + "); err != nil {\n\t\treturn err\n\t}\n")
-				continue
-			case f.form != "":
-				b.WriteString("\tif v := r.FormValue(" + strconv.Quote(f.form) + "); v != \"\" {\n")
-				renderBindField(&b, f)
-				b.WriteString("\t}\n")
-				continue
-			}
-			if f.path == "" && f.query == "" {
-				continue
-			}
-			source := "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
-			if f.path == "" {
-				source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
-			}
-			b.WriteString("\tif v := " + source + "; v != \"\" {\n")
-			renderBindField(&b, f)
-			b.WriteString("\t}\n")
-			if f.query != "" && f.def != "" {
-				b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
-				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
-			}
-		}
-		b.WriteString("\treturn nil\n}\n\n")
 		renderRouteURL(&b, d)
+		if d.form {
+			renderFormValue(&b, d)
+		}
 	}
 	src, err := format.Source(b.Bytes())
 	if err != nil {
 		return b.Bytes()
 	}
 	return src
+}
+
+// renderBindFunc writes the Bind method of a non-form route.
+func renderBindFunc(b *bytes.Buffer, d *routeDef) {
+	b.WriteString("// Bind fills " + d.name + " from the request.\n")
+	b.WriteString("func (in *" + d.name + ") Bind(r *http.Request) error {\n")
+	if d.hasSignals {
+		b.WriteString("\tsignals, err := gx.Signals(r)\n\tif err != nil {\n\t\treturn err\n\t}\n")
+	}
+	for _, f := range d.fields {
+		switch {
+		case f.signal != "":
+			b.WriteString("\tif err := gx.BindSignal(signals, gx.Scope(r), " + strconv.Quote(f.signal) + ", &in." + f.name + "); err != nil {\n\t\treturn err\n\t}\n")
+			continue
+		case f.form != "":
+			b.WriteString("\tif v := r.FormValue(" + strconv.Quote(f.form) + "); v != \"\" {\n")
+			renderBindField(b, f)
+			b.WriteString("\t}\n")
+			continue
+		}
+		if f.path == "" && f.query == "" {
+			continue
+		}
+		source := "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
+		if f.path == "" {
+			source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
+		}
+		b.WriteString("\tif v := " + source + "; v != \"\" {\n")
+		renderBindField(b, f)
+		b.WriteString("\t}\n")
+		if f.query != "" && f.def != "" {
+			b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
+			b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+		}
+	}
+	b.WriteString("\treturn nil\n}\n\n")
+}
+
+// renderFormBind writes GxBindForm and the Bind delegator of a form input.
+// A conversion error becomes a field error, not a bind failure
+// (REQ-FRM-07).
+func renderFormBind(b *bytes.Buffer, d *routeDef) {
+	b.WriteString("// GxBindForm fills " + d.name + " and returns one message key per field\n")
+	b.WriteString("// that did not convert (REQ-FRM-07).\n")
+	b.WriteString("func (in *" + d.name + ") GxBindForm(r *http.Request) (map[string]string, error) {\n")
+	b.WriteString("\terrs := map[string]string{}\n")
+	if d.hasSignals {
+		b.WriteString("\tsignals, err := gx.Signals(r)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n")
+	}
+	for _, f := range d.fields {
+		if f.signal != "" {
+			b.WriteString("\tif err := gx.BindSignal(signals, gx.Scope(r), " + strconv.Quote(f.signal) + ", &in." + f.name + "); err != nil {\n\t\treturn nil, err\n\t}\n")
+			continue
+		}
+		if f.form == "" && f.path == "" && f.query == "" {
+			continue
+		}
+		source := "r.FormValue(" + strconv.Quote(f.form) + ")"
+		if f.path != "" {
+			source = "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
+		} else if f.query != "" && f.form == "" {
+			source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
+		}
+		b.WriteString("\tif v := " + source + "; v != \"\" {\n")
+		renderBindFieldForm(b, f)
+		b.WriteString("\t}\n")
+		if f.query != "" && f.def != "" {
+			b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
+			b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+		}
+	}
+	b.WriteString("\treturn errs, nil\n}\n\n")
+	b.WriteString("// Bind fills " + d.name + " from the request.\n")
+	b.WriteString("func (in *" + d.name + ") Bind(r *http.Request) error {\n")
+	b.WriteString("\terrs, err := in.GxBindForm(r)\n\tif err != nil {\n\t\treturn err\n\t}\n")
+	b.WriteString("\tfor _, name := range gx.FieldNames(errs) {\n")
+	b.WriteString("\t\treturn fmt.Errorf(\"gx: %s: %s\", name, errs[name])\n\t}\n")
+	b.WriteString("\treturn nil\n}\n\n")
+}
+
+// formFieldName returns the form field name of a route field.
+func formFieldName(f routeField) string {
+	if f.form != "" {
+		return f.form
+	}
+	return lowerFirst(f.name)
+}
+
+// renderBindFieldForm writes a binding that records a conversion error as a
+// field error (REQ-FRM-07).
+func renderBindFieldForm(b *bytes.Buffer, f routeField) {
+	name := strconv.Quote(formFieldName(f))
+	switch {
+	case f.kind == types.String:
+		b.WriteString("\t\tin." + f.name + " = " + f.typeText + "(v)\n")
+	case f.kind == types.Bool:
+		b.WriteString("\t\tx, err := gx.ParseBool(v)\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\terrs[" + name + "] = \"invalid\"\n\t\t} else {\n")
+		b.WriteString("\t\t\tin." + f.name + " = " + f.typeText + "(x)\n\t\t}\n")
+	case floatBits(f.kind) > 0:
+		b.WriteString("\t\tx, err := strconv.ParseFloat(v, " + strconv.Itoa(floatBits(f.kind)) + ")\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\terrs[" + name + "] = \"invalid\"\n\t\t} else {\n")
+		b.WriteString("\t\t\tin." + f.name + " = " + f.typeText + "(x)\n\t\t}\n")
+	case unsignedKind(f.kind):
+		b.WriteString("\t\tx, err := strconv.ParseUint(v, 10, " + strconv.Itoa(intBits(f.kind)) + ")\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\terrs[" + name + "] = \"invalid\"\n\t\t} else {\n")
+		b.WriteString("\t\t\tin." + f.name + " = " + f.typeText + "(x)\n\t\t}\n")
+	default:
+		b.WriteString("\t\tx, err := strconv.ParseInt(v, 10, " + strconv.Itoa(intBits(f.kind)) + ")\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\terrs[" + name + "] = \"invalid\"\n\t\t} else {\n")
+		b.WriteString("\t\t\tin." + f.name + " = " + f.typeText + "(x)\n\t\t}\n")
+	}
+}
+
+// renderFormValue writes the generated form type, the form value builder and
+// the field namer (REQ-FRM-02, REQ-FRM-03).
+func renderFormValue(b *bytes.Buffer, d *routeDef) {
+	name := lowerFirst(d.name)
+	method, _, _ := strings.Cut(d.pattern, " ")
+	b.WriteString("// " + d.name + "Form is the generated form value of " + d.name + " (REQ-FRM-03).\n")
+	b.WriteString("type " + d.name + "Form struct {\n\tgx.FormMeta\n")
+	for _, f := range d.fields {
+		b.WriteString("\t" + f.name + " gx.FormField[" + f.typeText + "]\n")
+	}
+	b.WriteString("}\n\n")
+	b.WriteString("// GxFormValue fills the form value of " + d.name + " (REQ-FRM-03).\n")
+	b.WriteString("func (in *" + d.name + ") GxFormValue(errs map[string]string) gx.FormValue {\n")
+	b.WriteString("\tf := " + d.name + "Form{FormMeta: gx.FormMeta{Name: " + strconv.Quote(name) +
+		", ID: " + strconv.Quote(name+"-form") + ", Action: in.URL(), Method: " + strconv.Quote(method) + "}}\n")
+	for _, f := range d.fields {
+		fieldName := formFieldName(f)
+		key := "errs[" + strconv.Quote(fieldName) + "]"
+		constraints := constraintsExpr(d.formRules[f.name])
+		b.WriteString("\tf." + f.name + " = gx.FormField[" + f.typeText + "]{" +
+			"Name: " + strconv.Quote(fieldName) + ", ID: " + strconv.Quote(name+"-"+fieldName) +
+			", Value: in." + f.name +
+			", ErrorKey: " + key +
+			", Error: gx.Translate(" + key + ", gx.DefaultMessage(" + key + "))" +
+			", Constraints: " + constraints +
+			", ValidateURL: gx.ValidateURL(in.URL(), " + strconv.Quote(fieldName) + ")}" + "\n")
+	}
+	b.WriteString("\treturn f\n}\n\n")
+	b.WriteString("// GxFieldName returns the form field name of a field pointer (REQ-FRM-02).\n")
+	b.WriteString("func (in *" + d.name + ") GxFieldName(ptr any) string {\n\tswitch ptr {\n")
+	for _, f := range d.fields {
+		b.WriteString("\tcase any(&in." + f.name + "):\n\t\treturn " + strconv.Quote(formFieldName(f)) + "\n")
+	}
+	b.WriteString("\t}\n\treturn \"\"\n}\n\n")
+	b.WriteString("// GxNewForm returns a fresh " + d.name + " (REQ-FRM-02).\n")
+	b.WriteString("func (in *" + d.name + ") GxNewForm() gx.FormInput { return &" + d.name + "{} }\n\n")
+	b.WriteString("// GxRunForm calls the form handler with the concrete input type (REQ-FRM-02).\n")
+	b.WriteString("func (in *" + d.name + ") GxRunForm(ctx *gx.Ctx, fn any) error {\n")
+	b.WriteString("\treturn fn.(func(*gx.Ctx, *" + d.name + ") error)(ctx, in)\n}\n\n")
+}
+
+// constraintsExpr returns the gx.Attrs literal of a field's native
+// constraints (REQ-FRM-04).
+func constraintsExpr(cs []formConstraint) string {
+	if len(cs) == 0 {
+		return "nil"
+	}
+	parts := make([]string, 0, len(cs))
+	for _, c := range cs {
+		if c.isBool {
+			parts = append(parts, "gx.Bool("+strconv.Quote(c.key)+", true)")
+			continue
+		}
+		parts = append(parts, "gx.Attr{Key: "+strconv.Quote(c.key)+", Value: "+strconv.Quote(c.value)+", Kind: gx.AttrText}")
+	}
+	return "gx.Attrs{" + strings.Join(parts, ", ") + "}"
 }
 
 // renderRouteURL writes the URL method of a GET route (REQ-RTE-05).
@@ -634,7 +1029,7 @@ func renderBindField(b *bytes.Buffer, f routeField) {
 	case f.kind == types.String:
 		b.WriteString("\t\tin." + f.name + " = " + f.typeText + "(v)\n")
 	case f.kind == types.Bool:
-		b.WriteString("\t\tx, err := strconv.ParseBool(v)\n")
+		b.WriteString("\t\tx, err := gx.ParseBool(v)\n")
 		b.WriteString("\t\tif err != nil {\n\t\t\treturn fmt.Errorf(" + strconv.Quote("gx: "+f.name+": %w") + ", err)\n\t\t}\n")
 		b.WriteString("\t\tin." + f.name + " = " + f.typeText + "(x)\n")
 	case floatBits(f.kind) > 0:
