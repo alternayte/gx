@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -155,12 +156,14 @@ func statusFor(err error) int {
 
 // layoutDef is an untyped layout value.
 type layoutDef interface {
+	gxID() string
 	gxLoad(*Ctx) (any, error)
 	gxView(any, Node) Node
 }
 
 // layout is the value built by Layout.
 type layout[P any] struct {
+	id   string
 	load func(*Ctx) (P, error)
 	view func(P, Node) Node
 }
@@ -169,8 +172,20 @@ type layout[P any] struct {
 // loaded props and the page node (REQ-RTE-08). Pass a nil load when the
 // layout needs no data.
 func Layout[P any](load func(*Ctx) (P, error), view func(P, Node) Node) layout[P] {
-	return layout[P]{load: load, view: view}
+	return layout[P]{id: layoutID(1), load: load, view: view}
 }
+
+// layoutID names a layout by its Layout call site. The id is stable for one
+// binary, so the client can send back the layouts it holds (REQ-RTE-12).
+func layoutID(skip int) string {
+	_, file, line, ok := runtime.Caller(skip + 1)
+	if !ok {
+		return "layout"
+	}
+	return filepath.Base(file) + ":" + strconv.Itoa(line)
+}
+
+func (l layout[P]) gxID() string { return l.id }
 
 func (l layout[P]) gxLoad(c *Ctx) (any, error) {
 	if l.load == nil {
@@ -315,17 +330,22 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Group mounts routes under a prefix. Middleware applies to the routes that
-// follow it in the same call (REQ-RTE-06, REQ-RTE-09).
+// follow it in the same call (REQ-RTE-06, REQ-RTE-09). gx.Nav selects the
+// navigation mode of the routes that follow it (REQ-RTE-12).
 func (a *App) Group(prefix string, parts ...any) *App {
 	var mw []func(http.Handler) http.Handler
 	var layouts []layoutDef
+	nav := FullNavigation
 	add := func(h Handler) {
 		handler := http.Handler(h)
 		for i := len(mw) - 1; i >= 0; i-- {
 			handler = mw[i](handler)
 		}
 		if len(layouts) > 0 {
-			handler = &layoutHandler{inner: h, layouts: layouts}
+			handler = &layoutHandler{inner: h, layouts: layouts, morph: nav == MorphNavigation}
+		}
+		if nav == MorphNavigation {
+			handler = &navHandler{inner: handler.(Handler)}
 		}
 		handler = a.withErrorViews(handler)
 		handler = a.withAdapter(handler)
@@ -340,6 +360,8 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		switch v := part.(type) {
 		case func(http.Handler) http.Handler:
 			mw = append(mw, v)
+		case navOption:
+			nav = v.mode
 		case layoutDef:
 			layouts = append(layouts, v)
 		case []Handler:
@@ -464,6 +486,8 @@ func (p *page[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type layoutHandler struct {
 	inner   Handler
 	layouts []layoutDef
+	// morph wraps every layout's children in a named slot (REQ-RTE-12).
+	morph bool
 }
 
 func (h *layoutHandler) Pattern() string { return h.inner.Pattern() }
@@ -483,12 +507,30 @@ func (h *layoutHandler) staticInputs() ([]any, error) {
 }
 
 func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	nh, ok := h.inner.(nodeHandler)
-	if !ok {
+	if _, ok := h.inner.(nodeHandler); !ok {
+		// Actions and forms under a layout group answer themselves.
 		h.inner.ServeHTTP(w, r)
 		return
 	}
 	ctx := &Ctx{W: w, R: r}
+	page, props, err := h.loadChain(ctx)
+	if err != nil {
+		renderError(w, r, err)
+		return
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := RenderRequest(w, r, h.wrapFrom(page, props, 0)); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// loadChain runs the page loader and every layout loader concurrently
+// (REQ-RTE-08).
+func (h *layoutHandler) loadChain(ctx *Ctx) (Node, []any, error) {
+	nh, ok := h.inner.(nodeHandler)
+	if !ok {
+		return nil, nil, errors.New("gx: route does not load a node")
+	}
 	var wg sync.WaitGroup
 	var page Node
 	var pageErr error
@@ -508,21 +550,37 @@ func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	wg.Wait()
 	if pageErr != nil {
-		renderError(w, r, pageErr)
-		return
+		return nil, nil, pageErr
 	}
 	for _, err := range errs {
 		if err != nil {
-			renderError(w, r, err)
-			return
+			return nil, nil, err
 		}
 	}
+	return page, props, nil
+}
+
+// layoutIDs returns the layout ids from the root layout inwards
+// (REQ-RTE-12).
+func (h *layoutHandler) layoutIDs() []string {
+	out := make([]string, len(h.layouts))
+	for i, l := range h.layouts {
+		out[i] = l.gxID()
+	}
+	return out
+}
+
+// wrapFrom wraps the page in the layouts from index from outwards. With
+// morph navigation on, each layout's children sit in a named slot so a
+// partial navigation can patch the deepest shared layout (REQ-RTE-12).
+func (h *layoutHandler) wrapFrom(page Node, props []any, from int) Node {
 	n := page
-	for i := len(h.layouts) - 1; i >= 0; i-- {
-		n = h.layouts[i].gxView(props[i], n)
+	for i := len(h.layouts) - 1; i >= from; i-- {
+		children := n
+		if h.morph {
+			children = slotNode(h.layouts[i].gxID(), n)
+		}
+		n = h.layouts[i].gxView(props[i], children)
 	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := RenderRequest(w, r, n); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	return n
 }

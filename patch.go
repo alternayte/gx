@@ -16,6 +16,8 @@ const (
 	// ModeMorph morphs the node into the existing element. It is the
 	// default.
 	ModeMorph PatchMode = iota
+	// ModeInner replaces the children of the existing element.
+	ModeInner
 	// ModeAppend puts the node inside the existing element, at the end.
 	ModeAppend
 	// ModePrepend puts the node inside the existing element, at the start.
@@ -61,6 +63,10 @@ type Response struct {
 	Status int
 	// Err is the handler error, shown by the dev overlay (REQ-DEV-06).
 	Err error
+	// Navigate marks a partial navigation response (REQ-RTE-12).
+	Navigate bool
+	// Head is the merged head of a partial navigation (REQ-RTE-12).
+	Head *HeadProps
 }
 
 // patchModeNode marks the mode of the patches that follow it in Ctx.Patch.

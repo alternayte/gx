@@ -286,6 +286,11 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 				b.WriteString(escapeAttr(a.Value))
 			}
 			b.WriteByte('"')
+			if a.Active != "" {
+				b.WriteString(` data-gx-active="`)
+				b.WriteString(escapeAttr(a.Active))
+				b.WriteByte('"')
+			}
 			if a.Active != "" && st != nil {
 				switch {
 				case a.Active == "section" && sectionMatch(st.requestURI, a.Value):

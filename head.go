@@ -4,22 +4,22 @@ import "strings"
 
 // Meta is one meta tag in the head (REQ-RTE-11).
 type Meta struct {
-	Name     string
-	Property string
-	Content  string
+	Name     string `json:"name,omitempty"`
+	Property string `json:"property,omitempty"`
+	Content  string `json:"content,omitempty"`
 }
 
 // Link is one link tag in the head.
 type Link struct {
-	Rel  string
-	Href string
+	Rel  string `json:"rel,omitempty"`
+	Href string `json:"href,omitempty"`
 }
 
 // HeadProps is the props of the gx.Head component.
 type HeadProps struct {
-	Title string
-	Meta  []Meta
-	Links []Link
+	Title string `json:"title,omitempty"`
+	Meta  []Meta `json:"meta,omitempty"`
+	Links []Link `json:"links,omitempty"`
 }
 
 // Head marks the head of a page or layout. The deepest title wins and the
@@ -37,6 +37,13 @@ type renderState struct {
 	titleDepth  int
 	headWritten bool
 	requestURI  string
+}
+
+// HeadOf returns the merged head of a node tree (REQ-RTE-11, REQ-RTE-12).
+func HeadOf(n Node) HeadProps {
+	st := &renderState{}
+	collectHead(n, st, 1)
+	return st.head
 }
 
 // collectHead merges every head node of the tree, deepest title first.

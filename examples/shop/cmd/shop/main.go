@@ -15,7 +15,7 @@ func main() {
 	addr := flag.String("addr", "127.0.0.1:8080", "listen address")
 	flag.Parse()
 	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
-	app.Group("/", shop.ShellLayout, shop.Routes)
+	app.Group("/", shop.ShellLayout, gx.Nav(gx.MorphNavigation), shop.Routes)
 	log.Printf("shop listening on http://%s", *addr)
 	log.Fatal(http.ListenAndServe(*addr, app))
 }

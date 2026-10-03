@@ -4,10 +4,11 @@
 package datastar
 
 import (
-	_ "embed"
 	"crypto/sha256"
+	_ "embed"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -68,8 +69,11 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 	for _, p := range res.Patches {
 		switch t := p.(type) {
 		case gx.ElementPatch:
-			opts := []sdk.PatchElementOption{sdk.WithSelectorID(strings.TrimPrefix(t.Target, "#"))}
+			// Target is a CSS selector: "#id" or "[data-gx-slot=...]".
+			opts := []sdk.PatchElementOption{sdk.WithSelector(t.Target)}
 			switch t.Mode {
+			case gx.ModeInner:
+				opts = append(opts, sdk.WithModeInner())
 			case gx.ModeAppend:
 				opts = append(opts, sdk.WithModeAppend())
 			case gx.ModePrepend:
@@ -104,6 +108,17 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 			if err := sse.PatchElements(gx.String(gx.ToastNode(t.Text)), sdk.WithSelectorID("gx-toaster"), sdk.WithModeAppend()); err != nil {
 				return err
 			}
+		}
+	}
+	if res.Navigate && res.Head != nil {
+		// The Gx runtime reads gx-head and merges title, meta and link
+		// tags (REQ-RTE-12).
+		data, err := json.Marshal(res.Head)
+		if err != nil {
+			return err
+		}
+		if _, err := fmt.Fprintf(w, "event: gx-head\ndata: %s\n\n", data); err != nil {
+			return err
 		}
 	}
 	return nil

@@ -184,7 +184,7 @@ func TestREQ_RTE_13_ActiveLinks(t *testing.T) {
 	)
 	req := httptest.NewRequest("GET", "/products/42", nil)
 	got := gx.StringRequest(req, page)
-	want := `<nav><a href="/products/42" aria-current="page">product</a><a href="/products" data-active>list</a><a href="/other">other</a></nav>`
+	want := `<nav><a href="/products/42" data-gx-active="page" aria-current="page">product</a><a href="/products" data-gx-active="section" data-active>list</a><a href="/other" data-gx-active="page">other</a></nav>`
 	if got != want {
 		t.Fatalf("active links = %q, want %q", got, want)
 	}
@@ -238,7 +238,7 @@ func TestREQ_RTE_16_RenderInHandler(t *testing.T) {
 	if ct := rec.Header().Get("Content-Type"); ct != "text/html; charset=utf-8" {
 		t.Fatalf("content type = %q", ct)
 	}
-	want := `<nav><a href="/here" aria-current="page">here</a></nav>`
+	want := `<nav><a href="/here" data-gx-active="page" aria-current="page">here</a></nav>`
 	if got := rec.Body.String(); got != want {
 		t.Fatalf("body = %q, want %q", got, want)
 	}

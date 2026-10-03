@@ -176,3 +176,42 @@ test('REQ-ACT-06 the dev runtime reports a duplicate signal scope', async () => 
   }
   expect(errors.join('\n')).toContain('share the scope')
 })
+
+test('REQ-RTE-12 a partial navigation keeps the layout DOM node', async () => {
+  await page.evaluate(() => {
+    ;(document.querySelector('header') as unknown as { __keep: number }).__keep = 1
+  })
+  await page.click('a:text-is("About")')
+  await page.waitForFunction(() => document.title === 'Gx shop about', undefined, { timeout: 5000 })
+  expect(await page.evaluate(() => new URL(location.href).pathname)).toBe('/about')
+  expect(
+    await page.evaluate(
+      () => (document.querySelector('header') as unknown as { __keep?: number }).__keep === 1,
+    ),
+  ).toBe(true)
+  // Back and forward restore the pages (REQ-RTE-12).
+  await page.goBack()
+  await page.waitForFunction(() => document.title === 'Gx shop home', undefined, { timeout: 5000 })
+  expect(await page.textContent('#lazy-slot')).toBe('waiting')
+  await page.goForward()
+  await page.waitForFunction(() => document.title === 'Gx shop about', undefined, { timeout: 5000 })
+  expect(await page.evaluate(() => new URL(location.href).pathname)).toBe('/about')
+})
+
+test('REQ-RTE-13 the active link moves after a partial navigation', async () => {
+  expect(await page.getAttribute('a:text-is("Home")', 'aria-current')).toBe('page')
+  await page.click('a:text-is("About")')
+  await page.waitForFunction(() => document.title === 'Gx shop about', undefined, { timeout: 5000 })
+  expect(await page.getAttribute('a:text-is("About")', 'aria-current')).toBe('page')
+  expect(await page.getAttribute('a:text-is("Home")', 'aria-current')).toBeNull()
+})
+
+test('REQ-RTE-12 JS off keeps navigation links plain', async () => {
+  const context = await browser.newContext({ javaScriptEnabled: false })
+  const plain = await context.newPage()
+  await plain.goto(shop.url + '/')
+  await plain.click('a:text-is("About")')
+  await plain.waitForURL('**/about')
+  expect(await plain.title()).toBe('Gx shop about')
+  await context.close()
+})
