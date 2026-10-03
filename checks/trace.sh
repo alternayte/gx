@@ -6,6 +6,10 @@
 set -euo pipefail
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
+if [ ! -f docs/SDD.md ] || [ ! -f docs/build/ledger.md ]; then
+  echo "trace: skipped; docs/SDD.md and docs/build/ledger.md are local build state"
+  exit 0
+fi
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 fail=0

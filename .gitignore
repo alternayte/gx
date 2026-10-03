@@ -3,3 +3,6 @@ docs/SDD.md
 docs/build/
 
 .DS_Store
+
+# Build scratch
+.gx-build/
