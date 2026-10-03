@@ -16,6 +16,9 @@ const (
 	CodeStaticStringProp = "GX2004"
 
 	CodeType = "GX2000"
+
+	CodeSignal       = "GX2010"
+	CodeUnrenderable = "GX2013"
 )
 
 // Diagnostic is one compiler message.

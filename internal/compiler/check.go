@@ -12,6 +12,19 @@ import (
 // type-checks every server expression.
 func Check(root string) []Diagnostic {
 	l := newLoader()
+	dirs := collectDirs(root)
+	var out []Diagnostic
+	for _, dir := range dirs {
+		out = append(out, l.checkDir(dir)...)
+	}
+	_, tdiags := l.analyze(root, dirs)
+	out = append(out, tdiags...)
+	sortDiags(out)
+	return out
+}
+
+// collectDirs returns every directory under root that holds a .gx file.
+func collectDirs(root string) []string {
 	dirs := map[string]bool{}
 	_ = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -34,13 +47,7 @@ func Check(root string) []Diagnostic {
 		sorted = append(sorted, dir)
 	}
 	sort.Strings(sorted)
-	var out []Diagnostic
-	for _, dir := range sorted {
-		out = append(out, l.checkDir(dir)...)
-	}
-	out = append(out, l.checkTypes(root, sorted)...)
-	sortDiags(out)
-	return out
+	return sorted
 }
 
 // checkDir checks one package directory.
