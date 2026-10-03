@@ -756,12 +756,12 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 		fragSynth := fmt.Sprintf("%s-f%d", synth, i)
 		pr.frags = append(pr.frags, fragSynth)
 		fmt.Fprintf(&b, "\n//line %s:%d:1\nfunc _gxFrag%s_%d() {\n", fragSynth, el.At.Line, synth, i)
-		fmt.Fprintf(&b, "//line %s:%d:1\nvar p %sProps\n_ = p\n", fragSynth, el.At.Line, name)
+		fmt.Fprintf(&b, "//line %s:%d:1\nvar p %sProps\nvar _ = p\n", fragSynth, el.At.Line, name)
 		writeSignalDecls(&b, fragSynth, f, false)
 		writeRefDecls(&b, f)
 		for _, param := range splitParams(fragmentParams(el)) {
 			if ident := firstIdent(param); ident != "" && ident != "_" {
-				fmt.Fprintf(&b, "//line %s:%d:1\nvar %s\n_ = %s\n", fragSynth, el.At.Line, param, ident)
+				fmt.Fprintf(&b, "//line %s:%d:1\nvar %s\nvar _ = %s\n", fragSynth, el.At.Line, param, ident)
 			}
 		}
 		fw := &probeWriter{l: l, pkg: pkg, file: f, synth: fragSynth, pr: pr, b: &b}

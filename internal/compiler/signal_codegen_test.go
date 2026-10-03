@@ -134,3 +134,23 @@ func TestREQ_ACT_06_SignalPathMatchesSetSignals(t *testing.T) {
 		t.Fatalf("go test: %v\n%s", err, out)
 	}
 }
+
+// TestREQ_ACT_14_KeyedFragment checks that a fragment in a signal-bearing
+// component takes the instance key and keys its id (REQ-ACT-14).
+func TestREQ_ACT_14_KeyedFragment(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod": moduleWithGx(t),
+		"cart/Cart.gx": "package cart\n\nprops {\n  Total int\n}\n\nsignals {\n  Qty int = 1\n}\n\n<div>\n  total := p.Total\n  <span #total(total int)>{total} <span text={$Qty}>1</span></span>\n</div>\n",
+	})
+	files := generateFiles(t, dir)
+	src := string(files[filepath.Join(dir, "cart/Cart_gx.go")])
+	for _, want := range []string{
+		"func CartTotal(key gx.Key, total int) gx.Node {",
+		`gx.Attr{Key: "id", Value: gx.FragmentID("cart", "total", key), Kind: gx.AttrText}`,
+		`gx.SignalPath("cart.Cart", key, "qty")`,
+	} {
+		if !strings.Contains(src, want) {
+			t.Errorf("Cart_gx.go lacks %q:\n%s", want, src)
+		}
+	}
+}
