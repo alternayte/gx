@@ -274,6 +274,111 @@ func TestREQ_FRM_06_ValidateAction(t *testing.T) {
 	}
 }
 
+// TestREQ_FRM_05_SubmitPaths covers the two submit transports: without an
+// adapter the invalid submit answers 422 with the full page and the valid
+// submit answers 303; with an adapter only the form element is patched.
+func TestREQ_FRM_05_SubmitPaths(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	adapter := &captureAdapter{}
+	gx.SetAdapter(adapter)
+	defer gx.SetAdapter(old)
+
+	form := gx.Form(func(c *gx.Ctx, in *signupInStub) error {
+		return c.Redirect(gx.URL("/done"))
+	}, signupViewStub)
+
+	post := func(headers map[string]string, body string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("POST", "/signup", strings.NewReader(body))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		for k, v := range headers {
+			req.Header.Set(k, v)
+		}
+		rec := httptest.NewRecorder()
+		form.ServeHTTP(rec, req)
+		return rec
+	}
+
+	// JS off: an invalid submit answers 422 with the full page, the bound
+	// values and the errors.
+	rec := post(nil, "email=a@b.co&age=3")
+	if rec.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("invalid submit status = %d, want 422", rec.Code)
+	}
+	body := rec.Body.String()
+	if !strings.Contains(body, "<main") || !strings.Contains(body, `value="a@b.co"`) {
+		t.Fatalf("422 body is not the full page with values:\n%s", body)
+	}
+	if !strings.Contains(body, "This value is too small.") {
+		t.Fatalf("422 body lacks the error:\n%s", body)
+	}
+
+	// JS off: a valid submit answers 303.
+	rec = post(nil, "email=a@b.co&age=20")
+	if rec.Code != http.StatusSeeOther || rec.Header().Get("Location") != "/done" {
+		t.Fatalf("valid submit = %d %q, want 303 /done", rec.Code, rec.Header().Get("Location"))
+	}
+
+	// With an adapter and an event-stream request only the form element is
+	// patched.
+	adapter.patches = nil
+	rec = post(map[string]string{"Datastar-Request": "true"}, "email=a@b.co&age=3")
+	if rec.Code != http.StatusOK {
+		t.Fatalf("adapter invalid submit status = %d, want 200", rec.Code)
+	}
+	if len(adapter.patches) != 1 {
+		t.Fatalf("patches = %d, want 1", len(adapter.patches))
+	}
+	patch, ok := adapter.patches[0].(gx.ElementPatch)
+	if !ok {
+		t.Fatalf("patch = %T, want gx.ElementPatch", adapter.patches[0])
+	}
+	if patch.Target != "#signup-form" || patch.Mode != gx.ModeMorph {
+		t.Fatalf("patch target/mode = %q/%v, want #signup-form/morph", patch.Target, patch.Mode)
+	}
+	patched := gx.String(patch.Node)
+	if !strings.Contains(patched, "<form") || strings.Contains(patched, "<main") {
+		t.Fatalf("patch is not the form element alone: %q", patched)
+	}
+}
+
+// TestREQ_FRM_11_FieldAccessibility covers the server-rendered aria state:
+// aria-invalid and aria-describedby for the hint and the error, the extra
+// described-by ids a field component adds, and the error element.
+func TestREQ_FRM_11_FieldAccessibility(t *testing.T) {
+	f := gx.FormField[string]{
+		Name: "email", ID: "signup-email", Value: "a@b.co",
+		Hint: "We never share it.", Error: "This field is required.", ErrorKey: "required",
+	}
+	attrs := f.Attrs()
+	if attrValueOf(attrs, "aria-invalid") != "true" {
+		t.Fatalf("invalid field lacks aria-invalid: %+v", attrs)
+	}
+	if got := attrValueOf(attrs, "aria-describedby"); got != "signup-email-hint signup-email-error" {
+		t.Fatalf("aria-describedby = %q, want the hint then the error", got)
+	}
+
+	ctrl := gx.FieldControlAttrs(f)
+	if got := attrValueOf(ctrl, "aria-describedby"); got != "signup-email-hint signup-email-error" {
+		t.Fatalf("control aria-describedby = %q", got)
+	}
+	ctrl = gx.FieldControlAttrs(f, "email-note")
+	if got := attrValueOf(ctrl, "aria-describedby"); got != "signup-email-hint signup-email-error email-note" {
+		t.Fatalf("merged aria-describedby = %q", got)
+	}
+	ctrl = gx.FieldControlAttrs(f, "signup-email-hint")
+	if got := attrValueOf(ctrl, "aria-describedby"); got != "signup-email-hint signup-email-error" {
+		t.Fatalf("duplicate described-by = %q", got)
+	}
+
+	node := gx.FieldErrorNode("signup-email", "This field is required.")
+	body := gx.String(node)
+	for _, want := range []string{`id="signup-email-error"`, `role="alert"`, "This field is required."} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("error node %q lacks %q", body, want)
+		}
+	}
+}
+
 // TestREQ_FRM_10_Translator covers the message keys, the English defaults
 // and a custom translator (REQ-FRM-10).
 func TestREQ_FRM_10_Translator(t *testing.T) {
