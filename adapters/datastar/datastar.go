@@ -41,6 +41,7 @@ func (adapter) Runtime() gx.Node {
 	return gx.El("script", gx.Attrs{
 		{Key: "type", Value: "module"},
 		{Key: "src", Value: base + "/_gx/datastar.js", Kind: gx.AttrURL},
+		{Key: "data-gx-adapter", Value: "datastar"},
 	})
 }
 

@@ -131,20 +131,9 @@ const applyFrame = (frame: Frame): void => {
 const layoutChain = (): string[] =>
   [...document.querySelectorAll('[data-gx-slot]')].map((el) => el.getAttribute('data-gx-slot') ?? '')
 
-const navigate = async (url: string, push: boolean): Promise<void> => {
-  const res = await fetch(url, {
-    headers: {
-      'Gx-Nav': '1',
-      'Gx-Layouts': layoutChain().join(','),
-      'Datastar-Request': 'true',
-      Accept: 'text/event-stream',
-    },
-    credentials: 'same-origin',
-  })
-  if (!res.ok || !res.body || res.headers.get('Gx-Nav') === 'full') {
-    location.href = url
-    return
-  }
+// readFrames applies every SSE frame of a Gx response.
+const readFrames = async (res: Response): Promise<void> => {
+  if (!res.body) return
   const reader = res.body.getReader()
   const decoder = new TextDecoder()
   let buffer = ''
@@ -160,6 +149,61 @@ const navigate = async (url: string, push: boolean): Promise<void> => {
       at = buffer.indexOf('\n\n')
     }
   }
+}
+
+// cookie reads one cookie value.
+const cookie = (name: string): string => {
+  const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
+  return m ? decodeURIComponent(m[1]) : ''
+}
+
+// adapterPresent reports whether the page loaded a hypermedia adapter.
+const adapterPresent = (): boolean => document.querySelector('script[data-gx-adapter]') !== null
+
+// submitForm posts a Gx form through the adapter and applies the patches
+// (REQ-FRM-05). Native validation has already run; this path skips only the
+// browser's own form post.
+const submitForm = async (form: HTMLFormElement): Promise<void> => {
+  const body = new URLSearchParams()
+  new FormData(form).forEach((value, key) => {
+    if (typeof value === 'string') body.append(key, value)
+  })
+  const token = cookie('gx_csrf')
+  if (token !== '' && !body.has('gx_csrf')) body.set('gx_csrf', token)
+  const res = await fetch(form.action, {
+    method: (form.getAttribute('method') ?? 'post').toUpperCase(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Datastar-Request': 'true',
+      Accept: 'text/event-stream',
+      'Gx-CSRF': token,
+    },
+    credentials: 'same-origin',
+    body,
+  })
+  if (!res.ok || !res.body) {
+    form.submit()
+    return
+  }
+  await readFrames(res)
+  updateActive()
+}
+
+const navigate = async (url: string, push: boolean): Promise<void> => {
+  const res = await fetch(url, {
+    headers: {
+      'Gx-Nav': '1',
+      'Gx-Layouts': layoutChain().join(','),
+      'Datastar-Request': 'true',
+      Accept: 'text/event-stream',
+    },
+    credentials: 'same-origin',
+  })
+  if (!res.ok || !res.body || res.headers.get('Gx-Nav') === 'full') {
+    location.href = url
+    return
+  }
+  await readFrames(res)
   if (push) history.pushState({ gx: true }, '', url)
   window.scrollTo(0, 0)
   updateActive()
@@ -184,6 +228,13 @@ if (typeof document !== 'undefined') {
   window.addEventListener('popstate', () => {
     void navigate(location.pathname + location.search, false)
   })
+  document.addEventListener('submit', (e) => {
+    if (!adapterPresent()) return
+    const form = (e.target as Element | null)?.closest?.('form[data-gx-form]') as HTMLFormElement | null
+    if (!form) return
+    e.preventDefault()
+    void submitForm(form)
+  }, true)
   document.addEventListener('DOMContentLoaded', updateActive)
   updateActive()
   document.addEventListener('DOMContentLoaded', checkInstances)
