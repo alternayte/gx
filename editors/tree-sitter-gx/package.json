@@ -1,0 +1,17 @@
+{
+  "name": "tree-sitter-gx",
+  "version": "0.1.0",
+  "description": "Gx grammar for tree-sitter",
+  "license": "MIT",
+  "main": "bindings/node",
+  "keywords": ["parser", "tree-sitter", "gx"],
+  "tree-sitter": [
+    {
+      "scope": "source.gx",
+      "file-types": ["gx"],
+      "injection-regex": "^gx$",
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm"
+    }
+  ]
+}

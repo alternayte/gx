@@ -51,6 +51,10 @@ bench-lsp:
 vscode-smoke:
     "scripts/vscode-smoke.sh"
 
+# The headless Neovim smoke test (REQ-TLS-06). Needs nvim 0.11+.
+nvim-smoke:
+    "scripts/nvim-smoke.sh"
+
 evidence:
     go run ./internal/build/evidence --write
 
