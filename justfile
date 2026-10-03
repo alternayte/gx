@@ -25,6 +25,9 @@ trace:
 forbid:
     "checks/forbid.sh"
 
+bench-render:
+    go test -run '^$' -bench BenchmarkRender -benchmem .
+
 evidence:
     go run ./internal/build/evidence --write
 
