@@ -7,11 +7,16 @@ The spec is `docs/SDD.md`; it and the build state in `docs/build/` stay local an
 
 ## Run
 
-No code yet. The first build session starts at M0 and writes the module and the justfile (SDD §15.1).
+- `go run ./cmd/gx help` runs the CLI; `gx fmt` formats `.gx` files in place.
+- `go build ./...` compiles every package.
 
 ## Test
 
-No tests yet. The SDD names `just verify` as the gate; M0 writes the justfile.
+- `just verify` is the gate: build, vet, every test, then the `checks/` scripts.
+- `just check` is the same gate under the global name.
+- A test name carries the SDD ID it covers, for example `TestREQ_AUT_17_FmtCommand`.
+- `just trace` requires a covering test for every PASS ID; `just forbid` fails on stub markers and skipped tests.
+- `just evidence` writes `docs/build/evidence.json`; `just evidence-check` fails when it is not for HEAD.
 
 ## Stack rules
 
