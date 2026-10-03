@@ -158,6 +158,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		}
 		queryName := tag.Get("query")
 		signalName := tag.Get("signal")
+		formName := tag.Get("form")
 		isPath := pathName != "" && vars[strings.ToLower(pathName)] != ""
 		if tag.Get("path") != "" && !isPath {
 			diags = append(diags, Diagnostic{
@@ -195,6 +196,8 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		if isPath {
 			field.path = pathName
 			bound[strings.ToLower(pathName)] = true
+		} else if formName != "" {
+			field.form = formName
 		} else if queryName == "" && signalName == "" && def.action {
 			// An untagged action field binds from a form field
 			// (REQ-ACT-03).

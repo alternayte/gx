@@ -112,6 +112,7 @@ func TextValue(v any) string {
 // expression (SI-05). It panics when the value has no JSON form: the
 // compiler must not inline it.
 func JSON(v any) string {
+	checkSecret(v)
 	data, err := json.Marshal(v)
 	if err != nil {
 		panic("gx: cannot inline a value into a client expression: " + err.Error())

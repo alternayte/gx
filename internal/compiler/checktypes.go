@@ -14,26 +14,27 @@ import (
 
 // typesResult holds the Go types of .gx expressions from one analysis pass.
 type typesResult struct {
-	types      map[any]types.Type
-	quals      map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
-	nodeIface  *types.Interface
-	errIface   *types.Interface
-	stringer   *types.Interface
-	routeFiles map[string][]byte       // generated route code, keyed by output path
-	urlRoutes  map[string]bool         // package.Type of GET route structs
-	routes     []*routeDef             // every route struct
-	pkgs       []*packages.Package     // loaded packages
-	routePages map[string]string       // package.Type of a route -> its page value
-	pageRoutes map[types.Object]string // page var -> package.Type of its route
-	routeKeys  map[string]bool         // package.Type of every route struct
-	routeMeth  map[string]string       // package.Type of a route -> its method
-	actions    map[string][]token.Position
-	routeDefs  map[string]*routeDef // package.Type of a route -> its definition
-	sigTypes   map[*File]map[string]types.Type
-	sigActions map[string]bool // actions with signal-bound fields
-	exprTypes  map[ast.Expr]types.Type
-	clientBy   map[*Attr]*clientSite
-	scopedMap  map[*Component]bool
+	types       map[any]types.Type
+	quals       map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
+	nodeIface   *types.Interface
+	errIface    *types.Interface
+	stringer    *types.Interface
+	routeFiles  map[string][]byte       // generated route code, keyed by output path
+	urlRoutes   map[string]bool         // package.Type of GET route structs
+	routes      []*routeDef             // every route struct
+	pkgs        []*packages.Package     // loaded packages
+	routePages  map[string]string       // package.Type of a route -> its page value
+	pageRoutes  map[types.Object]string // page var -> package.Type of its route
+	routeKeys   map[string]bool         // package.Type of every route struct
+	routeMeth   map[string]string       // package.Type of a route -> its method
+	actions     map[string][]token.Position
+	routeDefs   map[string]*routeDef // package.Type of a route -> its definition
+	sigTypes    map[*File]map[string]types.Type
+	sigActions  map[string]bool // actions with signal-bound fields
+	exprTypes   map[ast.Expr]types.Type
+	clientBy    map[*Attr]*clientSite
+	clientSites []*clientSite
+	scopedMap   map[*Component]bool
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -159,6 +160,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	for _, pr := range parseProbe {
 		diags = append(diags, pr.clientDiags...)
 		for _, site := range pr.clients {
+			res.clientSites = append(res.clientSites, site)
 			diags = append(diags, res.checkClientSite(site)...)
 		}
 	}
@@ -184,7 +186,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkActionInvocations(res, dirs)...)
+	diags = append(diags, checkSignalRules(routes)...)
 	diags = append(diags, l.checkSignals(dirs)...)
+	diags = append(diags, l.checkSecrets(res, dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
 	diags = append(diags, checkSafeHTML(pkgs)...)
 	diags = append(diags, checkRoutePackages(pkgs)...)

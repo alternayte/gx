@@ -230,3 +230,120 @@ func clientActionFunc(method string) string {
 	}
 	return ""
 }
+
+// checkSecrets reports gx.Secret values that would cross to the client
+// (SI-04).
+func (l *loader) checkSecrets(res *typesResult, dirs []string) []Diagnostic {
+	var out []Diagnostic
+	for _, dir := range dirs {
+		p := l.load(dir)
+		for _, f := range p.Files {
+			for _, s := range f.Signals {
+				if isSecretType(res.sigTypes[f][lowerFirst(s.Name)]) {
+					out = append(out, Diagnostic{
+						Code: CodeSecret,
+						File: f.File,
+						Line: s.At.Line,
+						Col:  s.At.Col,
+						Msg:  "signal " + Quoted(s.Name) + " has type gx.Secret; a secret cannot cross to the client",
+					})
+				}
+			}
+		}
+	}
+	for _, site := range res.clientSites {
+		reported := false
+		ast.Inspect(site.node, func(n ast.Node) bool {
+			if reported {
+				return false
+			}
+			expr, ok := n.(ast.Expr)
+			if !ok {
+				return true
+			}
+			if isSecretType(res.exprTypes[expr]) {
+				reported = true
+				out = append(out, Diagnostic{
+					Code: CodeSecret,
+					File: site.file.File,
+					Line: site.attr.ValueAt.Line,
+					Col:  site.attr.ValueAt.Col,
+					Msg:  "a gx.Secret value cannot enter a client expression",
+				})
+			}
+			return true
+		})
+	}
+	return out
+}
+
+// isSecretType reports whether a type is gx.Secret or a pointer to it.
+func isSecretType(t types.Type) bool {
+	if t == nil {
+		return false
+	}
+	if ptr, ok := t.(*types.Pointer); ok {
+		t = ptr.Elem()
+	}
+	return t.String() == "github.com/alternayte/gx.Secret"
+}
+
+// checkSignalRules reports an action with signal-bound fields and no
+// Rules() method or gx.Unchecked marker (SI-13).
+func checkSignalRules(routes []*routeDef) []Diagnostic {
+	var out []Diagnostic
+	for _, d := range routes {
+		if !d.action || !d.hasSignals {
+			continue
+		}
+		obj, _ := d.pkg.Types.Scope().Lookup(d.name).(*types.TypeName)
+		if obj == nil {
+			continue
+		}
+		if hasRulesMethod(obj.Type()) || embedsUnchecked(obj.Type()) {
+			continue
+		}
+		out = append(out, Diagnostic{
+			Code: CodeSignalRules,
+			File: d.file,
+			Line: d.pos.Line,
+			Col:  d.pos.Column,
+			Msg:  "action " + Quoted(d.name) + " has signal-bound fields; add Rules() or embed gx.Unchecked",
+			Fix:  "add func (in *" + d.name + ") Rules() gx.Rules { ... }",
+		})
+	}
+	return out
+}
+
+// hasRulesMethod reports whether the type has a Rules method.
+func hasRulesMethod(t types.Type) bool {
+	for _, typ := range []types.Type{t, types.NewPointer(t)} {
+		sel := types.NewMethodSet(typ).Lookup(nil, "Rules")
+		if sel == nil {
+			continue
+		}
+		sig, ok := sel.Obj().Type().(*types.Signature)
+		if ok && sig.Params().Len() == 0 && sig.Results().Len() == 1 {
+			return true
+		}
+	}
+	return false
+}
+
+// embedsUnchecked reports whether the struct embeds gx.Unchecked.
+func embedsUnchecked(t types.Type) bool {
+	st, ok := t.Underlying().(*types.Struct)
+	if !ok {
+		return false
+	}
+	for i := 0; i < st.NumFields(); i++ {
+		f := st.Field(i)
+		if !f.Embedded() {
+			continue
+		}
+		if f.Type().String() == "github.com/alternayte/gx.Unchecked" {
+			return true
+		}
+	}
+	return false
+}

@@ -35,6 +35,7 @@ const (
 	CodeUnrenderable  = "GX2013"
 
 	CodeTrustedHTML = "GX7001"
+	CodeSecret      = "GX7002"
 
 	CodeActionMissing       = "GX4001"
 	CodeActionTwice         = "GX4002"
@@ -46,6 +47,7 @@ const (
 	CodeSignalDefault       = "GX2014"
 	CodeEventMod            = "GX4010"
 	CodeActionMethod        = "GX4009"
+	CodeSignalRules         = "GX4008"
 )
 
 // Diagnostic is one compiler message.
@@ -97,9 +99,11 @@ var Catalog = []Info{
 	{CodeSignalTypeMismatch, "signal type does not match the action field"},
 	{CodeClientCall, "call is not allowed in a client expression"},
 	{CodeClientType, "value or operator is not allowed in a client expression"},
+	{CodeSignalRules, "signal-bound fields need rules or gx.Unchecked"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeEventMod, "unknown event modifier or special event"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
+	{CodeSecret, "gx.Secret cannot cross to the client"},
 }
 
 // Doc returns the documentation path of the diagnostic (REQ-AUT-19).

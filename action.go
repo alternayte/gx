@@ -39,6 +39,12 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, &BindError{Err: err})
 		return
 	}
+	if violation := RunRules(&in); violation != nil {
+		// A tampered signal value is a field error, not a handler
+		// error (SI-13). M5 turns this into a form re-render.
+		http.Error(w, violation.Error(), http.StatusUnprocessableEntity)
+		return
+	}
 	ctx := &Ctx{W: w, R: r, res: &Response{}}
 	handlerErr := a.fn(ctx, in)
 	if handlerErr != nil {

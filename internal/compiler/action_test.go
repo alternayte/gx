@@ -115,6 +115,7 @@ const signalRoute = `package cart
 import "github.com/alternayte/gx"
 
 type Add struct {
+	gx.Unchecked
 	gx.Route ` + "`" + `POST /cart/add` + "`" + `
 	Qty int ` + "`" + `signal:"qty"` + "`" + `
 }
@@ -178,6 +179,7 @@ func TestREQ_ACT_03_BindGenerated(t *testing.T) {
 		"go.mod": moduleWithGx(t),
 		"cart/routes.go": "package cart\n\nimport \"github.com/alternayte/gx\"\n\n" +
 			"type Add struct {\n" +
+			"\tgx.Unchecked\n" +
 			"\tgx.Route `POST /cart/{id}`\n" +
 			"\tID   int64\n" +
 			"\tNote string\n" +

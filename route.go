@@ -316,10 +316,14 @@ func renderError(w http.ResponseWriter, r *http.Request, err error) {
 	http.Error(w, http.StatusText(status), status)
 }
 
-// ServeHTTP serves the app. A page response is buffered so the adapter
-// runtime can join it; action responses stream through (request lifecycle
-// step 6 and 7).
+// ServeHTTP serves the app with cross-origin protection (SI-03). A page
+// response is buffered so the adapter runtime can join it; action responses
+// stream through (request lifecycle step 6 and 7).
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	CSRF(http.HandlerFunc(a.serve)).ServeHTTP(w, r)
+}
+
+func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 	if a.adapter == nil || wantsEventStream(r) {
 		a.mux.ServeHTTP(w, r)
 		return
