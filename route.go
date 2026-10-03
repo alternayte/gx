@@ -1,6 +1,7 @@
 package gx
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -16,6 +17,9 @@ type Route struct{}
 
 // URL is a prebuilt URL for an href or src (REQ-RTE-05).
 type URL string
+
+// URL implements the redirect target interface.
+func (u URL) URL() string { return string(u) }
 
 // Binder is the generated route interface: a pattern and request binding.
 // The gx generator writes Pattern and Bind.
@@ -70,11 +74,42 @@ type BindError struct {
 func (e *BindError) Error() string { return e.Err.Error() }
 func (e *BindError) Unwrap() error { return e.Err }
 
+// statusError carries an HTTP status (REQ-RTE-10).
+type statusError struct {
+	status int
+	msg    string
+}
+
+func (e *statusError) Error() string { return e.msg }
+
+// NotFound tells the page to answer 404.
+func NotFound() error { return &statusError{status: http.StatusNotFound, msg: "gx: not found"} }
+
+// Forbidden tells the page to answer 403.
+func Forbidden() error { return &statusError{status: http.StatusForbidden, msg: "gx: forbidden"} }
+
+type redirectError struct{ url string }
+
+func (e *redirectError) Error() string { return "gx: redirect to " + e.url }
+
+// Redirect tells the page to answer 303 with a Location (REQ-RTE-10).
+func Redirect[In interface{ URL() string }](to In) error {
+	return &redirectError{url: to.URL()}
+}
+
 // statusFor maps an error to an HTTP status.
 func statusFor(err error) int {
 	var be *BindError
 	if errors.As(err, &be) {
 		return http.StatusBadRequest
+	}
+	var se *statusError
+	if errors.As(err, &se) {
+		return se.status
+	}
+	var re *redirectError
+	if errors.As(err, &re) {
+		return http.StatusSeeOther
 	}
 	return http.StatusInternalServerError
 }
@@ -135,13 +170,52 @@ type Config struct {
 
 // App is an http.Handler that owns a ServeMux (REQ-RTE-18).
 type App struct {
-	mux      *http.ServeMux
-	patterns map[string]bool
+	mux        *http.ServeMux
+	patterns   map[string]bool
+	errorViews map[int]func(*Ctx) Node
 }
 
 // New returns an empty app.
 func New(cfg Config) *App {
-	return &App{mux: http.NewServeMux(), patterns: map[string]bool{}}
+	return &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}}
+}
+
+// Errors sets the error components per status (REQ-RTE-10).
+func (a *App) Errors(notFound, forbidden, serverError func(*Ctx) Node) *App {
+	a.errorViews[http.StatusNotFound] = notFound
+	a.errorViews[http.StatusForbidden] = forbidden
+	a.errorViews[http.StatusInternalServerError] = serverError
+	return a
+}
+
+type errorViewsKey struct{}
+
+// withErrorViews passes the error components to the request.
+func (a *App) withErrorViews(h http.Handler) http.Handler {
+	if len(a.errorViews) == 0 {
+		return h
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), errorViewsKey{}, a.errorViews)))
+	})
+}
+
+// renderError answers with a redirect, an error component or a plain status.
+func renderError(w http.ResponseWriter, r *http.Request, err error) {
+	var re *redirectError
+	if errors.As(err, &re) {
+		http.Redirect(w, r, re.url, http.StatusSeeOther)
+		return
+	}
+	status := statusFor(err)
+	views, _ := r.Context().Value(errorViewsKey{}).(map[int]func(*Ctx) Node)
+	if view := views[status]; view != nil {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.WriteHeader(status)
+		_ = Render(w, view(&Ctx{W: w, R: r}))
+		return
+	}
+	http.Error(w, http.StatusText(status), status)
 }
 
 // ServeHTTP serves the app.
@@ -162,6 +236,7 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		if len(layouts) > 0 {
 			handler = &layoutHandler{inner: h, layouts: layouts}
 		}
+		handler = a.withErrorViews(handler)
 		pattern := joinPattern(prefix, h.Pattern())
 		if a.patterns[pattern] {
 			panic("gx: duplicate route " + pattern)
@@ -246,7 +321,7 @@ func (p *page[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := &Ctx{W: w, R: r}
 	n, err := p.LoadNode(ctx)
 	if err != nil {
-		http.Error(w, err.Error(), statusFor(err))
+		renderError(w, r, err)
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -290,12 +365,12 @@ func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	wg.Wait()
 	if pageErr != nil {
-		http.Error(w, pageErr.Error(), statusFor(pageErr))
+		renderError(w, r, pageErr)
 		return
 	}
 	for _, err := range errs {
 		if err != nil {
-			http.Error(w, err.Error(), statusFor(err))
+			renderError(w, r, err)
 			return
 		}
 	}
