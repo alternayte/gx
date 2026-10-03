@@ -18,3 +18,9 @@ if ! cmp -s "$tmp/gx.js" runtime/js/gx.js; then
   diff -u runtime/js/gx.js "$tmp/gx.js" >&2 || true
   exit 1
 fi
+bun build runtime/js/dev.ts --outfile "$tmp/devclient.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/devclient.js" internal/devserver/devclient.js; then
+  echo "rule: internal/devserver/devclient.js is stale; run just runtime" >&2
+  diff -u internal/devserver/devclient.js "$tmp/devclient.js" >&2 || true
+  exit 1
+fi

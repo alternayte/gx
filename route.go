@@ -238,6 +238,7 @@ type App struct {
 func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
 	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter}
+	a.devRoutes()
 	if cfg.Adapter != nil {
 		SetAdapter(cfg.Adapter)
 		a.registerAssets(cfg.Adapter)

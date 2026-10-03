@@ -3,15 +3,21 @@ package gxcli
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
+	"os/signal"
+	"path/filepath"
 	"sort"
 	"strings"
+	"syscall"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/devserver"
 )
 
 // Main runs the gx command with the given arguments and returns an exit code.
@@ -27,6 +33,10 @@ func Main(args []string) int {
 		return runCheck(args[1:])
 	case "generate":
 		return runGenerate(args[1:])
+	case "build":
+		return runBuild(args[1:])
+	case "dev":
+		return runDev(args[1:])
 	case "routes":
 		return runRoutes(args[1:])
 	case "help", "-h", "--help":
@@ -46,6 +56,8 @@ Commands:
   fmt       format .gx files in place, or stdin when no path is given
   check     check a module and fail on stale generated code
   generate  write the generated Go files of a module
+  build     generate the module and build its app binary
+  dev       run the app with rebuild, restart, morph and the error overlay
   routes    print the routes of a module, with --json for machine output
 `)
 }
@@ -225,6 +237,72 @@ func runRoutes(args []string) int {
 			line += "  middleware=" + strings.Join(r.Middleware, ",")
 		}
 		fmt.Println(line)
+	}
+	return 0
+}
+
+func runBuild(args []string) int {
+	fs := flag.NewFlagSet("gx build", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	out := fs.String("o", "", "output binary")
+	main := fs.String("main", "", "app main package")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	if *main == "" {
+		var err error
+		*main, err = devserver.DetectMain(dir)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+			return 1
+		}
+	}
+	if files, diags := compiler.Generate(dir); len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	} else {
+		for path, src := range files {
+			if err := os.WriteFile(path, src, 0o644); err != nil {
+				fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+				return 1
+			}
+		}
+	}
+	bin := *out
+	if bin == "" {
+		bin = filepath.Join(dir, "app")
+	}
+	cmd := exec.Command("go", "build", "-o", bin, *main)
+	cmd.Dir = dir
+	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+func runDev(args []string) int {
+	fs := flag.NewFlagSet("gx dev", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	addr := fs.String("addr", "127.0.0.1:3333", "dev proxy address")
+	main := fs.String("main", "", "app main package")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	if err := devserver.Run(ctx, devserver.Options{Dir: dir, Main: *main, Addr: *addr, Log: os.Stdout}); err != nil {
+		fmt.Fprintf(os.Stderr, "gx dev: %v\n", err)
+		return 1
 	}
 	return 0
 }

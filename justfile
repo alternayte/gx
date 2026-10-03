@@ -10,6 +10,7 @@ check: verify
 # Build the browser runtime from its TypeScript source.
 runtime:
     bun build runtime/js/gx.ts --outfile runtime/js/gx.js --target browser --minify
+    bun build runtime/js/dev.ts --outfile internal/devserver/devclient.js --target browser --minify
 
 # Drive the real app in a real browser. The repo's own gate only (G3).
 e2e:
@@ -35,6 +36,12 @@ forbid:
 
 bench-render:
     "scripts/bench-render.sh"
+
+bench-build:
+    "scripts/bench-build.sh"
+
+bench-dev:
+    go test ./internal/devserver -run TestNFR_02 -v
 
 evidence:
     go run ./internal/build/evidence --write
