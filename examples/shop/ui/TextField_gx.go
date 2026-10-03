@@ -11,13 +11,40 @@ type TextFieldProps struct {
 	Label    string
 	Type     string
 	Validate string
+	Hint     string
 }
 
 func TextField(p TextFieldProps) gx.Node {
 	var _b gx.Builder
-//line TextField.gx:10:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}, gx.Text(p.Label)), gx.Text("\n  "), gx.El("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: p.Field.FieldInputType(p.Type), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-validate", Value: p.Validate, Kind: gx.AttrText}})), gx.Text("\n  "), gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())), gx.Text("\n"))))
-//line TextField.gx:14:7
+//line TextField.gx:11:1
+	var _b1 gx.Builder
+//line TextField.gx:11:20
+	_b1.Add(gx.Text("\n  "))
+//line TextField.gx:12:3
+	_b1.Add(gx.El("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}, gx.Text(p.Label)))
+//line TextField.gx:12:51
+	_b1.Add(gx.Text("\n  "))
+//line TextField.gx:13:3
+	_b1.Add(gx.El("input", gx.JoinAttrs(gx.FieldControlAttrs(p.Field, gx.When(p.Field.FieldID()+"-hint", p.Hint != "")), gx.Attrs{gx.Attr{Key: "type", Value: p.Field.FieldInputType(p.Type), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-validate", Value: p.Validate, Kind: gx.AttrText}})))
+//line TextField.gx:13:167
+	_b1.Add(gx.Text("\n  "))
+//line TextField.gx:14:3
+	if p.Hint != "" {
+//line TextField.gx:14:20
+		_b1.Add(gx.Text("\n    "))
+//line TextField.gx:15:5
+		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "hint", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.Field.FieldID() + "-hint", Kind: gx.AttrText}}, gx.Text(p.Hint)))
+//line TextField.gx:15:66
+		_b1.Add(gx.Text("\n  "))
+	}
+//line TextField.gx:16:4
+	_b1.Add(gx.Text("\n  "))
+//line TextField.gx:17:3
+	_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())))
+//line TextField.gx:17:79
+	_b1.Add(gx.Text("\n"))
+	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, _b1.Node()))
+//line TextField.gx:18:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

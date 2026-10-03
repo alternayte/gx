@@ -273,3 +273,34 @@ func TestREQ_FRM_06_ValidateAction(t *testing.T) {
 		t.Fatalf("fix patch still holds an error: %q", body)
 	}
 }
+
+// TestREQ_FRM_10_Translator covers the message keys, the English defaults
+// and a custom translator (REQ-FRM-10).
+func TestREQ_FRM_10_Translator(t *testing.T) {
+	if got := gx.Translate("required", gx.DefaultMessage("required")); got != "This field is required." {
+		t.Fatalf("default message = %q", got)
+	}
+	if got := gx.DefaultMessage("email.taken"); got != "email.taken" {
+		t.Fatalf("a key without a default = %q, want the key", got)
+	}
+	gx.SetTranslator(func(key, fallback string) string {
+		if key == "email.taken" {
+			return "That address is not free."
+		}
+		return fallback
+	})
+	defer gx.SetTranslator(nil)
+	if got := gx.Translate("email.taken", gx.DefaultMessage("email.taken")); got != "That address is not free." {
+		t.Fatalf("translated message = %q", got)
+	}
+	if got := gx.Translate("required", gx.DefaultMessage("required")); got != "This field is required." {
+		t.Fatalf("fallback message = %q", got)
+	}
+
+	// The form value uses the translator for a rule key (REQ-FRM-10).
+	in := &signupInStub{Email: "taken@example.com"}
+	f := in.GxFormValue(map[string]string{"email": "email.taken"}).(signupFormStub)
+	if f.Email.Error != "That address is not free." || f.Email.ErrorKey != "email.taken" {
+		t.Fatalf("field error = %q key %q", f.Email.Error, f.Email.ErrorKey)
+	}
+}

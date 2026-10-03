@@ -235,6 +235,8 @@ type FieldView interface {
 	// FieldInputType returns the rule-derived input type ("email", "url"),
 	// or fallback (REQ-FRM-04).
 	FieldInputType(fallback string) string
+	// FieldHint returns the helper text, or "".
+	FieldHint() string
 }
 
 // FieldName implements FieldView.
@@ -255,6 +257,9 @@ func (f FormField[T]) FieldErrorKey() string { return f.ErrorKey }
 // FieldValidateURL implements FieldView.
 func (f FormField[T]) FieldValidateURL() string { return f.ValidateURL }
 
+// FieldHint implements FieldView.
+func (f FormField[T]) FieldHint() string { return f.Hint }
+
 // FieldInputType implements FieldView.
 func (f FormField[T]) FieldInputType(fallback string) string {
 	for _, c := range f.Constraints {
@@ -263,6 +268,49 @@ func (f FormField[T]) FieldInputType(fallback string) string {
 		}
 	}
 	return fallback
+}
+
+// FieldControlAttrs returns the control attributes of one field with extra
+// aria-describedby ids, for example a hint element (REQ-FRM-11).
+func FieldControlAttrs(f FieldView, describedBy ...string) Attrs {
+	attrs := f.Attrs()
+	ids := make([]string, 0, len(describedBy)+2)
+	existing := ""
+	for _, a := range attrs {
+		if a.Key == "aria-describedby" {
+			existing = a.Value
+			break
+		}
+	}
+	if existing != "" {
+		ids = append(ids, strings.Fields(existing)...)
+	}
+	for _, id := range describedBy {
+		if id == "" {
+			continue
+		}
+		found := false
+		for _, have := range ids {
+			if have == id {
+				found = true
+				break
+			}
+		}
+		if !found {
+			ids = append(ids, id)
+		}
+	}
+	out := make(Attrs, 0, len(attrs)+1)
+	for _, a := range attrs {
+		if a.Key == "aria-describedby" {
+			continue
+		}
+		out = append(out, a)
+	}
+	if len(ids) > 0 {
+		out = append(out, Attr{Key: "aria-describedby", Value: strings.Join(ids, " "), Kind: AttrText})
+	}
+	return out
 }
 
 // fieldError is the error FieldError returns (REQ-FRM-02).

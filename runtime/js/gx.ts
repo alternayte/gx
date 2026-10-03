@@ -242,6 +242,16 @@ const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null):
     return
   }
   await readFrames(res)
+  // Datastar morphs the patched form a moment later. Focus the error
+  // summary once it lands (REQ-FRM-11).
+  for (let i = 0; i < 20; i++) {
+    const summary = document.querySelector<HTMLElement>('[data-gx-error-summary]')
+    if (summary) {
+      summary.focus()
+      break
+    }
+    await new Promise((resolve) => setTimeout(resolve, 16))
+  }
   updateActive()
 }
 

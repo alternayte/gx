@@ -28,18 +28,49 @@ func SignupView(p SignupViewProps) gx.Node {
 //line SignupView.gx:13:17
 	_b.Add(gx.Text("\n"))
 //line SignupView.gx:14:1
-	if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.Avatar.Error != "" || p.F.Address.Street.Error != "" {
-//line SignupView.gx:14:135
-		_b.Add(gx.Text("\n  "))
+	var _b1 gx.Builder
+//line SignupView.gx:14:24
+	_b1.Add(gx.Text("\n  "))
 //line SignupView.gx:15:3
-		_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("p", nil, gx.Text("Fix the errors below.")), gx.Text("\n  "))))
-//line SignupView.gx:17:9
-		_b.Add(gx.Text("\n"))
+	if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.Avatar.Error != "" || p.F.Address.Street.Error != "" {
+//line SignupView.gx:15:137
+		_b1.Add(gx.Text("\n    "))
+//line SignupView.gx:16:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("p", nil, gx.Text("Fix the errors below.")), gx.Text("\n    "))))
+//line SignupView.gx:18:11
+		_b1.Add(gx.Text("\n  "))
 	}
-//line SignupView.gx:18:2
-	_b.Add(gx.Text("\n"))
-//line SignupView.gx:19:1
-	_b.Add(gx.El("form", p.F.Attrs(), gx.Frag(gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Email, Label: "Email", Type: "email", Validate: "blur"}), gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Age, Label: "Age", Type: "number", Validate: "input"}), gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Address.Street, Label: "Street", Type: "text", Validate: ""}), gx.Text("\n  "), ui.Checkbox(ui.CheckboxProps{Field: p.F.Terms, Children: gx.Text("I accept the terms")}), gx.Text("\n  "), ui.FileField(ui.FileFieldProps{Field: p.F.Avatar, Label: "Avatar"}), gx.Text("\n  "), gx.El("fieldset", nil, gx.Frag(gx.Text("\n    "), gx.El("legend", nil, gx.Text("Shipping addresses")), gx.Text("\n    "), addressList(p.F.Addresses), gx.Text("\n    "), addButton(), gx.Text("\n  "))), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "type", Value: "submit", Kind: gx.AttrText}}, gx.Text("Create account")), gx.Text("\n"))))
+//line SignupView.gx:19:4
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:20:3
+	_b1.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Email, Label: "Email", Type: "email", Validate: "blur", Hint: "We never share it."}))
+//line SignupView.gx:20:106
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:21:3
+	_b1.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Age, Label: "Age", Type: "number", Validate: "input", Hint: ""}))
+//line SignupView.gx:21:78
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:22:3
+	_b1.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Address.Street, Label: "Street", Type: "text", Validate: "", Hint: ""}))
+//line SignupView.gx:22:73
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:23:3
+	_b1.Add(ui.Checkbox(ui.CheckboxProps{Field: p.F.Terms, Children: gx.Text("I accept the terms")}))
+//line SignupView.gx:23:66
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:24:3
+	_b1.Add(ui.FileField(ui.FileFieldProps{Field: p.F.Avatar, Label: "Avatar"}))
+//line SignupView.gx:24:53
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:25:3
+	_b1.Add(gx.El("fieldset", nil, gx.Frag(gx.Text("\n    "), gx.El("legend", nil, gx.Text("Shipping addresses")), gx.Text("\n    "), addressList(p.F.Addresses), gx.Text("\n    "), addButton(), gx.Text("\n  "))))
+//line SignupView.gx:29:14
+	_b1.Add(gx.Text("\n  "))
+//line SignupView.gx:30:3
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "type", Value: "submit", Kind: gx.AttrText}}, gx.Text("Create account")))
+//line SignupView.gx:30:48
+	_b1.Add(gx.Text("\n"))
+	_b.Add(gx.El("form", p.F.Attrs(), _b1.Node()))
 //line SignupView.gx:31:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

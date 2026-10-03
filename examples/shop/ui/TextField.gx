@@ -5,10 +5,14 @@ props {
   Label    string
   Type     string = "text"
   Validate string = ""
+  Hint     string = ""
 }
 
 <div class="field">
   <label for={p.Field.FieldID()}>{p.Label}</label>
-  <input {...p.Field.Attrs()} type={p.Field.FieldInputType(p.Type)} data-gx-validate={p.Validate} />
+  <input {...gx.FieldControlAttrs(p.Field, gx.When(p.Field.FieldID() + "-hint", p.Hint != ""))} type={p.Field.FieldInputType(p.Type)} data-gx-validate={p.Validate} />
+  if p.Hint != "" {
+    <p id={p.Field.FieldID() + "-hint"} class="hint">{p.Hint}</p>
+  }
   <p id={p.Field.FieldID() + "-error"} role="alert">{p.Field.FieldError()}</p>
 </div>

@@ -132,6 +132,23 @@ test('REQ-FRM-05 JS off: an invalid submit answers 422 with values and errors', 
   await context.close()
 })
 
+test('REQ-FRM-11 a field error wires aria and the summary takes focus', async () => {
+  await page.goto(shop.url + '/signup')
+  await fillSignup('taken@example.com', '20')
+  await page.click('button:text-is("Create account")')
+  await waitForText('#signup-email-error', 'email.taken')
+  expect(await page.getAttribute('input[name=email]', 'aria-invalid')).toBe('true')
+  expect(await page.getAttribute('input[name=email]', 'aria-describedby')).toContain('signup-email-error')
+  expect(await page.getAttribute('label[for=signup-email]', 'for')).toBe('signup-email')
+  expect(await page.evaluate(() => document.activeElement?.id)).toBe('signup-errors')
+})
+
+test('REQ-FRM-11 a hint is described on the control', async () => {
+  await page.goto(shop.url + '/signup')
+  expect(await page.getAttribute('input[name=email]', 'aria-describedby')).toContain('signup-email-hint')
+  expect((await page.textContent('#signup-email-hint')) ?? '').toContain('never share')
+})
+
 test('REQ-FRM-09 a small upload reaches the handler', async () => {
   await page.goto(shop.url + '/signup')
   await fillSignup('a@b.co', '20')
