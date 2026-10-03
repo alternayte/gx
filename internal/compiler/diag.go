@@ -9,6 +9,11 @@ import (
 const (
 	CodeParse    = "GX1000"
 	CodeFileName = "GX1001"
+
+	CodeRequiredProp     = "GX2001"
+	CodeUnknownComponent = "GX2002"
+	CodeUnknownAttr      = "GX2003"
+	CodeStaticStringProp = "GX2004"
 )
 
 // Diagnostic is one compiler message.
