@@ -3,6 +3,7 @@ package compiler
 import (
 	"bytes"
 	"go/ast"
+	"go/constant"
 	"go/format"
 	"go/token"
 	"go/types"
@@ -31,6 +32,8 @@ type routeDef struct {
 	// formRules holds the native constraints of every field, parsed from
 	// the Rules method body (REQ-FRM-04).
 	formRules map[string][]formConstraint
+	// hasFile marks a form with a gx.File field (REQ-FRM-09).
+	hasFile bool
 }
 
 // formConstraint is one native constraint a rule maps to (REQ-FRM-04).
@@ -57,6 +60,7 @@ type routeField struct {
 	sub      []routeField // struct fields, or the one slice element
 	slice    bool
 	arrayLen int64 // 0 for a slice
+	file     bool  // gx.File (REQ-FRM-09)
 }
 
 var pathVarRe = regexp.MustCompile(`\{([A-Za-z_][A-Za-z0-9_]*)(\.\.\.)?\}`)
@@ -241,6 +245,21 @@ func ruleConstraints(pkg *packages.Package, expr ast.Expr) []formConstraint {
 			return intConstraint(pkg, t, "max")
 		case "True":
 			return []formConstraint{{key: "required", isBool: true}}
+		case "Accept":
+			var values []string
+			for _, arg := range t.Args {
+				tv, ok := pkg.TypesInfo.Types[arg]
+				if !ok || tv.Value == nil || tv.Value.Kind() != constant.String {
+					return nil
+				}
+				values = append(values, constant.StringVal(tv.Value))
+			}
+			if len(values) == 0 {
+				return nil
+			}
+			return []formConstraint{{key: "accept", value: strings.Join(values, ",")}}
+		case "MaxSize":
+			return intConstraint(pkg, t, "maxsize")
 		case "Pattern":
 			if re := patternLiteral(pkg, t); re != "" {
 				return []formConstraint{{key: "pattern", value: re}}
@@ -444,6 +463,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		}
 		def.fields = append(def.fields, field)
 	}
+	def.hasFile = treeHasFile(def.fields)
 	for name := range vars {
 		if !bound[name] {
 			diags = append(diags, Diagnostic{
@@ -468,6 +488,10 @@ func bindFormField(def *routeDef, goName string, t types.Type, bind string, pos 
 		typ:      t,
 		typeText: types.TypeString(t, typeQualifier(def.pkg)),
 		pos:      pos,
+	}
+	if isGxFile(t) {
+		field.file = true
+		return field, true
 	}
 	if kind, ok := bindKind(t); ok {
 		field.kind = kind
@@ -764,6 +788,27 @@ func checkDuplicatePatterns(defs []*routeDef) []Diagnostic {
 	return out
 }
 
+// treeHasFile reports whether any leaf of the tree is a gx.File
+// (REQ-FRM-09).
+func treeHasFile(fields []routeField) bool {
+	for _, f := range fields {
+		if f.file || treeHasFile(f.sub) {
+			return true
+		}
+	}
+	return false
+}
+
+// isGxFile reports whether t is gx.File.
+func isGxFile(t types.Type) bool {
+	named, ok := t.(*types.Named)
+	if !ok {
+		return false
+	}
+	obj := named.Obj()
+	return obj != nil && obj.Pkg() != nil && obj.Pkg().Path() == "github.com/alternayte/gx" && obj.Name() == "File"
+}
+
 func isGxFunc(pkg *packages.Package, fun ast.Expr, name string) bool {
 	sel, ok := fun.(*ast.SelectorExpr)
 	if !ok {
@@ -888,7 +933,7 @@ func renderBindFunc(b *bytes.Buffer, d *routeDef) {
 				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
 			}
 		default:
-			renderBindTree(b, f, "in."+f.name, strconv.Quote(f.bind), false, 0, &n)
+			renderBindTree(b, d, f, "in."+f.name, strconv.Quote(f.bind), false, 0, &n, "")
 		}
 	}
 	b.WriteString("\treturn nil\n}\n\n")
@@ -925,7 +970,7 @@ func renderFormBind(b *bytes.Buffer, d *routeDef) {
 				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
 			}
 		default:
-			renderBindTree(b, f, "in."+f.name, strconv.Quote(f.bind), true, 0, &n)
+			renderBindTree(b, d, f, "in."+f.name, strconv.Quote(f.bind), true, 0, &n, "")
 		}
 	}
 	b.WriteString("\treturn errs, nil\n}\n\n")
@@ -938,8 +983,43 @@ func renderFormBind(b *bytes.Buffer, d *routeDef) {
 }
 
 // renderBindTree writes binding code for one form-bound tree (REQ-FRM-08).
-func renderBindTree(b *bytes.Buffer, f routeField, target, nameExpr string, form bool, depth int, n *int) {
+func renderBindTree(b *bytes.Buffer, d *routeDef, f routeField, target, nameExpr string, form bool, depth int, n *int, cpath string) {
 	ind := strings.Repeat("\t", depth+1)
+	if f.slice && f.sub[0].file {
+		maxSize, accepts := uploadSpec(d.formRules[joinPath(cpath, f.name)])
+		if form {
+			b.WriteString(ind + "if files, err := gx.ReadUploads(r, " + nameExpr + ", " + maxSizeLiteral(maxSize) + ", " + acceptsLiteral(accepts) + "); err != nil {\n")
+			b.WriteString(ind + "\terrs[" + nameExpr + "] = gx.ViolationKey(err)\n")
+			b.WriteString(ind + "} else {\n")
+			b.WriteString(ind + "\t" + target + " = files\n")
+			b.WriteString(ind + "}\n")
+			return
+		}
+		b.WriteString(ind + "if files, err := gx.ReadUploads(r, " + nameExpr + ", " + maxSizeLiteral(maxSize) + ", " + acceptsLiteral(accepts) + "); err != nil {\n")
+		b.WriteString(ind + "\treturn err\n")
+		b.WriteString(ind + "} else {\n")
+		b.WriteString(ind + "\t" + target + " = files\n")
+		b.WriteString(ind + "}\n")
+		return
+	}
+	if f.file {
+		maxSize, accepts := uploadSpec(d.formRules[joinPath(cpath, f.name)])
+		key := "errs[" + nameExpr + "]"
+		if form {
+			b.WriteString(ind + "if files, err := gx.ReadUploads(r, " + nameExpr + ", " + maxSizeLiteral(maxSize) + ", " + acceptsLiteral(accepts) + "); err != nil {\n")
+			b.WriteString(ind + "\t" + key + " = gx.ViolationKey(err)\n")
+			b.WriteString(ind + "} else if len(files) > 0 {\n")
+			b.WriteString(ind + "\t" + target + " = files[0]\n")
+			b.WriteString(ind + "}\n")
+			return
+		}
+		b.WriteString(ind + "if files, err := gx.ReadUploads(r, " + nameExpr + ", " + maxSizeLiteral(maxSize) + ", " + acceptsLiteral(accepts) + "); err != nil {\n")
+		b.WriteString(ind + "\treturn err\n")
+		b.WriteString(ind + "} else if len(files) > 0 {\n")
+		b.WriteString(ind + "\t" + target + " = files[0]\n")
+		b.WriteString(ind + "}\n")
+		return
+	}
 	if f.slice {
 		idxVar := "gxIdx" + strconv.Itoa(*n)
 		iVar := "i" + strconv.Itoa(*n)
@@ -952,13 +1032,13 @@ func renderBindTree(b *bytes.Buffer, f routeField, target, nameExpr string, form
 		}
 		b.WriteString(ind + "for _, " + iVar + " := range " + idxVar + " {\n")
 		child := f.sub[0]
-		renderBindTree(b, child, target+"["+iVar+"]", bindIndexExpr(nameExpr, iVar), form, depth+1, n)
+		renderBindTree(b, d, child, target+"["+iVar+"]", bindIndexExpr(nameExpr, iVar), form, depth+1, n, joinPath(cpath, f.name))
 		b.WriteString(ind + "}\n")
 		return
 	}
 	if len(f.sub) > 0 {
 		for _, sub := range f.sub {
-			renderBindTree(b, sub, target+"."+sub.name, bindNameExpr(nameExpr, sub.bind), form, depth, n)
+			renderBindTree(b, d, sub, target+"."+sub.name, bindNameExpr(nameExpr, sub.bind), form, depth, n, joinPath(cpath, f.name))
 		}
 		return
 	}
@@ -1133,8 +1213,13 @@ func renderFormValue(b *bytes.Buffer, d *routeDef) {
 	// The root form value builder.
 	b.WriteString("// GxFormValue fills the form value of " + d.name + " (REQ-FRM-03).\n")
 	b.WriteString("func (in *" + d.name + ") GxFormValue(errs map[string]string) gx.FormValue {\n")
+	enctype := ""
+	if d.hasFile {
+		enctype = "multipart/form-data"
+	}
 	b.WriteString("\tf := " + d.name + "Form{FormMeta: gx.FormMeta{Name: " + strconv.Quote(name) +
-		", ID: " + strconv.Quote(name+"-form") + ", Action: in.URL(), Method: " + strconv.Quote(method) + "}}\n")
+		", ID: " + strconv.Quote(name+"-form") + ", Action: in.URL(), Method: " + strconv.Quote(method) +
+		", Enctype: " + strconv.Quote(enctype) + "}}\n")
 	for _, f := range d.fields {
 		b.WriteString("\tf." + f.name + " = " + formFieldExpr(d, d.name, strconv.Quote(name), "in.URL()", f, "in."+f.name, "errs", "", "") + "\n")
 	}
@@ -1149,6 +1234,10 @@ func renderFormValue(b *bytes.Buffer, d *routeDef) {
 	b.WriteString("// GxRunForm calls the form handler with the concrete input type (REQ-FRM-02).\n")
 	b.WriteString("func (in *" + d.name + ") GxRunForm(ctx *gx.Ctx, fn any) error {\n")
 	b.WriteString("\treturn fn.(func(*gx.Ctx, *" + d.name + ") error)(ctx, in)\n}\n\n")
+	if d.hasFile {
+		b.WriteString("// GxMaxUpload returns the total upload limit of the form (REQ-FRM-09).\n")
+		b.WriteString("func (in *" + d.name + ") GxMaxUpload() int64 { return " + strconv.FormatInt(uploadTotal(d), 10) + " }\n\n")
+	}
 }
 
 // renderSliceWrappers writes the wrapper of every direct slice field.
@@ -1193,6 +1282,55 @@ func renderShapeBuilder(b *bytes.Buffer, d *routeDef, s formShape) {
 		b.WriteString("\tf." + fld.name + " = " + formFieldExpr(d, s.goName, "form", "", fld, "v."+fld.name, "errs", "prefix", s.path) + "\n")
 	}
 	b.WriteString("\treturn f\n}\n\n")
+}
+
+// uploadSpec returns the size and type limits of a file field
+// (REQ-FRM-09).
+func uploadSpec(cs []formConstraint) (int64, []string) {
+	var maxSize int64
+	var accepts []string
+	for _, c := range cs {
+		switch c.key {
+		case "maxsize":
+			if n, err := strconv.ParseInt(c.value, 10, 64); err == nil {
+				maxSize = n
+			}
+		case "accept":
+			accepts = strings.Split(c.value, ",")
+		}
+	}
+	return maxSize, accepts
+}
+
+// maxSizeLiteral renders an upload size limit.
+func maxSizeLiteral(n int64) string {
+	return strconv.FormatInt(n, 10)
+}
+
+// acceptsLiteral renders an accept list.
+func acceptsLiteral(patterns []string) string {
+	if len(patterns) == 0 {
+		return "nil"
+	}
+	parts := make([]string, 0, len(patterns))
+	for _, p := range patterns {
+		parts = append(parts, strconv.Quote(p))
+	}
+	return "[]string{" + strings.Join(parts, ", ") + "}"
+}
+
+// uploadTotal returns the total upload limit of a form (REQ-FRM-09).
+func uploadTotal(d *routeDef) int64 {
+	var total int64
+	for _, cs := range d.formRules {
+		if maxSize, _ := uploadSpec(cs); maxSize > 0 {
+			total += maxSize
+		}
+	}
+	if total == 0 {
+		return 0
+	}
+	return total + (1 << 20) // multipart overhead and other fields
 }
 
 // formFieldExpr returns the Go expression of one generated field value.
@@ -1258,6 +1396,9 @@ func constraintsExpr(cs []formConstraint) string {
 	}
 	parts := make([]string, 0, len(cs))
 	for _, c := range cs {
+		if c.key == "maxsize" {
+			continue // no native form (REQ-FRM-09)
+		}
 		if c.isBool {
 			parts = append(parts, "gx.Bool("+strconv.Quote(c.key)+", true)")
 			continue

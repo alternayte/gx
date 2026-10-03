@@ -409,3 +409,169 @@ func TestREQ_FRM_08_NestedBinding(t *testing.T) {
 		t.Fatalf("nested binding test: %v\n%s", err, out)
 	}
 }
+
+// formFilesRoutesGo is the upload module of the M5 test (REQ-FRM-09).
+const formFilesRoutesGo = `package upload
+
+import "github.com/alternayte/gx"
+
+type Upload struct {
+	gx.Route ` + "`POST /files`" + `
+	Avatar gx.File
+	Docs   []gx.File
+}
+
+func (in *Upload) Rules() gx.Rules {
+	return gx.Rules{
+		gx.Field(&in.Avatar, gx.MaxSize(8), gx.Accept("image/*")),
+		gx.Field(&in.Docs, gx.MaxSize(8)),
+	}
+}
+
+var files = gx.Form(func(c *gx.Ctx, in *Upload) error {
+	return c.Redirect(gx.URL("/done"))
+}, FilesView)
+
+type FilesPage struct {
+	gx.Route ` + "`GET /files`" + `
+}
+
+var FilesPageValue = gx.Page(func(c *gx.Ctx, in FilesPage) (FilesViewProps, error) {
+	return files.Props(&Upload{}), nil
+}, FilesView)
+
+var FilesRoutes = gx.Collect(FilesPageValue, files)
+`
+
+const formFilesViewGx = `package upload
+
+props {
+  F UploadForm
+}
+
+<form {...p.F.Attrs()}>
+  <input {...p.F.Avatar.Attrs()} type="file" />
+  <input {...p.F.Docs.Attrs()} type="file" />
+</form>
+`
+
+const formFilesTestGo = `package upload
+
+import (
+	"bytes"
+	"fmt"
+	"mime/multipart"
+	"net/http/httptest"
+	"net/textproto"
+	"os"
+	"testing"
+)
+
+func upload(t *testing.T, fields map[string]struct{ name, mime, body string }) (*Upload, map[string]string, error) {
+	t.Helper()
+	var buf bytes.Buffer
+	w := multipart.NewWriter(&buf)
+	for field, f := range fields {
+		h := textproto.MIMEHeader{}
+		h.Set("Content-Disposition", fmt.Sprintf("form-data; name=%q; filename=%q", field, f.name))
+		h.Set("Content-Type", f.mime)
+		fw, err := w.CreatePart(h)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := fw.Write([]byte(f.body)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := w.Close(); err != nil {
+		t.Fatal(err)
+	}
+	req := httptest.NewRequest("POST", "/files", &buf)
+	req.Header.Set("Content-Type", w.FormDataContentType())
+	if err := req.ParseMultipartForm(32 << 20); err != nil {
+		t.Fatal(err)
+	}
+	var in Upload
+	errs, err := in.GxBindForm(req)
+	return &in, errs, err
+}
+
+func TestREQ_FRM_09_Upload(t *testing.T) {
+	in, errs, err := upload(t, map[string]struct{ name, mime, body string }{
+		"avatar": {"a.png", "image/png", "png"},
+		"docs":   {"d.txt", "text/plain", "doc"},
+	})
+	if err != nil || len(errs) != 0 {
+		t.Fatalf("upload: %v %v", err, errs)
+	}
+	if in.Avatar.Name != "a.png" || in.Avatar.Size != 3 || in.Avatar.Type != "image/png" {
+		t.Fatalf("avatar = %+v", in.Avatar)
+	}
+	if in.Avatar.Temp == "" {
+		t.Fatalf("avatar has no temp file")
+	}
+	if _, err := os.Stat(in.Avatar.Temp); err != nil {
+		t.Fatalf("temp file: %v", err)
+	}
+	if data, err := os.ReadFile(in.Avatar.Temp); err != nil || string(data) != "png" {
+		t.Fatalf("temp data = %q %v", data, err)
+	}
+	if len(in.Docs) != 1 || in.Docs[0].Name != "d.txt" {
+		t.Fatalf("docs = %+v", in.Docs)
+	}
+}
+
+func TestREQ_FRM_09_Oversize(t *testing.T) {
+	_, errs, err := upload(t, map[string]struct{ name, mime, body string }{
+		"avatar": {"a.png", "image/png", "0123456789"},
+	})
+	if err != nil {
+		t.Fatalf("oversize bind error: %v", err)
+	}
+	if errs["avatar"] != "maxsize" {
+		t.Fatalf("errs = %v, want avatar=maxsize", errs)
+	}
+}
+
+func TestREQ_FRM_09_Accept(t *testing.T) {
+	_, errs, err := upload(t, map[string]struct{ name, mime, body string }{
+		"avatar": {"a.txt", "text/plain", "png"},
+	})
+	if err != nil {
+		t.Fatalf("accept bind error: %v", err)
+	}
+	if errs["avatar"] != "accept" {
+		t.Fatalf("errs = %v, want avatar=accept", errs)
+	}
+}
+`
+
+// TestREQ_FRM_09_FileBinding covers gx.File binding, limits and temp storage
+// (REQ-FRM-09).
+func TestREQ_FRM_09_FileBinding(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":               moduleWithGx(t),
+		"upload/routes.go":     formFilesRoutesGo,
+		"upload/FilesView.gx":  formFilesViewGx,
+		"upload/files_test.go": formFilesTestGo,
+	})
+	files := generateFiles(t, dir)
+	routes := string(files[filepath.Join(dir, "upload/routes_gx.go")])
+	for _, want := range []string{
+		"gx.ReadUploads(r,",
+		"Enctype: \"multipart/form-data\"",
+		"func (in *Upload) GxMaxUpload() int64 {",
+		`gx.Attr{Key: "accept", Value: "image/*", Kind: gx.AttrText}`,
+		"gx.File",
+	} {
+		if !strings.Contains(routes, want) {
+			t.Fatalf("routes_gx.go lacks %q:\n%s", want, routes)
+		}
+	}
+	writeGenerated(t, dir)
+	cmd := exec.Command("go", "test", "-run", "TestREQ_FRM_09", "./...")
+	cmd.Dir = dir
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("file binding test: %v\n%s", err, out)
+	}
+}

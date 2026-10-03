@@ -1,0 +1,12 @@
+package ui
+
+props {
+  Field gx.FieldView
+  Label string
+}
+
+<div class="field">
+  <label for={p.Field.FieldID()}>{p.Label}</label>
+  <input {...p.Field.Attrs()} type="file" />
+  <p id={p.Field.FieldID() + "-error"} role="alert">{p.Field.FieldError()}</p>
+</div>

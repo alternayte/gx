@@ -15,6 +15,7 @@ type Signup struct {
 	Email     string
 	Age       int
 	Terms     bool
+	Avatar    gx.File
 	Address   Address
 	Addresses []Address
 }
@@ -25,6 +26,7 @@ func (in *Signup) Rules() gx.Rules {
 		gx.Field(&in.Email, gx.Required, gx.Email, gx.MaxLen(254)),
 		gx.Field(&in.Age, gx.Min(18), gx.Max(120)),
 		gx.Field(&in.Terms, gx.True("terms.required")),
+		gx.Field(&in.Avatar, gx.MaxSize(1<<20), gx.Accept("image/*")),
 		gx.Field(&in.Address.Street, gx.Required),
 	}
 }
@@ -34,6 +36,7 @@ type AddAddress struct {
 	gx.Route  `POST /signup/addresses/add`
 	Address   Address
 	Addresses []Address
+	Avatar    gx.File
 }
 
 // RemoveAddress removes one repeated address row (REQ-FRM-08).
@@ -42,6 +45,7 @@ type RemoveAddress struct {
 	Index     int
 	Address   Address
 	Addresses []Address
+	Avatar    gx.File
 }
 
 // Page is the signup page route.

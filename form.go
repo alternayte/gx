@@ -1,9 +1,14 @@
 package gx
 
 import (
+	"context"
 	"errors"
+	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -20,6 +25,9 @@ type FormMeta struct {
 	Action string
 	// Method is the HTTP method, for example "POST".
 	Method string
+	// Enctype is the form encoding when the form holds files
+	// (REQ-FRM-09).
+	Enctype string
 }
 
 // GxFormName implements FormValue.
@@ -38,12 +46,16 @@ func (m FormMeta) GxFormMethod() string { return m.Method }
 // submits every form marked with data-gx-form through the adapter
 // (REQ-FRM-05).
 func (m FormMeta) Attrs() Attrs {
-	return Attrs{
+	out := Attrs{
 		{Key: "id", Value: m.ID, Kind: AttrText},
 		{Key: "method", Value: strings.ToLower(m.Method), Kind: AttrText},
 		{Key: "action", Value: m.Action, Kind: AttrURL},
 		{Key: "data-gx-form", Value: m.Name, Kind: AttrText},
 	}
+	if m.Enctype != "" {
+		out = append(out, Attr{Key: "enctype", Value: m.Enctype, Kind: AttrText})
+	}
+	return out
 }
 
 // FormValue is implemented by every generated <Type>Form (REQ-FRM-03).
@@ -106,6 +118,8 @@ var defaultMessages = map[string]string{
 	"pattern":  "This value has the wrong format.",
 	"oneof":    "Choose one of the allowed values.",
 	"invalid":  "Enter a valid value.",
+	"maxsize":  "The file is too large.",
+	"accept":   "The file type is not allowed.",
 }
 
 // DefaultMessage returns the English message of a built-in rule key, or the
@@ -175,9 +189,12 @@ func (f FormField[T]) Attrs() Attrs {
 		Attr{Key: "name", Value: f.Name, Kind: AttrText},
 		Attr{Key: "id", Value: f.ID, Kind: AttrText},
 	)
-	if b, ok := any(f.Value).(bool); ok {
-		out = append(out, Bool("checked", b))
-	} else {
+	switch v := any(f.Value).(type) {
+	case bool:
+		out = append(out, Bool("checked", v))
+	case File, []File:
+		// A file input has no value attribute (REQ-FRM-09).
+	default:
 		out = append(out, Attr{Key: "value", Value: TextValue(f.Value), Kind: AttrText})
 	}
 	for _, c := range f.Constraints {
@@ -315,6 +332,24 @@ func (f *form[In, P]) props(in FormInput, errs map[string]string) P {
 // ServeHTTP binds the input, runs the rules, then the handler (REQ-FRM-02).
 func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	in := f.newIn()
+	if mu, ok := in.(interface{ GxMaxUpload() int64 }); ok {
+		if n := mu.GxMaxUpload(); n > 0 {
+			r.Body = http.MaxBytesReader(w, r.Body, n)
+		}
+	}
+	r, scope := withUploadScope(r)
+	defer scope.remove()
+	if strings.HasPrefix(r.Header.Get("Content-Type"), "multipart/form-data") {
+		if err := r.ParseMultipartForm(32 << 20); err != nil {
+			var maxErr *http.MaxBytesError
+			if errors.As(err, &maxErr) {
+				http.Error(w, "gx: upload too large", http.StatusRequestEntityTooLarge)
+				return
+			}
+			renderError(w, r, &BindError{Err: err})
+			return
+		}
+	}
 	errs, err := in.GxBindForm(r)
 	if err != nil {
 		renderError(w, r, &BindError{Err: err})
@@ -494,19 +529,28 @@ func findElementByID(n Node, id string) *elNode {
 
 // FormText returns one request form value after parsing (REQ-FRM-08).
 func FormText(r *http.Request, name string) string {
-	if r.Form == nil {
-		_ = r.ParseForm()
-	}
+	parseRequestForm(r)
 	return r.Form.Get(name)
+}
+
+// parseRequestForm parses a form body once, multipart included
+// (REQ-FRM-09).
+func parseRequestForm(r *http.Request) {
+	if r.Form != nil {
+		return
+	}
+	if strings.HasPrefix(r.Header.Get("Content-Type"), "multipart/form-data") {
+		_ = r.ParseMultipartForm(32 << 20)
+		return
+	}
+	_ = r.ParseForm()
 }
 
 // FormIndexes returns the sorted row indexes present for an indexed form
 // name, for example 0 and 2 for addresses[0].street and addresses[2].city
 // (REQ-FRM-08).
 func FormIndexes(r *http.Request, prefix string) []int {
-	if r.Form == nil {
-		_ = r.ParseForm()
-	}
+	parseRequestForm(r)
 	seen := map[int]bool{}
 	open := prefix + "["
 	for name := range r.Form {
@@ -559,4 +603,166 @@ func EachRow[T any](rows []T, fn func(int, T) Node) Node {
 		b.Add(fn(i, v))
 	}
 	return b.Node()
+}
+
+// File is one uploaded file (REQ-FRM-09). The upload streams to a temp file
+// during binding; the framework removes it after the handler returns.
+type File struct {
+	// Name is the client file name.
+	Name string
+	// Size is the number of bytes stored.
+	Size int64
+	// Type is the content type, for example "image/png".
+	Type string
+	// Temp is the path of the temp file.
+	Temp string
+}
+
+// Open opens the uploaded file for reading.
+func (f File) Open() (io.ReadCloser, error) { return os.Open(f.Temp) }
+
+// Remove deletes the temp file.
+func (f File) Remove() error { return os.Remove(f.Temp) }
+
+// MaxSize limits an uploaded file in bytes (REQ-FRM-09).
+func MaxSize(n int64) Rule {
+	return Rule{key: "maxsize", check: func(v any) error {
+		for _, f := range filesOf(v) {
+			if f.Temp == "" {
+				continue // no upload
+			}
+			if f.Size > n {
+				return violation("maxsize", "the file is too large")
+			}
+		}
+		return nil
+	}}
+}
+
+// Accept limits the content types of an uploaded file (REQ-FRM-09).
+func Accept(types ...string) Rule {
+	return Rule{key: "accept", check: func(v any) error {
+		for _, f := range filesOf(v) {
+			if f.Temp == "" {
+				continue // no upload
+			}
+			if !accepts(types, f.Type) {
+				return violation("accept", "the file type is not allowed")
+			}
+		}
+		return nil
+	}}
+}
+
+func filesOf(v any) []File {
+	switch x := v.(type) {
+	case File:
+		return []File{x}
+	case []File:
+		return x
+	}
+	return nil
+}
+
+// accepts reports whether a content type matches one accept pattern.
+func accepts(patterns []string, contentType string) bool {
+	if contentType == "" {
+		return len(patterns) == 0
+	}
+	mediaType, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		mediaType = contentType
+	}
+	for _, p := range patterns {
+		if p == mediaType {
+			return true
+		}
+		if prefix, ok := strings.CutSuffix(p, "/*"); ok && strings.HasPrefix(mediaType, prefix+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// uploadScope collects the temp files of one request (REQ-FRM-09).
+type uploadScope struct{ paths []string }
+
+type uploadScopeKey struct{}
+
+// withUploadScope installs the temp-file collector of one request.
+func withUploadScope(r *http.Request) (*http.Request, *uploadScope) {
+	scope := &uploadScope{}
+	return r.WithContext(context.WithValue(r.Context(), uploadScopeKey{}, scope)), scope
+}
+
+func (s *uploadScope) remove() {
+	for _, path := range s.paths {
+		_ = os.Remove(path)
+	}
+}
+
+// ReadUploads streams every part of one form name to a temp file and
+// enforces the size and type limits before the handler runs (REQ-FRM-09).
+func ReadUploads(r *http.Request, name string, maxSize int64, patterns []string) ([]File, error) {
+	if r.MultipartForm == nil {
+		return nil, nil
+	}
+	headers := r.MultipartForm.File[name]
+	out := make([]File, 0, len(headers))
+	for _, fh := range headers {
+		file, err := storeUpload(r, fh, maxSize, patterns)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, file)
+	}
+	return out, nil
+}
+
+// storeUpload streams one multipart part to a temp file.
+func storeUpload(r *http.Request, fh *multipart.FileHeader, maxSize int64, patterns []string) (File, error) {
+	if maxSize > 0 && fh.Size > maxSize {
+		return File{}, violation("maxsize", "the file is too large")
+	}
+	mediaType, _, _ := mime.ParseMediaType(fh.Header.Get("Content-Type"))
+	if len(patterns) > 0 && !accepts(patterns, mediaType) {
+		return File{}, violation("accept", "the file type is not allowed")
+	}
+	src, err := fh.Open()
+	if err != nil {
+		return File{}, err
+	}
+	defer src.Close()
+	tmp, err := os.CreateTemp("", "gx-upload-*")
+	if err != nil {
+		return File{}, err
+	}
+	n, err := io.Copy(tmp, src)
+	closeErr := tmp.Close()
+	if err != nil {
+		_ = os.Remove(tmp.Name())
+		return File{}, err
+	}
+	if closeErr != nil {
+		_ = os.Remove(tmp.Name())
+		return File{}, closeErr
+	}
+	if maxSize > 0 && n > maxSize {
+		_ = os.Remove(tmp.Name())
+		return File{}, violation("maxsize", "the file is too large")
+	}
+	if scope, ok := r.Context().Value(uploadScopeKey{}).(*uploadScope); ok {
+		scope.paths = append(scope.paths, tmp.Name())
+	}
+	return File{Name: fh.Filename, Size: n, Type: mediaType, Temp: tmp.Name()}, nil
+}
+
+// ViolationKey returns the message key of a field violation, or "invalid"
+// (REQ-FRM-09).
+func ViolationKey(err error) string {
+	var fv *FieldViolation
+	if errors.As(err, &fv) {
+		return fv.Key
+	}
+	return "invalid"
 }

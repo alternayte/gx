@@ -211,21 +211,29 @@ const watchValidation = (): void => {
 // (REQ-FRM-05). Native validation has already run; this path skips only the
 // browser's own form post.
 const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null): Promise<void> => {
-  const body = new URLSearchParams()
-  new FormData(form).forEach((value, key) => {
-    if (typeof value === 'string') body.append(key, value)
-  })
+  const data = new FormData(form)
   const token = cookie('gx_csrf')
-  if (token !== '' && !body.has('gx_csrf')) body.set('gx_csrf', token)
+  if (token !== '' && !data.has('gx_csrf')) data.set('gx_csrf', token)
+  const multipart = (form.getAttribute('enctype') ?? '').toLowerCase() === 'multipart/form-data'
   const action = submitter?.getAttribute('formaction') ?? form.action
+  const headers: Record<string, string> = {
+    'Datastar-Request': 'true',
+    Accept: 'text/event-stream',
+    'Gx-CSRF': token,
+  }
+  let body: URLSearchParams | FormData
+  if (multipart) {
+    body = data
+  } else {
+    body = new URLSearchParams()
+    data.forEach((value, key) => {
+      if (typeof value === 'string') body.append(key, value)
+    })
+    headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  }
   const res = await fetch(action, {
     method: (form.getAttribute('method') ?? 'post').toUpperCase(),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Datastar-Request': 'true',
-      Accept: 'text/event-stream',
-      'Gx-CSRF': token,
-    },
+    headers,
     credentials: 'same-origin',
     body,
   })

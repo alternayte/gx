@@ -41,6 +41,11 @@ func (in *AddAddress) Bind(r *http.Request) error {
 			}
 		}
 	}
+	if files, err := gx.ReadUploads(r, "avatar", 0, nil); err != nil {
+		return err
+	} else if len(files) > 0 {
+		in.Avatar = files[0]
+	}
 	return nil
 }
 
@@ -113,6 +118,11 @@ func (in *RemoveAddress) Bind(r *http.Request) error {
 			}
 		}
 	}
+	if files, err := gx.ReadUploads(r, "avatar", 0, nil); err != nil {
+		return err
+	} else if len(files) > 0 {
+		in.Avatar = files[0]
+	}
 	return nil
 }
 
@@ -159,6 +169,11 @@ func (in *Signup) GxBindForm(r *http.Request) (map[string]string, error) {
 				in.Terms = bool(x)
 			}
 		}
+	}
+	if files, err := gx.ReadUploads(r, "avatar", 1048576, []string{"image/*"}); err != nil {
+		errs["avatar"] = gx.ViolationKey(err)
+	} else if len(files) > 0 {
+		in.Avatar = files[0]
 	}
 	{
 		if v := gx.FormText(r, ("address" + ".street")); v != "" {
@@ -221,6 +236,7 @@ type SignupForm struct {
 	Email     gx.FormField[string]
 	Age       gx.FormField[int]
 	Terms     gx.FormField[bool]
+	Avatar    gx.FormField[gx.File]
 	Address   AddressForm
 	Addresses SignupAddressesField
 }
@@ -262,10 +278,11 @@ func addressFormValue(form, prefix string, v Address, errs map[string]string) Ad
 
 // GxFormValue fills the form value of Signup (REQ-FRM-03).
 func (in *Signup) GxFormValue(errs map[string]string) gx.FormValue {
-	f := SignupForm{FormMeta: gx.FormMeta{Name: "signup", ID: "signup-form", Action: in.URL(), Method: "POST"}}
+	f := SignupForm{FormMeta: gx.FormMeta{Name: "signup", ID: "signup-form", Action: in.URL(), Method: "POST", Enctype: "multipart/form-data"}}
 	f.Email = gx.FormField[string]{Name: "email", ID: gx.FieldID("signup", "email"), Value: in.Email, ErrorKey: errs["email"], Error: gx.Translate(errs["email"], gx.DefaultMessage(errs["email"])), Constraints: gx.Attrs{gx.Bool("required", true), gx.Attr{Key: "type", Value: "email", Kind: gx.AttrText}, gx.Attr{Key: "maxlength", Value: "254", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "email")}
 	f.Age = gx.FormField[int]{Name: "age", ID: gx.FieldID("signup", "age"), Value: in.Age, ErrorKey: errs["age"], Error: gx.Translate(errs["age"], gx.DefaultMessage(errs["age"])), Constraints: gx.Attrs{gx.Attr{Key: "min", Value: "18", Kind: gx.AttrText}, gx.Attr{Key: "max", Value: "120", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "age")}
 	f.Terms = gx.FormField[bool]{Name: "terms", ID: gx.FieldID("signup", "terms"), Value: in.Terms, ErrorKey: errs["terms"], Error: gx.Translate(errs["terms"], gx.DefaultMessage(errs["terms"])), Constraints: gx.Attrs{gx.Bool("required", true)}, ValidateURL: gx.ValidateURL(in.URL(), "terms")}
+	f.Avatar = gx.FormField[gx.File]{Name: "avatar", ID: gx.FieldID("signup", "avatar"), Value: in.Avatar, ErrorKey: errs["avatar"], Error: gx.Translate(errs["avatar"], gx.DefaultMessage(errs["avatar"])), Constraints: gx.Attrs{gx.Attr{Key: "accept", Value: "image/*", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "avatar")}
 	f.Address = addressFormValue("signup", "address", in.Address, errs)
 	f.Addresses = SignupAddressesField{FormField: gx.FormField[[]Address]{Name: "addresses", ID: gx.FieldID("signup", "addresses"), Value: in.Addresses}, form: "signup", errs: errs}
 	return f
@@ -280,6 +297,8 @@ func (in *Signup) GxFieldName(ptr any) string {
 		return "age"
 	case any(&in.Terms):
 		return "terms"
+	case any(&in.Avatar):
+		return "avatar"
 	case any(&in.Address.Street):
 		return "address.street"
 	case any(&in.Address.City):
@@ -295,3 +314,6 @@ func (in *Signup) GxNewForm() gx.FormInput { return &Signup{} }
 func (in *Signup) GxRunForm(ctx *gx.Ctx, fn any) error {
 	return fn.(func(*gx.Ctx, *Signup) error)(ctx, in)
 }
+
+// GxMaxUpload returns the total upload limit of the form (REQ-FRM-09).
+func (in *Signup) GxMaxUpload() int64 { return 2097152 }

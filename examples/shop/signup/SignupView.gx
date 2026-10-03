@@ -11,7 +11,7 @@ props {
 
 <gx.Head title="Gx shop signup" />
 <h1>Sign up</h1>
-if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.Address.Street.Error != "" {
+if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.Avatar.Error != "" || p.F.Address.Street.Error != "" {
   <div id="signup-errors" data-gx-error-summary tabindex="-1" role="alert">
     <p>Fix the errors below.</p>
   </div>
@@ -21,6 +21,7 @@ if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.
   <ui.TextField label="Age" field={p.F.Age} type="number" validate="input" />
   <ui.TextField label="Street" field={p.F.Address.Street} type="text" />
   <ui.Checkbox field={p.F.Terms}>I accept the terms</ui.Checkbox>
+  <ui.FileField label="Avatar" field={p.F.Avatar} />
   <fieldset>
     <legend>Shipping addresses</legend>
     {addressList(p.F.Addresses)}

@@ -132,6 +132,31 @@ test('REQ-FRM-05 JS off: an invalid submit answers 422 with values and errors', 
   await context.close()
 })
 
+test('REQ-FRM-09 a small upload reaches the handler', async () => {
+  await page.goto(shop.url + '/signup')
+  await fillSignup('a@b.co', '20')
+  await page.setInputFiles('input[name=avatar]', { name: 'a.png', mimeType: 'image/png', buffer: Buffer.from('png') })
+  await Promise.all([page.waitForURL(shop.url + '/', { timeout: 5000 }), page.click('button:text-is("Create account")')])
+  expect(new URL(page.url()).pathname).toBe('/')
+})
+
+test('REQ-FRM-09 an oversize upload is a field error before the handler', async () => {
+  await page.goto(shop.url + '/signup')
+  await fillSignup('a@b.co', '20')
+  await page.setInputFiles('input[name=avatar]', { name: 'big.png', mimeType: 'image/png', buffer: Buffer.alloc(1_200_000, 1) })
+  await page.click('button:text-is("Create account")')
+  await waitForText('#signup-avatar-error', 'too large')
+  expect(new URL(page.url()).pathname).toBe('/signup')
+})
+
+test('REQ-FRM-09 an upload over the body cap is rejected with 413', async () => {
+  await page.goto(shop.url + '/signup')
+  await fillSignup('a@b.co', '20')
+  await page.setInputFiles('input[name=avatar]', { name: 'huge.png', mimeType: 'image/png', buffer: Buffer.alloc(3_000_000, 1) })
+  const [res] = await Promise.all([page.waitForNavigation(), page.click('button:text-is("Create account")')])
+  expect(res?.status()).toBe(413)
+})
+
 test('REQ-FRM-08 add and remove repeated rows through actions', async () => {
   await page.goto(shop.url + '/signup')
   await page.click('button:text-is("Add address")')
