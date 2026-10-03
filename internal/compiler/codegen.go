@@ -332,6 +332,15 @@ func (g *gen) attrsExpr(el *Element) string {
 		case AttrBool:
 			parts = append(parts, fmt.Sprintf("gx.Bool(%s, true)", strconv.Quote(a.Name)))
 		case AttrExpr:
+			target := a.Name
+			if rest, ok := strings.CutPrefix(target, "attr:"); ok {
+				target = rest
+			}
+			value := strings.TrimSpace(a.Value)
+			if isBoolAttr(target) && g.isBoolType(a) && !strings.Contains(value, "$") {
+				parts = append(parts, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
+				continue
+			}
 			if isDirective(a.Name) {
 				continue
 			}
@@ -579,6 +588,11 @@ func isNamedUnderlying(t types.Type, kind types.BasicKind) bool {
 	return ok && b.Kind() == kind
 }
 
+func (g *gen) isBoolType(n any) bool {
+	t := g.res.types[n]
+	return t != nil && t.String() == "bool"
+}
+
 func isURLAttr(name string) bool {
 	switch name {
 	case "href", "src", "action", "formaction":
@@ -586,6 +600,19 @@ func isURLAttr(name string) bool {
 	}
 	return false
 }
+
+// boolAttrs are the HTML boolean attributes (REQ-AUT-08).
+var boolAttrs = map[string]bool{
+	"allowfullscreen": true, "async": true, "autofocus": true, "autoplay": true,
+	"checked": true, "controls": true, "default": true, "defer": true,
+	"disabled": true, "formnovalidate": true, "hidden": true, "inert": true,
+	"ismap": true, "itemscope": true, "loop": true, "multiple": true,
+	"muted": true, "nomodule": true, "novalidate": true, "open": true,
+	"playsinline": true, "readonly": true, "required": true, "reversed": true,
+	"selected": true,
+}
+
+func isBoolAttr(name string) bool { return boolAttrs[name] }
 
 func upperFirst(s string) string {
 	if s == "" {
