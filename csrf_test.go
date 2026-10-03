@@ -1,8 +1,10 @@
 package gx_test
 
 import (
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/alternayte/gx"
@@ -86,5 +88,55 @@ func TestSI_03_TokenForOldBrowsers(t *testing.T) {
 	})
 	if rec.Code != http.StatusNoContent {
 		t.Fatalf("token POST = %d, want 204", rec.Code)
+	}
+}
+
+// TestREQ_FRM_12_CSRF checks that every form POST passes the CSRF layer
+// (REQ-FRM-12).
+func TestREQ_FRM_12_CSRF(t *testing.T) {
+	form := gx.Form(func(c *gx.Ctx, in *signupInStub) error { return nil }, signupViewStub)
+	app := gx.New(gx.Config{})
+	app.Group("/", gx.Collect(form))
+
+	formPost := func(mutate func(*http.Request)) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("POST", "/signup", strings.NewReader("email=&age=20"))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		if mutate != nil {
+			mutate(req)
+		}
+		rec := httptest.NewRecorder()
+		app.ServeHTTP(rec, req)
+		return rec
+	}
+
+	if rec := formPost(func(r *http.Request) {
+		r.Header.Set("Origin", "https://evil.example")
+	}); rec.Code != http.StatusForbidden {
+		t.Fatalf("cross-site form POST = %d, want 403", rec.Code)
+	}
+	if rec := formPost(nil); rec.Code != http.StatusForbidden {
+		t.Fatalf("tokenless form POST = %d, want 403", rec.Code)
+	}
+
+	// A GET sets the token; the form POST carries it.
+	get := httptest.NewRequest("GET", "/signup", nil)
+	getRec := httptest.NewRecorder()
+	app.ServeHTTP(getRec, get)
+	token := ""
+	for _, c := range getRec.Result().Cookies() {
+		if c.Name == "gx_csrf" {
+			token = c.Value
+		}
+	}
+	if token == "" {
+		t.Fatal("GET did not set a CSRF cookie")
+	}
+	rec := formPost(func(r *http.Request) {
+		r.AddCookie(&http.Cookie{Name: "gx_csrf", Value: token})
+		r.Form = nil
+		r.Body = io.NopCloser(strings.NewReader("email=&age=20&gx_csrf=" + token))
+	})
+	if rec.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("form POST with token = %d, want 422", rec.Code)
 	}
 }
