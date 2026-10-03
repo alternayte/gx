@@ -14,7 +14,7 @@ func BenchmarkRender(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if err := gx.Render(io.Discard, node); err != nil {
+		if err := gx.RenderNode(io.Discard, node); err != nil {
 			b.Fatal(err)
 		}
 	}
@@ -39,7 +39,7 @@ func TestNFR_03_RenderBenchmarks(t *testing.T) {
 	gxRes := testing.Benchmark(func(b *testing.B) {
 		node := benchPage()
 		for i := 0; i < b.N; i++ {
-			if err := gx.Render(io.Discard, node); err != nil {
+			if err := gx.RenderNode(io.Discard, node); err != nil {
 				b.Fatal(err)
 			}
 		}

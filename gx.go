@@ -199,9 +199,15 @@ func Bool(key string, present bool) Attr {
 	return Attr{Key: key, Value: "false", Kind: AttrBool}
 }
 
-// Render writes n as HTML (REQ-AUT-03, REQ-AUT-12). It writes the merged
-// head (REQ-RTE-11) at the first head node of the tree.
-func Render(w io.Writer, n Node) error {
+// Render renders n inside any http.Handler (REQ-RTE-16). It sets the content
+// type, marks active links for r and writes the merged head.
+func Render(w http.ResponseWriter, r *http.Request, n Node) error {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	return RenderRequest(w, r, n)
+}
+
+// RenderNode writes n to a writer with no request in scope.
+func RenderNode(w io.Writer, n Node) error {
 	_, err := io.WriteString(w, String(n))
 	return err
 }

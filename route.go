@@ -212,7 +212,7 @@ func renderError(w http.ResponseWriter, r *http.Request, err error) {
 	if view := views[status]; view != nil {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.WriteHeader(status)
-		_ = Render(w, view(&Ctx{W: w, R: r}))
+		_ = RenderRequest(w, r, view(&Ctx{W: w, R: r}))
 		return
 	}
 	http.Error(w, http.StatusText(status), status)
@@ -281,6 +281,43 @@ type page[In any, P any] struct {
 	bind    func(*http.Request) (In, error)
 	load    func(*Ctx, In) (P, error)
 	view    func(P) Node
+	static  func() ([]In, error)
+}
+
+// Static records the inputs a static export renders (REQ-RTE-15).
+func (p *page[In, P]) Static(fn func() ([]In, error)) *page[In, P] {
+	p.static = fn
+	return p
+}
+
+func (p *page[In, P]) hasStatic() bool { return p.static != nil }
+
+func (p *page[In, P]) staticInputs() ([]any, error) {
+	if p.static == nil {
+		return nil, nil
+	}
+	ins, err := p.static()
+	if err != nil {
+		return nil, err
+	}
+	out := make([]any, len(ins))
+	for i := range ins {
+		out[i] = ins[i]
+	}
+	return out, nil
+}
+
+// StaticInputs reports the export inputs of a route, when it lists any.
+func StaticInputs(h Handler) ([]any, bool, error) {
+	sp, ok := h.(interface {
+		staticInputs() ([]any, error)
+		hasStatic() bool
+	})
+	if !ok || !sp.hasStatic() {
+		return nil, false, nil
+	}
+	ins, err := sp.staticInputs()
+	return ins, true, err
 }
 
 // Page builds a typed page from a loader and a view. The route input type In
@@ -338,6 +375,20 @@ type layoutHandler struct {
 }
 
 func (h *layoutHandler) Pattern() string { return h.inner.Pattern() }
+
+func (h *layoutHandler) hasStatic() bool {
+	if sp, ok := h.inner.(interface{ hasStatic() bool }); ok {
+		return sp.hasStatic()
+	}
+	return false
+}
+
+func (h *layoutHandler) staticInputs() ([]any, error) {
+	if sp, ok := h.inner.(interface{ staticInputs() ([]any, error) }); ok {
+		return sp.staticInputs()
+	}
+	return nil, nil
+}
 
 func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	nh, ok := h.inner.(nodeHandler)

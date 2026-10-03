@@ -192,3 +192,54 @@ func TestREQ_RTE_13_ActiveLinks(t *testing.T) {
 		t.Fatal("no request in scope must not mark links")
 	}
 }
+
+type staticRoute struct {
+	ID int64
+}
+
+func (staticRoute) Pattern() string          { return "GET /products/{id}" }
+func (staticRoute) Bind(*http.Request) error { return nil }
+
+func TestREQ_RTE_15_Static(t *testing.T) {
+	pg := gx.Page(func(c *gx.Ctx, in staticRoute) (int64, error) { return in.ID, nil },
+		func(v int64) gx.Node { return gx.Value(v) })
+	pg.Static(func() ([]staticRoute, error) {
+		return []staticRoute{{ID: 1}, {ID: 2}}, nil
+	})
+	ins, ok, err := gx.StaticInputs(pg)
+	if err != nil || !ok || len(ins) != 2 {
+		t.Fatalf("StaticInputs = %v, %v, %v", ins, ok, err)
+	}
+	if ins[1].(staticRoute).ID != 2 {
+		t.Fatalf("second input = %+v", ins[1])
+	}
+
+	plain := gx.Page(func(c *gx.Ctx, in staticRoute) (int64, error) { return in.ID, nil },
+		func(v int64) gx.Node { return gx.Value(v) })
+	if _, ok, _ := gx.StaticInputs(plain); ok {
+		t.Fatal("a page without Static reports inputs")
+	}
+}
+
+func TestREQ_RTE_16_RenderInHandler(t *testing.T) {
+	page := gx.El("nav", nil,
+		gx.El("a", gx.Attrs{{Key: "href", Value: "/here", Kind: gx.AttrURL, Active: "page"}}, gx.Text("here")),
+	)
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := gx.Render(w, r, page); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
+	rec := httptest.NewRecorder()
+	handler.ServeHTTP(rec, httptest.NewRequest("GET", "/here", nil))
+	if rec.Code != 200 {
+		t.Fatalf("status %d", rec.Code)
+	}
+	if ct := rec.Header().Get("Content-Type"); ct != "text/html; charset=utf-8" {
+		t.Fatalf("content type = %q", ct)
+	}
+	want := `<nav><a href="/here" aria-current="page">here</a></nav>`
+	if got := rec.Body.String(); got != want {
+		t.Fatalf("body = %q, want %q", got, want)
+	}
+}
