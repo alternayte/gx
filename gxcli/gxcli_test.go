@@ -2,6 +2,7 @@ package gxcli_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -253,5 +254,119 @@ func TestREQ_TLS_03_LintCommand(t *testing.T) {
 		if !strings.Contains(out, want) {
 			t.Fatalf("lint output lacks %q:\n%s", want, out)
 		}
+	}
+}
+
+// lspFrame frames one JSON-RPC message for the stdio test.
+func lspFrame(t *testing.T, v any) []byte {
+	t.Helper()
+	data, err := json.Marshal(v)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return []byte(fmt.Sprintf("Content-Length: %d\r\n\r\n%s", len(data), data))
+}
+
+// readLSPFrames parses every framed message in data.
+func readLSPFrames(t *testing.T, data []byte) []map[string]any {
+	t.Helper()
+	var out []map[string]any
+	for len(data) > 0 {
+		idx := strings.Index(string(data), "\r\n\r\n")
+		if idx < 0 {
+			break
+		}
+		var length int
+		if _, err := fmt.Sscanf(string(data[:idx]), "Content-Length: %d", &length); err != nil {
+			t.Fatal(err)
+		}
+		body := data[idx+4 : idx+4+length]
+		var msg map[string]any
+		if err := json.Unmarshal(body, &msg); err != nil {
+			t.Fatal(err)
+		}
+		out = append(out, msg)
+		data = data[idx+4+length:]
+	}
+	return out
+}
+
+// TestREQ_TLS_04_StdioLSP covers the `gx lsp` command: standard LSP over
+// stdio with no editor-specific extensions (REQ-TLS-04).
+func TestREQ_TLS_04_StdioLSP(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	repo := filepath.Clean(filepath.Join(filepath.Dir(file), ".."))
+	dir := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(dir, "ui/card"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	card := filepath.Join(dir, "ui/card/Card.gx")
+	bad := "package card\n\n<article>{p.Titel}</article>\n"
+	if err := os.WriteFile(card, []byte(bad), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	mod := "module app\n\ngo 1.25.0\n\nrequire github.com/alternayte/gx v0.0.0\n\nreplace github.com/alternayte/gx => " + filepath.ToSlash(repo) + "\n"
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(mod), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	inR, inW, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	outR, outW, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	oldIn, oldOut := os.Stdin, os.Stdout
+	os.Stdin, os.Stdout = inR, outW
+
+	uri := "file://" + filepath.ToSlash(card)
+	frames := [][]byte{
+		lspFrame(t, map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{"processId": nil, "rootUri": nil, "capabilities": map[string]any{}}}),
+		lspFrame(t, map[string]any{"jsonrpc": "2.0", "method": "initialized", "params": map[string]any{}}),
+		lspFrame(t, map[string]any{"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": map[string]any{"textDocument": map[string]any{"uri": uri, "languageId": "gx", "version": 1, "text": bad}}}),
+		lspFrame(t, map[string]any{"jsonrpc": "2.0", "id": 2, "method": "shutdown", "params": nil}),
+		lspFrame(t, map[string]any{"jsonrpc": "2.0", "method": "exit", "params": nil}),
+	}
+	go func() {
+		for _, f := range frames {
+			_, _ = inW.Write(f)
+		}
+		_ = inW.Close()
+	}()
+
+	code := gxcli.Main([]string{"lsp", "--root", dir})
+	_ = outW.Close()
+	os.Stdin, os.Stdout = oldIn, oldOut
+	data, err := io.ReadAll(outR)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code != 0 {
+		t.Fatalf("lsp exit = %d", code)
+	}
+
+	msgs := readLSPFrames(t, data)
+	var capabilities, diagnostics int
+	for _, msg := range msgs {
+		switch msg["method"] {
+		case "textDocument/publishDiagnostics":
+			diagnostics++
+		}
+		if result, ok := msg["result"].(map[string]any); ok {
+			if caps, ok := result["capabilities"].(map[string]any); ok && caps["completionProvider"] != nil {
+				capabilities++
+			}
+		}
+	}
+	if capabilities != 1 {
+		t.Fatalf("initialize result lacks capabilities: %v", msgs)
+	}
+	if diagnostics == 0 {
+		t.Fatalf("no diagnostics published over stdio: %v", msgs)
 	}
 }

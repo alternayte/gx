@@ -118,11 +118,7 @@ func fragmentHints(m *compiler.Model, doc *document) []map[string]any {
 				continue
 			}
 			params := strings.TrimSpace(a.Value)
-			sig := comp.Name + upperFirst(a.Name) + "("
-			if params != "" {
-				sig += params + ", "
-			}
-			sig += "key?) gx.Node"
+			sig := comp.Name + upperFirst(a.Name) + "(" + params + ") gx.Node"
 			offset := lineOffset(doc.Text, a.At.Line-1) + a.At.Col - 1 + 1 + len(a.Name)
 			if a.Value != "" {
 				offset += len(a.Value) + 2
