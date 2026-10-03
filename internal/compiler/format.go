@@ -1,6 +1,16 @@
 package compiler
 
-import "strings"
+import (
+	"bytes"
+	"fmt"
+	"go/format"
+	goparser "go/parser"
+	goprinter "go/printer"
+	"go/token"
+	"sort"
+	"strconv"
+	"strings"
+)
 
 // FormatSource parses src and returns its canonical form (REQ-AUT-17). It
 // returns the parse diagnostics instead when src does not parse.
@@ -24,7 +34,7 @@ func Format(f *File) []byte {
 		if started {
 			pr.write("\n")
 		}
-		for _, im := range f.Imports {
+		for _, im := range formatImports(f.Imports) {
 			pr.write("import " + im.Raw + "\n")
 		}
 		started = true
@@ -74,14 +84,124 @@ func indent(depth int) string {
 }
 
 func (pr *printer) writeFields(fields []Field) {
+	width := 0
 	for _, f := range fields {
-		pr.write("  " + f.Name + " " + f.Type)
+		if len(f.Name) > width {
+			width = len(f.Name)
+		}
+	}
+	for _, f := range fields {
+		pr.write("  " + f.Name + strings.Repeat(" ", width-len(f.Name)+1) + formatGoExpr(f.Type))
 		if f.HasDefault {
-			pr.write(" = " + f.Default)
+			pr.write(" = " + formatGoExpr(f.Default))
 		}
 		pr.write("\n")
 	}
 }
+
+// formatImports sorts and dedupes import specs, like gofmt does for imports.
+func formatImports(imports []Import) []Import {
+	type spec struct{ alias, path string }
+	var list []spec
+	seen := map[string]bool{}
+	for _, im := range imports {
+		alias, path, ok := splitImport(im.Raw)
+		if !ok || path == "" {
+			continue
+		}
+		key := alias + " " + path
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		list = append(list, spec{alias: alias, path: path})
+	}
+	sort.Slice(list, func(i, j int) bool {
+		if list[i].path != list[j].path {
+			return list[i].path < list[j].path
+		}
+		return list[i].alias < list[j].alias
+	})
+	out := make([]Import, 0, len(list))
+	for _, s := range list {
+		if s.alias == pathBase(s.path) {
+			out = append(out, Import{Raw: strconv.Quote(s.path)})
+			continue
+		}
+		out = append(out, Import{Raw: s.alias + " " + strconv.Quote(s.path)})
+	}
+	return out
+}
+
+// formatGoExpr formats a Go expression with go/format (REQ-TLS-01). Client
+// expressions keep their $signal names.
+func formatGoExpr(src string) string {
+	src = strings.TrimSpace(src)
+	if src == "" {
+		return src
+	}
+	masked, names := maskSignals(src)
+	node, err := goparser.ParseExpr(masked)
+	if err != nil {
+		return canonExpr(src)
+	}
+	var b bytes.Buffer
+	if err := goprinter.Fprint(&b, token.NewFileSet(), node); err != nil {
+		return canonExpr(src)
+	}
+	return unmaskSignals(b.String(), names)
+}
+
+// formatGoHeader formats the header of an if, for or switch block.
+func formatGoHeader(keyword, header string) string {
+	header = strings.TrimSpace(header)
+	masked, names := maskSignals(header)
+	src := "package p\n\nfunc _() {\n\t" + keyword + " " + masked + " {}\n}\n"
+	out, err := format.Source([]byte(src))
+	if err != nil {
+		return canonExpr(header)
+	}
+	for _, line := range strings.Split(string(out), "\n") {
+		t := strings.TrimSpace(line)
+		if !strings.HasPrefix(t, keyword) {
+			continue
+		}
+		h := strings.TrimSpace(strings.TrimPrefix(t, keyword))
+		h = strings.TrimSpace(strings.TrimSuffix(h, "{}"))
+		h = strings.TrimSpace(strings.TrimSuffix(h, "{"))
+		return unmaskSignals(h, names)
+	}
+	return canonExpr(header)
+}
+
+func maskSignals(src string) (string, []string) {
+	var names []string
+	var b strings.Builder
+	for i := 0; i < len(src); {
+		if src[i] != '$' || i+1 >= len(src) || !isIdentStart(src[i+1]) {
+			b.WriteByte(src[i])
+			i++
+			continue
+		}
+		j := i + 1
+		for j < len(src) && isIdentByte(src[j]) {
+			j++
+		}
+		names = append(names, src[i+1:j])
+		fmt.Fprintf(&b, "gxSig_%d", len(names)-1)
+		i = j
+	}
+	return b.String(), names
+}
+
+func unmaskSignals(s string, names []string) string {
+	for i, n := range names {
+		s = strings.ReplaceAll(s, fmt.Sprintf("gxSig_%d", i), "$"+n)
+	}
+	return s
+}
+
+func isIdentStart(c byte) bool { return c == '_' || isLetter(c) }
 
 func isWhitespaceText(n Node) bool {
 	t, ok := n.(*Text)
@@ -110,13 +230,13 @@ func (pr *printer) writeNode(n Node, depth int) {
 	case *Text:
 		pr.write(t.Data)
 	case *Expr:
-		pr.write("{" + canonExpr(t.Data) + "}")
+		pr.write("{" + formatGoExpr(t.Data) + "}")
 	case *Comment:
 		pr.write("{/*" + t.Data + "*/}")
 	case *HTMLComment:
 		pr.write("<!--" + t.Data + "-->")
 	case *Let:
-		pr.write(t.Name + " := " + canonExpr(t.Expr))
+		pr.write(t.Name + " := " + formatGoExpr(t.Expr))
 	case *Element:
 		pr.writeElement(t, depth)
 	case *Control:
@@ -203,7 +323,7 @@ func (pr *printer) writeControl(c *Control, depth int) {
 		if header == "" {
 			pr.write("switch {")
 		} else {
-			pr.write("switch " + canonExpr(header) + " {")
+			pr.write("switch " + formatGoHeader("switch", header) + " {")
 		}
 		for _, cs := range c.Cases {
 			pr.write("\n" + indent(depth+1))
@@ -230,7 +350,7 @@ func (pr *printer) writeIfChain(c *Control, depth int) {
 	if header == "" {
 		pr.write(c.Kind + " {")
 	} else {
-		pr.write(c.Kind + " " + canonExpr(header) + " {")
+		pr.write(c.Kind + " " + formatGoHeader(c.Kind, header) + " {")
 	}
 	pr.writeBlock(c.Body, depth+1)
 	pr.write("}")
@@ -276,7 +396,7 @@ func formatAttr(a Attr) string {
 		}
 		return a.Name + `="` + a.Value + `"`
 	case AttrExpr:
-		return a.Name + "={" + canonExpr(a.Value) + "}"
+		return a.Name + "={" + formatGoExpr(a.Value) + "}"
 	case AttrSpread:
 		return "{..." + canonExpr(a.Value) + "}"
 	case AttrFragment:
