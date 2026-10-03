@@ -48,6 +48,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX3002 | path field has no pattern variable",
 		"GX3003 | route value is not held by any gx.Collect",
 		"GX3004 | duplicate route pattern",
+		"GX3005 | route package contents",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 	}
 	if !reflect.DeepEqual(got, want) {

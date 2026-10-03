@@ -85,7 +85,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	}
 	cfg := &packages.Config{
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
-			packages.NeedTypes | packages.NeedTypesInfo | packages.NeedImports | packages.NeedDeps,
+			packages.NeedTypes | packages.NeedTypesInfo | packages.NeedImports | packages.NeedDeps | packages.NeedModule,
 		Dir:     root,
 		Overlay: overlay,
 	}
@@ -151,6 +151,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
 	diags = append(diags, checkSafeHTML(pkgs)...)
+	diags = append(diags, checkRoutePackages(pkgs)...)
 	return res, diags
 }
 

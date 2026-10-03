@@ -9,17 +9,55 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 )
 
 // Route is embedded in a route input struct. The tag carries the method and
 // the pattern: "GET /products/{id}" (REQ-RTE-01).
 type Route struct{}
 
+var basePathValue atomic.Value
+
+// SetBasePath sets the prefix of generated links (REQ-RTE-18).
+func SetBasePath(path string) {
+	basePathValue.Store(strings.TrimSuffix(path, "/"))
+}
+
+// BasePath returns the configured link prefix.
+func BasePath() string {
+	v, _ := basePathValue.Load().(string)
+	return v
+}
+
 // URL is a prebuilt URL for an href or src (REQ-RTE-05).
 type URL string
 
 // URL implements the redirect target interface.
 func (u URL) URL() string { return string(u) }
+
+// ParamsFunc reads a path variable from a request (REQ-RTE-17).
+type ParamsFunc func(*http.Request, string) string
+
+type paramsKey struct{}
+
+// Params returns middleware that installs a path variable reader for routers
+// that do not fill r.PathValue (REQ-RTE-17).
+func Params(fn ParamsFunc) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), paramsKey{}, fn)))
+		})
+	}
+}
+
+// PathValue reads a path variable through the Params reader, or through
+// r.PathValue when no reader is set.
+func PathValue(r *http.Request, name string) string {
+	if fn, ok := r.Context().Value(paramsKey{}).(ParamsFunc); ok {
+		return fn(r, name)
+	}
+	return r.PathValue(name)
+}
 
 // Binder is the generated route interface: a pattern and request binding.
 // The gx generator writes Pattern and Bind.
@@ -177,6 +215,7 @@ type App struct {
 
 // New returns an empty app.
 func New(cfg Config) *App {
+	SetBasePath(cfg.BasePath)
 	return &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}}
 }
 

@@ -243,3 +243,105 @@ func TestREQ_RTE_16_RenderInHandler(t *testing.T) {
 		t.Fatalf("body = %q, want %q", got, want)
 	}
 }
+
+type paramRoute struct {
+	ID string
+}
+
+func (paramRoute) Pattern() string { return "GET /products/{id}" }
+func (in *paramRoute) Bind(r *http.Request) error {
+	in.ID = gx.PathValue(r, "id")
+	return nil
+}
+
+func TestREQ_RTE_17_Params(t *testing.T) {
+	pg := gx.Page(func(c *gx.Ctx, in paramRoute) (string, error) { return in.ID, nil },
+		func(s string) gx.Node { return gx.Text(s) })
+
+	// Registered one by one on the standard ServeMux.
+	mux := http.NewServeMux()
+	mux.Handle(pg.Pattern(), pg)
+	rec := httptest.NewRecorder()
+	mux.ServeHTTP(rec, httptest.NewRequest("GET", "/products/42", nil))
+	if rec.Body.String() != "42" {
+		t.Fatalf("ServeMux body = %q", rec.Body.String())
+	}
+
+	// A router that does not fill PathValue uses gx.Params.
+	h := gx.Params(func(r *http.Request, name string) string {
+		if name == "id" {
+			return "77"
+		}
+		return ""
+	})(pg)
+	rec = httptest.NewRecorder()
+	h.ServeHTTP(rec, httptest.NewRequest("GET", "/products/ignored", nil))
+	if rec.Body.String() != "77" {
+		t.Fatalf("Params body = %q", rec.Body.String())
+	}
+}
+
+func TestREQ_RTE_18_Mount(t *testing.T) {
+	pg := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) { return 1, nil },
+		func(int) gx.Node { return gx.Text("ok") })
+	app := gx.New(gx.Config{BasePath: "/shop"})
+	defer gx.SetBasePath("")
+	app.Group("/", gx.Collect(pg))
+
+	mux := http.NewServeMux()
+	mux.Handle("/shop/", http.StripPrefix("/shop", app))
+	rec := httptest.NewRecorder()
+	mux.ServeHTTP(rec, httptest.NewRequest("GET", "/shop/slow", nil))
+	if rec.Code != 200 || rec.Body.String() != "ok" {
+		t.Fatalf("mounted app: %d %q", rec.Code, rec.Body.String())
+	}
+	if gx.BasePath() != "/shop" {
+		t.Fatalf("BasePath = %q", gx.BasePath())
+	}
+}
+
+func TestREQ_RTE_19_NoSpecialMiddleware(t *testing.T) {
+	var order []string
+	std := func(name string) func(http.Handler) http.Handler {
+		return func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				order = append(order, name+":before")
+				next.ServeHTTP(w, r)
+				order = append(order, name+":after")
+			})
+		}
+	}
+
+	pg := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) { return 1, nil },
+		func(int) gx.Node { return gx.Text("ok") })
+	app := gx.New(gx.Config{})
+	app.Group("/", gx.Collect(pg))
+	h := std("app")(app)
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, httptest.NewRequest("GET", "/slow", nil))
+	if rec.Body.String() != "ok" {
+		t.Fatalf("app body = %q", rec.Body.String())
+	}
+
+	node := gx.Text("plain")
+	h2 := std("render")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := gx.Render(w, r, node); err != nil {
+			t.Fatal(err)
+		}
+	}))
+	rec = httptest.NewRecorder()
+	h2.ServeHTTP(rec, httptest.NewRequest("GET", "/", nil))
+	if rec.Body.String() != "plain" {
+		t.Fatalf("render body = %q", rec.Body.String())
+	}
+
+	want := []string{"app:before", "app:after", "render:before", "render:after"}
+	if len(order) != len(want) {
+		t.Fatalf("middleware order = %v", order)
+	}
+	for i := range want {
+		if order[i] != want[i] {
+			t.Fatalf("middleware order = %v, want %v", order, want)
+		}
+	}
+}
