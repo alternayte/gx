@@ -9,3 +9,6 @@ docs/build/
 
 # Repo-local e2e dependencies
 node_modules/
+
+# Dev server and compiler state
+.gx/
