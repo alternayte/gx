@@ -205,7 +205,8 @@ func goTestNames(path string) ([]string, error) {
 			continue
 		}
 		name := fn.Name.Name
-		if strings.HasPrefix(name, "Test") || strings.HasPrefix(name, "Benchmark") || strings.HasPrefix(name, "Example") {
+		if strings.HasPrefix(name, "Test") || strings.HasPrefix(name, "Benchmark") ||
+			strings.HasPrefix(name, "Example") || strings.HasPrefix(name, "Fuzz") {
 			names = append(names, name)
 		}
 	}

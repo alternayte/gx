@@ -18,7 +18,7 @@ grep -oE 'REQ-[A-Z]+-[0-9]+|NFR-[0-9]+|SI-[0-9]+' docs/SDD.md | sort -u > "$tmp/
 
 find . -path ./.git -prune -o -path '*/node_modules' -prune -o -name '*_test.go' -type f -print |
   while IFS= read -r f; do
-    grep -oE 'func +(Test|Benchmark|Example)[A-Za-z0-9_]*' "$f" || true
+    grep -oE 'func +(Test|Benchmark|Example|Fuzz)[A-Za-z0-9_]*' "$f" || true
   done |
   sed 's/^func *//' | tr '_' '-' |
   grep -oE 'REQ-[A-Z]+-[0-9]+|NFR-[0-9]+|SI-[0-9]+' |
