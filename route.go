@@ -71,6 +71,7 @@ type Ctx struct {
 	W http.ResponseWriter
 	R *http.Request
 
+	res    *Response
 	onceMu sync.Mutex
 	once   map[string]*onceEntry
 }
@@ -201,9 +202,13 @@ type Handler interface {
 // Collect returns its arguments as one route list (REQ-RTE-06).
 func Collect(hs ...Handler) []Handler { return hs }
 
-// Config holds app options. BasePath and adapters arrive later (REQ-RTE-18).
+// Config holds app options. BasePath prefixes every generated link, and
+// Adapter selects the hypermedia library (REQ-RTE-18, REQ-ACT-09).
+// Package gx exports only the standard library plus an optional adapter
+// runtime dependency.
 type Config struct {
 	BasePath string
+	Adapter  Adapter
 }
 
 // App is an http.Handler that owns a ServeMux (REQ-RTE-18).
@@ -211,12 +216,46 @@ type App struct {
 	mux        *http.ServeMux
 	patterns   map[string]bool
 	errorViews map[int]func(*Ctx) Node
+	adapter    Adapter
 }
 
 // New returns an empty app.
 func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
-	return &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}}
+	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter}
+	if cfg.Adapter != nil {
+		SetAdapter(cfg.Adapter)
+		a.registerAssets(cfg.Adapter)
+	}
+	return a
+}
+
+// registerAssets serves the adapter runtime files under /_gx/ (request
+// lifecycle step 6). BasePath() prefixes the URLs the page uses; the mux
+// itself stays un-prefixed so a mount can strip the prefix (REQ-RTE-18).
+func (a *App) registerAssets(adapter Adapter) {
+	for name, data := range adapter.Assets() {
+		body := data
+		a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", assetType(name))
+			w.Header().Set("Cache-Control", "public, max-age=3600")
+			_, _ = w.Write(body)
+		}))
+	}
+}
+
+// assetType returns the content type of an adapter asset.
+func assetType(name string) string {
+	switch {
+	case strings.HasSuffix(name, ".js"):
+		return "text/javascript; charset=utf-8"
+	case strings.HasSuffix(name, ".css"):
+		return "text/css; charset=utf-8"
+	case strings.HasSuffix(name, ".json"):
+		return "application/json"
+	default:
+		return "application/octet-stream"
+	}
 }
 
 // Errors sets the error components per status (REQ-RTE-10).
@@ -257,9 +296,17 @@ func renderError(w http.ResponseWriter, r *http.Request, err error) {
 	http.Error(w, http.StatusText(status), status)
 }
 
-// ServeHTTP serves the app.
+// ServeHTTP serves the app. A page response is buffered so the adapter
+// runtime can join it; action responses stream through (request lifecycle
+// step 6 and 7).
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	a.mux.ServeHTTP(w, r)
+	if a.adapter == nil || wantsEventStream(r) {
+		a.mux.ServeHTTP(w, r)
+		return
+	}
+	b := newBufferedWriter()
+	a.mux.ServeHTTP(b, r)
+	a.flush(w, r, b)
 }
 
 // Group mounts routes under a prefix. Middleware applies to the routes that
@@ -276,6 +323,7 @@ func (a *App) Group(prefix string, parts ...any) *App {
 			handler = &layoutHandler{inner: h, layouts: layouts}
 		}
 		handler = a.withErrorViews(handler)
+		handler = a.withAdapter(handler)
 		pattern := joinPattern(prefix, h.Pattern())
 		if a.patterns[pattern] {
 			panic("gx: duplicate route " + pattern)
