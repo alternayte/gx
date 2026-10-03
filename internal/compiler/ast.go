@@ -25,6 +25,7 @@ type Import struct {
 
 // Field is one props or signals field.
 type Field struct {
+	At         Pos
 	Name       string
 	Type       string
 	Default    string
@@ -45,8 +46,9 @@ type Text struct {
 
 // Expr is {expr} in text or an attribute value.
 type Expr struct {
-	At   Pos
-	Data string
+	At     Pos
+	DataAt Pos
+	Data   string
 }
 
 // Comment is a {/* ... */} comment. It never renders.
@@ -99,10 +101,11 @@ type Case struct {
 
 // Attr is one attribute of an element.
 type Attr struct {
-	At    Pos
-	Kind  AttrKind
-	Name  string
-	Value string
+	At      Pos
+	Kind    AttrKind
+	Name    string
+	Value   string
+	ValueAt Pos
 }
 
 // AttrKind tells how an attribute value is written.

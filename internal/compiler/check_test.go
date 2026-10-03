@@ -47,7 +47,7 @@ props {
 
 func TestREQ_AUT_02_MissingRequiredProp(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"go.mod":          "module app\n\ngo 1.25.0\n",
+		"go.mod":          moduleWithGx(t),
 		"ui/card/Card.gx": cardGx,
 		"ui/card/Page.gx": "package card\n\n<Card />\n",
 	})
@@ -64,7 +64,7 @@ func TestREQ_AUT_02_MissingRequiredProp(t *testing.T) {
 	}
 
 	ok := writeTree(t, map[string]string{
-		"go.mod":          "module app\n\ngo 1.25.0\n",
+		"go.mod":          moduleWithGx(t),
 		"ui/card/Card.gx": cardGx,
 		"ui/card/Page.gx": "package card\n\n<Card title=\"x\" />\n",
 	})
@@ -75,7 +75,7 @@ func TestREQ_AUT_02_MissingRequiredProp(t *testing.T) {
 
 func TestREQ_AUT_02_OptionalPropIsNotRequired(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"go.mod":          "module app\n\ngo 1.25.0\n",
+		"go.mod":          moduleWithGx(t),
 		"ui/card/Card.gx": cardGx,
 		"ui/card/Page.gx": "package card\n\n<Card title=\"x\" variant=\"wide\" />\n",
 	})
@@ -86,7 +86,7 @@ func TestREQ_AUT_02_OptionalPropIsNotRequired(t *testing.T) {
 
 func TestREQ_AUT_06_UnknownComponentSuggest(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"go.mod":              "module app\n\ngo 1.25.0\n",
+		"go.mod":              moduleWithGx(t),
 		"ui/button/Button.gx": "package button\n\n<button>Go</button>\n",
 		"ui/button/Page.gx":   "package button\n\n<Buton />\n<div></div>\n<my-widget></my-widget>\n",
 	})
@@ -102,7 +102,7 @@ func TestREQ_AUT_06_UnknownComponentSuggest(t *testing.T) {
 
 func TestREQ_AUT_06_CrossPackageComponent(t *testing.T) {
 	files := map[string]string{
-		"go.mod":          "module app\n\ngo 1.25.0\n",
+		"go.mod":          moduleWithGx(t),
 		"ui/card/Card.gx": "package card\n\nprops {\n  Title string\n}\n\n<article>{p.Title}</article>\n",
 		"pages/Home.gx":   "package pages\n\nimport \"app/ui/card\"\n\n<card.Card title=\"x\" />\n",
 	}
@@ -121,9 +121,10 @@ func TestREQ_AUT_06_CrossPackageComponent(t *testing.T) {
 
 func TestREQ_AUT_07_AttributeMapping(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"go.mod":          "module app\n\ngo 1.25.0\n",
-		"ui/card/Card.gx": "package card\n\nprops {\n  Title   string\n  Variant Variant\n}\n\n<article>{p.Title}</article>\n",
-		"ui/card/Page.gx": "package card\n\n<Card title=\"x\" variant=\"raised\" />\n<Card title=\"x\" variant={p.Variant} foo=\"1\" />\n",
+		"go.mod":           moduleWithGx(t),
+		"ui/card/Card.gx":  "package card\n\nprops {\n  Title   string\n  Variant Variant = \"flat\"\n}\n\n<article>{p.Title}</article>\n",
+		"ui/card/types.go": "package card\n\ntype Variant string\n",
+		"ui/card/Page.gx":  "package card\n\n<Card title=\"x\" variant=\"raised\" />\n<Card title=\"x\" foo=\"1\" />\n",
 	})
 	diags := compiler.Check(dir)
 	d := diagWith(t, diags, compiler.CodeStaticStringProp)

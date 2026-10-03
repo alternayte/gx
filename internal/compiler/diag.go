@@ -14,6 +14,8 @@ const (
 	CodeUnknownComponent = "GX2002"
 	CodeUnknownAttr      = "GX2003"
 	CodeStaticStringProp = "GX2004"
+
+	CodeType = "GX2000"
 )
 
 // Diagnostic is one compiler message.

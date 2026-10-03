@@ -185,6 +185,7 @@ func (p *parser) parseFields() []Field {
 		if p.eof() {
 			p.fail(p.off, CodeParse, "unclosed block: expected }")
 		}
+		nameAt := p.posAt(p.off)
 		name := p.readIdent()
 		if name == "" {
 			p.fail(p.off, CodeParse, "expected a field name")
@@ -210,7 +211,7 @@ func (p *parser) parseFields() []Field {
 			}
 			p.off++
 		}
-		field := Field{Name: name, Type: canonExpr(p.src[typeStart:p.off])}
+		field := Field{At: nameAt, Name: name, Type: canonExpr(p.src[typeStart:p.off])}
 		if p.has("=") {
 			p.off++
 			defStart := p.off
@@ -425,17 +426,29 @@ func (p *parser) parseAttr() Attr {
 	}
 	switch {
 	case p.has("{"):
+		braceOff := p.off
 		a.Kind = AttrExpr
 		a.Value = p.scanBraces()
+		dataOff := braceOff + 1
+		for dataOff < p.off-1 && isSpaceByte(p.src[dataOff]) {
+			dataOff++
+		}
+		a.ValueAt = p.posAt(dataOff)
 	case p.has(`"`):
 		a.Kind = AttrString
+		qOff := p.off
 		a.Value = p.readQuoted('"')
+		a.ValueAt = p.posAt(qOff + 1)
 	case p.has("'"):
 		a.Kind = AttrString
+		qOff := p.off
 		a.Value = p.readQuoted('\'')
+		a.ValueAt = p.posAt(qOff + 1)
 	default:
 		a.Kind = AttrString
+		valueOff := p.off
 		a.Value = p.readUnquoted()
+		a.ValueAt = p.posAt(valueOff)
 	}
 	return a
 }
@@ -465,8 +478,14 @@ func (p *parser) parseGxComment() Node {
 }
 
 func (p *parser) parseExprNode() Node {
-	start := p.posAt(p.off)
-	return &Expr{At: start, Data: p.scanBraces()}
+	startOff := p.off
+	start := p.posAt(startOff)
+	inner := p.scanBraces()
+	dataOff := startOff + 1
+	for dataOff < p.off-1 && isSpaceByte(p.src[dataOff]) {
+		dataOff++
+	}
+	return &Expr{At: start, DataAt: p.posAt(dataOff), Data: inner}
 }
 
 func (p *parser) tryControl() Node {

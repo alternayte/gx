@@ -8,7 +8,8 @@ import (
 )
 
 // Check checks every .gx package under root and returns the diagnostics,
-// ordered by file, line and column.
+// ordered by file, line and column. It checks props and components, then
+// type-checks every server expression.
 func Check(root string) []Diagnostic {
 	l := newLoader()
 	dirs := map[string]bool{}
@@ -28,10 +29,16 @@ func Check(root string) []Diagnostic {
 		}
 		return nil
 	})
-	var out []Diagnostic
+	sorted := make([]string, 0, len(dirs))
 	for dir := range dirs {
+		sorted = append(sorted, dir)
+	}
+	sort.Strings(sorted)
+	var out []Diagnostic
+	for _, dir := range sorted {
 		out = append(out, l.checkDir(dir)...)
 	}
+	out = append(out, l.checkTypes(root, sorted)...)
 	sortDiags(out)
 	return out
 }
