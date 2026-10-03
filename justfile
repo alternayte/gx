@@ -26,7 +26,7 @@ forbid:
     "checks/forbid.sh"
 
 bench-render:
-    go test -run '^$' -bench . -benchmem ./internal/bench/
+    "scripts/bench-render.sh"
 
 evidence:
     go run ./internal/build/evidence --write
