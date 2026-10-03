@@ -928,7 +928,14 @@ func (g *gen) clientOnExpr(a *Attr) (string, bool) {
 		return "", false // GX4009 is reported by the checker
 	}
 	expr := strings.TrimSpace(a.Value)
-	return strconv.Quote("@"+fn+"('") + ` + (` + expr + `).URL() + "')"`, true
+	tail := "')"
+	if g.res.sigActions[key] {
+		// The binder resolves signal fields in the invoking instance
+		// (REQ-ACT-03, REQ-ACT-06).
+		scope := g.file.Package + "." + g.name
+		tail = "', {headers: {'Gx-Scope': '" + scope + "'}})"
+	}
+	return strconv.Quote("@"+fn+"('") + " + (" + expr + ").URL() + " + strconv.Quote(tail), true
 }
 
 // isURLAttr reports whether an attribute holds a URL.

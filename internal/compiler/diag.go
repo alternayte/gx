@@ -38,6 +38,8 @@ const (
 
 	CodeActionMissing = "GX4001"
 	CodeActionTwice   = "GX4002"
+	CodeActionMissingSignal = "GX4003"
+	CodeSignalTypeMismatch  = "GX4004"
 	CodeActionMethod  = "GX4009"
 )
 
@@ -84,6 +86,8 @@ var Catalog = []Info{
 	{CodeRoutePkg, "route package contents"},
 	{CodeActionMissing, "no action is registered for a route type"},
 	{CodeActionTwice, "more than one action is registered for a route type"},
+	{CodeActionMissingSignal, "no signal is declared for a signal-bound field"},
+	{CodeSignalTypeMismatch, "signal type does not match the action field"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }

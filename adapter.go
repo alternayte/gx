@@ -5,7 +5,7 @@ import (
 	"context"
 	"net/http"
 	"strings"
-	"sync/atomic"
+	"sync"
 )
 
 // Adapter is the public hook between Gx and one hypermedia library
@@ -27,15 +27,15 @@ type Adapter interface {
 	ReadSignals(r *http.Request, dst any) error
 }
 
-var defaultAdapter atomic.Value
+var adapterMu sync.RWMutex
+var adapterDefault Adapter
 
 // SetAdapter sets the adapter of the process. New does this from
 // Config.Adapter. Actions mounted outside a gx.App use the default.
 func SetAdapter(a Adapter) {
-	if a == nil {
-		return
-	}
-	defaultAdapter.Store(a)
+	adapterMu.Lock()
+	adapterDefault = a
+	adapterMu.Unlock()
 }
 
 // AdapterOf returns the adapter of the request, or the process default.
@@ -45,8 +45,9 @@ func AdapterOf(r *http.Request) Adapter {
 			return a
 		}
 	}
-	a, _ := defaultAdapter.Load().(Adapter)
-	return a
+	adapterMu.RLock()
+	defer adapterMu.RUnlock()
+	return adapterDefault
 }
 
 type adapterKey struct{}

@@ -91,7 +91,43 @@ func (l *loader) checkActionInvocations(res *typesResult, dirs []string) []Diagn
 							Msg:  "method " + res.routeMeth[key] + " of " + Quoted(typeName(key)) + " cannot be invoked from the client",
 						})
 					}
+					if def := res.routeDefs[key]; def != nil && len(regs) > 0 {
+						out = append(out, res.checkSignalFields(f, a, def)...)
+					}
 				}
+			})
+		}
+	}
+	return out
+}
+
+// checkSignalFields checks every signal-bound field of the invoked action
+// against the signals declared in the invoking component (REQ-ACT-03).
+func (r *typesResult) checkSignalFields(f *File, a *Attr, def *routeDef) []Diagnostic {
+	var out []Diagnostic
+	for _, fld := range def.fields {
+		if fld.signal == "" {
+			continue
+		}
+		sigType := r.sigTypes[f][lowerFirst(fld.name)]
+		if sigType == nil {
+			out = append(out, Diagnostic{
+				Code: CodeActionMissingSignal,
+				File: f.File,
+				Line: a.At.Line,
+				Col:  a.At.Col,
+				Msg:  "field " + Quoted(fld.name) + " reads signal " + Quoted(fld.signal) + " but this component declares no signal " + Quoted(fld.signal),
+				Fix:  "add the signal to the signals block of this component",
+			})
+			continue
+		}
+		if !types.AssignableTo(sigType, fld.typ) {
+			out = append(out, Diagnostic{
+				Code: CodeSignalTypeMismatch,
+				File: f.File,
+				Line: a.At.Line,
+				Col:  a.At.Col,
+				Msg:  "field " + Quoted(fld.name) + " has type " + Quoted(fld.typeText) + " but signal " + Quoted(fld.signal) + " has type " + Quoted(sigType.String()),
 			})
 		}
 	}

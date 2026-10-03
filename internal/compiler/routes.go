@@ -17,21 +17,26 @@ import (
 
 // routeDef is one route struct found in a Go file (REQ-RTE-01).
 type routeDef struct {
-	pkg     *packages.Package
-	file    string
-	name    string
-	pattern string
-	fields  []routeField
-	pos     token.Position
+	pkg        *packages.Package
+	file       string
+	name       string
+	pattern    string
+	fields     []routeField
+	pos        token.Position
+	action     bool
+	hasSignals bool
 }
 
 // routeField is one bindable field of a route struct.
 type routeField struct {
 	name     string
 	typeText string
+	typ      types.Type
 	kind     types.BasicKind
 	path     string
 	query    string
+	signal   string
+	form     string
 	def      string
 	pos      token.Position
 }
@@ -39,8 +44,9 @@ type routeField struct {
 var pathVarRe = regexp.MustCompile(`\{([A-Za-z_][A-Za-z0-9_]*)(\.\.\.)?\}`)
 
 // collectRoutes finds every route struct in the loaded packages and checks
-// its pattern against its fields (REQ-RTE-02).
-func collectRoutes(pkgs []*packages.Package) ([]*routeDef, []Diagnostic) {
+// its pattern against its fields (REQ-RTE-02). An action input type also
+// binds untagged fields from form fields (REQ-ACT-03).
+func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position) ([]*routeDef, []Diagnostic) {
 	var defs []*routeDef
 	var diags []Diagnostic
 	for _, pkg := range pkgs {
@@ -86,6 +92,7 @@ func collectRoutes(pkgs []*packages.Package) ([]*routeDef, []Diagnostic) {
 						pattern: pattern,
 						pos:     pkg.Fset.Position(ts.Pos()),
 					}
+					def.action = len(actions[def.pkg.PkgPath+"."+def.name]) > 0
 					diags = append(diags, routeFields(def, stype)...)
 					defs = append(defs, def)
 				}
@@ -150,6 +157,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 			pathName = vars[strings.ToLower(f.Name())]
 		}
 		queryName := tag.Get("query")
+		signalName := tag.Get("signal")
 		isPath := pathName != "" && vars[strings.ToLower(pathName)] != ""
 		if tag.Get("path") != "" && !isPath {
 			diags = append(diags, Diagnostic{
@@ -160,7 +168,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 				Msg:  "field " + Quoted(f.Name()) + " binds path " + Quoted(tag.Get("path")) + " which the pattern has no variable for",
 			})
 		}
-		if !isPath && queryName == "" {
+		if !isPath && queryName == "" && signalName == "" && !def.action {
 			continue // not a request-bound field
 		}
 		kind, ok := bindKind(f.Type())
@@ -177,14 +185,23 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		field := routeField{
 			name:     f.Name(),
 			typeText: types.TypeString(f.Type(), nil),
+			typ:      f.Type(),
 			kind:     kind,
 			query:    queryName,
+			signal:   signalName,
 			def:      tag.Get("default"),
 			pos:      pos,
 		}
 		if isPath {
 			field.path = pathName
 			bound[strings.ToLower(pathName)] = true
+		} else if queryName == "" && signalName == "" && def.action {
+			// An untagged action field binds from a form field
+			// (REQ-ACT-03).
+			field.form = lowerFirst(f.Name())
+		}
+		if signalName != "" {
+			def.hasSignals = true
 		}
 		def.fields = append(def.fields, field)
 	}
@@ -477,7 +494,20 @@ func renderRouteFile(defs []*routeDef) []byte {
 		b.WriteString("func (" + d.name + ") Pattern() string { return " + strconv.Quote(d.pattern) + " }\n\n")
 		b.WriteString("// Bind fills " + d.name + " from the request.\n")
 		b.WriteString("func (in *" + d.name + ") Bind(r *http.Request) error {\n")
+		if d.hasSignals {
+			b.WriteString("\tsignals, err := gx.Signals(r)\n\tif err != nil {\n\t\treturn err\n\t}\n")
+		}
 		for _, f := range d.fields {
+			switch {
+			case f.signal != "":
+				b.WriteString("\tif err := gx.BindSignal(signals, gx.Scope(r), " + strconv.Quote(f.signal) + ", &in." + f.name + "); err != nil {\n\t\treturn err\n\t}\n")
+				continue
+			case f.form != "":
+				b.WriteString("\tif v := r.FormValue(" + strconv.Quote(f.form) + "); v != \"\" {\n")
+				renderBindField(&b, f)
+				b.WriteString("\t}\n")
+				continue
+			}
 			if f.path == "" && f.query == "" {
 				continue
 			}

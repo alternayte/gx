@@ -28,6 +28,9 @@ type typesResult struct {
 	routeKeys  map[string]bool         // package.Type of every route struct
 	routeMeth  map[string]string       // package.Type of a route -> its method
 	actions    map[string][]token.Position
+	routeDefs  map[string]*routeDef // package.Type of a route -> its definition
+	sigTypes   map[*File]map[string]types.Type
+	sigActions map[string]bool // actions with signal-bound fields
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -59,6 +62,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		routeKeys:  map[string]bool{},
 		routeMeth:  map[string]string{},
 		actions:    map[string][]token.Position{},
+		routeDefs:  map[string]*routeDef{},
+		sigTypes:   map[*File]map[string]types.Type{},
+		sigActions: map[string]bool{},
 	}
 	if findModule(root) == nil {
 		return res, nil
@@ -142,12 +148,17 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			l.collectTypes(res, pkg, file, pr)
 		}
 	}
-	routes, rdiags := collectRoutes(pkgs)
+	res.collectActions(pkgs)
+	routes, rdiags := collectRoutes(pkgs, res.actions)
 	res.routes = routes
 	diags = append(diags, rdiags...)
 	for _, d := range routes {
 		key := d.pkg.PkgPath + "." + d.name
 		res.routeKeys[key] = true
+		res.routeDefs[key] = d
+		if d.hasSignals {
+			res.sigActions[key] = true
+		}
 		method, _, _ := strings.Cut(d.pattern, " ")
 		res.routeMeth[key] = method
 		if method == "GET" || method == "HEAD" {
@@ -155,7 +166,6 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		}
 	}
 	res.routeFiles = renderRouteFiles(routes)
-	res.collectActions(pkgs)
 	diags = append(diags, res.checkMounted(pkgs)...)
 	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
@@ -448,6 +458,10 @@ func walkElements(ns []Node, fn func(*Element)) {
 func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast.File, pr *probe) {
 	var exprs []ast.Expr
 	ast.Inspect(file, func(n ast.Node) bool {
+		if gd, ok := n.(*ast.GenDecl); ok && gd.Tok == token.VAR {
+			l.collectSignalTypes(res, pkg, pr.file, gd)
+			return true
+		}
 		as, ok := n.(*ast.AssignStmt)
 		if !ok || as.Tok != token.ASSIGN || len(as.Lhs) != 1 || len(as.Rhs) != 1 {
 			return true
@@ -482,6 +496,31 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 			res.quals[pr.file] = map[int]map[string]bool{}
 		}
 		res.quals[pr.file][idx] = names
+	}
+}
+
+// collectSignalTypes records the Go type of every gx signal declaration in
+// a probe file, keyed by the lower-first signal name (REQ-ACT-03).
+func (l *loader) collectSignalTypes(res *typesResult, pkg *packages.Package, f *File, gd *ast.GenDecl) {
+	for _, spec := range gd.Specs {
+		vs, ok := spec.(*ast.ValueSpec)
+		if !ok {
+			continue
+		}
+		for _, id := range vs.Names {
+			name, ok := strings.CutPrefix(id.Name, "_gxSig_")
+			if !ok {
+				continue
+			}
+			obj, _ := pkg.TypesInfo.Defs[id].(*types.Var)
+			if obj == nil {
+				continue
+			}
+			if res.sigTypes[f] == nil {
+				res.sigTypes[f] = map[string]types.Type{}
+			}
+			res.sigTypes[f][lowerFirst(name)] = obj.Type()
+		}
 	}
 }
 
@@ -591,6 +630,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 	fmt.Fprintf(&b, "func %s(p %sProps) gx.Node { return nil }\n\n", name, name)
 	w := &probeWriter{l: l, pkg: pkg, file: f, synth: synth, pr: pr, b: &b, record: true}
 	fmt.Fprintf(&b, "func _gxProbe%s(p %sProps) {\n", name, name)
+	writeSignalDecls(&b, synth, f, true)
 	for idx, fld := range f.Props {
 		if !fld.HasDefault {
 			continue
@@ -606,6 +646,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 		pr.frags = append(pr.frags, fragSynth)
 		fmt.Fprintf(&b, "\n//line %s:%d:1\nfunc _gxFrag%s_%d() {\n", fragSynth, el.At.Line, synth, i)
 		fmt.Fprintf(&b, "//line %s:%d:1\nvar p %sProps\n_ = p\n", fragSynth, el.At.Line, name)
+		writeSignalDecls(&b, fragSynth, f, false)
 		for _, param := range splitParams(fragmentParams(el)) {
 			if ident := firstIdent(param); ident != "" && ident != "_" {
 				fmt.Fprintf(&b, "//line %s:%d:1\nvar %s\n_ = %s\n", fragSynth, el.At.Line, param, ident)
@@ -616,6 +657,20 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 		b.WriteString("}\n")
 	}
 	return pr, b.Bytes()
+}
+
+// writeSignalDecls declares one probe variable per signal so client
+// expressions type-check (REQ-ACT-03). The main probe uses the initial
+// value, which may read p; a fragment probe only needs the type.
+func writeSignalDecls(b *bytes.Buffer, synth string, f *File, withDefault bool) {
+	for i, s := range f.Signals {
+		ds := fmt.Sprintf("%s-s%d", synth, i)
+		if withDefault && s.HasDefault {
+			fmt.Fprintf(b, "//line %s:%d:1\nvar _gxSig_%s %s = %s\n", ds, s.At.Line, s.Name, s.Type, s.Default)
+			continue
+		}
+		fmt.Fprintf(b, "//line %s:%d:1\nvar _gxSig_%s %s\n", ds, s.At.Line, s.Name, s.Type)
+	}
 }
 
 type probeWriter struct {
