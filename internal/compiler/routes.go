@@ -216,7 +216,7 @@ func bindKind(t types.Type) (types.BasicKind, bool) {
 }
 
 // checkMounted reports a gx.Page value that no gx.Collect holds (REQ-RTE-06).
-func checkMounted(pkgs []*packages.Package) []Diagnostic {
+func (r *typesResult) checkMounted(pkgs []*packages.Package) []Diagnostic {
 	var out []Diagnostic
 	for _, pkg := range pkgs {
 		collected := map[types.Object]bool{}
@@ -256,7 +256,14 @@ func checkMounted(pkgs []*packages.Package) []Diagnostic {
 							continue
 						}
 						obj := pkg.TypesInfo.Defs[vs.Names[i]]
-						if obj == nil || collected[obj] {
+						if obj == nil {
+							continue
+						}
+						if key := pageRouteKey(pkg, call); key != "" {
+							r.routePages[key] = pkg.Name + "." + vs.Names[i].Name
+							r.pageRoutes[obj] = key
+						}
+						if collected[obj] {
 							continue
 						}
 						pos := pkg.Fset.Position(vs.Names[i].Pos())
@@ -273,6 +280,23 @@ func checkMounted(pkgs []*packages.Package) []Diagnostic {
 		}
 	}
 	return out
+}
+
+// pageRouteKey returns the route type a gx.Page call binds, from the loader's
+// input parameter.
+func pageRouteKey(pkg *packages.Package, call *ast.CallExpr) string {
+	if len(call.Args) < 2 {
+		return ""
+	}
+	sig, ok := pkg.TypesInfo.TypeOf(call.Args[0]).Underlying().(*types.Signature)
+	if !ok || sig.Params().Len() < 2 {
+		return ""
+	}
+	named, ok := sig.Params().At(1).Type().(*types.Named)
+	if !ok || named.Obj().Pkg() == nil {
+		return ""
+	}
+	return named.Obj().Pkg().Path() + "." + named.Obj().Name()
 }
 
 // checkDuplicatePatterns reports two route structs with one pattern

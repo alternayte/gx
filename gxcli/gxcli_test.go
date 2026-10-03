@@ -147,3 +147,53 @@ func TestREQ_AUT_19_JSONOutput(t *testing.T) {
 		t.Fatalf("JSON diagnostics = %+v", got)
 	}
 }
+
+func TestREQ_RTE_14_RoutesJSON(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	repo := filepath.Clean(filepath.Join(filepath.Dir(file), ".."))
+	mod := "module app\n\ngo 1.25.0\n\nrequire github.com/alternayte/gx v0.0.0\n\nreplace github.com/alternayte/gx => " + filepath.ToSlash(repo) + "\n"
+
+	dir := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(dir, "products"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]string{
+		"go.mod":             mod,
+		"products/routes.go": "package products\n\nimport \"github.com/alternayte/gx\"\n\ntype Show struct {\n\tgx.Route `GET /products/{id}`\n\tID int64\n}\n\nvar Routes = gx.Collect(ShowPage)\n",
+		"products/page.go":   "package products\n\nimport \"github.com/alternayte/gx\"\n\nvar ShowPage = gx.Page(func(c *gx.Ctx, in Show) (int, error) { return 0, nil }, func(i int) gx.Node { return gx.Text(\"x\") })\n",
+	}
+	for rel, content := range files {
+		if err := os.WriteFile(filepath.Join(dir, filepath.FromSlash(rel)), []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	old := os.Stdout
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.Stdout = w
+	code := gxcli.Main([]string{"routes", "--json", dir})
+	if err := w.Close(); err != nil {
+		t.Fatal(err)
+	}
+	os.Stdout = old
+	data, err := io.ReadAll(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code != 0 {
+		t.Fatalf("routes --json exit = %d\n%s", code, data)
+	}
+	var got []map[string]any
+	if err := json.Unmarshal(data, &got); err != nil {
+		t.Fatalf("bad JSON: %v\n%s", err, data)
+	}
+	if len(got) != 1 || got[0]["pattern"] != "GET /products/{id}" || got[0]["page"] != "products.ShowPage" {
+		t.Fatalf("routes JSON = %s", data)
+	}
+}

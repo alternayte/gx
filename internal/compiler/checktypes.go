@@ -19,8 +19,12 @@ type typesResult struct {
 	nodeIface  *types.Interface
 	errIface   *types.Interface
 	stringer   *types.Interface
-	routeFiles map[string][]byte // generated route code, keyed by output path
-	urlRoutes  map[string]bool   // package.Type of GET route structs
+	routeFiles map[string][]byte       // generated route code, keyed by output path
+	urlRoutes  map[string]bool         // package.Type of GET route structs
+	routes     []*routeDef             // every route struct
+	pkgs       []*packages.Package     // loaded packages
+	routePages map[string]string       // package.Type of a route -> its page value
+	pageRoutes map[types.Object]string // page var -> package.Type of its route
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -47,6 +51,8 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		quals:      map[*File]map[int]map[string]bool{},
 		routeFiles: map[string][]byte{},
 		urlRoutes:  map[string]bool{},
+		routePages: map[string]string{},
+		pageRoutes: map[types.Object]string{},
 	}
 	if findModule(root) == nil {
 		return res, nil
@@ -87,6 +93,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	if err != nil {
 		return res, nil
 	}
+	res.pkgs = pkgs
 	res.fillInterfaces(pkgs)
 
 	var diags []Diagnostic
@@ -130,6 +137,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		}
 	}
 	routes, rdiags := collectRoutes(pkgs)
+	res.routes = routes
 	diags = append(diags, rdiags...)
 	for _, d := range routes {
 		if strings.HasPrefix(d.pattern, "GET ") || strings.HasPrefix(d.pattern, "HEAD ") {
@@ -137,7 +145,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		}
 	}
 	res.routeFiles = renderRouteFiles(routes)
-	diags = append(diags, checkMounted(pkgs)...)
+	diags = append(diags, res.checkMounted(pkgs)...)
 	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkSignals(dirs)...)

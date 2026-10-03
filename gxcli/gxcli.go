@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/alternayte/gx/internal/compiler"
 )
@@ -26,6 +27,8 @@ func Main(args []string) int {
 		return runCheck(args[1:])
 	case "generate":
 		return runGenerate(args[1:])
+	case "routes":
+		return runRoutes(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -43,6 +46,7 @@ Commands:
   fmt       format .gx files in place, or stdin when no path is given
   check     check a module and fail on stale generated code
   generate  write the generated Go files of a module
+  routes    print the routes of a module, with --json for machine output
 `)
 }
 
@@ -174,6 +178,53 @@ func printJSON(diags []compiler.Diagnostic) int {
 	fmt.Println(string(data))
 	if len(diags) > 0 {
 		return 1
+	}
+	return 0
+}
+
+func runRoutes(args []string) int {
+	fs := flag.NewFlagSet("gx routes", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	asJSON := fs.Bool("json", false, "print machine-readable output")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	reports, diags := compiler.Routes(dir)
+	if len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	}
+	if *asJSON {
+		data, err := json.MarshalIndent(reports, "", "  ")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "gx routes: %v\n", err)
+			return 1
+		}
+		fmt.Println(string(data))
+		return 0
+	}
+	for _, r := range reports {
+		line := r.Method + " " + r.Pattern + "  " + r.Type
+		if r.Page != "" {
+			line += "  page=" + r.Page
+		}
+		if len(r.Fields) > 0 {
+			line += "  fields=" + strings.Join(r.Fields, ",")
+		}
+		if r.Prefix != "" {
+			line += "  prefix=" + r.Prefix
+		}
+		if len(r.Layouts) > 0 {
+			line += "  layouts=" + strings.Join(r.Layouts, ",")
+		}
+		if len(r.Middleware) > 0 {
+			line += "  middleware=" + strings.Join(r.Middleware, ",")
+		}
+		fmt.Println(line)
 	}
 	return 0
 }
