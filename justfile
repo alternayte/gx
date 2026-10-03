@@ -43,6 +43,10 @@ bench-build:
 bench-dev:
     go test ./internal/devserver -run TestNFR_02 -v
 
+# The LSP latency budgets (NFR-06).
+bench-lsp:
+    go test ./internal/lsp -run TestNFR_06 -v
+
 evidence:
     go run ./internal/build/evidence --write
 
