@@ -3,6 +3,7 @@ package gxcli
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -120,17 +121,61 @@ func writeResult(name string, src, out []byte, check bool, path string) int {
 }
 
 func runCheck(args []string) int {
+	fs := flag.NewFlagSet("gx check", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	asJSON := fs.Bool("json", false, "print machine-readable output")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
 	dir := "."
-	if len(args) > 0 {
-		dir = args[0]
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
 	}
 	diags := compiler.Check(dir)
 	diags = append(diags, compiler.Stale(dir)...)
+	if *asJSON {
+		return printJSON(diags)
+	}
 	if len(diags) == 0 {
 		return 0
 	}
 	printDiags(diags)
 	return 1
+}
+
+type jsonDiagnostic struct {
+	Code    string `json:"code"`
+	File    string `json:"file"`
+	Line    int    `json:"line"`
+	Column  int    `json:"column"`
+	Message string `json:"message"`
+	Fix     string `json:"fix,omitempty"`
+	Doc     string `json:"doc"`
+}
+
+func printJSON(diags []compiler.Diagnostic) int {
+	out := make([]jsonDiagnostic, 0, len(diags))
+	for _, d := range diags {
+		out = append(out, jsonDiagnostic{
+			Code:    d.Code,
+			File:    d.File,
+			Line:    d.Line,
+			Column:  d.Col,
+			Message: d.Msg,
+			Fix:     d.Fix,
+			Doc:     d.Doc(),
+		})
+	}
+	data, err := json.MarshalIndent(out, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx check: %v\n", err)
+		return 1
+	}
+	fmt.Println(string(data))
+	if len(diags) > 0 {
+		return 1
+	}
+	return 0
 }
 
 func runGenerate(args []string) int {

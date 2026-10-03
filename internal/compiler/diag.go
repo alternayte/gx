@@ -38,6 +38,36 @@ type Diagnostic struct {
 	Fix  string
 }
 
+// Info describes one diagnostic code.
+type Info struct {
+	Code  string
+	Title string
+}
+
+// Catalog lists every diagnostic code (REQ-AUT-19). Keep it in step with the
+// code constants above; the catalog test fails when it does not.
+var Catalog = []Info{
+	{CodeParse, "parse error"},
+	{CodeFileName, "component file name is not an exported identifier"},
+	{CodeStale, "generated code is missing or stale"},
+	{CodeType, "type error in an expression"},
+	{CodeRequiredProp, "missing required prop"},
+	{CodeUnknownComponent, "unknown component"},
+	{CodeUnknownAttr, "unknown attribute or slot"},
+	{CodeStaticStringProp, "static value for a typed prop"},
+	{CodeSpread, "attribute spread on a component"},
+	{CodeDuplicateSlot, "duplicate slot"},
+	{CodeEventAttr, "dynamic event attribute"},
+	{CodeFragment, "fragment free variable"},
+	{CodeLoopKey, "loop needs a key"},
+	{CodeSignal, "signal in a server expression"},
+	{CodeURLAttr, "dynamic URL attribute"},
+	{CodeUnrenderable, "value cannot render as text"},
+}
+
+// Doc returns the documentation path of the diagnostic (REQ-AUT-19).
+func (d Diagnostic) Doc() string { return "/errors/" + d.Code }
+
 func (d Diagnostic) String() string {
 	where := d.File
 	if where == "" {
