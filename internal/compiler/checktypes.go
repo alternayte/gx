@@ -20,6 +20,7 @@ type typesResult struct {
 	errIface   *types.Interface
 	stringer   *types.Interface
 	routeFiles map[string][]byte // generated route code, keyed by output path
+	urlRoutes  map[string]bool   // package.Type of GET route structs
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -41,7 +42,12 @@ type probe struct {
 // analyze type-checks every .gx file in dirs. It generates shadow Go files in
 // memory and never writes them to disk.
 func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic) {
-	res := &typesResult{types: map[any]types.Type{}, quals: map[*File]map[int]map[string]bool{}, routeFiles: map[string][]byte{}}
+	res := &typesResult{
+		types:      map[any]types.Type{},
+		quals:      map[*File]map[int]map[string]bool{},
+		routeFiles: map[string][]byte{},
+		urlRoutes:  map[string]bool{},
+	}
 	if findModule(root) == nil {
 		return res, nil
 	}
@@ -123,13 +129,18 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			l.collectTypes(res, pkg, file, pr)
 		}
 	}
+	routes, rdiags := collectRoutes(pkgs)
+	diags = append(diags, rdiags...)
+	for _, d := range routes {
+		if strings.HasPrefix(d.pattern, "GET ") || strings.HasPrefix(d.pattern, "HEAD ") {
+			res.urlRoutes[d.pkg.PkgPath+"."+d.name] = true
+		}
+	}
+	res.routeFiles = renderRouteFiles(routes)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
 	diags = append(diags, checkSafeHTML(pkgs)...)
-	routes, rdiags := collectRoutes(pkgs)
-	diags = append(diags, rdiags...)
-	res.routeFiles = renderRouteFiles(routes)
 	return res, diags
 }
 
@@ -363,13 +374,15 @@ func (l *loader) checkAttributes(res *typesResult, dirs []string) []Diagnostic {
 						continue
 					}
 					if isURLAttr(a.Name) {
-						out = append(out, Diagnostic{
-							Code: CodeURLAttr,
-							File: f.File,
-							Line: a.At.Line,
-							Col:  a.At.Col,
-							Msg:  "attribute " + Quoted(a.Name) + " cannot take a dynamic value",
-						})
+						if !res.isURLValue(res.types[a]) {
+							out = append(out, Diagnostic{
+								Code: CodeURLAttr,
+								File: f.File,
+								Line: a.At.Line,
+								Col:  a.At.Col,
+								Msg:  "attribute " + Quoted(a.Name) + " needs a typed route or gx.URL, not a dynamic string",
+							})
+						}
 						continue
 					}
 					if a.Name == "style" {
@@ -480,6 +493,31 @@ func (r *typesResult) fillInterfaces(pkgs []*packages.Package) {
 	}, nil)
 	str.Complete()
 	r.stringer = str
+}
+
+// isURLValue reports whether a value of type t can stand in an href, src,
+// action or formaction attribute (REQ-RTE-05).
+func (r *typesResult) isURLValue(t types.Type) bool {
+	if t == nil {
+		return false
+	}
+	if t.String() == "github.com/alternayte/gx.URL" {
+		return true
+	}
+	if named, ok := t.(*types.Named); ok {
+		if obj := named.Obj(); obj.Pkg() != nil && r.urlRoutes[obj.Pkg().Path()+"."+obj.Name()] {
+			return true
+		}
+	}
+	sel := types.NewMethodSet(t).Lookup(nil, "URL")
+	if sel == nil {
+		return false
+	}
+	sig, ok := sel.Obj().Type().(*types.Signature)
+	if !ok || sig.Params().Len() != 0 || sig.Results().Len() != 1 {
+		return false
+	}
+	return sig.Results().At(0).Type().String() == "string"
 }
 
 // renderable reports whether a value of type t can become text.

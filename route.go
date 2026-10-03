@@ -10,6 +10,9 @@ import (
 // the pattern: "GET /products/{id}" (REQ-RTE-01).
 type Route struct{}
 
+// URL is a prebuilt URL for an href or src (REQ-RTE-05).
+type URL string
+
 // Binder is the generated route interface: a pattern and request binding.
 // The gx generator writes Pattern and Bind.
 type Binder interface {

@@ -466,6 +466,20 @@ func (g *gen) attrsExpr(el *Element) string {
 				static = append(static, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
 				continue
 			}
+			if isURLAttr(a.Name) {
+				t := g.res.types[a]
+				value := ""
+				switch {
+				case t != nil && t.String() == "github.com/alternayte/gx.URL":
+					value = "string(" + strings.TrimSpace(a.Value) + ")"
+				case g.res.isURLValue(t):
+					value = strings.TrimSpace(a.Value) + ".URL()"
+				}
+				if value != "" {
+					static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrURL}", strconv.Quote(a.Name), value))
+				}
+				continue
+			}
 			if a.Name == "key" {
 				if v, ok := g.attrValueExpr(a, a.Value); ok {
 					static = append(static, fmt.Sprintf("gx.Attr{Key: \"data-gx-key\", Value: %s, Kind: gx.AttrText}", v))

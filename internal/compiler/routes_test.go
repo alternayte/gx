@@ -23,6 +23,17 @@ const routesGo = "package products\n" +
 	"\n" +
 	"var Routes = gx.Collect(ShowPage)\n"
 
+const routesGoNoRoutes = "package products\n" +
+	"\n" +
+	"import \"github.com/alternayte/gx\"\n" +
+	"\n" +
+	"type Show struct {\n" +
+	"\tgx.Route `GET /products/{id}`\n" +
+	"\tID   int64\n" +
+	"\tTab  string `query:\"tab\" default:\"overview\"`\n" +
+	"\tPage int64  `query:\"page\"`\n" +
+	"}\n"
+
 const routesPageGo = "package products\n" +
 	"\n" +
 	"import \"github.com/alternayte/gx\"\n" +
