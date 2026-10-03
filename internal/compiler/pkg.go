@@ -221,12 +221,27 @@ func resolveComponent(l *loader, pkg *Package, file *File, qual, name string) (*
 		comp, _ := pkg.component(name)
 		return comp, pkg, ""
 	}
+	if name == "Head" && qual == "gx" {
+		return gxHeadComponent(), nil, qual
+	}
+	if path, ok := findImport(file, qual); ok && path == "github.com/alternayte/gx" && name == "Head" {
+		return gxHeadComponent(), nil, qual
+	}
 	target, ok := l.importedPackage(pkg, file, qual)
 	if !ok {
 		return nil, nil, ""
 	}
 	comp, _ := target.component(name)
 	return comp, target, qual
+}
+
+// gxHeadComponent is the runtime Head component (REQ-RTE-11).
+func gxHeadComponent() *Component {
+	return &Component{Name: "Head", Props: []Prop{
+		{Name: "Title", Type: "string", HasDefault: true, Default: `""`},
+		{Name: "Meta", Type: "[]gx.Meta", HasDefault: true, Default: "nil"},
+		{Name: "Links", Type: "[]gx.Link", HasDefault: true, Default: "nil"},
+	}}
 }
 
 // slotTypeArg returns T of a gx.Slot[T] prop type.

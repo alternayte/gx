@@ -787,7 +787,7 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 			continue // the checker reports the missing prop
 		}
 		def := prop.Default
-		if cross {
+		if cross && comp.File != nil {
 			if names := g.res.quals[comp.File][idx]; len(names) > 0 {
 				def = qualifyDefault(def, names, alias)
 			}

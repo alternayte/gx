@@ -195,7 +195,8 @@ func Bool(key string, present bool) Attr {
 	return Attr{Key: key, Value: "false", Kind: AttrBool}
 }
 
-// Render writes n as HTML (REQ-AUT-03, REQ-AUT-12).
+// Render writes n as HTML (REQ-AUT-03, REQ-AUT-12). It writes the merged
+// head (REQ-RTE-11) at the first head node of the tree.
 func Render(w io.Writer, n Node) error {
 	_, err := io.WriteString(w, String(n))
 	return err
@@ -204,21 +205,28 @@ func Render(w io.Writer, n Node) error {
 // String returns the HTML of n.
 func String(n Node) string {
 	var b strings.Builder
-	renderNode(&b, n)
+	st := &renderState{}
+	collectHead(n, st, 1)
+	renderNode(&b, n, st)
 	return b.String()
 }
 
-func renderNode(b *strings.Builder, n Node) {
+func renderNode(b *strings.Builder, n Node, st *renderState) {
 	switch t := n.(type) {
 	case nil:
 		return
+	case headNode:
+		if !st.headWritten {
+			st.headWritten = true
+			renderHead(b, st)
+		}
 	case textNode:
 		b.WriteString(escapeText(string(t)))
 	case rawNode:
 		b.WriteString(string(t))
 	case fragNode:
 		for _, child := range t {
-			renderNode(b, child)
+			renderNode(b, child, st)
 		}
 	case *elNode:
 		b.WriteByte('<')
@@ -249,7 +257,7 @@ func renderNode(b *strings.Builder, n Node) {
 			return
 		}
 		for _, child := range t.children {
-			renderNode(b, child)
+			renderNode(b, child, st)
 		}
 		b.WriteString("</")
 		b.WriteString(t.name)

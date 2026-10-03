@@ -151,3 +151,27 @@ func TestREQ_RTE_10_ErrorStatuses(t *testing.T) {
 		t.Fatalf("redirect: status %d location %q", rec.Code, rec.Header().Get("Location"))
 	}
 }
+
+func TestREQ_RTE_11_Head(t *testing.T) {
+	layout := gx.El("html", nil,
+		gx.El("head", nil, gx.Head(gx.HeadProps{
+			Title: "site",
+			Meta:  []gx.Meta{{Name: "robots", Content: "index"}},
+		})),
+		gx.El("body", nil, gx.Frag(
+			gx.Head(gx.HeadProps{
+				Title: "page",
+				Meta: []gx.Meta{
+					{Name: "description", Content: "d"},
+					{Name: "robots", Content: "noindex"},
+				},
+				Links: []gx.Link{{Rel: "canonical", Href: "/page"}},
+			}),
+			gx.Text("body"),
+		)),
+	)
+	want := `<html><head><title>page</title><meta name="robots" content="noindex"><meta name="description" content="d"><link rel="canonical" href="/page"></head><body>body</body></html>`
+	if got := gx.String(layout); got != want {
+		t.Fatalf("head output = %q, want %q", got, want)
+	}
+}

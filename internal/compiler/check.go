@@ -94,15 +94,7 @@ func (l *loader) checkElement(p *Package, file *File, el *Element, diags []Diagn
 	if !isComp {
 		return diags
 	}
-	var comp *Component
-	var target *Package
-	if qual == "" {
-		comp, _ = p.component(name)
-		target = p
-	} else if tp, ok := l.importedPackage(p, file, qual); ok {
-		target = tp
-		comp, _ = tp.component(name)
-	}
+	comp, target, _ := resolveComponent(l, p, file, qual, name)
 	if comp == nil {
 		diags = append(diags, Diagnostic{
 			Code: CodeUnknownComponent,
