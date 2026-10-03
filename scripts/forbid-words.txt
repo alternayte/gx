@@ -1,0 +1,7 @@
+TODO
+FIXME
+XXX
+HACK
+not implemented
+unimplemented
+placeholder
