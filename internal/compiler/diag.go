@@ -14,6 +14,8 @@ const (
 	CodeRouteField = "GX3000"
 	CodePathVar    = "GX3001"
 	CodePathField  = "GX3002"
+	CodeUnmounted  = "GX3003"
+	CodeDuplicate  = "GX3004"
 
 	CodeRequiredProp     = "GX2001"
 	CodeUnknownComponent = "GX2002"
@@ -72,6 +74,8 @@ var Catalog = []Info{
 	{CodeRouteField, "route field type cannot bind"},
 	{CodePathVar, "pattern variable has no field"},
 	{CodePathField, "path field has no pattern variable"},
+	{CodeUnmounted, "route value is not held by any gx.Collect"},
+	{CodeDuplicate, "duplicate route pattern"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }
 

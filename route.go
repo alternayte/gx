@@ -42,12 +42,13 @@ type Config struct {
 
 // App is an http.Handler that owns a ServeMux (REQ-RTE-18).
 type App struct {
-	mux *http.ServeMux
+	mux      *http.ServeMux
+	patterns map[string]bool
 }
 
 // New returns an empty app.
 func New(cfg Config) *App {
-	return &App{mux: http.NewServeMux()}
+	return &App{mux: http.NewServeMux(), patterns: map[string]bool{}}
 }
 
 // ServeHTTP serves the app.
@@ -64,7 +65,12 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		for i := len(mw) - 1; i >= 0; i-- {
 			handler = mw[i](handler)
 		}
-		a.mux.Handle(joinPattern(prefix, h.Pattern()), handler)
+		pattern := joinPattern(prefix, h.Pattern())
+		if a.patterns[pattern] {
+			panic("gx: duplicate route " + pattern)
+		}
+		a.patterns[pattern] = true
+		a.mux.Handle(pattern, handler)
 	}
 	for _, part := range parts {
 		switch v := part.(type) {

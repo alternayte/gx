@@ -215,6 +215,103 @@ func bindKind(t types.Type) (types.BasicKind, bool) {
 	return b.Kind(), true
 }
 
+// checkMounted reports a gx.Page value that no gx.Collect holds (REQ-RTE-06).
+func checkMounted(pkgs []*packages.Package) []Diagnostic {
+	var out []Diagnostic
+	for _, pkg := range pkgs {
+		collected := map[types.Object]bool{}
+		for _, file := range pkg.Syntax {
+			ast.Inspect(file, func(n ast.Node) bool {
+				call, ok := n.(*ast.CallExpr)
+				if !ok || !isGxFunc(pkg, call.Fun, "Collect") {
+					return true
+				}
+				for _, arg := range call.Args {
+					if id, ok := arg.(*ast.Ident); ok {
+						if obj := pkg.TypesInfo.Uses[id]; obj != nil {
+							collected[obj] = true
+						}
+					}
+				}
+				return true
+			})
+		}
+		for _, file := range pkg.Syntax {
+			if strings.HasSuffix(pkg.Fset.Position(file.Pos()).Filename, "_gx.go") {
+				continue
+			}
+			for _, decl := range file.Decls {
+				gen, ok := decl.(*ast.GenDecl)
+				if !ok || gen.Tok != token.VAR {
+					continue
+				}
+				for _, spec := range gen.Specs {
+					vs, ok := spec.(*ast.ValueSpec)
+					if !ok {
+						continue
+					}
+					for i, val := range vs.Values {
+						call, ok := val.(*ast.CallExpr)
+						if !ok || !isGxFunc(pkg, call.Fun, "Page") || i >= len(vs.Names) {
+							continue
+						}
+						obj := pkg.TypesInfo.Defs[vs.Names[i]]
+						if obj == nil || collected[obj] {
+							continue
+						}
+						pos := pkg.Fset.Position(vs.Names[i].Pos())
+						out = append(out, Diagnostic{
+							Code: CodeUnmounted,
+							File: pos.Filename,
+							Line: pos.Line,
+							Col:  pos.Column,
+							Msg:  "route value " + Quoted(vs.Names[i].Name) + " is not held by any gx.Collect",
+						})
+					}
+				}
+			}
+		}
+	}
+	return out
+}
+
+// checkDuplicatePatterns reports two route structs with one pattern
+// (REQ-RTE-07).
+func checkDuplicatePatterns(defs []*routeDef) []Diagnostic {
+	sorted := append([]*routeDef{}, defs...)
+	sort.SliceStable(sorted, func(i, j int) bool {
+		if sorted[i].file != sorted[j].file {
+			return sorted[i].file < sorted[j].file
+		}
+		return sorted[i].pos.Line < sorted[j].pos.Line
+	})
+	seen := map[string]*routeDef{}
+	var out []Diagnostic
+	for _, d := range sorted {
+		if prev, ok := seen[d.pattern]; ok {
+			out = append(out, Diagnostic{
+				Code: CodeDuplicate,
+				File: d.file,
+				Line: d.pos.Line,
+				Col:  d.pos.Column,
+				Msg:  "pattern " + Quoted(d.pattern) + " is already used by " + Quoted(prev.name),
+			})
+			continue
+		}
+		seen[d.pattern] = d
+	}
+	return out
+}
+
+func isGxFunc(pkg *packages.Package, fun ast.Expr, name string) bool {
+	sel, ok := fun.(*ast.SelectorExpr)
+	if !ok {
+		return false
+	}
+	obj := pkg.TypesInfo.Uses[sel.Sel]
+	return obj != nil && obj.Pkg() != nil && obj.Pkg().Path() == "github.com/alternayte/gx" && obj.Name() == name
+}
+
 // renderRouteFiles groups route definitions by source file and renders one
 // generated file each.
 func renderRouteFiles(defs []*routeDef) map[string][]byte {

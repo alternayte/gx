@@ -137,6 +137,8 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		}
 	}
 	res.routeFiles = renderRouteFiles(routes)
+	diags = append(diags, checkMounted(pkgs)...)
+	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
