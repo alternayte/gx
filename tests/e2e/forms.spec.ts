@@ -130,6 +130,31 @@ test('REQ-FRM-05 JS off: an invalid submit answers 422 with values and errors', 
   await context.close()
 })
 
+test('REQ-FRM-06 blur validation patches only that field', async () => {
+  await page.goto(shop.url + '/signup')
+  await page.evaluate(() => {
+    ;(document.querySelector('h1') as unknown as { __keep: number }).__keep = 1
+  })
+  await page.fill('input[name=email]', 'nope')
+  await page.focus('input[name=age]')
+  await waitForText('#signup-email-error', 'valid email')
+  expect(await page.textContent('#signup-age-error')).toBe('')
+  expect(await page.evaluate(() => (document.querySelector('h1') as unknown as { __keep?: number }).__keep === 1)).toBe(true)
+})
+
+test('REQ-FRM-06 input validation clears the error on fix', async () => {
+  await page.goto(shop.url + '/signup')
+  const age = 'input[name=age]'
+  await page.fill(age, '7')
+  await waitForText('#signup-age-error', 'at least 18')
+  await page.fill(age, '20')
+  const deadline = Date.now() + 5000
+  while ((await page.textContent('#signup-age-error')) !== '') {
+    if (Date.now() > deadline) throw new Error('the age error did not clear')
+    await Bun.sleep(50)
+  }
+})
+
 test('REQ-FRM-05 JS off: a valid submit redirects with 303', async () => {
   const context = await browser.newContext({ javaScriptEnabled: false })
   const plain = await context.newPage()

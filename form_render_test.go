@@ -216,3 +216,60 @@ func attrValueOf(attrs gx.Attrs, key string) string {
 	}
 	return ""
 }
+
+// captureAdapter records the patches of a form or action answer.
+type captureAdapter struct{ patches []gx.Patch }
+
+func (a *captureAdapter) Name() string                         { return "capture" }
+func (a *captureAdapter) Signals() bool                        { return true }
+func (a *captureAdapter) Runtime() gx.Node                     { return nil }
+func (a *captureAdapter) Assets() map[string][]byte            { return nil }
+func (a *captureAdapter) ReadSignals(*http.Request, any) error { return nil }
+func (a *captureAdapter) Respond(_ http.ResponseWriter, _ *http.Request, res *gx.Response) error {
+	a.patches = append(a.patches, res.Patches...)
+	return nil
+}
+
+// TestREQ_FRM_06_ValidateAction pins the live validation patch: the target
+// is the field error element and a fix morphs it empty (REQ-FRM-06).
+func TestREQ_FRM_06_ValidateAction(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	adapter := &captureAdapter{}
+	gx.SetAdapter(adapter)
+	defer gx.SetAdapter(old)
+
+	form := gx.Form(func(c *gx.Ctx, in *signupInStub) error { return nil }, signupViewStub)
+	validate := func(value string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("POST", "/signup?gx-validate=email", strings.NewReader("email="+value))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Datastar-Request", "true")
+		rec := httptest.NewRecorder()
+		form.ServeHTTP(rec, req)
+		return rec
+	}
+
+	validate("nope")
+	if len(adapter.patches) != 1 {
+		t.Fatalf("patches = %d, want 1", len(adapter.patches))
+	}
+	patch, ok := adapter.patches[0].(gx.ElementPatch)
+	if !ok {
+		t.Fatalf("patch = %T, want gx.ElementPatch", adapter.patches[0])
+	}
+	if patch.Target != "#signup-email-error" {
+		t.Fatalf("target = %q, want #signup-email-error", patch.Target)
+	}
+	if body := gx.String(patch.Node); !strings.Contains(body, "must be a valid email address") {
+		t.Fatalf("patch body = %q", body)
+	}
+
+	adapter.patches = nil
+	validate("a@b.co")
+	patch, ok = adapter.patches[0].(gx.ElementPatch)
+	if !ok || patch.Target != "#signup-email-error" {
+		t.Fatalf("fix patch = %#v", adapter.patches)
+	}
+	if body := gx.String(patch.Node); strings.Contains(body, "must be") {
+		t.Fatalf("fix patch still holds an error: %q", body)
+	}
+}

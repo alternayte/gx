@@ -160,6 +160,53 @@ const cookie = (name: string): string => {
 // adapterPresent reports whether the page loaded a hypermedia adapter.
 const adapterPresent = (): boolean => document.querySelector('script[data-gx-adapter]') !== null
 
+// validateTimers debounces input validation per element (REQ-FRM-06).
+const validateTimers = new WeakMap<Element, number>()
+
+// validateField posts one field value to its validation URL (REQ-FRM-06).
+const validateField = async (el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): Promise<void> => {
+  const url = el.getAttribute('data-gx-validate-url') ?? ''
+  const name = el.getAttribute('name') ?? ''
+  if (url === '' || name === '') return
+  const body = new URLSearchParams()
+  if (el instanceof HTMLInputElement && el.type === 'checkbox') {
+    if (el.checked) body.set(name, el.value === '' ? 'on' : el.value)
+  } else {
+    body.set(name, el.value)
+  }
+  const token = cookie('gx_csrf')
+  if (token !== '' && !body.has('gx_csrf')) body.set('gx_csrf', token)
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Datastar-Request': 'true',
+      Accept: 'text/event-stream',
+      'Gx-CSRF': token,
+    },
+    credentials: 'same-origin',
+    body,
+  })
+  if (!res.ok || !res.body) return
+  await readFrames(res)
+}
+
+// watchValidation wires blur and input validation (REQ-FRM-06).
+const watchValidation = (): void => {
+  document.addEventListener('blur', (e) => {
+    const el = e.target as HTMLInputElement | null
+    if (el?.getAttribute?.('data-gx-validate') !== 'blur') return
+    void validateField(el)
+  }, true)
+  document.addEventListener('input', (e) => {
+    const el = e.target as HTMLInputElement | null
+    if (el?.getAttribute?.('data-gx-validate') !== 'input') return
+    const timer = validateTimers.get(el)
+    if (timer !== undefined) clearTimeout(timer)
+    validateTimers.set(el, window.setTimeout(() => void validateField(el), 300))
+  }, true)
+}
+
 // submitForm posts a Gx form through the adapter and applies the patches
 // (REQ-FRM-05). Native validation has already run; this path skips only the
 // browser's own form post.
@@ -235,6 +282,7 @@ if (typeof document !== 'undefined') {
     e.preventDefault()
     void submitForm(form)
   }, true)
+  watchValidation()
   document.addEventListener('DOMContentLoaded', updateActive)
   updateActive()
   document.addEventListener('DOMContentLoaded', checkInstances)

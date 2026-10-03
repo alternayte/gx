@@ -445,16 +445,16 @@ func (f *form[In, P]) validate(w http.ResponseWriter, r *http.Request, in FormIn
 			break
 		}
 	}
-	fieldID := in.GxFormValue(nil).GxFormID() + "-" + field
-	var patch Patch
-	if key == "" {
-		patch = ElementPatch{Mode: ModeRemove, Target: "#" + fieldID + "-error"}
-	} else {
-		patch = ElementPatch{
-			Mode:   ModeMorph,
-			Target: "#" + fieldID + "-error",
-			Node:   FieldErrorNode(fieldID, Translate(key, fallback)),
-		}
+	fieldID := in.GxFormValue(nil).GxFormName() + "-" + field
+	message := ""
+	if key != "" {
+		message = Translate(key, fallback)
+	}
+	// The error element always exists, so the patch morphs it (REQ-FRM-06).
+	patch := ElementPatch{
+		Mode:   ModeMorph,
+		Target: "#" + fieldID + "-error",
+		Node:   FieldErrorNode(fieldID, message),
 	}
 	if err := adapter.Respond(w, r, &Response{Patches: []Patch{patch}}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
