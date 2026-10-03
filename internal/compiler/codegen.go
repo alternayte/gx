@@ -9,7 +9,9 @@ import (
 	goprinter "go/printer"
 	"go/token"
 	"go/types"
+	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -47,6 +49,34 @@ func Generate(root string) (map[string][]byte, []Diagnostic) {
 		return nil, diags
 	}
 	return out, nil
+}
+
+// Stale returns GX1002 for every .gx file whose generated file is missing or
+// out of date (REQ-AUT-18).
+func Stale(root string) []Diagnostic {
+	files, diags := Generate(root)
+	if len(diags) > 0 {
+		return nil // Check reports these.
+	}
+	paths := make([]string, 0, len(files))
+	for path := range files {
+		paths = append(paths, path)
+	}
+	sort.Strings(paths)
+	var out []Diagnostic
+	for _, path := range paths {
+		if onDisk, err := os.ReadFile(path); err == nil && bytes.Equal(onDisk, files[path]) {
+			continue
+		}
+		out = append(out, Diagnostic{
+			Code: CodeStale,
+			File: strings.TrimSuffix(path, "_gx.go") + ".gx",
+			Line: 1,
+			Col:  1,
+			Msg:  "generated code is missing or stale; run gx generate",
+		})
+	}
+	return out
 }
 
 type gen struct {

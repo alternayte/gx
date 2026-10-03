@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 
 	"github.com/alternayte/gx/internal/compiler"
 )
@@ -20,6 +21,10 @@ func Main(args []string) int {
 	switch args[0] {
 	case "fmt":
 		return runFmt(args[1:])
+	case "check":
+		return runCheck(args[1:])
+	case "generate":
+		return runGenerate(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -34,7 +39,9 @@ func usage(w io.Writer) {
 	fmt.Fprint(w, `usage: gx <command> [arguments]
 
 Commands:
-  fmt    format .gx files in place, or stdin when no path is given
+  fmt       format .gx files in place, or stdin when no path is given
+  check     check a module and fail on stale generated code
+  generate  write the generated Go files of a module
 `)
 }
 
@@ -108,6 +115,44 @@ func writeResult(name string, src, out []byte, check bool, path string) int {
 	if err := os.WriteFile(path, out, mode); err != nil {
 		fmt.Fprintf(os.Stderr, "gx fmt: %v\n", err)
 		return 1
+	}
+	return 0
+}
+
+func runCheck(args []string) int {
+	dir := "."
+	if len(args) > 0 {
+		dir = args[0]
+	}
+	diags := compiler.Check(dir)
+	diags = append(diags, compiler.Stale(dir)...)
+	if len(diags) == 0 {
+		return 0
+	}
+	printDiags(diags)
+	return 1
+}
+
+func runGenerate(args []string) int {
+	dir := "."
+	if len(args) > 0 {
+		dir = args[0]
+	}
+	files, diags := compiler.Generate(dir)
+	if len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	}
+	paths := make([]string, 0, len(files))
+	for path := range files {
+		paths = append(paths, path)
+	}
+	sort.Strings(paths)
+	for _, path := range paths {
+		if err := os.WriteFile(path, files[path], 0o644); err != nil {
+			fmt.Fprintf(os.Stderr, "gx generate: %v\n", err)
+			return 1
+		}
 	}
 	return 0
 }

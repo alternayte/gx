@@ -9,6 +9,7 @@ import (
 const (
 	CodeParse    = "GX1000"
 	CodeFileName = "GX1001"
+	CodeStale    = "GX1002"
 
 	CodeRequiredProp     = "GX2001"
 	CodeUnknownComponent = "GX2002"
