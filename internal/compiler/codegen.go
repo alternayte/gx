@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"go/ast"
-	"go/format"
 	goparser "go/parser"
 	goprinter "go/printer"
 	"go/token"
@@ -14,12 +13,15 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"golang.org/x/tools/imports"
 )
 
 // Generate generates Go source for every .gx file under root. The result maps
 // each generated file path to its source. It returns diagnostics instead when
 // any check fails.
 func Generate(root string) (map[string][]byte, []Diagnostic) {
+	root = absoluteRoot(root)
 	l := newLoader()
 	dirs := collectDirs(root)
 	var diags []Diagnostic
@@ -146,7 +148,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		g.write("")
 		g.fragmentFunc(el)
 	}
-	src, err := format.Source(g.b.Bytes())
+	src, err := imports.Process(name+"_gx.go", g.b.Bytes(), nil)
 	if err != nil {
 		return nil, append(g.diags, Diagnostic{
 			Code: CodeParse,

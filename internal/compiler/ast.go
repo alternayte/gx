@@ -119,6 +119,7 @@ const (
 	AttrFragment
 )
 
+func (a *Attr) Position() Pos        { return a.At }
 func (n *Text) Position() Pos        { return n.At }
 func (n *Expr) Position() Pos        { return n.At }
 func (n *Comment) Position() Pos     { return n.At }

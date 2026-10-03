@@ -61,8 +61,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			for _, fs := range pr.frags {
 				refs[fs] = synthRef{file: f, code: CodeFragment}
 			}
-			parseProbe[filepath.Join(dir, base+"_gx.go")] = pr
-			overlay[filepath.Join(dir, base+"_gx.go")] = src
+			path := filepath.Join(dir, base+"_gx.go")
+			parseProbe[path] = pr
+			overlay[path] = src
 			for idx, name := range pr.defs {
 				fld := f.Props[idx]
 				refs[name] = synthRef{file: f, line: fld.At.Line, col: fld.At.Col}
@@ -720,6 +721,16 @@ func lineDirective(b *bytes.Buffer, synth string, at Pos) {
 		col = 1
 	}
 	fmt.Fprintf(b, "//line %s:%d:%d\n", synth, at.Line, col)
+}
+
+// canonicalPath resolves symlinks in the enclosing directory so that overlay
+// keys match the paths go/packages reports.
+func canonicalPath(path string) string {
+	dir, err := filepath.EvalSymlinks(filepath.Dir(path))
+	if err != nil {
+		return path
+	}
+	return filepath.Join(dir, filepath.Base(path))
 }
 
 // componentName returns the component name of f: the file base name.

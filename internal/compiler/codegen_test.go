@@ -10,6 +10,11 @@ import (
 	"github.com/alternayte/gx/internal/compiler"
 )
 
+func generateWithDot(t *testing.T) (map[string][]byte, []compiler.Diagnostic) {
+	t.Helper()
+	return compiler.Generate(".")
+}
+
 func generateFiles(t *testing.T, dir string) map[string][]byte {
 	t.Helper()
 	files, diags := compiler.Generate(dir)

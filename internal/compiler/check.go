@@ -11,6 +11,7 @@ import (
 // ordered by file, line and column. It checks props and components, then
 // type-checks every server expression.
 func Check(root string) []Diagnostic {
+	root = absoluteRoot(root)
 	l := newLoader()
 	dirs := collectDirs(root)
 	var out []Diagnostic
@@ -21,6 +22,15 @@ func Check(root string) []Diagnostic {
 	out = append(out, tdiags...)
 	sortDiags(out)
 	return out
+}
+
+// absoluteRoot makes the tree root absolute so that overlay keys match the
+// paths go/packages reports.
+func absoluteRoot(root string) string {
+	if abs, err := filepath.Abs(root); err == nil {
+		return abs
+	}
+	return root
 }
 
 // collectDirs returns every directory under root that holds a .gx file.
