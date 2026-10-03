@@ -14,3 +14,25 @@ export const gx = {
 }
 
 ;(globalThis as { __gx?: typeof gx }).__gx = gx
+
+// In dev, two signal instances that share a scope are a bug: a patch would
+// reach both. The compiler reports what it can see (GX2012); this catches
+// the rest.
+const checkInstances = (): void => {
+  if (!document.querySelector('meta[name="gx-dev"]')) return
+  const seen = new Set<string>()
+  document.querySelectorAll('[data-gx-instance]').forEach((el) => {
+    const id = el.getAttribute('data-gx-instance') ?? ''
+    if (id === '') return
+    if (seen.has(id)) {
+      console.error(`gx: two signal instances share the scope ${id}; add key={...}`)
+    }
+    seen.add(id)
+  })
+}
+
+document.addEventListener('DOMContentLoaded', checkInstances)
+new MutationObserver(checkInstances).observe(document.documentElement, {
+  subtree: true,
+  childList: true,
+})

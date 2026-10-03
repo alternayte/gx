@@ -41,6 +41,8 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX2008 | fragment free variable",
 		"GX2009 | loop needs a key",
 		"GX2010 | signal in a server expression",
+		"GX2012 | signal instance needs a key",
+		"GX2014 | signal needs an initial value",
 		"GX2011 | dynamic URL attribute",
 		"GX2013 | value cannot render as text",
 		"GX3000 | route field type cannot bind",
@@ -53,6 +55,8 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4002 | more than one action is registered for a route type",
 		"GX4003 | no signal is declared for a signal-bound field",
 		"GX4004 | signal type does not match the action field",
+		"GX4005 | call is not allowed in a client expression",
+		"GX4007 | value or operator is not allowed in a client expression",
 		"GX4009 | action method cannot be invoked from the client",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 	}

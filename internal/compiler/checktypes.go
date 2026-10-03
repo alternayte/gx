@@ -31,6 +31,9 @@ type typesResult struct {
 	routeDefs  map[string]*routeDef // package.Type of a route -> its definition
 	sigTypes   map[*File]map[string]types.Type
 	sigActions map[string]bool // actions with signal-bound fields
+	exprTypes  map[ast.Expr]types.Type
+	clientBy   map[*Attr]*clientSite
+	scopedMap  map[*Component]bool
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -42,11 +45,13 @@ type synthRef struct {
 }
 
 type probe struct {
-	file  *File
-	synth string
-	sites []any          // emission order of {expr} and expression attributes
-	defs  map[int]string // props field index -> synthetic default probe name
-	frags []string       // synthetic names of the fragment scope probes
+	file        *File
+	synth       string
+	sites       []any          // emission order of {expr} and expression attributes
+	defs        map[int]string // props field index -> synthetic default probe name
+	frags       []string       // synthetic names of the fragment scope probes
+	clients     []*clientSite
+	clientDiags []Diagnostic
 }
 
 // analyze type-checks every .gx file in dirs. It generates shadow Go files in
@@ -65,6 +70,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		routeDefs:  map[string]*routeDef{},
 		sigTypes:   map[*File]map[string]types.Type{},
 		sigActions: map[string]bool{},
+		exprTypes:  map[ast.Expr]types.Type{},
+		clientBy:   map[*Attr]*clientSite{},
+		scopedMap:  map[*Component]bool{},
 	}
 	if findModule(root) == nil {
 		return res, nil
@@ -146,6 +154,12 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 				continue
 			}
 			l.collectTypes(res, pkg, file, pr)
+		}
+	}
+	for _, pr := range parseProbe {
+		diags = append(diags, pr.clientDiags...)
+		for _, site := range pr.clients {
+			diags = append(diags, res.checkClientSite(site)...)
 		}
 	}
 	res.collectActions(pkgs)
@@ -239,20 +253,80 @@ func (l *loader) checkKeys(dirs []string) []Diagnostic {
 				if !ok || c.Kind != "for" {
 					return
 				}
-				if !loopNeedsKey(l, p, f, c.Body) || loopHasKey(c.Body) {
-					return
+				if loopNeedsKey(l, p, f, c.Body) && !loopHasKey(c.Body) {
+					out = append(out, Diagnostic{
+						Code: CodeLoopKey,
+						File: f.File,
+						Line: c.At.Line,
+						Col:  c.At.Col,
+						Msg:  "loop needs a key: add key={expr} or a #fragment with a key parameter",
+					})
 				}
-				out = append(out, Diagnostic{
-					Code: CodeLoopKey,
-					File: f.File,
-					Line: c.At.Line,
-					Col:  c.At.Col,
-					Msg:  "loop needs a key: add key={expr} or a #fragment with a key parameter",
+				memo := map[*Component]bool{}
+				walkElementsKeyed(c.Body, false, func(el *Element, keyed bool) {
+					qual, name, ok := componentTag(el.Name)
+					if !ok {
+						return
+					}
+					comp, childPkg, _ := resolveComponent(l, p, f, qual, name)
+					if comp == nil || !componentScoped(l, childPkg, comp.File, comp, memo, map[*Component]bool{}) {
+						return
+					}
+					if keyed || elementHasKey(el) {
+						return
+					}
+					out = append(out, Diagnostic{
+						Code: CodeInstanceKey,
+						File: f.File,
+						Line: el.At.Line,
+						Col:  el.At.Col,
+						Msg:  "component <" + el.Name + "> has signals and renders in a loop; add key={expr} so each instance keeps its own signals",
+					})
 				})
 			})
 		}
 	}
 	return out
+}
+
+// elementHasKey reports whether an element carries key={expr}.
+func elementHasKey(el *Element) bool {
+	for i := range el.Attrs {
+		if el.Attrs[i].Kind == AttrExpr && el.Attrs[i].Name == "key" {
+			return true
+		}
+	}
+	return false
+}
+
+// walkElementsKeyed calls fn for every element below ns with keyed set when
+// an ancestor carries key={expr} or is a keyed fragment.
+func walkElementsKeyed(ns []Node, keyed bool, fn func(*Element, bool)) {
+	for _, n := range ns {
+		switch t := n.(type) {
+		case *Element:
+			own := keyed || elementHasKey(t) || fragmentDeclaresKey(t)
+			fn(t, keyed)
+			walkElementsKeyed(t.Children, own, fn)
+		case *Control:
+			walkElementsKeyed(t.Body, keyed, fn)
+			walkElementsKeyed(t.Else, keyed, fn)
+			for _, c := range t.Cases {
+				walkElementsKeyed(c.Body, keyed, fn)
+			}
+		}
+	}
+}
+
+// fragmentDeclaresKey reports whether an element is a fragment whose first
+// parameter is key.
+func fragmentDeclaresKey(el *Element) bool {
+	for i := range el.Attrs {
+		if el.Attrs[i].Kind == AttrFragment {
+			return declaresKey(el.Attrs[i].Value)
+		}
+	}
+	return false
 }
 
 // loopNeedsKey reports whether the loop body holds a node that keeps client
@@ -471,13 +545,49 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 		}
 		return true
 	})
-	for i, site := range pr.sites {
-		if i >= len(exprs) {
-			break
+	for expr, tv := range pkg.TypesInfo.Types {
+		res.exprTypes[expr] = tv.Type
+	}
+	// The site ASTs must come from the probe file so that TypesInfo has
+	// their types. The probe preserves site order, so one counter each
+	// for expressions and for statement blocks rebinds them.
+	var blocks []*ast.BlockStmt
+	ast.Inspect(file, func(n ast.Node) bool {
+		if lit, ok := n.(*ast.FuncLit); ok && lit.Body != nil {
+			blocks = append(blocks, lit.Body)
 		}
-		if tv, ok := pkg.TypesInfo.Types[exprs[i]]; ok {
-			res.types[site] = tv.Type
+		return true
+	})
+	for _, site := range pr.clients {
+		res.clientBy[site.attr] = site
+	}
+	blockIdx := 0
+	for i, siteAny := range pr.sites {
+		if i < len(exprs) {
+			if tv, ok := pkg.TypesInfo.Types[exprs[i]]; ok {
+				res.types[siteAny] = tv.Type
+			}
 		}
+		a, ok := siteAny.(*Attr)
+		if !ok {
+			continue
+		}
+		cs := res.clientBy[a]
+		if cs == nil || cs.block {
+			continue
+		}
+		if i < len(exprs) {
+			cs.node = exprs[i]
+		}
+	}
+	for _, site := range pr.clients {
+		if !site.block {
+			continue
+		}
+		if blockIdx < len(blocks) {
+			site.node = blocks[blockIdx]
+		}
+		blockIdx++
 	}
 	for idx, name := range pr.defs {
 		names := map[string]bool{}
@@ -631,6 +741,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 	w := &probeWriter{l: l, pkg: pkg, file: f, synth: synth, pr: pr, b: &b, record: true}
 	fmt.Fprintf(&b, "func _gxProbe%s(p %sProps) {\n", name, name)
 	writeSignalDecls(&b, synth, f, true)
+	writeRefDecls(&b, f)
 	for idx, fld := range f.Props {
 		if !fld.HasDefault {
 			continue
@@ -647,6 +758,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 		fmt.Fprintf(&b, "\n//line %s:%d:1\nfunc _gxFrag%s_%d() {\n", fragSynth, el.At.Line, synth, i)
 		fmt.Fprintf(&b, "//line %s:%d:1\nvar p %sProps\n_ = p\n", fragSynth, el.At.Line, name)
 		writeSignalDecls(&b, fragSynth, f, false)
+		writeRefDecls(&b, f)
 		for _, param := range splitParams(fragmentParams(el)) {
 			if ident := firstIdent(param); ident != "" && ident != "_" {
 				fmt.Fprintf(&b, "//line %s:%d:1\nvar %s\n_ = %s\n", fragSynth, el.At.Line, param, ident)
@@ -657,6 +769,19 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 		b.WriteString("}\n")
 	}
 	return pr, b.Bytes()
+}
+
+// writeRefDecls declares one probe variable per gx.SignalRef prop so a
+// client expression that reads the prop type-checks as its element type
+// (REQ-ACT-07).
+func writeRefDecls(b *bytes.Buffer, f *File) {
+	for _, p := range f.Props {
+		elem, ok := signalRefArg(p.Type)
+		if !ok {
+			continue
+		}
+		fmt.Fprintf(b, "var _gxRef_%s %s\n", p.Name, elem)
+	}
 }
 
 // writeSignalDecls declares one probe variable per signal so client
@@ -690,12 +815,58 @@ func (w *probeWriter) fragmentBody(el *Element) {
 		a := &el.Attrs[i]
 		switch a.Kind {
 		case AttrExpr:
+			if needsClient(a.Name, a.Value) {
+				w.client(a)
+				continue
+			}
 			writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a, w.record)
 		case AttrSpread:
 			writeProbeSpread(w.b, a.Value, a.ValueAt, w.synth)
 		}
 	}
 	w.nodes(el.Children)
+}
+
+// client probes one client expression attribute and records its site
+// (REQ-ACT-07).
+func (w *probeWriter) client(a *Attr) {
+	refs := map[string]bool{}
+	for name := range signalRefProps(w.file) {
+		refs[name] = true
+	}
+	rewritten, err := rewriteClient(a.Value, refs)
+	if err != nil {
+		w.clientDiag(a, "cannot parse the client expression: "+err.Error())
+		return
+	}
+	node, block, err := parseClient(rewritten)
+	if err != nil {
+		w.clientDiag(a, "cannot parse the client expression: "+err.Error())
+		return
+	}
+	site := &clientSite{file: w.file, attr: a, node: node, block: block}
+	w.pr.clients = append(w.pr.clients, site)
+	col := a.ValueAt.Col - 4
+	if col < 1 {
+		col = 1
+	}
+	if block {
+		fmt.Fprintf(w.b, "//line %s:%d:%d\nfunc() {\n%s\n}()\n", w.synth, a.ValueAt.Line, col, rewritten)
+		return
+	}
+	w.pr.sites = append(w.pr.sites, a)
+	fmt.Fprintf(w.b, "//line %s:%d:%d\n_=%s\n", w.synth, a.ValueAt.Line, col, rewritten)
+}
+
+// clientDiag records a diagnostic that the probe cannot type-check.
+func (w *probeWriter) clientDiag(a *Attr, msg string) {
+	w.pr.clientDiags = append(w.pr.clientDiags, Diagnostic{
+		Code: CodeType,
+		File: w.file.File,
+		Line: a.ValueAt.Line,
+		Col:  a.ValueAt.Col,
+		Msg:  msg,
+	})
 }
 
 func (w *probeWriter) nodes(ns []Node) {
@@ -708,6 +879,10 @@ func (w *probeWriter) nodes(ns []Node) {
 				a := &t.Attrs[i]
 				switch a.Kind {
 				case AttrExpr:
+					if needsClient(a.Name, a.Value) {
+						w.client(a)
+						continue
+					}
 					writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a, w.record)
 				case AttrSpread:
 					writeProbeSpread(w.b, a.Value, a.ValueAt, w.synth)

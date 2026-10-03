@@ -134,6 +134,48 @@ func (r *typesResult) checkSignalFields(f *File, a *Attr, def *routeDef) []Diagn
 	return out
 }
 
+// componentScoped reports whether a component carries client signals
+// itself or through a component it renders (REQ-ACT-06).
+func (r *typesResult) componentScoped(l *loader, pkg *Package, file *File, comp *Component, seen map[*Component]bool) bool {
+	return componentScoped(l, pkg, file, comp, r.scopedMap, seen)
+}
+
+// componentScoped reports whether a component carries client signals itself
+// or through a component it renders (REQ-ACT-06). The memo caches results.
+func componentScoped(l *loader, pkg *Package, file *File, comp *Component, memo, seen map[*Component]bool) bool {
+	if comp == nil || comp.File == nil {
+		return false
+	}
+	if v, ok := memo[comp]; ok {
+		return v
+	}
+	if seen[comp] {
+		return false
+	}
+	seen[comp] = true
+	defer delete(seen, comp)
+	if len(comp.File.Signals) > 0 {
+		memo[comp] = true
+		return true
+	}
+	found := false
+	walkElements(comp.File.Body, func(el *Element) {
+		if found {
+			return
+		}
+		qual, name, ok := componentTag(el.Name)
+		if !ok {
+			return
+		}
+		child, childPkg, _ := resolveComponent(l, pkg, comp.File, qual, name)
+		if child != nil && componentScoped(l, childPkg, comp.File, child, memo, seen) {
+			found = true
+		}
+	})
+	memo[comp] = found
+	return found
+}
+
 // namedTypeKey returns the package path and name of a named type, or "".
 func namedTypeKey(t types.Type) string {
 	named, ok := t.(*types.Named)

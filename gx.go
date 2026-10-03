@@ -3,6 +3,7 @@
 package gx
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -105,6 +106,17 @@ func TextValue(v any) string {
 		return ""
 	}
 	return fmt.Sprint(v)
+}
+
+// JSON returns the JSON form of a server value inlined into a client
+// expression (SI-05). It panics when the value has no JSON form: the
+// compiler must not inline it.
+func JSON(v any) string {
+	data, err := json.Marshal(v)
+	if err != nil {
+		panic("gx: cannot inline a value into a client expression: " + err.Error())
+	}
+	return string(data)
 }
 
 // JoinAttrs concatenates attribute lists in order (REQ-AUT-09).

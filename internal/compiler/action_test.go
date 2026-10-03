@@ -139,7 +139,7 @@ func TestREQ_ACT_03_SignalBinding(t *testing.T) {
 	}
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "cart/Cart_gx.go")])
-	want := `"@post('" + (Add{}).URL() + "', {headers: {'Gx-Scope': 'cart.Cart'}})"`
+	want := `"@post('" + (Add{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})"`
 	if !strings.Contains(src, want) {
 		t.Fatalf("Cart_gx.go lacks the scoped action attribute:\n%s", src)
 	}

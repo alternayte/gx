@@ -36,11 +36,15 @@ const (
 
 	CodeTrustedHTML = "GX7001"
 
-	CodeActionMissing = "GX4001"
-	CodeActionTwice   = "GX4002"
+	CodeActionMissing       = "GX4001"
+	CodeActionTwice         = "GX4002"
 	CodeActionMissingSignal = "GX4003"
 	CodeSignalTypeMismatch  = "GX4004"
-	CodeActionMethod  = "GX4009"
+	CodeClientCall          = "GX4005"
+	CodeClientType          = "GX4007"
+	CodeInstanceKey         = "GX2012"
+	CodeSignalDefault       = "GX2014"
+	CodeActionMethod        = "GX4009"
 )
 
 // Diagnostic is one compiler message.
@@ -76,6 +80,8 @@ var Catalog = []Info{
 	{CodeFragment, "fragment free variable"},
 	{CodeLoopKey, "loop needs a key"},
 	{CodeSignal, "signal in a server expression"},
+	{CodeInstanceKey, "signal instance needs a key"},
+	{CodeSignalDefault, "signal needs an initial value"},
 	{CodeURLAttr, "dynamic URL attribute"},
 	{CodeUnrenderable, "value cannot render as text"},
 	{CodeRouteField, "route field type cannot bind"},
@@ -88,6 +94,8 @@ var Catalog = []Info{
 	{CodeActionTwice, "more than one action is registered for a route type"},
 	{CodeActionMissingSignal, "no signal is declared for a signal-bound field"},
 	{CodeSignalTypeMismatch, "signal type does not match the action field"},
+	{CodeClientCall, "call is not allowed in a client expression"},
+	{CodeClientType, "value or operator is not allowed in a client expression"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }

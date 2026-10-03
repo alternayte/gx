@@ -65,6 +65,18 @@ func (l *loader) checkDir(dir string) []Diagnostic {
 	p := l.load(dir)
 	out := append([]Diagnostic{}, p.Diags...)
 	for _, f := range p.Files {
+		for _, s := range f.Signals {
+			if !s.HasDefault {
+				out = append(out, Diagnostic{
+					Code: CodeSignalDefault,
+					File: f.File,
+					Line: s.At.Line,
+					Col:  s.At.Col,
+					Msg:  "signal " + Quoted(s.Name) + " needs an initial value",
+					Fix:  "write " + s.Name + " " + s.Type + " = <value>",
+				})
+			}
+		}
 		out = l.checkNodes(p, f, f.Body, out)
 	}
 	return out
