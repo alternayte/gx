@@ -56,7 +56,8 @@ func (p *Package) component(name string) (*Component, bool) {
 
 // loader caches parsed packages by directory.
 type loader struct {
-	pkgs map[string]*Package
+	pkgs    map[string]*Package
+	overlay map[string][]byte
 }
 
 func newLoader() *loader {
@@ -78,11 +79,18 @@ func (l *loader) load(dir string) *Package {
 		if e.IsDir() || !strings.HasSuffix(e.Name(), ".gx") {
 			continue
 		}
-		src, err := os.ReadFile(filepath.Join(dir, e.Name()))
-		if err != nil {
-			continue
+		path := filepath.Join(dir, e.Name())
+		var src []byte
+		if data, ok := l.overlay[filepath.Clean(path)]; ok {
+			src = data
+		} else {
+			var readErr error
+			src, readErr = os.ReadFile(path)
+			if readErr != nil {
+				continue
+			}
 		}
-		f, diags := ParseFile(filepath.Join(dir, e.Name()), src)
+		f, diags := ParseFile(path, src)
 		p.Diags = append(p.Diags, diags...)
 		if f != nil {
 			p.Files[strings.TrimSuffix(e.Name(), ".gx")] = f

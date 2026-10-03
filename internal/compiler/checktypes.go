@@ -7,6 +7,7 @@ import (
 	"go/token"
 	"go/types"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"golang.org/x/tools/go/packages"
@@ -40,6 +41,8 @@ type typesResult struct {
 	clientBy    map[*Attr]*clientSite
 	clientSites []*clientSite
 	scopedMap   map[*Component]bool
+	symbols     map[string][]Symbol // typed identifiers per .gx file (REQ-DEV-08)
+	goFset      *token.FileSet      // the shared file set of the loaded Go packages
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -81,6 +84,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		exprTypes:  map[ast.Expr]types.Type{},
 		clientBy:   map[*Attr]*clientSite{},
 		scopedMap:  map[*Component]bool{},
+		symbols:    map[string][]Symbol{},
 	}
 	if findModule(root) == nil {
 		return res, nil
@@ -135,6 +139,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	}
 	res.pkgs = pkgs
 	res.fillInterfaces(pkgs)
+	if len(pkgs) > 0 {
+		res.goFset = pkgs[0].Fset
+	}
 
 	var diags []Diagnostic
 	for _, pkg := range pkgs {
@@ -658,6 +665,66 @@ func (l *loader) collectTypes(res *typesResult, info *types.Info, fset *token.Fi
 		}
 		res.quals[pr.file][idx] = names
 	}
+	res.symbols[pr.file.File] = collectSymbols(res.symbols[pr.file.File], info, fset, pr, tpkg, res)
+}
+
+// collectSymbols records one Symbol per identifier in a //line-mapped
+// region of the probe, so its position is the .gx position (REQ-DEV-08).
+func collectSymbols(dst []Symbol, info *types.Info, fset *token.FileSet, pr *probe, tpkg *types.Package, res *typesResult) []Symbol {
+	qual := func(p *types.Package) string { return p.Name() }
+	add := func(ident *ast.Ident, obj types.Object) {
+		if strings.HasPrefix(ident.Name, "_") {
+			return
+		}
+		pos := fset.PositionFor(ident.Pos(), true)
+		unadj := fset.PositionFor(ident.Pos(), false)
+		if pos.Filename == unadj.Filename {
+			return // the generated region: no //line directive
+		}
+		sym := Symbol{
+			File: pr.file.File, Line: pos.Line, Col: pos.Column,
+			EndCol: pos.Column + len(ident.Name), Text: ident.Name,
+		}
+		if t := info.TypeOf(ident); t != nil {
+			sym.Type = types.TypeString(t, qual)
+		}
+		if obj != nil {
+			var p token.Position
+			switch {
+			case obj.Pkg() == tpkg:
+				p = fset.PositionFor(obj.Pos(), true)
+			case res.goFset != nil:
+				p = res.goFset.Position(obj.Pos())
+			default:
+				p = fset.PositionFor(obj.Pos(), true)
+			}
+			if p.IsValid() {
+				genBase := strings.TrimSuffix(filepath.Base(pr.file.File), ".gx") + "_gx.go"
+				if filepath.Base(p.Filename) != genBase {
+					sym.ObjectFile, sym.ObjectLine, sym.ObjectCol = p.Filename, p.Line, p.Column
+				}
+			}
+		}
+		for _, have := range dst {
+			if have.Line == sym.Line && have.Col == sym.Col {
+				return
+			}
+		}
+		dst = append(dst, sym)
+	}
+	for ident, obj := range info.Uses {
+		add(ident, obj)
+	}
+	for ident, obj := range info.Defs {
+		add(ident, obj)
+	}
+	sort.Slice(dst, func(i, j int) bool {
+		if dst[i].Line != dst[j].Line {
+			return dst[i].Line < dst[j].Line
+		}
+		return dst[i].Col < dst[j].Col
+	})
+	return dst
 }
 
 // collectPropTypes records the Go type of every props field from the probe

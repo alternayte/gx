@@ -7,7 +7,6 @@ import (
 	goparser "go/parser"
 	"go/token"
 	"go/types"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"sort"
@@ -36,6 +35,7 @@ type Session struct {
 	sigs      map[string]string
 	imp       types.Importer
 	seq       int
+	overlay   map[string][]byte
 }
 
 // fileStamp is the content hash of one input file.
@@ -55,9 +55,10 @@ func (s *Session) Generate(root string) (map[string][]byte, []Diagnostic) {
 	if s.root != "" && s.root != root {
 		s.reset()
 	}
-	stamps, err := snapshotInputs(root)
+	stamps, err := snapshotInputsWith(root, s.overlay)
 	if err != nil {
-		return Generate(root)
+		files, diags, _, _, _ := generate(root, s.overlay)
+		return files, diags
 	}
 	if s.res == nil || s.stamps == nil || !sameFileSet(s.stamps, stamps) || goInputsChanged(s.stamps, stamps) {
 		return s.full(root, stamps)
@@ -67,9 +68,13 @@ func (s *Session) Generate(root string) (map[string][]byte, []Diagnostic) {
 		return s.files, s.lastDiags
 	}
 	for path := range changed {
-		sig, ok := fileSignature(path)
+		data, ok := inputContent(path, s.overlay)
 		if !ok {
 			continue // a parse error: handle it incrementally
+		}
+		sig, ok := fileSignatureData(path, data)
+		if !ok {
+			continue
 		}
 		if old, had := s.sigs[path]; !had || old != sig {
 			return s.full(root, stamps)
@@ -80,7 +85,7 @@ func (s *Session) Generate(root string) (map[string][]byte, []Diagnostic) {
 
 // full discards the cache and runs the whole analysis.
 func (s *Session) full(root string, stamps map[string]fileStamp) (map[string][]byte, []Diagnostic) {
-	files, diags, res, l, dirs := generate(root)
+	files, diags, res, l, dirs := generate(root, s.overlay)
 	s.root, s.l, s.dirs, s.res = root, l, dirs, res
 	s.files = files
 	s.lastDiags = diags
@@ -95,8 +100,10 @@ func (s *Session) full(root string, stamps map[string]fileStamp) (map[string][]b
 	s.sigs = map[string]string{}
 	for path := range stamps {
 		if strings.HasSuffix(path, ".gx") {
-			if sig, ok := fileSignature(path); ok {
-				s.sigs[path] = sig
+			if data, ok := inputContent(path, s.overlay); ok {
+				if sig, ok := fileSignatureData(path, data); ok {
+					s.sigs[path] = sig
+				}
 			}
 		}
 	}
@@ -106,6 +113,7 @@ func (s *Session) full(root string, stamps map[string]fileStamp) (map[string][]b
 // incremental re-checks the changed files against the cached packages and
 // regenerates only those files (NFR-05).
 func (s *Session) incremental(root string, changed map[string]bool, stamps map[string]fileStamp) (map[string][]byte, []Diagnostic) {
+	s.l.overlay = s.overlay
 	// Record what was on disk for this pass even when it fails, so the next
 	// change is diffed against the observed state.
 	s.stamps = stamps
@@ -188,11 +196,13 @@ func (s *Session) incremental(root string, changed map[string]bool, stamps map[s
 	s.lastDiags = nil
 	s.stamps = stamps
 	for path := range changed {
-		if sig, ok := fileSignature(path); ok {
-			s.sigs[path] = sig
-		} else {
-			delete(s.sigs, path)
+		if data, ok := inputContent(path, s.overlay); ok {
+			if sig, ok := fileSignatureData(path, data); ok {
+				s.sigs[path] = sig
+				continue
+			}
 		}
+		delete(s.sigs, path)
 	}
 	return out, nil
 }
@@ -252,7 +262,23 @@ func (s *Session) recheck(path string) {
 			tds = append(tds, d)
 		}
 	}}
-	tpkg, _ := conf.Check("gxcheck/"+synth, fset, []*ast.File{file}, info)
+	// Seed the package scope with the cached package-level declarations, so
+	// a probe that names a same-package Go symbol type-checks (REQ-DEV-08).
+	tpkg := types.NewPackage(s.packagePath(dir), f.Package)
+	if cached, err := s.imp.Import(tpkg.Path()); err == nil && cached != nil {
+		skip := map[string]bool{
+			componentName(f):           true,
+			componentName(f) + "Props": true,
+		}
+		for _, name := range cached.Scope().Names() {
+			if skip[name] || strings.HasPrefix(name, "_gx") {
+				continue
+			}
+			tpkg.Scope().Insert(cached.Scope().Lookup(name))
+		}
+	}
+	check := types.NewChecker(&conf, fset, tpkg, info)
+	_ = check.Files([]*ast.File{file})
 	s.dropFile(f)
 	s.l.collectTypes(s.res, info, fset, tpkg, file, pr)
 	if tpkg != nil {
@@ -266,6 +292,18 @@ func (s *Session) recheck(path string) {
 		tds = append(tds, s.res.checkClientSite(site)...)
 	}
 	s.res.typeDiags[path] = tds
+}
+
+// packagePath returns the import path of a package directory.
+func (s *Session) packagePath(dir string) string {
+	p := s.l.load(dir)
+	if p.Module == nil {
+		return "gxcheck/" + filepath.Base(dir)
+	}
+	if rel, err := filepath.Rel(p.Module.Dir, dir); err == nil && rel != "." {
+		return p.Module.Path + "/" + filepath.ToSlash(rel)
+	}
+	return p.Module.Path
 }
 
 // dropFile removes the cached type contributions of one .gx file.
@@ -284,6 +322,7 @@ func (s *Session) dropFile(f *File) {
 	}
 	delete(s.res.sigTypes, f)
 	delete(s.res.quals, f)
+	delete(s.res.symbols, f.File)
 }
 
 // reset clears the session.
@@ -325,37 +364,6 @@ func (s sessionImporter) Import(path string) (*types.Package, error) {
 		return p, nil
 	}
 	return nil, fmt.Errorf("gx: no cached package %q", path)
-}
-
-// snapshotInputs hashes every input file of the compiler.
-func snapshotInputs(root string) (map[string]fileStamp, error) {
-	out := map[string]fileStamp{}
-	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-		if d.IsDir() {
-			switch d.Name() {
-			case ".git", "node_modules", ".gx", "vendor", "testdata", ".gx-build":
-				return fs.SkipDir
-			}
-			return nil
-		}
-		name := d.Name()
-		if strings.HasSuffix(name, "_gx.go") {
-			return nil // generated output
-		}
-		if !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && name != "go.mod" && name != "go.sum" {
-			return nil
-		}
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return nil
-		}
-		out[path] = fileStamp{hash: sha256.Sum256(data)}
-		return nil
-	})
-	return out, err
 }
 
 // sameFileSet reports whether the two snapshots hold the same paths.
@@ -406,6 +414,11 @@ func fileSignature(path string) (string, bool) {
 	if err != nil {
 		return "", false
 	}
+	return fileSignatureData(path, src)
+}
+
+// fileSignatureData is fileSignature over given source bytes.
+func fileSignatureData(path string, src []byte) (string, bool) {
 	f, diags := ParseFile(path, src)
 	if f == nil || len(diags) > 0 {
 		return "", false

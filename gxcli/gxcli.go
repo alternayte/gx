@@ -18,6 +18,7 @@ import (
 
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
+	"github.com/alternayte/gx/internal/lsp"
 )
 
 // Main runs the gx command with the given arguments and returns an exit code.
@@ -39,6 +40,8 @@ func Main(args []string) int {
 		return runDev(args[1:])
 	case "routes":
 		return runRoutes(args[1:])
+	case "lsp":
+		return runLSP(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -59,6 +62,7 @@ Commands:
   build     generate the module and build its app binary
   dev       run the app with rebuild, restart, morph and the error overlay
   routes    print the routes of a module, with --json for machine output
+  lsp       run the language server on stdio
 `)
 }
 
@@ -281,6 +285,29 @@ func runBuild(args []string) int {
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 	if err := cmd.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+func runLSP(args []string) int {
+	fs := flag.NewFlagSet("gx lsp", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	root := fs.String("root", "", "module root (default: current directory)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := *root
+	if dir == "" {
+		var err error
+		dir, err = os.Getwd()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "gx lsp: %v\n", err)
+			return 1
+		}
+	}
+	if err := lsp.Serve(os.Stdin, os.Stdout, lsp.Options{Root: dir, Log: os.Stderr}); err != nil {
+		fmt.Fprintf(os.Stderr, "gx lsp: %v\n", err)
 		return 1
 	}
 	return 0

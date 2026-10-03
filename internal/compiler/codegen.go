@@ -21,15 +21,17 @@ import (
 // each generated file path to its source. It returns diagnostics instead when
 // any check fails.
 func Generate(root string) (map[string][]byte, []Diagnostic) {
-	files, diags, _, _, _ := generate(root)
+	files, diags, _, _, _ := generate(root, nil)
 	return files, diags
 }
 
 // generate is Generate with the analysis pieces returned, for the
-// incremental Session (NFR-05).
-func generate(root string) (map[string][]byte, []Diagnostic, *typesResult, *loader, []string) {
+// incremental Session (NFR-05). overlay holds in-memory input files
+// (REQ-DEV-08).
+func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diagnostic, *typesResult, *loader, []string) {
 	root = absoluteRoot(root)
 	l := newLoader()
+	l.overlay = overlay
 	dirs := collectDirs(root)
 	var diags []Diagnostic
 	for _, dir := range dirs {
