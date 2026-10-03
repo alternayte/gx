@@ -43,9 +43,9 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX2010 | signal in a server expression",
 		"GX2011 | dynamic URL attribute",
 		"GX2013 | value cannot render as text",
+		"GX3000 | route field type cannot bind",
 		"GX3001 | pattern variable has no field",
 		"GX3002 | path field has no pattern variable",
-		"GX3005 | route field type cannot bind",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 	}
 	if !reflect.DeepEqual(got, want) {
