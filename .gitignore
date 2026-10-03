@@ -1,0 +1,5 @@
+# The spec and the build state stay local
+docs/SDD.md
+docs/build/
+
+.DS_Store
