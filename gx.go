@@ -162,6 +162,9 @@ func Classes(parts ...string) string {
 // Attrs is an ordered attribute list.
 type Attrs []Attr
 
+// Style is a dynamic style attribute value.
+type Style string
+
 // AttrKind selects the escaping rule of an attribute value.
 type AttrKind uint8
 
@@ -172,6 +175,8 @@ const (
 	AttrURL
 	// AttrBool is a boolean attribute: present when Value is "true".
 	AttrBool
+	// AttrStyle is a style attribute value.
+	AttrStyle
 )
 
 // Attr is one attribute of an element.
@@ -229,9 +234,12 @@ func renderNode(b *strings.Builder, n Node) {
 			b.WriteByte(' ')
 			b.WriteString(a.Key)
 			b.WriteString(`="`)
-			if a.Kind == AttrURL {
+			switch a.Kind {
+			case AttrURL:
 				b.WriteString(escapeURL(a.Value))
-			} else {
+			case AttrStyle:
+				b.WriteString(escapeStyle(a.Value))
+			default:
 				b.WriteString(escapeAttr(a.Value))
 			}
 			b.WriteByte('"')
@@ -262,11 +270,41 @@ var attrEscaper = strings.NewReplacer(
 	"<", "&lt;",
 	">", "&gt;",
 	`"`, "&#34;",
+	"'", "&#39;",
 )
 
 func escapeAttr(s string) string { return attrEscaper.Replace(s) }
 
-func escapeURL(s string) string { return attrEscaper.Replace(s) }
+// escapeStyle escapes a dynamic style attribute value (REQ-AUT-12).
+func escapeStyle(s string) string { return attrEscaper.Replace(s) }
+
+// escapeURL filters a URL and then escapes it for an attribute (REQ-AUT-12).
+func escapeURL(s string) string { return attrEscaper.Replace(urlFilter(s)) }
+
+// urlFilter percent-encodes bytes that are not safe in a URL.
+func urlFilter(s string) string {
+	// Straight from html/template: keep unreserved and gen-delims, plus
+	// the sub-delims that carry URL syntax.
+	const safe = "!#$&*+,-./:;=?@[]_~"
+	var b strings.Builder
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		switch {
+		case c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z', c >= '0' && c <= '9':
+			b.WriteByte(c)
+		case c == '%':
+			b.WriteByte(c)
+		case strings.IndexByte(safe, c) >= 0:
+			b.WriteByte(c)
+		default:
+			const hex = "0123456789ABCDEF"
+			b.WriteByte('%')
+			b.WriteByte(hex[c>>4])
+			b.WriteByte(hex[c&0x0f])
+		}
+	}
+	return b.String()
+}
 
 // voidElements are the HTML elements with no closing tag.
 var voidElements = map[string]bool{

@@ -94,6 +94,16 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 	}
 	g.ind--
 	g.write("}")
+	if len(f.Signals) > 0 {
+		g.write("")
+		g.write("type %sSignals struct {", name)
+		g.ind++
+		for _, fld := range f.Signals {
+			g.write("%s %s", fld.Name, fld.Type)
+		}
+		g.ind--
+		g.write("}")
+	}
 	g.write("")
 	g.write("func %s(p %sProps) gx.Node {", name, name)
 	g.ind++
@@ -400,6 +410,12 @@ func (g *gen) attrsExpr(el *Element) string {
 				static = append(static, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
 				continue
 			}
+			if a.Name == "style" {
+				if g.isStyleType(a) {
+					static = append(static, fmt.Sprintf("gx.Attr{Key: \"style\", Value: string(%s), Kind: gx.AttrStyle}", strings.TrimSpace(a.Value)))
+				}
+				continue
+			}
 			if isDirective(a.Name) {
 				continue
 			}
@@ -695,6 +711,11 @@ func isNamedUnderlying(t types.Type, kind types.BasicKind) bool {
 func (g *gen) isBoolType(n any) bool {
 	t := g.res.types[n]
 	return t != nil && t.String() == "bool"
+}
+
+func (g *gen) isStyleType(n any) bool {
+	t := g.res.types[n]
+	return t != nil && t.String() == "github.com/alternayte/gx.Style"
 }
 
 func isURLAttr(name string) bool {

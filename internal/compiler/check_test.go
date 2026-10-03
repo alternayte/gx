@@ -24,6 +24,11 @@ func writeTree(t *testing.T, files map[string]string) string {
 	return dir
 }
 
+func checkDir(t *testing.T, dir string) []compiler.Diagnostic {
+	t.Helper()
+	return compiler.Check(dir)
+}
+
 func diagWith(t *testing.T, diags []compiler.Diagnostic, code string) compiler.Diagnostic {
 	t.Helper()
 	for _, d := range diags {

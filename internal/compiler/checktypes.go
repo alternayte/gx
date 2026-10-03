@@ -108,37 +108,146 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			l.collectTypes(res, pkg, file, pr)
 		}
 	}
-	diags = append(diags, l.checkClassConditions(res, dirs)...)
+	diags = append(diags, l.checkAttributes(res, dirs)...)
+	diags = append(diags, l.checkSignals(dirs)...)
 	return res, diags
 }
 
-// checkClassConditions reports a class:<name> directive whose expression is
-// not a bool (REQ-AUT-10).
-func (l *loader) checkClassConditions(res *typesResult, dirs []string) []Diagnostic {
+// checkSignals reports a server expression that reads a signal (REQ-AUT-15).
+func (l *loader) checkSignals(dirs []string) []Diagnostic {
+	var out []Diagnostic
+	report := func(f *File, n Node) {
+		switch t := n.(type) {
+		case *Expr:
+			if strings.Contains(t.Data, "$") {
+				out = append(out, Diagnostic{Code: CodeSignal, File: f.File, Line: t.At.Line, Col: t.At.Col, Msg: "a signal is only valid in a client expression"})
+			}
+		case *Let:
+			if strings.Contains(t.Expr, "$") {
+				out = append(out, Diagnostic{Code: CodeSignal, File: f.File, Line: t.At.Line, Col: t.At.Col, Msg: "a signal is only valid in a client expression"})
+			}
+		case *Control:
+			if strings.Contains(t.Header, "$") {
+				out = append(out, Diagnostic{Code: CodeSignal, File: f.File, Line: t.At.Line, Col: t.At.Col, Msg: "a signal is only valid in a client expression"})
+			}
+		}
+	}
+	for _, dir := range dirs {
+		p := l.load(dir)
+		for _, f := range p.Files {
+			walkNodes(f.Body, func(n Node) { report(f, n) })
+		}
+	}
+	return out
+}
+
+// walkNodes calls fn for every body node below ns.
+func walkNodes(ns []Node, fn func(Node)) {
+	for _, n := range ns {
+		fn(n)
+		switch t := n.(type) {
+		case *Element:
+			walkNodes(t.Children, fn)
+		case *Control:
+			walkNodes(t.Body, fn)
+			walkNodes(t.Else, fn)
+			for _, c := range t.Cases {
+				walkNodes(c.Body, fn)
+			}
+		}
+	}
+}
+
+// isClientDirective reports whether an attribute holds a client expression
+// (REQ-ACT-07).
+func isClientDirective(name string) bool {
+	if name == "show" || name == "text" {
+		return true
+	}
+	for _, prefix := range []string{"bind:", "class:", "attr:", "on:"} {
+		if strings.HasPrefix(name, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
+// checkAttributes reports context mistakes the probe cannot see: a class
+// directive that is not a bool (REQ-AUT-10), a dynamic event attribute
+// (REQ-AUT-12), a dynamic URL attribute (SI-02) and a non-gx.Style style
+// (REQ-AUT-12).
+func (l *loader) checkAttributes(res *typesResult, dirs []string) []Diagnostic {
 	var out []Diagnostic
 	for _, dir := range dirs {
 		p := l.load(dir)
 		for _, f := range p.Files {
 			walkElements(f.Body, func(el *Element) {
+				if _, _, isComp := componentTag(el.Name); isComp {
+					return // component attributes are props
+				}
 				for i := range el.Attrs {
 					a := &el.Attrs[i]
-					if a.Kind != AttrExpr || !strings.HasPrefix(a.Name, "class:") {
+					if a.Kind != AttrExpr {
 						continue
 					}
-					if strings.Contains(a.Value, "$") {
+					if strings.Contains(a.Value, "$") && !isClientDirective(a.Name) {
+						out = append(out, Diagnostic{
+							Code: CodeSignal,
+							File: f.File,
+							Line: a.At.Line,
+							Col:  a.At.Col,
+							Msg:  "a signal is only valid in a client expression",
+						})
 						continue
 					}
-					t := res.types[a]
-					if t == nil || t.String() == "bool" {
+					if _, ok := strings.CutPrefix(a.Name, "class:"); ok {
+						if !strings.Contains(a.Value, "$") {
+							if t := res.types[a]; t != nil && t.String() != "bool" {
+								out = append(out, Diagnostic{
+									Code: CodeType,
+									File: f.File,
+									Line: a.At.Line,
+									Col:  a.At.Col,
+									Msg:  "attribute " + Quoted(a.Name) + " needs a bool expression, got " + t.String(),
+								})
+							}
+						}
 						continue
 					}
-					out = append(out, Diagnostic{
-						Code: CodeType,
-						File: f.File,
-						Line: a.At.Line,
-						Col:  a.At.Col,
-						Msg:  "attribute " + Quoted(a.Name) + " needs a bool expression, got " + t.String(),
-					})
+					if isDirective(a.Name) {
+						continue
+					}
+					if strings.HasPrefix(a.Name, "on") {
+						out = append(out, Diagnostic{
+							Code: CodeEventAttr,
+							File: f.File,
+							Line: a.At.Line,
+							Col:  a.At.Col,
+							Msg:  "attribute " + Quoted(a.Name) + " cannot take an expression",
+						})
+						continue
+					}
+					if isURLAttr(a.Name) {
+						out = append(out, Diagnostic{
+							Code: CodeURLAttr,
+							File: f.File,
+							Line: a.At.Line,
+							Col:  a.At.Col,
+							Msg:  "attribute " + Quoted(a.Name) + " cannot take a dynamic value",
+						})
+						continue
+					}
+					if a.Name == "style" {
+						if t := res.types[a]; t == nil || t.String() != "github.com/alternayte/gx.Style" {
+							out = append(out, Diagnostic{
+								Code: CodeType,
+								File: f.File,
+								Line: a.At.Line,
+								Col:  a.At.Col,
+								Msg:  "attribute \"style\" needs a gx.Style value",
+							})
+						}
+					}
 				}
 			})
 		}

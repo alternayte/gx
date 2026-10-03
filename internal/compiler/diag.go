@@ -19,7 +19,9 @@ const (
 
 	CodeSpread        = "GX2005"
 	CodeDuplicateSlot = "GX2006"
+	CodeEventAttr     = "GX2007"
 	CodeSignal        = "GX2010"
+	CodeURLAttr       = "GX2011"
 	CodeUnrenderable  = "GX2013"
 )
 
