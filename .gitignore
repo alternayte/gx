@@ -6,3 +6,6 @@ docs/build/
 
 # Build scratch
 .gx-build/
+
+# Repo-local e2e dependencies
+node_modules/

@@ -2,7 +2,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # The gate. Run this before every commit.
-verify: build vet runtime test checks
+verify: build vet runtime test checks e2e
 
 # The same gate under the global agent-instruction name.
 check: verify
@@ -10,6 +10,10 @@ check: verify
 # Build the browser runtime from its TypeScript source.
 runtime:
     bun build runtime/js/gx.ts --outfile runtime/js/gx.js --target browser --minify
+
+# Drive the real app in a real browser. The repo's own gate only (G3).
+e2e:
+    "tests/e2e/run.sh"
 
 build:
     rm -rf .gx-build; mkdir -p .gx-build; trap 'rm -rf .gx-build' EXIT; go build -o .gx-build ./...

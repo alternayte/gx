@@ -8,7 +8,7 @@ root="$(git rev-parse --show-toplevel)"
 cd "$root"
 fail=0
 
-files="$(find . -path ./.git -prune -o -type f \( -name '*.go' -o -name '*.ts' -o -name '*.tsx' -o -name '*.gx' -o -name '*.js' \) -print)"
+files="$(find . -path ./.git -prune -o -path '*/node_modules' -prune -o -type f \( -name '*.go' -o -name '*.ts' -o -name '*.tsx' -o -name '*.gx' -o -name '*.js' \) -print)"
 while IFS= read -r word; do
   case "$word" in ''|\#*) continue ;; esac
   hits="$(printf '%s\n' "$files" | xargs grep -Fn -- "$word" 2>/dev/null || true)"
@@ -19,7 +19,7 @@ while IFS= read -r word; do
   fi
 done < scripts/forbid-words.txt
 
-skips="$(find . -path ./.git -prune -o -path ./tests/quarantine -prune -o -type f -name '*_test.go' -print | xargs grep -En 't\.Skip|testing\.Skip' 2>/dev/null || true)"
+skips="$(find . -path ./.git -prune -o -path '*/node_modules' -prune -o -path ./tests/quarantine -prune -o -type f -name '*_test.go' -print | xargs grep -En 't\.Skip|testing\.Skip' 2>/dev/null || true)"
 if [ -n "$skips" ]; then
   echo "rule: a test skips outside tests/quarantine/:" >&2
   echo "$skips" >&2

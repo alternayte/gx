@@ -175,6 +175,11 @@ func signalRefArg(typ string) (string, bool) {
 // adapterAttrName maps a client directive name to the adapter attribute
 // name, including event modifiers and special events (REQ-ACT-08).
 func adapterAttrName(name string) (string, error) {
+	if strings.HasPrefix(name, "bind:") {
+		// Datastar v1 binds by signal path in the value and reads the
+		// property from the element type.
+		return "data-bind", nil
+	}
 	if !strings.HasPrefix(name, "on:") {
 		return "data-" + name, nil
 	}
@@ -355,6 +360,10 @@ type transpiler struct {
 	file      *File
 	scopeBase string
 	keyExpr   string
+	// scoped sends the instance scope with every action call, so the
+	// handler can patch and set the signals of this instance
+	// (REQ-ACT-03, REQ-ACT-05).
+	scoped bool
 }
 
 // transpileValue returns a Go expression that builds the adapter value.
@@ -462,7 +471,7 @@ func (t *transpiler) actionValue(call ast.Expr, key string) (string, error) {
 	}
 	expr := printNode(call)
 	end := strconv.Quote("')")
-	if t.res.sigActions[key] {
+	if t.scoped {
 		end = strconv.Quote("', {headers: {'Gx-Scope': '") + " + gx.ScopeString(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ") + " + strconv.Quote("'}})")
 	}
 	return strconv.Quote("@"+fn+"('") + " + (" + expr + ").URL() + " + end, nil

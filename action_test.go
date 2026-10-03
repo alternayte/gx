@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/alternayte/gx"
@@ -17,9 +18,9 @@ type fakeAdapter struct {
 	wrote     int
 }
 
-func (f *fakeAdapter) Name() string        { return "fake" }
-func (f *fakeAdapter) Signals() bool       { return true }
-func (f *fakeAdapter) Runtime() gx.Node    { return nil }
+func (f *fakeAdapter) Name() string     { return "fake" }
+func (f *fakeAdapter) Signals() bool    { return true }
+func (f *fakeAdapter) Runtime() gx.Node { return nil }
 func (f *fakeAdapter) Assets() map[string][]byte {
 	return nil
 }
@@ -42,8 +43,8 @@ func (f *fakeAdapter) ReadSignals(*http.Request, any) error { return nil }
 // types provide the same Pattern and Bind methods.
 type actRoute struct{}
 
-func (actRoute) Pattern() string             { return "POST /act" }
-func (actRoute) Bind(*http.Request) error    { return nil }
+func (actRoute) Pattern() string          { return "POST /act" }
+func (actRoute) Bind(*http.Request) error { return nil }
 
 // redirectTarget implements the redirect target interface.
 type redirectTarget struct{}
@@ -164,8 +165,11 @@ func TestREQ_ACT_01_ActionError(t *testing.T) {
 	a := &fakeAdapter{}
 	h := gx.Action(func(c *gx.Ctx, in actRoute) error { return errors.New("boom") })
 	rec := serveAction(t, a, h)
-	if rec.Code != http.StatusInternalServerError {
-		t.Fatalf("status = %d, want 500", rec.Code)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want 200 with a toast stream", rec.Code)
+	}
+	if a.res == nil || a.res.Err == nil {
+		t.Fatal("handler error is not recorded for the dev overlay")
 	}
 	if !a.responded || len(a.res.Patches) != 1 {
 		t.Fatalf("adapter got %+v, want one toast", a.res)
@@ -215,7 +219,10 @@ func TestREQ_ACT_04_PatchNeedsID(t *testing.T) {
 		return ctx.Patch(gx.El("span", nil, gx.Text("x")))
 	})
 	rec := serveAction(t, a, h)
-	if rec.Code != http.StatusInternalServerError {
-		t.Fatalf("status = %d, want 500 for a patch without an id", rec.Code)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want 200 with the error toast", rec.Code)
+	}
+	if p, ok := a.res.Patches[0].(gx.ToastPatch); !ok || !strings.Contains(p.Text, "no id") {
+		t.Fatalf("patch = %#v, want a toast about the missing id", a.res.Patches[0])
 	}
 }

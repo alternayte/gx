@@ -99,7 +99,9 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 				return err
 			}
 		case gx.ToastPatch:
-			if err := sse.PatchElements(gx.String(gx.ToastNode(t.Text)), sdk.WithSelectorID("gx-toaster")); err != nil {
+			// Append, so the toaster region keeps its id for the next
+			// toast (REQ-REG-11).
+			if err := sse.PatchElements(gx.String(gx.ToastNode(t.Text)), sdk.WithSelectorID("gx-toaster"), sdk.WithModeAppend()); err != nil {
 				return err
 			}
 		}

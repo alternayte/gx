@@ -37,7 +37,7 @@ func TestREQ_ACT_05_SignalCodegen(t *testing.T) {
 	for _, want := range []string{
 		"GxKey gx.Key",
 		`gx.Attr{Key: "data-signals", Value: gx.SignalJSON("cart.Cart", p.GxKey, map[string]any{"qty": 1}), Kind: gx.AttrText}`,
-		`gx.Attr{Key: "data-bind:value", Value: gx.SignalPath("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
+		`gx.Attr{Key: "data-bind", Value: gx.SignalName("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
 		`gx.Attr{Key: "data-show", Value: "(" + gx.SignalPath("cart.Cart", p.GxKey, "qty") + " > " + gx.JSON(1) + ")", Kind: gx.AttrText}`,
 		`gx.Attr{Key: "data-text", Value: gx.SignalPath("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
 	} {
@@ -113,7 +113,7 @@ func TestREQ_ACT_06_SignalPathMatchesSetSignals(t *testing.T) {
 			"\tif !strings.Contains(got, `qty`) {\n" +
 			"\t\tt.Fatalf(\"signals missing: %s\", got)\n" +
 			"\t}\n" +
-			"\tif !strings.Contains(got, `data-bind:value`) {\n" +
+			"\tif !strings.Contains(got, `data-bind`) {\n" +
 			"\t\tt.Fatalf(\"bind missing: %s\", got)\n" +
 			"\t}\n" +
 			"}\n",
@@ -139,7 +139,7 @@ func TestREQ_ACT_06_SignalPathMatchesSetSignals(t *testing.T) {
 // component takes the instance key and keys its id (REQ-ACT-14).
 func TestREQ_ACT_14_KeyedFragment(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"go.mod": moduleWithGx(t),
+		"go.mod":       moduleWithGx(t),
 		"cart/Cart.gx": "package cart\n\nprops {\n  Total int\n}\n\nsignals {\n  Qty int = 1\n}\n\n<div>\n  total := p.Total\n  <span #total(total int)>{total} <span text={$Qty}>1</span></span>\n</div>\n",
 	})
 	files := generateFiles(t, dir)

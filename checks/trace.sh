@@ -16,7 +16,7 @@ fail=0
 
 grep -oE 'REQ-[A-Z]+-[0-9]+|NFR-[0-9]+|SI-[0-9]+' docs/SDD.md | sort -u > "$tmp/sdd-ids"
 
-find . -path ./.git -prune -o -name '*_test.go' -type f -print |
+find . -path ./.git -prune -o -path '*/node_modules' -prune -o -name '*_test.go' -type f -print |
   while IFS= read -r f; do
     grep -oE 'func +(Test|Benchmark|Example)[A-Za-z0-9_]*' "$f" || true
   done |
@@ -24,7 +24,7 @@ find . -path ./.git -prune -o -name '*_test.go' -type f -print |
   grep -oE 'REQ-[A-Z]+-[0-9]+|NFR-[0-9]+|SI-[0-9]+' |
   sort -u > "$tmp/named-go" || true
 
-find . -path ./.git -prune -o -type f \( -name '*.ts' -o -name '*.tsx' \) -print |
+find . -path ./.git -prune -o -path '*/node_modules' -prune -o -type f \( -name '*.ts' -o -name '*.tsx' \) -print |
   while IFS= read -r f; do
     grep -oE "(test|it)\([\"'][^\"']*" "$f" || true
   done |

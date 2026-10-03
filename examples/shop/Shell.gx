@@ -1,0 +1,17 @@
+package shop
+
+import "github.com/alternayte/gx/examples/shop/route"
+
+props {
+  Children gx.Node
+}
+
+<gx.Head title="Gx shop" />
+<header>
+  <nav>
+    <a href={route.Home{}}>Home</a>
+    <a href={route.About{}}>About</a>
+  </nav>
+</header>
+<main>{p.Children}</main>
+<div id="gx-toaster" aria-live="polite" aria-atomic="true"></div>

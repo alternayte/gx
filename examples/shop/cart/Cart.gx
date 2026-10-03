@@ -1,0 +1,24 @@
+package cart
+
+import "github.com/alternayte/gx/examples/shop/cart/route"
+
+props {
+  Label string
+  Total int
+}
+
+signals {
+  Qty int = 1
+}
+
+<div class="cart" data-label={p.Label}>
+  total := p.Total
+  <p>{p.Label} total: <span #total(total int)>{total}</span></p>
+  <input type="number" bind:value={$Qty} />
+  <button on:click={route.Add{}}>Add</button>
+  <button on:click={route.Set{}}>Set 2</button>
+  <button on:click={route.Redirect{}}>Go</button>
+  <button on:click={route.Toast{}}>Toast</button>
+  <button on:click={route.Noop{}}>Nothing</button>
+  <button on:click={route.Error{}}>Fail</button>
+</div>

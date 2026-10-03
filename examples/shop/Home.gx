@@ -1,0 +1,16 @@
+package shop
+
+import (
+  "github.com/alternayte/gx/examples/shop/cart"
+  cartroute "github.com/alternayte/gx/examples/shop/cart/route"
+)
+
+<gx.Head title="Gx shop home" />
+<h1>Two carts</h1>
+<cart.Cart label="Alpha" total={1} key="alpha" />
+<cart.Cart label="Beta" total={2} key="beta" />
+<div on:visible={cartroute.Lazy{}}>
+  <span id="lazy-slot">waiting</span>
+</div>
+<button on:click={cartroute.Transition{}}>Transition</button>
+<span id="transition-target">idle</span>

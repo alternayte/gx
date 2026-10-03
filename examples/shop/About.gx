@@ -1,0 +1,9 @@
+package shop
+
+import cartroute "github.com/alternayte/gx/examples/shop/cart/route"
+
+<gx.Head title="Gx shop about" />
+<h1>About</h1>
+<p>A shop built with Gx.</p>
+<div on:load={cartroute.Lazy{}}></div>
+<span id="lazy-slot">waiting</span>

@@ -38,6 +38,7 @@ const checkInstances = (): void => {
 }
 
 document.addEventListener('DOMContentLoaded', checkInstances)
+checkInstances()
 new MutationObserver(checkInstances).observe(document.documentElement, {
   subtree: true,
   childList: true,

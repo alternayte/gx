@@ -43,9 +43,10 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handlerErr := a.fn(ctx, in)
 	if handlerErr != nil {
 		// A handler error shows a toast, and the dev overlay replaces
-		// the page (REQ-ACT-10, REQ-DEV-06).
+		// the page (REQ-ACT-10, REQ-DEV-06). The status stays 200 so
+		// the adapter stream reaches the browser; res.Err carries the
+		// error for the dev overlay.
 		ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: handlerErr.Error()})
-		ctx.res.Status = http.StatusInternalServerError
 		ctx.res.Err = handlerErr
 	}
 	if len(ctx.res.Patches) == 0 {

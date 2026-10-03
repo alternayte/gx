@@ -458,11 +458,10 @@ func renderRouteFile(defs []*routeDef) []byte {
 	for _, d := range defs {
 		// Every route has a URL method: typed links use GET routes and
 		// action invocations use every method (REQ-RTE-05, REQ-ACT-02).
-		needURL = true
 		needGx = true
 		for _, f := range d.fields {
-			if f.path != "" {
-				needGx = true
+			if f.path != "" || f.query != "" {
+				needURL = true
 			}
 			if f.path != "" || f.query != "" {
 				if f.kind != types.String {
@@ -485,7 +484,7 @@ func renderRouteFile(defs []*routeDef) []byte {
 	if needStrconv {
 		b.WriteString("\t\"strconv\"\n")
 	}
-	if needURL {
+	if len(defs) > 0 {
 		b.WriteString("\t\"strings\"\n")
 	}
 	b.WriteString(")\n\n")

@@ -175,7 +175,9 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		g.write("type %sSignals struct {", name)
 		g.ind++
 		for _, fld := range f.Signals {
-			g.write("%s %s", fld.Name, fld.Type)
+			// The JSON tag matches the signal name the client sees
+			// (REQ-ACT-05).
+			g.write("%s %s `json:%s`", fld.Name, fld.Type, strconv.Quote(lowerFirst(fld.Name)))
 		}
 		g.ind--
 		g.write("}")
@@ -1032,6 +1034,7 @@ func (g *gen) clientAttrValue(a *Attr, site *clientSite) (string, bool) {
 		file:      g.file,
 		scopeBase: g.file.Package + "." + g.name,
 		keyExpr:   g.keyExpr(),
+		scoped:    g.scoped,
 	}
 	if site.block {
 		block, ok := site.node.(*ast.BlockStmt)
@@ -1048,6 +1051,18 @@ func (g *gen) clientAttrValue(a *Attr, site *clientSite) (string, bool) {
 	expr, ok := site.node.(ast.Expr)
 	if !ok {
 		return "", false
+	}
+	if strings.HasPrefix(a.Name, "bind:") {
+		// data-bind takes the dotted signal name, not an expression.
+		id, ok := expr.(*ast.Ident)
+		if !ok {
+			return "", false
+		}
+		name, ok := strings.CutPrefix(id.Name, "_gxSig_")
+		if !ok {
+			return "", false
+		}
+		return "gx.SignalName(" + strconv.Quote(g.file.Package+"."+g.name) + ", " + g.keyExpr() + ", " + strconv.Quote(lowerFirst(name)) + ")", true
 	}
 	if key := namedTypeKey(g.res.exprTypes[expr]); key != "" && g.res.routeKeys[key] {
 		v, err := t.actionValue(expr, key)
@@ -1102,12 +1117,19 @@ func (g *gen) keyAttrExpr(el *Element) string {
 	return ""
 }
 
-// keyAttrValue returns the raw key={expr} source of an element, or "".
+// keyAttrValue returns the key expression of an element as Go source, or
+// "". A static key string becomes a quoted literal.
 func (g *gen) keyAttrValue(el *Element) string {
 	for i := range el.Attrs {
 		a := &el.Attrs[i]
-		if a.Kind == AttrExpr && a.Name == "key" {
+		if a.Name != "key" {
+			continue
+		}
+		if a.Kind == AttrExpr {
 			return strings.TrimSpace(a.Value)
+		}
+		if a.Kind == AttrString {
+			return strconv.Quote(a.Value)
 		}
 	}
 	return ""

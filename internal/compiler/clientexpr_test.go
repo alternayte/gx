@@ -33,7 +33,7 @@ func TestREQ_ACT_07_TranspileGolden(t *testing.T) {
 		{
 			"bind",
 			"<input bind:value={$Qty} />",
-			`gx.Attr{Key: "data-bind:value", Value: gx.SignalPath("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
+			`gx.Attr{Key: "data-bind", Value: gx.SignalName("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
 		},
 		{
 			"class",

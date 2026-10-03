@@ -24,6 +24,20 @@ func ChildKey(parent Key, index int) Key {
 	return parent + Key("."+part)
 }
 
+// ScopeKey returns the instance key inside a scope for a component base,
+// for example "42" for base "cart.Cart" and scope "cart.Cart.42"
+// (REQ-ACT-06). It returns "" when the scope is not that component.
+func ScopeKey(scope, base string) Key {
+	if scope == base {
+		return ""
+	}
+	prefix := base + "."
+	if !strings.HasPrefix(scope, prefix) {
+		return ""
+	}
+	return Key(scope[len(prefix):])
+}
+
 // ScopeString returns the signal namespace of a component instance: the
 // component path plus its key (REQ-ACT-06).
 func ScopeString(base string, key Key) string {
@@ -58,6 +72,12 @@ func SignalJSON(base string, key Key, values map[string]any) string {
 // (REQ-ACT-07).
 func SignalPath(base string, key Key, name string) string {
 	return "$" + SignalRefPath(base, key, name)
+}
+
+// SignalName returns the dotted name of one signal, as data-bind takes it
+// (REQ-ACT-07), for example cart.Cart.42.qty.
+func SignalName(base string, key Key, name string) string {
+	return ScopeString(base, key) + "." + name
 }
 
 // SignalRefPath returns the bracket path of one signal, without the leading
