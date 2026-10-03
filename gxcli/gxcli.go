@@ -1,0 +1,119 @@
+// Package gxcli implements the gx command line tool.
+package gxcli
+
+import (
+	"bytes"
+	"flag"
+	"fmt"
+	"io"
+	"os"
+
+	"github.com/alternayte/gx/internal/compiler"
+)
+
+// Main runs the gx command with the given arguments and returns an exit code.
+func Main(args []string) int {
+	if len(args) == 0 {
+		usage(os.Stderr)
+		return 2
+	}
+	switch args[0] {
+	case "fmt":
+		return runFmt(args[1:])
+	case "help", "-h", "--help":
+		usage(os.Stdout)
+		return 0
+	default:
+		fmt.Fprintf(os.Stderr, "gx: unknown command %q\n", args[0])
+		usage(os.Stderr)
+		return 2
+	}
+}
+
+func usage(w io.Writer) {
+	fmt.Fprint(w, `usage: gx <command> [arguments]
+
+Commands:
+  fmt    format .gx files in place, or stdin when no path is given
+`)
+}
+
+func runFmt(args []string) int {
+	fs := flag.NewFlagSet("gx fmt", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	check := fs.Bool("check", false, "exit non-zero when a file is not formatted")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	paths := fs.Args()
+	if len(paths) == 0 {
+		return fmtStdin(*check)
+	}
+	status := 0
+	for _, path := range paths {
+		if code := fmtFile(path, *check); code != 0 {
+			status = code
+		}
+	}
+	return status
+}
+
+func fmtStdin(check bool) int {
+	src, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx fmt: %v\n", err)
+		return 1
+	}
+	out, diags := compiler.FormatSource("", src)
+	if len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	}
+	return writeResult("stdin", src, out, check, "")
+}
+
+func fmtFile(path string, check bool) int {
+	src, err := os.ReadFile(path)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx fmt: %v\n", err)
+		return 1
+	}
+	out, diags := compiler.FormatSource(path, src)
+	if len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	}
+	return writeResult(path, src, out, check, path)
+}
+
+func writeResult(name string, src, out []byte, check bool, path string) int {
+	if check {
+		if !bytes.Equal(src, out) {
+			fmt.Fprintf(os.Stderr, "gx fmt: %s is not formatted\n", name)
+			return 1
+		}
+		return 0
+	}
+	if path == "" {
+		if _, err := os.Stdout.Write(out); err != nil {
+			fmt.Fprintf(os.Stderr, "gx fmt: %v\n", err)
+			return 1
+		}
+		return 0
+	}
+	mode := os.FileMode(0o644)
+	if info, err := os.Stat(path); err == nil {
+		mode = info.Mode().Perm()
+	}
+	if err := os.WriteFile(path, out, mode); err != nil {
+		fmt.Fprintf(os.Stderr, "gx fmt: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+func printDiags(diags []compiler.Diagnostic) {
+	for _, d := range diags {
+		fmt.Fprintln(os.Stderr, d.String())
+	}
+}

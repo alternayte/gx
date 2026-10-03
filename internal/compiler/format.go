@@ -1,0 +1,363 @@
+package compiler
+
+import "strings"
+
+// FormatSource parses src and returns its canonical form (REQ-AUT-17). It
+// returns the parse diagnostics instead when src does not parse.
+func FormatSource(file string, src []byte) ([]byte, []Diagnostic) {
+	f, diags := ParseFile(file, src)
+	if len(diags) > 0 {
+		return nil, diags
+	}
+	return Format(f), nil
+}
+
+// Format returns the canonical source of f (REQ-AUT-17).
+func Format(f *File) []byte {
+	pr := &printer{}
+	started := false
+	if f.Package != "" {
+		pr.write("package " + f.Package + "\n")
+		started = true
+	}
+	if len(f.Imports) > 0 {
+		if started {
+			pr.write("\n")
+		}
+		for _, im := range f.Imports {
+			pr.write("import " + im.Raw + "\n")
+		}
+		started = true
+	}
+	if f.HasProps {
+		if started {
+			pr.write("\n")
+		}
+		pr.write("props {\n")
+		pr.writeFields(f.Props)
+		pr.write("}\n")
+		started = true
+	}
+	if f.HasSignals {
+		if started {
+			pr.write("\n")
+		}
+		pr.write("signals {\n")
+		pr.writeFields(f.Signals)
+		pr.write("}\n")
+		started = true
+	}
+	if len(f.Body) > 0 {
+		if body := trimWhitespaceEdges(f.Body); len(body) > 0 {
+			if started {
+				pr.write("\n")
+			}
+			pr.writeNodes(body, 0)
+			pr.write("\n")
+		}
+	}
+	out := strings.TrimRight(pr.b.String(), " \t\n") + "\n"
+	return []byte(out)
+}
+
+type printer struct {
+	b strings.Builder
+}
+
+func (pr *printer) write(s string) { pr.b.WriteString(s) }
+
+func indent(depth int) string {
+	if depth <= 0 {
+		return ""
+	}
+	return strings.Repeat("  ", depth)
+}
+
+func (pr *printer) writeFields(fields []Field) {
+	for _, f := range fields {
+		pr.write("  " + f.Name + " " + f.Type)
+		if f.HasDefault {
+			pr.write(" = " + f.Default)
+		}
+		pr.write("\n")
+	}
+}
+
+func isWhitespaceText(n Node) bool {
+	t, ok := n.(*Text)
+	return ok && strings.TrimSpace(t.Data) == ""
+}
+
+func (pr *printer) writeNodes(ns []Node, depth int) {
+	for i, n := range ns {
+		if t, ok := n.(*Text); ok && strings.TrimSpace(t.Data) == "" {
+			switch {
+			case i == len(ns)-1 && strings.Contains(t.Data, "\n"):
+				pr.write("\n" + indent(depth-1))
+			case strings.Contains(t.Data, "\n"):
+				pr.write("\n" + indent(depth))
+			default:
+				pr.write(" ")
+			}
+			continue
+		}
+		pr.writeNode(n, depth)
+	}
+}
+
+func (pr *printer) writeNode(n Node, depth int) {
+	switch t := n.(type) {
+	case *Text:
+		pr.write(t.Data)
+	case *Expr:
+		pr.write("{" + canonExpr(t.Data) + "}")
+	case *Comment:
+		pr.write("{/*" + t.Data + "*/}")
+	case *HTMLComment:
+		pr.write("<!--" + t.Data + "-->")
+	case *Let:
+		pr.write(t.Name + " := " + canonExpr(t.Expr))
+	case *Element:
+		pr.writeElement(t, depth)
+	case *Control:
+		pr.writeControl(t, depth)
+	}
+}
+
+// trimWhitespaceEdges drops whitespace-only text nodes at both ends.
+func trimWhitespaceEdges(ns []Node) []Node {
+	start, end := 0, len(ns)
+	for start < end && isWhitespaceText(ns[start]) {
+		start++
+	}
+	for end > start && isWhitespaceText(ns[end-1]) {
+		end--
+	}
+	return ns[start:end]
+}
+
+// trimBlockEdges removes the layout whitespace at the start and end of a
+// block body: a leading or trailing whitespace run that contains a newline is
+// replaced by the block indentation the printer writes itself.
+func trimBlockEdges(ns []Node) []Node {
+	if len(ns) == 0 {
+		return ns
+	}
+	out := make([]Node, len(ns))
+	copy(out, ns)
+	if t, ok := out[0].(*Text); ok {
+		nt := *t
+		trimTextEdge(&nt, true)
+		if strings.TrimSpace(nt.Data) == "" {
+			out = out[1:]
+		} else {
+			out[0] = &nt
+		}
+	}
+	if len(out) > 0 {
+		if t, ok := out[len(out)-1].(*Text); ok {
+			nt := *t
+			trimTextEdge(&nt, false)
+			if strings.TrimSpace(nt.Data) == "" {
+				out = out[:len(out)-1]
+			} else {
+				out[len(out)-1] = &nt
+			}
+		}
+	}
+	return out
+}
+
+func trimTextEdge(t *Text, leading bool) {
+	if leading {
+		j := 0
+		for j < len(t.Data) && isSpaceByte(t.Data[j]) {
+			j++
+		}
+		t.Data = t.Data[j:]
+		return
+	}
+	j := len(t.Data)
+	for j > 0 && isSpaceByte(t.Data[j-1]) {
+		j--
+	}
+	t.Data = t.Data[:j]
+}
+
+// writeBlock writes a block body with one newline and one indent level.
+func (pr *printer) writeBlock(ns []Node, depth int) {
+	body := trimBlockEdges(trimWhitespaceEdges(ns))
+	if len(body) == 0 {
+		pr.write("\n" + indent(depth-1))
+		return
+	}
+	pr.write("\n" + indent(depth))
+	pr.writeNodes(body, depth)
+	pr.write("\n" + indent(depth-1))
+}
+
+func (pr *printer) writeControl(c *Control, depth int) {
+	switch c.Kind {
+	case "switch":
+		header := strings.TrimSpace(c.Header)
+		if header == "" {
+			pr.write("switch {")
+		} else {
+			pr.write("switch " + canonExpr(header) + " {")
+		}
+		for _, cs := range c.Cases {
+			pr.write("\n" + indent(depth+1))
+			if cs.IsDefault {
+				pr.write("default:")
+			} else {
+				pr.write("case " + canonExpr(cs.Header) + ":")
+			}
+			body := trimWhitespaceEdges(cs.Body)
+			if len(body) == 0 {
+				continue
+			}
+			pr.write("\n" + indent(depth+2))
+			pr.writeNodes(body, depth+2)
+		}
+		pr.write("\n" + indent(depth) + "}")
+	default:
+		pr.writeIfChain(c, depth)
+	}
+}
+
+func (pr *printer) writeIfChain(c *Control, depth int) {
+	header := strings.TrimSpace(c.Header)
+	if header == "" {
+		pr.write(c.Kind + " {")
+	} else {
+		pr.write(c.Kind + " " + canonExpr(header) + " {")
+	}
+	pr.writeBlock(c.Body, depth+1)
+	pr.write("}")
+	if len(c.Else) == 0 {
+		return
+	}
+	pr.write(" else ")
+	if ec, ok := c.Else[0].(*Control); ok && ec.Kind == "if" {
+		pr.writeIfChain(ec, depth)
+		return
+	}
+	pr.write("{")
+	pr.writeBlock(c.Else, depth+1)
+	pr.write("}")
+}
+
+func (pr *printer) writeElement(el *Element, depth int) {
+	pr.write("<" + el.Name)
+	for _, a := range el.Attrs {
+		pr.write(" " + formatAttr(a))
+	}
+	if el.SelfClose {
+		pr.write(" />")
+		return
+	}
+	pr.write(">")
+	if voidElements[strings.ToLower(el.Name)] {
+		return
+	}
+	if el.HasRaw {
+		pr.write(el.RawText)
+	} else {
+		pr.writeNodes(el.Children, depth+1)
+	}
+	pr.write("</" + el.Name + ">")
+}
+
+func formatAttr(a Attr) string {
+	switch a.Kind {
+	case AttrString:
+		if strings.Contains(a.Value, `"`) {
+			return a.Name + "='" + a.Value + "'"
+		}
+		return a.Name + `="` + a.Value + `"`
+	case AttrExpr:
+		return a.Name + "={" + canonExpr(a.Value) + "}"
+	case AttrSpread:
+		return "{..." + canonExpr(a.Value) + "}"
+	case AttrFragment:
+		if a.Value == "" {
+			return "#" + a.Name
+		}
+		return "#" + a.Name + "(" + canonExpr(a.Value) + ")"
+	default:
+		return a.Name
+	}
+}
+
+// canonExpr is the canonical form of a Go or client expression: whitespace
+// runs outside strings and comments become one space (REQ-AUT-17).
+func canonExpr(s string) string {
+	var b strings.Builder
+	i := 0
+	pending := false
+	for i < len(s) {
+		c := s[i]
+		switch {
+		case c == '"' || c == '\'' || c == '`':
+			j := i + 1
+			for j < len(s) {
+				if s[j] == '\\' && c != '`' {
+					j += 2
+					continue
+				}
+				if s[j] == c {
+					j++
+					break
+				}
+				j++
+			}
+			if j > len(s) {
+				j = len(s)
+			}
+			if pending && b.Len() > 0 {
+				b.WriteByte(' ')
+			}
+			pending = false
+			b.WriteString(s[i:j])
+			i = j
+		case c == '/' && i+1 < len(s) && s[i+1] == '/':
+			j := strings.IndexByte(s[i:], '\n')
+			if pending && b.Len() > 0 {
+				b.WriteByte(' ')
+			}
+			pending = false
+			if j < 0 {
+				b.WriteString(s[i:])
+				i = len(s)
+				continue
+			}
+			j = i + j + 1
+			b.WriteString(s[i:j])
+			i = j
+		case c == '/' && i+1 < len(s) && s[i+1] == '*':
+			j := strings.Index(s[i+2:], "*/")
+			if j < 0 {
+				j = len(s)
+			} else {
+				j = i + 2 + j + 2
+			}
+			if pending && b.Len() > 0 {
+				b.WriteByte(' ')
+			}
+			pending = false
+			b.WriteString(s[i:j])
+			i = j
+		case isSpaceByte(c):
+			pending = true
+			i++
+		default:
+			if pending && b.Len() > 0 {
+				b.WriteByte(' ')
+			}
+			pending = false
+			b.WriteByte(c)
+			i++
+		}
+	}
+	return b.String()
+}
