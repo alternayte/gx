@@ -55,6 +55,10 @@ vscode-smoke:
 nvim-smoke:
     "scripts/nvim-smoke.sh"
 
+# The Delve breakpoint test (REQ-TLS-08). Needs dlv.
+delve-smoke:
+    "scripts/delve-smoke.sh"
+
 evidence:
     go run ./internal/build/evidence --write
 
