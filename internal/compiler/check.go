@@ -150,8 +150,49 @@ func (l *loader) checkElement(p *Package, file *File, el *Element, diags []Diagn
 		}
 		provided[prop.Name] = true
 	}
-	if hasContent(el.Children) {
-		provided["Children"] = true
+	slots := map[string]bool{}
+	for _, child := range el.Children {
+		slotEl, ok := child.(*Element)
+		if !ok || !strings.HasPrefix(slotEl.Name, ":") {
+			continue
+		}
+		slotName := strings.TrimPrefix(slotEl.Name, ":")
+		if slots[slotName] {
+			diags = append(diags, Diagnostic{
+				Code: CodeDuplicateSlot,
+				File: file.File,
+				Line: slotEl.At.Line,
+				Col:  slotEl.At.Col,
+				Msg:  "slot " + Quoted(slotName) + " is given twice on <" + el.Name + ">",
+			})
+			continue
+		}
+		slots[slotName] = true
+		prop, ok := findProp(comp, slotName)
+		if !ok {
+			diags = append(diags, Diagnostic{
+				Code: CodeUnknownAttr,
+				File: file.File,
+				Line: slotEl.At.Line,
+				Col:  slotEl.At.Col,
+				Msg:  "unknown slot " + Quoted(slotName) + " on <" + el.Name + ">",
+			})
+			continue
+		}
+		provided[prop.Name] = true
+	}
+	if hasDefaultContent(el.Children) {
+		if _, ok := findProp(comp, "children"); ok {
+			provided["Children"] = true
+		} else {
+			diags = append(diags, Diagnostic{
+				Code: CodeUnknownAttr,
+				File: file.File,
+				Line: el.At.Line,
+				Col:  el.At.Col,
+				Msg:  "component <" + el.Name + "> has no Children prop",
+			})
+		}
 	}
 	for _, prop := range comp.Props {
 		if prop.HasDefault || provided[prop.Name] {
@@ -168,9 +209,9 @@ func (l *loader) checkElement(p *Package, file *File, el *Element, diags []Diagn
 	return diags
 }
 
-// hasContent reports whether children hold content that can fill the default
+// hasDefaultContent reports whether children hold content for the default
 // slot. Whitespace text, comments and named slots do not count.
-func hasContent(ns []Node) bool {
+func hasDefaultContent(ns []Node) bool {
 	for _, n := range ns {
 		switch t := n.(type) {
 		case *Text:
@@ -178,8 +219,6 @@ func hasContent(ns []Node) bool {
 				return true
 			}
 		case *Comment:
-		case *HTMLComment:
-			return true
 		case *Element:
 			if !strings.HasPrefix(t.Name, ":") {
 				return true

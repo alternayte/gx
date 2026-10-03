@@ -215,6 +215,45 @@ func componentTag(tag string) (qual, name string, ok bool) {
 	return "", "", false
 }
 
+// resolveComponent finds the component a tag refers to.
+func resolveComponent(l *loader, pkg *Package, file *File, qual, name string) (*Component, *Package, string) {
+	if qual == "" {
+		comp, _ := pkg.component(name)
+		return comp, pkg, ""
+	}
+	target, ok := l.importedPackage(pkg, file, qual)
+	if !ok {
+		return nil, nil, ""
+	}
+	comp, _ := target.component(name)
+	return comp, target, qual
+}
+
+// slotTypeArg returns T of a gx.Slot[T] prop type.
+func slotTypeArg(typ string) (string, bool) {
+	const prefix = "gx.Slot["
+	if !strings.HasPrefix(typ, prefix) || !strings.HasSuffix(typ, "]") {
+		return "", false
+	}
+	return strings.TrimSpace(typ[len(prefix) : len(typ)-1]), true
+}
+
+// slotLetName returns the bound name of a <:name let={v}> slot.
+func slotLetName(slot *Element) string {
+	if slot == nil {
+		return "_"
+	}
+	for i := range slot.Attrs {
+		a := &slot.Attrs[i]
+		if a.Kind == AttrExpr && a.Name == "let" {
+			if name := strings.TrimSpace(a.Value); name != "" {
+				return name
+			}
+		}
+	}
+	return "_"
+}
+
 // isDirective reports whether an attribute name is a gx directive rather than
 // a component prop.
 func isDirective(name string) bool {

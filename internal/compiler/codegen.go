@@ -465,13 +465,14 @@ func (g *gen) attrValueExpr(n any, raw string) (string, bool) {
 // call.
 type childPart struct {
 	key   string
+	slot  *Element
 	nodes []Node
 }
 
 func splitChildren(ns []Node) []childPart {
 	var parts []childPart
 	index := map[string]int{}
-	add := func(key string, nodes []Node, exists bool) {
+	add := func(key string, nodes []Node, slot *Element, exists bool) {
 		if i, ok := index[key]; ok {
 			parts[i].nodes = append(parts[i].nodes, nodes...)
 			return
@@ -480,24 +481,28 @@ func splitChildren(ns []Node) []childPart {
 			return
 		}
 		index[key] = len(parts)
-		parts = append(parts, childPart{key: key, nodes: nodes})
+		parts = append(parts, childPart{key: key, slot: slot, nodes: nodes})
 	}
 	for _, n := range ns {
 		if el, ok := n.(*Element); ok && strings.HasPrefix(el.Name, ":") {
-			add(strings.TrimPrefix(el.Name, ":"), el.Children, true)
+			add(strings.TrimPrefix(el.Name, ":"), el.Children, el, true)
 			continue
 		}
 		if t, ok := n.(*Text); ok && strings.TrimSpace(t.Data) == "" {
 			continue
 		}
-		add("children", []Node{n}, true)
+		add("children", []Node{n}, nil, true)
 	}
 	return parts
 }
 
 func (g *gen) emitComponent(el *Element, qual, name, builder string) {
+	comp, _, _ := g.resolveComponent(qual, name)
 	built := map[string]string{}
 	for _, part := range splitChildren(el.Children) {
+		if comp != nil && g.isSlotProp(comp, part) {
+			continue // the slot closure carries the statements
+		}
 		if subtreeNeedsBlock(part.nodes) {
 			nb := g.newBuilder()
 			g.write("var %s gx.Builder", nb)
@@ -506,6 +511,29 @@ func (g *gen) emitComponent(el *Element, qual, name, builder string) {
 		}
 	}
 	g.add(builder, g.componentCallExpr(el, qual, name, built))
+}
+
+// isSlotProp reports whether the part fills a gx.Slot[T] prop.
+func (g *gen) isSlotProp(comp *Component, part childPart) bool {
+	propName := "Children"
+	if part.key != "children" {
+		propName = upperFirst(part.key)
+	}
+	prop, ok := findProp(comp, lowerFirst(propName))
+	if !ok {
+		return false
+	}
+	_, isSlot := slotTypeArg(prop.Type)
+	return isSlot
+}
+
+// slotClosure returns a func(value T) gx.Node for a gx.Slot[T] prop.
+func (g *gen) slotClosure(param, elemType string, ns []Node) string {
+	sub := &gen{l: g.l, res: g.res, pkg: g.pkg, file: g.file, name: g.name, ind: 1}
+	sub.write("var _c gx.Builder")
+	sub.emitStmts(ns, "_c")
+	sub.write("return _c.Node()")
+	return "func(" + param + " " + elemType + ") gx.Node {\n" + sub.b.String() + "}"
 }
 
 // componentCallExpr returns the Go call expression for a component element.
@@ -538,7 +566,12 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		if part.key != "children" {
 			propName = upperFirst(part.key)
 		}
-		if _, ok := findProp(comp, lowerFirst(propName)); !ok {
+		prop, ok := findProp(comp, lowerFirst(propName))
+		if !ok {
+			continue
+		}
+		if elem, isSlot := slotTypeArg(prop.Type); isSlot {
+			valueFor[prop.Name] = g.slotClosure(slotLetName(part.slot), elem, part.nodes)
 			continue
 		}
 		expr, ok := built[part.key]
@@ -548,7 +581,7 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		if expr == "" {
 			continue
 		}
-		valueFor[propName] = expr
+		valueFor[prop.Name] = expr
 	}
 
 	cross := targetPkg != g.pkg
@@ -578,16 +611,7 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 }
 
 func (g *gen) resolveComponent(qual, name string) (*Component, *Package, string) {
-	if qual == "" {
-		comp, _ := g.pkg.component(name)
-		return comp, g.pkg, ""
-	}
-	target, ok := g.l.importedPackage(g.pkg, g.file, qual)
-	if !ok {
-		return nil, nil, ""
-	}
-	comp, _ := target.component(name)
-	return comp, target, qual
+	return resolveComponent(g.l, g.pkg, g.file, qual, name)
 }
 
 // qualifyDefault rewrites package-owned identifiers of a default expression to

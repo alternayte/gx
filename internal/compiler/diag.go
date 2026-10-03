@@ -17,9 +17,10 @@ const (
 
 	CodeType = "GX2000"
 
-	CodeSpread       = "GX2005"
-	CodeSignal       = "GX2010"
-	CodeUnrenderable = "GX2013"
+	CodeSpread        = "GX2005"
+	CodeDuplicateSlot = "GX2006"
+	CodeSignal        = "GX2010"
+	CodeUnrenderable  = "GX2013"
 )
 
 // Diagnostic is one compiler message.

@@ -122,6 +122,9 @@ func JoinAttrs(parts ...Attrs) Attrs {
 	return out
 }
 
+// Slot is a typed slot: a function that renders one value (REQ-AUT-11).
+type Slot[T any] func(T) Node
+
 // When returns name when on is true, and the empty string otherwise.
 func When(name string, on bool) string {
 	if on {
