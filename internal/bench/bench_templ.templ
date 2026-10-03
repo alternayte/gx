@@ -1,0 +1,11 @@
+package bench
+
+import "strconv"
+
+templ benchTempl() {
+	<div class="page">
+		for i := 0; i < 50; i++ {
+			<li class="row">{ strconv.Itoa(i) } items</li>
+		}
+	</div>
+}

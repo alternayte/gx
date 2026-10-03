@@ -2,7 +2,10 @@ module github.com/alternayte/gx
 
 go 1.25.0
 
-require golang.org/x/tools v0.49.0
+require (
+	github.com/a-h/templ v0.3.1020
+	golang.org/x/tools v0.49.0
+)
 
 require (
 	golang.org/x/mod v0.39.0 // indirect
