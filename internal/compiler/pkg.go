@@ -254,6 +254,70 @@ func slotLetName(slot *Element) string {
 	return "_"
 }
 
+// fragmentElements returns every element that carries a #fragment, in source
+// order.
+func fragmentElements(ns []Node) []*Element {
+	var out []*Element
+	walkElements(ns, func(el *Element) {
+		for i := range el.Attrs {
+			if el.Attrs[i].Kind == AttrFragment {
+				out = append(out, el)
+				return
+			}
+		}
+	})
+	return out
+}
+
+// fragmentParams returns the text inside the parentheses of a #name(params)
+// fragment.
+func fragmentParams(el *Element) string {
+	for i := range el.Attrs {
+		if el.Attrs[i].Kind == AttrFragment {
+			return strings.TrimSpace(el.Attrs[i].Value)
+		}
+	}
+	return ""
+}
+
+// splitParams splits a Go parameter list at top-level commas.
+func splitParams(params string) []string {
+	if strings.TrimSpace(params) == "" {
+		return nil
+	}
+	var out []string
+	depth, start := 0, 0
+	for i := 0; i < len(params); i++ {
+		switch params[i] {
+		case '(', '[', '{':
+			depth++
+		case ')', ']', '}':
+			depth--
+		case ',':
+			if depth == 0 {
+				out = append(out, strings.TrimSpace(params[start:i]))
+				start = i + 1
+			}
+		}
+	}
+	out = append(out, strings.TrimSpace(params[start:]))
+	return out
+}
+
+// firstIdent returns the first identifier of a parameter declaration.
+func firstIdent(s string) string {
+	for i := 0; i < len(s); i++ {
+		if s[i] == '_' || isLetter(s[i]) {
+			j := i
+			for j < len(s) && (s[j] == '_' || isLetter(s[j]) || isDigit(s[j])) {
+				j++
+			}
+			return s[i:j]
+		}
+	}
+	return ""
+}
+
 // isDirective reports whether an attribute name is a gx directive rather than
 // a component prop.
 func isDirective(name string) bool {

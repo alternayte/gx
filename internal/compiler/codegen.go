@@ -112,6 +112,10 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 	g.write("return _b.Node()")
 	g.ind--
 	g.write("}")
+	for _, el := range fragmentElements(f.Body) {
+		g.write("")
+		g.fragmentFunc(el)
+	}
 	src, err := format.Source(g.b.Bytes())
 	if err != nil {
 		return nil, append(g.diags, Diagnostic{
@@ -435,6 +439,19 @@ func (g *gen) attrsExpr(el *Element) string {
 			static = append([]string{classAttr}, static...)
 		}
 	}
+	for i := range el.Attrs {
+		if el.Attrs[i].Kind != AttrFragment {
+			continue
+		}
+		id := lowerFirst(g.name) + "-" + el.Attrs[i].Name
+		idAttr := fmt.Sprintf("gx.Attr{Key: \"id\", Value: %s, Kind: gx.AttrText}", strconv.Quote(id))
+		if spread {
+			parts = append([]string{"gx.Attrs{" + idAttr + "}"}, parts...)
+		} else {
+			static = append([]string{idAttr}, static...)
+		}
+		break
+	}
 	flush()
 	switch len(parts) {
 	case 0:
@@ -444,6 +461,92 @@ func (g *gen) attrsExpr(el *Element) string {
 	default:
 		return "gx.JoinAttrs(" + strings.Join(parts, ", ") + ")"
 	}
+}
+
+// fragmentFunc generates the function of one #fragment element.
+func (g *gen) fragmentFunc(el *Element) {
+	var frag *Attr
+	for i := range el.Attrs {
+		if el.Attrs[i].Kind == AttrFragment {
+			frag = &el.Attrs[i]
+			break
+		}
+	}
+	if frag == nil {
+		return
+	}
+	name := g.name + upperFirst(frag.Name)
+	var params []string
+	if usesP(el) {
+		params = append(params, "p "+g.name+"Props")
+	}
+	if ps := strings.TrimSpace(frag.Value); ps != "" {
+		params = append(params, ps)
+	}
+	g.write("func %s(%s) gx.Node {", name, strings.Join(params, ", "))
+	g.ind++
+	g.write("var _b gx.Builder")
+	g.emitStmts([]Node{el}, "_b")
+	g.write("return _b.Node()")
+	g.ind--
+	g.write("}")
+}
+
+// usesP reports whether the subtree reads the props value p.
+func usesP(el *Element) bool {
+	found := false
+	visitExprs([]Node{el}, func(expr string) {
+		if hasIdent(expr, "p") {
+			found = true
+		}
+	})
+	return found
+}
+
+// visitExprs calls fn for every expression text in ns.
+func visitExprs(ns []Node, fn func(string)) {
+	for _, n := range ns {
+		switch t := n.(type) {
+		case *Expr:
+			fn(t.Data)
+		case *Let:
+			fn(t.Expr)
+		case *Control:
+			fn(t.Header)
+			visitExprs(t.Body, fn)
+			visitExprs(t.Else, fn)
+			for _, c := range t.Cases {
+				fn(c.Header)
+				visitExprs(c.Body, fn)
+			}
+		case *Element:
+			for i := range t.Attrs {
+				if t.Attrs[i].Kind == AttrExpr {
+					fn(t.Attrs[i].Value)
+				}
+			}
+			visitExprs(t.Children, fn)
+		}
+	}
+}
+
+// hasIdent reports whether s holds ident as a whole identifier.
+func hasIdent(s, ident string) bool {
+	for i := 0; i+len(ident) <= len(s); i++ {
+		if s[i:i+len(ident)] != ident {
+			continue
+		}
+		before := i == 0 || !isIdentByte(s[i-1])
+		after := i+len(ident) == len(s) || !isIdentByte(s[i+len(ident)])
+		if before && after {
+			return true
+		}
+	}
+	return false
+}
+
+func isIdentByte(c byte) bool {
+	return c == '_' || isLetter(c) || isDigit(c)
 }
 
 // classExpr returns the Go expression of a class value.

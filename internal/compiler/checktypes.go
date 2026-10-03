@@ -26,6 +26,7 @@ type synthRef struct {
 	file *File
 	line int // 0 means keep the reported line and column
 	col  int
+	code string // default GX2000
 }
 
 type probe struct {
@@ -33,6 +34,7 @@ type probe struct {
 	synth string
 	sites []any          // emission order of {expr} and expression attributes
 	defs  map[int]string // props field index -> synthetic default probe name
+	frags []string       // synthetic names of the fragment scope probes
 }
 
 // analyze type-checks every .gx file in dirs. It generates shadow Go files in
@@ -56,6 +58,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			i++
 			refs[synth] = synthRef{file: f}
 			pr, src := buildProbe(l, p, f, synth)
+			for _, fs := range pr.frags {
+				refs[fs] = synthRef{file: f, code: CodeFragment}
+			}
 			parseProbe[filepath.Join(dir, base+"_gx.go")] = pr
 			overlay[filepath.Join(dir, base+"_gx.go")] = src
 			for idx, name := range pr.defs {
@@ -91,13 +96,24 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			if ref.line > 0 {
 				line, col = ref.line, ref.col
 			}
-			diags = append(diags, Diagnostic{
-				Code: CodeType,
+			code := ref.code
+			if code == "" {
+				code = CodeType
+			}
+			d := Diagnostic{
+				Code: code,
 				File: ref.file.File,
 				Line: line,
 				Col:  col,
 				Msg:  e.Msg,
-			})
+			}
+			if code == CodeFragment {
+				d.Fix = "add the undefined name to the #fragment params"
+				if name, ok := strings.CutPrefix(e.Msg, "undefined: "); ok {
+					d.Fix = "add " + name + " to the #fragment params"
+				}
+			}
+			diags = append(diags, d)
 		}
 		for _, file := range pkg.Syntax {
 			path := pkg.Fset.Position(file.Pos()).Filename
@@ -392,7 +408,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 	}
 	b.WriteString("}\n\n")
 	fmt.Fprintf(&b, "func %s(p %sProps) gx.Node { return nil }\n\n", name, name)
-	w := &probeWriter{l: l, pkg: pkg, file: f, synth: synth, pr: pr, b: &b}
+	w := &probeWriter{l: l, pkg: pkg, file: f, synth: synth, pr: pr, b: &b, record: true}
 	fmt.Fprintf(&b, "func _gxProbe%s(p %sProps) {\n", name, name)
 	for idx, fld := range f.Props {
 		if !fld.HasDefault {
@@ -404,29 +420,59 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 	}
 	w.nodes(f.Body)
 	b.WriteString("}\n")
+	for i, el := range fragmentElements(f.Body) {
+		fragSynth := fmt.Sprintf("%s-f%d", synth, i)
+		pr.frags = append(pr.frags, fragSynth)
+		fmt.Fprintf(&b, "\n//line %s:%d:1\nfunc _gxFrag%s_%d() {\n", fragSynth, el.At.Line, synth, i)
+		fmt.Fprintf(&b, "//line %s:%d:1\nvar p %sProps\n_ = p\n", fragSynth, el.At.Line, name)
+		for _, param := range splitParams(fragmentParams(el)) {
+			if ident := firstIdent(param); ident != "" && ident != "_" {
+				fmt.Fprintf(&b, "//line %s:%d:1\nvar %s\n_ = %s\n", fragSynth, el.At.Line, param, ident)
+			}
+		}
+		fw := &probeWriter{l: l, pkg: pkg, file: f, synth: fragSynth, pr: pr, b: &b}
+		fw.fragmentBody(el)
+		b.WriteString("}\n")
+	}
 	return pr, b.Bytes()
 }
 
 type probeWriter struct {
-	l     *loader
-	pkg   *Package
-	file  *File
-	synth string
-	pr    *probe
-	b     *bytes.Buffer
+	l      *loader
+	pkg    *Package
+	file   *File
+	synth  string
+	pr     *probe
+	b      *bytes.Buffer
+	record bool
+}
+
+// fragmentBody probes the body of a fragment element. It does not record
+// sites: the fragment scope probe only reports free variables (GX2008).
+func (w *probeWriter) fragmentBody(el *Element) {
+	for i := range el.Attrs {
+		a := &el.Attrs[i]
+		switch a.Kind {
+		case AttrExpr:
+			writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a, w.record)
+		case AttrSpread:
+			writeProbeSpread(w.b, a.Value, a.ValueAt, w.synth)
+		}
+	}
+	w.nodes(el.Children)
 }
 
 func (w *probeWriter) nodes(ns []Node) {
 	for _, n := range ns {
 		switch t := n.(type) {
 		case *Expr:
-			writeProbeExpr(w.b, t.Data, t.DataAt, w.synth, w.pr, t)
+			writeProbeExpr(w.b, t.Data, t.DataAt, w.synth, w.pr, t, w.record)
 		case *Element:
 			for i := range t.Attrs {
 				a := &t.Attrs[i]
 				switch a.Kind {
 				case AttrExpr:
-					writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a)
+					writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a, w.record)
 				case AttrSpread:
 					writeProbeSpread(w.b, a.Value, a.ValueAt, w.synth)
 				}
@@ -511,19 +557,28 @@ func (w *probeWriter) control(c *Control) {
 	}
 }
 
-func writeProbeExpr(b *bytes.Buffer, expr string, at Pos, synth string, pr *probe, site any) {
+func writeProbeExpr(b *bytes.Buffer, expr string, at Pos, synth string, pr *probe, site any, record bool) {
 	expr = strings.TrimSpace(expr)
 	if expr == "" || strings.Contains(expr, "$") || at.Line <= 0 {
 		return
 	}
-	pr.sites = append(pr.sites, site)
-	// The prefix "_=" is two columns wide, so the expression starts at
-	// the column the directive names.
-	col := at.Col - 2
+	if record {
+		pr.sites = append(pr.sites, site)
+		// The prefix "_=" is two columns wide, so the expression starts
+		// at the column the directive names.
+		col := at.Col - 2
+		if col < 1 {
+			col = 1
+		}
+		fmt.Fprintf(b, "//line %s:%d:%d\n_=%s\n", synth, at.Line, col, expr)
+		return
+	}
+	const prefix = "var _ = "
+	col := at.Col - len(prefix)
 	if col < 1 {
 		col = 1
 	}
-	fmt.Fprintf(b, "//line %s:%d:%d\n_=%s\n", synth, at.Line, col, expr)
+	fmt.Fprintf(b, "//line %s:%d:%d\n%s%s\n", synth, at.Line, col, prefix, expr)
 }
 
 func writeProbeSpread(b *bytes.Buffer, expr string, at Pos, synth string) {
