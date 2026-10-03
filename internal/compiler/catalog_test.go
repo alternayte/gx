@@ -49,6 +49,9 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX3003 | route value is not held by any gx.Collect",
 		"GX3004 | duplicate route pattern",
 		"GX3005 | route package contents",
+		"GX4001 | no action is registered for a route type",
+		"GX4002 | more than one action is registered for a route type",
+		"GX4009 | action method cannot be invoked from the client",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 	}
 	if !reflect.DeepEqual(got, want) {

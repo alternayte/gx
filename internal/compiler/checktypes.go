@@ -25,6 +25,9 @@ type typesResult struct {
 	pkgs       []*packages.Package     // loaded packages
 	routePages map[string]string       // package.Type of a route -> its page value
 	pageRoutes map[types.Object]string // page var -> package.Type of its route
+	routeKeys  map[string]bool         // package.Type of every route struct
+	routeMeth  map[string]string       // package.Type of a route -> its method
+	actions    map[string][]token.Position
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -53,6 +56,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		urlRoutes:  map[string]bool{},
 		routePages: map[string]string{},
 		pageRoutes: map[types.Object]string{},
+		routeKeys:  map[string]bool{},
+		routeMeth:  map[string]string{},
+		actions:    map[string][]token.Position{},
 	}
 	if findModule(root) == nil {
 		return res, nil
@@ -140,14 +146,20 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	res.routes = routes
 	diags = append(diags, rdiags...)
 	for _, d := range routes {
-		if strings.HasPrefix(d.pattern, "GET ") || strings.HasPrefix(d.pattern, "HEAD ") {
-			res.urlRoutes[d.pkg.PkgPath+"."+d.name] = true
+		key := d.pkg.PkgPath + "." + d.name
+		res.routeKeys[key] = true
+		method, _, _ := strings.Cut(d.pattern, " ")
+		res.routeMeth[key] = method
+		if method == "GET" || method == "HEAD" {
+			res.urlRoutes[key] = true
 		}
 	}
 	res.routeFiles = renderRouteFiles(routes)
+	res.collectActions(pkgs)
 	diags = append(diags, res.checkMounted(pkgs)...)
 	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
+	diags = append(diags, l.checkActionInvocations(res, dirs)...)
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
 	diags = append(diags, checkSafeHTML(pkgs)...)
@@ -507,7 +519,8 @@ func (r *typesResult) fillInterfaces(pkgs []*packages.Package) {
 }
 
 // isURLValue reports whether a value of type t can stand in an href, src,
-// action or formaction attribute (REQ-RTE-05).
+// action or formaction attribute (REQ-RTE-05). A route type that is not a
+// GET route never qualifies, even though every route has a URL method.
 func (r *typesResult) isURLValue(t types.Type) bool {
 	if t == nil {
 		return false
@@ -515,9 +528,9 @@ func (r *typesResult) isURLValue(t types.Type) bool {
 	if t.String() == "github.com/alternayte/gx.URL" {
 		return true
 	}
-	if named, ok := t.(*types.Named); ok {
-		if obj := named.Obj(); obj.Pkg() != nil && r.urlRoutes[obj.Pkg().Path()+"."+obj.Name()] {
-			return true
+	if _, ok := t.(*types.Named); ok {
+		if key := namedTypeKey(t); key != "" && r.routeKeys[key] {
+			return r.urlRoutes[key]
 		}
 	}
 	sel := types.NewMethodSet(t).Lookup(nil, "URL")

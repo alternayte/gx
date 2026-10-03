@@ -507,6 +507,13 @@ func (g *gen) attrsExpr(el *Element) string {
 				}
 				continue
 			}
+			if strings.HasPrefix(a.Name, "on:") {
+				if v, ok := g.clientOnExpr(a); ok {
+					static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
+						strconv.Quote("data-"+a.Name), v))
+				}
+				continue
+			}
 			if isDirective(a.Name) {
 				continue
 			}
@@ -909,6 +916,22 @@ func (g *gen) isStyleType(n any) bool {
 	return t != nil && t.String() == "github.com/alternayte/gx.Style"
 }
 
+// clientOnExpr returns the Go expression of the adapter attribute for an
+// on: action invocation (REQ-ACT-02).
+func (g *gen) clientOnExpr(a *Attr) (string, bool) {
+	key := namedTypeKey(g.res.types[a])
+	if key == "" || !g.res.routeKeys[key] {
+		return "", false
+	}
+	fn := clientActionFunc(g.res.routeMeth[key])
+	if fn == "" {
+		return "", false // GX4009 is reported by the checker
+	}
+	expr := strings.TrimSpace(a.Value)
+	return strconv.Quote("@"+fn+"('") + ` + (` + expr + `).URL() + "')"`, true
+}
+
+// isURLAttr reports whether an attribute holds a URL.
 func isURLAttr(name string) bool {
 	switch name {
 	case "href", "src", "action", "formaction":

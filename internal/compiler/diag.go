@@ -35,6 +35,10 @@ const (
 	CodeUnrenderable  = "GX2013"
 
 	CodeTrustedHTML = "GX7001"
+
+	CodeActionMissing = "GX4001"
+	CodeActionTwice   = "GX4002"
+	CodeActionMethod  = "GX4009"
 )
 
 // Diagnostic is one compiler message.
@@ -78,6 +82,9 @@ var Catalog = []Info{
 	{CodeUnmounted, "route value is not held by any gx.Collect"},
 	{CodeDuplicate, "duplicate route pattern"},
 	{CodeRoutePkg, "route package contents"},
+	{CodeActionMissing, "no action is registered for a route type"},
+	{CodeActionTwice, "more than one action is registered for a route type"},
+	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }
 

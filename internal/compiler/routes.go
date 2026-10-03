@@ -439,10 +439,10 @@ func renderRouteFile(defs []*routeDef) []byte {
 	b.WriteString("package " + defs[0].pkg.Name + "\n\n")
 	needStrconv, needFmt, needURL, needGx := false, false, false, false
 	for _, d := range defs {
-		if strings.HasPrefix(d.pattern, "GET ") || strings.HasPrefix(d.pattern, "HEAD ") {
-			needURL = true
-			needGx = true
-		}
+		// Every route has a URL method: typed links use GET routes and
+		// action invocations use every method (REQ-RTE-05, REQ-ACT-02).
+		needURL = true
+		needGx = true
 		for _, f := range d.fields {
 			if f.path != "" {
 				needGx = true
@@ -494,9 +494,7 @@ func renderRouteFile(defs []*routeDef) []byte {
 			}
 		}
 		b.WriteString("\treturn nil\n}\n\n")
-		if strings.HasPrefix(d.pattern, "GET ") || strings.HasPrefix(d.pattern, "HEAD ") {
-			renderRouteURL(&b, d)
-		}
+		renderRouteURL(&b, d)
 	}
 	src, err := format.Source(b.Bytes())
 	if err != nil {
