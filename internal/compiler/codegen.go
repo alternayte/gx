@@ -21,6 +21,13 @@ import (
 // each generated file path to its source. It returns diagnostics instead when
 // any check fails.
 func Generate(root string) (map[string][]byte, []Diagnostic) {
+	files, diags, _, _, _ := generate(root)
+	return files, diags
+}
+
+// generate is Generate with the analysis pieces returned, for the
+// incremental Session (NFR-05).
+func generate(root string) (map[string][]byte, []Diagnostic, *typesResult, *loader, []string) {
 	root = absoluteRoot(root)
 	l := newLoader()
 	dirs := collectDirs(root)
@@ -32,7 +39,7 @@ func Generate(root string) (map[string][]byte, []Diagnostic) {
 	diags = append(diags, tdiags...)
 	if len(diags) > 0 {
 		sortDiags(diags)
-		return nil, diags
+		return nil, diags, res, l, dirs
 	}
 	out := map[string][]byte{}
 	for _, dir := range dirs {
@@ -51,9 +58,9 @@ func Generate(root string) (map[string][]byte, []Diagnostic) {
 	}
 	if len(diags) > 0 {
 		sortDiags(diags)
-		return nil, diags
+		return nil, diags, res, l, dirs
 	}
-	return out, nil
+	return out, nil, res, l, dirs
 }
 
 // Stale returns GX1002 for every .gx file whose generated file is missing or

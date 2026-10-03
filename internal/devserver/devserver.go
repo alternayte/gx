@@ -76,7 +76,7 @@ func Run(ctx context.Context, opt Options) error {
 			return err
 		}
 	}
-	s := &server{opt: opt, dir: dir, clients: map[chan []byte]bool{}}
+	s := &server{opt: opt, dir: dir, session: compiler.NewSession(), clients: map[chan []byte]bool{}}
 	return s.run(ctx)
 }
 
@@ -109,8 +109,9 @@ func DetectMain(dir string) (string, error) {
 }
 
 type server struct {
-	opt Options
-	dir string
+	opt     Options
+	dir     string
+	session *compiler.Session
 
 	appPort int
 	appCmd  *exec.Cmd
@@ -168,7 +169,7 @@ func (s *server) workDir() string { return filepath.Join(s.dir, ".gx", "dev") }
 // build runs gx generate and go build. It returns the overlay on failure
 // (REQ-DEV-03, REQ-DEV-06).
 func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
-	if files, diags := compiler.Generate(s.dir); len(diags) > 0 {
+	if files, diags := s.session.Generate(s.dir); len(diags) > 0 {
 		return false, diagsOverlay(diags)
 	} else {
 		for path, src := range files {

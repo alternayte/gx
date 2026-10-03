@@ -1,6 +1,8 @@
 package compiler_test
 
 import (
+	"bytes"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -44,13 +46,24 @@ func BenchmarkNFR_05_ColdBuild(b *testing.B) {
 // against the 50 ms budget (NFR-05).
 func BenchmarkNFR_05_IncrementalCompile(b *testing.B) {
 	dir := filepath.Join(repoPath(b), "examples", "shop")
-	if _, diags := compiler.Generate(dir); len(diags) > 0 {
+	view := filepath.Join(dir, "Home.gx")
+	original, err := os.ReadFile(view)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.Cleanup(func() { _ = os.WriteFile(view, original, 0o644) })
+	session := compiler.NewSession()
+	if _, diags := session.Generate(dir); len(diags) > 0 {
 		b.Fatalf("warm up: %v", diags)
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		changed := append(append([]byte{}, original...), bytes.Repeat([]byte(" "), i+1)...)
+		if err := os.WriteFile(view, changed, 0o644); err != nil {
+			b.Fatal(err)
+		}
 		start := time.Now()
-		if _, diags := compiler.Generate(dir); len(diags) > 0 {
+		if _, diags := session.Generate(dir); len(diags) > 0 {
 			b.Fatalf("generate: %v", diags)
 		}
 		took := time.Since(start)

@@ -14,25 +14,28 @@ import (
 
 // typesResult holds the Go types of .gx expressions from one analysis pass.
 type typesResult struct {
-	types       map[any]types.Type
-	quals       map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
-	nodeIface   *types.Interface
-	formIface   *types.Interface
-	errIface    *types.Interface
-	stringer    *types.Interface
-	propTypes   map[*File][]types.Type  // props field types, in declaration order
-	routeFiles  map[string][]byte       // generated route code, keyed by output path
-	urlRoutes   map[string]bool         // package.Type of GET route structs
-	routes      []*routeDef             // every route struct
-	pkgs        []*packages.Package     // loaded packages
-	routePages  map[string]string       // package.Type of a route -> its page value
-	pageRoutes  map[types.Object]string // page var -> package.Type of its route
-	routeKeys   map[string]bool         // package.Type of every route struct
-	routeMeth   map[string]string       // package.Type of a route -> its method
-	actions     map[string][]token.Position
-	routeDefs   map[string]*routeDef // package.Type of a route -> its definition
-	sigTypes    map[*File]map[string]types.Type
-	sigActions  map[string]bool // actions with signal-bound fields
+	types      map[any]types.Type
+	quals      map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
+	nodeIface  *types.Interface
+	formIface  *types.Interface
+	errIface   *types.Interface
+	stringer   *types.Interface
+	propTypes  map[*File][]types.Type  // props field types, in declaration order
+	routeFiles map[string][]byte       // generated route code, keyed by output path
+	urlRoutes  map[string]bool         // package.Type of GET route structs
+	routes     []*routeDef             // every route struct
+	pkgs       []*packages.Package     // loaded packages
+	routePages map[string]string       // package.Type of a route -> its page value
+	pageRoutes map[types.Object]string // page var -> package.Type of its route
+	routeKeys  map[string]bool         // package.Type of every route struct
+	routeMeth  map[string]string       // package.Type of a route -> its method
+	actions    map[string][]token.Position
+	routeDefs  map[string]*routeDef // package.Type of a route -> its definition
+	sigTypes   map[*File]map[string]types.Type
+	sigActions map[string]bool // actions with signal-bound fields
+	// typeDiags holds the type-check diagnostics of each .gx file, so an
+	// incremental pass can keep the unchanged ones (NFR-05).
+	typeDiags   map[string][]Diagnostic
 	exprTypes   map[ast.Expr]types.Type
 	clientBy    map[*Attr]*clientSite
 	clientSites []*clientSite
@@ -74,6 +77,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		propTypes:  map[*File][]types.Type{},
 		sigTypes:   map[*File]map[string]types.Type{},
 		sigActions: map[string]bool{},
+		typeDiags:  map[string][]Diagnostic{},
 		exprTypes:  map[ast.Expr]types.Type{},
 		clientBy:   map[*Attr]*clientSite{},
 		scopedMap:  map[*Component]bool{},
@@ -135,33 +139,12 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	var diags []Diagnostic
 	for _, pkg := range pkgs {
 		for _, e := range pkg.TypeErrors {
-			pos := pkg.Fset.Position(e.Pos)
-			ref, ok := refs[filepath.Base(pos.Filename)]
+			d, ok := mapTypeError(refs, pkg.Fset.Position(e.Pos), e.Msg)
 			if !ok {
 				continue
 			}
-			line, col := pos.Line, pos.Column
-			if ref.line > 0 {
-				line, col = ref.line, ref.col
-			}
-			code := ref.code
-			if code == "" {
-				code = CodeType
-			}
-			d := Diagnostic{
-				Code: code,
-				File: ref.file.File,
-				Line: line,
-				Col:  col,
-				Msg:  e.Msg,
-			}
-			if code == CodeFragment {
-				d.Fix = "add the undefined name to the #fragment params"
-				if name, ok := strings.CutPrefix(e.Msg, "undefined: "); ok {
-					d.Fix = "add " + name + " to the #fragment params"
-				}
-			}
 			diags = append(diags, d)
+			res.typeDiags[d.File] = append(res.typeDiags[d.File], d)
 		}
 		for _, file := range pkg.Syntax {
 			path := pkg.Fset.Position(file.Pos()).Filename
@@ -169,15 +152,21 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			if !ok {
 				continue
 			}
-			l.collectTypes(res, pkg, file, pr)
-			l.collectPropTypes(res, pkg, pr)
+			l.collectTypes(res, pkg.TypesInfo, pkg.Fset, pkg.Types, file, pr)
+			l.collectPropTypes(res, pkg.Types, pr)
 		}
 	}
 	for _, pr := range parseProbe {
-		diags = append(diags, pr.clientDiags...)
+		for _, d := range pr.clientDiags {
+			diags = append(diags, d)
+			res.typeDiags[pr.file.File] = append(res.typeDiags[pr.file.File], d)
+		}
 		for _, site := range pr.clients {
 			res.clientSites = append(res.clientSites, site)
-			diags = append(diags, res.checkClientSite(site)...)
+			for _, d := range res.checkClientSite(site) {
+				diags = append(diags, d)
+				res.typeDiags[pr.file.File] = append(res.typeDiags[pr.file.File], d)
+			}
 		}
 	}
 	res.collectActions(pkgs)
@@ -209,6 +198,38 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, checkSafeHTML(pkgs)...)
 	diags = append(diags, checkRoutePackages(pkgs)...)
 	return res, diags
+}
+
+// mapTypeError turns one type-check error position into a diagnostic. The
+// position names a synthetic probe whose //line directives point at the .gx
+// file (REQ-TLS-02).
+func mapTypeError(refs map[string]synthRef, pos token.Position, msg string) (Diagnostic, bool) {
+	ref, ok := refs[filepath.Base(pos.Filename)]
+	if !ok {
+		return Diagnostic{}, false
+	}
+	line, col := pos.Line, pos.Column
+	if ref.line > 0 {
+		line, col = ref.line, ref.col
+	}
+	code := ref.code
+	if code == "" {
+		code = CodeType
+	}
+	d := Diagnostic{
+		Code: code,
+		File: ref.file.File,
+		Line: line,
+		Col:  col,
+		Msg:  msg,
+	}
+	if code == CodeFragment {
+		d.Fix = "add the undefined name to the #fragment params"
+		if name, ok := strings.CutPrefix(msg, "undefined: "); ok {
+			d.Fix = "add " + name + " to the #fragment params"
+		}
+	}
+	return d, true
 }
 
 // hasFormRoute reports whether any route is a form input (REQ-FRM-01).
@@ -559,11 +580,11 @@ func walkElements(ns []Node, fn func(*Element)) {
 
 // collectTypes reads the types of the probe sites and the package-owned
 // identifiers of every default expression.
-func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast.File, pr *probe) {
+func (l *loader) collectTypes(res *typesResult, info *types.Info, fset *token.FileSet, tpkg *types.Package, file *ast.File, pr *probe) {
 	var exprs []ast.Expr
 	ast.Inspect(file, func(n ast.Node) bool {
 		if gd, ok := n.(*ast.GenDecl); ok && gd.Tok == token.VAR {
-			l.collectSignalTypes(res, pkg, pr.file, gd)
+			l.collectSignalTypes(res, info, fset, pr.file, gd)
 			return true
 		}
 		as, ok := n.(*ast.AssignStmt)
@@ -575,7 +596,7 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 		}
 		return true
 	})
-	for expr, tv := range pkg.TypesInfo.Types {
+	for expr, tv := range info.Types {
 		res.exprTypes[expr] = tv.Type
 	}
 	// The site ASTs must come from the probe file so that TypesInfo has
@@ -594,7 +615,7 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 	blockIdx := 0
 	for i, siteAny := range pr.sites {
 		if i < len(exprs) {
-			if tv, ok := pkg.TypesInfo.Types[exprs[i]]; ok {
+			if tv, ok := info.Types[exprs[i]]; ok {
 				res.types[siteAny] = tv.Type
 			}
 		}
@@ -621,11 +642,11 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 	}
 	for idx, name := range pr.defs {
 		names := map[string]bool{}
-		for ident, obj := range pkg.TypesInfo.Uses {
-			if filepath.Base(pkg.Fset.Position(ident.Pos()).Filename) != name {
+		for ident, obj := range info.Uses {
+			if filepath.Base(fset.Position(ident.Pos()).Filename) != name {
 				continue
 			}
-			if obj.Pkg() != nil && obj.Pkg() == pkg.Types {
+			if obj.Pkg() != nil && obj.Pkg() == tpkg {
 				names[obj.Name()] = true
 			}
 		}
@@ -641,9 +662,12 @@ func (l *loader) collectTypes(res *typesResult, pkg *packages.Package, file *ast
 
 // collectPropTypes records the Go type of every props field from the probe
 // struct, in declaration order (REQ-FRM-03).
-func (l *loader) collectPropTypes(res *typesResult, pkg *packages.Package, pr *probe) {
+func (l *loader) collectPropTypes(res *typesResult, tpkg *types.Package, pr *probe) {
 	name := componentName(pr.file) + "Props"
-	obj := pkg.Types.Scope().Lookup(name)
+	if tpkg == nil {
+		return
+	}
+	obj := tpkg.Scope().Lookup(name)
 	if obj == nil {
 		return
 	}
@@ -664,7 +688,7 @@ func (l *loader) collectPropTypes(res *typesResult, pkg *packages.Package, pr *p
 
 // collectSignalTypes records the Go type of every gx signal declaration in
 // a probe file, keyed by the lower-first signal name (REQ-ACT-03).
-func (l *loader) collectSignalTypes(res *typesResult, pkg *packages.Package, f *File, gd *ast.GenDecl) {
+func (l *loader) collectSignalTypes(res *typesResult, info *types.Info, fset *token.FileSet, f *File, gd *ast.GenDecl) {
 	for _, spec := range gd.Specs {
 		vs, ok := spec.(*ast.ValueSpec)
 		if !ok {
@@ -675,7 +699,7 @@ func (l *loader) collectSignalTypes(res *typesResult, pkg *packages.Package, f *
 			if !ok {
 				continue
 			}
-			obj, _ := pkg.TypesInfo.Defs[id].(*types.Var)
+			obj, _ := info.Defs[id].(*types.Var)
 			if obj == nil {
 				continue
 			}

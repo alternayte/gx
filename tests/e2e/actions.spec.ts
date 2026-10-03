@@ -215,3 +215,4 @@ test('REQ-RTE-12 JS off keeps navigation links plain', async () => {
   expect(await plain.title()).toBe('Gx shop about')
   await context.close()
 })
+

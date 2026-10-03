@@ -1,6 +1,7 @@
 // The Gx browser runtime. `just runtime` builds this file to gx.js, which
 // package gx embeds. Keep it free of bare imports: users never run a
 // bundler for the core runtime.
+import { installCSRF } from './csrf'
 //
 // It owns the parts Datastar does not: layout-aware navigation (REQ-RTE-12),
 // active links (REQ-RTE-13), the dev duplicate-scope check (REQ-ACT-06) and
@@ -156,6 +157,10 @@ const cookie = (name: string): string => {
   const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
   return m ? decodeURIComponent(m[1]) : ''
 }
+
+// Attach the CSRF token to every same-origin write, Datastar's fetches
+// included (SI-03).
+installCSRF()
 
 // adapterPresent reports whether the page loaded a hypermedia adapter.
 const adapterPresent = (): boolean => document.querySelector('script[data-gx-adapter]') !== null
