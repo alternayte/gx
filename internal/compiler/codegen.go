@@ -205,6 +205,17 @@ func (g *gen) add(builder, expr string) {
 	g.write("%s.Add(%s)", builder, expr)
 }
 
+// lineAt emits a //line directive so that Go tooling and stack traces report
+// .gx positions (REQ-TLS-02).
+func (g *gen) lineAt(n Node) {
+	at := posOf(n)
+	if at.Line <= 0 {
+		return
+	}
+	// A //line directive is only honored at column 1.
+	g.b.WriteString(fmt.Sprintf("//line %s:%d:%d\n", filepath.Base(g.file.File), at.Line, at.Col))
+}
+
 // subtreeNeedsBlock reports whether ns holds a statement (a let or a control)
 // anywhere below it.
 func subtreeNeedsBlock(ns []Node) bool {
@@ -225,18 +236,23 @@ func (g *gen) emitStmts(ns []Node, builder string) {
 	for _, n := range ns {
 		switch t := n.(type) {
 		case *Text:
+			g.lineAt(t)
 			g.add(builder, "gx.Text("+strconv.Quote(t.Data)+")")
 		case *HTMLComment:
+			g.lineAt(t)
 			g.add(builder, "gx.Raw(gx.SafeHTML("+strconv.Quote("<!--"+t.Data+"-->")+"))")
 		case *Comment:
 			// A {/* ... */} comment never renders (REQ-AUT-16).
 		case *Expr:
+			g.lineAt(t)
 			g.add(builder, g.exprValue(t, t.Data))
 		case *Let:
+			g.lineAt(t)
 			g.write("%s := %s", t.Name, t.Expr)
 		case *Control:
 			g.emitControl(t, builder)
 		case *Element:
+			g.lineAt(t)
 			if qual, name, ok := componentTag(t.Name); ok {
 				g.emitComponent(t, qual, name, builder)
 			} else if subtreeNeedsBlock(t.Children) {
@@ -252,6 +268,7 @@ func (g *gen) emitStmts(ns []Node, builder string) {
 }
 
 func (g *gen) emitControl(c *Control, builder string) {
+	g.lineAt(c)
 	switch c.Kind {
 	case "if":
 		header := strings.TrimSpace(c.Header)
@@ -512,6 +529,7 @@ func (g *gen) fragmentFunc(el *Element) {
 		return
 	}
 	name := g.name + upperFirst(frag.Name)
+	g.lineAt(el)
 	var params []string
 	if usesP(el) {
 		params = append(params, "p "+g.name+"Props")
