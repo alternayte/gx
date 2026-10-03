@@ -19,4 +19,5 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - uses: extractions/setup-just@v2
+      - uses: oven-sh/setup-bun@v2
       - run: just verify

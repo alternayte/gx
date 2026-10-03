@@ -195,3 +195,13 @@ func attrValue(el *elNode, name string) string {
 	}
 	return ""
 }
+
+// Toaster renders the region that Toast patches into (REQ-REG-11).
+func Toaster() Node {
+	return El("div", Attrs{{Key: "id", Value: "gx-toaster"}, {Key: "aria-live", Value: "polite"}, {Key: "aria-atomic", Value: "true"}})
+}
+
+// ToastNode is the markup of one toast.
+func ToastNode(text string) Node {
+	return El("div", Attrs{{Key: "role", Value: "status"}, {Key: "data-gx-toast", Value: ""}}, Text(text))
+}

@@ -230,11 +230,16 @@ func New(cfg Config) *App {
 	return a
 }
 
-// registerAssets serves the adapter runtime files under /_gx/ (request
-// lifecycle step 6). BasePath() prefixes the URLs the page uses; the mux
-// itself stays un-prefixed so a mount can strip the prefix (REQ-RTE-18).
+// registerAssets serves the Gx runtime and the adapter runtime files under
+// /_gx/ (request lifecycle step 6). BasePath() prefixes the URLs the page
+// uses; the mux pattern stays un-prefixed so a mount can strip a prefix
+// (REQ-RTE-18).
 func (a *App) registerAssets(adapter Adapter) {
+	assets := map[string][]byte{"gx.js": coreRuntimeJS}
 	for name, data := range adapter.Assets() {
+		assets[name] = data
+	}
+	for name, data := range assets {
 		body := data
 		a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", assetType(name))

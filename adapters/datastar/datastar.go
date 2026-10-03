@@ -1,0 +1,132 @@
+// Package datastar adapts Gx to the Datastar hypermedia library through the
+// public gx.Adapter hook (REQ-PLG-04, DR-04). It imports only the public Gx
+// API, the standard library and the official Datastar Go SDK.
+package datastar
+
+import (
+	_ "embed"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"net/http"
+	"strings"
+
+	"github.com/alternayte/gx"
+	sdk "github.com/starfederation/datastar-go/datastar"
+)
+
+// Version is the pinned Datastar browser runtime version (SI-10).
+const Version = "v1.0.4"
+
+// bundleSHA256 is the SHA-256 of the pinned browser runtime. A mismatch
+// stops the build (SI-10).
+const bundleSHA256 = "727844adfc825ee651fb93c544a2a739986f9a21820a94524b35f0cac470cf91"
+
+//go:embed datastar.js
+var bundle []byte
+
+type adapter struct{}
+
+// Adapter returns the Datastar adapter for gx.Config.Adapter.
+func Adapter() gx.Adapter { return adapter{} }
+
+func (adapter) Name() string  { return "datastar" }
+func (adapter) Signals() bool { return true }
+
+// Runtime returns the scripts every page needs (request lifecycle step 6).
+// The Gx runtime script comes from package gx.
+func (adapter) Runtime() gx.Node {
+	base := gx.BasePath()
+	return gx.El("script", gx.Attrs{
+		{Key: "type", Value: "module"},
+		{Key: "src", Value: base + "/_gx/datastar.js", Kind: gx.AttrURL},
+	})
+}
+
+// Assets returns the browser runtime files served under /_gx/.
+func (adapter) Assets() map[string][]byte {
+	check := sha256.Sum256(bundle)
+	if got := hex.EncodeToString(check[:]); got != bundleSHA256 {
+		panic("datastar: browser runtime hash mismatch: " + got)
+	}
+	return map[string][]byte{
+		"datastar.js": bundle,
+	}
+}
+
+// Respond writes the patched answer as Datastar SSE events.
+func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response) error {
+	if res.Status >= 400 {
+		// Datastar reads the events on an error status too, so the
+		// toast still arrives (REQ-ACT-10).
+		h := w.Header()
+		h.Set("Content-Type", "text/event-stream")
+		h.Set("Cache-Control", "no-cache")
+		w.WriteHeader(res.Status)
+	}
+	sse := sdk.NewSSE(w, r)
+	for _, p := range res.Patches {
+		switch t := p.(type) {
+		case gx.ElementPatch:
+			opts := []sdk.PatchElementOption{sdk.WithSelectorID(strings.TrimPrefix(t.Target, "#"))}
+			switch t.Mode {
+			case gx.ModeAppend:
+				opts = append(opts, sdk.WithModeAppend())
+			case gx.ModePrepend:
+				opts = append(opts, sdk.WithModePrepend())
+			case gx.ModeReplace:
+				opts = append(opts, sdk.WithModeReplace())
+			case gx.ModeRemove:
+				opts = append(opts, sdk.WithModeRemove())
+			}
+			if t.Transition {
+				opts = append(opts, sdk.WithViewTransitions())
+			}
+			if err := sse.PatchElements(gx.String(t.Node), opts...); err != nil {
+				return err
+			}
+		case gx.SignalPatch:
+			value := scopeObject(t.Scope, t.Signals)
+			data, err := json.Marshal(value)
+			if err != nil {
+				return err
+			}
+			if err := sse.PatchSignals(data); err != nil {
+				return err
+			}
+		case gx.RedirectPatch:
+			if err := sse.Redirect(t.URL); err != nil {
+				return err
+			}
+		case gx.ToastPatch:
+			if err := sse.PatchElements(gx.String(gx.ToastNode(t.Text)), sdk.WithSelectorID("gx-toaster")); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// ReadSignals decodes the request signals, adapter-native, into dst.
+func (adapter) ReadSignals(r *http.Request, dst any) error {
+	return sdk.ReadSignals(r, dst)
+}
+
+// scopeObject nests v under the dotted scope path (REQ-ACT-06). An empty
+// scope returns v unchanged.
+func scopeObject(scope string, v any) any {
+	if scope == "" {
+		return v
+	}
+	parts := strings.Split(scope, ".")
+	var out any = v
+	for i := len(parts) - 1; i >= 0; i-- {
+		if parts[i] == "" {
+			continue
+		}
+		out = map[string]any{parts[i]: out}
+	}
+	return out
+}
+
+var _ gx.Adapter = adapter{}
