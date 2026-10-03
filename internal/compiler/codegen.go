@@ -575,9 +575,13 @@ func (g *gen) attrsExpr(el *Element) string {
 				continue
 			}
 			if site := g.res.clientBy[a]; site != nil {
+				name, ok := g.clientAttrName(a)
+				if !ok {
+					continue
+				}
 				if v, ok := g.clientAttrValue(a, site); ok {
 					static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
-						strconv.Quote("data-"+a.Name), v))
+						strconv.Quote(name), v))
 				}
 				continue
 			}
@@ -850,6 +854,12 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		case AttrBool:
 			valueFor[prop.Name] = "true"
 		case AttrExpr:
+			if elem, isRef := signalRefArg(prop.Type); isRef {
+				if v, ok := g.signalRefValue(a, elem); ok {
+					valueFor[prop.Name] = v
+				}
+				continue
+			}
 			valueFor[prop.Name] = strings.TrimSpace(a.Value)
 		}
 	}
@@ -1003,6 +1013,17 @@ func (g *gen) isStyleType(n any) bool {
 	return t != nil && t.String() == "github.com/alternayte/gx.Style"
 }
 
+// clientAttrName returns the adapter attribute name of a client directive
+// (REQ-ACT-08).
+func (g *gen) clientAttrName(a *Attr) (string, bool) {
+	name, err := adapterAttrName(a.Name)
+	if err != nil {
+		g.fail(a, CodeEventMod, "event modifier", "%s", err)
+		return "", false
+	}
+	return name, true
+}
+
 // clientAttrValue returns the Go expression of the adapter attribute of one
 // client expression (REQ-ACT-07).
 func (g *gen) clientAttrValue(a *Attr, site *clientSite) (string, bool) {
@@ -1090,6 +1111,33 @@ func (g *gen) keyAttrValue(el *Element) string {
 		}
 	}
 	return ""
+}
+
+// signalRefValue returns the Go expression of a gx.SignalRef prop value
+// (REQ-ACT-07). The caller names its own signal or passes a parent ref on.
+func (g *gen) signalRefValue(a *Attr, elem string) (string, bool) {
+	src := strings.TrimSpace(a.Value)
+	if name, ok := strings.CutPrefix(src, "$"); ok && isIdent(name) {
+		return "gx.Ref[" + elem + "](gx.SignalRefPath(" + strconv.Quote(g.file.Package+"."+g.name) + ", " + g.keyExpr() + ", " + strconv.Quote(lowerFirst(name)) + "))", true
+	}
+	if name, ok := strings.CutPrefix(src, "p."); ok && isIdent(name) {
+		return "gx.Ref[" + elem + "](string(p." + name + "))", true
+	}
+	g.fail(a, CodeClientType, "signal ref", "a signal ref prop takes $Signal or a parent signal ref")
+	return "", false
+}
+
+// isIdent reports whether s is a Go identifier.
+func isIdent(s string) bool {
+	if s == "" || !isLetter(s[0]) && s[0] != '_' {
+		return false
+	}
+	for i := 1; i < len(s); i++ {
+		if !isIdentByte(s[i]) {
+			return false
+		}
+	}
+	return true
 }
 
 // callKeyExpr returns the instance key a scoped component call passes

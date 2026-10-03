@@ -58,6 +58,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4005 | call is not allowed in a client expression",
 		"GX4007 | value or operator is not allowed in a client expression",
 		"GX4009 | action method cannot be invoked from the client",
+		"GX4010 | unknown event modifier or special event",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 	}
 	if !reflect.DeepEqual(got, want) {

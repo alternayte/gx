@@ -9,8 +9,14 @@
 export const gx = {
   // len counts Unicode code points, like Go's utf8.RuneCountInString.
   len: (s: string): number => [...s].length,
-  // at returns the code point at a rune index, like a Go []rune index.
-  at: (s: string, i: number): string | undefined => [...s][i],
+  // at returns the code point at a rune index, like gxc.At.
+  at: (s: string, i: number): string => [...s][i] ?? "",
+  // contains and index mirror gxc.Contains and gxc.Index.
+  contains: (s: string, sub: string): boolean => s.includes(sub),
+  index: (s: string, sub: string): number => {
+    const i = s.indexOf(sub)
+    return i < 0 ? -1 : [...s.slice(0, i)].length
+  },
 }
 
 ;(globalThis as { __gx?: typeof gx }).__gx = gx

@@ -44,6 +44,7 @@ const (
 	CodeClientType          = "GX4007"
 	CodeInstanceKey         = "GX2012"
 	CodeSignalDefault       = "GX2014"
+	CodeEventMod            = "GX4010"
 	CodeActionMethod        = "GX4009"
 )
 
@@ -97,6 +98,7 @@ var Catalog = []Info{
 	{CodeClientCall, "call is not allowed in a client expression"},
 	{CodeClientType, "value or operator is not allowed in a client expression"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},
+	{CodeEventMod, "unknown event modifier or special event"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }
 

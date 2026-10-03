@@ -49,26 +49,20 @@ func rewriteClient(src string, refProps map[string]bool) (string, error) {
 			b.WriteString(name)
 			i += 1 + len(name)
 		case 'p':
-			if len(refProps) == 0 || i > 0 && isIdentByte(src[i-1]) {
+			if i > 0 && isIdentByte(src[i-1]) || len(refProps) == 0 || i+1 >= len(src) || src[i+1] != '.' {
 				b.WriteByte(c)
 				i++
 				continue
 			}
-			name := identAfter(src, i+1)
+			name := identAfter(src, i+2)
 			if name == "" || !refProps[name] {
-				b.WriteByte(c)
-				i++
-				continue
-			}
-			// Only a bare p.Name is a prop read.
-			if i > 0 && src[i-1] == '.' {
 				b.WriteByte(c)
 				i++
 				continue
 			}
 			b.WriteString("_gxRef_")
 			b.WriteString(name)
-			i += 1 + len(name)
+			i += 2 + len(name)
 		default:
 			b.WriteByte(c)
 			i++
@@ -133,7 +127,10 @@ func needsClient(name, value string) bool {
 	if strings.Contains(value, "$") {
 		return true
 	}
-	if name == "show" || name == "text" || name == "key" {
+	if name == "show" || name == "text" {
+		return true
+	}
+	if name == "key" {
 		return false
 	}
 	for _, prefix := range []string{"bind:", "attr:", "on:"} {
@@ -175,6 +172,100 @@ func signalRefArg(typ string) (string, bool) {
 	return "", false
 }
 
+// adapterAttrName maps a client directive name to the adapter attribute
+// name, including event modifiers and special events (REQ-ACT-08).
+func adapterAttrName(name string) (string, error) {
+	if !strings.HasPrefix(name, "on:") {
+		return "data-" + name, nil
+	}
+	event, mods := splitOnSpec(strings.TrimPrefix(name, "on:"))
+	out := "data-on:" + event
+	switch {
+	case event == "load":
+		out = "data-on-init"
+	case event == "visible":
+		out = "data-on-intersect"
+	case event == "interval" || strings.HasPrefix(event, "interval("):
+		out = "data-on-interval"
+		if dur, ok := parenValue(event); ok {
+			out += "__duration." + dur
+		}
+	}
+	for _, mod := range mods {
+		label, value := splitMod(mod)
+		switch label {
+		case "prevent", "stop", "once", "outside", "window", "capture", "passive":
+			out += "__" + label
+		case "debounce", "throttle", "delay":
+			if value == "" {
+				return "", fmt.Errorf("%s() needs a duration", label)
+			}
+			out += "__" + label + "." + value
+		default:
+			return "", fmt.Errorf("unknown modifier .%s", label)
+		}
+	}
+	return out, nil
+}
+
+// splitOnSpec splits an on: spec into the event and its modifiers.
+func splitOnSpec(spec string) (string, []string) {
+	depth := 0
+	for i := 0; i < len(spec); i++ {
+		switch spec[i] {
+		case '(':
+			depth++
+		case ')':
+			depth--
+		case '.':
+			if depth == 0 {
+				return spec[:i], splitTopDots(spec[i+1:])
+			}
+		}
+	}
+	return spec, nil
+}
+
+// splitTopDots splits s at dots outside parentheses.
+func splitTopDots(s string) []string {
+	var out []string
+	depth, start := 0, 0
+	for i := 0; i < len(s); i++ {
+		switch s[i] {
+		case '(':
+			depth++
+		case ')':
+			depth--
+		case '.':
+			if depth == 0 {
+				out = append(out, s[start:i])
+				start = i + 1
+			}
+		}
+	}
+	if start < len(s) {
+		out = append(out, s[start:])
+	}
+	return out
+}
+
+// splitMod splits a modifier into its label and value.
+func splitMod(mod string) (string, string) {
+	if label, value, ok := strings.Cut(mod, "("); ok {
+		return label, strings.TrimSuffix(value, ")")
+	}
+	return mod, ""
+}
+
+// parenValue returns the text inside the parentheses of s.
+func parenValue(s string) (string, bool) {
+	i := strings.IndexByte(s, '(')
+	if i < 0 || !strings.HasSuffix(s, ")") {
+		return "", false
+	}
+	return s[i+1 : len(s)-1], true
+}
+
 // checkClientSite reports calls and types the transpiler cannot represent
 // (REQ-ACT-05, REQ-ACT-13).
 func (r *typesResult) checkClientSite(site *clientSite) []Diagnostic {
@@ -183,12 +274,22 @@ func (r *typesResult) checkClientSite(site *clientSite) []Diagnostic {
 		at := site.attr.ValueAt
 		out = append(out, Diagnostic{Code: code, File: site.file.File, Line: at.Line, Col: at.Col, Msg: msg})
 	}
+	if _, err := adapterAttrName(site.attr.Name); err != nil {
+		report(site.node, CodeEventMod, err.Error())
+	}
+	if strings.HasPrefix(site.attr.Name, "bind:") {
+		id, ok := site.node.(*ast.Ident)
+		if site.block || !ok || !strings.HasPrefix(id.Name, "_gxSig_") {
+			report(site.node, CodeClientType, "bind: targets one signal")
+		}
+	}
 	ast.Inspect(site.node, func(n ast.Node) bool {
 		switch t := n.(type) {
 		case *ast.CallExpr:
-			if !isGxCHelper(t.Fun) {
+			if name, ok := gxcHelper(t.Fun); !ok {
 				report(t, CodeClientCall, "only gxc helpers are allowed in a client expression")
-				return true
+			} else if !knownHelper(name) {
+				report(t, CodeClientCall, "gxc."+name+" has no client equivalent")
 			}
 		case *ast.BinaryExpr:
 			switch t.Op {
@@ -222,20 +323,26 @@ func isNumeric(info types.BasicInfo) bool {
 	return info&(types.IsFloat|types.IsInteger) != 0
 }
 
-// isGxCHelper reports whether an expression calls a helper of package gxc.
-func isGxCHelper(fun ast.Expr) bool {
+// gxcHelper returns the name of a gxc helper call, when the expression is
+// one. The probe imports the package only when the .gx file imports it, so
+// the qualifier is enough for the grammar check.
+func gxcHelper(fun ast.Expr) (string, bool) {
 	sel, ok := fun.(*ast.SelectorExpr)
 	if !ok {
-		return false
+		return "", false
 	}
 	pkg, ok := sel.X.(*ast.Ident)
-	if !ok {
-		return false
+	if !ok || pkg.Name != "gxc" {
+		return "", false
 	}
-	// The probe imports are dropped for gxc unless the .gx imports it;
-	// the qualifier is enough for the grammar check.
-	switch pkg.Name {
-	case "gxc":
+	return sel.Sel.Name, true
+}
+
+// knownHelper reports whether a gxc helper has a JavaScript equivalent
+// (REQ-ACT-13).
+func knownHelper(name string) bool {
+	switch name {
+	case "Len", "At", "Contains", "Index":
 		return true
 	}
 	return false
@@ -385,8 +492,16 @@ func (t *transpiler) call(e *ast.CallExpr) (string, error) {
 		return "", fmt.Errorf("only gxc helpers are allowed in a client expression")
 	}
 	name := sel.Sel.Name
+	var js string
 	switch name {
-	case "Len", "At":
+	case "Len":
+		js = "__gx.len"
+	case "At":
+		js = "__gx.at"
+	case "Contains":
+		js = "__gx.contains"
+	case "Index":
+		js = "__gx.index"
 	default:
 		return "", fmt.Errorf("gxc.%s has no client equivalent", name)
 	}
@@ -397,12 +512,6 @@ func (t *transpiler) call(e *ast.CallExpr) (string, error) {
 			return "", err
 		}
 		args = append(args, v)
-	}
-	js := "__gx." + strings.ToLower(name[:1]) + name[1:]
-	if name == "Len" {
-		js = "__gx.len"
-	} else {
-		js = "__gx.at"
 	}
 	parts := []string{strconv.Quote(js + "(")}
 	for i, a := range args {
