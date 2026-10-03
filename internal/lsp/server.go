@@ -21,7 +21,9 @@ type Options struct {
 
 // Server is one gx language server.
 type Server struct {
-	mu        sync.Mutex
+	mu        sync.Mutex // documents and publish state
+	diagMu    sync.Mutex // one diagnose pass at a time
+	wmu       sync.Mutex // response and notification writes
 	root      string
 	session   *compiler.Session
 	docs      map[string]*document
@@ -29,6 +31,7 @@ type Server struct {
 	out       io.Writer
 	log       io.Writer
 	exiting   bool
+	done      chan struct{}
 }
 
 // Serve runs the server loop until exit or EOF.
@@ -40,7 +43,10 @@ func Serve(r io.Reader, w io.Writer, opts Options) error {
 		published: map[string]bool{},
 		out:       w,
 		log:       opts.Log,
+		done:      make(chan struct{}),
 	}
+	defer close(s.done)
+	go s.watch()
 	br := bufio.NewReader(r)
 	for {
 		msg, err := readMessage(br)
@@ -82,6 +88,7 @@ func (s *Server) handleRequest(msg *message) error {
 			} `json:"workspaceFolders"`
 		}
 		_ = json.Unmarshal(params, &p)
+		s.mu.Lock()
 		if s.root == "" {
 			switch {
 			case p.RootURI != "":
@@ -90,6 +97,7 @@ func (s *Server) handleRequest(msg *message) error {
 				s.root = uriToPath(p.WorkspaceFolders[0].URI)
 			}
 		}
+		s.mu.Unlock()
 		return s.reply(msg, map[string]any{
 			"capabilities": map[string]any{
 				"textDocumentSync": map[string]any{
@@ -157,9 +165,12 @@ func (s *Server) handleNotification(msg *message) error {
 			return nil
 		}
 		path := uriToPath(p.TextDocument.URI)
+		s.diagMu.Lock()
 		s.docs[path] = &document{Path: path, Text: p.TextDocument.Text, Version: p.TextDocument.Version}
 		s.session.SetOverlay(path, []byte(p.TextDocument.Text))
-		return s.diagnose()
+		err := s.diagnoseLocked()
+		s.diagMu.Unlock()
+		return err
 	case "textDocument/didChange":
 		var p struct {
 			TextDocument struct {
@@ -174,6 +185,7 @@ func (s *Server) handleNotification(msg *message) error {
 			return nil
 		}
 		path := uriToPath(p.TextDocument.URI)
+		s.diagMu.Lock()
 		doc := s.docs[path]
 		if doc == nil {
 			doc = &document{Path: path}
@@ -184,7 +196,9 @@ func (s *Server) handleNotification(msg *message) error {
 		}
 		doc.Version = p.TextDocument.Version
 		s.session.SetOverlay(path, []byte(doc.Text))
-		return s.diagnose()
+		err := s.diagnoseLocked()
+		s.diagMu.Unlock()
+		return err
 	case "textDocument/didClose":
 		var p struct {
 			TextDocument struct {
@@ -195,10 +209,15 @@ func (s *Server) handleNotification(msg *message) error {
 			return nil
 		}
 		path := uriToPath(p.TextDocument.URI)
+		s.diagMu.Lock()
 		delete(s.docs, path)
 		s.session.ClearOverlay(path)
-		return s.diagnose()
+		err := s.diagnoseLocked()
+		s.diagMu.Unlock()
+		return err
 	case "textDocument/didSave":
+		return s.diagnose()
+	case "workspace/didChangeWatchedFiles":
 		return s.diagnose()
 	case "exit":
 		s.exiting = true
@@ -208,8 +227,14 @@ func (s *Server) handleNotification(msg *message) error {
 	}
 }
 
+func (s *Server) write(v any) error {
+	s.wmu.Lock()
+	defer s.wmu.Unlock()
+	return writeMessage(s.out, v)
+}
+
 func (s *Server) reply(msg *message, result any) error {
-	return writeMessage(s.out, map[string]any{
+	return s.write(map[string]any{
 		"jsonrpc": "2.0",
 		"id":      msg.ID,
 		"result":  result,
@@ -217,7 +242,7 @@ func (s *Server) reply(msg *message, result any) error {
 }
 
 func (s *Server) replyError(msg *message, code int, text string) error {
-	return writeMessage(s.out, map[string]any{
+	return s.write(map[string]any{
 		"jsonrpc": "2.0",
 		"id":      msg.ID,
 		"error":   map[string]any{"code": code, "message": text},
@@ -243,6 +268,13 @@ type lspDiagnostic struct {
 // diagnose runs the compiler over the module with the open buffers and
 // publishes the diagnostics of every open file (REQ-DEV-08).
 func (s *Server) diagnose() error {
+	s.diagMu.Lock()
+	defer s.diagMu.Unlock()
+	return s.diagnoseLocked()
+}
+
+// diagnoseLocked runs one check pass. The caller holds diagMu.
+func (s *Server) diagnoseLocked() error {
 	if s.root == "" {
 		return nil
 	}
@@ -288,7 +320,7 @@ func (s *Server) diagnose() error {
 		if doc := s.docs[path]; doc != nil {
 			version = doc.Version
 		}
-		if err := writeMessage(s.out, map[string]any{
+		if err := s.write(map[string]any{
 			"jsonrpc": "2.0",
 			"method":  "textDocument/publishDiagnostics",
 			"params":  publishDiagnostics{URI: pathToURI(path), Version: version, Diagnostics: items},
