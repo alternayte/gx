@@ -98,6 +98,13 @@ func postForm(target string, values url.Values) *httptest.ResponseRecorder {
 	return rec
 }
 
+func TestREQ_FRM_07_Conversion(t *testing.T) {
+	rec := postForm("/signup", url.Values{"email": {"a@b.co"}, "age": {"abc"}, "terms": {"on"}})
+	if rec.Code != http.StatusUnprocessableEntity || !strings.Contains(rec.Body.String(), "Enter a valid value.") {
+		t.Fatalf("conversion = %d %q", rec.Code, rec.Body.String())
+	}
+}
+
 func TestFormFlow(t *testing.T) {
 	rec := postForm("/signup", url.Values{"email": {""}, "age": {"20"}, "plan": {"free"}, "terms": {"on"}})
 	if rec.Code != http.StatusUnprocessableEntity || !strings.Contains(rec.Body.String(), "required") {
@@ -126,6 +133,24 @@ func formTree(t *testing.T, routes string) string {
 		"signup/SignupView.gx": formViewGx,
 		"signup/form_test.go":  formPageTestGo,
 	})
+}
+
+// TestREQ_FRM_07_ConversionError covers the conversion error: the generated
+// binder records a message key, and the form answers 422 with the field
+// error, not 400 (REQ-FRM-07).
+func TestREQ_FRM_07_ConversionError(t *testing.T) {
+	dir := formTree(t, formRoutesGo)
+	files := generateFiles(t, dir)
+	src := string(files[filepath.Join(dir, "signup/routes_gx.go")])
+	if !strings.Contains(src, `errs["age"] = "invalid"`) {
+		t.Fatalf("GxBindForm does not record a conversion error:\n%s", src)
+	}
+	writeGenerated(t, dir)
+	cmd := exec.Command("go", "test", "-run", "TestREQ_FRM_07_Conversion", "./...")
+	cmd.Dir = dir
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("conversion error test: %v\n%s", err, out)
+	}
 }
 
 // TestREQ_FRM_03_GeneratedForm covers the generated form type and its
