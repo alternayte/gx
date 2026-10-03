@@ -4,6 +4,7 @@ go 1.25.0
 
 require (
 	github.com/a-h/templ v0.3.1020
+	github.com/golangci/plugin-module-register v0.1.1
 	github.com/starfederation/datastar-go v1.2.2
 	golang.org/x/tools v0.49.0
 )

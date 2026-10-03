@@ -1,0 +1,7 @@
+version: v2.12.2
+name: gx-golangci
+destination: ./bin
+plugins:
+  - module: github.com/alternayte/gx
+    import: github.com/alternayte/gx/lintplugin
+    path: .

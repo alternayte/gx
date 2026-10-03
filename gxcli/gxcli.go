@@ -16,6 +16,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
 	"github.com/alternayte/gx/internal/lsp"
@@ -42,6 +43,8 @@ func Main(args []string) int {
 		return runRoutes(args[1:])
 	case "lsp":
 		return runLSP(args[1:])
+	case "lint":
+		return runLint(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -63,6 +66,7 @@ Commands:
   dev       run the app with rebuild, restart, morph and the error overlay
   routes    print the routes of a module, with --json for machine output
   lsp       run the language server on stdio
+  lint      run go vet and the Gx analyzers on a module
 `)
 }
 
@@ -285,6 +289,34 @@ func runBuild(args []string) int {
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 	if err := cmd.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+func runLint(args []string) int {
+	fs := flag.NewFlagSet("gx lint", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	vet := exec.Command("go", "vet", "./...")
+	vet.Dir = dir
+	vet.Stdout, vet.Stderr = os.Stdout, os.Stderr
+	vetErr := vet.Run()
+	findings, err := analyze.Lint(dir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx lint: %v\n", err)
+		return 1
+	}
+	for _, f := range findings {
+		fmt.Fprintf(os.Stderr, "%s:%d:%d: %s: %s\n", f.File, f.Line, f.Col, f.Code, f.Message)
+	}
+	if vetErr != nil || len(findings) > 0 {
 		return 1
 	}
 	return 0

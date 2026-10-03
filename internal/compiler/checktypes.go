@@ -202,7 +202,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkSecrets(res, dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
-	diags = append(diags, checkSafeHTML(pkgs)...)
+	diags = append(diags, checkSafeHTML(refs, pkgs)...)
 	diags = append(diags, checkRoutePackages(pkgs)...)
 	return res, diags
 }
@@ -251,7 +251,7 @@ func hasFormRoute(defs []*routeDef) bool {
 
 // checkSafeHTML reports a conversion of a non-constant value to gx.SafeHTML
 // unless the same line carries //gx:trusted (SI-01).
-func checkSafeHTML(pkgs []*packages.Package) []Diagnostic {
+func checkSafeHTML(refs map[string]synthRef, pkgs []*packages.Package) []Diagnostic {
 	var out []Diagnostic
 	for _, pkg := range pkgs {
 		for _, file := range pkg.Syntax {
@@ -285,9 +285,13 @@ func checkSafeHTML(pkgs []*packages.Package) []Diagnostic {
 				if trusted[pos.Line] {
 					return true
 				}
+				file := pos.Filename
+				if ref, ok := refs[filepath.Base(pos.Filename)]; ok {
+					file = ref.file.File
+				}
 				out = append(out, Diagnostic{
 					Code: CodeTrustedHTML,
-					File: pos.Filename,
+					File: file,
 					Line: pos.Line,
 					Col:  pos.Column,
 					Msg:  "conversion to gx.SafeHTML needs //gx:trusted <reason>",

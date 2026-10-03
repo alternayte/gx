@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/alternayte/gx/gxcli"
@@ -195,5 +196,62 @@ func TestREQ_RTE_14_RoutesJSON(t *testing.T) {
 	}
 	if len(got) != 1 || got[0]["pattern"] != "GET /products/{id}" || got[0]["page"] != "products.ShowPage" {
 		t.Fatalf("routes JSON = %s", data)
+	}
+}
+
+// captureStderr runs fn with os.Stderr redirected and returns the output.
+func captureStderr(t *testing.T, fn func()) string {
+	t.Helper()
+	old := os.Stderr
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.Stderr = w
+	fn()
+	_ = w.Close()
+	os.Stderr = old
+	data, err := io.ReadAll(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(data)
+}
+
+// TestREQ_TLS_03_LintCommand covers gx lint: it runs go vet and the Gx
+// analyzers over every package and reports the findings with their codes
+// (REQ-TLS-03).
+func TestREQ_TLS_03_LintCommand(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	repo := filepath.Clean(filepath.Join(filepath.Dir(file), ".."))
+	mod := "module app\n\ngo 1.25.0\n\nrequire github.com/alternayte/gx v0.0.0\n\nreplace github.com/alternayte/gx => " + filepath.ToSlash(repo) + "\n"
+
+	dir := t.TempDir()
+	for rel, content := range map[string]string{
+		"go.mod":         mod,
+		"cart/cart.go":   "package cart\n\nimport gx \"github.com/alternayte/gx\"\n\nvar userInput string\n\nvar a = gx.SafeHTML(userInput)\n",
+		"route/route.go": "package route\n\nfunc Nope() {}\n",
+	} {
+		p := filepath.Join(dir, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out := captureStderr(t, func() {
+		if code := gxcli.Main([]string{"lint", dir}); code == 0 {
+			t.Error("lint accepted a module with findings")
+		}
+	})
+	for _, want := range []string{"GX7001", "GX3005", "cart.go", "route.go"} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("lint output lacks %q:\n%s", want, out)
+		}
 	}
 }
