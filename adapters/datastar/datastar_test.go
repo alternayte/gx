@@ -74,6 +74,44 @@ func TestREQ_PLG_04_SignalScope(t *testing.T) {
 	}
 }
 
+// TestREQ_ACT_04_DatastarModes checks every patch mode reaches the wire
+// (REQ-ACT-04, contract test per adapter).
+func TestREQ_ACT_04_DatastarModes(t *testing.T) {
+	cases := []struct {
+		name string
+		arg  gx.Node
+		want string
+	}{
+		{"default", nil, ""},
+		{"append", gx.Append, "mode append"},
+		{"prepend", gx.Prepend, "mode prepend"},
+		{"replace", gx.Replace, "mode replace"},
+		{"remove", gx.Remove, "mode remove"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			h := gx.Action(func(ctx *gx.Ctx, in actRoute) error {
+				node := gx.El("span", gx.Attrs{{Key: "id", Value: "count"}}, gx.Text("2"))
+				if c.arg == nil {
+					return ctx.Patch(node)
+				}
+				return ctx.Patch(c.arg, node)
+			})
+			rec := serve(t, h, httptest.NewRequest("POST", "/act", nil))
+			body := rec.Body.String()
+			if c.want == "" {
+				if strings.Contains(body, "mode ") {
+					t.Fatalf("default mode must morph:\n%s", body)
+				}
+				return
+			}
+			if !strings.Contains(body, c.want) {
+				t.Fatalf("SSE body lacks %q:\n%s", c.want, body)
+			}
+		})
+	}
+}
+
 // TestREQ_PLG_04_Assets checks the pinned runtime is served and matches its
 // recorded hash (SI-10 groundwork).
 func TestREQ_PLG_04_Assets(t *testing.T) {

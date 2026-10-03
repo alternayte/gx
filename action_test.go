@@ -174,3 +174,48 @@ func TestREQ_ACT_01_ActionError(t *testing.T) {
 		t.Fatalf("patch = %#v, want a toast", a.res.Patches[0])
 	}
 }
+
+func TestREQ_ACT_04_PatchModes(t *testing.T) {
+	cases := []struct {
+		name string
+		arg  gx.Node
+		want gx.PatchMode
+	}{
+		{"default", nil, gx.ModeMorph},
+		{"append", gx.Append, gx.ModeAppend},
+		{"prepend", gx.Prepend, gx.ModePrepend},
+		{"replace", gx.Replace, gx.ModeReplace},
+		{"remove", gx.Remove, gx.ModeRemove},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			a := &fakeAdapter{}
+			h := gx.Action(func(ctx *gx.Ctx, in actRoute) error {
+				node := gx.El("span", gx.Attrs{{Key: "id", Value: "count"}}, gx.Text("2"))
+				if c.arg == nil {
+					return ctx.Patch(node)
+				}
+				return ctx.Patch(c.arg, node)
+			})
+			serveAction(t, a, h)
+			if len(a.res.Patches) != 1 {
+				t.Fatalf("patches = %+v", a.res.Patches)
+			}
+			p := a.res.Patches[0].(gx.ElementPatch)
+			if p.Mode != c.want || p.Target != "#count" {
+				t.Fatalf("patch = %+v, want mode %d target #count", p, c.want)
+			}
+		})
+	}
+}
+
+func TestREQ_ACT_04_PatchNeedsID(t *testing.T) {
+	a := &fakeAdapter{}
+	h := gx.Action(func(ctx *gx.Ctx, in actRoute) error {
+		return ctx.Patch(gx.El("span", nil, gx.Text("x")))
+	})
+	rec := serveAction(t, a, h)
+	if rec.Code != http.StatusInternalServerError {
+		t.Fatalf("status = %d, want 500 for a patch without an id", rec.Code)
+	}
+}
