@@ -43,6 +43,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX2010 | signal in a server expression",
 		"GX2011 | dynamic URL attribute",
 		"GX2013 | value cannot render as text",
+		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("catalog changed; update the snapshot deliberately:\ngot:\n%v\nwant:\n%v", got, want)

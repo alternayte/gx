@@ -127,7 +127,59 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
+	diags = append(diags, checkSafeHTML(pkgs)...)
 	return res, diags
+}
+
+// checkSafeHTML reports a conversion of a non-constant value to gx.SafeHTML
+// unless the same line carries //gx:trusted (SI-01).
+func checkSafeHTML(pkgs []*packages.Package) []Diagnostic {
+	var out []Diagnostic
+	for _, pkg := range pkgs {
+		for _, file := range pkg.Syntax {
+			trusted := map[int]bool{}
+			for _, cg := range file.Comments {
+				for _, c := range cg.List {
+					if strings.Contains(c.Text, "gx:trusted") {
+						trusted[pkg.Fset.Position(c.Pos()).Line] = true
+					}
+				}
+			}
+			ast.Inspect(file, func(n ast.Node) bool {
+				call, ok := n.(*ast.CallExpr)
+				if !ok || len(call.Args) != 1 {
+					return true
+				}
+				var obj types.Object
+				switch fun := call.Fun.(type) {
+				case *ast.Ident:
+					obj = pkg.TypesInfo.Uses[fun]
+				case *ast.SelectorExpr:
+					obj = pkg.TypesInfo.Uses[fun.Sel]
+				}
+				if obj == nil || obj.Pkg() == nil || obj.Pkg().Path() != "github.com/alternayte/gx" || obj.Name() != "SafeHTML" {
+					return true
+				}
+				if tv, ok := pkg.TypesInfo.Types[call.Args[0]]; ok && tv.Value != nil {
+					return true // a constant string is trusted
+				}
+				pos := pkg.Fset.Position(call.Pos())
+				if trusted[pos.Line] {
+					return true
+				}
+				out = append(out, Diagnostic{
+					Code: CodeTrustedHTML,
+					File: pos.Filename,
+					Line: pos.Line,
+					Col:  pos.Column,
+					Msg:  "conversion to gx.SafeHTML needs //gx:trusted <reason>",
+					Fix:  "add //gx:trusted <reason> on the same line",
+				})
+				return true
+			})
+		}
+	}
+	return out
 }
 
 // checkKeys reports a loop that needs a key and has none (REQ-AUT-14).

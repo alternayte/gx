@@ -26,6 +26,8 @@ const (
 	CodeSignal        = "GX2010"
 	CodeURLAttr       = "GX2011"
 	CodeUnrenderable  = "GX2013"
+
+	CodeTrustedHTML = "GX7001"
 )
 
 // Diagnostic is one compiler message.
@@ -63,6 +65,7 @@ var Catalog = []Info{
 	{CodeSignal, "signal in a server expression"},
 	{CodeURLAttr, "dynamic URL attribute"},
 	{CodeUnrenderable, "value cannot render as text"},
+	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }
 
 // Doc returns the documentation path of the diagnostic (REQ-AUT-19).
