@@ -14,11 +14,12 @@ import (
 
 // typesResult holds the Go types of .gx expressions from one analysis pass.
 type typesResult struct {
-	types     map[any]types.Type
-	quals     map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
-	nodeIface *types.Interface
-	errIface  *types.Interface
-	stringer  *types.Interface
+	types      map[any]types.Type
+	quals      map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
+	nodeIface  *types.Interface
+	errIface   *types.Interface
+	stringer   *types.Interface
+	routeFiles map[string][]byte // generated route code, keyed by output path
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -40,7 +41,7 @@ type probe struct {
 // analyze type-checks every .gx file in dirs. It generates shadow Go files in
 // memory and never writes them to disk.
 func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic) {
-	res := &typesResult{types: map[any]types.Type{}, quals: map[*File]map[int]map[string]bool{}}
+	res := &typesResult{types: map[any]types.Type{}, quals: map[*File]map[int]map[string]bool{}, routeFiles: map[string][]byte{}}
 	if findModule(root) == nil {
 		return res, nil
 	}
@@ -69,9 +70,6 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 				refs[name] = synthRef{file: f, line: fld.At.Line, col: fld.At.Col}
 			}
 		}
-	}
-	if len(overlay) == 0 {
-		return res, nil
 	}
 	cfg := &packages.Config{
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
@@ -129,6 +127,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkKeys(dirs)...)
 	diags = append(diags, checkSafeHTML(pkgs)...)
+	routes, rdiags := collectRoutes(pkgs)
+	diags = append(diags, rdiags...)
+	res.routeFiles = renderRouteFiles(routes)
 	return res, diags
 }
 

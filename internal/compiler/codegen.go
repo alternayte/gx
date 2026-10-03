@@ -46,6 +46,9 @@ func Generate(root string) (map[string][]byte, []Diagnostic) {
 			out[filepath.Join(dir, base+"_gx.go")] = src
 		}
 	}
+	for path, src := range res.routeFiles {
+		out[path] = src
+	}
 	if len(diags) > 0 {
 		sortDiags(diags)
 		return nil, diags

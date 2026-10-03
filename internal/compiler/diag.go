@@ -11,6 +11,11 @@ const (
 	CodeFileName = "GX1001"
 	CodeStale    = "GX1002"
 
+	CodePathVar   = "GX3001"
+	CodePathField = "GX3002"
+
+	CodeRouteField = "GX3005"
+
 	CodeRequiredProp     = "GX2001"
 	CodeUnknownComponent = "GX2002"
 	CodeUnknownAttr      = "GX2003"
@@ -65,6 +70,9 @@ var Catalog = []Info{
 	{CodeSignal, "signal in a server expression"},
 	{CodeURLAttr, "dynamic URL attribute"},
 	{CodeUnrenderable, "value cannot render as text"},
+	{CodePathVar, "pattern variable has no field"},
+	{CodePathField, "path field has no pattern variable"},
+	{CodeRouteField, "route field type cannot bind"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 }
 
