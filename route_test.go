@@ -175,3 +175,20 @@ func TestREQ_RTE_11_Head(t *testing.T) {
 		t.Fatalf("head output = %q, want %q", got, want)
 	}
 }
+
+func TestREQ_RTE_13_ActiveLinks(t *testing.T) {
+	page := gx.El("nav", nil,
+		gx.El("a", gx.Attrs{{Key: "href", Value: "/products/42", Kind: gx.AttrURL, Active: "page"}}, gx.Text("product")),
+		gx.El("a", gx.Attrs{{Key: "href", Value: "/products", Kind: gx.AttrURL, Active: "section"}}, gx.Text("list")),
+		gx.El("a", gx.Attrs{{Key: "href", Value: "/other", Kind: gx.AttrURL, Active: "page"}}, gx.Text("other")),
+	)
+	req := httptest.NewRequest("GET", "/products/42", nil)
+	got := gx.StringRequest(req, page)
+	want := `<nav><a href="/products/42" aria-current="page">product</a><a href="/products" data-active>list</a><a href="/other">other</a></nav>`
+	if got != want {
+		t.Fatalf("active links = %q, want %q", got, want)
+	}
+	if got := gx.String(page); got == want {
+		t.Fatal("no request in scope must not mark links")
+	}
+}

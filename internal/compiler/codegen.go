@@ -413,8 +413,18 @@ func (g *gen) attrsExpr(el *Element) string {
 		parts = append(parts, "gx.Attrs{"+strings.Join(static, ", ")+"}")
 		static = nil
 	}
+	activeMode := ""
+	for i := range el.Attrs {
+		if el.Attrs[i].Kind == AttrString && el.Attrs[i].Name == "active" {
+			activeMode = el.Attrs[i].Value
+			break
+		}
+	}
 	for i := range el.Attrs {
 		a := &el.Attrs[i]
+		if a.Kind == AttrString && a.Name == "active" {
+			continue // a gx directive, not an HTML attribute
+		}
 		// The class attribute and the class:<name> directives join in
 		// source order (REQ-AUT-10).
 		switch a.Kind {
@@ -476,7 +486,12 @@ func (g *gen) attrsExpr(el *Element) string {
 					value = strings.TrimSpace(a.Value) + ".URL()"
 				}
 				if value != "" {
-					static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrURL}", strconv.Quote(a.Name), value))
+					active := `"page"`
+					if activeMode == "section" {
+						active = `"section"`
+					}
+					static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrURL, Active: %s}",
+						strconv.Quote(a.Name), value, active))
 				}
 				continue
 			}

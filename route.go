@@ -325,7 +325,7 @@ func (p *page[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := Render(w, n); err != nil {
+	if err := RenderRequest(w, r, n); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -379,7 +379,7 @@ func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		n = h.layouts[i].gxView(props[i], n)
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := Render(w, n); err != nil {
+	if err := RenderRequest(w, r, n); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

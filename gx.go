@@ -5,6 +5,7 @@ package gx
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"strconv"
 	"strings"
 )
@@ -179,11 +180,14 @@ const (
 	AttrStyle
 )
 
-// Attr is one attribute of an element.
+// Attr is one attribute of an element. Active marks a typed link for the
+// aria-current and data-active rules of REQ-RTE-13: "page" (exact match) or
+// "section" (path prefix).
 type Attr struct {
-	Key   string
-	Value string
-	Kind  AttrKind
+	Key    string
+	Value  string
+	Kind   AttrKind
+	Active string
 }
 
 // Bool returns a boolean attribute that is omitted when present is false
@@ -202,10 +206,23 @@ func Render(w io.Writer, n Node) error {
 	return err
 }
 
-// String returns the HTML of n.
-func String(n Node) string {
+// RenderRequest renders n with the request in scope, so typed links mark the
+// active page (REQ-RTE-13).
+func RenderRequest(w io.Writer, r *http.Request, n Node) error {
+	_, err := io.WriteString(w, StringRequest(r, n))
+	return err
+}
+
+// String returns the HTML of n with no request in scope.
+func String(n Node) string { return StringRequest(nil, n) }
+
+// StringRequest returns the HTML of n with the request in scope.
+func StringRequest(r *http.Request, n Node) string {
 	var b strings.Builder
 	st := &renderState{}
+	if r != nil && r.URL != nil {
+		st.requestURI = r.URL.RequestURI()
+	}
 	collectHead(n, st, 1)
 	renderNode(&b, n, st)
 	return b.String()
@@ -251,6 +268,14 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 				b.WriteString(escapeAttr(a.Value))
 			}
 			b.WriteByte('"')
+			if a.Active != "" && st != nil {
+				switch {
+				case a.Active == "section" && sectionMatch(st.requestURI, a.Value):
+					b.WriteString(" data-active")
+				case a.Active == "page" && st.requestURI == a.Value:
+					b.WriteString(` aria-current="page"`)
+				}
+			}
 		}
 		b.WriteByte('>')
 		if voidElements[t.name] {
@@ -263,6 +288,22 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 		b.WriteString(t.name)
 		b.WriteByte('>')
 	}
+}
+
+// sectionMatch reports whether the current URI is the link path or below it.
+func sectionMatch(currentURI, href string) bool {
+	current := currentURI
+	if i := strings.IndexByte(current, '?'); i >= 0 {
+		current = current[:i]
+	}
+	base := href
+	if i := strings.IndexByte(base, '?'); i >= 0 {
+		base = base[:i]
+	}
+	if base == "" {
+		return false
+	}
+	return current == base || strings.HasPrefix(current, strings.TrimSuffix(base, "/")+"/")
 }
 
 var textEscaper = strings.NewReplacer(

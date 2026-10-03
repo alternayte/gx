@@ -36,6 +36,7 @@ type renderState struct {
 	hasHead     bool
 	titleDepth  int
 	headWritten bool
+	requestURI  string
 }
 
 // collectHead merges every head node of the tree, deepest title first.
