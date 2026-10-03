@@ -40,18 +40,23 @@ type formConstraint struct {
 	isBool bool
 }
 
-// routeField is one bindable field of a route struct.
+// routeField is one bindable field of a route struct. A form-bound field
+// holds a tree: struct fields nest and slices hold one element.
 type routeField struct {
-	name     string
+	name     string // Go field name
+	bind     string // form name segment
 	typeText string
 	typ      types.Type
-	kind     types.BasicKind
+	kind     types.BasicKind // basic leaves only
 	path     string
 	query    string
 	signal   string
 	form     string
 	def      string
 	pos      token.Position
+	sub      []routeField // struct fields, or the one slice element
+	slice    bool
+	arrayLen int64 // 0 for a slice
 }
 
 var pathVarRe = regexp.MustCompile(`\{([A-Za-z_][A-Za-z0-9_]*)(\.\.\.)?\}`)
@@ -182,17 +187,29 @@ func parseFormRules(pkg *packages.Package, fn *ast.FuncDecl) map[string][]formCo
 	return out
 }
 
-// fieldArgName returns the Go field name of a gx.Field call argument.
+// fieldArgName returns the dotted Go field path of a gx.Field call argument,
+// for example "Address.Street". A slice element gives "" (REQ-FRM-08).
 func fieldArgName(expr ast.Expr) string {
 	unary, ok := expr.(*ast.UnaryExpr)
 	if !ok || unary.Op != token.AND {
 		return ""
 	}
-	sel, ok := unary.X.(*ast.SelectorExpr)
-	if !ok {
-		return ""
+	var parts []string
+	for {
+		switch x := unary.X.(type) {
+		case *ast.SelectorExpr:
+			parts = append(parts, x.Sel.Name)
+			unary = &ast.UnaryExpr{X: x.X}
+		case *ast.Ident:
+			// The receiver name is not part of the path.
+			for i, j := 0, len(parts)-1; i < j; i, j = i+1, j-1 {
+				parts[i], parts[j] = parts[j], parts[i]
+			}
+			return strings.Join(parts, ".")
+		default:
+			return ""
+		}
 	}
-	return sel.Sel.Name
 }
 
 // ruleConstraints maps one rule value to its native constraints. Rules
@@ -378,7 +395,43 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		if !isPath && queryName == "" && signalName == "" && !def.action && !def.form {
 			continue // not a request-bound field
 		}
-		kind, ok := bindKind(f.Type())
+		if isPath || queryName != "" || signalName != "" {
+			kind, ok := bindKind(f.Type())
+			if !ok {
+				diags = append(diags, Diagnostic{
+					Code: CodeRouteField,
+					File: def.file,
+					Line: pos.Line,
+					Col:  pos.Column,
+					Msg:  "field " + Quoted(f.Name()) + " has type " + Quoted(types.TypeString(f.Type(), nil)) + " which cannot bind",
+				})
+				continue
+			}
+			field := routeField{
+				name:     f.Name(),
+				typeText: types.TypeString(f.Type(), typeQualifier(def.pkg)),
+				typ:      f.Type(),
+				kind:     kind,
+				query:    queryName,
+				signal:   signalName,
+				def:      tag.Get("default"),
+				pos:      pos,
+			}
+			if isPath {
+				field.path = pathName
+				bound[strings.ToLower(pathName)] = true
+			}
+			if signalName != "" {
+				def.hasSignals = true
+			}
+			def.fields = append(def.fields, field)
+			continue
+		}
+		bind := formName
+		if bind == "" {
+			bind = lowerFirst(f.Name())
+		}
+		field, ok := bindFormField(def, f.Name(), f.Type(), bind, pos)
 		if !ok {
 			diags = append(diags, Diagnostic{
 				Code: CodeRouteField,
@@ -388,29 +441,6 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 				Msg:  "field " + Quoted(f.Name()) + " has type " + Quoted(types.TypeString(f.Type(), nil)) + " which cannot bind",
 			})
 			continue
-		}
-		field := routeField{
-			name:     f.Name(),
-			typeText: types.TypeString(f.Type(), typeQualifier(def.pkg)),
-			typ:      f.Type(),
-			kind:     kind,
-			query:    queryName,
-			signal:   signalName,
-			def:      tag.Get("default"),
-			pos:      pos,
-		}
-		if isPath {
-			field.path = pathName
-			bound[strings.ToLower(pathName)] = true
-		} else if formName != "" {
-			field.form = formName
-		} else if queryName == "" && signalName == "" && (def.action || def.form) {
-			// An untagged action or form field binds from a form field
-			// (REQ-ACT-03, REQ-FRM-02).
-			field.form = lowerFirst(f.Name())
-		}
-		if signalName != "" {
-			def.hasSignals = true
 		}
 		def.fields = append(def.fields, field)
 	}
@@ -427,6 +457,66 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 	}
 	sort.SliceStable(diags, func(i, j int) bool { return diags[i].Msg < diags[j].Msg })
 	return diags
+}
+
+// bindFormField builds the binding tree of one form-bound field. Leaves are
+// basic values; structs nest and slices hold one element (REQ-FRM-08).
+func bindFormField(def *routeDef, goName string, t types.Type, bind string, pos token.Position) (routeField, bool) {
+	field := routeField{
+		name:     goName,
+		bind:     bind,
+		typ:      t,
+		typeText: types.TypeString(t, typeQualifier(def.pkg)),
+		pos:      pos,
+	}
+	if kind, ok := bindKind(t); ok {
+		field.kind = kind
+		return field, true
+	}
+	switch u := t.Underlying().(type) {
+	case *types.Struct:
+		for i := 0; i < u.NumFields(); i++ {
+			sub := u.Field(i)
+			if sub.Embedded() || !sub.Exported() {
+				continue
+			}
+			tag := reflect.StructTag(u.Tag(i))
+			if tag.Get("bind") == "-" {
+				continue
+			}
+			name := tag.Get("form")
+			if name == "" {
+				name = lowerFirst(sub.Name())
+			}
+			child, ok := bindFormField(def, sub.Name(), sub.Type(), name, pos)
+			if ok {
+				field.sub = append(field.sub, child)
+			}
+		}
+		return field, len(field.sub) > 0
+	case *types.Slice:
+		switch u.Elem().Underlying().(type) {
+		case *types.Slice, *types.Array:
+			return field, false // a slice of slices has no HTML form shape
+		}
+		child, ok := bindFormField(def, goName, u.Elem(), bind, pos)
+		if !ok {
+			return field, false
+		}
+		field.sub = []routeField{child}
+		field.slice = true
+		return field, true
+	case *types.Array:
+		child, ok := bindFormField(def, goName, u.Elem(), bind, pos)
+		if !ok {
+			return field, false
+		}
+		field.sub = []routeField{child}
+		field.slice = true
+		field.arrayLen = u.Len()
+		return field, true
+	}
+	return field, false
 }
 
 // bindKind returns the basic kind of a bindable field type.
@@ -611,10 +701,10 @@ func checkRoutePackages(pkgs []*packages.Package) []Diagnostic {
 						if !ok {
 							continue
 						}
-						if st, ok := ts.Type.(*ast.StructType); ok {
-							if _, isRoute := routePattern(pkg, st); isRoute {
-								continue
-							}
+						// A struct type is either a route or the nested
+						// data of one (REQ-FRM-08).
+						if _, ok := ts.Type.(*ast.StructType); ok {
+							continue
 						}
 						pos := pkg.Fset.Position(ts.Pos())
 						out = append(out, Diagnostic{
@@ -760,6 +850,19 @@ func renderRouteFile(defs []*routeDef) []byte {
 	return src
 }
 
+// bindNameExpr appends one form name segment to a Go string expression.
+func bindNameExpr(base, seg string) string {
+	if base == "" {
+		return strconv.Quote(seg)
+	}
+	return "(" + base + " + " + strconv.Quote("."+seg) + ")"
+}
+
+// bindIndexExpr appends one slice index to a Go form name expression.
+func bindIndexExpr(base, iVar string) string {
+	return "(" + base + " + \"[\" + strconv.Itoa(" + iVar + ") + \"]\")"
+}
+
 // renderBindFunc writes the Bind method of a non-form route.
 func renderBindFunc(b *bytes.Buffer, d *routeDef) {
 	b.WriteString("// Bind fills " + d.name + " from the request.\n")
@@ -767,30 +870,25 @@ func renderBindFunc(b *bytes.Buffer, d *routeDef) {
 	if d.hasSignals {
 		b.WriteString("\tsignals, err := gx.Signals(r)\n\tif err != nil {\n\t\treturn err\n\t}\n")
 	}
+	n := 0
 	for _, f := range d.fields {
 		switch {
 		case f.signal != "":
 			b.WriteString("\tif err := gx.BindSignal(signals, gx.Scope(r), " + strconv.Quote(f.signal) + ", &in." + f.name + "); err != nil {\n\t\treturn err\n\t}\n")
-			continue
-		case f.form != "":
-			b.WriteString("\tif v := r.FormValue(" + strconv.Quote(f.form) + "); v != \"\" {\n")
+		case f.path != "" || f.query != "":
+			source := "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
+			if f.path == "" {
+				source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
+			}
+			b.WriteString("\tif v := " + source + "; v != \"\" {\n")
 			renderBindField(b, f)
 			b.WriteString("\t}\n")
-			continue
-		}
-		if f.path == "" && f.query == "" {
-			continue
-		}
-		source := "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
-		if f.path == "" {
-			source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
-		}
-		b.WriteString("\tif v := " + source + "; v != \"\" {\n")
-		renderBindField(b, f)
-		b.WriteString("\t}\n")
-		if f.query != "" && f.def != "" {
-			b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
-			b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+			if f.query != "" && f.def != "" {
+				b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
+				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+			}
+		default:
+			renderBindTree(b, f, "in."+f.name, strconv.Quote(f.bind), false, 0, &n)
 		}
 	}
 	b.WriteString("\treturn nil\n}\n\n")
@@ -807,26 +905,27 @@ func renderFormBind(b *bytes.Buffer, d *routeDef) {
 	if d.hasSignals {
 		b.WriteString("\tsignals, err := gx.Signals(r)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n")
 	}
+	n := 0
 	for _, f := range d.fields {
-		if f.signal != "" {
+		switch {
+		case f.signal != "":
 			b.WriteString("\tif err := gx.BindSignal(signals, gx.Scope(r), " + strconv.Quote(f.signal) + ", &in." + f.name + "); err != nil {\n\t\treturn nil, err\n\t}\n")
-			continue
-		}
-		if f.form == "" && f.path == "" && f.query == "" {
-			continue
-		}
-		source := "r.FormValue(" + strconv.Quote(f.form) + ")"
-		if f.path != "" {
-			source = "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
-		} else if f.query != "" && f.form == "" {
-			source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
-		}
-		b.WriteString("\tif v := " + source + "; v != \"\" {\n")
-		renderBindFieldForm(b, f)
-		b.WriteString("\t}\n")
-		if f.query != "" && f.def != "" {
-			b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
-			b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+		case f.path != "" || f.query != "":
+			source := "r.FormValue(" + strconv.Quote(f.bind) + ")"
+			if f.path != "" {
+				source = "gx.PathValue(r, " + strconv.Quote(f.path) + ")"
+			} else if f.query != "" {
+				source = "r.URL.Query().Get(" + strconv.Quote(f.query) + ")"
+			}
+			b.WriteString("\tif v := " + source + "; v != \"\" {\n")
+			renderBindFieldForm(b, f)
+			b.WriteString("\t}\n")
+			if f.query != "" && f.def != "" {
+				b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
+				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+			}
+		default:
+			renderBindTree(b, f, "in."+f.name, strconv.Quote(f.bind), true, 0, &n)
 		}
 	}
 	b.WriteString("\treturn errs, nil\n}\n\n")
@@ -838,18 +937,77 @@ func renderFormBind(b *bytes.Buffer, d *routeDef) {
 	b.WriteString("\treturn nil\n}\n\n")
 }
 
-// formFieldName returns the form field name of a route field.
-func formFieldName(f routeField) string {
-	if f.form != "" {
-		return f.form
+// renderBindTree writes binding code for one form-bound tree (REQ-FRM-08).
+func renderBindTree(b *bytes.Buffer, f routeField, target, nameExpr string, form bool, depth int, n *int) {
+	ind := strings.Repeat("\t", depth+1)
+	if f.slice {
+		idxVar := "gxIdx" + strconv.Itoa(*n)
+		iVar := "i" + strconv.Itoa(*n)
+		*n++
+		b.WriteString(ind + idxVar + " := gx.FormIndexes(r, " + nameExpr + ")\n")
+		if f.arrayLen == 0 {
+			b.WriteString(ind + "if n := len(" + idxVar + "); n > 0 {\n")
+			b.WriteString(ind + "\t" + target + " = make(" + f.typeText + ", " + idxVar + "[n-1]+1)\n")
+			b.WriteString(ind + "}\n")
+		}
+		b.WriteString(ind + "for _, " + iVar + " := range " + idxVar + " {\n")
+		child := f.sub[0]
+		renderBindTree(b, child, target+"["+iVar+"]", bindIndexExpr(nameExpr, iVar), form, depth+1, n)
+		b.WriteString(ind + "}\n")
+		return
 	}
-	return lowerFirst(f.name)
+	if len(f.sub) > 0 {
+		for _, sub := range f.sub {
+			renderBindTree(b, sub, target+"."+sub.name, bindNameExpr(nameExpr, sub.bind), form, depth, n)
+		}
+		return
+	}
+	b.WriteString(ind + "{\n")
+	b.WriteString(ind + "\tif v := gx.FormText(r, " + nameExpr + "); v != \"\" {\n")
+	renderParse(b, f, target, ind+"\t\t", form, nameExpr)
+	b.WriteString(ind + "\t}\n")
+	b.WriteString(ind + "}\n")
+}
+
+// renderParse writes the conversion and assignment of one basic leaf.
+func renderParse(b *bytes.Buffer, f routeField, target, ind string, form bool, nameExpr string) {
+	onErr := func() {
+		if form {
+			b.WriteString(ind + "errs[" + nameExpr + "] = \"invalid\"\n")
+			return
+		}
+		b.WriteString(ind + "return fmt.Errorf(\"gx: " + f.name + ": %w\", err)\n")
+	}
+	switch {
+	case f.kind == types.String:
+		b.WriteString(ind + target + " = " + f.typeText + "(v)\n")
+	case f.kind == types.Bool:
+		b.WriteString(ind + "x, err := gx.ParseBool(v)\n")
+		b.WriteString(ind + "if err != nil {\n")
+		onErr()
+		b.WriteString(ind + "} else {\n" + ind + "\t" + target + " = " + f.typeText + "(x)\n" + ind + "}\n")
+	case floatBits(f.kind) > 0:
+		b.WriteString(ind + "x, err := strconv.ParseFloat(v, " + strconv.Itoa(floatBits(f.kind)) + ")\n")
+		b.WriteString(ind + "if err != nil {\n")
+		onErr()
+		b.WriteString(ind + "} else {\n" + ind + "\t" + target + " = " + f.typeText + "(x)\n" + ind + "}\n")
+	case unsignedKind(f.kind):
+		b.WriteString(ind + "x, err := strconv.ParseUint(v, 10, " + strconv.Itoa(intBits(f.kind)) + ")\n")
+		b.WriteString(ind + "if err != nil {\n")
+		onErr()
+		b.WriteString(ind + "} else {\n" + ind + "\t" + target + " = " + f.typeText + "(x)\n" + ind + "}\n")
+	default:
+		b.WriteString(ind + "x, err := strconv.ParseInt(v, 10, " + strconv.Itoa(intBits(f.kind)) + ")\n")
+		b.WriteString(ind + "if err != nil {\n")
+		onErr()
+		b.WriteString(ind + "} else {\n" + ind + "\t" + target + " = " + f.typeText + "(x)\n" + ind + "}\n")
+	}
 }
 
 // renderBindFieldForm writes a binding that records a conversion error as a
-// field error (REQ-FRM-07).
+// field error (REQ-FRM-07) for a top-level path or query field.
 func renderBindFieldForm(b *bytes.Buffer, f routeField) {
-	name := strconv.Quote(formFieldName(f))
+	name := strconv.Quote(f.bind)
 	switch {
 	case f.kind == types.String:
 		b.WriteString("\t\tin." + f.name + " = " + f.typeText + "(v)\n")
@@ -872,45 +1030,224 @@ func renderBindFieldForm(b *bytes.Buffer, f routeField) {
 	}
 }
 
-// renderFormValue writes the generated form type, the form value builder and
-// the field namer (REQ-FRM-02, REQ-FRM-03).
+// formShape is one struct type in a form's binding tree (REQ-FRM-08).
+type formShape struct {
+	typeText string
+	goName   string
+	path     string // Go field path from the root, for constraints
+	fields   []routeField
+}
+
+// collectShapes appends every nested struct shape, deepest first.
+func collectShapes(out *[]formShape, seen map[string]bool, fields []routeField, path string) {
+	for _, f := range fields {
+		if f.slice {
+			child := f.sub[0]
+			if len(child.sub) > 0 {
+				collectShapes(out, seen, child.sub, path+"."+f.name)
+				addShape(out, seen, child.typeText, path+"."+f.name, child.sub)
+			}
+			continue
+		}
+		if len(f.sub) > 0 {
+			collectShapes(out, seen, f.sub, path+"."+f.name)
+			addShape(out, seen, f.typeText, path+"."+f.name, f.sub)
+		}
+	}
+}
+
+func addShape(out *[]formShape, seen map[string]bool, typeText, path string, fields []routeField) {
+	if seen[typeText] {
+		return
+	}
+	seen[typeText] = true
+	*out = append(*out, formShape{typeText: typeText, goName: formTypeName(typeText), path: strings.TrimPrefix(path, "."), fields: fields})
+}
+
+// formTypeName returns the Go name part of a type string.
+func formTypeName(typeText string) string {
+	if i := strings.LastIndexByte(typeText, '.'); i >= 0 {
+		return typeText[i+1:]
+	}
+	return typeText
+}
+
+// fieldGoType returns the generated form field type of one tree node.
+func fieldGoType(owner string, f routeField) string {
+	if f.slice {
+		return owner + f.name + "Field"
+	}
+	return elemFieldType(f)
+}
+
+// elemFieldType returns the generated type of one element field.
+func elemFieldType(f routeField) string {
+	if len(f.sub) > 0 {
+		return formTypeName(f.typeText) + "Form"
+	}
+	return "gx.FormField[" + f.typeText + "]"
+}
+
+// renderFormValue writes the generated form types, the form value builders
+// and the field namer (REQ-FRM-02, REQ-FRM-03, REQ-FRM-08).
 func renderFormValue(b *bytes.Buffer, d *routeDef) {
 	name := lowerFirst(d.name)
 	method, _, _ := strings.Cut(d.pattern, " ")
+	shapes := []formShape{}
+	collectShapes(&shapes, map[string]bool{}, d.fields, "")
+	// Struct declarations.
+	for _, s := range shapes {
+		b.WriteString("// " + s.goName + "Form is the generated form value of " + s.goName + " (REQ-FRM-08).\n")
+		b.WriteString("type " + s.goName + "Form struct {\n")
+		for _, f := range s.fields {
+			b.WriteString("\t" + f.name + " " + fieldGoType(s.goName, f) + "\n")
+		}
+		b.WriteString("}\n\n")
+	}
 	b.WriteString("// " + d.name + "Form is the generated form value of " + d.name + " (REQ-FRM-03).\n")
 	b.WriteString("type " + d.name + "Form struct {\n\tgx.FormMeta\n")
 	for _, f := range d.fields {
-		b.WriteString("\t" + f.name + " gx.FormField[" + f.typeText + "]\n")
+		b.WriteString("\t" + f.name + " " + fieldGoType(d.name, f) + "\n")
 	}
 	b.WriteString("}\n\n")
+	// Slice wrappers: one per slice field of each shape and of the root.
+	for _, s := range shapes {
+		renderSliceWrappers(b, d, s.goName, s.fields)
+	}
+	renderSliceWrappers(b, d, d.name, d.fields)
+	// Root slice constructors: actions rebuild a repeated field (REQ-FRM-08).
+	for _, f := range d.fields {
+		if !f.slice {
+			continue
+		}
+		ctor := d.name + f.name + "FieldValue"
+		b.WriteString("// " + ctor + " builds the repeated field " + d.name + "." + f.name + " (REQ-FRM-08).\n")
+		b.WriteString("func " + ctor + "(form string, v " + f.typeText + ", errs map[string]string) " + d.name + f.name + "Field {\n")
+		b.WriteString("\treturn " + d.name + f.name + "Field{FormField: gx.FormField[" + f.typeText + "]{Name: " + strconv.Quote(f.bind) +
+			", ID: gx.FieldID(form, " + strconv.Quote(f.bind) + "), Value: v}, form: form, errs: errs}\n}\n\n")
+	}
+	// Struct builders.
+	for _, s := range shapes {
+		renderShapeBuilder(b, d, s)
+	}
+	// The root form value builder.
 	b.WriteString("// GxFormValue fills the form value of " + d.name + " (REQ-FRM-03).\n")
 	b.WriteString("func (in *" + d.name + ") GxFormValue(errs map[string]string) gx.FormValue {\n")
 	b.WriteString("\tf := " + d.name + "Form{FormMeta: gx.FormMeta{Name: " + strconv.Quote(name) +
 		", ID: " + strconv.Quote(name+"-form") + ", Action: in.URL(), Method: " + strconv.Quote(method) + "}}\n")
 	for _, f := range d.fields {
-		fieldName := formFieldName(f)
-		key := "errs[" + strconv.Quote(fieldName) + "]"
-		constraints := constraintsExpr(d.formRules[f.name])
-		b.WriteString("\tf." + f.name + " = gx.FormField[" + f.typeText + "]{" +
-			"Name: " + strconv.Quote(fieldName) + ", ID: " + strconv.Quote(name+"-"+fieldName) +
-			", Value: in." + f.name +
-			", ErrorKey: " + key +
-			", Error: gx.Translate(" + key + ", gx.DefaultMessage(" + key + "))" +
-			", Constraints: " + constraints +
-			", ValidateURL: gx.ValidateURL(in.URL(), " + strconv.Quote(fieldName) + ")}" + "\n")
+		b.WriteString("\tf." + f.name + " = " + formFieldExpr(d, d.name, strconv.Quote(name), "in.URL()", f, "in."+f.name, "errs", "", "") + "\n")
 	}
 	b.WriteString("\treturn f\n}\n\n")
+	// Field namer.
 	b.WriteString("// GxFieldName returns the form field name of a field pointer (REQ-FRM-02).\n")
 	b.WriteString("func (in *" + d.name + ") GxFieldName(ptr any) string {\n\tswitch ptr {\n")
-	for _, f := range d.fields {
-		b.WriteString("\tcase any(&in." + f.name + "):\n\t\treturn " + strconv.Quote(formFieldName(f)) + "\n")
-	}
+	renderFieldNameCases(b, d.fields, "in", "")
 	b.WriteString("\t}\n\treturn \"\"\n}\n\n")
 	b.WriteString("// GxNewForm returns a fresh " + d.name + " (REQ-FRM-02).\n")
 	b.WriteString("func (in *" + d.name + ") GxNewForm() gx.FormInput { return &" + d.name + "{} }\n\n")
 	b.WriteString("// GxRunForm calls the form handler with the concrete input type (REQ-FRM-02).\n")
 	b.WriteString("func (in *" + d.name + ") GxRunForm(ctx *gx.Ctx, fn any) error {\n")
 	b.WriteString("\treturn fn.(func(*gx.Ctx, *" + d.name + ") error)(ctx, in)\n}\n\n")
+}
+
+// renderSliceWrappers writes the wrapper of every direct slice field.
+func renderSliceWrappers(b *bytes.Buffer, d *routeDef, owner string, fields []routeField) {
+	for _, f := range fields {
+		if f.slice {
+			renderSliceWrapper(b, d, owner, f)
+		}
+	}
+}
+
+// renderSliceWrapper writes one slice field wrapper type (REQ-FRM-08).
+func renderSliceWrapper(b *bytes.Buffer, d *routeDef, owner string, f routeField) {
+	child := f.sub[0]
+	name := owner + f.name + "Field"
+	elem := elemFieldType(child)
+	b.WriteString("// " + name + " is the generated slice field of " + owner + "." + f.name + " (REQ-FRM-08).\n")
+	b.WriteString("type " + name + " struct {\n\tgx.FormField[" + f.typeText + "]\n\tform string\n\terrs map[string]string\n}\n\n")
+	b.WriteString("// Rows fills the form value of every row.\n")
+	b.WriteString("func (f " + name + ") Rows() []" + elem + " {\n")
+	b.WriteString("\tout := make([]" + elem + ", len(f.Value))\n")
+	b.WriteString("\tfor i, v := range f.Value {\n")
+	b.WriteString("\t\tname := f.FormField.Name + \"[\" + strconv.Itoa(i) + \"]\"\n")
+	if len(child.sub) > 0 {
+		b.WriteString("\t\tout[i] = " + lowerFirst(formTypeName(child.typeText)) + "FormValue(f.form, name, v, f.errs)\n")
+	} else {
+		b.WriteString("\t\tout[i] = gx.FormField[" + child.typeText + "]{Name: name, ID: gx.FieldID(f.form, name), Value: v, ErrorKey: f.errs[name], Error: gx.Translate(f.errs[name], gx.DefaultMessage(f.errs[name]))}\n")
+	}
+	b.WriteString("\t}\n\treturn out\n}\n\n")
+	b.WriteString("// Each renders one node per row (REQ-FRM-08).\n")
+	b.WriteString("func (f " + name + ") Each(fn func(int, " + elem + ") gx.Node) gx.Node {\n")
+	b.WriteString("\treturn gx.EachRow(f.Rows(), fn)\n}\n\n")
+}
+
+// renderShapeBuilder writes the form value builder of one nested struct.
+func renderShapeBuilder(b *bytes.Buffer, d *routeDef, s formShape) {
+	fn := lowerFirst(s.goName) + "FormValue"
+	b.WriteString("// " + fn + " fills the form value of one " + s.goName + " (REQ-FRM-08).\n")
+	b.WriteString("func " + fn + "(form, prefix string, v " + s.typeText + ", errs map[string]string) " + s.goName + "Form {\n")
+	b.WriteString("\tvar f " + s.goName + "Form\n")
+	for _, fld := range s.fields {
+		b.WriteString("\tf." + fld.name + " = " + formFieldExpr(d, s.goName, "form", "", fld, "v."+fld.name, "errs", "prefix", s.path) + "\n")
+	}
+	b.WriteString("\treturn f\n}\n\n")
+}
+
+// formFieldExpr returns the Go expression of one generated field value.
+// owner is the Go type that declares the field; prefix is "" at the root or
+// the parent name expression inside a nested builder; cpath is the Go field
+// path used for rule constraints.
+func formFieldExpr(d *routeDef, owner, formExpr, urlExpr string, f routeField, value, errs, prefix, cpath string) string {
+	nameExpr := strconv.Quote(f.bind)
+	if prefix != "" {
+		nameExpr = "(" + prefix + " + " + strconv.Quote("."+f.bind) + ")"
+	}
+	if f.slice {
+		return owner + f.name + "Field{FormField: gx.FormField[" + f.typeText + "]{Name: " + nameExpr +
+			", ID: gx.FieldID(" + formExpr + ", " + nameExpr + "), Value: " + value +
+			"}, form: " + formExpr + ", errs: " + errs + "}"
+	}
+	if len(f.sub) > 0 {
+		return lowerFirst(formTypeName(f.typeText)) + "FormValue(" + formExpr + ", " + nameExpr + ", " + value + ", " + errs + ")"
+	}
+	key := errs + "[" + nameExpr + "]"
+	validate := "\"\""
+	if urlExpr != "" {
+		validate = "gx.ValidateURL(" + urlExpr + ", " + nameExpr + ")"
+	}
+	return "gx.FormField[" + f.typeText + "]{" +
+		"Name: " + nameExpr +
+		", ID: gx.FieldID(" + formExpr + ", " + nameExpr + ")" +
+		", Value: " + value +
+		", ErrorKey: " + key +
+		", Error: gx.Translate(" + key + ", gx.DefaultMessage(" + key + "))" +
+		", Constraints: " + constraintsExpr(d.formRules[joinPath(cpath, f.name)]) +
+		", ValidateURL: " + validate + "}"
+}
+
+// joinPath joins a Go field path with one field name.
+func joinPath(prefix, name string) string {
+	if prefix == "" {
+		return name
+	}
+	return prefix + "." + name
+}
+
+// renderFieldNameCases writes the GxFieldName switch cases of one level.
+func renderFieldNameCases(b *bytes.Buffer, fields []routeField, goPrefix, namePrefix string) {
+	for _, f := range fields {
+		if f.slice {
+			continue // slice elements have no stable pointer
+		}
+		if len(f.sub) > 0 {
+			renderFieldNameCases(b, f.sub, goPrefix+"."+f.name, namePrefix+f.bind+".")
+			continue
+		}
+		path := namePrefix + f.bind
+		b.WriteString("\tcase any(&" + goPrefix + "." + f.name + "):\n\t\treturn " + strconv.Quote(path) + "\n")
+	}
 }
 
 // constraintsExpr returns the gx.Attrs literal of a field's native

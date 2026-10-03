@@ -210,14 +210,15 @@ const watchValidation = (): void => {
 // submitForm posts a Gx form through the adapter and applies the patches
 // (REQ-FRM-05). Native validation has already run; this path skips only the
 // browser's own form post.
-const submitForm = async (form: HTMLFormElement): Promise<void> => {
+const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null): Promise<void> => {
   const body = new URLSearchParams()
   new FormData(form).forEach((value, key) => {
     if (typeof value === 'string') body.append(key, value)
   })
   const token = cookie('gx_csrf')
   if (token !== '' && !body.has('gx_csrf')) body.set('gx_csrf', token)
-  const res = await fetch(form.action, {
+  const action = submitter?.getAttribute('formaction') ?? form.action
+  const res = await fetch(action, {
     method: (form.getAttribute('method') ?? 'post').toUpperCase(),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -280,7 +281,7 @@ if (typeof document !== 'undefined') {
     const form = (e.target as Element | null)?.closest?.('form[data-gx-form]') as HTMLFormElement | null
     if (!form) return
     e.preventDefault()
-    void submitForm(form)
+    void submitForm(form, (e as SubmitEvent).submitter as HTMLElement | null)
   }, true)
   watchValidation()
   document.addEventListener('DOMContentLoaded', updateActive)

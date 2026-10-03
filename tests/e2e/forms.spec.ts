@@ -55,13 +55,14 @@ async function waitForText(selector: string, want: string, timeout = 5000): Prom
 async function fillSignup(email: string, age: string): Promise<void> {
   await page.fill('input[name=email]', email)
   await page.fill('input[name=age]', age)
+  await page.fill('input[name="address.street"]', 'Main')
   await page.check('input[name=terms]')
 }
 
 test('REQ-FRM-02 a rule failure re-renders with the value and the error', async () => {
   await page.goto(shop.url + '/signup')
   const res = await page.request.post(shop.url + '/signup', {
-    form: { email: 'a@b.co', age: '7', terms: 'on', gx_csrf: await csrf() },
+    form: { email: 'a@b.co', age: '7', terms: 'on', 'address.street': 'Main', gx_csrf: await csrf() },
     maxRedirects: 0,
   })
   expect(res.status()).toBe(422)
@@ -75,7 +76,7 @@ test('REQ-FRM-02 a rule failure re-renders with the value and the error', async 
 test('REQ-FRM-02 the handler runs only when the rules pass', async () => {
   await page.goto(shop.url + '/signup')
   const res = await page.request.post(shop.url + '/signup', {
-    form: { email: '', age: '20', terms: 'on', gx_csrf: await csrf() },
+    form: { email: '', age: '20', terms: 'on', 'address.street': 'Main', gx_csrf: await csrf() },
     maxRedirects: 0,
   })
   expect(res.status()).toBe(422)
@@ -85,7 +86,7 @@ test('REQ-FRM-02 the handler runs only when the rules pass', async () => {
 test('REQ-FRM-02 a handler FieldError re-renders with the key', async () => {
   await page.goto(shop.url + '/signup')
   const res = await page.request.post(shop.url + '/signup', {
-    form: { email: 'taken@example.com', age: '20', terms: 'on', gx_csrf: await csrf() },
+    form: { email: 'taken@example.com', age: '20', terms: 'on', 'address.street': 'Main', gx_csrf: await csrf() },
     maxRedirects: 0,
   })
   expect(res.status()).toBe(422)
@@ -95,7 +96,7 @@ test('REQ-FRM-02 a handler FieldError re-renders with the key', async () => {
 test('REQ-FRM-02 a valid submit redirects with 303', async () => {
   await page.goto(shop.url + '/signup')
   const res = await page.request.post(shop.url + '/signup', {
-    form: { email: 'a@b.co', age: '20', terms: 'on', gx_csrf: await csrf() },
+    form: { email: 'a@b.co', age: '20', terms: 'on', 'address.street': 'Main', gx_csrf: await csrf() },
     maxRedirects: 0,
   })
   expect(res.status()).toBe(303)
@@ -108,7 +109,7 @@ test('REQ-FRM-05 with the adapter only the form is patched', async () => {
     ;(document.querySelector('h1') as unknown as { __keep: number }).__keep = 1
   })
   await fillSignup('taken@example.com', '20')
-  await page.click('button[type=submit]')
+  await page.click('button:text-is("Create account")')
   await waitForText('#signup-email-error', 'email.taken')
   expect(await page.evaluate(() => (document.querySelector('h1') as unknown as { __keep?: number }).__keep === 1)).toBe(true)
   expect(new URL(page.url()).pathname).toBe('/signup')
@@ -121,13 +122,33 @@ test('REQ-FRM-05 JS off: an invalid submit answers 422 with values and errors', 
   await plain.goto(shop.url + '/signup')
   await plain.fill('input[name=email]', 'taken@example.com')
   await plain.fill('input[name=age]', '20')
+  await plain.fill('input[name="address.street"]', 'Main')
   await plain.check('input[name=terms]')
-  const [res] = await Promise.all([plain.waitForNavigation(), plain.click('button[type=submit]')])
+  const [res] = await Promise.all([plain.waitForNavigation(), plain.click('button:text-is("Create account")')])
   expect(res?.status()).toBe(422)
   expect(await plain.textContent('#signup-email-error')).toContain('email.taken')
   expect(await plain.inputValue('input[name=email]')).toBe('taken@example.com')
   expect(await plain.inputValue('input[name=age]')).toBe('20')
   await context.close()
+})
+
+test('REQ-FRM-08 add and remove repeated rows through actions', async () => {
+  await page.goto(shop.url + '/signup')
+  await page.click('button:text-is("Add address")')
+  await page.waitForSelector('input[name="addresses[0].street"]')
+  await page.fill('input[name="addresses[0].street"]', 'A0')
+  await page.click('button:text-is("Add address")')
+  await page.waitForSelector('input[name="addresses[1].street"]')
+  await page.fill('input[name="addresses[1].street"]', 'A1')
+  await Bun.sleep(200)
+  expect(await page.inputValue('input[name="addresses[0].street"]')).toBe('A0')
+  await page.click('[data-index="0"] button:text-is("Remove")')
+  await page.waitForFunction(
+    () => document.querySelectorAll('input[name^="addresses["][name$=".street"]').length === 1,
+    undefined,
+    { timeout: 5000 },
+  )
+  expect(await page.inputValue('input[name="addresses[0].street"]')).toBe('A1')
 })
 
 test('REQ-FRM-06 blur validation patches only that field', async () => {
@@ -161,8 +182,9 @@ test('REQ-FRM-05 JS off: a valid submit redirects with 303', async () => {
   await plain.goto(shop.url + '/signup')
   await plain.fill('input[name=email]', 'a@b.co')
   await plain.fill('input[name=age]', '20')
+  await plain.fill('input[name="address.street"]', 'Main')
   await plain.check('input[name=terms]')
-  await Promise.all([plain.waitForNavigation(), plain.click('button[type=submit]')])
+  await Promise.all([plain.waitForNavigation(), plain.click('button:text-is("Create account")')])
   expect(new URL(plain.url()).pathname).toBe('/')
   await context.close()
 })

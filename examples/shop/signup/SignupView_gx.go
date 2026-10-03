@@ -28,8 +28,8 @@ func SignupView(p SignupViewProps) gx.Node {
 //line SignupView.gx:13:17
 	_b.Add(gx.Text("\n"))
 //line SignupView.gx:14:1
-	if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" {
-//line SignupView.gx:14:75
+	if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.Address.Street.Error != "" {
+//line SignupView.gx:14:109
 		_b.Add(gx.Text("\n  "))
 //line SignupView.gx:15:3
 		_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("p", nil, gx.Text("Fix the errors below.")), gx.Text("\n  "))))
@@ -39,8 +39,8 @@ func SignupView(p SignupViewProps) gx.Node {
 //line SignupView.gx:18:2
 	_b.Add(gx.Text("\n"))
 //line SignupView.gx:19:1
-	_b.Add(gx.El("form", p.F.Attrs(), gx.Frag(gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Email, Label: "Email", Type: "email", Validate: "blur"}), gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Age, Label: "Age", Type: "number", Validate: "input"}), gx.Text("\n  "), ui.Checkbox(ui.CheckboxProps{Field: p.F.Terms, Children: gx.Text("I accept the terms")}), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "type", Value: "submit", Kind: gx.AttrText}}, gx.Text("Create account")), gx.Text("\n"))))
-//line SignupView.gx:24:8
+	_b.Add(gx.El("form", p.F.Attrs(), gx.Frag(gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Email, Label: "Email", Type: "email", Validate: "blur"}), gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Age, Label: "Age", Type: "number", Validate: "input"}), gx.Text("\n  "), ui.TextField(ui.TextFieldProps{Field: p.F.Address.Street, Label: "Street", Type: "text", Validate: ""}), gx.Text("\n  "), ui.Checkbox(ui.CheckboxProps{Field: p.F.Terms, Children: gx.Text("I accept the terms")}), gx.Text("\n  "), gx.El("fieldset", nil, gx.Frag(gx.Text("\n    "), gx.El("legend", nil, gx.Text("Shipping addresses")), gx.Text("\n    "), addressList(p.F.Addresses), gx.Text("\n    "), addButton(), gx.Text("\n  "))), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "type", Value: "submit", Kind: gx.AttrText}}, gx.Text("Create account")), gx.Text("\n"))))
+//line SignupView.gx:30:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

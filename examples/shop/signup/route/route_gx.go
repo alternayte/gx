@@ -10,6 +10,52 @@ import (
 	"strings"
 )
 
+// Pattern returns the method and pattern of AddAddress.
+func (AddAddress) Pattern() string { return "POST /signup/addresses/add" }
+
+// Bind fills AddAddress from the request.
+func (in *AddAddress) Bind(r *http.Request) error {
+	{
+		if v := gx.FormText(r, ("address" + ".street")); v != "" {
+			in.Address.Street = string(v)
+		}
+	}
+	{
+		if v := gx.FormText(r, ("address" + ".city")); v != "" {
+			in.Address.City = string(v)
+		}
+	}
+	gxIdx0 := gx.FormIndexes(r, "addresses")
+	if n := len(gxIdx0); n > 0 {
+		in.Addresses = make([]Address, gxIdx0[n-1]+1)
+	}
+	for _, i0 := range gxIdx0 {
+		{
+			if v := gx.FormText(r, (("addresses" + "[" + strconv.Itoa(i0) + "]") + ".street")); v != "" {
+				in.Addresses[i0].Street = string(v)
+			}
+		}
+		{
+			if v := gx.FormText(r, (("addresses" + "[" + strconv.Itoa(i0) + "]") + ".city")); v != "" {
+				in.Addresses[i0].City = string(v)
+			}
+		}
+	}
+	return nil
+}
+
+// URL returns the path of AddAddress.
+func (in AddAddress) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("signup")
+	b.WriteString("/")
+	b.WriteString("addresses")
+	b.WriteString("/")
+	b.WriteString("add")
+	return gx.BasePath() + b.String()
+}
+
 // Pattern returns the method and pattern of Page.
 func (Page) Pattern() string { return "GET /signup" }
 
@@ -26,6 +72,62 @@ func (in Page) URL() string {
 	return gx.BasePath() + b.String()
 }
 
+// Pattern returns the method and pattern of RemoveAddress.
+func (RemoveAddress) Pattern() string { return "POST /signup/addresses/remove" }
+
+// Bind fills RemoveAddress from the request.
+func (in *RemoveAddress) Bind(r *http.Request) error {
+	{
+		if v := gx.FormText(r, "index"); v != "" {
+			x, err := strconv.ParseInt(v, 10, 0)
+			if err != nil {
+				return fmt.Errorf("gx: Index: %w", err)
+			} else {
+				in.Index = int(x)
+			}
+		}
+	}
+	{
+		if v := gx.FormText(r, ("address" + ".street")); v != "" {
+			in.Address.Street = string(v)
+		}
+	}
+	{
+		if v := gx.FormText(r, ("address" + ".city")); v != "" {
+			in.Address.City = string(v)
+		}
+	}
+	gxIdx0 := gx.FormIndexes(r, "addresses")
+	if n := len(gxIdx0); n > 0 {
+		in.Addresses = make([]Address, gxIdx0[n-1]+1)
+	}
+	for _, i0 := range gxIdx0 {
+		{
+			if v := gx.FormText(r, (("addresses" + "[" + strconv.Itoa(i0) + "]") + ".street")); v != "" {
+				in.Addresses[i0].Street = string(v)
+			}
+		}
+		{
+			if v := gx.FormText(r, (("addresses" + "[" + strconv.Itoa(i0) + "]") + ".city")); v != "" {
+				in.Addresses[i0].City = string(v)
+			}
+		}
+	}
+	return nil
+}
+
+// URL returns the path of RemoveAddress.
+func (in RemoveAddress) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("signup")
+	b.WriteString("/")
+	b.WriteString("addresses")
+	b.WriteString("/")
+	b.WriteString("remove")
+	return gx.BasePath() + b.String()
+}
+
 // Pattern returns the method and pattern of Signup.
 func (Signup) Pattern() string { return "POST /signup" }
 
@@ -33,23 +135,55 @@ func (Signup) Pattern() string { return "POST /signup" }
 // that did not convert (REQ-FRM-07).
 func (in *Signup) GxBindForm(r *http.Request) (map[string]string, error) {
 	errs := map[string]string{}
-	if v := r.FormValue("email"); v != "" {
-		in.Email = string(v)
-	}
-	if v := r.FormValue("age"); v != "" {
-		x, err := strconv.ParseInt(v, 10, 0)
-		if err != nil {
-			errs["age"] = "invalid"
-		} else {
-			in.Age = int(x)
+	{
+		if v := gx.FormText(r, "email"); v != "" {
+			in.Email = string(v)
 		}
 	}
-	if v := r.FormValue("terms"); v != "" {
-		x, err := gx.ParseBool(v)
-		if err != nil {
-			errs["terms"] = "invalid"
-		} else {
-			in.Terms = bool(x)
+	{
+		if v := gx.FormText(r, "age"); v != "" {
+			x, err := strconv.ParseInt(v, 10, 0)
+			if err != nil {
+				errs["age"] = "invalid"
+			} else {
+				in.Age = int(x)
+			}
+		}
+	}
+	{
+		if v := gx.FormText(r, "terms"); v != "" {
+			x, err := gx.ParseBool(v)
+			if err != nil {
+				errs["terms"] = "invalid"
+			} else {
+				in.Terms = bool(x)
+			}
+		}
+	}
+	{
+		if v := gx.FormText(r, ("address" + ".street")); v != "" {
+			in.Address.Street = string(v)
+		}
+	}
+	{
+		if v := gx.FormText(r, ("address" + ".city")); v != "" {
+			in.Address.City = string(v)
+		}
+	}
+	gxIdx0 := gx.FormIndexes(r, "addresses")
+	if n := len(gxIdx0); n > 0 {
+		in.Addresses = make([]Address, gxIdx0[n-1]+1)
+	}
+	for _, i0 := range gxIdx0 {
+		{
+			if v := gx.FormText(r, (("addresses" + "[" + strconv.Itoa(i0) + "]") + ".street")); v != "" {
+				in.Addresses[i0].Street = string(v)
+			}
+		}
+		{
+			if v := gx.FormText(r, (("addresses" + "[" + strconv.Itoa(i0) + "]") + ".city")); v != "" {
+				in.Addresses[i0].City = string(v)
+			}
 		}
 	}
 	return errs, nil
@@ -75,20 +209,65 @@ func (in Signup) URL() string {
 	return gx.BasePath() + b.String()
 }
 
+// AddressForm is the generated form value of Address (REQ-FRM-08).
+type AddressForm struct {
+	Street gx.FormField[string]
+	City   gx.FormField[string]
+}
+
 // SignupForm is the generated form value of Signup (REQ-FRM-03).
 type SignupForm struct {
 	gx.FormMeta
-	Email gx.FormField[string]
-	Age   gx.FormField[int]
-	Terms gx.FormField[bool]
+	Email     gx.FormField[string]
+	Age       gx.FormField[int]
+	Terms     gx.FormField[bool]
+	Address   AddressForm
+	Addresses SignupAddressesField
+}
+
+// SignupAddressesField is the generated slice field of Signup.Addresses (REQ-FRM-08).
+type SignupAddressesField struct {
+	gx.FormField[[]Address]
+	form string
+	errs map[string]string
+}
+
+// Rows fills the form value of every row.
+func (f SignupAddressesField) Rows() []AddressForm {
+	out := make([]AddressForm, len(f.Value))
+	for i, v := range f.Value {
+		name := f.FormField.Name + "[" + strconv.Itoa(i) + "]"
+		out[i] = addressFormValue(f.form, name, v, f.errs)
+	}
+	return out
+}
+
+// Each renders one node per row (REQ-FRM-08).
+func (f SignupAddressesField) Each(fn func(int, AddressForm) gx.Node) gx.Node {
+	return gx.EachRow(f.Rows(), fn)
+}
+
+// SignupAddressesFieldValue builds the repeated field Signup.Addresses (REQ-FRM-08).
+func SignupAddressesFieldValue(form string, v []Address, errs map[string]string) SignupAddressesField {
+	return SignupAddressesField{FormField: gx.FormField[[]Address]{Name: "addresses", ID: gx.FieldID(form, "addresses"), Value: v}, form: form, errs: errs}
+}
+
+// addressFormValue fills the form value of one Address (REQ-FRM-08).
+func addressFormValue(form, prefix string, v Address, errs map[string]string) AddressForm {
+	var f AddressForm
+	f.Street = gx.FormField[string]{Name: (prefix + ".street"), ID: gx.FieldID(form, (prefix + ".street")), Value: v.Street, ErrorKey: errs[(prefix + ".street")], Error: gx.Translate(errs[(prefix+".street")], gx.DefaultMessage(errs[(prefix+".street")])), Constraints: gx.Attrs{gx.Bool("required", true)}, ValidateURL: ""}
+	f.City = gx.FormField[string]{Name: (prefix + ".city"), ID: gx.FieldID(form, (prefix + ".city")), Value: v.City, ErrorKey: errs[(prefix + ".city")], Error: gx.Translate(errs[(prefix+".city")], gx.DefaultMessage(errs[(prefix+".city")])), Constraints: nil, ValidateURL: ""}
+	return f
 }
 
 // GxFormValue fills the form value of Signup (REQ-FRM-03).
 func (in *Signup) GxFormValue(errs map[string]string) gx.FormValue {
 	f := SignupForm{FormMeta: gx.FormMeta{Name: "signup", ID: "signup-form", Action: in.URL(), Method: "POST"}}
-	f.Email = gx.FormField[string]{Name: "email", ID: "signup-email", Value: in.Email, ErrorKey: errs["email"], Error: gx.Translate(errs["email"], gx.DefaultMessage(errs["email"])), Constraints: gx.Attrs{gx.Bool("required", true), gx.Attr{Key: "type", Value: "email", Kind: gx.AttrText}, gx.Attr{Key: "maxlength", Value: "254", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "email")}
-	f.Age = gx.FormField[int]{Name: "age", ID: "signup-age", Value: in.Age, ErrorKey: errs["age"], Error: gx.Translate(errs["age"], gx.DefaultMessage(errs["age"])), Constraints: gx.Attrs{gx.Attr{Key: "min", Value: "18", Kind: gx.AttrText}, gx.Attr{Key: "max", Value: "120", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "age")}
-	f.Terms = gx.FormField[bool]{Name: "terms", ID: "signup-terms", Value: in.Terms, ErrorKey: errs["terms"], Error: gx.Translate(errs["terms"], gx.DefaultMessage(errs["terms"])), Constraints: gx.Attrs{gx.Bool("required", true)}, ValidateURL: gx.ValidateURL(in.URL(), "terms")}
+	f.Email = gx.FormField[string]{Name: "email", ID: gx.FieldID("signup", "email"), Value: in.Email, ErrorKey: errs["email"], Error: gx.Translate(errs["email"], gx.DefaultMessage(errs["email"])), Constraints: gx.Attrs{gx.Bool("required", true), gx.Attr{Key: "type", Value: "email", Kind: gx.AttrText}, gx.Attr{Key: "maxlength", Value: "254", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "email")}
+	f.Age = gx.FormField[int]{Name: "age", ID: gx.FieldID("signup", "age"), Value: in.Age, ErrorKey: errs["age"], Error: gx.Translate(errs["age"], gx.DefaultMessage(errs["age"])), Constraints: gx.Attrs{gx.Attr{Key: "min", Value: "18", Kind: gx.AttrText}, gx.Attr{Key: "max", Value: "120", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "age")}
+	f.Terms = gx.FormField[bool]{Name: "terms", ID: gx.FieldID("signup", "terms"), Value: in.Terms, ErrorKey: errs["terms"], Error: gx.Translate(errs["terms"], gx.DefaultMessage(errs["terms"])), Constraints: gx.Attrs{gx.Bool("required", true)}, ValidateURL: gx.ValidateURL(in.URL(), "terms")}
+	f.Address = addressFormValue("signup", "address", in.Address, errs)
+	f.Addresses = SignupAddressesField{FormField: gx.FormField[[]Address]{Name: "addresses", ID: gx.FieldID("signup", "addresses"), Value: in.Addresses}, form: "signup", errs: errs}
 	return f
 }
 
@@ -101,6 +280,10 @@ func (in *Signup) GxFieldName(ptr any) string {
 		return "age"
 	case any(&in.Terms):
 		return "terms"
+	case any(&in.Address.Street):
+		return "address.street"
+	case any(&in.Address.City):
+		return "address.city"
 	}
 	return ""
 }

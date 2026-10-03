@@ -247,3 +247,165 @@ func TestREQ_FRM_04_PatternConstraint(t *testing.T) {
 		t.Fatalf("check reported diagnostics: %v", diags)
 	}
 }
+
+// formNestedRoutesGo is the nested and repeated field module of the M5 test.
+const formNestedRoutesGo = `package signup
+
+import "github.com/alternayte/gx"
+
+// Address is a nested form struct (REQ-FRM-08).
+type Address struct {
+	Street string   ` + "`form:\"street\"`" + `
+	City   string   ` + "`form:\"city\"`" + `
+	Lines  []string ` + "`form:\"lines\"`" + `
+}
+
+type Nested struct {
+	gx.Route ` + "`POST /signup`" + `
+	Name      string
+	Address   Address
+	Addresses []Address
+	Tags      []string
+}
+
+func (in *Nested) Rules() gx.Rules {
+	return gx.Rules{
+		gx.Field(&in.Name, gx.Required),
+		gx.Field(&in.Address.Street, gx.Required),
+	}
+}
+
+var nested = gx.Form(func(c *gx.Ctx, in *Nested) error {
+	return c.Redirect(gx.URL("/done"))
+}, NestedView)
+
+type NestedPage struct {
+	gx.Route ` + "`GET /nested`" + `
+}
+
+var NestedPageValue = gx.Page(func(c *gx.Ctx, in NestedPage) (NestedViewProps, error) {
+	return nested.Props(&Nested{}), nil
+}, NestedView)
+
+var NestedRoutes = gx.Collect(NestedPageValue, nested)
+`
+
+const formNestedViewGx = `package signup
+
+props {
+  F NestedForm
+}
+
+<form {...p.F.Attrs()}>
+  <input {...p.F.Name.Attrs()} />
+  <input {...p.F.Address.Street.Attrs()} />
+  {p.F.Addresses.Each(rowNode)}
+  {p.F.Tags.Each(tagNode)}
+</form>
+`
+
+const formNestedHelpersGo = `package signup
+
+import "github.com/alternayte/gx"
+
+// rowNode renders one repeated address row (REQ-FRM-08).
+func rowNode(i int, a AddressForm) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "class", Value: "row"}},
+		gx.Text(a.Street.Name),
+		gx.Text(a.City.Name),
+	)
+}
+
+// tagNode renders one repeated tag field.
+func tagNode(i int, t gx.FormField[string]) gx.Node {
+	return gx.El("input", t.Attrs())
+}
+`
+
+const formNestedTestGo = `package signup
+
+import (
+	"net/http/httptest"
+	"strings"
+	"testing"
+)
+
+func TestREQ_FRM_08_NestedBinding(t *testing.T) {
+	var in Nested
+	req := httptest.NewRequest("POST", "/signup", strings.NewReader(
+		"name=N&address.street=S&address.city=C&addresses[0].street=A0&addresses[1].street=A1&addresses[0].lines[0]=l0&tags[0]=t0&tags[1]=t1"))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	errs, err := in.GxBindForm(req)
+	if err != nil || len(errs) != 0 {
+		t.Fatalf("GxBindForm: %v %v", err, errs)
+	}
+	if in.Name != "N" || in.Address.Street != "S" || in.Address.City != "C" {
+		t.Fatalf("nested struct = %+v", in.Address)
+	}
+	if len(in.Addresses) != 2 || in.Addresses[0].Street != "A0" || in.Addresses[1].Street != "A1" {
+		t.Fatalf("addresses = %+v", in.Addresses)
+	}
+	if len(in.Addresses[0].Lines) != 1 || in.Addresses[0].Lines[0] != "l0" {
+		t.Fatalf("lines = %+v", in.Addresses[0].Lines)
+	}
+	if len(in.Tags) != 2 || in.Tags[0] != "t0" || in.Tags[1] != "t1" {
+		t.Fatalf("tags = %+v", in.Tags)
+	}
+
+	f := in.GxFormValue(nil).(NestedForm)
+	if f.Address.Street.Name != "address.street" || f.Address.Street.ID != "nested-address-street" {
+		t.Fatalf("nested field = %+v", f.Address.Street)
+	}
+	rows := f.Addresses.Rows()
+	if len(rows) != 2 || rows[0].Street.Name != "addresses[0].street" || rows[0].Street.ID != "nested-addresses-0-street" {
+		t.Fatalf("rows = %+v", rows)
+	}
+	if rows[1].City.Name != "addresses[1].city" {
+		t.Fatalf("second row = %+v", rows[1])
+	}
+	if tags := f.Tags.Rows(); len(tags) != 2 || tags[1].Name != "tags[1]" {
+		t.Fatalf("tags = %+v", tags)
+	}
+}
+
+func TestREQ_FRM_08_ConversionInsideRow(t *testing.T) {
+	var in Nested
+	req := httptest.NewRequest("POST", "/signup", strings.NewReader("name=N&address.street=S"))
+	errs, err := in.GxBindForm(req)
+	if err != nil || len(errs) != 0 {
+		t.Fatalf("valid row: %v %v", err, errs)
+	}
+}
+`
+
+// TestREQ_FRM_08_NestedBinding covers nested structs, repeated fields and
+// their generated form values (REQ-FRM-08).
+func TestREQ_FRM_08_NestedBinding(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":                moduleWithGx(t),
+		"signup/routes.go":      formNestedRoutesGo,
+		"signup/NestedView.gx":  formNestedViewGx,
+		"signup/helpers.go":     formNestedHelpersGo,
+		"signup/nested_test.go": formNestedTestGo,
+	})
+	files := generateFiles(t, dir)
+	routes := string(files[filepath.Join(dir, "signup/routes_gx.go")])
+	for _, want := range []string{
+		"type AddressForm struct {",
+		"type NestedAddressesField struct {",
+		"type NestedTagsField struct {",
+		"func (f NestedAddressesField) Each(fn func(int, AddressForm) gx.Node) gx.Node {",
+		`gx.FormIndexes(r, "addresses")`,
+		`gx.FormText(r, ("address" + ".street"))`,
+	} {
+		if !strings.Contains(routes, want) {
+			t.Fatalf("routes_gx.go lacks %q:\n%s", want, routes)
+		}
+	}
+	writeGenerated(t, dir)
+	cmd := exec.Command("go", "test", "-run", "TestREQ_FRM_08", "./...")
+	cmd.Dir = dir
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("nested binding test: %v\n%s", err, out)
+	}
+}

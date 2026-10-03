@@ -491,3 +491,72 @@ func findElementByID(n Node, id string) *elNode {
 	}
 	return nil
 }
+
+// FormText returns one request form value after parsing (REQ-FRM-08).
+func FormText(r *http.Request, name string) string {
+	if r.Form == nil {
+		_ = r.ParseForm()
+	}
+	return r.Form.Get(name)
+}
+
+// FormIndexes returns the sorted row indexes present for an indexed form
+// name, for example 0 and 2 for addresses[0].street and addresses[2].city
+// (REQ-FRM-08).
+func FormIndexes(r *http.Request, prefix string) []int {
+	if r.Form == nil {
+		_ = r.ParseForm()
+	}
+	seen := map[int]bool{}
+	open := prefix + "["
+	for name := range r.Form {
+		if !strings.HasPrefix(name, open) {
+			continue
+		}
+		rest := name[len(open):]
+		end := strings.IndexByte(rest, ']')
+		if end <= 0 {
+			continue
+		}
+		n, err := strconv.Atoi(rest[:end])
+		if err != nil || n < 0 {
+			continue
+		}
+		seen[n] = true
+	}
+	out := make([]int, 0, len(seen))
+	for n := range seen {
+		out = append(out, n)
+	}
+	sort.Ints(out)
+	return out
+}
+
+// FieldID returns the element id of one form field, for example
+// ("signup", "addresses[0].street") gives "signup-addresses-0-street"
+// (REQ-FRM-03).
+func FieldID(form, path string) string {
+	var b strings.Builder
+	b.WriteString(form)
+	b.WriteByte('-')
+	for i := 0; i < len(path); i++ {
+		switch path[i] {
+		case '.', '[':
+			b.WriteByte('-')
+		case ']':
+			// Rows and nesting separate two id parts already.
+		default:
+			b.WriteByte(path[i])
+		}
+	}
+	return b.String()
+}
+
+// EachRow renders one node per row of a slice field (REQ-FRM-08).
+func EachRow[T any](rows []T, fn func(int, T) Node) Node {
+	var b Builder
+	for i, v := range rows {
+		b.Add(fn(i, v))
+	}
+	return b.Node()
+}
