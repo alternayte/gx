@@ -21,6 +21,7 @@ const (
 	CodeDuplicateSlot = "GX2006"
 	CodeEventAttr     = "GX2007"
 	CodeFragment      = "GX2008"
+	CodeLoopKey       = "GX2009"
 	CodeSignal        = "GX2010"
 	CodeURLAttr       = "GX2011"
 	CodeUnrenderable  = "GX2013"

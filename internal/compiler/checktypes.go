@@ -126,7 +126,72 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	}
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkSignals(dirs)...)
+	diags = append(diags, l.checkKeys(dirs)...)
 	return res, diags
+}
+
+// checkKeys reports a loop that needs a key and has none (REQ-AUT-14).
+func (l *loader) checkKeys(dirs []string) []Diagnostic {
+	var out []Diagnostic
+	for _, dir := range dirs {
+		p := l.load(dir)
+		for _, f := range p.Files {
+			walkNodes(f.Body, func(n Node) {
+				c, ok := n.(*Control)
+				if !ok || c.Kind != "for" {
+					return
+				}
+				if !loopNeedsKey(l, p, f, c.Body) || loopHasKey(c.Body) {
+					return
+				}
+				out = append(out, Diagnostic{
+					Code: CodeLoopKey,
+					File: f.File,
+					Line: c.At.Line,
+					Col:  c.At.Col,
+					Msg:  "loop needs a key: add key={expr} or a #fragment with a key parameter",
+				})
+			})
+		}
+	}
+	return out
+}
+
+// loopNeedsKey reports whether the loop body holds a node that keeps client
+// state: a form control or a component with signals (REQ-AUT-14).
+func loopNeedsKey(l *loader, p *Package, f *File, ns []Node) bool {
+	needs := false
+	walkElements(ns, func(el *Element) {
+		switch strings.ToLower(el.Name) {
+		case "input", "select", "textarea":
+			needs = true
+			return
+		}
+		if qual, name, ok := componentTag(el.Name); ok {
+			if comp, _, _ := resolveComponent(l, p, f, qual, name); comp != nil && len(comp.File.Signals) > 0 {
+				needs = true
+			}
+		}
+	})
+	return needs
+}
+
+// loopHasKey reports whether the loop body carries key={expr} or a fragment
+// whose first parameter is key.
+func loopHasKey(ns []Node) bool {
+	found := false
+	walkElements(ns, func(el *Element) {
+		for i := range el.Attrs {
+			a := &el.Attrs[i]
+			if a.Kind == AttrExpr && a.Name == "key" {
+				found = true
+			}
+			if a.Kind == AttrFragment && firstIdent(strings.TrimSpace(a.Value)) == "key" {
+				found = true
+			}
+		}
+	})
+	return found
 }
 
 // checkSignals reports a server expression that reads a signal (REQ-AUT-15).

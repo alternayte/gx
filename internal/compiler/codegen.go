@@ -414,6 +414,12 @@ func (g *gen) attrsExpr(el *Element) string {
 				static = append(static, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
 				continue
 			}
+			if a.Name == "key" {
+				if v, ok := g.attrValueExpr(a, a.Value); ok {
+					static = append(static, fmt.Sprintf("gx.Attr{Key: \"data-gx-key\", Value: %s, Kind: gx.AttrText}", v))
+				}
+				continue
+			}
 			if a.Name == "style" {
 				if g.isStyleType(a) {
 					static = append(static, fmt.Sprintf("gx.Attr{Key: \"style\", Value: string(%s), Kind: gx.AttrStyle}", strings.TrimSpace(a.Value)))
