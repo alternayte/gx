@@ -1,6 +1,7 @@
 package compiler_test
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -24,7 +25,7 @@ func TestREQ_CNT_02_Frontmatter(t *testing.T) {
 		if d.Code != compiler.CodeContentFrontmatter {
 			continue
 		}
-		base := d.File[strings.LastIndexByte(d.File, '/')+1:]
+		base := filepath.Base(d.File)
 		byFile[base] = d
 	}
 	if got, ok := byFile["ok.md"]; ok {

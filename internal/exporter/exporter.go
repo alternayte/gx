@@ -22,6 +22,7 @@ import (
 
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/pagefind"
@@ -93,7 +94,7 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 		return nil, err
 	}
 	defer os.RemoveAll(work)
-	bin := filepath.Join(work, "app")
+	bin := execname.Name(filepath.Join(work, "app"))
 	if err := buildApp(ctx, dir, opt.Main, bin, opt.Log); err != nil {
 		return nil, err
 	}

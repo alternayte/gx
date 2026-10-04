@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/gxstyles"
 )
 
@@ -129,7 +130,7 @@ type server struct {
 
 func (s *server) run(ctx context.Context) error {
 	s.appPort = freePort()
-	bin := filepath.Join(s.workDir(), "app")
+	bin := execname.Name(filepath.Join(s.workDir(), "app"))
 	if err := os.MkdirAll(s.workDir(), 0o755); err != nil {
 		return err
 	}

@@ -67,7 +67,7 @@ func TestREQ_STY_01_PinnedDownload(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info.Mode()&0o111 == 0 {
+	if runtime.GOOS != "windows" && info.Mode()&0o111 == 0 {
 		t.Fatalf("binary is not executable: %v", info.Mode())
 	}
 	// A second Ensure uses the cache and does not download again.

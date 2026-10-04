@@ -18,9 +18,9 @@ import (
 
 // Item is one published registry item (REQ-REG-01).
 type Item struct {
-	Name        string   `json:"name"`
-	Version     string   `json:"version"`
-	Description string   `json:"description"`
+	Name        string `json:"name"`
+	Version     string `json:"version"`
+	Description string `json:"description"`
 	// Kind is "component", "block" or "theme".
 	Kind                 string   `json:"kind"`
 	Files                []File   `json:"files"`
@@ -229,7 +229,8 @@ func ValidateItem(item Item) error {
 		if file.Path == "" || file.Target == "" {
 			return fmt.Errorf("item %s has a file without a path or target", item.Name)
 		}
-		if filepath.IsAbs(file.Target) || strings.Contains(file.Target, "..") {
+		if filepath.IsAbs(file.Target) || strings.HasPrefix(file.Target, "/") ||
+			strings.HasPrefix(file.Target, `\`) || strings.Contains(file.Target, "..") {
 			return fmt.Errorf("item %s target %q is not a relative app path", item.Name, file.Target)
 		}
 		if !hexPattern.MatchString(file.SHA256) {

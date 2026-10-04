@@ -17,6 +17,7 @@ import (
 	"testing"
 
 	"github.com/alternayte/gx/gxcli"
+	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/pagefind"
 	"github.com/alternayte/gx/internal/tailwind"
 )
@@ -179,7 +180,7 @@ func main() {
 		}
 	}
 	run("go", "mod", "tidy")
-	bin := filepath.Join(dir, "app")
+	bin := execname.Name(filepath.Join(dir, "app"))
 	run("go", "build", "-o", bin, ".")
 	data, err := os.ReadFile(bin)
 	if err != nil {

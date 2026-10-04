@@ -227,7 +227,11 @@ func fileURI(path string) string {
 	if err != nil {
 		abs = path
 	}
-	return "file://" + filepath.ToSlash(abs)
+	slash := filepath.ToSlash(abs)
+	if !strings.HasPrefix(slash, "/") {
+		slash = "/" + slash
+	}
+	return "file://" + slash
 }
 
 // diagnostics decodes one publishDiagnostics notification.

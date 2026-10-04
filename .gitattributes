@@ -1,0 +1,13 @@
+# Check the same bytes out on every platform. The browser runtimes and
+# vendored assets are hashed, so CRLF would change them.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.wasm binary
+*.tar.gz binary

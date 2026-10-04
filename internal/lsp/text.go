@@ -3,6 +3,7 @@ package lsp
 import (
 	"net/url"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"unicode/utf16"
 )
@@ -109,21 +110,31 @@ func utf16Len(s string) int {
 	return n
 }
 
-// pathToURI converts a file path to a file URI.
+// pathToURI converts a file path to a file URI. On Windows the drive
+// letter needs a leading slash (`file:///C:/src/Card.gx`).
 func pathToURI(path string) string {
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		abs = path
 	}
-	u := url.URL{Scheme: "file", Path: filepath.ToSlash(abs)}
+	slash := filepath.ToSlash(abs)
+	if !strings.HasPrefix(slash, "/") {
+		slash = "/" + slash
+	}
+	u := url.URL{Scheme: "file", Path: slash}
 	return u.String()
 }
 
-// uriToPath converts a file URI to a file path.
+// uriToPath converts a file URI to a file path, including the Windows
+// drive-letter form.
 func uriToPath(uri string) string {
 	u, err := url.Parse(uri)
 	if err != nil || u.Scheme != "file" {
 		return uri
 	}
-	return filepath.FromSlash(u.Path)
+	p := u.Path
+	if runtime.GOOS == "windows" && len(p) >= 3 && p[0] == '/' && p[2] == ':' {
+		p = p[1:]
+	}
+	return filepath.FromSlash(p)
 }

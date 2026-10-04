@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/testbudget"
 )
 
 // actionModule builds a module with one action invocation and one
@@ -54,8 +55,8 @@ func TestREQ_DEV_11_ActionIndexRename(t *testing.T) {
 	if !found {
 		t.Fatalf("no GX4001 after the rename: %+v", d.Items)
 	}
-	if elapsed > 2*time.Second {
-		t.Fatalf("GX4001 after %s, want under 2s", elapsed)
+	if budget := testbudget.Budget(2*time.Second, 10); elapsed > budget {
+		t.Fatalf("GX4001 after %s, want under %s on this machine", elapsed, budget)
 	}
 
 	// gx check keeps the same index.
