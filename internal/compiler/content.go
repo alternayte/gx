@@ -19,12 +19,27 @@ type contentCollection struct {
 	dir   string // absolute directory
 	comps map[string]contentComp
 	meta  map[string]string // Meta frontmatter fields, nil when unknown
+
+	// The declaring package and variable, so the compiler can generate a
+	// typed body renderer (REQ-CNT-03).
+	varName     string
+	pkgDir      string
+	pkgName     string
+	pkgPath     string
+	metaType    string
+	metaPkgPath string
+	metaPkgName string
 }
 
 // contentComp is one component of a collection's Components list.
 type contentComp struct {
 	name  string
 	props map[string]Prop // lower-first name -> prop
+	// pkgPath and pkgName locate the component package; propsType is the
+	// generated props struct as written in the body renderer.
+	pkgPath   string
+	pkgName   string
+	propsType string
 }
 
 // collectCollections finds every gx.Collection(...).Components(...) call and
@@ -68,6 +83,12 @@ func collectCollections(pkgs []*packages.Package) []contentCollection {
 					base = filepath.Join(root, filepath.FromSlash(dir))
 				}
 				coll := contentCollection{dir: filepath.Clean(base), comps: map[string]contentComp{}}
+				if pos := pkg.Fset.Position(file.Pos()); pos.Filename != "" {
+					coll.pkgDir = filepath.Dir(pos.Filename)
+				}
+				coll.pkgName = pkg.Name
+				coll.pkgPath = pkg.PkgPath
+				coll.varName = collectionVarName(file, inner)
 				metaType := pkg.TypesInfo.TypeOf(inner)
 				if ptr, ok := metaType.(*types.Pointer); ok {
 					metaType = ptr.Elem()
@@ -75,6 +96,16 @@ func collectCollections(pkgs []*packages.Package) []contentCollection {
 				if named, ok := metaType.(*types.Named); ok {
 					if args := named.TypeArgs(); args != nil && args.Len() == 1 {
 						coll.meta = yamlFields(args.At(0))
+						coll.metaType = types.TypeString(args.At(0), func(p *types.Package) string { return p.Name() })
+						if m, ok := args.At(0).(*types.Named); ok && m.Obj() != nil && m.Obj().Pkg() != nil {
+							if m.Obj().Pkg().Path() == pkg.PkgPath {
+								coll.metaType = m.Obj().Name()
+							} else {
+								coll.metaPkgPath = m.Obj().Pkg().Path()
+								coll.metaPkgName = m.Obj().Pkg().Name()
+								coll.metaType = coll.metaPkgName + "." + m.Obj().Name()
+							}
+						}
 					}
 				}
 				for _, arg := range call.Args {
@@ -88,6 +119,28 @@ func collectCollections(pkgs []*packages.Package) []contentCollection {
 		}
 	}
 	return out
+}
+
+// collectionVarName returns the variable a Collection call is assigned to.
+func collectionVarName(file *ast.File, call *ast.CallExpr) string {
+	for _, decl := range file.Decls {
+		gen, ok := decl.(*ast.GenDecl)
+		if !ok || gen.Tok != token.VAR {
+			continue
+		}
+		for _, spec := range gen.Specs {
+			vs, ok := spec.(*ast.ValueSpec)
+			if !ok || len(vs.Names) == 0 {
+				continue
+			}
+			for _, value := range vs.Values {
+				if value.Pos() <= call.Pos() && call.End() <= value.End() {
+					return vs.Names[0].Name
+				}
+			}
+		}
+	}
+	return ""
 }
 
 // isGxFuncExpr is isGxFunc with generic instantiation unwrapped.
@@ -118,6 +171,16 @@ func contentComponent(pkg *packages.Package, expr ast.Expr) (contentComp, bool) 
 		return contentComp{}, false
 	}
 	comp := contentComp{name: name, props: map[string]Prop{}}
+	switch e := expr.(type) {
+	case *ast.SelectorExpr:
+		if obj := pkg.TypesInfo.Uses[e.Sel]; obj != nil && obj.Pkg() != nil {
+			comp.pkgPath = obj.Pkg().Path()
+			comp.pkgName = obj.Pkg().Name()
+			comp.propsType = comp.pkgName + "." + name + "Props"
+		}
+	case *ast.Ident:
+		comp.propsType = name + "Props"
+	}
 	t := pkg.TypesInfo.TypeOf(expr)
 	sig, _ := t.Underlying().(*types.Signature)
 	if sig == nil || sig.Params().Len() == 0 {
@@ -131,7 +194,16 @@ func contentComponent(pkg *packages.Package, expr ast.Expr) (contentComp, bool) 
 	if !ok {
 		return comp, true
 	}
-	qual := func(p *types.Package) string { return p.Name() }
+	selfPkg := pkg.PkgPath
+	if comp.pkgPath != "" {
+		selfPkg = comp.pkgPath
+	}
+	qual := func(p *types.Package) string {
+		if p.Path() == selfPkg {
+			return ""
+		}
+		return p.Name()
+	}
 	for i := 0; i < st.NumFields(); i++ {
 		f := st.Field(i)
 		if !f.Exported() {
@@ -161,7 +233,12 @@ func checkContent(root string, colls []contentCollection, read func(string) ([]b
 		for _, path := range paths {
 			src := files[path]
 			out = checkFrontmatter(path, src, coll.meta, out)
-			for _, tag := range scanMarkdownTags(string(src)) {
+			nodes, ndiags := parseContentTree(string(src))
+			for _, d := range ndiags {
+				d.File = path
+				out = append(out, d)
+			}
+			walkContentTags(nodes, func(tag *contentTag) {
 				comp, ok := coll.comps[tag.name]
 				if !ok {
 					names := make([]string, 0, len(coll.comps))
@@ -181,7 +258,7 @@ func checkContent(root string, colls []contentCollection, read func(string) ([]b
 						Msg:  msg,
 						Fix:  "add it to the gx.Collection Components list",
 					})
-					continue
+					return
 				}
 				for _, attr := range tag.attrs {
 					if _, ok := comp.props[attr.name]; ok {
@@ -195,7 +272,7 @@ func checkContent(root string, colls []contentCollection, read func(string) ([]b
 						Msg:  "unknown attribute " + Quoted(attr.name) + " on <" + tag.name + ">",
 					})
 				}
-			}
+			})
 		}
 		out = append(out, checkCollectionLinks(coll, files)...)
 	}

@@ -58,6 +58,9 @@ func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diag
 	for path, src := range res.routeFiles {
 		out[path] = src
 	}
+	for path, src := range renderContentBodies(res.collections) {
+		out[path] = src
+	}
 	out[classesFilePath(root)] = classesBytes(collectClasses(dirs, l, res.pkgs))
 	out[galleryFilePath(root)] = renderGallery(root, dirs, l, res.pkgs)
 	if len(diags) > 0 {
