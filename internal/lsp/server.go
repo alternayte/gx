@@ -279,7 +279,7 @@ func (s *Server) diagnoseLocked() error {
 		return nil
 	}
 	s.session.Generate(s.root)
-	diags := s.session.Diagnostics()
+	diags := append(s.session.Diagnostics(), s.session.Content(s.root)...)
 	byFile := map[string][]lspDiagnostic{}
 	for _, d := range diags {
 		path := d.File

@@ -58,7 +58,7 @@ func fingerprint(root string) string {
 			return nil
 		}
 		name := d.Name()
-		if !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && name != "go.mod" {
+		if !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && !strings.HasSuffix(name, ".md") && name != "go.mod" {
 			return nil
 		}
 		info, err := d.Info()

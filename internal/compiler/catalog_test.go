@@ -62,6 +62,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4010 | unknown event modifier or special event",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 		"GX7002 | gx.Secret cannot cross to the client",
+		"GX8002 | component is not declared in this collection",
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("catalog changed; update the snapshot deliberately:\ngot:\n%v\nwant:\n%v", got, want)

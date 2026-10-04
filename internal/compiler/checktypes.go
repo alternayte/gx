@@ -43,6 +43,7 @@ type typesResult struct {
 	scopedMap   map[*Component]bool
 	symbols     map[string][]Symbol // typed identifiers per .gx file (REQ-DEV-08)
 	goFset      *token.FileSet      // the shared file set of the loaded Go packages
+	collections []contentCollection // gx.Collection declarations (REQ-CNT-03)
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -177,6 +178,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		}
 	}
 	res.collectActions(pkgs)
+	res.collections = collectCollections(pkgs)
 	routes, rdiags := collectRoutes(pkgs, res.actions)
 	res.routes = routes
 	diags = append(diags, rdiags...)

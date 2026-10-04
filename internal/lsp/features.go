@@ -40,6 +40,9 @@ func (s *Server) completion(params json.RawMessage) any {
 	if m == nil {
 		return nil
 	}
+	if strings.HasSuffix(doc.Path, ".md") {
+		return completeMarkdown(doc, m, p.Position)
+	}
 	return complete(doc, m, p.Position)
 }
 

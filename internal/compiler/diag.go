@@ -37,6 +37,8 @@ const (
 	CodeTrustedHTML = "GX7001"
 	CodeSecret      = "GX7002"
 
+	CodeContentComponent = "GX8002"
+
 	CodeActionMissing       = "GX4001"
 	CodeActionTwice         = "GX4002"
 	CodeActionMissingSignal = "GX4003"
@@ -104,6 +106,7 @@ var Catalog = []Info{
 	{CodeEventMod, "unknown event modifier or special event"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
+	{CodeContentComponent, "component is not declared in this collection"},
 }
 
 // Doc returns the documentation path of the diagnostic (REQ-AUT-19).

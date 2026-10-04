@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -46,12 +47,13 @@ type RouteRef struct {
 // Model is the whole-module index of one analysis pass (REQ-DEV-11). The
 // LSP answers completion, hover and definition from it.
 type Model struct {
-	Root       string
-	Files      []*File
-	Components []ComponentRef
-	Routes     []RouteRef
-	Symbols    []Symbol
-	Packages   map[string][]string // import path -> exported names
+	Root        string
+	Files       []*File
+	Components  []ComponentRef
+	Routes      []RouteRef
+	Symbols     []Symbol
+	Packages    map[string][]string // import path -> exported names
+	Collections []CollectionRef     // gx.Collection declarations (REQ-CNT-03)
 }
 
 // Model runs the analysis and returns the whole-module index. It reuses the
@@ -129,6 +131,28 @@ func (s *Session) Model(root string) (*Model, []Diagnostic) {
 			}
 			return m.Symbols[i].Col < m.Symbols[j].Col
 		})
+		for _, coll := range s.res.collections {
+			ref := CollectionRef{Dir: coll.dir}
+			names := make([]string, 0, len(coll.comps))
+			for name := range coll.comps {
+				names = append(names, name)
+			}
+			sort.Strings(names)
+			for _, name := range names {
+				props := coll.comps[name].props
+				propNames := make([]string, 0, len(props))
+				for prop := range props {
+					propNames = append(propNames, prop)
+				}
+				sort.Strings(propNames)
+				comp := ContentComponent{Name: name}
+				for _, prop := range propNames {
+					comp.Props = append(comp.Props, props[prop])
+				}
+				ref.Components = append(ref.Components, comp)
+			}
+			m.Collections = append(m.Collections, ref)
+		}
 		for _, p := range s.res.pkgs {
 			if p.Types == nil {
 				continue
@@ -139,11 +163,41 @@ func (s *Session) Model(root string) (*Model, []Diagnostic) {
 	return m, diags
 }
 
+// CollectionRef is one gx.Collection declaration (REQ-CNT-03).
+type CollectionRef struct {
+	Dir        string
+	Components []ContentComponent
+}
+
+// ContentComponent is one component a collection allows in its Markdown
+// files.
+type ContentComponent struct {
+	Name  string
+	Props []Prop
+}
+
 // Diagnostics returns the diagnostics of the last Generate call.
 func (s *Session) Diagnostics() []Diagnostic {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return append([]Diagnostic(nil), s.lastDiags...)
+}
+
+// Content returns the diagnostics of the Markdown files of every
+// gx.Collection declaration (REQ-CNT-03). An open buffer wins over disk.
+func (s *Session) Content(root string) []Diagnostic {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.res == nil {
+		return nil
+	}
+	return checkContent(root, s.res.collections, func(path string) ([]byte, error) {
+		data := s.readInput(path)
+		if data == nil {
+			return nil, os.ErrNotExist
+		}
+		return data, nil
+	})
 }
 
 // Fragments returns the fragment elements of a component body

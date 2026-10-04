@@ -144,3 +144,59 @@ func TestREQ_TLS_04_AnalyzerDiagnostics(t *testing.T) {
 		t.Fatalf("diagnostics = %+v, want GX7001", d.Items)
 	}
 }
+
+// TestREQ_TLS_04_ContentMarkdown covers content Markdown support: the LSP
+// diagnoses an undeclared component and a bad prop, and completes the
+// collection's components and their props (REQ-TLS-04, REQ-CNT-03).
+func TestREQ_TLS_04_ContentMarkdown(t *testing.T) {
+	dir := module(t, map[string]string{
+		"docs/Aside.gx":         "package docs\n\nprops {\n  Kind string\n}\n\n<aside>{p.Kind}</aside>\n",
+		"docs/content.go":       "package docs\n\nimport \"github.com/alternayte/gx\"\n\ntype DocMeta struct {\n\tTitle string\n}\n\nvar Docs = gx.Collection[DocMeta](\"content/docs\").Components(Aside)\n",
+		"content/docs/start.md": "---\ntitle: Start\n---\n\n<docs.Aside kind=\"tip\">Good</docs.Aside>\n<docs.Widget />\n<docs.Aside wrong=\"x\" />\n",
+	})
+	md := filepath.Join(dir, "content/docs/start.md")
+	c := newClient(t, dir)
+	c.initialize()
+	c.didOpen(md, readBody(t, md))
+
+	d := c.waitDiagnostics(md)
+	codes := map[string]bool{}
+	for _, item := range d.Items {
+		codes[item.Code] = true
+	}
+	if !codes["GX8002"] || !codes["GX2003"] {
+		t.Fatalf("content diagnostics = %+v", d.Items)
+	}
+
+	// Completion of a component name and of a prop.
+	view := readBody(t, md) + "\n<docs.\n"
+	c.didChange(md, view)
+	c.waitDiagnostics(md)
+	line, col := position(view, "<docs.")
+	msg := c.request("textDocument/completion", map[string]any{
+		"textDocument": map[string]any{"uri": fileURI(md)},
+		"position":     map[string]any{"line": line, "character": col + len("<docs.")},
+	})
+	var list completionList
+	if err := json.Unmarshal(msg.Result, &list); err != nil {
+		t.Fatal(err)
+	}
+	if !contains(labels(list), "docs.Aside") {
+		t.Fatalf("tag completions = %v", labels(list))
+	}
+
+	view = readBody(t, md) + "\n<docs.Aside \n"
+	c.didChange(md, view)
+	c.waitDiagnostics(md)
+	line, col = position(view, "<docs.Aside ")
+	msg = c.request("textDocument/completion", map[string]any{
+		"textDocument": map[string]any{"uri": fileURI(md)},
+		"position":     map[string]any{"line": line, "character": col + len("<docs.Aside ")},
+	})
+	if err := json.Unmarshal(msg.Result, &list); err != nil {
+		t.Fatal(err)
+	}
+	if !contains(labels(list), "kind") {
+		t.Fatalf("prop completions = %v", labels(list))
+	}
+}

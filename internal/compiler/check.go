@@ -18,8 +18,9 @@ func Check(root string) []Diagnostic {
 	for _, dir := range dirs {
 		out = append(out, l.checkDir(dir)...)
 	}
-	_, tdiags := l.analyze(root, dirs)
+	res, tdiags := l.analyze(root, dirs)
 	out = append(out, tdiags...)
+	out = append(out, checkContent(root, res.collections, nil)...)
 	sortDiags(out)
 	return out
 }
