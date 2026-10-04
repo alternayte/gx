@@ -13,8 +13,8 @@
     {
       "path": "PopoverTrigger.gx",
       "target": "ui/popover/PopoverTrigger.gx",
-      "content": "package popover\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" popovertarget={p.Id} popovertargetaction=\"toggle\" style={gx.Style(\"anchor-name: --gx-pop-\" + p.Id)} class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
-      "sha256": "6a3b2bfc15f0b0163f0207e6f5f7b6aa0bd4066e9886850936b0e15cb95de478"
+      "content": "package popover\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" popovertarget={p.Id} popovertargetaction=\"toggle\" style={gx.Style(\"anchor-name: --gx-pop-\" + p.Id)} class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "3d7164a130523444fa6b38ea446c3caf1a8352786e7dc4ebf020215028a1a6f1"
     },
     {
       "path": "Popover.fixtures.go",

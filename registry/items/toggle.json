@@ -7,8 +7,8 @@
     {
       "path": "Toggle.gx",
       "target": "ui/toggle/Toggle.gx",
-      "content": "package toggle\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"on\"\n  Pressed  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/50\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Pressed} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
-      "sha256": "8bdfdc7502b964260f97f8dc7a3b12b0a7727be62001730c4b0ae396b3807320"
+      "content": "package toggle\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"on\"\n  Pressed  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Pressed} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "f1b23cf742b0f6724f7f7c03a6331a3f1edb97b4f67e257f062b857ba2db23a2"
     },
     {
       "path": "Toggle.fixtures.go",

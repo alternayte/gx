@@ -9,6 +9,12 @@ const DefaultThemeCSS = `@import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
+
 /* Cross-document view transitions for full loads (REQ-STY-09). */
 @view-transition {
   navigation: auto;

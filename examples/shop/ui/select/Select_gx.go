@@ -17,8 +17,8 @@ type SelectProps struct {
 func Select(p SelectProps) gx.Node {
 	var _b gx.Builder
 //line Select.gx:11:1
-	_b.Add(gx.El("select", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Select.gx:11:349
+	_b.Add(gx.El("select", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Select.gx:11:353
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

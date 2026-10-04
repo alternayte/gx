@@ -7,8 +7,8 @@
     {
       "path": "Textarea.gx",
       "target": "ui/textarea/Textarea.gx",
-      "content": "package textarea\n\nprops {\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Rows        int      = 4\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003ctextarea name={p.Name} rows={p.rows()} placeholder={p.Placeholder} class={gx.Cx(\"flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs}\u003e{p.Value}\u003c/textarea\u003e\n",
-      "sha256": "8519c18bbceb0bb5820388b16412b99c6b266023f5024f1837347cec033f55f9"
+      "content": "package textarea\n\nprops {\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Rows        int      = 4\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003ctextarea name={p.Name} rows={p.rows()} placeholder={p.Placeholder} class={gx.Cx(\"flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs}\u003e{p.Value}\u003c/textarea\u003e\n",
+      "sha256": "3b1feb1f6e70f824ccd82034af648b261e192d555c8de09e091e863c94171cca"
     },
     {
       "path": "Textarea.fixtures.go",

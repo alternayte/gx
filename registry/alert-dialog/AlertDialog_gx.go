@@ -38,7 +38,7 @@ func AlertDialog(p AlertDialogProps) gx.Node {
 	_b1.Add(gx.Text("\n  "))
 //line AlertDialog.gx:20:3
 	var _b2 gx.Builder
-//line AlertDialog.gx:20:238
+//line AlertDialog.gx:20:271
 	_b2.Add(gx.Text("\n    "))
 //line AlertDialog.gx:21:5
 	var _b3 gx.Builder
@@ -46,11 +46,11 @@ func AlertDialog(p AlertDialogProps) gx.Node {
 	_b3.Add(gx.Text("\n      "))
 //line AlertDialog.gx:22:7
 	var _b4 gx.Builder
-//line AlertDialog.gx:22:42
+//line AlertDialog.gx:22:40
 	_b4.Add(gx.Text("\n        "))
 //line AlertDialog.gx:23:9
-	_b4.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg leading-none font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line AlertDialog.gx:23:70
+	_b4.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line AlertDialog.gx:23:57
 	_b4.Add(gx.Text("\n        "))
 //line AlertDialog.gx:24:9
 	if p.Description != "" {
@@ -63,7 +63,7 @@ func AlertDialog(p AlertDialogProps) gx.Node {
 	}
 //line AlertDialog.gx:26:10
 	_b4.Add(gx.Text("\n      "))
-	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1.5", Kind: gx.AttrText}}, _b4.Node()))
+	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-2", Kind: gx.AttrText}}, _b4.Node()))
 //line AlertDialog.gx:27:13
 	_b3.Add(gx.Text("\n      "))
 //line AlertDialog.gx:28:7
@@ -82,8 +82,8 @@ func AlertDialog(p AlertDialogProps) gx.Node {
 //line AlertDialog.gx:31:75
 	_b5.Add(gx.Text("\n        "))
 //line AlertDialog.gx:32:9
-	_b5.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs hover:bg-accent hover:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Text(p.cancel())))
-//line AlertDialog.gx:32:244
+	_b5.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium whitespace-nowrap shadow-xs outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input/30 dark:border-input dark:hover:bg-input/50", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Text(p.cancel())))
+//line AlertDialog.gx:32:495
 	_b5.Add(gx.Text("\n        "))
 //line AlertDialog.gx:33:9
 	if p.Confirm != nil {
@@ -102,7 +102,7 @@ func AlertDialog(p AlertDialogProps) gx.Node {
 	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-4", Kind: gx.AttrText}}, _b3.Node()))
 //line AlertDialog.gx:37:11
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-md rounded-xl border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Attr{Key: "data-gx-dismiss", Value: "manual", Kind: gx.AttrText}}, p.Attrs), _b2.Node()))
+	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] sm:max-w-lg rounded-lg border border-border bg-background p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Attr{Key: "data-gx-dismiss", Value: "manual", Kind: gx.AttrText}}, p.Attrs), _b2.Node()))
 //line AlertDialog.gx:38:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))

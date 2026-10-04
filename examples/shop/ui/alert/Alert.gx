@@ -11,14 +11,14 @@ props {
 
 <div role="alert" class={p.class()} {...p.Attrs}>
   if p.Icon != nil {
-    <span class="mt-0.5 [&>svg]:size-4"> {p.Icon} </span>
+    <span class="[&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"> {p.Icon} </span>
   }
-  <div class="grid gap-1">
+  <div class="col-start-2 grid justify-items-start gap-1">
     if p.Title != "" {
-      <p class="font-medium">{p.Title}</p>
+      <p class="line-clamp-1 min-h-4 font-medium tracking-tight">{p.Title}</p>
     }
     if p.Children != nil {
-      <div class="text-sm [&_p]:leading-relaxed">{p.Children}</div>
+      <div class={gx.Cx("text-sm text-muted-foreground [&_p]:leading-relaxed", p.descClass())}>{p.Children}</div>
     }
   </div>
 </div>

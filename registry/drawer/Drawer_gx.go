@@ -37,68 +37,75 @@ func Drawer(p DrawerProps) gx.Node {
 	_b1.Add(gx.Text("\n  "))
 //line Drawer.gx:19:3
 	var _b2 gx.Builder
-//line Drawer.gx:19:253
+//line Drawer.gx:19:246
 	_b2.Add(gx.Text("\n    "))
 //line Drawer.gx:20:5
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto h-1.5 w-12 rounded-full bg-muted", Kind: gx.AttrText}}))
-//line Drawer.gx:20:65
-	_b2.Add(gx.Text("\n    "))
-//line Drawer.gx:21:5
 	var _b3 gx.Builder
-//line Drawer.gx:21:65
+//line Drawer.gx:20:32
+	_b3.Add(gx.Text("\n      "))
+//line Drawer.gx:21:7
+	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-muted", Kind: gx.AttrText}}))
+//line Drawer.gx:21:84
 	_b3.Add(gx.Text("\n      "))
 //line Drawer.gx:22:7
-	if p.Title != "" {
-//line Drawer.gx:22:25
-		_b3.Add(gx.Text("\n        "))
+	var _b4 gx.Builder
+//line Drawer.gx:22:82
+	_b4.Add(gx.Text("\n        "))
 //line Drawer.gx:23:9
-		_b3.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg leading-none font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Drawer.gx:23:70
-		_b3.Add(gx.Text("\n      "))
+	if p.Title != "" {
+//line Drawer.gx:23:27
+		_b4.Add(gx.Text("\n          "))
+//line Drawer.gx:24:11
+		_b4.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Drawer.gx:24:51
+		_b4.Add(gx.Text("\n        "))
 	}
-//line Drawer.gx:24:8
-	_b3.Add(gx.Text("\n      "))
-//line Drawer.gx:25:7
-	if p.Description != "" {
-//line Drawer.gx:25:31
-		_b3.Add(gx.Text("\n        "))
+//line Drawer.gx:25:10
+	_b4.Add(gx.Text("\n        "))
 //line Drawer.gx:26:9
-		_b3.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Drawer.gx:26:69
+	if p.Description != "" {
+//line Drawer.gx:26:33
+		_b4.Add(gx.Text("\n          "))
+//line Drawer.gx:27:11
+		_b4.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
+//line Drawer.gx:27:71
+		_b4.Add(gx.Text("\n        "))
+	}
+//line Drawer.gx:28:10
+	_b4.Add(gx.Text("\n      "))
+	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-0.5 p-4 text-center md:gap-1.5 md:text-left", Kind: gx.AttrText}}, _b4.Node()))
+//line Drawer.gx:29:13
+	_b3.Add(gx.Text("\n      "))
+//line Drawer.gx:30:7
+	if p.Children != nil {
+//line Drawer.gx:30:29
+		_b3.Add(gx.Text("\n        "))
+//line Drawer.gx:31:9
+		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "p-4 pt-0 text-sm", Kind: gx.AttrText}}, p.Children))
+//line Drawer.gx:31:57
 		_b3.Add(gx.Text("\n      "))
 	}
-//line Drawer.gx:27:8
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1.5 text-center sm:text-left", Kind: gx.AttrText}}, _b3.Node()))
-//line Drawer.gx:28:11
-	_b2.Add(gx.Text("\n    "))
-//line Drawer.gx:29:5
-	if p.Children != nil {
-//line Drawer.gx:29:27
-		_b2.Add(gx.Text("\n      "))
-//line Drawer.gx:30:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm", Kind: gx.AttrText}}, p.Children))
-//line Drawer.gx:30:46
-		_b2.Add(gx.Text("\n    "))
-	}
-//line Drawer.gx:31:6
-	_b2.Add(gx.Text("\n    "))
-//line Drawer.gx:32:5
-	if p.Footer != nil {
-//line Drawer.gx:32:25
-		_b2.Add(gx.Text("\n      "))
+//line Drawer.gx:32:8
+	_b3.Add(gx.Text("\n      "))
 //line Drawer.gx:33:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-2", Kind: gx.AttrText}}, p.Footer))
-//line Drawer.gx:33:56
-		_b2.Add(gx.Text("\n    "))
+	if p.Footer != nil {
+//line Drawer.gx:33:27
+		_b3.Add(gx.Text("\n        "))
+//line Drawer.gx:34:9
+		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-auto flex flex-col gap-2 p-4", Kind: gx.AttrText}}, p.Footer))
+//line Drawer.gx:34:70
+		_b3.Add(gx.Text("\n      "))
 	}
-//line Drawer.gx:34:6
+//line Drawer.gx:35:8
+	_b3.Add(gx.Text("\n    "))
+	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col", Kind: gx.AttrText}}, _b3.Node()))
+//line Drawer.gx:36:11
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-x-0 bottom-0 top-auto m-0 flex w-full flex-col gap-4 rounded-t-xl border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
-//line Drawer.gx:35:12
+	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-x-0 bottom-0 top-auto m-0 w-full max-w-none rounded-t-lg border border-border bg-background text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
+//line Drawer.gx:37:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))
-//line Drawer.gx:36:8
+//line Drawer.gx:38:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

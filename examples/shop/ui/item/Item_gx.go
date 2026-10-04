@@ -15,8 +15,8 @@ type ItemProps struct {
 func Item(p ItemProps) gx.Node {
 	var _b gx.Builder
 //line Item.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Item.gx:9:310
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Item.gx:9:314
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

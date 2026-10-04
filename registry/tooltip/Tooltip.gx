@@ -11,6 +11,6 @@ props {
 <span class={gx.Cx("group relative inline-flex", p.Class)} {...p.Attrs}>
   {p.Children}
   if p.Content != "" {
-    <span role="tooltip" class={gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-md group-hover:block group-focus-within:block", p.sideClass())}>{p.Content}</span>
+    <span role="tooltip" class={gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md group-hover:block group-focus-within:block", p.sideClass())}>{p.Content}</span>
   }
 </span>

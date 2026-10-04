@@ -7,8 +7,8 @@
     {
       "path": "Select.gx",
       "target": "ui/select/Select.gx",
-      "content": "package selectbox\n\nprops {\n  Name     string   = \"\"\n  Label    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cselect name={p.Name} aria-label={p.Label} class={gx.Cx(\"h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/select\u003e\n",
-      "sha256": "c42374b7838a83733cc9a73e8762cfa0c8f6492ea49f75fcfb1b2cdc3e5f4ce2"
+      "content": "package selectbox\n\nprops {\n  Name     string   = \"\"\n  Label    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cselect name={p.Name} aria-label={p.Label} class={gx.Cx(\"h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/select\u003e\n",
+      "sha256": "d42e261edf96a72761521966dbb4118ce24a5469cfe5d4d105eec648bdd0e600"
     },
     {
       "path": "SelectOption.gx",

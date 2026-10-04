@@ -16,8 +16,8 @@ type DropdownMenuProps struct {
 func DropdownMenu(p DropdownMenuProps) gx.Node {
 	var _b gx.Builder
 //line DropdownMenu.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenu.gx:10:248
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line DropdownMenu.gx:10:252
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

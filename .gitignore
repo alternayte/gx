@@ -17,3 +17,6 @@ node_modules/
 bin/
 # VS Code test download
 editors/vscode/.vscode-test/
+
+# Generated reference stylesheet of the parity suite
+tools/shadcn-ref/public/

@@ -1,7 +1,7 @@
 package navigationmenu
 
 var activeClass = map[bool]string{
-	true:  "bg-accent text-accent-foreground",
+	true:  "bg-accent/50 text-accent-foreground",
 	false: "text-foreground",
 }
 

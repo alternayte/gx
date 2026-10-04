@@ -34,6 +34,9 @@ beforeEach(async () => {
   page = await browser.newPage()
   await page.goto(shop.url + '/_gx/gallery')
   await page.waitForSelector('section[data-fixture]')
+  // Audit settled styles: a running color transition would report the
+  // transition start value against the new theme.
+  await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' })
   await page.addScriptTag({ content: axeSource })
 })
 

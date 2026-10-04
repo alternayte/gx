@@ -1,0 +1,298 @@
+[
+  {
+    "ref": "button",
+    "fixture": "Button-Default",
+    "focus": {
+      "gx": "button",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "badge",
+    "fixture": "Badge-Default"
+  },
+  {
+    "ref": "alert",
+    "fixture": "Alert-Default"
+  },
+  {
+    "ref": "card",
+    "fixture": "Card-Full"
+  },
+  {
+    "ref": "input",
+    "fixture": "Input-Text",
+    "focus": {
+      "gx": "input",
+      "ref": "input"
+    }
+  },
+  {
+    "ref": "textarea",
+    "fixture": "Textarea-Placeholder",
+    "focus": {
+      "gx": "textarea",
+      "ref": "textarea"
+    }
+  },
+  {
+    "ref": "label",
+    "fixture": "Label-Plain"
+  },
+  {
+    "ref": "separator",
+    "fixture": "Separator-Horizontal"
+  },
+  {
+    "ref": "skeleton",
+    "fixture": "Skeleton-Line"
+  },
+  {
+    "ref": "kbd",
+    "fixture": "Kbd-Key"
+  },
+  {
+    "ref": "spinner",
+    "fixture": "Spinner-Small"
+  },
+  {
+    "ref": "progress",
+    "fixture": "Progress-Half"
+  },
+  {
+    "ref": "avatar",
+    "fixture": "Avatar-Fallback"
+  },
+  {
+    "ref": "aspect-ratio",
+    "fixture": "AspectRatio-Wide"
+  },
+  {
+    "ref": "checkbox",
+    "fixture": "Checkbox-Unchecked",
+    "focus": {
+      "gx": "input[type=checkbox]",
+      "ref": "button[role=checkbox]"
+    }
+  },
+  {
+    "ref": "switch",
+    "fixture": "Switch-Off",
+    "focus": {
+      "gx": "input[role=switch]",
+      "ref": "button[role=switch]"
+    }
+  },
+  {
+    "ref": "radio-group",
+    "fixture": "RadioGroup-Vertical",
+    "focus": {
+      "gx": "input[type=radio]",
+      "ref": "button[role=radio]"
+    }
+  },
+  {
+    "ref": "toggle",
+    "fixture": "Toggle-Off",
+    "focus": {
+      "gx": "input[type=checkbox]",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "toggle-group",
+    "fixture": "ToggleGroup-Three",
+    "focus": {
+      "gx": "input[type=radio]",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "table",
+    "fixture": "Table-Simple"
+  },
+  {
+    "ref": "breadcrumb",
+    "fixture": "Breadcrumb-Trail"
+  },
+  {
+    "ref": "pagination",
+    "fixture": "Pagination-Trail"
+  },
+  {
+    "ref": "empty",
+    "fixture": "Empty-Full"
+  },
+  {
+    "ref": "item",
+    "fixture": "Item-Full"
+  },
+  {
+    "ref": "input-group",
+    "fixture": "InputGroup-LeadingText",
+    "focus": {
+      "gx": "input",
+      "ref": "input"
+    }
+  },
+  {
+    "ref": "field",
+    "fixture": "Field-LabelAndInput"
+  },
+  {
+    "ref": "button-group",
+    "fixture": "ButtonGroup-Three",
+    "focus": {
+      "gx": "button",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "collapsible",
+    "fixture": "Collapsible-Open",
+    "focus": {
+      "gx": "summary",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "accordion",
+    "fixture": "Accordion-Two",
+    "focus": {
+      "gx": "summary",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "dialog",
+    "fixture": "Dialog-Default",
+    "open": {
+      "gx": "[data-gx-open='#demo-dialog']"
+    },
+    "capture": {
+      "gx": "#demo-dialog",
+      "ref": "[data-slot=dialog-content]"
+    }
+  },
+  {
+    "ref": "alert-dialog",
+    "fixture": "AlertDialog-Default",
+    "open": {
+      "gx": "[data-gx-open='#demo-alert']"
+    },
+    "capture": {
+      "gx": "#demo-alert",
+      "ref": "[data-slot=alert-dialog-content]"
+    }
+  },
+  {
+    "ref": "sheet",
+    "fixture": "Sheet-Right",
+    "open": {
+      "gx": "[data-gx-open='#demo-sheet']"
+    },
+    "capture": {
+      "gx": "#demo-sheet",
+      "ref": "[data-slot=sheet-content]"
+    }
+  },
+  {
+    "ref": "drawer",
+    "fixture": "Drawer-Default",
+    "open": {
+      "gx": "[data-gx-open='#demo-drawer']"
+    },
+    "capture": {
+      "gx": "#demo-drawer",
+      "ref": "[data-slot=drawer-content]"
+    }
+  },
+  {
+    "ref": "popover",
+    "fixture": "Popover-Content",
+    "open": {
+      "js": "document.querySelector('#demo-popover').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-popover",
+      "ref": "[data-slot=popover-content]"
+    }
+  },
+  {
+    "ref": "dropdown-menu",
+    "fixture": "DropdownMenu-Menu",
+    "open": {
+      "js": "document.querySelector('#demo-dropdown').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-dropdown",
+      "ref": "[data-slot=dropdown-menu-content]"
+    }
+  },
+  {
+    "ref": "context-menu",
+    "fixture": "ContextMenu-Menu",
+    "open": {
+      "js": "document.querySelector('#demo-context').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-context",
+      "ref": "[data-slot=context-menu-content]"
+    }
+  },
+  {
+    "ref": "tooltip",
+    "fixture": "Tooltip-Top",
+    "open": {
+      "focus": "button"
+    },
+    "capture": {
+      "gx": "section[data-fixture=\"Tooltip-Top\"] [role=tooltip]",
+      "ref": "[data-slot=tooltip-content]"
+    },
+    "threshold": 0.25
+  },
+  {
+    "ref": "hover-card",
+    "fixture": "HoverCard-User",
+    "open": {
+      "focus": "button"
+    },
+    "capture": {
+      "gx": "section[data-fixture='HoverCard-User'] .fixture-body > span > span:last-child",
+      "ref": "[data-slot=hover-card-content]"
+    }
+  },
+  {
+    "ref": "menubar",
+    "fixture": "Menubar-Default"
+  },
+  {
+    "ref": "navigation-menu",
+    "fixture": "NavigationMenu-Default"
+  },
+  {
+    "ref": "select",
+    "fixture": "Select-Plan"
+  },
+  {
+    "ref": "tabs",
+    "fixture": "Tabs-Two"
+  },
+  {
+    "ref": "scroll-area",
+    "fixture": "ScrollArea-Vertical"
+  },
+  {
+    "ref": "slider",
+    "fixture": "Slider-Half"
+  },
+  {
+    "ref": "sidebar",
+    "fixture": "Sidebar-Full"
+  },
+  {
+    "ref": "toast",
+    "fixture": "Toaster-WithToast"
+  }
+]

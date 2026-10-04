@@ -13,8 +13,8 @@
     {
       "path": "NavigationMenuItem.gx",
       "target": "ui/navigation-menu/NavigationMenuItem.gx",
-      "content": "package navigationmenu\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} aria-current={p.current()} class={gx.Cx(\"inline-flex h-9 items-center rounded-md px-4 text-sm font-medium no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/50\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
-      "sha256": "725b52e1dec9cc9fbec92b062ef2f209e8b4456b3692ced765331ff26bfe14e9"
+      "content": "package navigationmenu\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} aria-current={p.current()} class={gx.Cx(\"inline-flex h-9 items-center rounded-md px-4 text-sm font-medium no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "79813b9d791f2dc5fc769baff005b857d560bbbd0f0105ad4f8cbcd692189965"
     },
     {
       "path": "NavigationMenu.fixtures.go",
@@ -25,8 +25,8 @@
     {
       "path": "styles.go",
       "target": "ui/navigation-menu/styles.go",
-      "content": "package navigationmenu\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-accent text-accent-foreground\",\n\tfalse: \"text-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p NavigationMenuItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
-      "sha256": "c8c3f98b4ac3eef96d9587853b26d4ef5be463e8f4bd631d1fbfc115db230c45"
+      "content": "package navigationmenu\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-accent/50 text-accent-foreground\",\n\tfalse: \"text-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p NavigationMenuItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
+      "sha256": "23c960ec8811816317c00863713484a701c457c4c81f5fb27d60efc11b333c3a"
     },
     {
       "path": "NavigationMenuItem.fixtures.go",

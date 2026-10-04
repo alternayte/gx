@@ -9,6 +9,6 @@ props {
 }
 
 <details open={p.Open} class={gx.Cx("group", p.Class)} {...p.Attrs}>
-  <summary class="flex cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">{p.Summary}</summary>
+  <summary class="inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden">{p.Summary}</summary>
   <div class="pt-2">{p.Children}</div>
 </details>

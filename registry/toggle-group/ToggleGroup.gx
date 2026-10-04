@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div role="group" class={gx.Cx("inline-flex items-center gap-1 rounded-md border border-border p-1", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" class={gx.Cx("flex w-fit items-center rounded-md", p.Class)} {...p.Attrs}>{p.Children}</div>

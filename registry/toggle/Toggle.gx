@@ -9,7 +9,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/50", p.Class)} {...p.Attrs}>
+<label class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50", p.Class)} {...p.Attrs}>
   <input type="checkbox" name={p.Name} value={p.Value} checked={p.Pressed} class="peer sr-only" />
   {p.Children}
 </label>

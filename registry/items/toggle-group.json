@@ -7,14 +7,14 @@
     {
       "path": "ToggleGroup.gx",
       "target": "ui/toggle-group/ToggleGroup.gx",
-      "content": "package togglegroup\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" class={gx.Cx(\"inline-flex items-center gap-1 rounded-md border border-border p-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "f4b97c16b13816012f6069f9150623d58735941c5a13c3aa5fdc4445b06b382a"
+      "content": "package togglegroup\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" class={gx.Cx(\"flex w-fit items-center rounded-md\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "8339d209a30b94b11f505968fa3d500005d7d9e72bde7fe21d97e77fb4e8800e"
     },
     {
       "path": "ToggleGroupItem.gx",
       "target": "ui/toggle-group/ToggleGroupItem.gx",
-      "content": "package togglegroup\n\nprops {\n  Name     string\n  Value    string\n  Checked  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-7 items-center justify-center gap-1 rounded-sm px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" name={p.Name} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
-      "sha256": "74fc52517162bf3aad41e0e034d3238831a9d49f3e71828c559a4018c470a9e2"
+      "content": "package togglegroup\n\nprops {\n  Name     string\n  Value    string\n  Checked  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-9 min-w-9 items-center justify-center gap-2 rounded-none px-2 text-sm font-medium transition-colors outline-none first:rounded-l-md last:rounded-r-md hover:bg-muted hover:text-muted-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:z-10 has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" name={p.Name} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "d2a7b4b5a0b0d48eefa7121c53d79db9aa375b97a1f83a4c5d912018740e09d4"
     },
     {
       "path": "ToggleGroup.fixtures.go",

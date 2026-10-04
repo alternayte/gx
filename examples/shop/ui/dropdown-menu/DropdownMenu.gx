@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>

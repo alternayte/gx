@@ -15,8 +15,8 @@ type InputGroupProps struct {
 func InputGroup(p InputGroupProps) gx.Node {
 	var _b gx.Builder
 //line InputGroup.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/input-group relative flex h-9 w-full min-w-0 items-center rounded-md border border-input shadow-xs transition-[color,box-shadow] outline-none focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/50 has-[[data-gx-invalid]]:border-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line InputGroup.gx:9:338
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/input-group relative flex h-9 w-full min-w-0 items-center rounded-md border border-input shadow-xs transition-[color,box-shadow] outline-none focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-[[data-gx-invalid]]:border-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line InputGroup.gx:9:342
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

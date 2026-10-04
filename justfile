@@ -2,7 +2,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # The gate. Run this before every commit.
-verify: build vet runtime test checks e2e
+verify: build vet runtime test checks e2e parity
 
 # The same gate under the global agent-instruction name.
 check: verify
@@ -17,6 +17,13 @@ runtime:
 e2e:
     cd tests/e2e && bun install --frozen-lockfile
     bash tests/e2e/run.sh
+
+# Visual parity against the dev-only shadcn reference (REQ-REG-08).
+parity:
+    cd tools/shadcn-ref && bun install --frozen-lockfile
+    go run ./internal/refcss -in tools/shadcn-ref/src/theme.css -out tools/shadcn-ref/public/ref.css
+    cd tests/e2e && bun install --frozen-lockfile
+    cd tests/e2e && bun test --timeout=300000 ./parity.browsers.ts
 
 build:
     rm -rf .gx-build; mkdir -p .gx-build; trap 'rm -rf .gx-build' EXIT; go build -o .gx-build ./...

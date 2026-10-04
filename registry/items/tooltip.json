@@ -7,8 +7,8 @@
     {
       "path": "Tooltip.gx",
       "target": "ui/tooltip/Tooltip.gx",
-      "content": "package tooltip\n\nprops {\n  Content  string   = \"\"\n  Side     Side     = Top\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"group relative inline-flex\", p.Class)} {...p.Attrs}\u003e\n  {p.Children}\n  if p.Content != \"\" {\n    \u003cspan role=\"tooltip\" class={gx.Cx(\"pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-md group-hover:block group-focus-within:block\", p.sideClass())}\u003e{p.Content}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "27858c9be24641a9bb375b28547cf7e67dac94cb5f29bc39b1b9f453f3739e4b"
+      "content": "package tooltip\n\nprops {\n  Content  string   = \"\"\n  Side     Side     = Top\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"group relative inline-flex\", p.Class)} {...p.Attrs}\u003e\n  {p.Children}\n  if p.Content != \"\" {\n    \u003cspan role=\"tooltip\" class={gx.Cx(\"pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md group-hover:block group-focus-within:block\", p.sideClass())}\u003e{p.Content}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "022a5618ac62b1cf6cf436da8cef440af00661bb84b941c6c08d9327278e0116"
     },
     {
       "path": "Tooltip.fixtures.go",

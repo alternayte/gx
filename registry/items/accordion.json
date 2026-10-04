@@ -13,8 +13,8 @@
     {
       "path": "AccordionItem.gx",
       "target": "ui/accordion/AccordionItem.gx",
-      "content": "package accordion\n\nprops {\n  Name     string\n  Title    string\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails name={p.Name} open={p.Open} class={gx.Cx(\"group border-b border-border\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-sm font-medium [\u0026::-webkit-details-marker]:hidden\"\u003e\n    {p.Title}\n    \u003cspan class=\"text-muted-foreground transition-transform group-open:rotate-45\"\u003e+\u003c/span\u003e\n  \u003c/summary\u003e\n  \u003cdiv class=\"pb-4 text-sm\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
-      "sha256": "0fa12039cca7813918c905052ef765175bd2c714921f1e3aacc18fa369001308"
+      "content": "package accordion\n\nprops {\n  Name     string\n  Title    string\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails name={p.Name} open={p.Open} class={gx.Cx(\"group border-b border-border\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"flex cursor-pointer list-none items-center justify-between gap-4 rounded-md py-4 text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [\u0026::-webkit-details-marker]:hidden\"\u003e\n    {p.Title}\n    \u003cspan class=\"text-muted-foreground transition-transform group-open:rotate-45\"\u003e+\u003c/span\u003e\n  \u003c/summary\u003e\n  \u003cdiv class=\"pb-4 text-sm\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
+      "sha256": "bb291cd1bbdcaca483997ce3d6bb6ba80fa14db5a97e724c12677eb844d0042c"
     },
     {
       "path": "Accordion.fixtures.go",

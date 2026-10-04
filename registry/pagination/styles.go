@@ -34,7 +34,7 @@ func (p PaginationLinkProps) current() string {
 
 // class returns the classes of one pagination link.
 func (p PaginationLinkProps) class() string {
-	base := "inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
+	base := "inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
 	if p.Active {
 		return gx.Cx(base, p.sizeClass(), "border border-border", p.Class)
 	}

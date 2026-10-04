@@ -16,10 +16,10 @@ props {
   if p.Trigger != nil {
     <span data-gx-open={"#" + p.Id} class="contents">{p.Trigger}</span>
   }
-  <dialog id={p.Id} open={p.Open} data-gx-dismiss class={gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-lg rounded-xl border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class)} {...p.Attrs}>
+  <dialog id={p.Id} open={p.Open} data-gx-dismiss class={gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-lg rounded-lg border border-border bg-background p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class)} {...p.Attrs}>
     <div class="flex flex-col gap-4">
       <div class="flex items-start justify-between gap-4">
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-2">
           if p.Title != "" {
             <h2 class="text-lg leading-none font-semibold">{p.Title}</h2>
           }

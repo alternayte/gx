@@ -7,8 +7,8 @@
     {
       "path": "Progress.gx",
       "target": "ui/progress/Progress.gx",
-      "content": "package progress\n\nprops {\n  Value int      = 0\n  Max   int      = 100\n  Label string   = \"\"\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cprogress value={p.Value} max={p.max()} aria-label={p.Label} class={gx.Cx(\"h-2 w-full overflow-hidden rounded-full [\u0026::-moz-progress-bar]:bg-primary [\u0026::-webkit-progress-bar]:rounded-full [\u0026::-webkit-progress-bar]:bg-muted [\u0026::-webkit-progress-value]:rounded-full [\u0026::-webkit-progress-value]:bg-primary\", p.Class)} {...p.Attrs}\u003e\u003c/progress\u003e\n",
-      "sha256": "aeb52fa3d4436fd4926b2ae388ccfb880f53f6859a3e9720882f4a90f13c37d8"
+      "content": "package progress\n\nprops {\n  Value int      = 0\n  Max   int      = 100\n  Label string   = \"\"\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"progressbar\" aria-valuemin={0} aria-valuemax={p.max()} aria-valuenow={p.Value} aria-label={p.Label} class={gx.Cx(\"bg-primary/20 relative h-2 w-full overflow-hidden rounded-full\", p.Class)} {...p.Attrs}\u003e\n  \u003cdiv class=\"bg-primary h-full w-full flex-1\" style={gx.Style(\"transform: translateX(-\" + p.offset() + \"%)\")}\u003e\u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "95f780bfb6526ac022f0a856bbdb43d6342447367c2dcccd27f081075c314739"
     },
     {
       "path": "Progress.fixtures.go",
@@ -19,8 +19,8 @@
     {
       "path": "styles.go",
       "target": "ui/progress/styles.go",
-      "content": "package progress\n\n// max returns the maximum value; a zero value is 100.\nfunc (p ProgressProps) max() int {\n\tif p.Max == 0 {\n\t\treturn 100\n\t}\n\treturn p.Max\n}\n",
-      "sha256": "d30f3d0d9ba7c2f6153f5913cca74b179e713102d327957efb5294a89394c3af"
+      "content": "package progress\n\nimport \"strconv\"\n\n// max returns the maximum value; a zero value is 100.\nfunc (p ProgressProps) max() int {\n\tif p.Max == 0 {\n\t\treturn 100\n\t}\n\treturn p.Max\n}\n\n// offset returns the translated percentage of the unfilled part.\nfunc (p ProgressProps) offset() string {\n\tv := p.Value\n\tmax := p.max()\n\tif max \u003c= 0 {\n\t\tmax = 100\n\t}\n\tif v \u003c 0 {\n\t\tv = 0\n\t}\n\tif v \u003e max {\n\t\tv = max\n\t}\n\treturn strconv.Itoa(100 - (v * 100 / max))\n}\n",
+      "sha256": "84a18e729042474c10a7ceb78fc91065f6f6569983e3a63e3361e960949e065c"
     }
   ],
   "requiredTokens": [

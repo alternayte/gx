@@ -7,8 +7,8 @@
     {
       "path": "Collapsible.gx",
       "target": "ui/collapsible/Collapsible.gx",
-      "content": "package collapsible\n\nprops {\n  Summary  gx.Node\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails open={p.Open} class={gx.Cx(\"group\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"flex cursor-pointer list-none items-center gap-2 [\u0026::-webkit-details-marker]:hidden\"\u003e{p.Summary}\u003c/summary\u003e\n  \u003cdiv class=\"pt-2\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
-      "sha256": "47de56acfcec9ff1a32a0bfa0fb4a726988731808e8e5ad93cb372d2c8199ec7"
+      "content": "package collapsible\n\nprops {\n  Summary  gx.Node\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails open={p.Open} class={gx.Cx(\"group\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [\u0026::-webkit-details-marker]:hidden\"\u003e{p.Summary}\u003c/summary\u003e\n  \u003cdiv class=\"pt-2\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
+      "sha256": "6ac2415d90c8b3d7ab6eb9b0e55a163e8dba1cc764c86b88a7628fc23d5ba977"
     },
     {
       "path": "Collapsible.fixtures.go",

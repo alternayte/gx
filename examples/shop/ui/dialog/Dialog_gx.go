@@ -37,7 +37,7 @@ func Dialog(p DialogProps) gx.Node {
 	_b1.Add(gx.Text("\n  "))
 //line Dialog.gx:19:3
 	var _b2 gx.Builder
-//line Dialog.gx:19:229
+//line Dialog.gx:19:235
 	_b2.Add(gx.Text("\n    "))
 //line Dialog.gx:20:5
 	var _b3 gx.Builder
@@ -49,7 +49,7 @@ func Dialog(p DialogProps) gx.Node {
 	_b4.Add(gx.Text("\n        "))
 //line Dialog.gx:22:9
 	var _b5 gx.Builder
-//line Dialog.gx:22:44
+//line Dialog.gx:22:42
 	_b5.Add(gx.Text("\n          "))
 //line Dialog.gx:23:11
 	if p.Title != "" {
@@ -73,7 +73,7 @@ func Dialog(p DialogProps) gx.Node {
 	}
 //line Dialog.gx:28:12
 	_b5.Add(gx.Text("\n        "))
-	_b4.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1.5", Kind: gx.AttrText}}, _b5.Node()))
+	_b4.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-2", Kind: gx.AttrText}}, _b5.Node()))
 //line Dialog.gx:29:15
 	_b4.Add(gx.Text("\n        "))
 //line Dialog.gx:30:9
@@ -108,7 +108,7 @@ func Dialog(p DialogProps) gx.Node {
 	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-4", Kind: gx.AttrText}}, _b3.Node()))
 //line Dialog.gx:38:11
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-lg rounded-xl border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
+	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-lg rounded-lg border border-border bg-background p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
 //line Dialog.gx:39:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))

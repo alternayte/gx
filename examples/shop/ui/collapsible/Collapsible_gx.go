@@ -17,7 +17,7 @@ type CollapsibleProps struct {
 func Collapsible(p CollapsibleProps) gx.Node {
 	var _b gx.Builder
 //line Collapsible.gx:11:1
-	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "flex cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}}, p.Summary), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "pt-2", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
+	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}}, p.Summary), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "pt-2", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
 //line Collapsible.gx:14:11
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

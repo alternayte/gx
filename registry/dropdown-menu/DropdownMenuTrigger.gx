@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<button type="button" popovertarget={p.Id} aria-haspopup="menu" class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button type="button" popovertarget={p.Id} aria-haspopup="menu" class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>

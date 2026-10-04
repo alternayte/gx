@@ -3,6 +3,7 @@
 package gx
 
 import (
+	_ "embed"
 	"sort"
 )
 
@@ -67,61 +68,11 @@ func galleryPageHTML() Node {
 	)
 }
 
-// galleryCSS is the gallery shell style: token names match shadcn, and dark
-// mode follows a .dark class or the system preference (REQ-STY-03).
-const galleryCSS = SafeHTML(`
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-  --border: #e5e5e5;
-  --primary: #171717;
-  --primary-foreground: #fafafa;
-  --radius: 0.625rem;
-}
-.dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --card: #171717;
-  --card-foreground: #fafafa;
-  --muted: #262626;
-  --muted-foreground: #a3a3a3;
-  --border: #262626;
-  --primary: #fafafa;
-  --primary-foreground: #171717;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #0a0a0a;
-    --foreground: #fafafa;
-    --card: #171717;
-    --card-foreground: #fafafa;
-    --muted: #262626;
-    --muted-foreground: #a3a3a3;
-    --border: #262626;
-    --primary: #fafafa;
-    --primary-foreground: #171717;
-  }
-}
-body {
-  margin: 0;
-  padding: 2rem;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, sans-serif;
-}
-h1 { font-size: 1.5rem; }
-section.fixture, section.missing {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card);
-  color: var(--card-foreground);
-  padding: 1rem;
-  margin: 1rem 0;
-}
-section.missing { background: var(--muted); color: var(--muted-foreground); }
-.fixture-body { padding-top: .5rem; }
-`)
+// galleryShellCSS is the gallery shell style: token names match shadcn, and
+// dark mode follows a .dark class or the system preference (REQ-STY-03).
+//
+//go:embed gallery.css
+var galleryShellCSS string
+
+// galleryCSS is the gallery shell style the page inlines.
+var galleryCSS = SafeHTML(galleryShellCSS)

@@ -7,8 +7,8 @@
     {
       "path": "ContextMenu.gx",
       "target": "ui/context-menu/ContextMenu.gx",
-      "content": "package contextmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"fixed m-0 z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "94ef794b814ffd4db3b379cae087057d04b9cbe1839a89ab09d3c39586c7e518"
+      "content": "package contextmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"fixed m-0 z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "cc74f795bb5cd847c62d37b211c5cfc5a15cd369f19472d76de4e4f250d6cf2c"
     },
     {
       "path": "ContextMenuTrigger.gx",

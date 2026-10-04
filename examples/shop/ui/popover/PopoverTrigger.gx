@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<button type="button" popovertarget={p.Id} popovertargetaction="toggle" style={gx.Style("anchor-name: --gx-pop-" + p.Id)} class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button type="button" popovertarget={p.Id} popovertargetaction="toggle" style={gx.Style("anchor-name: --gx-pop-" + p.Id)} class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>

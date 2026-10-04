@@ -26,23 +26,23 @@ func Alert(p AlertProps) gx.Node {
 //line Alert.gx:13:21
 		_b1.Add(gx.Text("\n    "))
 //line Alert.gx:14:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "mt-0.5 [&>svg]:size-4", Kind: gx.AttrText}}, gx.Frag(gx.Text(" "), p.Icon, gx.Text(" "))))
-//line Alert.gx:14:58
+		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "[&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current", Kind: gx.AttrText}}, gx.Frag(gx.Text(" "), p.Icon, gx.Text(" "))))
+//line Alert.gx:14:96
 		_b1.Add(gx.Text("\n  "))
 	}
 //line Alert.gx:15:4
 	_b1.Add(gx.Text("\n  "))
 //line Alert.gx:16:3
 	var _b2 gx.Builder
-//line Alert.gx:16:27
+//line Alert.gx:16:59
 	_b2.Add(gx.Text("\n    "))
 //line Alert.gx:17:5
 	if p.Title != "" {
 //line Alert.gx:17:23
 		_b2.Add(gx.Text("\n      "))
 //line Alert.gx:18:7
-		_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "font-medium", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Alert.gx:18:43
+		_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Alert.gx:18:79
 		_b2.Add(gx.Text("\n    "))
 	}
 //line Alert.gx:19:6
@@ -52,13 +52,13 @@ func Alert(p AlertProps) gx.Node {
 //line Alert.gx:20:27
 		_b2.Add(gx.Text("\n      "))
 //line Alert.gx:21:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm [&_p]:leading-relaxed", Kind: gx.AttrText}}, p.Children))
-//line Alert.gx:21:68
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm text-muted-foreground [&_p]:leading-relaxed", p.descClass()), Kind: gx.AttrText}}, p.Children))
+//line Alert.gx:21:114
 		_b2.Add(gx.Text("\n    "))
 	}
 //line Alert.gx:22:6
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "grid gap-1", Kind: gx.AttrText}}, _b2.Node()))
+	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1", Kind: gx.AttrText}}, _b2.Node()))
 //line Alert.gx:23:9
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))

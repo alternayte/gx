@@ -29,8 +29,8 @@ func Tooltip(p TooltipProps) gx.Node {
 //line Tooltip.gx:13:23
 		_b1.Add(gx.Text("\n    "))
 //line Tooltip.gx:14:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-md group-hover:block group-focus-within:block", p.sideClass()), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tooltip", Kind: gx.AttrText}}, gx.Text(p.Content)))
-//line Tooltip.gx:14:251
+		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md group-hover:block group-focus-within:block", p.sideClass()), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tooltip", Kind: gx.AttrText}}, gx.Text(p.Content)))
+//line Tooltip.gx:14:246
 		_b1.Add(gx.Text("\n  "))
 	}
 //line Tooltip.gx:15:4

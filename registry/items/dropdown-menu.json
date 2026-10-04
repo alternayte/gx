@@ -7,14 +7,14 @@
     {
       "path": "DropdownMenu.gx",
       "target": "ui/dropdown-menu/DropdownMenu.gx",
-      "content": "package dropdownmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "6278074646d773d2d10061b5d3d8bc3548c1f58f51c6ff11a12854f7faa6fb27"
+      "content": "package dropdownmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "fd36b8eb1deed3e4b64416dffb802fc45c0fe69e34e38286cfe89333c10ac1ff"
     },
     {
       "path": "DropdownMenuTrigger.gx",
       "target": "ui/dropdown-menu/DropdownMenuTrigger.gx",
-      "content": "package dropdownmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" popovertarget={p.Id} aria-haspopup=\"menu\" class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
-      "sha256": "77d11fe49777560c3d0ee4615882f06c1259a5be2837cf6d998174e71cd8becf"
+      "content": "package dropdownmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" popovertarget={p.Id} aria-haspopup=\"menu\" class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "8f598caa778acc0a3c1a90239e043f63d4c00299ca7dd7ac7415d606f33de641"
     },
     {
       "path": "DropdownMenuItem.gx",
@@ -37,8 +37,8 @@
     {
       "path": "DropdownMenuLabel.gx",
       "target": "ui/dropdown-menu/DropdownMenuLabel.gx",
-      "content": "package dropdownmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"presentation\" class={gx.Cx(\"px-2 py-1.5 text-xs font-medium text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "a8bd2d153706f0ce0477126a7aa3fcef8d55242ce01ec04c5e53bacfdb730b53"
+      "content": "package dropdownmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"presentation\" class={gx.Cx(\"px-2 py-1.5 text-sm font-medium\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "c269787ad82523985bb5d5ead5aa9b7aa3dd8eb5d9ab80880bfee90a98a0f56a"
     },
     {
       "path": "DropdownMenu.fixtures.go",

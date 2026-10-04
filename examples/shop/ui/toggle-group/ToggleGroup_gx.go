@@ -15,8 +15,8 @@ type ToggleGroupProps struct {
 func ToggleGroup(p ToggleGroupProps) gx.Node {
 	var _b gx.Builder
 //line ToggleGroup.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1 rounded-md border border-border p-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ToggleGroup.gx:9:143
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center rounded-md", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ToggleGroup.gx:9:111
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

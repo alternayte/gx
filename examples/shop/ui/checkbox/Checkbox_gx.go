@@ -19,25 +19,29 @@ func Checkbox(p CheckboxProps) gx.Node {
 	var _b gx.Builder
 //line Checkbox.gx:12:1
 	var _b1 gx.Builder
-//line Checkbox.gx:12:79
+//line Checkbox.gx:12:116
 	_b1.Add(gx.Text("\n  "))
 //line Checkbox.gx:13:3
-	_b1.Add(gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "size-4 rounded border-input accent-primary", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked)}))
-//line Checkbox.gx:13:129
+	_b1.Add(gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked)}))
+//line Checkbox.gx:13:99
 	_b1.Add(gx.Text("\n  "))
 //line Checkbox.gx:14:3
+	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs outline-none transition-shadow dark:bg-input/30 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("svg", gx.Attrs{gx.Attr{Key: "class", Value: "size-3.5", Kind: gx.AttrText}, gx.Attr{Key: "viewBox", Value: "0 0 24 24", Kind: gx.AttrText}, gx.Attr{Key: "fill", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "stroke", Value: "currentColor", Kind: gx.AttrText}, gx.Attr{Key: "stroke-width", Value: "2", Kind: gx.AttrText}, gx.Attr{Key: "stroke-linecap", Value: "round", Kind: gx.AttrText}, gx.Attr{Key: "stroke-linejoin", Value: "round", Kind: gx.AttrText}}, gx.El("path", gx.Attrs{gx.Attr{Key: "d", Value: "M20 6 9 17l-5-5", Kind: gx.AttrText}})), gx.Text("\n  "))))
+//line Checkbox.gx:16:10
+	_b1.Add(gx.Text("\n  "))
+//line Checkbox.gx:17:3
 	if p.Children != nil {
-//line Checkbox.gx:14:25
+//line Checkbox.gx:17:25
 		_b1.Add(gx.Text("\n    "))
-//line Checkbox.gx:15:5
+//line Checkbox.gx:18:5
 		_b1.Add(gx.El("span", nil, p.Children))
-//line Checkbox.gx:15:30
+//line Checkbox.gx:18:30
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Checkbox.gx:16:4
+//line Checkbox.gx:19:4
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Checkbox.gx:17:9
+	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex select-none items-center gap-2 text-sm font-medium leading-none", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line Checkbox.gx:20:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }
