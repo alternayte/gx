@@ -26,7 +26,7 @@ export type Shop = {
 // startShop builds the example app and starts it.
 export async function startShop(): Promise<Shop> {
   const dir = mkdtempSync(join(tmpdir(), 'gx-shop-'))
-  const bin = join(dir, 'shop')
+  const bin = join(dir, process.platform === 'win32' ? 'shop.exe' : 'shop')
   const build = spawn(['go', 'build', '-o', bin, './cmd/shop'], { cwd: shopDir })
   const buildCode = await build.exited
   if (buildCode !== 0) {

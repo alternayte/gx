@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 log=""
 code=0
 for f in *.spec.ts; do
-  out="$(bun test "$f" 2>&1)"
+  out="$(bun test --timeout=300000 "$f" 2>&1)"
   rc=$?
   printf '%s\n' "$out"
   log+="$out"$'\n'

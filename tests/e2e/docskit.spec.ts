@@ -123,10 +123,11 @@ beforeAll(async () => {
   writeFileSync(join(dir, 'main.go'), mainGo)
   await run(['go', 'mod', 'tidy'], dir)
   await run(['go', 'run', './cmd/gx', 'generate', dir], repo)
-  await run(['go', 'build', '-o', join(dir, 'kitapp'), '.'], dir)
+  const kitBin = join(dir, process.platform === 'win32' ? 'kitapp.exe' : 'kitapp')
+  await run(['go', 'build', '-o', kitBin, '.'], dir)
   const port = 19000 + Math.floor(Math.random() * 1500)
   url = `http://127.0.0.1:${port}`
-  app = spawn([join(dir, 'kitapp')], {
+  app = spawn([kitBin], {
     cwd: dir,
     env: { ...process.env, PORT: String(port) },
     stdout: 'ignore',
