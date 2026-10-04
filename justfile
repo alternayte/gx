@@ -59,6 +59,10 @@ nvim-smoke:
 delve-smoke:
     "scripts/delve-smoke.sh"
 
+# The real Tailwind download test (REQ-STY-01). Needs network.
+tailwind-smoke:
+    "scripts/tailwind-smoke.sh"
+
 evidence:
     go run ./internal/build/evidence --write
 
