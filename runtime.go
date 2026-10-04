@@ -154,7 +154,7 @@ func behaviorMarker(key string) bool {
 func componentBehaviorMarker(key string) bool {
 	switch key {
 	case "data-gx-behavior", "data-gx-roving", "data-gx-roving-item", "data-gx-trap", "data-gx-dismiss",
-		"data-gx-open", "data-gx-close",
+		"data-gx-open", "data-gx-close", "data-gx-contextmenu",
 		"data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel":
 		return true
 	}

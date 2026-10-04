@@ -248,6 +248,20 @@ const onPointerdown = (e: Event): void => {
   })
 }
 
+// onContextMenu opens the menu of a right-clicked area.
+const onContextMenu = (e: Event): void => {
+  const trigger = (e.target as Element | null)?.closest?.('[data-gx-contextmenu]') as HTMLElement | null
+  if (!trigger) return
+  const selector = trigger.getAttribute('data-gx-contextmenu') ?? ''
+  const target = selector === '' ? null : document.querySelector<HTMLElement>(selector)
+  if (!target) return
+  e.preventDefault()
+  const point = e as MouseEvent
+  target.style.left = `${point.clientX}px`
+  target.style.top = `${point.clientY}px`
+  open(target)
+}
+
 // onOpenClick wires the generic overlay contract: data-gx-open points at
 // the element to open, data-gx-close closes the nearest overlay.
 const onOpenClick = (e: Event): void => {
@@ -287,6 +301,7 @@ const install = (): void => {
 
 if (typeof document !== 'undefined') {
   document.addEventListener('click', onOpenClick)
+  document.addEventListener('contextmenu', onContextMenu)
   document.addEventListener('click', (e) => {
     const button = (e.target as Element | null)?.closest?.('[data-gx-tab]') as HTMLElement | null
     if (!button) return
