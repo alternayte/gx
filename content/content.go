@@ -20,7 +20,7 @@ func Install() {
 // Body renders the Markdown body of a content entry: CommonMark plus GFM,
 // footnotes and heading anchors.
 func Body(markdown []byte) (gx.Node, error) {
-	html, err := gxcontent.Render(markdown, gxcontent.Options{GFM: true, Footnotes: true, Anchors: true})
+	html, err := gxcontent.Render(markdown, gxcontent.Options{GFM: true, Footnotes: true, Anchors: true, Highlight: true})
 	if err != nil {
 		return nil, err
 	}

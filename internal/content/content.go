@@ -31,6 +31,9 @@ type Options struct {
 	// XHTML renders void elements in the XHTML form the CommonMark spec
 	// uses (<hr />). Content pages use the HTML5 form.
 	XHTML bool
+	// Highlight renders fenced code blocks as highlighted frames
+	// (REQ-CNT-04).
+	Highlight bool
 }
 
 // Render renders Markdown to HTML.
@@ -83,6 +86,9 @@ func (r *nodeRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
 	if r.opts.GFM {
 		reg.Register(ast.KindRawHTML, r.renderRawHTML)
 		reg.Register(ast.KindHTMLBlock, r.renderHTMLBlock)
+	}
+	if r.opts.Highlight {
+		(&codeRenderer{}).RegisterFuncs(reg)
 	}
 }
 

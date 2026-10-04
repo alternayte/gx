@@ -102,6 +102,27 @@ const withViewTransition = async (update: () => Promise<void>): Promise<void> =>
   }
 }
 
+// installCopyButtons copies the code of a highlighted block (REQ-CNT-04).
+const installCopyButtons = (): void => {
+  document.addEventListener('click', (e) => {
+    const button = (e.target as Element | null)?.closest?.('[data-gx-copy]') as HTMLElement | null
+    if (!button) return
+    const code = button.closest('figure.gx-code')?.querySelector('pre code')
+    if (!code) return
+    const text = code.textContent ?? ''
+    const done = (): void => {
+      const old = button.textContent
+      button.textContent = 'Copied'
+      window.setTimeout(() => {
+        button.textContent = old
+      }, 1000)
+    }
+    if (navigator.clipboard?.writeText) {
+      void navigator.clipboard.writeText(text).then(done, () => undefined)
+    }
+  })
+}
+
 // installReducedMotionCSS stops the transition pseudo-element animations
 // when the user asks for reduced motion (REQ-STY-10).
 const installReducedMotionCSS = (): void => {
@@ -363,6 +384,7 @@ if (typeof document !== 'undefined') {
     void submitForm(form, (e as SubmitEvent).submitter as HTMLElement | null)
   }, true)
   watchValidation()
+  installCopyButtons()
   installReducedMotionCSS()
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual' 
   document.addEventListener('DOMContentLoaded', updateActive)

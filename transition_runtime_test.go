@@ -39,3 +39,13 @@ func TestREQ_STY_10_ReducedMotionRuntime(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_CNT_04_CopyButtonRuntime covers the copy button of highlighted
+// code blocks: the runtime handles it, so a code page ships no other JS
+// (REQ-CNT-04).
+func TestREQ_CNT_04_CopyButtonRuntime(t *testing.T) {
+	js := readRuntimeJS(t)
+	if !strings.Contains(js, "data-gx-copy") {
+		t.Fatal("the runtime has no copy button handler")
+	}
+}
