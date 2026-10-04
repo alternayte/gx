@@ -12,8 +12,17 @@ import (
 
 // Config is the parsed gx.toml.
 type Config struct {
-	Mirrors map[string]string
-	Site    Site
+	Mirrors  map[string]string
+	Site     Site
+	Registry Registry
+}
+
+// Registry is the [registry] table of gx.toml (REQ-REG-02). URL is the
+// registry base, an http(s) URL or a directory. Dir maps the published
+// target root to an app directory (default "ui").
+type Registry struct {
+	URL string
+	Dir string
 }
 
 // Site is the [site] table of gx.toml (REQ-CNT-09).
@@ -62,6 +71,13 @@ func Load(root string) (Config, error) {
 		switch section {
 		case "mirrors":
 			cfg.Mirrors[key] = value
+		case "registry":
+			switch key {
+			case "url":
+				cfg.Registry.URL = value
+			case "dir":
+				cfg.Registry.Dir = value
+			}
 		case "site":
 			switch key {
 			case "url":

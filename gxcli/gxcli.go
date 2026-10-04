@@ -20,6 +20,7 @@ import (
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
 	"github.com/alternayte/gx/internal/exporter"
+	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
@@ -62,6 +63,8 @@ func Main(args []string) int {
 		return runImport(args[1:])
 	case "registry":
 		return runRegistry(args[1:])
+	case "add":
+		return runAdd(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -89,6 +92,7 @@ Commands:
   export    render every GET page to static files with --out <dir>
   import    convert another tool: gx import starlight --out <dir> <src>
   registry  build a publishable component registry
+  add       install a registry item and its dependencies
 `)
 }
 
@@ -347,6 +351,54 @@ func runExport(args []string) int {
 		return 1
 	}
 	fmt.Printf("exported %d pages to %s\n", len(res.Paths), *out)
+	return 0
+}
+
+// runAdd installs a registry item and its dependencies (REQ-REG-02).
+func runAdd(args []string) int {
+	fs := flag.NewFlagSet("gx add", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	source := fs.String("registry", "", "registry URL or directory (overrides [registry] url)")
+	dir := fs.String("dir", "", "install directory (overrides [registry] dir)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx add [--registry <url>] [--dir <dir>] <item>[@version] [app]")
+		return 2
+	}
+	name, version, _ := strings.Cut(rest[0], "@")
+	root := "."
+	if len(rest) > 1 {
+		root = rest[1]
+	}
+	cfg, err := gxconfig.Load(root)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx add: %v\n", err)
+		return 1
+	}
+	src := *source
+	if src == "" {
+		src = cfg.Registry.URL
+	}
+	if src == "" {
+		fmt.Fprintln(os.Stderr, "gx add: no registry; set [registry] url in gx.toml or pass --registry")
+		return 1
+	}
+	installDir := *dir
+	if installDir == "" {
+		installDir = cfg.Registry.Dir
+	}
+	inst := registry.Installer{Root: root, Source: src, Dir: installDir}
+	items, err := inst.Add(name, version)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx add: %v\n", err)
+		return 1
+	}
+	for _, item := range items {
+		fmt.Printf("added %s@%s: %s\n", item.Name, item.Version, item.Description)
+	}
 	return 0
 }
 
