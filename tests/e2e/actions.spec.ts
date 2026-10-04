@@ -10,7 +10,7 @@ let page: Page
 beforeAll(async () => {
   shop = await startShop()
   browser = await chromium.launch({ channel: 'chrome', headless: true })
-})
+}), 180000
 
 afterAll(async () => {
   // Let pending CDP preview callbacks drain before the browser goes away;

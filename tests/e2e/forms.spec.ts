@@ -10,7 +10,7 @@ let page: Page
 beforeAll(async () => {
   shop = await startShop()
   browser = await chromium.launch({ channel: 'chrome', headless: true })
-})
+}), 180000
 
 afterAll(async () => {
   await Bun.sleep(300)

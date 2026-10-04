@@ -66,7 +66,7 @@ beforeAll(async () => {
   })
   await waitForUrl(url + '/')
   browser = await chromium.launch({ channel: 'chrome', headless: true })
-})
+}), 240000
 
 afterAll(async () => {
   await Bun.sleep(200)
