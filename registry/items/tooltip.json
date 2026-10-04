@@ -27,5 +27,5 @@
     "--primary",
     "--primary-foreground"
   ],
-  "usage": "# Tooltip\n\nA short hint on hover or focus.\n\n## Usage\n\n```gx\n\u003ctooltip.Tooltip content=\"Add to library\"\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eAdd\u003c/button.Button\u003e\n\u003c/tooltip.Tooltip\u003e\n```\n\nThe tooltip is CSS only. It shows on hover and on keyboard focus.\n\n## Do\n\n- Keep the text to a few words.\n- Wrap a control that needs a name.\n\n## Don't\n\n- Do not put essential information only in a tooltip.\n- Do not put a link inside a tooltip.\n\n## Keyboard\n\nThe tooltip appears when the wrapped control takes keyboard focus.\n"
+  "usage": "# Tooltip\n\nA short hint on hover or focus.\n\n## Usage\n\n```gx\n\u003ctooltip.Tooltip content=\"Add to library\"\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eAdd\u003c/button.Button\u003e\n\u003c/tooltip.Tooltip\u003e\n```\n\nThe tooltip is CSS only. It shows on hover and on keyboard focus.\n\n## Do\n\n- Keep the text to a few words.\n- Wrap a control that needs a name.\n\n## Don't\n\n- Do not put essential information only in a tooltip.\n- Do not put a link inside a tooltip.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| (none) | The tooltip appears when the control takes keyboard focus. |\n"
 }

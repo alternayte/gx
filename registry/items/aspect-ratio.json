@@ -17,5 +17,5 @@
       "sha256": "db6be10bd030d6c86a9dbbf4dc68b9ebdb30580e2455e9eb0cd6822d5aad4f8d"
     }
   ],
-  "usage": "# Aspect Ratio\n\nA box that keeps a fixed width to height ratio.\n\n## Usage\n\n```gx\n\u003caspectratio.AspectRatio ratio=\"16 / 9\"\u003e\n  \u003cimg src={gx.URL(\"/hero.jpg\")} alt=\"Hero\" class=\"size-full object-cover\" /\u003e\n\u003c/aspectratio.AspectRatio\u003e\n```\n\n## Do\n\n- Set `Ratio` as a CSS ratio, for example `16 / 9`.\n- Let the child fill the box with `size-full`.\n\n## Don't\n\n- Do not use an aspect ratio for text content.\n- Do not nest aspect ratio boxes.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Aspect Ratio\n\nA box that keeps a fixed width to height ratio.\n\n## Usage\n\n```gx\n\u003caspectratio.AspectRatio ratio=\"16 / 9\"\u003e\n  \u003cimg src={gx.URL(\"/hero.jpg\")} alt=\"Hero\" class=\"size-full object-cover\" /\u003e\n\u003c/aspectratio.AspectRatio\u003e\n```\n\n## Do\n\n- Set `Ratio` as a CSS ratio, for example `16 / 9`.\n- Let the child fill the box with `size-full`.\n\n## Don't\n\n- Do not use an aspect ratio for text content.\n- Do not nest aspect ratio boxes.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

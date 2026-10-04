@@ -20,5 +20,5 @@
   "requiredTokens": [
     "--muted"
   ],
-  "usage": "# Skeleton\n\nA placeholder while content loads.\n\n## Usage\n\n```gx\n\u003cskeleton.Skeleton class=\"h-4 w-40\" /\u003e\n```\n\n## Do\n\n- Match the size of the content that will replace it.\n- Use two or three skeletons for a list.\n\n## Don't\n\n- Do not leave a skeleton on the page after the load finishes.\n- Do not show a skeleton for longer than a moment.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Skeleton\n\nA placeholder while content loads.\n\n## Usage\n\n```gx\n\u003cskeleton.Skeleton class=\"h-4 w-40\" /\u003e\n```\n\n## Do\n\n- Match the size of the content that will replace it.\n- Use two or three skeletons for a list.\n\n## Don't\n\n- Do not leave a skeleton on the page after the load finishes.\n- Do not show a skeleton for longer than a moment.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

@@ -23,5 +23,5 @@
     "--popover-foreground",
     "--muted-foreground"
   ],
-  "usage": "# Hover Card\n\nA richer preview on hover or focus.\n\n## Usage\n\n```gx\n\u003chovercard.HoverCard trigger={gx.Text(\"@ada\")}\u003e\n  \u003cp\u003eAda Lovelace\u003c/p\u003e\n  \u003cp\u003eFirst programmer.\u003c/p\u003e\n\u003c/hovercard.HoverCard\u003e\n```\n\nThe card is CSS only. It shows on hover and on keyboard focus.\n\n## Do\n\n- Keep the preview short.\n- Use it for a profile or a link preview.\n\n## Don't\n\n- Do not put a form in a hover card.\n- Do not rely on a hover card for a touch-only device.\n\n## Keyboard\n\nThe card appears when the trigger takes keyboard focus.\n"
+  "usage": "# Hover Card\n\nA richer preview on hover or focus.\n\n## Usage\n\n```gx\n\u003chovercard.HoverCard trigger={gx.Text(\"@ada\")}\u003e\n  \u003cp\u003eAda Lovelace\u003c/p\u003e\n  \u003cp\u003eFirst programmer.\u003c/p\u003e\n\u003c/hovercard.HoverCard\u003e\n```\n\nThe card is CSS only. It shows on hover and on keyboard focus.\n\n## Do\n\n- Keep the preview short.\n- Use it for a profile or a link preview.\n\n## Don't\n\n- Do not put a form in a hover card.\n- Do not rely on a hover card for a touch-only device.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| (none) | The card appears when the trigger takes keyboard focus. |\n"
 }

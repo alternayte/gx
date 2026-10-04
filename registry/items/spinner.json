@@ -26,5 +26,5 @@
   "requiredTokens": [
     "--muted-foreground"
   ],
-  "usage": "# Spinner\n\nAn indicator for an unknown wait.\n\n## Usage\n\n```gx\n\u003cspinner.Spinner label=\"Loading\" /\u003e\n```\n\n## Do\n\n- Add a label when the wait is longer than a moment.\n- Keep the spinner near the content it replaces.\n\n## Don't\n\n- Do not use a spinner for a known duration. Use a progress bar.\n- Do not show more than one spinner for one wait.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Spinner\n\nAn indicator for an unknown wait.\n\n## Usage\n\n```gx\n\u003cspinner.Spinner label=\"Loading\" /\u003e\n```\n\n## Do\n\n- Add a label when the wait is longer than a moment.\n- Keep the spinner near the content it replaces.\n\n## Don't\n\n- Do not use a spinner for a known duration. Use a progress bar.\n- Do not show more than one spinner for one wait.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

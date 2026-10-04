@@ -27,5 +27,5 @@
     "--muted",
     "--muted-foreground"
   ],
-  "usage": "# Avatar\n\nA user image with a fallback.\n\n## Usage\n\n```gx\n\u003cavatar.Avatar src={gx.URL(user.Image)} alt={user.Name} fallback=\"NA\" /\u003e\n```\n\n## Do\n\n- Always set `Alt` when the image carries meaning.\n- Set `Fallback` to the initials of the user.\n\n## Don't\n\n- Do not build an image URL from a raw string. Use `gx.URL`.\n- Do not use an avatar as the only label of an action.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Avatar\n\nA user image with a fallback.\n\n## Usage\n\n```gx\n\u003cavatar.Avatar src={gx.URL(user.Image)} alt={user.Name} fallback=\"NA\" /\u003e\n```\n\n## Do\n\n- Always set `Alt` when the image carries meaning.\n- Set `Fallback` to the initials of the user.\n\n## Don't\n\n- Do not build an image URL from a raw string. Use `gx.URL`.\n- Do not use an avatar as the only label of an action.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

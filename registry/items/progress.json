@@ -21,5 +21,5 @@
     "--primary",
     "--muted"
   ],
-  "usage": "# Progress\n\nA bar that shows the completion of a task.\n\n## Usage\n\n```gx\n\u003cprogress.Progress value={p.Done} max={p.Total} label=\"Upload\" /\u003e\n```\n\n## Do\n\n- Set `Label` so the bar has an accessible name.\n- Update the value as the task advances.\n\n## Don't\n\n- Do not use a progress bar for an unknown duration. Use a spinner.\n- Do not animate the bar backward without a reason.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Progress\n\nA bar that shows the completion of a task.\n\n## Usage\n\n```gx\n\u003cprogress.Progress value={p.Done} max={p.Total} label=\"Upload\" /\u003e\n```\n\n## Do\n\n- Set `Label` so the bar has an accessible name.\n- Update the value as the task advances.\n\n## Don't\n\n- Do not use a progress bar for an unknown duration. Use a spinner.\n- Do not animate the bar backward without a reason.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

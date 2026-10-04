@@ -20,5 +20,5 @@
   "requiredTokens": [
     "--border"
   ],
-  "usage": "# Scroll Area\n\nA box with a styled scrollbar.\n\n## Usage\n\n```gx\n\u003cscrollarea.ScrollArea class=\"h-64\"\u003e\n  \u003cp\u003eLong content.\u003c/p\u003e\n\u003c/scrollarea.ScrollArea\u003e\n```\n\n## Do\n\n- Set a height on the area.\n- Keep the scroll on one axis.\n\n## Don't\n\n- Do not nest two scroll areas.\n- Do not use a scroll area for the whole page.\n\n## Keyboard\n\nThe area scrolls with the page keys when it holds focus, as the browser defines.\n"
+  "usage": "# Scroll Area\n\nA box with a styled scrollbar.\n\n## Usage\n\n```gx\n\u003cscrollarea.ScrollArea class=\"h-64\"\u003e\n  \u003cp\u003eLong content.\u003c/p\u003e\n\u003c/scrollarea.ScrollArea\u003e\n```\n\n## Do\n\n- Set a height on the area.\n- Keep the scroll on one axis.\n\n## Don't\n\n- Do not nest two scroll areas.\n- Do not use a scroll area for the whole page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Page keys | Scroll the area when it holds focus. |\n"
 }

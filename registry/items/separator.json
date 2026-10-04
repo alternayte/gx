@@ -26,5 +26,5 @@
   "requiredTokens": [
     "--border"
   ],
-  "usage": "# Separator\n\nA visual divider between content.\n\n## Usage\n\n```gx\n\u003cseparator.Separator /\u003e\n\u003cseparator.Separator orientation={separator.Vertical} class=\"h-6\" /\u003e\n```\n\n## Do\n\n- Use a separator between groups that need a visual break.\n- Keep the decorative default for a pure layout line.\n\n## Don't\n\n- Do not use a separator where whitespace is enough.\n- Do not set `Decorative` to false unless the line is a real landmark.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Separator\n\nA visual divider between content.\n\n## Usage\n\n```gx\n\u003cseparator.Separator /\u003e\n\u003cseparator.Separator orientation={separator.Vertical} class=\"h-6\" /\u003e\n```\n\n## Do\n\n- Use a separator between groups that need a visual break.\n- Keep the decorative default for a pure layout line.\n\n## Don't\n\n- Do not use a separator where whitespace is enough.\n- Do not set `Decorative` to false unless the line is a real landmark.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

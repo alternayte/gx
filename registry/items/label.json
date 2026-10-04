@@ -17,5 +17,5 @@
       "sha256": "f92a559b1b84f7ac18be05092372b29c20bd8a738a5d5c0d53a7caac829cfab0"
     }
   ],
-  "usage": "# Label\n\nA caption for a form control.\n\n## Usage\n\n```gx\n\u003clabel.Label for=\"email\"\u003eEmail\u003c/label.Label\u003e\n\u003cinput id=\"email\" name=\"email\" type=\"email\" /\u003e\n```\n\n## Do\n\n- Point `For` at the id of the control.\n- Keep the label short.\n\n## Don't\n\n- Do not use placeholder text as the only label.\n- Do not point `For` at an element that is not a form control.\n\n## Keyboard\n\nClicking the label moves focus to its control.\n"
+  "usage": "# Label\n\nA caption for a form control.\n\n## Usage\n\n```gx\n\u003clabel.Label for=\"email\"\u003eEmail\u003c/label.Label\u003e\n\u003cinput id=\"email\" name=\"email\" type=\"email\" /\u003e\n```\n\n## Do\n\n- Point `For` at the id of the control.\n- Keep the label short.\n\n## Don't\n\n- Do not use placeholder text as the only label.\n- Do not point `For` at an element that is not a form control.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| (none) | Clicking the label moves focus to its control. |\n"
 }

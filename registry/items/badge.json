@@ -31,5 +31,5 @@
     "--destructive",
     "--ring"
   ],
-  "usage": "# Badge\n\nA small label for a status or a count.\n\n## Usage\n\n```gx\n\u003cbadge.Badge\u003eNew\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Destructive}\u003eFailed\u003c/badge.Badge\u003e\n```\n\n## Do\n\n- Keep the label short, one or two words.\n- Use `Destructive` only for a failed or dangerous state.\n\n## Don't\n\n- Do not use a badge as a button.\n- Do not put a long sentence in a badge.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Badge\n\nA small label for a status or a count.\n\n## Usage\n\n```gx\n\u003cbadge.Badge\u003eNew\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Destructive}\u003eFailed\u003c/badge.Badge\u003e\n```\n\n## Do\n\n- Keep the label short, one or two words.\n- Use `Destructive` only for a failed or dangerous state.\n\n## Don't\n\n- Do not use a badge as a button.\n- Do not put a long sentence in a badge.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

@@ -29,5 +29,5 @@
     "--destructive",
     "--border"
   ],
-  "usage": "# Alert\n\nA callout for an important message.\n\n## Usage\n\n```gx\n\u003calert.Alert title=\"Heads up\"\u003e\n  \u003cp\u003eYou can add components to your app.\u003c/p\u003e\n\u003c/alert.Alert\u003e\n```\n\n## Do\n\n- Put the message in the title and the detail in the body.\n- Use `Destructive` for an error.\n\n## Don't\n\n- Do not use an alert for a success message. Use a toast.\n- Do not put more than one action in an alert.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+  "usage": "# Alert\n\nA callout for an important message.\n\n## Usage\n\n```gx\n\u003calert.Alert title=\"Heads up\"\u003e\n  \u003cp\u003eYou can add components to your app.\u003c/p\u003e\n\u003c/alert.Alert\u003e\n```\n\n## Do\n\n- Put the message in the title and the detail in the body.\n- Use `Destructive` for an error.\n\n## Don't\n\n- Do not use an alert for a success message. Use a toast.\n- Do not put more than one action in an alert.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }
