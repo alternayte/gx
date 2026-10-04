@@ -61,11 +61,21 @@ func (s *server) ensureSearch(ctx context.Context) error {
 	if s.searchSnap != nil && sameSnapshot(snap, s.searchSnap) {
 		return nil
 	}
-	if err := s.buildSearch(ctx); err != nil {
-		return err
+	// The app may be restarting between two edits; retry the crawl.
+	var err error
+	for attempt := 0; attempt < 3; attempt++ {
+		err = s.buildSearch(ctx)
+		if err == nil {
+			s.searchSnap = snap
+			return nil
+		}
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(500 * time.Millisecond):
+		}
 	}
-	s.searchSnap = snap
-	return nil
+	return err
 }
 
 // buildSearch crawls the running app and indexes every page with Pagefind

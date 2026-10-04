@@ -434,6 +434,7 @@ func watchFile(path string) bool {
 	}
 	switch {
 	case strings.HasSuffix(path, ".gx"), strings.HasSuffix(path, ".go"),
+		strings.HasSuffix(path, ".md"), strings.HasSuffix(path, ".markdown"),
 		strings.HasSuffix(path, ".css"), strings.HasSuffix(path, ".ts"),
 		base == "go.mod", base == "go.sum", base == "gx.toml":
 		return true

@@ -3,7 +3,7 @@
 // client behaviours.
 import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { chromium, type Browser, type Page } from 'playwright-core'
-import { cpSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
 import { fileURLToPath } from 'node:url'
@@ -193,6 +193,20 @@ test('REQ-CNT-07 search finds a page by body text', async () => {
   const text = (await page.textContent('.gx-search-results')) ?? ''
   expect(text.toLowerCase()).toContain('lorem')
 }, 90000)
+
+test('REQ-CNT-12 a Markdown edit reaches the page under 2.5 s', async () => {
+  page = await browser.newPage()
+  await page.goto(url + '/start/')
+  await page.waitForSelector('#gx-main')
+  const file = join(dir, 'content', 'docs', 'start.md')
+  const original = readFileSync(file, 'utf8')
+  const start = Date.now()
+  writeFileSync(file, original + '\n\nFreshmarker appears.\n')
+  await page.waitForFunction(() => document.body.innerText.includes('Freshmarker'), null, { timeout: 30000 })
+  const elapsed = Date.now() - start
+  writeFileSync(file, original)
+  expect(elapsed).toBeLessThan(2500)
+}, 60000)
 
 test('REQ-CNT-06 the mobile menu shows and hides the sidebar', async () => {
   page = await browser.newPage({ viewport: { width: 390, height: 800 } })

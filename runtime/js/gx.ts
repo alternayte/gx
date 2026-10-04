@@ -347,7 +347,10 @@ const loadPagefind = async (): Promise<Pagefind | null> => {
         pagefindModule = mod
         return mod
       })
-      .catch(() => null)
+      .catch(() => {
+        pagefindLoading = null
+        return null
+      })
   }
   return pagefindLoading
 }
