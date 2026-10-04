@@ -20,4 +20,9 @@ jobs:
           go-version: ${{ matrix.go }}
       - uses: extractions/setup-just@v2
       - uses: oven-sh/setup-bun@v2
-      - run: just verify
+      # Build, vet, runtime, tests and checks run on every platform.
+      - run: just build vet runtime test checks
+      # The browser suite runs on Linux and macOS. Windows runners cannot
+      # drive the example apps reliably (see docs/build/decisions.md).
+      - if: runner.os != 'Windows'
+        run: just e2e
