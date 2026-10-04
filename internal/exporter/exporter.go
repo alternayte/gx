@@ -1,0 +1,333 @@
+// Package exporter renders a Gx app to static files (REQ-EXP-01). It builds
+// the app with the gxdev tag, asks the dev-only export manifest for every
+// GET page, writes each page under the output directory, copies the /_gx/
+// assets, writes 404.html and builds the Pagefind index.
+package exporter
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net"
+	"net/http"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/gxstyles"
+	"github.com/alternayte/gx/internal/pagefind"
+)
+
+// Options configure one export.
+type Options struct {
+	// Dir is the app module root.
+	Dir string
+	// Out is the output directory. It is emptied first.
+	Out string
+	// Main is the main package path; DetectMain finds it when empty.
+	Main string
+	// Log receives progress lines. Defaults to io.Discard.
+	Log io.Writer
+	// Index writes the search index into a directory. Defaults to the
+	// pinned Pagefind binary.
+	Index func(ctx context.Context, root, siteDir string) error
+}
+
+// Manifest is the dev-only export listing (REQ-EXP-01).
+type Manifest struct {
+	Paths  []string `json:"paths"`
+	Assets []string `json:"assets"`
+}
+
+// Result carries the exported pages for the follow-up writers
+// (REQ-CNT-08, REQ-CNT-09).
+type Result struct {
+	// Pages maps a site path to its rendered HTML.
+	Pages map[string][]byte
+	// Paths lists the exported site paths in manifest order.
+	Paths []string
+	// Assets lists the /_gx/ asset URLs.
+	Assets []string
+	// NotFound is the rendered 404 page.
+	NotFound []byte
+}
+
+// Export builds and renders the app into opt.Out (REQ-EXP-01).
+func Export(ctx context.Context, opt Options) (*Result, error) {
+	if opt.Log == nil {
+		opt.Log = io.Discard
+	}
+	dir, err := filepath.Abs(opt.Dir)
+	if err != nil {
+		return nil, err
+	}
+	if opt.Out == "" {
+		opt.Out = filepath.Join(dir, "dist")
+	}
+	out, err := filepath.Abs(opt.Out)
+	if err != nil {
+		return nil, err
+	}
+	if opt.Main == "" {
+		opt.Main, err = detectMain(dir)
+		if err != nil {
+			return nil, err
+		}
+	}
+	work, err := os.MkdirTemp("", "gx-export-")
+	if err != nil {
+		return nil, err
+	}
+	defer os.RemoveAll(work)
+	bin := filepath.Join(work, "app")
+	if err := buildApp(ctx, dir, opt.Main, bin, opt.Log); err != nil {
+		return nil, err
+	}
+	port, err := freePort()
+	if err != nil {
+		return nil, err
+	}
+	appCmd, err := startApp(ctx, bin, dir, port)
+	if err != nil {
+		return nil, err
+	}
+	defer stopApp(appCmd)
+	if err := waitReady(ctx, port); err != nil {
+		return nil, err
+	}
+	base := "http://127.0.0.1:" + strconv.Itoa(port)
+
+	manifest, err := fetchManifest(ctx, base)
+	if err != nil {
+		return nil, err
+	}
+	if err := os.RemoveAll(out); err != nil {
+		return nil, err
+	}
+	if err := os.MkdirAll(out, 0o755); err != nil {
+		return nil, err
+	}
+	res := &Result{Pages: map[string][]byte{}, Paths: manifest.Paths, Assets: manifest.Assets}
+	for _, path := range manifest.Paths {
+		body, status, err := fetchPage(ctx, base, path)
+		if err != nil {
+			return nil, err
+		}
+		if status != http.StatusOK {
+			return nil, fmt.Errorf("gx export: %s: %s", path, http.StatusText(status))
+		}
+		res.Pages[path] = body
+		if err := writePage(out, path, body); err != nil {
+			return nil, err
+		}
+		fmt.Fprintf(opt.Log, "exported %s\n", path)
+	}
+	notFound, _, err := fetchPage(ctx, base, "/_gx-export-missing-page")
+	if err != nil {
+		return nil, err
+	}
+	res.NotFound = notFound
+	if err := os.WriteFile(filepath.Join(out, "404.html"), notFound, 0o644); err != nil {
+		return nil, err
+	}
+	for _, asset := range manifest.Assets {
+		body, status, err := fetchPage(ctx, base, asset)
+		if err != nil {
+			return nil, err
+		}
+		if status != http.StatusOK {
+			continue
+		}
+		full := filepath.Join(out, filepath.FromSlash(strings.TrimPrefix(asset, "/")))
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			return nil, err
+		}
+		if err := os.WriteFile(full, body, 0o644); err != nil {
+			return nil, err
+		}
+	}
+	index := opt.Index
+	if index == nil {
+		index = func(ctx context.Context, root, siteDir string) error {
+			return (&pagefind.Manager{Root: root}).Index(ctx, siteDir)
+		}
+	}
+	if err := index(ctx, dir, out); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// buildApp generates the app code and builds it with the gxdev tag.
+func buildApp(ctx context.Context, dir, mainPkg, bin string, log io.Writer) error {
+	files, diags := compiler.NewSession().Generate(dir)
+	if len(diags) > 0 {
+		return fmt.Errorf("gx export: %s", diags[0].String())
+	}
+	for path, src := range files {
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(path, src, 0o644); err != nil {
+			return err
+		}
+	}
+	if _, err := gxstyles.Build(ctx, dir, true); err != nil {
+		return err
+	}
+	cmd := exec.CommandContext(ctx, "go", "build", "-tags", "gxdev", "-o", bin, mainPkg)
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("gx export: build: %w\n%s", err, out)
+	}
+	return nil
+}
+
+// detectMain finds the app main package.
+func detectMain(dir string) (string, error) {
+	entries, err := os.ReadDir(filepath.Join(dir, "cmd"))
+	if err != nil {
+		return "", fmt.Errorf("gx export: no -main given and no cmd/ directory found")
+	}
+	var found []string
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		if _, err := os.Stat(filepath.Join(dir, "cmd", e.Name(), "main.go")); err == nil {
+			found = append(found, "./cmd/"+e.Name())
+		}
+	}
+	switch len(found) {
+	case 0:
+		return "", fmt.Errorf("gx export: no -main given and no cmd/*/main.go found")
+	case 1:
+		return found[0], nil
+	default:
+		return "", fmt.Errorf("gx export: several mains found (%s); pass -main", strings.Join(found, ", "))
+	}
+}
+
+// startApp runs the built binary with the gxdev tag.
+func startApp(ctx context.Context, bin, dir string, port int) (*exec.Cmd, error) {
+	cmd := exec.CommandContext(ctx, bin)
+	cmd.Dir = dir
+	cmd.Env = append(os.Environ(), "GX_DEV_ADDR=127.0.0.1:"+strconv.Itoa(port), "GX_DEV=1")
+	cmd.Stdout = io.Discard
+	cmd.Stderr = io.Discard
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+	return cmd, nil
+}
+
+// stopApp stops the app process.
+func stopApp(cmd *exec.Cmd) {
+	if cmd == nil || cmd.Process == nil {
+		return
+	}
+	_ = cmd.Process.Kill()
+	_, _ = cmd.Process.Wait()
+}
+
+// waitReady blocks until the app accepts a connection.
+func waitReady(ctx context.Context, port int) error {
+	deadline := time.Now().Add(30 * time.Second)
+	for time.Now().Before(deadline) {
+		conn, err := net.DialTimeout("tcp", "127.0.0.1:"+strconv.Itoa(port), 200*time.Millisecond)
+		if err == nil {
+			_ = conn.Close()
+			return nil
+		}
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(50 * time.Millisecond):
+		}
+	}
+	return fmt.Errorf("gx export: the app did not start")
+}
+
+// fetchManifest reads the dev-only export listing.
+func fetchManifest(ctx context.Context, base string) (*Manifest, error) {
+	resp, err := httpGet(ctx, base+"/_gx/export")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("gx export: /_gx/export: %s", resp.Status)
+	}
+	var m Manifest
+	if err := json.NewDecoder(resp.Body).Decode(&m); err != nil {
+		return nil, fmt.Errorf("gx export: /_gx/export: %w", err)
+	}
+	return &m, nil
+}
+
+// fetchPage reads one page from the running app.
+func fetchPage(ctx context.Context, base, path string) ([]byte, int, error) {
+	resp, err := httpGet(ctx, base+path)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
+	return body, resp.StatusCode, nil
+}
+
+// httpGet runs one GET with a timeout.
+func httpGet(ctx context.Context, url string) (*http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	return (&http.Client{Timeout: 60 * time.Second}).Do(req)
+}
+
+// writePage writes one page under the output directory.
+func writePage(root, path string, body []byte) error {
+	rel := strings.TrimPrefix(path, "/")
+	full := ""
+	switch {
+	case rel == "":
+		full = filepath.Join(root, "index.html")
+	case strings.Contains(filepath.Base(rel), ".") && !strings.HasSuffix(rel, "/"):
+		full = filepath.Join(root, filepath.FromSlash(rel))
+	default:
+		full = filepath.Join(root, filepath.FromSlash(strings.TrimSuffix(rel, "/")), "index.html")
+	}
+	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(full, wrapDocument(body), 0o644)
+}
+
+// wrapDocument wraps a Gx page fragment in a minimal HTML document, so a
+// static host serves a complete page (REQ-EXP-01).
+func wrapDocument(body []byte) []byte {
+	doc := make([]byte, 0, len(body)+80)
+	doc = append(doc, "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"></head><body>"...)
+	doc = append(doc, body...)
+	doc = append(doc, "</body></html>"...)
+	return doc
+}
+
+// freePort returns a free local port.
+func freePort() (int, error) {
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return 0, err
+	}
+	defer l.Close()
+	return l.Addr().(*net.TCPAddr).Port, nil
+}

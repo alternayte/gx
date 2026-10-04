@@ -19,6 +19,7 @@ import (
 	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
+	"github.com/alternayte/gx/internal/exporter"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
@@ -53,6 +54,8 @@ func Main(args []string) int {
 		return runIcons(args[1:])
 	case "vendor":
 		return runVendor(args[1:])
+	case "export":
+		return runExport(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -77,6 +80,7 @@ Commands:
   lint      run go vet and the Gx analyzers on a module
   icons pin pin an icon set and generate one .gx component per icon
   vendor    store the pinned downloads in .gx/vendor for offline builds
+  export    render every GET page to static files with --out <dir>
 `)
 }
 
@@ -309,6 +313,30 @@ func runBuild(args []string) int {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
 		return 1
 	}
+	return 0
+}
+
+// runExport renders a module to static files (REQ-EXP-01).
+func runExport(args []string) int {
+	fs := flag.NewFlagSet("gx export", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	out := fs.String("out", "dist", "output directory")
+	mainPkg := fs.String("main", "", "main package path")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	res, err := exporter.Export(ctx, exporter.Options{Dir: dir, Out: *out, Main: *mainPkg, Log: os.Stdout})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx export: %v\n", err)
+		return 1
+	}
+	fmt.Printf("exported %d pages to %s\n", len(res.Paths), *out)
 	return 0
 }
 

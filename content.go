@@ -195,6 +195,15 @@ type ContentPage struct {
 	Slug string `path:"slug"`
 }
 
+// URL implements the typed link value of a content page (REQ-EXP-01). The
+// index entry is the site root.
+func (p ContentPage) URL() string {
+	if p.Slug == "" || p.Slug == "index" {
+		return "/"
+	}
+	return "/" + p.Slug + "/"
+}
+
 // ContentPages makes the content route of the collection (REQ-CNT-02): one
 // URL per entry under "/{slug...}". view builds the page from the typed
 // frontmatter and the raw Markdown body; the docs kit renders the body.

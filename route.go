@@ -232,6 +232,17 @@ type App struct {
 	patterns   map[string]bool
 	errorViews map[int]func(*Ctx) Node
 	adapter    Adapter
+	// routes records every mounted route for the static export
+	// (REQ-EXP-01). It is read only by the dev-only export listing.
+	routes []appRoute
+	// assets lists the /_gx/ asset names the app serves.
+	assets []string
+}
+
+// appRoute is one mounted route as registered.
+type appRoute struct {
+	pattern string
+	handler Handler
 }
 
 // New returns an empty app.
@@ -258,6 +269,7 @@ func (a *App) registerAssets(adapter Adapter) {
 	}
 	for name, data := range assets {
 		body := data
+		a.assets = append(a.assets, "/_gx/"+name)
 		a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", assetType(name))
 			w.Header().Set("Cache-Control", "public, max-age=3600")
@@ -375,6 +387,7 @@ func (a *App) Group(prefix string, parts ...any) *App {
 			panic("gx: duplicate route " + pattern)
 		}
 		a.patterns[pattern] = true
+		a.routes = append(a.routes, appRoute{pattern: pattern, handler: h})
 		a.mux.Handle(pattern, handler)
 	}
 	for _, part := range parts {
