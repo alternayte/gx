@@ -316,6 +316,89 @@ const installShellEvents = (): void => {
   )
 }
 
+// installSearch wires the docs-shell search dialog to Pagefind
+// (REQ-CNT-07). The module and index load on first use.
+type PagefindResult = { url: string; excerpt: string; meta: { title?: string } }
+type Pagefind = {
+  init: () => Promise<void>
+  search: (q: string) => Promise<{ results: { data: () => Promise<PagefindResult> }[] }>
+}
+
+let pagefindModule: Pagefind | null = null
+let pagefindLoading: Promise<Pagefind | null> | null = null
+
+const escapeHTML = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+// searchExcerpt keeps Pagefind's <mark> highlights and escapes the rest.
+const searchExcerpt = (s: string): string =>
+  escapeHTML(s)
+    .replace(/&lt;mark&gt;/g, '<mark>')
+    .replace(/&lt;\/mark&gt;/g, '</mark>')
+
+const loadPagefind = async (): Promise<Pagefind | null> => {
+  if (pagefindModule) return pagefindModule
+  if (!pagefindLoading) {
+    const dialog = document.querySelector('[data-gx-search]')
+    const src = dialog?.getAttribute('data-gx-search-src') ?? '/pagefind/pagefind.js'
+    pagefindLoading = import(/* @vite-ignore */ src)
+      .then(async (mod: Pagefind) => {
+        await mod.init()
+        pagefindModule = mod
+        return mod
+      })
+      .catch(() => null)
+  }
+  return pagefindLoading
+}
+
+const runSearch = async (query: string): Promise<void> => {
+  const box = document.querySelector<HTMLElement>('[data-gx-search-results]')
+  if (!box) return
+  const q = query.trim()
+  if (q === '') {
+    box.innerHTML = ''
+    return
+  }
+  const pf = await loadPagefind()
+  if (!pf) {
+    box.textContent = 'Search is not available.'
+    return
+  }
+  const search = await pf.search(q)
+  const results = await Promise.all(search.results.slice(0, 8).map((r) => r.data()))
+  if (results.length === 0) {
+    box.textContent = 'No results.'
+    return
+  }
+  box.innerHTML = results
+    .map(
+      (r) =>
+        `<a class="gx-search-result block rounded-md p-2 no-underline hover:bg-accent" href="${escapeHTML(r.url)}">` +
+        `<span class="block font-medium">${escapeHTML(r.meta.title ?? r.url)}</span>` +
+        `<span class="block text-muted-foreground">${searchExcerpt(r.excerpt)}</span></a>`,
+    )
+    .join('')
+}
+
+const installSearch = (): void => {
+  let timer = 0
+  document.addEventListener('input', (e) => {
+    const input = (e.target as Element | null)?.closest?.('[data-gx-search-input]') as HTMLInputElement | null
+    if (!input) return
+    const value = input.value
+    window.clearTimeout(timer)
+    timer = window.setTimeout(() => void runSearch(value), 200)
+  })
+  document.addEventListener('submit', (e) => {
+    const form = (e.target as Element | null)?.closest?.('[data-gx-search-form]')
+    if (!form) return
+    e.preventDefault()
+    const input = form.querySelector<HTMLInputElement>('[data-gx-search-input]')
+    void runSearch(input?.value ?? '')
+  })
+}
+
 // installCopyButtons copies the code of a highlighted block (REQ-CNT-04).
 const installCopyButtons = (): void => {
   document.addEventListener('click', (e) => {
@@ -610,6 +693,7 @@ if (typeof document !== 'undefined') {
   installReducedMotionCSS()
   installShellEvents()
   installShell()
+  installSearch()
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual' 
   document.addEventListener('DOMContentLoaded', updateActive)
   updateActive()

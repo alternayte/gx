@@ -56,15 +56,13 @@ beforeAll(async () => {
     writeFileSync(join(dir, 'ui', 'shell', name), await Bun.file(join(shellSrc, name)).text())
   }
   await run(['go', 'mod', 'tidy'], dir)
-  await run(['go', 'run', './cmd/gx', 'generate', dir], repo)
-  await run(['go', 'build', '-o', join(dir, 'shellapp'), '.'], dir)
   const port = 20000 + Math.floor(Math.random() * 1500)
   url = `http://127.0.0.1:${port}`
-  app = spawn([join(dir, 'shellapp')], {
-    cwd: dir,
-    env: { ...process.env, PORT: String(port) },
+  app = spawn(['go', 'run', './cmd/gx', 'dev', '-addr', `127.0.0.1:${port}`, '-main', '.', dir], {
+    cwd: repo,
     stdout: 'ignore',
     stderr: 'ignore',
+    detached: true,
   })
   await waitForUrl(url + '/')
   browser = await chromium.launch({ channel: 'chrome', headless: true })
@@ -77,7 +75,13 @@ afterAll(async () => {
   } catch {
     // already closed
   }
-  app?.kill()
+  if (app?.pid) {
+    try {
+      process.kill(-app.pid, 'SIGTERM')
+    } catch {
+      app.kill()
+    }
+  }
   await Bun.sleep(200)
   if (dir) rmSync(dir, { recursive: true, force: true })
 })
@@ -176,6 +180,19 @@ test('REQ-CNT-06 Ctrl+K opens the search dialog and Close closes it', async () =
   await page.click('[data-gx-search-close]')
   await page.waitForFunction(() => document.querySelector('dialog[data-gx-search]')?.hasAttribute('open') !== true)
 })
+
+test('REQ-CNT-07 search finds a page by body text', async () => {
+  page = await browser.newPage()
+  await page.goto(url + '/start/')
+  await page.keyboard.press('Control+k')
+  await page.waitForSelector('[data-gx-search-input]')
+  await page.fill('[data-gx-search-input]', 'lorem ipsum')
+  await page.waitForSelector('.gx-search-result', { timeout: 60000 })
+  const href = await page.getAttribute('.gx-search-result', 'href')
+  expect(href).toContain('/start')
+  const text = (await page.textContent('.gx-search-results')) ?? ''
+  expect(text.toLowerCase()).toContain('lorem')
+}, 90000)
 
 test('REQ-CNT-06 the mobile menu shows and hides the sidebar', async () => {
   page = await browser.newPage({ viewport: { width: 390, height: 800 } })

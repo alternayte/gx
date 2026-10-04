@@ -28,5 +28,9 @@ func main() {
 		},
 	)
 	app.Group("/", Routes)
-	_ = http.ListenAndServe("127.0.0.1:"+os.Getenv("PORT"), app)
+	addr := os.Getenv("GX_DEV_ADDR")
+	if addr == "" {
+		addr = "127.0.0.1:" + os.Getenv("PORT")
+	}
+	_ = http.ListenAndServe(addr, app)
 }

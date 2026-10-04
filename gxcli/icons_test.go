@@ -1,6 +1,9 @@
 package gxcli_test
 
 import (
+	"archive/tar"
+	"bytes"
+	"compress/gzip"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -14,8 +17,35 @@ import (
 	"testing"
 
 	"github.com/alternayte/gx/gxcli"
+	"github.com/alternayte/gx/internal/pagefind"
 	"github.com/alternayte/gx/internal/tailwind"
 )
+
+// fakePagefindTarball builds a release tarball that holds one script.
+func fakePagefindTarball(t *testing.T) []byte {
+	t.Helper()
+	name := "pagefind"
+	if runtime.GOOS == "windows" {
+		name = "pagefind.exe"
+	}
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	tw := tar.NewWriter(gz)
+	body := []byte("#!/bin/sh\necho pagefind\n")
+	if err := tw.WriteHeader(&tar.Header{Name: name, Mode: 0o755, Size: int64(len(body))}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := tw.Write(body); err != nil {
+		t.Fatal(err)
+	}
+	if err := tw.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := gz.Close(); err != nil {
+		t.Fatal(err)
+	}
+	return buf.Bytes()
+}
 
 // packJSON is a three-icon Iconify pack.
 const packJSON = `{
@@ -173,12 +203,21 @@ func TestREQ_STY_12_VendorCommand(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	pfAsset, err := pagefind.Asset(runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		t.Fatal(err)
+	}
+	pfData := fakePagefindTarball(t)
+	pfSum := sha256.Sum256(pfData)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !strings.HasSuffix(r.URL.Path, asset) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, asset):
+			_, _ = w.Write(content)
+		case strings.HasSuffix(r.URL.Path, pfAsset):
+			_, _ = w.Write(pfData)
+		default:
 			http.NotFound(w, r)
-			return
 		}
-		_, _ = w.Write(content)
 	}))
 	defer srv.Close()
 
@@ -188,6 +227,10 @@ func TestREQ_STY_12_VendorCommand(t *testing.T) {
 			"version": "v1.2.3",
 			"sha256":  map[string]string{asset: hexSum},
 		},
+		"pagefind": map[string]any{
+			"version": pagefind.DefaultVersion,
+			"sha256":  map[string]string{pfAsset: hex.EncodeToString(pfSum[:])},
+		},
 	}
 	data, err := json.Marshal(lock)
 	if err != nil {
@@ -196,7 +239,7 @@ func TestREQ_STY_12_VendorCommand(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dir, "gx.lock"), data, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(dir, "gx.toml"), []byte("[mirrors]\ntailwind = \""+srv.URL+"\"\n"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "gx.toml"), []byte("[mirrors]\ntailwind = \""+srv.URL+"\"\npagefind = \""+srv.URL+"\"\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if code := gxcli.Main([]string{"vendor", dir}); code != 0 {
@@ -204,5 +247,12 @@ func TestREQ_STY_12_VendorCommand(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".gx", "vendor", "tailwind", "v1.2.3", asset)); err != nil {
 		t.Fatalf("vendored tailwind: %v", err)
+	}
+	pfName := "pagefind"
+	if runtime.GOOS == "windows" {
+		pfName = "pagefind.exe"
+	}
+	if _, err := os.Stat(filepath.Join(dir, ".gx", "vendor", "pagefind", pagefind.DefaultVersion, pfName)); err != nil {
+		t.Fatalf("vendored pagefind: %v", err)
 	}
 }

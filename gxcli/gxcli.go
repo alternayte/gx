@@ -22,6 +22,7 @@ import (
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
+	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 )
 
@@ -324,6 +325,18 @@ func runVendor(args []string) int {
 		return 1
 	}
 	fmt.Println("vendored", path)
+	pfPath, err := (&pagefindpkg.Manager{Root: dir}).Vendor(ctx)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx vendor: pagefind: %v\n", err)
+		return 1
+	}
+	fmt.Println("vendored", pfPath)
+	if !pagefindpkg.HasLock(dir) {
+		if err := pagefindpkg.SaveLock(dir, pagefindpkg.DefaultLock().Pagefind); err != nil {
+			fmt.Fprintf(os.Stderr, "gx vendor: pagefind lock: %v\n", err)
+			return 1
+		}
+	}
 	pins, err := icons.Pinned(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx vendor: %v\n", err)

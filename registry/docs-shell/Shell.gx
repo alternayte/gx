@@ -13,7 +13,7 @@ props {
   <div class="mx-auto flex max-w-7xl gap-8 px-4">
     <Sidebar nav={p.Nav} path={p.Page.Path} />
     <main id="gx-main" class="min-w-0 flex-1 py-8">
-      <article class="gx-content">{p.Children}</article>
+      <article class="gx-content" data-pagefind-body>{p.Children}</article>
       <Pagination prev={p.Page.Prev} next={p.Page.Next} />
       <PageMeta site={p.Site} page={p.Page} />
     </main>

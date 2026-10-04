@@ -42,8 +42,11 @@ func view(e gx.Entry[DocMeta]) gx.Node {
 	}
 	if e.Meta.Template == "splash" {
 		return shell.Splash(shell.SplashProps{
-			Title:    e.Meta.Title,
-			Tagline:  e.Meta.Description,
+			Title:   e.Meta.Title,
+			Tagline: e.Meta.Description,
+			Actions: gx.Frag(
+				gx.El("a", gx.Attrs{{Key: "href", Value: "/start/", Kind: gx.AttrURL}}, gx.Text("Get started")),
+			),
 			Children: body,
 		})
 	}

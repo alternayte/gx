@@ -121,6 +121,10 @@ type server struct {
 	clients map[chan []byte]bool
 	lastErr *Overlay
 	snap    map[string]time.Time
+
+	// searchMu guards the on-demand Pagefind index (REQ-CNT-07).
+	searchMu   sync.Mutex
+	searchSnap map[string]time.Time
 }
 
 func (s *server) run(ctx context.Context) error {
@@ -151,6 +155,7 @@ func (s *server) run(ctx context.Context) error {
 		w.Header().Set("Cache-Control", "no-store")
 		_, _ = w.Write(devClientJS)
 	})
+	mux.HandleFunc("GET /pagefind/", s.serveSearch)
 	mux.Handle("/", proxy)
 
 	srv := &http.Server{Addr: s.opt.Addr, Handler: mux}
