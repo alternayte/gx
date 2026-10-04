@@ -22,4 +22,6 @@ A bordered surface for grouped content.
 
 ## Keyboard
 
-This component is static. It takes no focus and has no key bindings.
+| Key | Action |
+| --- | --- |
+| None | The component is static. |

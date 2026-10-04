@@ -25,4 +25,6 @@ The card is CSS only. It shows on hover and on keyboard focus.
 
 ## Keyboard
 
-The card appears when the trigger takes keyboard focus.
+| Key | Action |
+| --- | --- |
+| (none) | The card appears when the trigger takes keyboard focus. |

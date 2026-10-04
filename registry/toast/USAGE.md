@@ -28,4 +28,6 @@ return c.Toast("Saved")
 
 ## Keyboard
 
-The toaster is an `aria-live` region; it takes no focus.
+| Key | Action |
+| --- | --- |
+| None | The toaster is an aria-live region and takes no focus. |

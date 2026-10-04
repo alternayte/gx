@@ -21,4 +21,6 @@ A caption for a form control.
 
 ## Keyboard
 
-Clicking the label moves focus to its control.
+| Key | Action |
+| --- | --- |
+| (none) | Clicking the label moves focus to its control. |

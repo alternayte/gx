@@ -26,3 +26,12 @@ Set `[site] url` in `gx.toml` so the export writes canonical links,
 - Do not render `Shell` without a `Page`; the table of contents and the
   navigation need the path.
 - Do not put a `Toc` outside the shell.
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| Enter, Space | Opens the search dialog or the mobile menu. |
+| Ctrl/Cmd K | Opens the search dialog. |
+| Escape | Closes the search dialog. |
+| Tab | Moves through the header, the sidebar and the table of contents. |

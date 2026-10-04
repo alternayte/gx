@@ -27,4 +27,6 @@ A row for one entry in a list.
 
 ## Keyboard
 
-Rows take focus only when they contain a link or a control.
+| Key | Action |
+| --- | --- |
+| None | The component is static. |

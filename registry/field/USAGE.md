@@ -26,4 +26,6 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 
 ## Keyboard
 
-This component is static. It adds no key bindings.
+| Key | Action |
+| --- | --- |
+| None | The component is static. |

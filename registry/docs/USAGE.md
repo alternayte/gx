@@ -39,3 +39,10 @@ In Markdown:
 
 - Do not use `docs.Code` with a file outside the module.
 - Do not repeat a label inside one tab group.
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| Enter, Space | Switches a docs.Tabs tab. |
+| Ctrl/Cmd K | Opens the docs-shell search dialog when the shell is present. |

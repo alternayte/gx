@@ -20,4 +20,6 @@ A bar that shows the completion of a task.
 
 ## Keyboard
 
-This component is static. It takes no focus and has no key bindings.
+| Key | Action |
+| --- | --- |
+| None | The component is static. |

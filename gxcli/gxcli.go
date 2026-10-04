@@ -95,7 +95,7 @@ Commands:
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
   import    convert another tool: gx import starlight --out <dir> <src>
-  registry  build a publishable component registry
+  registry  build or lint a publishable component registry
   add       install a registry item and its dependencies
   diff      show local, base and upstream changes of an item
   update    merge the current registry version into an item
@@ -524,15 +524,31 @@ func runUpdate(args []string) int {
 }
 
 // runRegistry builds a publishable registry (REQ-REG-01).
+// runRegistry builds or lints a publishable registry (REQ-REG-01,
+// REQ-REG-06).
 func runRegistry(args []string) int {
-	if len(args) == 0 || args[0] != "build" {
-		fmt.Fprintln(os.Stderr, "usage: gx registry build [--out <dir>] <src>")
+	if len(args) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx registry build|lint <src>")
 		return 2
 	}
+	switch args[0] {
+	case "build":
+		return runRegistryBuild(args[1:])
+	case "lint":
+		return runRegistryLint(args[1:])
+	default:
+		fmt.Fprintln(os.Stderr, "usage: gx registry build|lint <src>")
+		return 2
+	}
+}
+
+// runRegistryBuild writes the published registry of a source folder
+// (REQ-REG-01).
+func runRegistryBuild(args []string) int {
 	fs := flag.NewFlagSet("gx registry build", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	out := fs.String("out", "", "output directory (default the source directory)")
-	if err := fs.Parse(args[1:]); err != nil {
+	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	rest := fs.Args()
@@ -551,6 +567,29 @@ func runRegistry(args []string) int {
 		return 1
 	}
 	fmt.Printf("registry: %d items\n", len(index.Items))
+	return 0
+}
+
+// runRegistryLint fails an item that lacks fixtures, usage sections or a
+// keyboard spec (REQ-REG-06).
+func runRegistryLint(args []string) int {
+	if len(args) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx registry lint <src>")
+		return 2
+	}
+	findings, err := registry.Lint(args[0])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx registry lint: %v\n", err)
+		return 1
+	}
+	for _, finding := range findings {
+		fmt.Println(finding)
+	}
+	if len(findings) > 0 {
+		fmt.Fprintf(os.Stderr, "gx registry lint: %d findings\n", len(findings))
+		return 1
+	}
+	fmt.Println("registry lint: ok")
 	return 0
 }
 

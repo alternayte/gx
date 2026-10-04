@@ -24,4 +24,6 @@ The tooltip is CSS only. It shows on hover and on keyboard focus.
 
 ## Keyboard
 
-The tooltip appears when the wrapped control takes keyboard focus.
+| Key | Action |
+| --- | --- |
+| (none) | The tooltip appears when the control takes keyboard focus. |

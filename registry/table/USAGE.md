@@ -35,4 +35,6 @@ For sorting, filtering and paging over many rows, use the data table component.
 
 ## Keyboard
 
-This component is static. It takes no focus and has no key bindings.
+| Key | Action |
+| --- | --- |
+| None | The component is static. |

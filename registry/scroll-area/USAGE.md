@@ -22,4 +22,6 @@ A box with a styled scrollbar.
 
 ## Keyboard
 
-The area scrolls with the page keys when it holds focus, as the browser defines.
+| Key | Action |
+| --- | --- |
+| Page keys | Scroll the area when it holds focus. |

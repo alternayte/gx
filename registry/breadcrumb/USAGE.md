@@ -30,4 +30,6 @@ A trail of links to the current page.
 
 ## Keyboard
 
-Links follow the normal link keys. The components add no key bindings.
+| Key | Action |
+| --- | --- |
+| None | The component is static. |

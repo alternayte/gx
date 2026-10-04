@@ -391,6 +391,34 @@ func TestREQ_REG_05_RegistryImports(t *testing.T) {
 	}
 }
 
+// TestREQ_REG_06_LintCommand covers the gx registry lint command: a valid
+// item passes, and an item without fixtures or usage sections fails
+// (REQ-REG-06).
+func TestREQ_REG_06_LintCommand(t *testing.T) {
+	src := t.TempDir()
+	dir := filepath.Join(src, "button")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	manifest := `{"name":"button","version":"0.1.0","description":"A button.","kind":"component","files":[{"path":"Button.gx","target":"ui/button/Button.gx"},{"path":"Button.fixtures.go","target":"ui/button/Button.fixtures.go"}]}`
+	usage := "# Button\n\n## Usage\n\n```gx\n<button.Button />\n```\n\n## Do\n\n- Use one primary button.\n\n## Don't\n\n- Do not use a button as a link.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Enter | Activates the button. |\n"
+	writeFile(t, src, "button/gx-item.json", manifest)
+	writeFile(t, src, "button/Button.gx", "package button\n\n<button></button>\n")
+	writeFile(t, src, "button/Button.fixtures.go", "package button\n\nimport \"github.com/alternayte/gx\"\n\nvar ButtonFixtures = gx.Fixtures[ButtonProps]{}\n")
+	writeFile(t, src, "button/USAGE.md", usage)
+
+	if code := gxcli.Main([]string{"registry", "lint", src}); code != 0 {
+		t.Fatalf("lint exit = %d", code)
+	}
+	if err := os.Remove(filepath.Join(dir, "Button.fixtures.go")); err != nil {
+		t.Fatal(err)
+	}
+	writeFile(t, src, "button/USAGE.md", "# Button\n\n## Usage\n\n```gx\n<button.Button />\n```\n")
+	if code := gxcli.Main([]string{"registry", "lint", src}); code == 0 {
+		t.Fatal("lint accepted an item without fixtures and sections")
+	}
+}
+
 // TestREQ_REG_12_RoundTrip covers gx registry build: build a publishable
 // registry from an item folder, serve it over HTTP and add an item from it
 // (REQ-REG-12).
