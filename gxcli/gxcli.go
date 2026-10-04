@@ -65,6 +65,10 @@ func Main(args []string) int {
 		return runRegistry(args[1:])
 	case "add":
 		return runAdd(args[1:])
+	case "diff":
+		return runDiff(args[1:])
+	case "update":
+		return runUpdate(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -93,6 +97,8 @@ Commands:
   import    convert another tool: gx import starlight --out <dir> <src>
   registry  build a publishable component registry
   add       install a registry item and its dependencies
+  diff      show local, base and upstream changes of an item
+  update    merge the current registry version into an item
 `)
 }
 
@@ -354,6 +360,29 @@ func runExport(args []string) int {
 	return 0
 }
 
+// registryInstaller builds the installer of an app from gx.toml and the
+// command flags (REQ-REG-02, REQ-REG-03).
+func registryInstaller(root, source, dir string) (registry.Installer, int) {
+	cfg, err := gxconfig.Load(root)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx registry: %v\n", err)
+		return registry.Installer{}, 1
+	}
+	src := source
+	if src == "" {
+		src = cfg.Registry.URL
+	}
+	if src == "" {
+		fmt.Fprintln(os.Stderr, "gx registry: no registry; set [registry] url in gx.toml or pass --registry")
+		return registry.Installer{}, 1
+	}
+	installDir := dir
+	if installDir == "" {
+		installDir = cfg.Registry.Dir
+	}
+	return registry.Installer{Root: root, Source: src, Dir: installDir}, 0
+}
+
 // runAdd installs a registry item and its dependencies (REQ-REG-02).
 func runAdd(args []string) int {
 	fs := flag.NewFlagSet("gx add", flag.ContinueOnError)
@@ -373,24 +402,10 @@ func runAdd(args []string) int {
 	if len(rest) > 1 {
 		root = rest[1]
 	}
-	cfg, err := gxconfig.Load(root)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "gx add: %v\n", err)
-		return 1
+	inst, code := registryInstaller(root, *source, *dir)
+	if code != 0 {
+		return code
 	}
-	src := *source
-	if src == "" {
-		src = cfg.Registry.URL
-	}
-	if src == "" {
-		fmt.Fprintln(os.Stderr, "gx add: no registry; set [registry] url in gx.toml or pass --registry")
-		return 1
-	}
-	installDir := *dir
-	if installDir == "" {
-		installDir = cfg.Registry.Dir
-	}
-	inst := registry.Installer{Root: root, Source: src, Dir: installDir}
 	items, err := inst.Add(name, version)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx add: %v\n", err)
@@ -398,6 +413,80 @@ func runAdd(args []string) int {
 	}
 	for _, item := range items {
 		fmt.Printf("added %s@%s: %s\n", item.Name, item.Version, item.Description)
+	}
+	return 0
+}
+
+// runDiff shows local, base and upstream changes of an installed item
+// (REQ-REG-03).
+func runDiff(args []string) int {
+	fs := flag.NewFlagSet("gx diff", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	source := fs.String("registry", "", "registry URL or directory (overrides [registry] url)")
+	dir := fs.String("dir", "", "install directory (overrides [registry] dir)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx diff [--registry <url>] <item> [app]")
+		return 2
+	}
+	name, _, _ := strings.Cut(rest[0], "@")
+	root := "."
+	if len(rest) > 1 {
+		root = rest[1]
+	}
+	inst, code := registryInstaller(root, *source, *dir)
+	if code != 0 {
+		return code
+	}
+	changes, err := inst.Diff(name)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx diff: %v\n", err)
+		return 1
+	}
+	for _, change := range changes {
+		fmt.Printf("%-16s %s\n", change.Status, change.Target)
+	}
+	return 0
+}
+
+// runUpdate merges the current registry version into an installed item
+// (REQ-REG-03).
+func runUpdate(args []string) int {
+	fs := flag.NewFlagSet("gx update", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	source := fs.String("registry", "", "registry URL or directory (overrides [registry] url)")
+	dir := fs.String("dir", "", "install directory (overrides [registry] dir)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx update [--registry <url>] <item>[@version] [app]")
+		return 2
+	}
+	name, version, _ := strings.Cut(rest[0], "@")
+	root := "."
+	if len(rest) > 1 {
+		root = rest[1]
+	}
+	inst, code := registryInstaller(root, *source, *dir)
+	if code != 0 {
+		return code
+	}
+	changes, conflict, err := inst.Update(name, version)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx update: %v\n", err)
+		return 1
+	}
+	for _, change := range changes {
+		fmt.Printf("%-16s %s\n", change.Status, change.Target)
+	}
+	if conflict {
+		fmt.Fprintln(os.Stderr, "gx update: conflict markers written; resolve them in place")
+		return 1
 	}
 	return 0
 }
