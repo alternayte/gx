@@ -319,3 +319,26 @@ func hashFile(path string) (string, error) {
 	}
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
+
+// Build runs the pinned Tailwind binary on themePath and returns the CSS
+// (REQ-STY-02). The output also lands in .gx/app.css.
+func (m *Manager) Build(ctx context.Context, themePath string, minify bool) ([]byte, error) {
+	bin, err := m.Ensure(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := filepath.Join(m.Root, ".gx", "app.css")
+	if err := os.MkdirAll(filepath.Dir(out), 0o755); err != nil {
+		return nil, err
+	}
+	args := []string{"-i", themePath, "-o", out}
+	if minify {
+		args = append(args, "--minify")
+	}
+	cmd := exec.CommandContext(ctx, bin, args...)
+	cmd.Dir = m.Root
+	if combined, err := cmd.CombinedOutput(); err != nil {
+		return nil, fmt.Errorf("tailwind: %v: %w\n%s", args, err, combined)
+	}
+	return os.ReadFile(out)
+}

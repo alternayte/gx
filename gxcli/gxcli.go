@@ -19,6 +19,7 @@ import (
 	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
+	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
@@ -291,6 +292,10 @@ func runBuild(args []string) int {
 				return 1
 			}
 		}
+	}
+	if _, err := gxstyles.Build(context.Background(), dir, true); err != nil {
+		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+		return 1
 	}
 	bin := *out
 	if bin == "" {

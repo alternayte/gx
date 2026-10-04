@@ -19,12 +19,12 @@ func Shell(p ShellProps) gx.Node {
 //line Shell.gx:12:28
 	_b.Add(gx.Text("\n"))
 //line Shell.gx:13:1
-	_b.Add(gx.El("header", nil, gx.Frag(gx.Text("\n  "), gx.El("nav", nil, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Sign up")), gx.Text("\n  "))), gx.Text("\n"))))
+	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "border-b border-border", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Sign up")), gx.Text("\n  "))), gx.Text("\n"))))
 //line Shell.gx:19:10
 	_b.Add(gx.Text("\n"))
 //line Shell.gx:20:1
-	_b.Add(gx.El("main", nil, p.Children))
-//line Shell.gx:20:26
+	_b.Add(gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto max-w-3xl p-4", Kind: gx.AttrText}}, p.Children))
+//line Shell.gx:20:56
 	_b.Add(gx.Text("\n"))
 //line Shell.gx:21:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "gx-toaster", Kind: gx.AttrText}, gx.Attr{Key: "aria-live", Value: "polite", Kind: gx.AttrText}, gx.Attr{Key: "aria-atomic", Value: "true", Kind: gx.AttrText}}))

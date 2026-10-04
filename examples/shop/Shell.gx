@@ -10,12 +10,12 @@ props {
 }
 
 <gx.Head title="Gx shop" />
-<header>
-  <nav>
+<header class="border-b border-border">
+  <nav class="mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm">
     <a href={route.Home{}}>Home</a>
     <a href={route.About{}}>About</a>
     <a href={signuproute.Page{}}>Sign up</a>
   </nav>
 </header>
-<main>{p.Children}</main>
+<main class="mx-auto max-w-3xl p-4">{p.Children}</main>
 <div id="gx-toaster" aria-live="polite" aria-atomic="true"></div>

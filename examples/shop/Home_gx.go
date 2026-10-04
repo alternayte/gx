@@ -19,8 +19,8 @@ func Home(p HomeProps) gx.Node {
 //line Home.gx:8:33
 	_b.Add(gx.Text("\n"))
 //line Home.gx:9:1
-	_b.Add(gx.El("h1", nil, gx.Text("Two carts")))
-//line Home.gx:9:19
+	_b.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-2xl font-semibold", Kind: gx.AttrText}}, gx.Text("Two carts")))
+//line Home.gx:9:50
 	_b.Add(gx.Text("\n"))
 //line Home.gx:10:1
 	_b.Add(cart.Cart(cart.CartProps{Label: "Alpha", Total: 1, GxKey: gx.InstanceKey("alpha")}))

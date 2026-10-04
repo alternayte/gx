@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/gxstyles"
 )
 
 //go:embed devclient.js
@@ -179,6 +180,9 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 			if err := os.WriteFile(path, src, 0o644); err != nil {
 				return false, &Overlay{Title: "generate failed", Text: err.Error()}
 			}
+		}
+		if _, err := gxstyles.Build(ctx, s.dir, false); err != nil {
+			return false, &Overlay{Title: "styles failed", Text: err.Error()}
 		}
 	}
 	cmd := exec.CommandContext(ctx, "go", "build", "-tags", "gxdev", "-o", bin, s.opt.Main)

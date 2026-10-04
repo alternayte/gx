@@ -238,6 +238,7 @@ type App struct {
 func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
 	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter}
+	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
 	a.devRoutes()
 	if cfg.Adapter != nil {
 		SetAdapter(cfg.Adapter)
@@ -263,6 +264,19 @@ func (a *App) registerAssets(adapter Adapter) {
 			_, _ = w.Write(body)
 		}))
 	}
+}
+
+// serveStylesheet serves the app stylesheet installed with SetStylesheet
+// (REQ-STY-01 to REQ-STY-03).
+func (a *App) serveStylesheet(w http.ResponseWriter, r *http.Request) {
+	css := Stylesheet()
+	if len(css) == 0 {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Content-Type", "text/css; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-cache")
+	_, _ = w.Write(css)
 }
 
 // assetType returns the content type of an adapter asset.
@@ -325,7 +339,9 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) serve(w http.ResponseWriter, r *http.Request) {
-	if a.adapter == nil || wantsEventStream(r) {
+	// Buffer a page when an adapter or a stylesheet needs to join it
+	// (request lifecycle step 6); action streams pass through.
+	if wantsEventStream(r) || (a.adapter == nil && len(Stylesheet()) == 0) {
 		a.mux.ServeHTTP(w, r)
 		return
 	}

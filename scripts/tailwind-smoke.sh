@@ -6,4 +6,4 @@
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
-exec go test -tags tailwindreal ./internal/tailwind -run TestREQ_STY_01_RealBinary -v -count=1
+exec go test -tags tailwindreal ./internal/tailwind ./internal/gxstyles -run 'TestREQ_STY_01_RealBinary|TestREQ_STY_02_ClassListInCSS' -v -count=1

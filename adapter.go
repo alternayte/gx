@@ -133,8 +133,13 @@ func (a *App) flush(w http.ResponseWriter, r *http.Request, b *bufferedWriter) {
 // inject adds the Gx runtime and the adapter scripts to a page.
 func (a *App) inject(page []byte, r *http.Request) []byte {
 	var b bytes.Buffer
-	b.WriteString(String(coreRuntime()))
-	b.WriteString(String(a.runtimeScripts()))
+	if link := stylesheetLink(); link != "" {
+		b.WriteString(link)
+	}
+	if a.adapter != nil {
+		b.WriteString(String(coreRuntime()))
+		b.WriteString(String(a.runtimeScripts()))
+	}
 	add := b.Bytes()
 	if len(add) == 0 {
 		return page

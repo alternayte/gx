@@ -6,7 +6,7 @@ import (
 )
 
 <gx.Head title="Gx shop home" />
-<h1>Two carts</h1>
+<h1 class="text-2xl font-semibold">Two carts</h1>
 <cart.Cart label="Alpha" total={1} key="alpha" />
 <cart.Cart label="Beta" total={2} key="beta" />
 <div on:visible={cartroute.Lazy{}}>

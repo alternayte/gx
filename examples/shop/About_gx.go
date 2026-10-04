@@ -17,12 +17,12 @@ func About(p AboutProps) gx.Node {
 //line About.gx:5:34
 	_b.Add(gx.Text("\n"))
 //line About.gx:6:1
-	_b.Add(gx.El("h1", nil, gx.Text("About")))
-//line About.gx:6:15
+	_b.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-2xl font-semibold", Kind: gx.AttrText}}, gx.Text("About")))
+//line About.gx:6:46
 	_b.Add(gx.Text("\n"))
 //line About.gx:7:1
-	_b.Add(gx.El("p", nil, gx.Text("A shop built with Gx.")))
-//line About.gx:7:29
+	_b.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-muted-foreground", Kind: gx.AttrText}}, gx.Text("A shop built with Gx.")))
+//line About.gx:7:59
 	_b.Add(gx.Text("\n"))
 //line About.gx:8:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "data-on-init", Value: "@get('" + (cartroute.Lazy{}).URL() + "')", Kind: gx.AttrText}}))

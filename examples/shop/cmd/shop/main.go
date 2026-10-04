@@ -10,6 +10,7 @@ import (
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/adapters/datastar"
 	"github.com/alternayte/gx/examples/shop"
+	"github.com/alternayte/gx/examples/shop/gxstyles"
 )
 
 // listenAddr is the dev server address when gx dev runs the app.
@@ -24,6 +25,7 @@ func main() {
 	addr := flag.String("addr", listenAddr(), "listen address")
 	flag.Parse()
 	setupGallery()
+	gx.SetStylesheet(gxstyles.CSS())
 	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
 	app.Group("/", shop.ShellLayout, gx.Nav(gx.MorphNavigation), shop.Routes)
 	log.Printf("shop listening on http://%s", *addr)
