@@ -274,6 +274,10 @@ func runBuild(args []string) int {
 		return 1
 	} else {
 		for path, src := range files {
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+				return 1
+			}
 			if err := os.WriteFile(path, src, 0o644); err != nil {
 				fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
 				return 1
@@ -382,6 +386,10 @@ func runGenerate(args []string) int {
 	}
 	sort.Strings(paths)
 	for _, path := range paths {
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			fmt.Fprintf(os.Stderr, "gx generate: %v\n", err)
+			return 1
+		}
 		if err := os.WriteFile(path, files[path], 0o644); err != nil {
 			fmt.Fprintf(os.Stderr, "gx generate: %v\n", err)
 			return 1

@@ -58,6 +58,7 @@ func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diag
 	for path, src := range res.routeFiles {
 		out[path] = src
 	}
+	out[classesFilePath(root)] = classesBytes(collectClasses(dirs, l, res.pkgs))
 	if len(diags) > 0 {
 		sortDiags(diags)
 		return nil, diags, res, l, dirs
@@ -79,6 +80,9 @@ func Stale(root string) []Diagnostic {
 	sort.Strings(paths)
 	var out []Diagnostic
 	for _, path := range paths {
+		if !strings.HasSuffix(path, "_gx.go") {
+			continue
+		}
 		if onDisk, err := os.ReadFile(path); err == nil && bytes.Equal(onDisk, files[path]) {
 			continue
 		}
