@@ -21,6 +21,10 @@ const BaseDir = ".gx/base"
 // DefaultRoot is the published target root that Dir replaces.
 const DefaultRoot = "ui"
 
+// RegistryImport is the import prefix of the official registry source. An
+// installed item rewrites it to the app module path (REQ-REG-05).
+const RegistryImport = "github.com/alternayte/gx/registry/"
+
 // Installer installs published registry items into an app (REQ-REG-02).
 type Installer struct {
 	// Root is the app module root that holds gx.toml and gx.lock.
@@ -202,7 +206,8 @@ func (in *Installer) writeSnapshot(item Item) error {
 	return os.WriteFile(filepath.Join(dir, "item.json"), data, 0o644)
 }
 
-// fetch loads one published item.
+// fetch loads one published item and rewrites its cross-item imports to the
+// app module path (REQ-REG-05).
 func (in *Installer) fetch(name string) (Item, error) {
 	data, err := in.read("items/" + name + ".json")
 	if err != nil {
@@ -218,7 +223,57 @@ func (in *Installer) fetch(name string) (Item, error) {
 	if item.Name != name {
 		return Item{}, fmt.Errorf("registry: items/%s.json holds item %s", name, item.Name)
 	}
-	return item, nil
+	return in.rewriteImports(item)
+}
+
+// rewriteImports points the cross-item imports of an item at the app's
+// installed copies. Items that import no sibling stay untouched, so an app
+// without go.mod can still install them.
+func (in *Installer) rewriteImports(item Item) (Item, error) {
+	needs := false
+	for _, f := range item.Files {
+		if strings.Contains(f.Content, RegistryImport) {
+			needs = true
+			break
+		}
+	}
+	if !needs {
+		return item, nil
+	}
+	module, err := modulePath(in.Root)
+	if err != nil {
+		return Item{}, err
+	}
+	dir, err := in.appDir()
+	if err != nil {
+		return Item{}, err
+	}
+	prefix := module + "/" + dir + "/"
+	out := item
+	out.Files = make([]File, len(item.Files))
+	for i, f := range item.Files {
+		f.Content = strings.ReplaceAll(f.Content, RegistryImport, prefix)
+		sum := sha256.Sum256([]byte(f.Content))
+		f.SHA256 = hex.EncodeToString(sum[:])
+		out.Files[i] = f
+	}
+	return out, nil
+}
+
+// modulePath reads the module path of the app from go.mod.
+func modulePath(root string) (string, error) {
+	data, err := os.ReadFile(filepath.Join(root, "go.mod"))
+	if err != nil {
+		return "", fmt.Errorf("registry: the item imports another item, and go.mod cannot be read: %w", err)
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		if rest, ok := strings.CutPrefix(strings.TrimSpace(line), "module "); ok {
+			if path := strings.TrimSpace(rest); path != "" {
+				return path, nil
+			}
+		}
+	}
+	return "", fmt.Errorf("registry: go.mod has no module path")
 }
 
 // read loads a path from the registry source.

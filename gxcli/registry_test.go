@@ -351,6 +351,72 @@ func TestREQ_REG_04_Registries(t *testing.T) {
 	}
 }
 
+// TestREQ_REG_05_RegistryImports covers the cross-item import rewrite: an
+// item that imports a sibling lands with the app module path, and an app
+// without go.mod cannot install it (REQ-REG-05).
+func TestREQ_REG_05_RegistryImports(t *testing.T) {
+	f := &fixture{src: t.TempDir(), out: t.TempDir()}
+	writeRegistryItem(t, f.src, registryItem{
+		name:   "button",
+		files:  map[string]string{"Button.gx": "package button\n\nprops {\n  Label string\n}\n\n<button>{p.Label}</button>\n"},
+		target: "ui/button/Button.gx",
+	})
+	writeRegistryItem(t, f.src, registryItem{
+		name:   "dialog",
+		deps:   []string{"button"},
+		files:  map[string]string{"Dialog.gx": "package dialog\n\nimport \"github.com/alternayte/gx/registry/button\"\n\nprops {\n  Label string\n}\n\n<button.Button label={p.Label} />\n"},
+		target: "ui/dialog/Dialog.gx",
+	})
+	f.build(t)
+
+	app := appWithRegistry(t, f.out)
+	writeFile(t, app, "go.mod", "module app\n\ngo 1.25.0\n")
+	if code := gxcli.Main([]string{"add", "dialog", app}); code != 0 {
+		t.Fatalf("add exit = %d", code)
+	}
+	for _, rel := range []string{"ui/dialog/Dialog.gx", ".gx/base/dialog@0.1.0/item.json"} {
+		data, err := os.ReadFile(filepath.Join(app, filepath.FromSlash(rel)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(string(data), `app/ui/button`) {
+			t.Fatalf("%s was not rewritten:\n%s", rel, data)
+		}
+	}
+
+	// Without go.mod the same item cannot resolve its sibling import.
+	bare := appWithRegistry(t, f.out)
+	if code := gxcli.Main([]string{"add", "dialog", bare}); code == 0 {
+		t.Fatal("add accepted a cross-item import without go.mod")
+	}
+}
+
+// TestREQ_REG_12_RoundTrip covers gx registry build: build a publishable
+// registry from an item folder, serve it over HTTP and add an item from it
+// (REQ-REG-12).
+func TestREQ_REG_12_RoundTrip(t *testing.T) {
+	f := registryFixture(t)
+	served := t.TempDir()
+	if code := gxcli.Main([]string{"registry", "build", "--out", served, f.src}); code != 0 {
+		t.Fatalf("registry build exit = %d", code)
+	}
+	for _, rel := range []string{"index.json", "items/button.json", "items/dialog.json", "schema/item.schema.json"} {
+		if _, err := os.Stat(filepath.Join(served, filepath.FromSlash(rel))); err != nil {
+			t.Fatalf("build output missing %s: %v", rel, err)
+		}
+	}
+	srv := httptest.NewServer(http.FileServer(http.Dir(served)))
+	defer srv.Close()
+	app := t.TempDir()
+	writeFile(t, app, "gx.toml", "[registry]\nurl = \""+srv.URL+"\"\n")
+	if code := gxcli.Main([]string{"add", "dialog", app}); code != 0 {
+		t.Fatalf("add from the served registry exit = %d", code)
+	}
+	if _, err := os.Stat(filepath.Join(app, "ui/button/Button.gx")); err != nil {
+		t.Fatalf("round trip did not pull the dependency: %v", err)
+	}
+}
+
 // TestSI_09_TamperedRegistry covers gx add: a file whose bytes do not match
 // its published hash stops the install before any write, and the installer
 // never runs registry code (SI-09).
