@@ -13,11 +13,25 @@ import (
 //go:embed runtime/js/gx.js
 var coreRuntimeJS []byte
 
+// behaviorRuntimeJS is the built component behaviour runtime (REQ-REG-07).
+//
+//go:embed runtime/js/behavior.js
+var behaviorRuntimeJS []byte
+
 // coreRuntime returns the script tag of the Gx browser runtime.
 func coreRuntime() Node {
 	return El("script", Attrs{
 		{Key: "type", Value: "module"},
 		{Key: "src", Value: BasePath() + "/_gx/gx.js", Kind: AttrURL},
+	})
+}
+
+// behaviorRuntime returns the script tag of the component behaviour runtime
+// (REQ-REG-07).
+func behaviorRuntime() Node {
+	return El("script", Attrs{
+		{Key: "type", Value: "module"},
+		{Key: "src", Value: BasePath() + "/_gx/behavior.js", Kind: AttrURL},
 	})
 }
 
@@ -28,8 +42,11 @@ type runtimeNeeds struct {
 	// expressions.
 	adapter bool
 	// core is true when the page uses a form, layout-aware navigation or
-	// a behaviour.
+	// a page-shell behaviour.
 	core bool
+	// behavior is true when the page uses a component behaviour
+	// (REQ-REG-07).
+	behavior bool
 }
 
 type runtimeNeedsKey struct{}
@@ -78,6 +95,8 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 					needs.core = true
 				case behaviorMarker(a.Key):
 					needs.core = true
+				case componentBehaviorMarker(a.Key):
+					needs.behavior = true
 				}
 			}
 			for _, c := range t.children {
@@ -117,8 +136,8 @@ func interactiveMarker(key string) bool {
 	return false
 }
 
-// behaviorMarker reports whether an attribute activates a browser behaviour
-// (REQ-REG-07).
+// behaviorMarker reports whether an attribute activates a page-shell
+// behaviour of the core runtime (REQ-CNT-05, REQ-CNT-06, REQ-CNT-07).
 func behaviorMarker(key string) bool {
 	switch key {
 	case "data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel",
@@ -126,6 +145,16 @@ func behaviorMarker(key string) bool {
 		"data-gx-search", "data-gx-search-open", "data-gx-search-close",
 		"data-gx-search-form", "data-gx-search-input", "data-gx-search-results",
 		"data-gx-search-src", "data-gx-toc", "data-gx-toc-target":
+		return true
+	}
+	return false
+}
+
+// componentBehaviorMarker reports whether an attribute activates the
+// component behaviour runtime (REQ-REG-07).
+func componentBehaviorMarker(key string) bool {
+	switch key {
+	case "data-gx-behavior", "data-gx-roving", "data-gx-roving-item", "data-gx-trap", "data-gx-dismiss":
 		return true
 	}
 	return false

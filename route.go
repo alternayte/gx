@@ -263,7 +263,7 @@ func New(cfg Config) *App {
 // uses; the mux pattern stays un-prefixed so a mount can strip a prefix
 // (REQ-RTE-18).
 func (a *App) registerAssets(adapter Adapter) {
-	assets := map[string][]byte{"gx.js": coreRuntimeJS}
+	assets := map[string][]byte{"gx.js": coreRuntimeJS, "behavior.js": behaviorRuntimeJS}
 	for name, data := range adapter.Assets() {
 		assets[name] = data
 	}

@@ -38,9 +38,15 @@ func (nfr04Route) Bind(*http.Request) error { return nil }
 // nfr04Serve renders one page through an app with an adapter (NFR-04).
 func nfr04Serve(t *testing.T, view func() gx.Node) string {
 	t.Helper()
+	return servePage(t, &nfr04Adapter{}, view)
+}
+
+// servePage renders one page through an app with the adapter (NFR-04).
+func servePage(t *testing.T, adapter gx.Adapter, view func() gx.Node) string {
+	t.Helper()
 	page := gx.Page(func(*gx.Ctx, nfr04Route) (struct{}, error) { return struct{}{}, nil },
 		func(struct{}) gx.Node { return view() })
-	app := gx.New(gx.Config{Adapter: &nfr04Adapter{}})
+	app := gx.New(gx.Config{Adapter: adapter})
 	app.Group("/", gx.Collect(page))
 	rec := httptest.NewRecorder()
 	app.ServeHTTP(rec, httptest.NewRequest("GET", "/nfr04", nil))
@@ -69,26 +75,30 @@ func TestNFR_04_ZeroJSWithoutFeatures(t *testing.T) {
 // (NFR-04).
 func TestNFR_04_FeatureScripts(t *testing.T) {
 	tests := []struct {
-		name    string
-		view    func() gx.Node
-		core    bool
-		adapter bool
+		name     string
+		view     func() gx.Node
+		core     bool
+		adapter  bool
+		behavior bool
 	}{
 		{"signals", func() gx.Node {
 			return gx.El("input", gx.Attrs{
 				{Key: "data-signals", Value: "{}"},
 				{Key: "data-bind", Value: "$q"},
 			})
-		}, true, true},
+		}, true, true, false},
 		{"form", func() gx.Node {
 			return gx.El("form", gx.Attrs{{Key: "data-gx-form", Value: "signup"}})
-		}, true, true},
+		}, true, true, false},
 		{"navigation", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-slot", Value: "page"}})
-		}, true, true},
-		{"behaviour", func() gx.Node {
+		}, true, true, false},
+		{"page-shell behaviour", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-tabs", Value: ""}})
-		}, true, false},
+		}, true, false, false},
+		{"component behaviour", func() gx.Node {
+			return gx.El("div", gx.Attrs{{Key: "data-gx-roving", Value: ""}})
+		}, false, false, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -98,6 +108,9 @@ func TestNFR_04_FeatureScripts(t *testing.T) {
 			}
 			if got := strings.Contains(body, "/_gx/nfr04-adapter.js"); got != tt.adapter {
 				t.Fatalf("adapter runtime = %v, want %v:\n%s", got, tt.adapter, body)
+			}
+			if got := strings.Contains(body, "/_gx/behavior.js"); got != tt.behavior {
+				t.Fatalf("behaviour runtime = %v, want %v:\n%s", got, tt.behavior, body)
 			}
 		})
 	}

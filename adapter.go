@@ -149,6 +149,9 @@ func (a *App) inject(page []byte, needs *runtimeNeeds) []byte {
 		if needs.adapter {
 			b.WriteString(String(a.runtimeScripts()))
 		}
+		if needs.behavior {
+			b.WriteString(String(behaviorRuntime()))
+		}
 	}
 	add := b.Bytes()
 	if len(add) == 0 {
