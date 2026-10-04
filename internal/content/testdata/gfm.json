@@ -1,0 +1,236 @@
+[
+ {
+  "markdown": "| foo | bar |\n| --- | --- |\n| baz | bim |\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>foo</th>\n<th>bar</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>baz</td>\n<td>bim</td>\n</tr>\n</tbody>\n</table>\n",
+  "example": 1,
+  "section": "table"
+ },
+ {
+  "markdown": "| abc | defghi |\n:-: | -----------:\nbar | baz\n",
+  "html": "<table>\n<thead>\n<tr>\n<th align=\"center\">abc</th>\n<th align=\"right\">defghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"center\">bar</td>\n<td align=\"right\">baz</td>\n</tr>\n</tbody>\n</table>\n",
+  "example": 2,
+  "section": "table"
+ },
+ {
+  "markdown": "| f\\|oo  |\n| ------ |\n| b `\\|` az |\n| b **\\|** im |\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>f|oo</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b <code>|</code> az</td>\n</tr>\n<tr>\n<td>b <strong>|</strong> im</td>\n</tr>\n</tbody>\n</table>\n",
+  "example": 3,
+  "section": "table"
+ },
+ {
+  "markdown": "| abc | def |\n| --- | --- |\n| bar | baz |\n> bar\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody>\n</table>\n<blockquote>\n<p>bar</p>\n</blockquote>\n",
+  "example": 4,
+  "section": "table"
+ },
+ {
+  "markdown": "| abc | def |\n| --- | --- |\n| bar | baz |\nbar\n\nbar\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n</tbody>\n</table>\n<p>bar</p>\n",
+  "example": 5,
+  "section": "table"
+ },
+ {
+  "markdown": "| abc | def |\n| --- |\n| bar |\n",
+  "html": "<p>| abc | def |\n| --- |\n| bar |</p>\n",
+  "example": 6,
+  "section": "table"
+ },
+ {
+  "markdown": "| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody>\n</table>\n",
+  "example": 7,
+  "section": "table"
+ },
+ {
+  "markdown": "| abc | def |\n| --- | --- |\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n</table>\n",
+  "example": 8,
+  "section": "table"
+ },
+ {
+  "markdown": "Foo|Bar\n---|---\n`Yoyo`|Dyne\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>Foo</th>\n<th>Bar</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>Yoyo</code></td>\n<td>Dyne</td>\n</tr>\n</tbody>\n</table>\n",
+  "example": 9,
+  "section": "table"
+ },
+ {
+  "markdown": "foo|bar\n---|---\n`\\` | second column\n",
+  "html": "<table>\n<thead>\n<tr>\n<th>foo</th>\n<th>bar</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>\\</code></td>\n<td>second column</td>\n</tr>\n</tbody>\n</table>\n",
+  "example": 10,
+  "section": "table"
+ },
+ {
+  "markdown": "- [ ] foo\n- [x] bar\n",
+  "html": "<ul>\n<li><input disabled=\"\" type=\"checkbox\"> foo</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> bar</li>\n</ul>\n",
+  "example": 11,
+  "section": "tasklist"
+ },
+ {
+  "markdown": "- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim\n",
+  "html": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> foo\n<ul>\n<li><input disabled=\"\" type=\"checkbox\"> bar</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> baz</li>\n</ul>\n</li>\n<li><input disabled=\"\" type=\"checkbox\"> bim</li>\n</ul>\n",
+  "example": 12,
+  "section": "tasklist"
+ },
+ {
+  "markdown": "- test[x]=[x]\n",
+  "html": "<ul>\n<li>test[x]=[x]</li>\n</ul>\n",
+  "example": 13,
+  "section": "tasklist"
+ },
+ {
+  "markdown": "+ [x] [x]\n",
+  "html": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> [x]</li>\n</ul>\n",
+  "example": 14,
+  "section": "tasklist"
+ },
+ {
+  "markdown": "~~Hi~~ Hello, world!\n",
+  "html": "<p><del>Hi</del> Hello, world!</p>\n",
+  "example": 15,
+  "section": "strikethrough"
+ },
+ {
+  "markdown": "This ~~has a\n\nnew paragraph~~.\n",
+  "html": "<p>This ~~has a</p>\n<p>new paragraph~~.</p>\n",
+  "example": 16,
+  "section": "strikethrough"
+ },
+ {
+  "markdown": "~Hi~ Hello, world!\n",
+  "html": "<p><del>Hi</del> Hello, world!</p>\n",
+  "example": 17,
+  "section": "strikethrough"
+ },
+ {
+  "markdown": "www.commonmark.org\n",
+  "html": "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>\n",
+  "example": 18,
+  "section": "linkify"
+ },
+ {
+  "markdown": "Visit www.commonmark.org/help for more information.\n",
+  "html": "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>\n",
+  "example": 19,
+  "section": "linkify"
+ },
+ {
+  "markdown": "www.google.com/search?q=Markup+(business)\n\nwww.google.com/search?q=Markup+(business)))\n\n(www.google.com/search?q=Markup+(business))\n\n(www.google.com/search?q=Markup+(business)\n",
+  "html": "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>))</p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n",
+  "example": 20,
+  "section": "linkify"
+ },
+ {
+  "markdown": "www.google.com/search?q=(business))+ok\n",
+  "html": "<p><a href=\"http://www.google.com/search?q=(business))+ok\">www.google.com/search?q=(business))+ok</a></p>\n",
+  "example": 21,
+  "section": "linkify"
+ },
+ {
+  "markdown": "www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;\n",
+  "html": "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>\n",
+  "example": 22,
+  "section": "linkify"
+ },
+ {
+  "markdown": "www.commonmark.org/he<lp\n",
+  "html": "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>\n",
+  "example": 23,
+  "section": "linkify"
+ },
+ {
+  "markdown": "http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.\n",
+  "html": "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>\n",
+  "example": 24,
+  "section": "linkify"
+ },
+ {
+  "markdown": "foo@bar.baz\n",
+  "html": "<p><a href=\"mailto:foo@bar.baz\">foo@bar.baz</a></p>\n",
+  "example": 25,
+  "section": "linkify"
+ },
+ {
+  "markdown": "hello@mail+xyz.example isn't valid, but hello+xyz@mail.example is.\n",
+  "html": "<p>hello@mail+xyz.example isn't valid, but <a href=\"mailto:hello+xyz@mail.example\">hello+xyz@mail.example</a> is.</p>\n",
+  "example": 26,
+  "section": "linkify"
+ },
+ {
+  "markdown": "a.b-c_d@a.b\n\na.b-c_d@a.b.\n\na.b-c_d@a.b-\n\na.b-c_d@a.b_\n",
+  "html": "<p><a href=\"mailto:a.b-c_d@a.b\">a.b-c_d@a.b</a></p>\n<p><a href=\"mailto:a.b-c_d@a.b\">a.b-c_d@a.b</a>.</p>\n<p>a.b-c_d@a.b-</p>\n<p>a.b-c_d@a.b_</p>\n",
+  "example": 27,
+  "section": "linkify"
+ },
+ {
+  "markdown": "https://github.com#sun,mon\n",
+  "html": "<p><a href=\"https://github.com#sun,mon\">https://github.com#sun,mon</a></p>\n",
+  "example": 28,
+  "section": "linkify"
+ },
+ {
+  "markdown": "https://github.com/sunday's\n",
+  "html": "<p><a href=\"https://github.com/sunday's\">https://github.com/sunday's</a></p>\n",
+  "example": 29,
+  "section": "linkify"
+ },
+ {
+  "markdown": "https://github.com?q=stars:>1\n",
+  "html": "<p><a href=\"https://github.com?q=stars:%3E1\">https://github.com?q=stars:&gt;1</a></p>\n",
+  "example": 30,
+  "section": "linkify"
+ },
+ {
+  "markdown": "[https://google.com](https://google.com)\n",
+  "html": "<p><a href=\"https://google.com\">https://google.com</a></p>\n",
+  "example": 31,
+  "section": "linkify"
+ },
+ {
+  "markdown": "This is a `git@github.com:vim/vim`\n",
+  "html": "<p>This is a <code>git@github.com:vim/vim</code></p>\n",
+  "example": 32,
+  "section": "linkify"
+ },
+ {
+  "markdown": "https://nic.college\n",
+  "html": "<p><a href=\"https://nic.college\">https://nic.college</a></p>\n",
+  "example": 33,
+  "section": "linkify"
+ },
+ {
+  "markdown": "http://server.intranet.acme.com:1313\n",
+  "html": "<p><a href=\"http://server.intranet.acme.com:1313\">http://server.intranet.acme.com:1313</a></p>\n",
+  "example": 34,
+  "section": "linkify"
+ },
+ {
+  "markdown": "https://g.page/foo\n",
+  "html": "<p><a href=\"https://g.page/foo\">https://g.page/foo</a></p>\n",
+  "example": 35,
+  "section": "linkify"
+ },
+ {
+  "markdown": "That's some text with a footnote.[^1]\n\n[^1]: And that's the footnote.\n\n    That's the second paragraph.\n",
+  "html": "<p>That's some text with a footnote.<sup id=\"fnref:1\"><a href=\"#fn:1\" class=\"footnote-ref\" role=\"doc-noteref\">1</a></sup></p>\n<div class=\"footnotes\" role=\"doc-endnotes\">\n<hr>\n<ol>\n<li id=\"fn:1\">\n<p>And that's the footnote.</p>\n<p>That's the second paragraph.&#160;<a href=\"#fnref:1\" class=\"footnote-backref\" role=\"doc-backlink\">&#x21a9;&#xfe0e;</a></p>\n</li>\n</ol>\n</div>\n",
+  "example": 36,
+  "section": "footnote"
+ },
+ {
+  "markdown": "[^000]:0\t[^]:\n",
+  "html": "",
+  "example": 37,
+  "section": "footnote"
+ },
+ {
+  "markdown": "This[^3] is[^1] text with footnotes[^2].\n\n[^1]: Footnote one\n[^2]: Footnote two\n[^3]: Footnote three\n",
+  "html": "<p>This<sup id=\"fnref:1\"><a href=\"#fn:1\" class=\"footnote-ref\" role=\"doc-noteref\">1</a></sup> is<sup id=\"fnref:2\"><a href=\"#fn:2\" class=\"footnote-ref\" role=\"doc-noteref\">2</a></sup> text with footnotes<sup id=\"fnref:3\"><a href=\"#fn:3\" class=\"footnote-ref\" role=\"doc-noteref\">3</a></sup>.</p>\n<div class=\"footnotes\" role=\"doc-endnotes\">\n<hr>\n<ol>\n<li id=\"fn:1\">\n<p>Footnote three&#160;<a href=\"#fnref:1\" class=\"footnote-backref\" role=\"doc-backlink\">&#x21a9;&#xfe0e;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Footnote one&#160;<a href=\"#fnref:2\" class=\"footnote-backref\" role=\"doc-backlink\">&#x21a9;&#xfe0e;</a></p>\n</li>\n<li id=\"fn:3\">\n<p>Footnote two&#160;<a href=\"#fnref:3\" class=\"footnote-backref\" role=\"doc-backlink\">&#x21a9;&#xfe0e;</a></p>\n</li>\n</ol>\n</div>\n",
+  "example": 38,
+  "section": "footnote"
+ },
+ {
+  "markdown": "test![^1]\n\n[^1]: footnote\n",
+  "html": "<p>test!<sup id=\"fnref:1\"><a href=\"#fn:1\" class=\"footnote-ref\" role=\"doc-noteref\">1</a></sup></p>\n<div class=\"footnotes\" role=\"doc-endnotes\">\n<hr>\n<ol>\n<li id=\"fn:1\">\n<p>footnote&#160;<a href=\"#fnref:1\" class=\"footnote-backref\" role=\"doc-backlink\">&#x21a9;&#xfe0e;</a></p>\n</li>\n</ol>\n</div>\n",
+  "example": 39,
+  "section": "footnote"
+ }
+]
