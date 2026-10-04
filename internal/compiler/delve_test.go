@@ -15,7 +15,7 @@ import (
 // (REQ-TLS-08).
 func TestREQ_TLS_08_DelveBreakpoint(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"go.mod": moduleWithGx(t),
+		"go.mod":          moduleWithGx(t),
 		"ui/card/Card.gx": "package card\n\nprops {\n  Title string\n  Items []string\n}\n\n<article>\n  for _, it := range p.Items {\n    <p>{it}</p>\n  }\n</article>\n",
 	})
 	files, diags := compiler.Generate(dir)

@@ -39,9 +39,45 @@ var EnumCoverage = &analysis.Analyzer{
 	Run:  runEnum,
 }
 
+// RuntimeClass reports a gx.Cx argument built at runtime (GX5003,
+// REQ-STY-11).
+var RuntimeClass = &analysis.Analyzer{
+	Name: "gxclassruntime",
+	Doc:  "report a gx.Cx argument built at runtime (GX5003)",
+	Run:  runRuntimeClass,
+}
+
 // Analyzers returns the Gx analyzers in a stable order (REQ-TLS-03).
 func Analyzers() []*analysis.Analyzer {
-	return []*analysis.Analyzer{SafeHTML, RoutePackage, EnumCoverage}
+	return []*analysis.Analyzer{SafeHTML, RoutePackage, EnumCoverage, RuntimeClass}
+}
+
+func runRuntimeClass(pass *analysis.Pass) (any, error) {
+	for _, file := range pass.Files {
+		ast.Inspect(file, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok {
+				return true
+			}
+			obj := called(pass.TypesInfo, call.Fun)
+			if obj == nil || obj.Pkg() == nil || obj.Pkg().Path() != gxPath || obj.Name() != "Cx" {
+				return true
+			}
+			for _, arg := range call.Args {
+				if tv, ok := pass.TypesInfo.Types[arg]; ok && tv.Value != nil {
+					continue
+				}
+				pass.Report(analysis.Diagnostic{
+					Pos:      arg.Pos(),
+					End:      arg.End(),
+					Category: "GX5003",
+					Message:  "class string is built at runtime; Tailwind cannot see it",
+				})
+			}
+			return true
+		})
+	}
+	return nil, nil
 }
 
 func runEnum(pass *analysis.Pass) (any, error) {

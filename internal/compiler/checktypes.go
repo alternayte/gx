@@ -206,6 +206,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, l.checkKeys(dirs)...)
 	diags = append(diags, checkSafeHTML(refs, pkgs)...)
 	diags = append(diags, checkEnums(pkgs)...)
+	diags = append(diags, l.checkRuntimeClasses(dirs)...)
 	diags = append(diags, checkRoutePackages(pkgs)...)
 	return res, diags
 }

@@ -46,7 +46,7 @@ func TestSI_13_RulesMethod(t *testing.T) {
 		"go.mod":         moduleWithGx(t),
 		"cart/routes.go": signalledRoute,
 		"cart/action.go": signalledAction,
-		"cart/rules.go": "package cart\n\nimport \"github.com/alternayte/gx\"\n\nfunc (in *Add) Rules() gx.Rules {\n\treturn gx.Rules{gx.Field(&in.Qty, gx.Min(1), gx.Max(5))}\n}\n",
+		"cart/rules.go":  "package cart\n\nimport \"github.com/alternayte/gx\"\n\nfunc (in *Add) Rules() gx.Rules {\n\treturn gx.Rules{gx.Field(&in.Qty, gx.Min(1), gx.Max(5))}\n}\n",
 		"cart/Cart.gx":   "package cart\n\nsignals {\n  Qty int = 1\n}\n\n<button on:click={Add{}}>x</button>\n",
 	})
 	for _, d := range checkDir(t, dir) {
