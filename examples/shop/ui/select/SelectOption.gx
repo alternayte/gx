@@ -1,0 +1,9 @@
+package selectbox
+
+props {
+  Value    string = ""
+  Selected bool   = false
+  Children gx.Node
+}
+
+<option value={p.Value} selected={p.Selected}>{p.Children}</option>

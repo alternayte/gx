@@ -1,0 +1,9 @@
+package contextmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" tabindex="-1" data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", p.Class)} {...p.Attrs}>{p.Children}</button>

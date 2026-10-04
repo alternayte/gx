@@ -1,0 +1,10 @@
+package inputgroup
+
+props {
+  Align    Align    = InlineStart
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-align={p.Align} class={gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none [&>svg]:size-4", alignClass[p.Align], p.Class)} {...p.Attrs}>{p.Children}</div>

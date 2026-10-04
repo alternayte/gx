@@ -1,0 +1,10 @@
+package contextmenu
+
+props {
+  Id       string
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("fixed m-0 z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>

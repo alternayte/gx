@@ -1,0 +1,9 @@
+package table
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<tfoot class={gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class)} {...p.Attrs}>{p.Children}</tfoot>

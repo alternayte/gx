@@ -1,0 +1,10 @@
+package empty
+
+props {
+  Variant  Variant  = Default
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-variant={p.Variant} class={gx.Cx("flex shrink-0 items-center justify-center", variantClass[p.Variant], p.Class)} {...p.Attrs}>{p.Children}</div>

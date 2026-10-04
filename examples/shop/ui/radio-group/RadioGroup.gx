@@ -1,0 +1,11 @@
+package radiogroup
+
+props {
+  Name        string      = ""
+  Orientation Orientation = Vertical
+  Class       string      = ""
+  Children    gx.Node
+  Attrs       gx.Attrs    = nil
+}
+
+<div role="radiogroup" aria-orientation={p.Orientation} class={gx.Cx("grid gap-2", orientationClass[p.Orientation], p.Class)} {...p.Attrs}>{p.Children}</div>

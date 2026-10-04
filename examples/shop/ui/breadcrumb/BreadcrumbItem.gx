@@ -1,0 +1,9 @@
+package breadcrumb
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<li class={gx.Cx("inline-flex items-center gap-1.5", p.Class)} {...p.Attrs}>{p.Children}</li>

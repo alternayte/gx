@@ -1,0 +1,9 @@
+package navigationmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<nav class={gx.Cx("relative flex items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</nav>

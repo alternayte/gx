@@ -1,0 +1,9 @@
+package menubar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="menubar" data-gx-roving="nowrap" class={gx.Cx("flex h-9 items-center gap-1 rounded-md border border-border bg-background p-1 shadow-xs", p.Class)} {...p.Attrs}>{p.Children}</div>

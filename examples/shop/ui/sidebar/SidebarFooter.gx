@@ -1,0 +1,9 @@
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("mt-auto p-4", p.Class)} {...p.Attrs}>{p.Children}</div>

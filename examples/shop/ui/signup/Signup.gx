@@ -1,0 +1,44 @@
+package signup
+
+import (
+	"github.com/alternayte/gx/examples/shop/ui/button"
+	"github.com/alternayte/gx/examples/shop/ui/card"
+	"github.com/alternayte/gx/examples/shop/ui/checkbox"
+	"github.com/alternayte/gx/examples/shop/ui/field"
+	"github.com/alternayte/gx/examples/shop/ui/input"
+)
+
+props {
+  Title       string = "Create an account"
+  Description string = "Start with your email."
+  Action      gx.URL = ""
+}
+
+<div class="grid min-h-screen lg:grid-cols-2">
+  <div class="flex items-center justify-center p-6">
+    <card.Card title={p.Title} description={p.Description} class="w-full max-w-sm">
+      <form method="post" action={p.Action} class="flex flex-col gap-4">
+        <field.Field>
+          <field.FieldLabel for="name">Name</field.FieldLabel>
+          <input.Input id="name" name="name" type="text" />
+        </field.Field>
+        <field.Field>
+          <field.FieldLabel for="email">Email</field.FieldLabel>
+          <input.Input id="email" name="email" type="email" placeholder="you@example.com" />
+        </field.Field>
+        <field.Field>
+          <field.FieldLabel for="password">Password</field.FieldLabel>
+          <input.Input id="password" name="password" type="password" />
+          <field.FieldDescription>At least 12 characters.</field.FieldDescription>
+        </field.Field>
+        <checkbox.Checkbox name="terms">I accept the terms</checkbox.Checkbox>
+        <button.Button type="submit" class="w-full">Create account</button.Button>
+        <p class="text-center text-sm text-muted-foreground">Already have an account? <a href="/login" class="underline underline-offset-4">Sign in</a></p>
+      </form>
+    </card.Card>
+  </div>
+  <div class="hidden flex-col justify-between bg-muted p-10 lg:flex">
+    <a href="/" class="font-semibold no-underline">Gx</a>
+    <p class="max-w-sm text-sm text-muted-foreground">Typed templates, routes and forms in one loop.</p>
+  </div>
+</div>

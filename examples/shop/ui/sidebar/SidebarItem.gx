@@ -1,0 +1,11 @@
+package sidebar
+
+props {
+  Href     gx.URL
+  Active   bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a href={p.Href} aria-current={p.current()} class={gx.Cx("flex items-center gap-2 rounded-md px-2 py-1.5 text-sm no-underline transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground", activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>

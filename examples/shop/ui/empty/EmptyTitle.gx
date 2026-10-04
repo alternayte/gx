@@ -1,0 +1,9 @@
+package empty
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("text-lg font-medium tracking-tight", p.Class)} {...p.Attrs}>{p.Children}</div>

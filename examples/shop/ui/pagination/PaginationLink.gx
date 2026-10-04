@@ -1,0 +1,12 @@
+package pagination
+
+props {
+  Href     gx.URL
+  Active   bool     = false
+  Size     Size     = Icon
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a href={p.Href} aria-current={p.current()} class={p.class()} {...p.Attrs}>{p.Children}</a>

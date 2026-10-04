@@ -7,6 +7,57 @@ package gxdev_gallery
 import (
 	gx "github.com/alternayte/gx"
 	cart "github.com/alternayte/gx/examples/shop/cart"
+	accordion "github.com/alternayte/gx/examples/shop/ui/accordion"
+	alert "github.com/alternayte/gx/examples/shop/ui/alert"
+	alertdialog "github.com/alternayte/gx/examples/shop/ui/alert-dialog"
+	appshell "github.com/alternayte/gx/examples/shop/ui/app-shell"
+	aspectratio "github.com/alternayte/gx/examples/shop/ui/aspect-ratio"
+	avatar "github.com/alternayte/gx/examples/shop/ui/avatar"
+	badge "github.com/alternayte/gx/examples/shop/ui/badge"
+	breadcrumb "github.com/alternayte/gx/examples/shop/ui/breadcrumb"
+	button "github.com/alternayte/gx/examples/shop/ui/button"
+	buttongroup "github.com/alternayte/gx/examples/shop/ui/button-group"
+	card "github.com/alternayte/gx/examples/shop/ui/card"
+	checkbox "github.com/alternayte/gx/examples/shop/ui/checkbox"
+	collapsible "github.com/alternayte/gx/examples/shop/ui/collapsible"
+	contextmenu "github.com/alternayte/gx/examples/shop/ui/context-menu"
+	datatablepage "github.com/alternayte/gx/examples/shop/ui/data-table-page"
+	dialog "github.com/alternayte/gx/examples/shop/ui/dialog"
+	drawer "github.com/alternayte/gx/examples/shop/ui/drawer"
+	dropdownmenu "github.com/alternayte/gx/examples/shop/ui/dropdown-menu"
+	empty "github.com/alternayte/gx/examples/shop/ui/empty"
+	field "github.com/alternayte/gx/examples/shop/ui/field"
+	hovercard "github.com/alternayte/gx/examples/shop/ui/hover-card"
+	input "github.com/alternayte/gx/examples/shop/ui/input"
+	inputgroup "github.com/alternayte/gx/examples/shop/ui/input-group"
+	item "github.com/alternayte/gx/examples/shop/ui/item"
+	kbd "github.com/alternayte/gx/examples/shop/ui/kbd"
+	label "github.com/alternayte/gx/examples/shop/ui/label"
+	login "github.com/alternayte/gx/examples/shop/ui/login"
+	menubar "github.com/alternayte/gx/examples/shop/ui/menubar"
+	navigationmenu "github.com/alternayte/gx/examples/shop/ui/navigation-menu"
+	pagination "github.com/alternayte/gx/examples/shop/ui/pagination"
+	popover "github.com/alternayte/gx/examples/shop/ui/popover"
+	progress "github.com/alternayte/gx/examples/shop/ui/progress"
+	radiogroup "github.com/alternayte/gx/examples/shop/ui/radio-group"
+	scrollarea "github.com/alternayte/gx/examples/shop/ui/scroll-area"
+	selectbox "github.com/alternayte/gx/examples/shop/ui/select"
+	separator "github.com/alternayte/gx/examples/shop/ui/separator"
+	settingsform "github.com/alternayte/gx/examples/shop/ui/settings-form"
+	sheet "github.com/alternayte/gx/examples/shop/ui/sheet"
+	sidebar "github.com/alternayte/gx/examples/shop/ui/sidebar"
+	signup "github.com/alternayte/gx/examples/shop/ui/signup"
+	skeleton "github.com/alternayte/gx/examples/shop/ui/skeleton"
+	slider "github.com/alternayte/gx/examples/shop/ui/slider"
+	spinner "github.com/alternayte/gx/examples/shop/ui/spinner"
+	switches "github.com/alternayte/gx/examples/shop/ui/switch"
+	table "github.com/alternayte/gx/examples/shop/ui/table"
+	tabs "github.com/alternayte/gx/examples/shop/ui/tabs"
+	textarea "github.com/alternayte/gx/examples/shop/ui/textarea"
+	toast "github.com/alternayte/gx/examples/shop/ui/toast"
+	toggle "github.com/alternayte/gx/examples/shop/ui/toggle"
+	togglegroup "github.com/alternayte/gx/examples/shop/ui/toggle-group"
+	tooltip "github.com/alternayte/gx/examples/shop/ui/tooltip"
 )
 
 // Fixtures returns every component fixture for the dev gallery
@@ -22,5 +73,174 @@ func Fixtures() []gx.Fixture {
 		{Component: "Checkbox", Missing: true},
 		{Component: "FileField", Missing: true},
 		{Component: "TextField", Missing: true},
+		{Component: "Accordion", Name: "Two", Node: func() gx.Node { return accordion.Accordion(accordion.AccordionFixtures["Two"]) }},
+		{Component: "AccordionItem", Name: "Closed", Node: func() gx.Node { return accordion.AccordionItem(accordion.AccordionItemFixtures["Closed"]) }},
+		{Component: "AccordionItem", Name: "Open", Node: func() gx.Node { return accordion.AccordionItem(accordion.AccordionItemFixtures["Open"]) }},
+		{Component: "Alert", Name: "Default", Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["Default"]) }},
+		{Component: "Alert", Name: "Destructive", Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["Destructive"]) }},
+		{Component: "AlertDialog", Name: "Default", Node: func() gx.Node { return alertdialog.AlertDialog(alertdialog.AlertDialogFixtures["Default"]) }},
+		{Component: "AppShell", Name: "Default", Node: func() gx.Node { return appshell.AppShell(appshell.AppShellFixtures["Default"]) }},
+		{Component: "AspectRatio", Name: "Square", Node: func() gx.Node { return aspectratio.AspectRatio(aspectratio.AspectRatioFixtures["Square"]) }},
+		{Component: "AspectRatio", Name: "Wide", Node: func() gx.Node { return aspectratio.AspectRatio(aspectratio.AspectRatioFixtures["Wide"]) }},
+		{Component: "Avatar", Name: "Fallback", Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Fallback"]) }},
+		{Component: "Avatar", Name: "Large", Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Large"]) }},
+		{Component: "Avatar", Name: "Small", Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Small"]) }},
+		{Component: "Badge", Name: "Default", Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Default"]) }},
+		{Component: "Badge", Name: "Destructive", Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Destructive"]) }},
+		{Component: "Badge", Name: "Outline", Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Outline"]) }},
+		{Component: "Badge", Name: "Secondary", Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Secondary"]) }},
+		{Component: "Breadcrumb", Name: "Ellipsis", Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["Ellipsis"]) }},
+		{Component: "Breadcrumb", Name: "Trail", Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["Trail"]) }},
+		{Component: "BreadcrumbEllipsis", Name: "Default", Node: func() gx.Node { return breadcrumb.BreadcrumbEllipsis(breadcrumb.BreadcrumbEllipsisFixtures["Default"]) }},
+		{Component: "BreadcrumbItem", Name: "Empty", Node: func() gx.Node { return breadcrumb.BreadcrumbItem(breadcrumb.BreadcrumbItemFixtures["Empty"]) }},
+		{Component: "BreadcrumbLink", Name: "Link", Node: func() gx.Node { return breadcrumb.BreadcrumbLink(breadcrumb.BreadcrumbLinkFixtures["Link"]) }},
+		{Component: "BreadcrumbList", Name: "Empty", Node: func() gx.Node { return breadcrumb.BreadcrumbList(breadcrumb.BreadcrumbListFixtures["Empty"]) }},
+		{Component: "BreadcrumbPage", Name: "Page", Node: func() gx.Node { return breadcrumb.BreadcrumbPage(breadcrumb.BreadcrumbPageFixtures["Page"]) }},
+		{Component: "BreadcrumbSeparator", Name: "Default", Node: func() gx.Node { return breadcrumb.BreadcrumbSeparator(breadcrumb.BreadcrumbSeparatorFixtures["Default"]) }},
+		{Component: "Button", Name: "Default", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Default"]) }},
+		{Component: "Button", Name: "Destructive", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Destructive"]) }},
+		{Component: "Button", Name: "Disabled", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Disabled"]) }},
+		{Component: "Button", Name: "Ghost", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Ghost"]) }},
+		{Component: "Button", Name: "Icon", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Icon"]) }},
+		{Component: "Button", Name: "Large", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Large"]) }},
+		{Component: "Button", Name: "Link", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Link"]) }},
+		{Component: "Button", Name: "Outline", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Outline"]) }},
+		{Component: "Button", Name: "Secondary", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Secondary"]) }},
+		{Component: "Button", Name: "Small", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Small"]) }},
+		{Component: "ButtonGroup", Name: "Three", Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Three"]) }},
+		{Component: "Card", Name: "BodyOnly", Node: func() gx.Node { return card.Card(card.CardFixtures["BodyOnly"]) }},
+		{Component: "Card", Name: "Full", Node: func() gx.Node { return card.Card(card.CardFixtures["Full"]) }},
+		{Component: "Card", Name: "TitleOnly", Node: func() gx.Node { return card.Card(card.CardFixtures["TitleOnly"]) }},
+		{Component: "Checkbox", Name: "Checked", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Checked"]) }},
+		{Component: "Checkbox", Name: "Disabled", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Disabled"]) }},
+		{Component: "Checkbox", Name: "Unchecked", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Unchecked"]) }},
+		{Component: "Collapsible", Name: "Closed", Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Closed"]) }},
+		{Component: "Collapsible", Name: "Open", Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Open"]) }},
+		{Component: "ContextMenu", Name: "Menu", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Menu"]) }},
+		{Component: "ContextMenuItem", Name: "Item", Node: func() gx.Node { return contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Item"]) }},
+		{Component: "ContextMenuLink", Name: "Link", Node: func() gx.Node { return contextmenu.ContextMenuLink(contextmenu.ContextMenuLinkFixtures["Link"]) }},
+		{Component: "ContextMenuSeparator", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuSeparator(contextmenu.ContextMenuSeparatorFixtures["Default"]) }},
+		{Component: "ContextMenuTrigger", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Default"]) }},
+		{Component: "DataTablePage", Name: "Default", Node: func() gx.Node { return datatablepage.DataTablePage(datatablepage.DataTablePageFixtures["Default"]) }},
+		{Component: "Dialog", Name: "Default", Node: func() gx.Node { return dialog.Dialog(dialog.DialogFixtures["Default"]) }},
+		{Component: "Drawer", Name: "Default", Node: func() gx.Node { return drawer.Drawer(drawer.DrawerFixtures["Default"]) }},
+		{Component: "DropdownMenu", Name: "Menu", Node: func() gx.Node { return dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Menu"]) }},
+		{Component: "DropdownMenuItem", Name: "Item", Node: func() gx.Node { return dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Item"]) }},
+		{Component: "DropdownMenuLabel", Name: "Label", Node: func() gx.Node { return dropdownmenu.DropdownMenuLabel(dropdownmenu.DropdownMenuLabelFixtures["Label"]) }},
+		{Component: "DropdownMenuLink", Name: "Link", Node: func() gx.Node { return dropdownmenu.DropdownMenuLink(dropdownmenu.DropdownMenuLinkFixtures["Link"]) }},
+		{Component: "DropdownMenuSeparator", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuSeparator(dropdownmenu.DropdownMenuSeparatorFixtures["Default"]) }},
+		{Component: "DropdownMenuTrigger", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Default"]) }},
+		{Component: "Empty", Name: "Full", Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Full"]) }},
+		{Component: "EmptyContent", Name: "Empty", Node: func() gx.Node { return empty.EmptyContent(empty.EmptyContentFixtures["Empty"]) }},
+		{Component: "EmptyDescription", Name: "Text", Node: func() gx.Node { return empty.EmptyDescription(empty.EmptyDescriptionFixtures["Text"]) }},
+		{Component: "EmptyHeader", Name: "Empty", Node: func() gx.Node { return empty.EmptyHeader(empty.EmptyHeaderFixtures["Empty"]) }},
+		{Component: "EmptyMedia", Name: "Icon", Node: func() gx.Node { return empty.EmptyMedia(empty.EmptyMediaFixtures["Icon"]) }},
+		{Component: "EmptyTitle", Name: "Title", Node: func() gx.Node { return empty.EmptyTitle(empty.EmptyTitleFixtures["Title"]) }},
+		{Component: "Field", Name: "Invalid", Node: func() gx.Node { return field.Field(field.FieldFixtures["Invalid"]) }},
+		{Component: "Field", Name: "LabelAndInput", Node: func() gx.Node { return field.Field(field.FieldFixtures["LabelAndInput"]) }},
+		{Component: "FieldDescription", Name: "Text", Node: func() gx.Node { return field.FieldDescription(field.FieldDescriptionFixtures["Text"]) }},
+		{Component: "FieldError", Name: "Error", Node: func() gx.Node { return field.FieldError(field.FieldErrorFixtures["Error"]) }},
+		{Component: "FieldGroup", Name: "Empty", Node: func() gx.Node { return field.FieldGroup(field.FieldGroupFixtures["Empty"]) }},
+		{Component: "FieldLabel", Name: "Label", Node: func() gx.Node { return field.FieldLabel(field.FieldLabelFixtures["Label"]) }},
+		{Component: "FieldLegend", Name: "Legend", Node: func() gx.Node { return field.FieldLegend(field.FieldLegendFixtures["Legend"]) }},
+		{Component: "FieldSet", Name: "Empty", Node: func() gx.Node { return field.FieldSet(field.FieldSetFixtures["Empty"]) }},
+		{Component: "HoverCard", Name: "User", Node: func() gx.Node { return hovercard.HoverCard(hovercard.HoverCardFixtures["User"]) }},
+		{Component: "Input", Name: "Disabled", Node: func() gx.Node { return input.Input(input.InputFixtures["Disabled"]) }},
+		{Component: "Input", Name: "File", Node: func() gx.Node { return input.Input(input.InputFixtures["File"]) }},
+		{Component: "Input", Name: "Filled", Node: func() gx.Node { return input.Input(input.InputFixtures["Filled"]) }},
+		{Component: "Input", Name: "Text", Node: func() gx.Node { return input.Input(input.InputFixtures["Text"]) }},
+		{Component: "InputGroup", Name: "LeadingText", Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["LeadingText"]) }},
+		{Component: "InputGroup", Name: "TrailingText", Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["TrailingText"]) }},
+		{Component: "InputGroupAddon", Name: "Text", Node: func() gx.Node { return inputgroup.InputGroupAddon(inputgroup.InputGroupAddonFixtures["Text"]) }},
+		{Component: "InputGroupInput", Name: "Placeholder", Node: func() gx.Node { return inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"]) }},
+		{Component: "InputGroupText", Name: "Text", Node: func() gx.Node { return inputgroup.InputGroupText(inputgroup.InputGroupTextFixtures["Text"]) }},
+		{Component: "Item", Name: "Full", Node: func() gx.Node { return item.Item(item.ItemFixtures["Full"]) }},
+		{Component: "ItemActions", Name: "Empty", Node: func() gx.Node { return item.ItemActions(item.ItemActionsFixtures["Empty"]) }},
+		{Component: "ItemContent", Name: "Empty", Node: func() gx.Node { return item.ItemContent(item.ItemContentFixtures["Empty"]) }},
+		{Component: "ItemDescription", Name: "Text", Node: func() gx.Node { return item.ItemDescription(item.ItemDescriptionFixtures["Text"]) }},
+		{Component: "ItemFooter", Name: "Empty", Node: func() gx.Node { return item.ItemFooter(item.ItemFooterFixtures["Empty"]) }},
+		{Component: "ItemHeader", Name: "Empty", Node: func() gx.Node { return item.ItemHeader(item.ItemHeaderFixtures["Empty"]) }},
+		{Component: "ItemMedia", Name: "Empty", Node: func() gx.Node { return item.ItemMedia(item.ItemMediaFixtures["Empty"]) }},
+		{Component: "ItemTitle", Name: "Title", Node: func() gx.Node { return item.ItemTitle(item.ItemTitleFixtures["Title"]) }},
+		{Component: "Kbd", Name: "Combo", Node: func() gx.Node { return kbd.Kbd(kbd.KbdFixtures["Combo"]) }},
+		{Component: "Kbd", Name: "Key", Node: func() gx.Node { return kbd.Kbd(kbd.KbdFixtures["Key"]) }},
+		{Component: "Label", Name: "Plain", Node: func() gx.Node { return label.Label(label.LabelFixtures["Plain"]) }},
+		{Component: "Login", Name: "Default", Node: func() gx.Node { return login.Login(login.LoginFixtures["Default"]) }},
+		{Component: "Menubar", Name: "Default", Node: func() gx.Node { return menubar.Menubar(menubar.MenubarFixtures["Default"]) }},
+		{Component: "MenubarItem", Name: "Item", Node: func() gx.Node { return menubar.MenubarItem(menubar.MenubarItemFixtures["Item"]) }},
+		{Component: "NavigationMenu", Name: "Default", Node: func() gx.Node { return navigationmenu.NavigationMenu(navigationmenu.NavigationMenuFixtures["Default"]) }},
+		{Component: "NavigationMenuItem", Name: "Active", Node: func() gx.Node { return navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Active"]) }},
+		{Component: "NavigationMenuItem", Name: "Item", Node: func() gx.Node { return navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Item"]) }},
+		{Component: "Pagination", Name: "Trail", Node: func() gx.Node { return pagination.Pagination(pagination.PaginationFixtures["Trail"]) }},
+		{Component: "PaginationContent", Name: "Empty", Node: func() gx.Node { return pagination.PaginationContent(pagination.PaginationContentFixtures["Empty"]) }},
+		{Component: "PaginationEllipsis", Name: "Default", Node: func() gx.Node { return pagination.PaginationEllipsis(pagination.PaginationEllipsisFixtures["Default"]) }},
+		{Component: "PaginationItem", Name: "Empty", Node: func() gx.Node { return pagination.PaginationItem(pagination.PaginationItemFixtures["Empty"]) }},
+		{Component: "PaginationLink", Name: "Active", Node: func() gx.Node { return pagination.PaginationLink(pagination.PaginationLinkFixtures["Active"]) }},
+		{Component: "PaginationLink", Name: "Inactive", Node: func() gx.Node { return pagination.PaginationLink(pagination.PaginationLinkFixtures["Inactive"]) }},
+		{Component: "PaginationNext", Name: "Default", Node: func() gx.Node { return pagination.PaginationNext(pagination.PaginationNextFixtures["Default"]) }},
+		{Component: "PaginationPrevious", Name: "Default", Node: func() gx.Node { return pagination.PaginationPrevious(pagination.PaginationPreviousFixtures["Default"]) }},
+		{Component: "Popover", Name: "Content", Node: func() gx.Node { return popover.Popover(popover.PopoverFixtures["Content"]) }},
+		{Component: "PopoverTrigger", Name: "Default", Node: func() gx.Node { return popover.PopoverTrigger(popover.PopoverTriggerFixtures["Default"]) }},
+		{Component: "Progress", Name: "Empty", Node: func() gx.Node { return progress.Progress(progress.ProgressFixtures["Empty"]) }},
+		{Component: "Progress", Name: "Full", Node: func() gx.Node { return progress.Progress(progress.ProgressFixtures["Full"]) }},
+		{Component: "Progress", Name: "Half", Node: func() gx.Node { return progress.Progress(progress.ProgressFixtures["Half"]) }},
+		{Component: "RadioGroup", Name: "Horizontal", Node: func() gx.Node { return radiogroup.RadioGroup(radiogroup.RadioGroupFixtures["Horizontal"]) }},
+		{Component: "RadioGroup", Name: "Vertical", Node: func() gx.Node { return radiogroup.RadioGroup(radiogroup.RadioGroupFixtures["Vertical"]) }},
+		{Component: "RadioGroupItem", Name: "Checked", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Checked"]) }},
+		{Component: "RadioGroupItem", Name: "Unchecked", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Unchecked"]) }},
+		{Component: "ScrollArea", Name: "Vertical", Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"]) }},
+		{Component: "Select", Name: "Disabled", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Disabled"]) }},
+		{Component: "Select", Name: "Plan", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Plan"]) }},
+		{Component: "SelectOption", Name: "Option", Node: func() gx.Node { return selectbox.SelectOption(selectbox.SelectOptionFixtures["Option"]) }},
+		{Component: "Separator", Name: "Horizontal", Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Horizontal"]) }},
+		{Component: "Separator", Name: "Vertical", Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Vertical"]) }},
+		{Component: "SettingsForm", Name: "Default", Node: func() gx.Node { return settingsform.SettingsForm(settingsform.SettingsFormFixtures["Default"]) }},
+		{Component: "Sheet", Name: "Bottom", Node: func() gx.Node { return sheet.Sheet(sheet.SheetFixtures["Bottom"]) }},
+		{Component: "Sheet", Name: "Right", Node: func() gx.Node { return sheet.Sheet(sheet.SheetFixtures["Right"]) }},
+		{Component: "Sidebar", Name: "Full", Node: func() gx.Node { return sidebar.Sidebar(sidebar.SidebarFixtures["Full"]) }},
+		{Component: "Sidebar", Name: "Hidden", Node: func() gx.Node { return sidebar.Sidebar(sidebar.SidebarFixtures["Hidden"]) }},
+		{Component: "SidebarContent", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarContent(sidebar.SidebarContentFixtures["Empty"]) }},
+		{Component: "SidebarFooter", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarFooter(sidebar.SidebarFooterFixtures["Empty"]) }},
+		{Component: "SidebarGroup", Name: "Group", Node: func() gx.Node { return sidebar.SidebarGroup(sidebar.SidebarGroupFixtures["Group"]) }},
+		{Component: "SidebarHeader", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarHeader(sidebar.SidebarHeaderFixtures["Empty"]) }},
+		{Component: "SidebarItem", Name: "Item", Node: func() gx.Node { return sidebar.SidebarItem(sidebar.SidebarItemFixtures["Item"]) }},
+		{Component: "Signup", Name: "Default", Node: func() gx.Node { return signup.Signup(signup.SignupFixtures["Default"]) }},
+		{Component: "Skeleton", Name: "Card", Node: func() gx.Node { return skeleton.Skeleton(skeleton.SkeletonFixtures["Card"]) }},
+		{Component: "Skeleton", Name: "Circle", Node: func() gx.Node { return skeleton.Skeleton(skeleton.SkeletonFixtures["Circle"]) }},
+		{Component: "Skeleton", Name: "Line", Node: func() gx.Node { return skeleton.Skeleton(skeleton.SkeletonFixtures["Line"]) }},
+		{Component: "Slider", Name: "Full", Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Full"]) }},
+		{Component: "Slider", Name: "Half", Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Half"]) }},
+		{Component: "Slider", Name: "Range", Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Range"]) }},
+		{Component: "Spinner", Name: "Label", Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Label"]) }},
+		{Component: "Spinner", Name: "Large", Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Large"]) }},
+		{Component: "Spinner", Name: "Small", Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Small"]) }},
+		{Component: "Switch", Name: "Disabled", Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["Disabled"]) }},
+		{Component: "Switch", Name: "Off", Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["Off"]) }},
+		{Component: "Switch", Name: "On", Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["On"]) }},
+		{Component: "Table", Name: "Simple", Node: func() gx.Node { return table.Table(table.TableFixtures["Simple"]) }},
+		{Component: "TableBody", Name: "Empty", Node: func() gx.Node { return table.TableBody(table.TableBodyFixtures["Empty"]) }},
+		{Component: "TableCaption", Name: "Caption", Node: func() gx.Node { return table.TableCaption(table.TableCaptionFixtures["Caption"]) }},
+		{Component: "TableCell", Name: "Cell", Node: func() gx.Node { return table.TableCell(table.TableCellFixtures["Cell"]) }},
+		{Component: "TableFooter", Name: "Empty", Node: func() gx.Node { return table.TableFooter(table.TableFooterFixtures["Empty"]) }},
+		{Component: "TableHead", Name: "Header", Node: func() gx.Node { return table.TableHead(table.TableHeadFixtures["Header"]) }},
+		{Component: "TableHeader", Name: "Empty", Node: func() gx.Node { return table.TableHeader(table.TableHeaderFixtures["Empty"]) }},
+		{Component: "TableRow", Name: "Empty", Node: func() gx.Node { return table.TableRow(table.TableRowFixtures["Empty"]) }},
+		{Component: "TabItem", Name: "Item", Node: func() gx.Node { return tabs.TabItem(tabs.TabItemFixtures["Item"]) }},
+		{Component: "Tabs", Name: "Synced", Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Synced"]) }},
+		{Component: "Tabs", Name: "Two", Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Two"]) }},
+		{Component: "Textarea", Name: "Disabled", Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Disabled"]) }},
+		{Component: "Textarea", Name: "Filled", Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Filled"]) }},
+		{Component: "Textarea", Name: "Placeholder", Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Placeholder"]) }},
+		{Component: "Toaster", Name: "Empty", Node: func() gx.Node { return toast.Toaster(toast.ToasterFixtures["Empty"]) }},
+		{Component: "Toaster", Name: "WithToast", Node: func() gx.Node { return toast.Toaster(toast.ToasterFixtures["WithToast"]) }},
+		{Component: "Toggle", Name: "Disabled", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Disabled"]) }},
+		{Component: "Toggle", Name: "Off", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Off"]) }},
+		{Component: "Toggle", Name: "On", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["On"]) }},
+		{Component: "ToggleGroup", Name: "Three", Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Three"]) }},
+		{Component: "ToggleGroupItem", Name: "Checked", Node: func() gx.Node { return togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Checked"]) }},
+		{Component: "Tooltip", Name: "Bottom", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Bottom"]) }},
+		{Component: "Tooltip", Name: "Left", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Left"]) }},
+		{Component: "Tooltip", Name: "Right", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Right"]) }},
+		{Component: "Tooltip", Name: "Top", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Top"]) }},
 	}
 }

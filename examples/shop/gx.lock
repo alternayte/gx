@@ -1,0 +1,14 @@
+{
+  "registry": {
+    "items": {
+      "tooltip": {
+        "version": "0.1.0",
+        "files": {
+          "ui/tooltip/Tooltip.fixtures.go": "77c1dc7889cf765f9953f5c8ad72834a47ef13d7b3386f59ec68fbbb98277c8a",
+          "ui/tooltip/Tooltip.gx": "5b1d779134116e19b4acb0c283a21f0a7acca4cf2dc98d99ad694da25ef542fe",
+          "ui/tooltip/styles.go": "4e21956f48b97d780350155b0478de4597aa22437723d703c7de4f7b397dc047"
+        }
+      }
+    }
+  }
+}

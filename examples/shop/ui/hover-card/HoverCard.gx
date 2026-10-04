@@ -1,0 +1,13 @@
+package hovercard
+
+props {
+  Trigger  gx.Node
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<span class={gx.Cx("group relative inline-flex", p.Class)} {...p.Attrs}>
+  {p.Trigger}
+  <span class="pointer-events-none absolute top-full left-0 z-50 mt-2 hidden w-64 rounded-md border border-border bg-popover p-4 text-sm text-popover-foreground shadow-md group-hover:block group-focus-within:block">{p.Children}</span>
+</span>

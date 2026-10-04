@@ -1,0 +1,18 @@
+package avatar
+
+props {
+  Src      gx.URL
+  Alt      string   = ""
+  Fallback string   = ""
+  Size     Size     = Md
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
+}
+
+<span class={gx.Cx("relative flex shrink-0 overflow-hidden rounded-full", sizeClass[p.Size], p.Class)} {...p.Attrs}>
+  if p.Src != "" {
+    <img src={p.Src} alt={p.Alt} class="aspect-square size-full object-cover" />
+  } else if p.Fallback != "" {
+    <span class="flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">{p.Fallback}</span>
+  }
+</span>

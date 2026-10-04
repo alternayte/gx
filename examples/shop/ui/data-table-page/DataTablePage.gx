@@ -1,0 +1,36 @@
+package datatablepage
+
+import (
+	"github.com/alternayte/gx/examples/shop/ui/card"
+	"github.com/alternayte/gx/examples/shop/ui/input"
+)
+
+props {
+  Title       string
+  Description string   = ""
+  Filter      gx.Node  = nil
+  Table       gx.Node
+  Pagination  gx.Node  = nil
+}
+
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-6">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex flex-col gap-1">
+      <h1 class="text-xl font-semibold">{p.Title}</h1>
+      if p.Description != "" {
+        <p class="text-sm text-muted-foreground">{p.Description}</p>
+      }
+    </div>
+    if p.Filter != nil {
+      <div class="w-56">
+        {p.Filter}
+      </div>
+    }
+  </div>
+  <card.Card>
+    {p.Table}
+  </card.Card>
+  if p.Pagination != nil {
+    <div class="flex justify-center">{p.Pagination}</div>
+  }
+</div>

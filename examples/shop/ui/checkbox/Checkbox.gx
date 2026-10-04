@@ -1,0 +1,17 @@
+package checkbox
+
+props {
+  Name     string   = ""
+  Value    string   = "on"
+  Checked  bool     = false
+  Class    string   = ""
+  Children gx.Node  = nil
+  Attrs    gx.Attrs = nil
+}
+
+<label class={gx.Cx("flex items-center gap-2 text-sm", p.Class)} {...p.Attrs}>
+  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Checked} class="size-4 rounded border-input accent-primary" />
+  if p.Children != nil {
+    <span>{p.Children}</span>
+  }
+</label>

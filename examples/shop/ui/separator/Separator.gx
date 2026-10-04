@@ -1,0 +1,10 @@
+package separator
+
+props {
+  Orientation Orientation = Horizontal
+  Decorative  bool        = true
+  Class       string      = ""
+  Attrs       gx.Attrs    = nil
+}
+
+<div {...p.attrs()}></div>
