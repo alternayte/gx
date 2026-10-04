@@ -360,17 +360,49 @@ func runExport(args []string) int {
 	return 0
 }
 
+// splitRef splits an item reference into its registry namespace, item name
+// and version, for example "@acme/button@0.2.0" (REQ-REG-04).
+func splitRef(ref string) (namespace, name, version string) {
+	name = ref
+	if i := strings.LastIndex(ref, "@"); i > 0 {
+		name, version = ref[:i], ref[i+1:]
+	}
+	if strings.HasPrefix(name, "@") {
+		if i := strings.Index(name, "/"); i > 1 {
+			namespace, name = name[1:i], name[i+1:]
+		}
+	}
+	return namespace, name, version
+}
+
 // registryInstaller builds the installer of an app from gx.toml and the
-// command flags (REQ-REG-02, REQ-REG-03).
-func registryInstaller(root, source, dir string) (registry.Installer, int) {
+// command flags (REQ-REG-02, REQ-REG-04). A namespace selects a named
+// registry; --registry overrides every source.
+func registryInstaller(root, source, dir, namespace string) (registry.Installer, int) {
 	cfg, err := gxconfig.Load(root)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx registry: %v\n", err)
 		return registry.Installer{}, 1
 	}
 	src := source
+	var headers []string
+	if src == "" && namespace != "" {
+		named, ok := cfg.Registries[namespace]
+		if !ok {
+			fmt.Fprintf(os.Stderr, "gx registry: unknown registry @%s\n", namespace)
+			return registry.Installer{}, 1
+		}
+		src = named.URL
+		headers = named.Headers
+	}
 	if src == "" {
 		src = cfg.Registry.URL
+	}
+	if src == "" {
+		if official, ok := cfg.Registries["official"]; ok {
+			src = official.URL
+			headers = official.Headers
+		}
 	}
 	if src == "" {
 		fmt.Fprintln(os.Stderr, "gx registry: no registry; set [registry] url in gx.toml or pass --registry")
@@ -380,7 +412,7 @@ func registryInstaller(root, source, dir string) (registry.Installer, int) {
 	if installDir == "" {
 		installDir = cfg.Registry.Dir
 	}
-	return registry.Installer{Root: root, Source: src, Dir: installDir}, 0
+	return registry.Installer{Root: root, Source: src, Dir: installDir, Headers: headers}, 0
 }
 
 // runAdd installs a registry item and its dependencies (REQ-REG-02).
@@ -397,12 +429,12 @@ func runAdd(args []string) int {
 		fmt.Fprintln(os.Stderr, "usage: gx add [--registry <url>] [--dir <dir>] <item>[@version] [app]")
 		return 2
 	}
-	name, version, _ := strings.Cut(rest[0], "@")
+	namespace, name, version := splitRef(rest[0])
 	root := "."
 	if len(rest) > 1 {
 		root = rest[1]
 	}
-	inst, code := registryInstaller(root, *source, *dir)
+	inst, code := registryInstaller(root, *source, *dir, namespace)
 	if code != 0 {
 		return code
 	}
@@ -432,12 +464,12 @@ func runDiff(args []string) int {
 		fmt.Fprintln(os.Stderr, "usage: gx diff [--registry <url>] <item> [app]")
 		return 2
 	}
-	name, _, _ := strings.Cut(rest[0], "@")
+	namespace, name, _ := splitRef(rest[0])
 	root := "."
 	if len(rest) > 1 {
 		root = rest[1]
 	}
-	inst, code := registryInstaller(root, *source, *dir)
+	inst, code := registryInstaller(root, *source, *dir, namespace)
 	if code != 0 {
 		return code
 	}
@@ -467,12 +499,12 @@ func runUpdate(args []string) int {
 		fmt.Fprintln(os.Stderr, "usage: gx update [--registry <url>] <item>[@version] [app]")
 		return 2
 	}
-	name, version, _ := strings.Cut(rest[0], "@")
+	namespace, name, version := splitRef(rest[0])
 	root := "."
 	if len(rest) > 1 {
 		root = rest[1]
 	}
-	inst, code := registryInstaller(root, *source, *dir)
+	inst, code := registryInstaller(root, *source, *dir, namespace)
 	if code != 0 {
 		return code
 	}

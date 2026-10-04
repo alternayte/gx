@@ -12,17 +12,26 @@ import (
 
 // Config is the parsed gx.toml.
 type Config struct {
-	Mirrors  map[string]string
-	Site     Site
-	Registry Registry
+	Mirrors    map[string]string
+	Site       Site
+	Registry   Registry
+	Registries map[string]RegistrySource
 }
 
 // Registry is the [registry] table of gx.toml (REQ-REG-02). URL is the
-// registry base, an http(s) URL or a directory. Dir maps the published
-// target root to an app directory (default "ui").
+// default registry base, an http(s) URL or a directory. Dir maps the
+// published target root to an app directory (default "ui").
 type Registry struct {
 	URL string
 	Dir string
+}
+
+// RegistrySource is one named [registries.<name>] entry (REQ-REG-04).
+// Headers are "name: value" strings sent with every request to an HTTP
+// registry.
+type RegistrySource struct {
+	URL     string
+	Headers []string
 }
 
 // Site is the [site] table of gx.toml (REQ-CNT-09).
@@ -41,7 +50,7 @@ type Site struct {
 
 // Load reads root/gx.toml. A missing file is an empty config.
 func Load(root string) (Config, error) {
-	cfg := Config{Mirrors: map[string]string{}}
+	cfg := Config{Mirrors: map[string]string{}, Registries: map[string]RegistrySource{}}
 	data, err := os.ReadFile(filepath.Join(root, "gx.toml"))
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -78,6 +87,10 @@ func Load(root string) (Config, error) {
 			case "dir":
 				cfg.Registry.Dir = value
 			}
+		case "registries":
+			source := cfg.Registries[key]
+			source.URL = value
+			cfg.Registries[key] = source
 		case "site":
 			switch key {
 			case "url":
@@ -88,6 +101,21 @@ func Load(root string) (Config, error) {
 				cfg.Site.TitleTemplate = value
 			case "description":
 				cfg.Site.Description = value
+			}
+		default:
+			if name, ok := strings.CutPrefix(section, "registries."); ok {
+				source := cfg.Registries[name]
+				switch key {
+				case "url":
+					source.URL = value
+				case "header", "headers":
+					for _, h := range strings.Split(value, ";") {
+						if h = strings.TrimSpace(h); h != "" {
+							source.Headers = append(source.Headers, h)
+						}
+					}
+				}
+				cfg.Registries[name] = source
 			}
 		}
 	}

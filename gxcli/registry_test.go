@@ -3,6 +3,8 @@ package gxcli_test
 import (
 	"encoding/json"
 	"io"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -300,6 +302,52 @@ func TestREQ_REG_03_Conflicts(t *testing.T) {
 	}
 	if string(after) != before {
 		t.Fatalf("second update changed the resolved file:\n%s", after)
+	}
+}
+
+// TestREQ_REG_04_Registries covers several registries in gx.toml with
+// namespaces and auth headers, and a named official registry as the default
+// of a bare item name (REQ-REG-04).
+func TestREQ_REG_04_Registries(t *testing.T) {
+	f := registryFixture(t)
+	private := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "Bearer secret" {
+			http.Error(w, "unauthorized", http.StatusUnauthorized)
+			return
+		}
+		http.ServeFile(w, r, filepath.Join(f.out, filepath.FromSlash(strings.TrimPrefix(r.URL.Path, "/"))))
+	}))
+	defer private.Close()
+
+	app := t.TempDir()
+	writeFile(t, app, "gx.toml", "[registries.acme]\nurl = \""+private.URL+"\"\nheaders = \"Authorization: Bearer secret\"\n")
+	if code := gxcli.Main([]string{"add", "@acme/dialog", app}); code != 0 {
+		t.Fatalf("namespaced add exit = %d", code)
+	}
+	if _, err := os.Stat(filepath.Join(app, "ui/dialog/Dialog.gx")); err != nil {
+		t.Fatalf("namespaced add wrote no file: %v", err)
+	}
+
+	// The header is required: without it the private registry refuses.
+	app2 := t.TempDir()
+	writeFile(t, app2, "gx.toml", "[registries.acme]\nurl = \""+private.URL+"\"\n")
+	if code := gxcli.Main([]string{"add", "@acme/dialog", app2}); code == 0 {
+		t.Fatal("add without the auth header succeeded")
+	}
+	if _, err := os.Stat(filepath.Join(app2, "ui/dialog/Dialog.gx")); !os.IsNotExist(err) {
+		t.Fatalf("failed namespaced add wrote a file (err %v)", err)
+	}
+
+	// An unknown namespace is an error.
+	if code := gxcli.Main([]string{"add", "@nope/button", app}); code == 0 {
+		t.Fatal("add accepted an unknown namespace")
+	}
+
+	// A named official registry is the default for a bare item name.
+	app3 := t.TempDir()
+	writeFile(t, app3, "gx.toml", "[registries]\nofficial = \""+f.out+"\"\n")
+	if code := gxcli.Main([]string{"add", "button", app3}); code != 0 {
+		t.Fatalf("bare add via the official registry exit = %d", code)
 	}
 }
 

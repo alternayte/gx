@@ -31,6 +31,9 @@ type Installer struct {
 	// Dir is the app directory the published DefaultRoot maps to. Empty
 	// keeps DefaultRoot.
 	Dir string
+	// Headers are "name: value" strings sent with every HTTP request
+	// (REQ-REG-04).
+	Headers []string
 	// Client is the HTTP client, or a client with a 30 s timeout.
 	Client *http.Client
 }
@@ -222,7 +225,18 @@ func (in *Installer) fetch(name string) (Item, error) {
 func (in *Installer) read(rel string) ([]byte, error) {
 	if strings.HasPrefix(in.Source, "http://") || strings.HasPrefix(in.Source, "https://") {
 		url := strings.TrimSuffix(in.Source, "/") + "/" + rel
-		resp, err := in.client().Get(url)
+		req, err := http.NewRequest(http.MethodGet, url, nil)
+		if err != nil {
+			return nil, err
+		}
+		for _, header := range in.Headers {
+			name, value, ok := strings.Cut(header, ":")
+			if !ok {
+				return nil, fmt.Errorf("registry: header %q is not name: value", header)
+			}
+			req.Header.Set(strings.TrimSpace(name), strings.TrimSpace(value))
+		}
+		resp, err := in.client().Do(req)
 		if err != nil {
 			return nil, err
 		}
