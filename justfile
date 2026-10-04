@@ -82,3 +82,7 @@ evidence-check:
 # Registry accessibility: zero serious or critical axe violations (REQ-REG-09).
 a11y:
     cd tests/e2e && bun test --timeout=300000 a11y.spec.ts
+
+# The fallback path of partly supported platform features (REQ-REG-13).
+fallback:
+    cd tests/e2e && bun test --timeout=300000 fallback.browsers.ts
