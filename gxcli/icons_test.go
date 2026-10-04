@@ -1,0 +1,162 @@
+package gxcli_test
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+	"testing"
+
+	"github.com/alternayte/gx/gxcli"
+)
+
+// packJSON is a three-icon Iconify pack.
+const packJSON = `{
+  "prefix": "lucide",
+  "width": 24,
+  "height": 24,
+  "icons": {
+    "shopping-cart": {"body": "<circle cx=\"8\" cy=\"21\" r=\"1\"/><path d=\"M1 1\"/>"},
+    "arrow-right": {"body": "<path d=\"M5 12h14\"/>"}
+  },
+  "aliases": {
+    "cart": {"parent": "shopping-cart"}
+  }
+}`
+
+// TestREQ_STY_06_IconsPin covers `gx icons pin`: the pack is fetched,
+// pinned by sha256 in gx.lock, and one .gx component is written per icon
+// with a tamper check on the next pin (REQ-STY-06).
+func TestREQ_STY_06_IconsPin(t *testing.T) {
+	body := packJSON
+	sum := sha256.Sum256([]byte(body))
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/lucide.json" {
+			http.NotFound(w, r)
+			return
+		}
+		_, _ = w.Write([]byte(body))
+	}))
+	defer srv.Close()
+	t.Setenv("GX_ICONIFY_BASE", srv.URL)
+
+	dir := t.TempDir()
+	if code := gxcli.Main([]string{"icons", "pin", "lucide@1.2.3", dir}); code != 0 {
+		t.Fatalf("icons pin exit = %d", code)
+	}
+	for name, want := range map[string]string{
+		"ShoppingCart.gx": "gx.Icon(",
+		"Cart.gx":         "<circle cx=",
+		"ArrowRight.gx":   "M5 12h14",
+	} {
+		data, err := os.ReadFile(filepath.Join(dir, "ui", "icons", "lucide", name))
+		if err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+		got := string(data)
+		for _, needle := range []string{"package lucide", "props {", "Label string", "Class string", want} {
+			if !strings.Contains(got, needle) {
+				t.Fatalf("%s lacks %q:\n%s", name, needle, got)
+			}
+		}
+	}
+	lock, err := os.ReadFile(filepath.Join(dir, "gx.lock"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var parsed struct {
+		Icons map[string]struct {
+			Version string `json:"version"`
+			SHA256  string `json:"sha256"`
+		} `json:"icons"`
+	}
+	if err := json.Unmarshal(lock, &parsed); err != nil {
+		t.Fatal(err)
+	}
+	pin, ok := parsed.Icons["lucide"]
+	if !ok || pin.Version != "1.2.3" || pin.SHA256 != hex.EncodeToString(sum[:]) {
+		t.Fatalf("gx.lock icons = %+v", parsed.Icons)
+	}
+
+	// A changed pack with the same version stops the next pin.
+	tampered := strings.Replace(body, "M1 1", "M2 2", 1)
+	srv2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte(tampered))
+	}))
+	defer srv2.Close()
+	t.Setenv("GX_ICONIFY_BASE", srv2.URL)
+	if code := gxcli.Main([]string{"icons", "pin", "lucide@1.2.3", dir}); code == 0 {
+		t.Fatal("icons pin accepted a changed pack for a pinned version")
+	}
+}
+
+// TestREQ_STY_06_IconDeadCode covers the linker dead-code budget: only the
+// icon that the app uses is in the binary (REQ-STY-06).
+func TestREQ_STY_06_IconDeadCode(t *testing.T) {
+	body := packJSON
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte(body))
+	}))
+	defer srv.Close()
+	t.Setenv("GX_ICONIFY_BASE", srv.URL)
+
+	repo, err := filepath.Abs("..")
+	if err != nil {
+		t.Fatal(err)
+	}
+	dir := t.TempDir()
+	mod := "module app\n\ngo 1.25.0\n\nrequire github.com/alternayte/gx v0.0.0\n\nreplace github.com/alternayte/gx => " + filepath.ToSlash(repo) + "\n"
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(mod), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if code := gxcli.Main([]string{"icons", "pin", "lucide@1.2.3", dir}); code != 0 {
+		t.Fatalf("icons pin exit = %d", code)
+	}
+	main := `package main
+
+import (
+	"fmt"
+	"os"
+
+	"app/ui/icons/lucide"
+
+	"github.com/alternayte/gx"
+)
+
+func main() {
+	fmt.Fprint(os.Stdout, gx.String(lucide.ShoppingCart(lucide.ShoppingCartProps{Class: "size-4"})))
+}
+`
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(main), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if code := gxcli.Main([]string{"generate", dir}); code != 0 {
+		t.Fatalf("generate exit = %d", code)
+	}
+	run := func(args ...string) {
+		t.Helper()
+		cmd := exec.Command(args[0], args[1:]...)
+		cmd.Dir = dir
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("%v: %v\n%s", args, err, out)
+		}
+	}
+	run("go", "mod", "tidy")
+	bin := filepath.Join(dir, "app")
+	run("go", "build", "-o", bin, ".")
+	data, err := os.ReadFile(bin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), "M1 1") {
+		t.Fatal("the used icon is not in the binary")
+	}
+	if strings.Contains(string(data), "M5 12h14") {
+		t.Fatal("an unused icon is in the binary; the linker did not drop it")
+	}
+}

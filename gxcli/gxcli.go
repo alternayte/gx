@@ -19,6 +19,7 @@ import (
 	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
+	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
 )
 
@@ -45,6 +46,8 @@ func Main(args []string) int {
 		return runLSP(args[1:])
 	case "lint":
 		return runLint(args[1:])
+	case "icons":
+		return runIcons(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -67,6 +70,7 @@ Commands:
   routes    print the routes of a module, with --json for machine output
   lsp       run the language server on stdio
   lint      run go vet and the Gx analyzers on a module
+  icons pin pin an icon set and generate one .gx component per icon
 `)
 }
 
@@ -293,6 +297,41 @@ func runBuild(args []string) int {
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 	if err := cmd.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+func runIcons(args []string) int {
+	if len(args) == 0 || args[0] != "pin" {
+		fmt.Fprintln(os.Stderr, "usage: gx icons pin <set>@<version> [dir]")
+		return 2
+	}
+	fs := flag.NewFlagSet("gx icons pin", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	out := fs.String("out", "", "output directory (default ui/icons/<set>)")
+	if err := fs.Parse(args[1:]); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx icons pin <set>@<version> [dir]")
+		return 2
+	}
+	set, version, ok := strings.Cut(rest[0], "@")
+	if !ok || set == "" || version == "" {
+		fmt.Fprintln(os.Stderr, "usage: gx icons pin <set>@<version> [dir]")
+		return 2
+	}
+	dir := "."
+	if len(rest) > 1 {
+		dir = rest[1]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	err := icons.Pin(ctx, icons.Options{Dir: dir, Set: set, Version: version, Out: *out})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx icons: %v\n", err)
 		return 1
 	}
 	return 0
