@@ -226,8 +226,12 @@ func RenderNode(w io.Writer, n Node) error {
 }
 
 // RenderRequest renders n with the request in scope, so typed links mark the
-// active page (REQ-RTE-13).
+// active page (REQ-RTE-13). The rendered markers feed the runtime script
+// decision of the app (NFR-04).
 func RenderRequest(w io.Writer, r *http.Request, n Node) error {
+	if needs := runtimeNeedsOf(r); needs != nil {
+		*needs = scanRuntimeNeeds(n)
+	}
 	_, err := io.WriteString(w, StringRequest(r, n))
 	return err
 }

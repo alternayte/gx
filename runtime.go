@@ -1,7 +1,10 @@
 package gx
 
 import (
+	"context"
 	_ "embed"
+	"net/http"
+	"strings"
 )
 
 // coreRuntimeJS is the built Gx browser runtime. `just runtime` rebuilds it
@@ -16,4 +19,114 @@ func coreRuntime() Node {
 		{Key: "type", Value: "module"},
 		{Key: "src", Value: BasePath() + "/_gx/gx.js", Kind: AttrURL},
 	})
+}
+
+// runtimeNeeds records which optional scripts one page uses (NFR-04). The
+// app scans the rendered node tree and injects only what the page needs.
+type runtimeNeeds struct {
+	// adapter is true when the page uses signals, actions or client
+	// expressions.
+	adapter bool
+	// core is true when the page uses a form, layout-aware navigation or
+	// a behaviour.
+	core bool
+}
+
+type runtimeNeedsKey struct{}
+
+// withRuntimeNeeds installs a recorder on the request. RenderRequest fills
+// it, the app reads it before the response flushes (NFR-04).
+func withRuntimeNeeds(r *http.Request) (*http.Request, *runtimeNeeds) {
+	needs := &runtimeNeeds{}
+	return r.WithContext(context.WithValue(r.Context(), runtimeNeedsKey{}, needs)), needs
+}
+
+// runtimeNeedsOf returns the recorder of the request, or nil.
+func runtimeNeedsOf(r *http.Request) *runtimeNeeds {
+	if r == nil {
+		return nil
+	}
+	needs, _ := r.Context().Value(runtimeNeedsKey{}).(*runtimeNeeds)
+	return needs
+}
+
+// scanRuntimeNeeds walks a page and records the markers its elements carry
+// (NFR-04).
+func scanRuntimeNeeds(n Node) runtimeNeeds {
+	var needs runtimeNeeds
+	var walk func(Node)
+	walk = func(n Node) {
+		switch t := n.(type) {
+		case fragNode:
+			for _, c := range t {
+				walk(c)
+			}
+		case rawNode:
+			// Highlighted code frames are raw and carry the copy
+			// button; trusted raw HTML may carry other Gx markers.
+			if strings.Contains(string(t), "data-gx-") {
+				needs.core = true
+			}
+		case *elNode:
+			for _, a := range t.attrs {
+				switch {
+				case adapterMarker(a.Key):
+					needs.adapter = true
+					needs.core = true
+				case interactiveMarker(a.Key):
+					needs.adapter = true
+					needs.core = true
+				case behaviorMarker(a.Key):
+					needs.core = true
+				}
+			}
+			for _, c := range t.children {
+				walk(c)
+			}
+		}
+	}
+	walk(n)
+	return needs
+}
+
+// adapterMarker reports whether an attribute activates the hypermedia
+// adapter: the attributes the client expression transpiler emits
+// (REQ-ACT-07).
+func adapterMarker(key string) bool {
+	switch key {
+	case "data-signals", "data-bind", "data-show", "data-text":
+		return true
+	}
+	for _, prefix := range []string{"data-on", "data-attr:", "data-class:"} {
+		if strings.HasPrefix(key, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
+// interactiveMarker reports whether an attribute makes a page talk to the
+// server: a form, live validation or layout-aware navigation. The answer
+// arrives as patches, so the adapter joins the page too (REQ-RTE-12,
+// REQ-FRM-05).
+func interactiveMarker(key string) bool {
+	switch key {
+	case "data-gx-slot", "data-gx-form", "data-gx-validate", "data-gx-validate-url":
+		return true
+	}
+	return false
+}
+
+// behaviorMarker reports whether an attribute activates a browser behaviour
+// (REQ-REG-07).
+func behaviorMarker(key string) bool {
+	switch key {
+	case "data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel",
+		"data-gx-copy", "data-gx-theme", "data-gx-menu",
+		"data-gx-search", "data-gx-search-open", "data-gx-search-close",
+		"data-gx-search-form", "data-gx-search-input", "data-gx-search-results",
+		"data-gx-search-src", "data-gx-toc", "data-gx-toc-target":
+		return true
+	}
+	return false
 }

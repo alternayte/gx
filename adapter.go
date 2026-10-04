@@ -108,7 +108,7 @@ func (b *bufferedWriter) Write(p []byte) (int, error) {
 }
 
 // flush injects the adapter runtime and writes the buffered response.
-func (a *App) flush(w http.ResponseWriter, r *http.Request, b *bufferedWriter) {
+func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeeds) {
 	status := b.status
 	if status == 0 {
 		status = http.StatusOK
@@ -116,7 +116,7 @@ func (a *App) flush(w http.ResponseWriter, r *http.Request, b *bufferedWriter) {
 	body := b.body.Bytes()
 	ct := b.header.Get("Content-Type")
 	if status == http.StatusOK && strings.Contains(ct, "text/html") {
-		body = a.inject(body, r)
+		body = a.inject(body, needs)
 	}
 	for k, vs := range b.header {
 		for _, v := range vs {
@@ -130,15 +130,25 @@ func (a *App) flush(w http.ResponseWriter, r *http.Request, b *bufferedWriter) {
 	_, _ = w.Write(body)
 }
 
-// inject adds the Gx runtime and the adapter scripts to a page.
-func (a *App) inject(page []byte, r *http.Request) []byte {
+// inject adds the Gx runtime and the adapter scripts to a page. A page with
+// no signals, actions, forms, navigation or behaviours ships no JS at all
+// (NFR-04).
+func (a *App) inject(page []byte, needs *runtimeNeeds) []byte {
 	var b bytes.Buffer
 	if link := stylesheetLink(); link != "" {
 		b.WriteString(link)
 	}
-	if a.adapter != nil {
-		b.WriteString(String(coreRuntime()))
-		b.WriteString(String(a.runtimeScripts()))
+	if a.adapter != nil && needs != nil {
+		// Signals, actions and server answers need both scripts: the
+		// runtime carries the CSRF wrapper and applies the frames the
+		// adapter receives (SI-03). A behaviour needs only the core
+		// runtime, and a plain page needs neither.
+		if needs.adapter || needs.core {
+			b.WriteString(String(coreRuntime()))
+		}
+		if needs.adapter {
+			b.WriteString(String(a.runtimeScripts()))
+		}
 	}
 	add := b.Bytes()
 	if len(add) == 0 {

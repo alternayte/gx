@@ -357,9 +357,10 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 		a.mux.ServeHTTP(w, r)
 		return
 	}
+	r, needs := withRuntimeNeeds(r)
 	b := newBufferedWriter()
 	a.mux.ServeHTTP(b, r)
-	a.flush(w, r, b)
+	a.flush(w, b, needs)
 }
 
 // Group mounts routes under a prefix. Middleware applies to the routes that
