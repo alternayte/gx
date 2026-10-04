@@ -24,6 +24,7 @@ import (
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
 	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
+	"github.com/alternayte/gx/internal/starlight"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 )
 
@@ -56,6 +57,8 @@ func Main(args []string) int {
 		return runVendor(args[1:])
 	case "export":
 		return runExport(args[1:])
+	case "import":
+		return runImport(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -81,6 +84,7 @@ Commands:
   icons pin pin an icon set and generate one .gx component per icon
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
+  import    convert another tool: gx import starlight --out <dir> <src>
 `)
 }
 
@@ -339,6 +343,35 @@ func runExport(args []string) int {
 		return 1
 	}
 	fmt.Printf("exported %d pages to %s\n", len(res.Paths), *out)
+	return 0
+}
+
+// runImport converts another tool's project into a Gx app (REQ-CNT-13).
+func runImport(args []string) int {
+	if len(args) == 0 || args[0] != "starlight" {
+		fmt.Fprintln(os.Stderr, "usage: gx import starlight --out <dir> <src>")
+		return 2
+	}
+	fs := flag.NewFlagSet("gx import starlight", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	out := fs.String("out", "content/docs", "Gx content directory")
+	if err := fs.Parse(args[1:]); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx import starlight --out <dir> <src>")
+		return 2
+	}
+	report, err := starlight.Convert(starlight.Options{Src: rest[0], Out: *out})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx import starlight: %v\n", err)
+		return 1
+	}
+	fmt.Printf("converted %d pages\n", report.Converted)
+	for _, note := range report.Notes {
+		fmt.Println("note:", note)
+	}
 	return 0
 }
 
