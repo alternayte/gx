@@ -40,6 +40,10 @@ bench-render:
 bench-build:
     "scripts/bench-build.sh"
 
+# The 100-page export budget (NFR-11).
+bench-export:
+    go test ./internal/exporter -run TestNFR_11 -v -count=1 -timeout 300s
+
 bench-dev:
     go test ./internal/devserver -run TestNFR_02 -v
 
