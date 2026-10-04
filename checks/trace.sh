@@ -26,7 +26,7 @@ find . -path ./.git -prune -o -path '*/node_modules' -prune -o -name '*_test.go'
 
 find . -path ./.git -prune -o -path '*/node_modules' -prune -o -type f \( -name '*.ts' -o -name '*.tsx' \) -print |
   while IFS= read -r f; do
-    grep -oE "(test|it)\([\"'][^\"']*" "$f" || true
+    grep -oE "(test|it)\([\"'\`][^\"'\`]*" "$f" || true
   done |
   grep -oE 'REQ-[A-Z]+-[0-9]+|NFR-[0-9]+|SI-[0-9]+' |
   sort -u > "$tmp/named-ts" || true
