@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/alternayte/gx/internal/gxconfig"
 	"io"
 	"net/http"
 	"os"
@@ -77,7 +78,7 @@ func LoadLock(root string) (Lock, error) {
 
 // Manager fetches and runs the pinned binary.
 type Manager struct {
-	// Root is the module root that holds gx.lock.
+	// Root is the module root that holds gx.lock and gx.toml.
 	Root string
 	// Cache overrides the binary cache directory.
 	Cache string
@@ -86,6 +87,52 @@ type Manager struct {
 	BaseURL string
 	// Client is the HTTP client, or http.DefaultClient.
 	Client *http.Client
+}
+
+// vendorPath returns the vendored binary path of one asset.
+func (m *Manager) vendorPath(version, asset string) string {
+	return filepath.Join(m.Root, ".gx", "vendor", "tailwind", version, asset)
+}
+
+// Vendor downloads the pinned binary into .gx/vendor for offline builds
+// (REQ-STY-12).
+func (m *Manager) Vendor(ctx context.Context) (string, error) {
+	path, err := m.Ensure(ctx)
+	if err != nil {
+		return "", err
+	}
+	lock, err := LoadLock(m.Root)
+	if err != nil {
+		return "", err
+	}
+	asset, err := Asset(runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		return "", err
+	}
+	want, ok := lock.Tailwind.SHA256[asset]
+	if !ok {
+		return "", fmt.Errorf("tailwind: gx.lock has no sha256 for %s", asset)
+	}
+	dst := m.vendorPath(lock.Tailwind.Version, asset)
+	if got, err := hashFile(dst); err == nil && got == want {
+		return dst, nil
+	}
+	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
+		return "", err
+	}
+	if err := copyFile(path, dst); err != nil {
+		return "", err
+	}
+	return dst, nil
+}
+
+// copyFile copies a file and keeps it executable.
+func copyFile(src, dst string) error {
+	data, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(dst, data, 0o755)
 }
 
 // Asset returns the release asset name of a GOOS and GOARCH.
@@ -144,19 +191,50 @@ func (m *Manager) Ensure(ctx context.Context) (string, error) {
 			dir = filepath.Join(base, "gx", "tailwind")
 		}
 	}
+	// A vendored binary wins and works with the network off (REQ-STY-12).
+	vendored := m.vendorPath(version, asset)
+	if got, err := hashFile(vendored); err == nil {
+		if got != want {
+			return "", fmt.Errorf("tailwind: vendored %s sha256 = %s, gx.lock pins %s", vendored, got, want)
+		}
+		return vendored, nil
+	}
 	path := filepath.Join(dir, version, asset)
 	if got, err := hashFile(path); err == nil && got == want {
 		return path, nil
 	}
-	baseURL := m.BaseURL
-	if baseURL == "" {
-		baseURL = DefaultBaseURL
+	url, err := m.downloadURL(version, asset)
+	if err != nil {
+		return "", err
 	}
-	url := strings.TrimSuffix(baseURL, "/") + "/" + version + "/" + asset
 	if err := m.download(ctx, url, path, want); err != nil {
 		return "", err
 	}
 	return path, nil
+}
+
+// downloadURL resolves the download URL: BaseURL, then GX_TAILWIND_BASE_URL,
+// then the gx.toml mirror, then the official release root (REQ-STY-12).
+func (m *Manager) downloadURL(version, asset string) (string, error) {
+	base := m.BaseURL
+	if base == "" {
+		base = os.Getenv("GX_TAILWIND_BASE_URL")
+	}
+	if base == "" {
+		cfg, err := gxconfig.Load(m.Root)
+		if err != nil {
+			return "", err
+		}
+		base = cfg.Mirror("tailwind")
+	}
+	if base == "" {
+		base = DefaultBaseURL
+	}
+	if strings.Contains(base, "{version}") || strings.Contains(base, "{asset}") {
+		base = strings.ReplaceAll(base, "{version}", version)
+		return strings.ReplaceAll(base, "{asset}", asset), nil
+	}
+	return strings.TrimSuffix(base, "/") + "/" + version + "/" + asset, nil
 }
 
 // download fetches url, verifies its sha256 and moves it to path.

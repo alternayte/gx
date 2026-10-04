@@ -21,6 +21,7 @@ import (
 	"github.com/alternayte/gx/internal/devserver"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
+	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 )
 
 // Main runs the gx command with the given arguments and returns an exit code.
@@ -48,6 +49,8 @@ func Main(args []string) int {
 		return runLint(args[1:])
 	case "icons":
 		return runIcons(args[1:])
+	case "vendor":
+		return runVendor(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -71,6 +74,7 @@ Commands:
   lsp       run the language server on stdio
   lint      run go vet and the Gx analyzers on a module
   icons pin pin an icon set and generate one .gx component per icon
+  vendor    store the pinned downloads in .gx/vendor for offline builds
 `)
 }
 
@@ -298,6 +302,35 @@ func runBuild(args []string) int {
 	if err := cmd.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
 		return 1
+	}
+	return 0
+}
+
+func runVendor(args []string) int {
+	dir := "."
+	if len(args) > 0 {
+		dir = args[0]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	path, err := (&tailwindpkg.Manager{Root: dir}).Vendor(ctx)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx vendor: tailwind: %v\n", err)
+		return 1
+	}
+	fmt.Println("vendored", path)
+	pins, err := icons.Pinned(dir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx vendor: %v\n", err)
+		return 1
+	}
+	for set, entry := range pins {
+		path, err := icons.Vendor(ctx, icons.Options{Dir: dir, Set: set, Version: entry.Version})
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "gx vendor: icons %s: %v\n", set, err)
+			return 1
+		}
+		fmt.Println("vendored", path)
 	}
 	return 0
 }

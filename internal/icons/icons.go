@@ -17,6 +17,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/alternayte/gx/internal/gxconfig"
 )
 
 // DefaultBaseURL is the Iconify JSON pack root.
@@ -70,33 +72,36 @@ func Pin(ctx context.Context, opt Options) error {
 	if opt.Set == "" || opt.Version == "" {
 		return fmt.Errorf("icons: set and version are required")
 	}
-	base := opt.BaseURL
-	if base == "" {
-		base = os.Getenv("GX_ICONIFY_BASE")
-	}
-	if base == "" {
-		base = DefaultBaseURL
-	}
-	url := strings.TrimSuffix(base, "/") + "/" + opt.Set + ".json"
-	client := opt.Client
-	if client == nil {
-		client = &http.Client{Timeout: 5 * time.Minute}
-	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return err
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("icons: fetch %s: %w", url, err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("icons: fetch %s: %s", url, resp.Status)
-	}
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
+	vendored := filepath.Join(opt.Dir, ".gx", "vendor", "icons", opt.Set+".json")
+	var data []byte
+	if vendoredData, err := os.ReadFile(vendored); err == nil {
+		// A vendored pack works with the network off (REQ-STY-12).
+		data = vendoredData
+	} else {
+		url, err := opt.packURL()
+		if err != nil {
+			return err
+		}
+		client := opt.Client
+		if client == nil {
+			client = &http.Client{Timeout: 5 * time.Minute}
+		}
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+			return err
+		}
+		resp, err := client.Do(req)
+		if err != nil {
+			return fmt.Errorf("icons: fetch %s: %w", url, err)
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("icons: fetch %s: %s", url, resp.Status)
+		}
+		data, err = io.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
 	}
 	sum := sha256.Sum256(data)
 	hexSum := hex.EncodeToString(sum[:])
@@ -105,7 +110,7 @@ func Pin(ctx context.Context, opt Options) error {
 	}
 	var pack Pack
 	if err := json.Unmarshal(data, &pack); err != nil {
-		return fmt.Errorf("icons: parse %s: %w", url, err)
+		return fmt.Errorf("icons: parse pack %s: %w", opt.Set, err)
 	}
 	if len(pack.Icons) == 0 {
 		return fmt.Errorf("icons: pack %s holds no icons", opt.Set)
@@ -135,6 +140,74 @@ func Pin(ctx context.Context, opt Options) error {
 		}
 	}
 	return saveLock(opt.Dir, opt.Set, Entry{Version: opt.Version, SHA256: hexSum})
+}
+
+// packURL resolves the pack URL: BaseURL, then GX_ICONIFY_BASE, then the
+// gx.toml mirror, then the official Iconify root (REQ-STY-12).
+func (opt Options) packURL() (string, error) {
+	base := opt.BaseURL
+	if base == "" {
+		base = os.Getenv("GX_ICONIFY_BASE")
+	}
+	if base == "" {
+		cfg, err := gxconfig.Load(opt.Dir)
+		if err != nil {
+			return "", err
+		}
+		base = cfg.Mirror("icons")
+	}
+	if base == "" {
+		base = DefaultBaseURL
+	}
+	if strings.Contains(base, "{set}") {
+		return strings.ReplaceAll(base, "{set}", opt.Set), nil
+	}
+	return strings.TrimSuffix(base, "/") + "/" + opt.Set + ".json", nil
+}
+
+// Vendor fetches the pack and stores it in .gx/vendor/icons for offline
+// builds (REQ-STY-12).
+func Vendor(ctx context.Context, opt Options) (string, error) {
+	url, err := opt.packURL()
+	if err != nil {
+		return "", err
+	}
+	client := opt.Client
+	if client == nil {
+		client = &http.Client{Timeout: 5 * time.Minute}
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return "", err
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("icons: fetch %s: %w", url, err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("icons: fetch %s: %s", url, resp.Status)
+	}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	sum := sha256.Sum256(data)
+	hexSum := hex.EncodeToString(sum[:])
+	if err := checkPin(opt.Dir, opt.Set, hexSum); err != nil {
+		return "", err
+	}
+	path := filepath.Join(opt.Dir, ".gx", "vendor", "icons", opt.Set+".json")
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return "", err
+	}
+	if err := os.WriteFile(path, data, 0o644); err != nil {
+		return "", err
+	}
+	if err := saveLock(opt.Dir, opt.Set, Entry{Version: opt.Version, SHA256: hexSum}); err != nil {
+		return "", err
+	}
+	return path, nil
 }
 
 // body returns the inner markup of an icon, resolving aliases.
@@ -251,6 +324,9 @@ func checkPin(dir, set, sum string) error {
 	}
 	return nil
 }
+
+// Pinned returns the icon pins of gx.lock (REQ-STY-12).
+func Pinned(dir string) (map[string]Entry, error) { return readLock(dir) }
 
 // readLock reads the icons section of gx.lock.
 func readLock(dir string) (map[string]Entry, error) {

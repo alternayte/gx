@@ -9,10 +9,12 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
 	"github.com/alternayte/gx/gxcli"
+	"github.com/alternayte/gx/internal/tailwind"
 )
 
 // packJSON is a three-icon Iconify pack.
@@ -158,5 +160,49 @@ func main() {
 	}
 	if strings.Contains(string(data), "M5 12h14") {
 		t.Fatal("an unused icon is in the binary; the linker did not drop it")
+	}
+}
+
+// TestREQ_STY_12_VendorCommand covers `gx vendor`: the pinned Tailwind
+// binary lands in .gx/vendor for offline builds (REQ-STY-12).
+func TestREQ_STY_12_VendorCommand(t *testing.T) {
+	content := []byte("#!/bin/sh\necho hi\n")
+	sum := sha256.Sum256(content)
+	hexSum := hex.EncodeToString(sum[:])
+	asset, err := tailwind.Asset(runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		t.Fatal(err)
+	}
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, asset) {
+			http.NotFound(w, r)
+			return
+		}
+		_, _ = w.Write(content)
+	}))
+	defer srv.Close()
+
+	dir := t.TempDir()
+	lock := map[string]any{
+		"tailwind": map[string]any{
+			"version": "v1.2.3",
+			"sha256":  map[string]string{asset: hexSum},
+		},
+	}
+	data, err := json.Marshal(lock)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "gx.lock"), data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "gx.toml"), []byte("[mirrors]\ntailwind = \""+srv.URL+"\"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if code := gxcli.Main([]string{"vendor", dir}); code != 0 {
+		t.Fatalf("vendor exit = %d", code)
+	}
+	if _, err := os.Stat(filepath.Join(dir, ".gx", "vendor", "tailwind", "v1.2.3", asset)); err != nil {
+		t.Fatalf("vendored tailwind: %v", err)
 	}
 }
