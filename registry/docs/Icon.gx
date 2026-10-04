@@ -1,0 +1,9 @@
+package docs
+
+props {
+  Body  gx.SafeHTML
+  Label string = ""
+  Class string = ""
+}
+
+{gx.Icon(string(p.Body), gx.IconProps{Label: p.Label, Class: gx.Cx("inline-block size-5", p.Class)})}

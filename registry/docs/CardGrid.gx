@@ -1,0 +1,8 @@
+package docs
+
+props {
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="gx-card-grid my-4 grid gap-4 sm:grid-cols-2" {...p.Attrs}>{p.Children}</div>

@@ -40,10 +40,11 @@ type typesResult struct {
 	exprTypes   map[ast.Expr]types.Type
 	clientBy    map[*Attr]*clientSite
 	clientSites []*clientSite
-	scopedMap   map[*Component]bool
+	scopedMap   map[*File]bool
 	symbols     map[string][]Symbol // typed identifiers per .gx file (REQ-DEV-08)
 	goFset      *token.FileSet      // the shared file set of the loaded Go packages
 	collections []contentCollection // gx.Collection declarations (REQ-CNT-03)
+	codeFiles   map[any]string       // resolved gx.CodeFile literals (REQ-CNT-05)
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -84,7 +85,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		typeDiags:  map[string][]Diagnostic{},
 		exprTypes:  map[ast.Expr]types.Type{},
 		clientBy:   map[*Attr]*clientSite{},
-		scopedMap:  map[*Component]bool{},
+		scopedMap:  map[*File]bool{},
 		symbols:    map[string][]Symbol{},
 	}
 	if findModule(root) == nil {
@@ -179,6 +180,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	}
 	res.collectActions(pkgs)
 	res.collections = collectCollections(pkgs)
+	diags = append(diags, l.checkCodeFiles(res, dirs)...)
 	routes, rdiags := collectRoutes(pkgs, res.actions)
 	res.routes = routes
 	diags = append(diags, rdiags...)
@@ -329,14 +331,14 @@ func (l *loader) checkKeys(dirs []string) []Diagnostic {
 						Msg:  "loop needs a key: add key={expr} or a #fragment with a key parameter",
 					})
 				}
-				memo := map[*Component]bool{}
+				memo := map[*File]bool{}
 				walkElementsKeyed(c.Body, false, func(el *Element, keyed bool) {
 					qual, name, ok := componentTag(el.Name)
 					if !ok {
 						return
 					}
 					comp, childPkg, _ := resolveComponent(l, p, f, qual, name)
-					if comp == nil || !componentScoped(l, childPkg, comp.File, comp, memo, map[*Component]bool{}) {
+					if comp == nil || !componentScoped(l, childPkg, comp.File, comp, memo, map[*File]bool{}) {
 						return
 					}
 					if keyed || elementHasKey(el) {

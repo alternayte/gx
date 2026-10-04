@@ -1,0 +1,15 @@
+package docs
+
+props {
+  Kind     Kind = Note
+  Title    string = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<aside class={gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind])} {...p.Attrs}>
+  if p.Title != "" {
+    <p class="gx-aside-title m-0 mb-1 font-semibold">{p.Title}</p>
+  }
+  <div class="gx-aside-body [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">{p.Children}</div>
+</aside>

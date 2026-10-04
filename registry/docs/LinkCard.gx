@@ -1,0 +1,19 @@
+package docs
+
+props {
+  Href        gx.URL
+  Title       string
+  Description string = ""
+  Children    gx.Node = nil
+  Attrs       gx.Attrs = nil
+}
+
+<a href={p.Href} class="gx-link-card my-4 block rounded-lg border border-border p-4 no-underline transition-colors hover:bg-accent" {...p.Attrs}>
+  <span class="block font-medium text-foreground">{p.Title}</span>
+  if p.Description != "" {
+    <span class="mt-1 block text-sm text-muted-foreground">{p.Description}</span>
+  }
+  if p.Children != nil {
+    <span class="gx-link-card-body mt-2 block text-sm">{p.Children}</span>
+  }
+</a>

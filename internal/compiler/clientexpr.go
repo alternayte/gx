@@ -136,26 +136,28 @@ func (r *typesResult) checkSignalFields(f *File, a *Attr, def *routeDef) []Diagn
 
 // componentScoped reports whether a component carries client signals
 // itself or through a component it renders (REQ-ACT-06).
-func (r *typesResult) componentScoped(l *loader, pkg *Package, file *File, comp *Component, seen map[*Component]bool) bool {
+func (r *typesResult) componentScoped(l *loader, pkg *Package, file *File, comp *Component, seen map[*File]bool) bool {
 	return componentScoped(l, pkg, file, comp, r.scopedMap, seen)
 }
 
 // componentScoped reports whether a component carries client signals itself
 // or through a component it renders (REQ-ACT-06). The memo caches results.
-func componentScoped(l *loader, pkg *Package, file *File, comp *Component, memo, seen map[*Component]bool) bool {
+// The memo and seen maps key on the component file, which stays stable
+// across resolve calls, so a recursive component terminates.
+func componentScoped(l *loader, pkg *Package, file *File, comp *Component, memo, seen map[*File]bool) bool {
 	if comp == nil || comp.File == nil {
 		return false
 	}
-	if v, ok := memo[comp]; ok {
+	if v, ok := memo[comp.File]; ok {
 		return v
 	}
-	if seen[comp] {
+	if seen[comp.File] {
 		return false
 	}
-	seen[comp] = true
-	defer delete(seen, comp)
+	seen[comp.File] = true
+	defer delete(seen, comp.File)
 	if len(comp.File.Signals) > 0 {
-		memo[comp] = true
+		memo[comp.File] = true
 		return true
 	}
 	found := false
@@ -172,7 +174,7 @@ func componentScoped(l *loader, pkg *Package, file *File, comp *Component, memo,
 			found = true
 		}
 	})
-	memo[comp] = found
+	memo[comp.File] = found
 	return found
 }
 

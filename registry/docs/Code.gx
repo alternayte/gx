@@ -1,0 +1,18 @@
+package docs
+
+import (
+  "github.com/alternayte/gx"
+  "github.com/alternayte/gx/content"
+)
+
+props {
+  Code  gx.Code
+  Title string = ""
+  Wrap  bool = false
+  Marks []int = nil
+  Ins   []int = nil
+  Del   []int = nil
+  Words []int = nil
+}
+
+{content.Code(p.Code, content.CodeOptions{Title: p.Title, Wrap: p.Wrap, Marks: p.Marks, Ins: p.Ins, Del: p.Del, Words: p.Words})}

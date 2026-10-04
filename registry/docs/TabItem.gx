@@ -1,0 +1,12 @@
+package docs
+
+props {
+  Label    string
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="gx-tab" data-gx-tab-item>
+  <button type="button" class="gx-tab-button -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground" data-gx-tab={p.Label} aria-expanded="false">{p.Label}</button>
+  <div class="gx-tab-panel pt-4" data-gx-tab-panel>{p.Children}</div>
+</div>

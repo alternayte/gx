@@ -1,0 +1,25 @@
+package docs
+
+props {
+  Item FileTreeItem
+}
+
+<li class="gx-file-tree-item">
+  <span class="flex items-center gap-2">
+    if p.Item.Dir {
+      <span class="font-medium text-foreground">{p.Item.Name}/</span>
+    } else {
+      <span>{p.Item.Name}</span>
+    }
+    if p.Item.Comment != "" {
+      <span class="text-muted-foreground">{p.Item.Comment}</span>
+    }
+  </span>
+  if len(p.Item.Children) > 0 {
+    <ul class="mt-1 list-none space-y-1 border-l border-border p-0 pl-4">
+      for _, child := range p.Item.Children {
+        <FileTreeItemRow item={child} />
+      }
+    </ul>
+  }
+</li>

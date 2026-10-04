@@ -1,0 +1,8 @@
+package docs
+
+props {
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="gx-steps my-4 [&>ol]:m-0 [&>ol]:list-none [&>ol]:space-y-4 [&>ol]:p-0 [&>ol>li]:border-l-2 [&>ol>li]:border-border [&>ol>li]:pl-4" {...p.Attrs}>{p.Children}</div>

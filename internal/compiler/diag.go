@@ -47,6 +47,8 @@ const (
 
 	CodeContentComponent = "GX8002"
 
+	CodeCodeFile = "GX8004"
+
 	CodeActionMissing       = "GX4001"
 	CodeActionTwice         = "GX4002"
 	CodeActionMissingSignal = "GX4003"
@@ -119,6 +121,7 @@ var Catalog = []Info{
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},
 	{CodeContentComponent, "component is not declared in this collection"},
+	{CodeCodeFile, "code file or line range is missing"},
 }
 
 // Doc returns the documentation path of the diagnostic (REQ-AUT-19).

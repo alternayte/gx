@@ -1,4 +1,6 @@
-package content
+// Package highlight renders syntax-highlighted code frames (REQ-CNT-04).
+// Chroma runs at build time; the browser gets HTML and CSS only.
+package highlight
 
 import (
 	"fmt"
@@ -11,14 +13,10 @@ import (
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/alecthomas/chroma/v2/styles"
-	"github.com/yuin/goldmark/ast"
-	"github.com/yuin/goldmark/renderer"
-	"github.com/yuin/goldmark/util"
 )
 
-// CodeOptions are the per-block options of a highlighted code block
-// (REQ-CNT-04).
-type CodeOptions struct {
+// Options are the options of one highlighted code block.
+type Options struct {
 	Lang  string
 	Title string
 	// Frame is "" (none), "code" or "terminal".
@@ -31,37 +29,9 @@ type CodeOptions struct {
 	Wrap  bool
 }
 
-// codeRenderer replaces the default fenced code block renderer with the
-// highlighted frame (REQ-CNT-04).
-type codeRenderer struct{}
-
-func (r *codeRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
-	reg.Register(ast.KindFencedCodeBlock, r.renderFenced)
-}
-
-func (r *codeRenderer) renderFenced(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
-	if !entering {
-		return ast.WalkSkipChildren, nil
-	}
-	n := node.(*ast.FencedCodeBlock)
-	lang := string(n.Language(source))
-	info := ""
-	if n.Info != nil {
-		info = string(n.Info.Value(source))
-	}
-	var code strings.Builder
-	lines := n.Lines()
-	for i := 0; i < lines.Len(); i++ {
-		line := lines.At(i)
-		code.Write(line.Value(source))
-	}
-	_, _ = w.WriteString(RenderCode(lang, info, code.String()))
-	return ast.WalkSkipChildren, nil
-}
-
-// RenderCode renders one highlighted code block (REQ-CNT-04).
+// RenderCode renders one highlighted code block.
 func RenderCode(lang, info, code string) string {
-	opt := ParseCodeInfo(lang, info)
+	opt := ParseInfo(lang, info)
 	body := highlightLines(opt.Lang, code, opt)
 	var b strings.Builder
 	class := "gx-code"
@@ -89,11 +59,11 @@ func RenderCode(lang, info, code string) string {
 	return b.String()
 }
 
-// ParseCodeInfo parses the fence info string (REQ-CNT-04):
+// ParseInfo parses the fence info string (REQ-CNT-04):
 //
 //	```go title="main.go" frame="code" {3-5} ins={7} del={9} word={2} wrap
-func ParseCodeInfo(lang, info string) CodeOptions {
-	opt := CodeOptions{Lang: strings.ToLower(lang)}
+func ParseInfo(lang, info string) Options {
+	opt := Options{Lang: strings.ToLower(lang)}
 	switch opt.Lang {
 	case "sh", "bash", "zsh", "shell", "console", "fish":
 		opt.Frame = "terminal"
@@ -109,7 +79,7 @@ func ParseCodeInfo(lang, info string) CodeOptions {
 			if end < 0 {
 				return opt
 			}
-			opt.Marks = append(opt.Marks, parseLines(rest[1:end])...)
+			opt.Marks = append(opt.Marks, ParseLines(rest[1:end])...)
 			rest = strings.TrimSpace(rest[end+1:])
 		case strings.HasPrefix(rest, "title="):
 			value, n := parseValue(rest[len("title="):])
@@ -121,15 +91,15 @@ func ParseCodeInfo(lang, info string) CodeOptions {
 			rest = strings.TrimSpace(rest[len("frame=")+n:])
 		case strings.HasPrefix(rest, "ins="):
 			value, n := parseValue(rest[len("ins="):])
-			opt.Ins = append(opt.Ins, parseLines(value)...)
+			opt.Ins = append(opt.Ins, ParseLines(value)...)
 			rest = strings.TrimSpace(rest[len("ins=")+n:])
 		case strings.HasPrefix(rest, "del="):
 			value, n := parseValue(rest[len("del="):])
-			opt.Del = append(opt.Del, parseLines(value)...)
+			opt.Del = append(opt.Del, ParseLines(value)...)
 			rest = strings.TrimSpace(rest[len("del=")+n:])
 		case strings.HasPrefix(rest, "word="):
 			value, n := parseValue(rest[len("word="):])
-			opt.Words = append(opt.Words, parseLines(value)...)
+			opt.Words = append(opt.Words, ParseLines(value)...)
 			rest = strings.TrimSpace(rest[len("word=")+n:])
 		case strings.HasPrefix(rest, "wrap"):
 			opt.Wrap = true
@@ -169,8 +139,8 @@ func parseValue(s string) (string, int) {
 	return s[:i], i
 }
 
-// parseLines parses "1,3-5" into line numbers.
-func parseLines(s string) []int {
+// ParseLines parses "1,3-5" into line numbers.
+func ParseLines(s string) []int {
 	var out []int
 	for _, part := range strings.Split(s, ",") {
 		part = strings.TrimSpace(part)
@@ -196,7 +166,7 @@ func parseLines(s string) []int {
 
 // highlightLines highlights code and wraps every line with its mark
 // classes.
-func highlightLines(lang, code string, opt CodeOptions) string {
+func highlightLines(lang, code string, opt Options) string {
 	if !strings.HasSuffix(code, "\n") {
 		code += "\n"
 	}
@@ -246,7 +216,7 @@ func highlightLines(lang, code string, opt CodeOptions) string {
 }
 
 // lineClasses returns the mark classes of one line.
-func lineClasses(n int, opt CodeOptions) string {
+func lineClasses(n int, opt Options) string {
 	var classes []string
 	if contains(opt.Marks, n) {
 		classes = append(classes, "mark")
@@ -270,6 +240,55 @@ func contains(xs []int, n int) bool {
 		}
 	}
 	return false
+}
+
+// LangForFile guesses the chroma lexer name from a file path.
+func LangForFile(path string) string {
+	base := strings.ToLower(path)
+	if i := strings.LastIndexByte(base, '/'); i >= 0 {
+		base = base[i+1:]
+	}
+	switch base {
+	case "go.mod", "go.sum":
+		return "go"
+	case "dockerfile", "makefile":
+		return "bash"
+	}
+	ext := base
+	if i := strings.LastIndexByte(base, '.'); i >= 0 {
+		ext = base[i+1:]
+	}
+	switch ext {
+	case "go":
+		return "go"
+	case "ts", "tsx", "mts", "cts":
+		return "typescript"
+	case "js", "jsx", "mjs", "cjs":
+		return "javascript"
+	case "md", "markdown", "mdx":
+		return "markdown"
+	case "html", "htm", "gx":
+		return "html"
+	case "css":
+		return "css"
+	case "json", "jsonc", "json5":
+		return "json"
+	case "yaml", "yml":
+		return "yaml"
+	case "toml":
+		return "toml"
+	case "sh", "bash", "zsh":
+		return "bash"
+	case "sql":
+		return "sql"
+	case "diff", "patch":
+		return "diff"
+	case "xml", "svg":
+		return "xml"
+	case "mod":
+		return "go"
+	}
+	return "text"
 }
 
 // tokenClass turns a chroma token type into a CSS class.

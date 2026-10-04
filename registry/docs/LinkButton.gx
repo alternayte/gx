@@ -1,0 +1,10 @@
+package docs
+
+props {
+  Href     gx.URL
+  Variant  ButtonVariant = ButtonPrimary
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a href={p.Href} class={gx.Cx("gx-link-button my-2 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant])} {...p.Attrs}>{p.Children}</a>

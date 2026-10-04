@@ -1,0 +1,20 @@
+package docs
+
+props {
+  Title       string = ""
+  Description string = ""
+  Children    gx.Node = nil
+  Attrs       gx.Attrs = nil
+}
+
+<div class="gx-card my-4 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm" {...p.Attrs}>
+  if p.Title != "" {
+    <h3 class="m-0 text-base font-semibold leading-none tracking-tight">{p.Title}</h3>
+  }
+  if p.Description != "" {
+    <p class="m-0 mt-1.5 text-sm text-muted-foreground">{p.Description}</p>
+  }
+  if p.Children != nil {
+    <div class="gx-card-body mt-4">{p.Children}</div>
+  }
+</div>

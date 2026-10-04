@@ -1,0 +1,10 @@
+package docs
+
+props {
+  Sync     string = ""
+  Default  string = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="gx-tabs my-4" data-gx-tabs data-sync={p.Sync} data-default={p.Default} {...p.Attrs}>{p.Children}</div>
