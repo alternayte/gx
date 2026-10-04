@@ -1,0 +1,20 @@
+package shell
+
+props {
+  Group NavGroup
+  Path  string
+}
+
+<details class="gx-nav-group mb-4" open={!p.Group.Collapsed}>
+  <summary class="gx-nav-group-label flex cursor-pointer items-center gap-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+    {p.Group.Label}
+    if p.Group.Badge != "" {
+      <span class="gx-nav-badge rounded-full border border-border px-1.5 text-[10px]">{p.Group.Badge}</span>
+    }
+  </summary>
+  <ul class="mt-1 list-none space-y-0.5 p-0">
+    for _, it := range p.Group.Items {
+      <SidebarItem item={it} path={p.Path} />
+    }
+  </ul>
+</details>

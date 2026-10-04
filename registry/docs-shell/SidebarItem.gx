@@ -1,0 +1,31 @@
+package shell
+
+props {
+  Item NavItem
+  Path string
+}
+
+<li class="gx-nav-item">
+  if len(p.Item.Items) > 0 {
+    <details class="gx-nav-sub" open={ActiveItem(p.Path, p.Item)}>
+      <summary class="gx-nav-sub-label cursor-pointer py-1 text-sm text-muted-foreground">
+        {p.Item.Label}
+        if p.Item.Badge != "" {
+          <span class="gx-nav-badge ml-1 rounded-full border border-border px-1.5 text-[10px]">{p.Item.Badge}</span>
+        }
+      </summary>
+      <ul class="mt-1 list-none space-y-0.5 border-l border-border p-0 pl-3">
+        for _, child := range p.Item.Items {
+          <SidebarItem item={child} path={p.Path} />
+        }
+      </ul>
+    </details>
+  } else {
+    <a class="gx-nav-link block py-1 text-sm text-muted-foreground hover:text-foreground [&[aria-current=page]]:font-medium [&[aria-current=page]]:text-foreground" href={p.Item.Href} active="page">
+      {p.Item.Label}
+      if p.Item.Badge != "" {
+        <span class="gx-nav-badge ml-1 rounded-full border border-border px-1.5 text-[10px]">{p.Item.Badge}</span>
+      }
+    </a>
+  }
+</li>

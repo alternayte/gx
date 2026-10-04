@@ -1,0 +1,22 @@
+package shell
+
+props {
+  Site Config
+}
+
+<header class="gx-header sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
+    <button type="button" class="gx-menu-button rounded-md border border-border px-2 py-1 text-sm lg:hidden" data-gx-menu aria-expanded="false" aria-controls="gx-sidebar">Menu</button>
+    <a class="gx-site-title font-semibold" href={gx.URL("/")}>{p.Site.Title}</a>
+    if p.Site.Version != "" {
+      <span class="gx-version rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground" data-gx-version>{p.Site.Version}</span>
+    }
+    <div class="ml-auto flex items-center gap-3 text-sm">
+      <button type="button" class="gx-search-button rounded-md border border-border px-2 py-1 text-muted-foreground" data-gx-search-open aria-haspopup="dialog">Search <kbd class="ml-1 text-xs">Ctrl K</kbd></button>
+      for _, l := range p.Site.Links {
+        <a class="gx-header-link" href={l.Href}>{l.Label}</a>
+      }
+      <ThemeSelect />
+    </div>
+  </div>
+</header>

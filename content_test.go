@@ -76,7 +76,7 @@ func TestREQ_CNT_02_ContentPages(t *testing.T) {
 		}
 		return gx.El("main", nil, gx.El("h1", nil, gx.Text(m.Title)), node)
 	})
-	if h.Pattern() != "/{slug}" {
+	if h.Pattern() != "/{slug...}" {
 		t.Fatalf("pattern = %q", h.Pattern())
 	}
 	mux := http.NewServeMux()
@@ -103,5 +103,48 @@ func TestREQ_CNT_02_ContentPages(t *testing.T) {
 	}
 	if page, ok := inputs[0].(gx.ContentPage); !ok || page.Slug != "a" {
 		t.Fatalf("static input = %#v", inputs[0])
+	}
+}
+
+// TestREQ_CNT_06_ContentEntryAndHeadings covers the entry view, the index
+// route of the docs shell and the heading list for its table of contents
+// (REQ-CNT-06).
+func TestREQ_CNT_06_ContentEntryAndHeadings(t *testing.T) {
+	content.Install()
+	dir := t.TempDir()
+	files := map[string]string{
+		"index.md": "---\ntitle: Home\n---\n\n# Home\n",
+		"start.md": "---\ntitle: Start\n---\n\n# Start\n\n## Install\n\n### Database\n\n#### Deep\n",
+	}
+	for name, body := range files {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	coll := gx.Collection[docMeta](dir).Components()
+	h := gx.ContentEntries(coll, func(e gx.Entry[docMeta]) gx.Node {
+		return gx.El("h1", nil, gx.Text(e.Meta.Title+":"+e.Slug))
+	})
+	mux := http.NewServeMux()
+	mux.Handle("GET /docs/{slug...}", h)
+	rec := httptest.NewRecorder()
+	mux.ServeHTTP(rec, httptest.NewRequest("GET", "/docs/", nil))
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), "Home:index") {
+		t.Fatalf("index = %d %q", rec.Code, rec.Body.String())
+	}
+	rec = httptest.NewRecorder()
+	mux.ServeHTTP(rec, httptest.NewRequest("GET", "/docs/start/", nil))
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), "Start:start") {
+		t.Fatalf("trailing slash = %d %q", rec.Code, rec.Body.String())
+	}
+	body := []byte("# Start\n\n## Install\n\n### Database\n\n#### Deep\n")
+	headings := content.Headings(body)
+	var got []string
+	for _, heading := range headings {
+		got = append(got, heading.Text+"/"+heading.ID)
+	}
+	want := []string{"Start/start", "Install/install", "Database/database", "Deep/deep"}
+	if strings.Join(got, ",") != strings.Join(want, ",") {
+		t.Fatalf("headings = %v, want %v", got, want)
 	}
 }

@@ -1,0 +1,7 @@
+package shell
+
+<div class="gx-theme inline-flex gap-1 rounded-md border border-border p-0.5" role="group" aria-label="Theme">
+  <button type="button" class="gx-theme-button rounded px-2 py-0.5 text-xs" data-gx-theme="light" aria-pressed="false">Light</button>
+  <button type="button" class="gx-theme-button rounded px-2 py-0.5 text-xs" data-gx-theme="dark" aria-pressed="false">Dark</button>
+  <button type="button" class="gx-theme-button rounded px-2 py-0.5 text-xs" data-gx-theme="auto" aria-pressed="false">Auto</button>
+</div>

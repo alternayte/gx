@@ -181,6 +181,141 @@ const installTabs = (): void => {
   })
 }
 
+// installShell wires the docs-shell behaviours (REQ-CNT-06): theme select,
+// search dialog, mobile menu and table-of-contents scroll spy.
+const themeKey = 'gx-theme'
+
+const applyTheme = (mode: string): void => {
+  const root = document.documentElement
+  root.classList.remove('dark', 'light')
+  if (mode === 'dark') root.classList.add('dark')
+  else if (mode === 'light') root.classList.add('light')
+  document.querySelectorAll<HTMLElement>('[data-gx-theme]').forEach((button) => {
+    const on = button.getAttribute('data-gx-theme') === mode
+    button.setAttribute('aria-pressed', on ? 'true' : 'false')
+    if (on) button.setAttribute('data-active', '')
+    else button.removeAttribute('data-active')
+  })
+}
+
+const storedTheme = (): string => {
+  try {
+    return localStorage.getItem(themeKey) ?? 'auto'
+  } catch {
+    return 'auto'
+  }
+}
+
+const openSearch = (): void => {
+  const dialog = document.querySelector<HTMLDialogElement>('dialog[data-gx-search]')
+  if (!dialog) return
+  if (!dialog.open) dialog.showModal()
+  dialog.querySelector<HTMLInputElement>('[data-gx-search-input]')?.focus()
+}
+
+// spyTOC marks the table-of-contents entry of the heading nearest the top
+// of the viewport (REQ-CNT-06).
+const spyTOC = (): void => {
+  const toc = document.querySelector('[data-gx-toc]')
+  if (!toc) return
+  const links = [...toc.querySelectorAll<HTMLElement>('[data-gx-toc-target]')]
+  let active = ''
+  for (const link of links) {
+    const id = link.getAttribute('data-gx-toc-target') ?? ''
+    const heading = id === '' ? null : document.getElementById(id)
+    if (heading && heading.getBoundingClientRect().top <= 96) active = id
+  }
+  // At the end of the page the last heading is the one being read, even
+  // when it cannot reach the top of the viewport.
+  if (links.length > 0 && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+    active = links[links.length - 1].getAttribute('data-gx-toc-target') ?? active
+  }
+  for (const link of links) {
+    const on = link.getAttribute('data-gx-toc-target') === active
+    if (on) {
+      link.setAttribute('aria-current', 'location')
+      link.setAttribute('data-active', '')
+    } else {
+      link.removeAttribute('aria-current')
+      link.removeAttribute('data-active')
+    }
+  }
+}
+
+const installShell = (): void => {
+  applyTheme(storedTheme())
+  syncSidebar()
+  spyTOC()
+}
+
+// syncSidebar shows the sidebar on wide screens and when the mobile menu is
+// open (REQ-CNT-06).
+const syncSidebar = (): void => {
+  const side = document.getElementById('gx-sidebar')
+  if (!side) return
+  const wide = window.matchMedia('(min-width: 1024px)').matches
+  const open = side.hasAttribute('data-open')
+  side.hidden = !wide && !open
+}
+
+// installShellEvents installs the delegated shell handlers once.
+const installShellEvents = (): void => {
+  document.addEventListener('click', (e) => {
+    const at = e.target as Element | null
+    const theme = at?.closest?.('[data-gx-theme]') as HTMLElement | null
+    if (theme) {
+      const mode = theme.getAttribute('data-gx-theme') ?? 'auto'
+      applyTheme(mode)
+      try {
+        localStorage.setItem(themeKey, mode)
+      } catch {
+        // Private mode has no storage.
+      }
+      return
+    }
+    if (at?.closest?.('[data-gx-search-open]')) {
+      openSearch()
+      return
+    }
+    const close = at?.closest?.('[data-gx-search-close]')
+    if (close) {
+      close.closest('dialog')?.close()
+      return
+    }
+    const menu = at?.closest?.('[data-gx-menu]') as HTMLElement | null
+    if (menu) {
+      const side = document.getElementById('gx-sidebar')
+      if (side) {
+        const open = side.hasAttribute('data-open')
+        if (open) side.removeAttribute('data-open')
+        else side.setAttribute('data-open', '')
+        menu.setAttribute('aria-expanded', open ? 'false' : 'true')
+        syncSidebar()
+      }
+    }
+  })
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault()
+      openSearch()
+    }
+  })
+  window.addEventListener('resize', syncSidebar)
+  let queued = false
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (queued) return
+      queued = true
+      requestAnimationFrame(() => {
+        queued = false
+        spyTOC()
+      })
+    },
+    { passive: true },
+  )
+}
+
 // installCopyButtons copies the code of a highlighted block (REQ-CNT-04).
 const installCopyButtons = (): void => {
   document.addEventListener('click', (e) => {
@@ -473,6 +608,8 @@ if (typeof document !== 'undefined') {
   watchValidation()
   installCopyButtons()
   installReducedMotionCSS()
+  installShellEvents()
+  installShell()
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual' 
   document.addEventListener('DOMContentLoaded', updateActive)
   updateActive()
@@ -482,6 +619,7 @@ if (typeof document !== 'undefined') {
   new MutationObserver(() => {
     checkInstances()
     installTabs()
+    installShell()
   }).observe(document.documentElement, {
     subtree: true,
     childList: true,

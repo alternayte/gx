@@ -1,0 +1,21 @@
+package shell
+
+props {
+  Title    string
+  Tagline  string = ""
+  Actions  gx.Node = nil
+  Children gx.Node = nil
+}
+
+<header class="gx-splash my-12 text-center">
+  <h1 class="m-0 text-5xl font-bold tracking-tight">{p.Title}</h1>
+  if p.Tagline != "" {
+    <p class="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{p.Tagline}</p>
+  }
+  if p.Actions != nil {
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-3">{p.Actions}</div>
+  }
+  if p.Children != nil {
+    <div class="gx-splash-body mt-10">{p.Children}</div>
+  }
+</header>

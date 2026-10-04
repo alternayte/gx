@@ -91,3 +91,10 @@ func itoa(n int) string {
 	}
 	return string(b[i:])
 }
+
+// Heading is one heading of a content page (REQ-CNT-06).
+type Heading = gxcontent.Heading
+
+// Headings returns the rendered headings of a Markdown body, so the docs
+// shell can build its table of contents (REQ-CNT-06).
+func Headings(markdown []byte) []Heading { return gxcontent.Headings(markdown) }

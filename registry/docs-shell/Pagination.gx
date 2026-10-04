@@ -1,0 +1,19 @@
+package shell
+
+props {
+  Prev *NavItem
+  Next *NavItem
+}
+
+if p.Prev != nil || p.Next != nil {
+  <nav class="gx-pagination mt-10 flex justify-between gap-4 border-t border-border pt-4 text-sm" aria-label="Pages">
+    if p.Prev != nil {
+      <a class="gx-pagination-prev" href={p.Prev.Href} rel="prev">Previous: {p.Prev.Label}</a>
+    } else {
+      <span></span>
+    }
+    if p.Next != nil {
+      <a class="gx-pagination-next" href={p.Next.Href} rel="next">Next: {p.Next.Label}</a>
+    }
+  </nav>
+}

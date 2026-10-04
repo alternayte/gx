@@ -1,0 +1,15 @@
+package shell
+
+props {
+  Site Config
+  Page Page
+}
+
+<div class="gx-page-meta mt-8 flex flex-wrap gap-4 text-sm text-muted-foreground">
+  if p.Site.EditURL(p.Page) != "" {
+    <a class="gx-edit-link" href={gx.URL(p.Site.EditURL(p.Page))}>Edit this page</a>
+  }
+  if p.Page.Updated != "" {
+    <span class="gx-updated" data-gx-updated>Last updated {p.Page.Updated}</span>
+  }
+</div>

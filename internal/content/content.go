@@ -15,6 +15,7 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 )
 
@@ -159,4 +160,60 @@ func escapeDisallowed(b []byte) []byte {
 		return "&lt;" + match[1:]
 	})
 	return []byte(out)
+}
+
+// Heading is one heading of a Markdown page (REQ-CNT-06).
+type Heading struct {
+	Level int
+	Text  string
+	ID    string
+}
+
+// Headings returns the headings of src with the ids the renderer gives
+// them (REQ-CNT-06).
+func Headings(src []byte) []Heading {
+	md := goldmark.New(
+		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
+	)
+	doc := md.Parser().Parse(text.NewReader(src))
+	var out []Heading
+	_ = ast.Walk(doc, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
+		if !entering {
+			return ast.WalkContinue, nil
+		}
+		h, ok := n.(*ast.Heading)
+		if !ok {
+			return ast.WalkContinue, nil
+		}
+		id := ""
+		if v, ok := h.AttributeString("id"); ok {
+			if b, ok := v.([]byte); ok {
+				id = string(b)
+			}
+		}
+		out = append(out, Heading{Level: h.Level, Text: headingText(h, src), ID: id})
+		return ast.WalkContinue, nil
+	})
+	return out
+}
+
+// headingText collects the text of one heading.
+func headingText(h *ast.Heading, src []byte) string {
+	var b strings.Builder
+	collectText(&b, h, src)
+	return b.String()
+}
+
+// collectText writes the text below a node.
+func collectText(b *strings.Builder, n ast.Node, src []byte) {
+	for c := n.FirstChild(); c != nil; c = c.NextSibling() {
+		switch t := c.(type) {
+		case *ast.Text:
+			b.Write(t.Segment.Value(src))
+		case *ast.String:
+			b.Write(t.Value)
+		default:
+			collectText(b, c, src)
+		}
+	}
 }

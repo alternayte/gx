@@ -1,0 +1,14 @@
+package shell
+
+props {
+  Title   string = "Page not found"
+  Message string = "The page does not exist. Check the address or return to the start."
+  Home    string = "/"
+}
+
+<div class="gx-not-found mx-auto my-16 max-w-lg text-center">
+  <p class="text-5xl font-bold">404</p>
+  <h1 class="mt-4 text-2xl font-semibold">{p.Title}</h1>
+  <p class="mt-2 text-muted-foreground">{p.Message}</p>
+  <a class="mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground" href={gx.URL(p.Home)}>Go home</a>
+</div>

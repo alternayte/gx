@@ -1,0 +1,23 @@
+package shell
+
+props {
+  Site     Config
+  Nav      Nav
+  Page     Page
+  Children gx.Node
+}
+
+<a class="gx-skip-link sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground" href="#gx-main">Skip to content</a>
+<div class="gx-shell min-h-screen">
+  <Header site={p.Site} />
+  <div class="mx-auto flex max-w-7xl gap-8 px-4">
+    <Sidebar nav={p.Nav} path={p.Page.Path} />
+    <main id="gx-main" class="min-w-0 flex-1 py-8">
+      <article class="gx-content">{p.Children}</article>
+      <Pagination prev={p.Page.Prev} next={p.Page.Next} />
+      <PageMeta site={p.Site} page={p.Page} />
+    </main>
+    <Toc headings={p.Page.ShownTOC()} />
+  </div>
+</div>
+<SearchDialog />

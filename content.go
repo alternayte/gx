@@ -81,10 +81,11 @@ func (c *collection[Meta]) Entries() []Entry[Meta] {
 	return append([]Entry[Meta](nil), c.entries...)
 }
 
-// Get returns one entry by slug, with or without the ".md" suffix
-// (REQ-CNT-02).
+// Get returns one entry by slug, with or without the ".md" suffix and
+// with or without a trailing slash (REQ-CNT-02).
 func (c *collection[Meta]) Get(slug string) (Entry[Meta], bool) {
 	slug = strings.TrimSuffix(slug, ".md")
+	slug = strings.TrimSuffix(slug, "/")
 	for _, e := range c.Entries() {
 		if e.Slug == slug {
 			return e, true
@@ -195,39 +196,52 @@ type ContentPage struct {
 }
 
 // ContentPages makes the content route of the collection (REQ-CNT-02): one
-// URL per entry under "/{slug}". view builds the page from the typed
+// URL per entry under "/{slug...}". view builds the page from the typed
 // frontmatter and the raw Markdown body; the docs kit renders the body.
 func ContentPages[Meta any](c *collection[Meta], view func(Meta, []byte) Node) Handler {
-	return &contentPages[Meta]{coll: c, view: view}
+	return ContentEntries(c, func(e Entry[Meta]) Node { return view(e.Meta, e.Body) })
 }
 
-// contentPages serves every entry of one collection.
-type contentPages[Meta any] struct {
+// ContentEntries makes one route per entry and passes the whole Entry to
+// view (REQ-CNT-06). The docs shell needs the slug to build links, the
+// table of contents and the previous and next pages.
+func ContentEntries[Meta any](c *collection[Meta], view func(Entry[Meta]) Node) Handler {
+	return &contentEntryPages[Meta]{coll: c, view: view}
+}
+
+// contentEntryPages serves every entry of one collection.
+type contentEntryPages[Meta any] struct {
 	coll *collection[Meta]
-	view func(Meta, []byte) Node
+	view func(Entry[Meta]) Node
 }
 
-// Pattern implements Handler (REQ-CNT-02).
-func (h *contentPages[Meta]) Pattern() string { return "/{slug}" }
+// Pattern implements Handler (REQ-CNT-02). The trailing wildcard serves a
+// nested entry slug ("guides/routing") as one path.
+func (h *contentEntryPages[Meta]) Pattern() string { return "/{slug...}" }
 
-// ServeHTTP renders the entry named by the path value.
-func (h *contentPages[Meta]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	entry, ok := h.coll.Get(r.PathValue("slug"))
+// ServeHTTP renders the entry named by the path value. The empty slug is
+// the collection index (REQ-CNT-06).
+func (h *contentEntryPages[Meta]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	if slug == "" {
+		slug = "index"
+	}
+	entry, ok := h.coll.Get(slug)
 	if !ok {
 		renderError(w, r, NotFound())
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := RenderRequest(w, r, h.view(entry.Meta, entry.Body)); err != nil {
+	if err := RenderRequest(w, r, h.view(entry)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 // hasStatic implements the export source (REQ-CNT-02, REQ-EXP-01).
-func (h *contentPages[Meta]) hasStatic() bool { return true }
+func (h *contentEntryPages[Meta]) hasStatic() bool { return true }
 
 // staticInputs returns every entry slug for the static export.
-func (h *contentPages[Meta]) staticInputs() ([]any, error) {
+func (h *contentEntryPages[Meta]) staticInputs() ([]any, error) {
 	entries := h.coll.Entries()
 	out := make([]any, 0, len(entries))
 	for _, e := range entries {

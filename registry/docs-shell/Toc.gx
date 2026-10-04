@@ -1,0 +1,20 @@
+package shell
+
+props {
+  Headings []Heading
+}
+
+if len(p.Headings) > 0 {
+  <nav class="gx-toc hidden w-56 shrink-0 xl:block" data-gx-toc aria-label="On this page">
+    <div class="sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-8 text-sm">
+      <p class="mb-2 font-medium">On this page</p>
+      <ul class="list-none space-y-1 border-l border-border p-0">
+        for _, h := range p.Headings {
+          <li class="gx-toc-item" data-level={h.Level}>
+            <a class="gx-toc-link block pl-3 text-muted-foreground hover:text-foreground [&[aria-current=location]]:text-foreground [&[data-level='3']]:pl-6" href={gx.URL("#" + h.ID)} data-gx-toc-target={h.ID} data-level={h.Level}>{h.Text}</a>
+          </li>
+        }
+      </ul>
+    </div>
+  </nav>
+}
