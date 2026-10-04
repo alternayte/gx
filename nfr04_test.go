@@ -94,10 +94,13 @@ func TestNFR_04_FeatureScripts(t *testing.T) {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-slot", Value: "page"}})
 		}, true, true, false},
 		{"page-shell behaviour", func() gx.Node {
-			return gx.El("div", gx.Attrs{{Key: "data-gx-tabs", Value: ""}})
+			return gx.El("div", gx.Attrs{{Key: "data-gx-theme", Value: "dark"}})
 		}, true, false, false},
 		{"component behaviour", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-roving", Value: ""}})
+		}, false, false, true},
+		{"tabs behaviour", func() gx.Node {
+			return gx.El("div", gx.Attrs{{Key: "data-gx-tabs", Value: ""}})
 		}, false, false, true},
 	}
 	for _, tt := range tests {

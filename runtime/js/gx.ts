@@ -102,85 +102,6 @@ const withViewTransition = async (update: () => Promise<void>): Promise<void> =>
   }
 }
 
-// installTabs wires the docs kit tabs (REQ-CNT-05): exclusive panels, a
-// shared selection per sync key, and the choice remembered per viewer.
-const tabsStorage = (key: string): string => {
-  try {
-    return localStorage.getItem(key) ?? ''
-  } catch {
-    return ''
-  }
-}
-
-const tabsRemember = (key: string, label: string): void => {
-  try {
-    localStorage.setItem(key, label)
-  } catch {
-    // Private mode has no storage; the page selection still works.
-  }
-}
-
-type Tab = { button: HTMLElement; panel: HTMLElement; label: string }
-
-const tabsOf = (wrapper: Element): Tab[] => {
-  const tabs: Tab[] = []
-  wrapper.querySelectorAll<HTMLElement>('[data-gx-tab]').forEach((button) => {
-    const panel = button.closest('[data-gx-tab-item]')?.querySelector<HTMLElement>('[data-gx-tab-panel]')
-    if (panel) tabs.push({ button, panel, label: button.getAttribute('data-gx-tab') ?? '' })
-  })
-  return tabs
-}
-
-const selectTab = (wrapper: Element, label: string, remember: boolean): void => {
-  const tabs = tabsOf(wrapper)
-  if (tabs.length === 0) return
-  const chosen = tabs.find((t) => t.label === label) ?? tabs[0]
-  applyTab(wrapper, chosen.label)
-  const sync = wrapper.getAttribute('data-sync') ?? ''
-  if (sync !== '') {
-    document.querySelectorAll<HTMLElement>('[data-gx-tabs]').forEach((other) => {
-      if (other !== wrapper && other.getAttribute('data-sync') === sync) {
-        const match = tabsOf(other).find((t) => t.label === chosen.label)
-        if (match) applyTab(other, match.label)
-      }
-    })
-    if (remember) tabsRemember('gx-tabs:' + sync, chosen.label)
-  }
-}
-
-// applyTab switches one tab group without touching the sync peers.
-const applyTab = (wrapper: Element, label: string): void => {
-  const tabs = tabsOf(wrapper)
-  if (tabs.length === 0) return
-  const chosen = tabs.find((t) => t.label === label) ?? tabs[0]
-  for (const tab of tabs) {
-    const selected = tab === chosen
-    tab.button.setAttribute('aria-expanded', selected ? 'true' : 'false')
-    if (selected) tab.button.setAttribute('data-selected', 'true')
-    else tab.button.removeAttribute('data-selected')
-    tab.panel.hidden = !selected
-  }
-}
-
-const installTabs = (): void => {
-  document.querySelectorAll<HTMLElement>('[data-gx-tabs]').forEach((wrapper) => {
-    if (wrapper.getAttribute('data-gx-tabs-ready') === 'true') return
-    wrapper.setAttribute('data-gx-tabs-ready', 'true')
-    const tabs = tabsOf(wrapper)
-    tabs.forEach((tab, i) => {
-      if (!tab.button.id) tab.button.id = `gx-tab-${i}-${Math.random().toString(36).slice(2, 8)}`
-      if (!tab.panel.id) tab.panel.id = `${tab.button.id}-panel`
-      tab.button.setAttribute('aria-controls', tab.panel.id)
-      tab.panel.setAttribute('role', 'region')
-      tab.panel.setAttribute('aria-labelledby', tab.button.id)
-    })
-    const sync = wrapper.getAttribute('data-sync') ?? ''
-    const stored = sync !== '' ? tabsStorage('gx-tabs:' + sync) : ''
-    const initial = stored !== '' ? stored : wrapper.getAttribute('data-default') ?? ''
-    selectTab(wrapper, initial, false)
-  })
-}
-
 // installShell wires the docs-shell behaviours (REQ-CNT-06): theme select,
 // search dialog, mobile menu and table-of-contents scroll spy.
 const themeKey = 'gx-theme'
@@ -683,14 +604,6 @@ if (typeof document !== 'undefined') {
     e.preventDefault()
     void submitForm(form, (e as SubmitEvent).submitter as HTMLElement | null)
   }, true)
-  document.addEventListener('click', (e) => {
-    const button = (e.target as Element | null)?.closest?.('[data-gx-tab]') as HTMLElement | null
-    if (!button) return
-    const wrapper = button.closest('[data-gx-tabs]')
-    if (!wrapper) return
-    e.preventDefault()
-    selectTab(wrapper, button.getAttribute('data-gx-tab') ?? '', true)
-  })
   watchValidation()
   installCopyButtons()
   installReducedMotionCSS()
@@ -702,10 +615,8 @@ if (typeof document !== 'undefined') {
   updateActive()
   document.addEventListener('DOMContentLoaded', checkInstances)
   checkInstances()
-  installTabs()
   new MutationObserver(() => {
     checkInstances()
-    installTabs()
     installShell()
   }).observe(document.documentElement, {
     subtree: true,

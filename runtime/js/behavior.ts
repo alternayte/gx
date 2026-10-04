@@ -23,6 +23,23 @@ const focusable = (root: HTMLElement): HTMLElement[] =>
 const isOpen = (el: HTMLElement): boolean =>
   el.matches(':popover-open') || (el instanceof HTMLDialogElement && el.open) || el.hasAttribute('data-gx-open')
 
+// open opens a dialog, a popover or a custom overlay.
+const open = (el: HTMLElement): void => {
+  if (el instanceof HTMLDialogElement) {
+    el.showModal()
+    return
+  }
+  const popover = el as HTMLElement & { showPopover?: () => void }
+  if (typeof popover.showPopover === 'function' && el.hasAttribute('popover')) {
+    popover.showPopover()
+    return
+  }
+  el.setAttribute('data-gx-open', '')
+  el.dispatchEvent(new CustomEvent('gx:open', { bubbles: true }))
+}
+
+const manual = (el: HTMLElement): boolean => el.getAttribute('data-gx-dismiss') === 'manual'
+
 const close = (el: HTMLElement): void => {
   if (el instanceof HTMLDialogElement && el.open) {
     el.close()
@@ -71,6 +88,85 @@ const installRoving = (): void => {
   })
 }
 
+// Tabs are exclusive panels with an optional sync key (REQ-CNT-05). The
+// registry tabs item and the docs kit share this contract.
+const tabsStorage = (key: string): string => {
+  try {
+    return localStorage.getItem(key) ?? ''
+  } catch {
+    return ''
+  }
+}
+
+const tabsRemember = (key: string, label: string): void => {
+  try {
+    localStorage.setItem(key, label)
+  } catch {
+    // Private mode has no storage; the page selection still works.
+  }
+}
+
+type Tab = { button: HTMLElement; panel: HTMLElement; label: string }
+
+const tabsOf = (wrapper: Element): Tab[] => {
+  const tabs: Tab[] = []
+  wrapper.querySelectorAll<HTMLElement>('[data-gx-tab]').forEach((button) => {
+    const panel = button.closest('[data-gx-tab-item]')?.querySelector<HTMLElement>('[data-gx-tab-panel]')
+    if (panel) tabs.push({ button, panel, label: button.getAttribute('data-gx-tab') ?? '' })
+  })
+  return tabs
+}
+
+const applyTab = (wrapper: Element, label: string): void => {
+  const tabs = tabsOf(wrapper)
+  if (tabs.length === 0) return
+  const chosen = tabs.find((tab) => tab.label === label) ?? tabs[0]
+  for (const tab of tabs) {
+    const selected = tab === chosen
+    tab.button.setAttribute('aria-selected', selected ? 'true' : 'false')
+    tab.button.setAttribute('tabindex', selected ? '0' : '-1')
+    if (selected) tab.button.setAttribute('data-selected', 'true')
+    else tab.button.removeAttribute('data-selected')
+    tab.panel.hidden = !selected
+  }
+}
+
+const selectTab = (wrapper: Element, label: string, remember: boolean): void => {
+  const tabs = tabsOf(wrapper)
+  if (tabs.length === 0) return
+  const chosen = tabs.find((tab) => tab.label === label) ?? tabs[0]
+  applyTab(wrapper, chosen.label)
+  const sync = wrapper.getAttribute('data-sync') ?? ''
+  if (sync !== '') {
+    document.querySelectorAll<HTMLElement>('[data-gx-tabs]').forEach((other) => {
+      if (other !== wrapper && other.getAttribute('data-sync') === sync) {
+        const match = tabsOf(other).find((tab) => tab.label === chosen.label)
+        if (match) applyTab(other, match.label)
+      }
+    })
+    if (remember) tabsRemember('gx-tabs:' + sync, chosen.label)
+  }
+}
+
+const installTabs = (): void => {
+  document.querySelectorAll<HTMLElement>('[data-gx-tabs]').forEach((wrapper) => {
+    if (wrapper.getAttribute('data-gx-tabs-ready') === 'true') return
+    wrapper.setAttribute('data-gx-tabs-ready', 'true')
+    const tabs = tabsOf(wrapper)
+    tabs.forEach((tab, i) => {
+      if (!tab.button.id) tab.button.id = `gx-tab-${i}-${Math.random().toString(36).slice(2, 8)}`
+      if (!tab.panel.id) tab.panel.id = `${tab.button.id}-panel`
+      tab.button.setAttribute('aria-controls', tab.panel.id)
+      tab.panel.setAttribute('role', 'tabpanel')
+      tab.panel.setAttribute('aria-labelledby', tab.button.id)
+    })
+    const sync = wrapper.getAttribute('data-sync') ?? ''
+    const stored = sync !== '' ? tabsStorage('gx-tabs:' + sync) : ''
+    const initial = stored !== '' ? stored : wrapper.getAttribute('data-default') ?? ''
+    selectTab(wrapper, initial, false)
+  })
+}
+
 // typeahead accumulates printable keys per container for half a second.
 const typed = new WeakMap<HTMLElement, { text: string; timer: number }>()
 
@@ -87,10 +183,13 @@ const typeahead = (box: HTMLElement, items: HTMLElement[], key: string): void =>
 const onKeydown = (e: KeyboardEvent): void => {
   const at = e.target as HTMLElement | null
   if (e.key === 'Escape' && !e.defaultPrevented) {
-    const open = [...document.querySelectorAll<HTMLElement>('[data-gx-dismiss]')].filter(isOpen)
-    if (open.length > 0) {
-      close(open[open.length - 1])
-      e.stopPropagation()
+    const openList = [...document.querySelectorAll<HTMLElement>('[data-gx-dismiss]')].filter(isOpen)
+    if (openList.length > 0) {
+      const top = openList[openList.length - 1]
+      if (!manual(top)) {
+        close(top)
+        e.stopPropagation()
+      }
       return
     }
   }
@@ -144,9 +243,34 @@ const onKeydown = (e: KeyboardEvent): void => {
 const onPointerdown = (e: Event): void => {
   const target = e.target as Node | null
   document.querySelectorAll<HTMLElement>('[data-gx-dismiss]').forEach((el) => {
-    if (!isOpen(el) || el.contains(target)) return
+    if (!isOpen(el) || manual(el) || el.contains(target)) return
     close(el)
   })
+}
+
+// onOpenClick wires the generic overlay contract: data-gx-open points at
+// the element to open, data-gx-close closes the nearest overlay.
+const onOpenClick = (e: Event): void => {
+  const at = e.target as Element | null
+  const closeButton = at?.closest?.('[data-gx-close]') as HTMLElement | null
+  if (closeButton) {
+    const target =
+      (closeButton.closest('[data-gx-dismiss]') as HTMLElement | null) ??
+      (closeButton.closest('dialog[open], [popover]:popover-open') as HTMLElement | null)
+    if (target) {
+      e.preventDefault()
+      close(target)
+    }
+    return
+  }
+  const opener = at?.closest?.('[data-gx-open]') as HTMLElement | null
+  if (!opener) return
+  const selector = opener.getAttribute('data-gx-open') ?? ''
+  if (selector === '') return
+  const target = document.querySelector<HTMLElement>(selector)
+  if (!target) return
+  e.preventDefault()
+  open(target)
 }
 
 const onToggle = (e: Event): void => {
@@ -158,9 +282,19 @@ const onToggle = (e: Event): void => {
 
 const install = (): void => {
   installRoving()
+  installTabs()
 }
 
 if (typeof document !== 'undefined') {
+  document.addEventListener('click', onOpenClick)
+  document.addEventListener('click', (e) => {
+    const button = (e.target as Element | null)?.closest?.('[data-gx-tab]') as HTMLElement | null
+    if (!button) return
+    const wrapper = button.closest('[data-gx-tabs]')
+    if (!wrapper) return
+    e.preventDefault()
+    selectTab(wrapper, button.getAttribute('data-gx-tab') ?? '', true)
+  })
   document.addEventListener('keydown', onKeydown, true)
   document.addEventListener('pointerdown', onPointerdown, true)
   document.addEventListener('toggle', onToggle, true)

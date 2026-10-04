@@ -140,8 +140,7 @@ func interactiveMarker(key string) bool {
 // behaviour of the core runtime (REQ-CNT-05, REQ-CNT-06, REQ-CNT-07).
 func behaviorMarker(key string) bool {
 	switch key {
-	case "data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel",
-		"data-gx-copy", "data-gx-theme", "data-gx-menu",
+	case "data-gx-copy", "data-gx-theme", "data-gx-menu",
 		"data-gx-search", "data-gx-search-open", "data-gx-search-close",
 		"data-gx-search-form", "data-gx-search-input", "data-gx-search-results",
 		"data-gx-search-src", "data-gx-toc", "data-gx-toc-target":
@@ -154,7 +153,9 @@ func behaviorMarker(key string) bool {
 // component behaviour runtime (REQ-REG-07).
 func componentBehaviorMarker(key string) bool {
 	switch key {
-	case "data-gx-behavior", "data-gx-roving", "data-gx-roving-item", "data-gx-trap", "data-gx-dismiss":
+	case "data-gx-behavior", "data-gx-roving", "data-gx-roving-item", "data-gx-trap", "data-gx-dismiss",
+		"data-gx-open", "data-gx-close",
+		"data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel":
 		return true
 	}
 	return false
