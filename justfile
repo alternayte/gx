@@ -14,6 +14,7 @@ runtime:
 
 # Drive the real app in a real browser. The repo's own gate only (G3).
 e2e:
+    cd tests/e2e && bun install --frozen-lockfile
     "tests/e2e/run.sh"
 
 build:
