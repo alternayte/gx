@@ -322,6 +322,7 @@ func runExport(args []string) int {
 	fs.SetOutput(os.Stderr)
 	out := fs.String("out", "dist", "output directory")
 	mainPkg := fs.String("main", "", "main package path")
+	siteURL := fs.String("site", "", "canonical site URL (overrides [site] url)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -331,7 +332,7 @@ func runExport(args []string) int {
 	}
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
-	res, err := exporter.Export(ctx, exporter.Options{Dir: dir, Out: *out, Main: *mainPkg, Log: os.Stdout})
+	res, err := exporter.Export(ctx, exporter.Options{Dir: dir, Out: *out, Main: *mainPkg, SiteURL: *siteURL, Log: os.Stdout})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx export: %v\n", err)
 		return 1

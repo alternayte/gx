@@ -8,18 +8,21 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 	"net"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/pagefind"
 )
@@ -37,6 +40,8 @@ type Options struct {
 	// Index writes the search index into a directory. Defaults to the
 	// pinned Pagefind binary.
 	Index func(ctx context.Context, root, siteDir string) error
+	// SiteURL overrides [site] url from gx.toml (REQ-CNT-09).
+	SiteURL string
 }
 
 // Manifest is the dev-only export listing (REQ-EXP-01, REQ-CNT-08).
@@ -116,6 +121,19 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 	if err := os.MkdirAll(out, 0o755); err != nil {
 		return nil, err
 	}
+	site, err := gxconfig.Load(dir)
+	if err != nil {
+		return nil, err
+	}
+	if opt.SiteURL != "" {
+		site.Site.URL = opt.SiteURL
+	}
+	metas := map[string]gx.LLMSEntry{}
+	if manifest.LLMS != nil {
+		for _, e := range manifest.LLMS.Entries {
+			metas[e.Path] = e
+		}
+	}
 	res := &Result{Pages: map[string][]byte{}, Paths: manifest.Paths, Assets: manifest.Assets}
 	for _, path := range manifest.Paths {
 		body, status, err := fetchPage(ctx, base, path)
@@ -126,10 +144,13 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 			return nil, fmt.Errorf("gx export: %s: %s", path, http.StatusText(status))
 		}
 		res.Pages[path] = body
-		if err := writePage(out, path, body); err != nil {
+		if err := writePage(out, path, body, site.Site, metas[path]); err != nil {
 			return nil, err
 		}
 		fmt.Fprintf(opt.Log, "exported %s\n", path)
+	}
+	if err := writeSiteFiles(out, site.Site, manifest.Paths); err != nil {
+		return nil, err
 	}
 	notFound, _, err := fetchPage(ctx, base, "/_gx-export-missing-page")
 	if err != nil {
@@ -305,7 +326,7 @@ func httpGet(ctx context.Context, url string) (*http.Response, error) {
 }
 
 // writePage writes one page under the output directory.
-func writePage(root, path string, body []byte) error {
+func writePage(root, path string, body []byte, site gxconfig.Site, meta gx.LLMSEntry) error {
 	rel := strings.TrimPrefix(path, "/")
 	full := ""
 	switch {
@@ -319,17 +340,89 @@ func writePage(root, path string, body []byte) error {
 	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
 		return err
 	}
-	return os.WriteFile(full, wrapDocument(body), 0o644)
+	title := meta.Title
+	if title == "" {
+		title = extractTitle(body)
+	}
+	description := meta.Description
+	if description == "" {
+		description = site.Description
+	}
+	return os.WriteFile(full, document(body, buildHead(site, path, site.PageTitle(title), description)), 0o644)
 }
 
-// wrapDocument wraps a Gx page fragment in a minimal HTML document, so a
-// static host serves a complete page (REQ-EXP-01).
-func wrapDocument(body []byte) []byte {
-	doc := make([]byte, 0, len(body)+80)
-	doc = append(doc, "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"></head><body>"...)
+// titleTag finds the inline title gx.Head renders.
+var titleTag = regexp.MustCompile(`(?is)<title>(.*?)</title>`)
+
+// extractTitle returns the text of the first inline title element.
+func extractTitle(body []byte) string {
+	m := titleTag.FindSubmatch(body)
+	if m == nil {
+		return ""
+	}
+	return html.UnescapeString(strings.TrimSpace(string(m[1])))
+}
+
+// buildHead returns the head of one exported page (REQ-CNT-09): charset,
+// title, description, canonical, Open Graph and Twitter card.
+func buildHead(site gxconfig.Site, path, title, description string) string {
+	var b strings.Builder
+	b.WriteString(`<meta charset="utf-8">`)
+	fmt.Fprintf(&b, `<title>%s</title>`, html.EscapeString(title))
+	if description != "" {
+		fmt.Fprintf(&b, `<meta name="description" content="%s">`, html.EscapeString(description))
+	}
+	if site.URL != "" {
+		canonical := strings.TrimSuffix(site.URL, "/") + path
+		fmt.Fprintf(&b, `<link rel="canonical" href="%s">`, html.EscapeString(canonical))
+		fmt.Fprintf(&b, `<meta property="og:url" content="%s">`, html.EscapeString(canonical))
+	}
+	fmt.Fprintf(&b, `<meta property="og:title" content="%s">`, html.EscapeString(title))
+	if description != "" {
+		fmt.Fprintf(&b, `<meta property="og:description" content="%s">`, html.EscapeString(description))
+	}
+	b.WriteString(`<meta property="og:type" content="website">`)
+	b.WriteString(`<meta name="twitter:card" content="summary">`)
+	fmt.Fprintf(&b, `<meta name="twitter:title" content="%s">`, html.EscapeString(title))
+	if description != "" {
+		fmt.Fprintf(&b, `<meta name="twitter:description" content="%s">`, html.EscapeString(description))
+	}
+	return b.String()
+}
+
+// document wraps a Gx page fragment in a complete HTML document with the
+// exported head (REQ-EXP-01, REQ-CNT-09). The inline title moves to the
+// head.
+func document(body []byte, head string) []byte {
+	body = titleTag.ReplaceAll(body, nil)
+	doc := make([]byte, 0, len(body)+len(head)+80)
+	doc = append(doc, "<!doctype html><html lang=\"en\"><head>"...)
+	doc = append(doc, head...)
+	doc = append(doc, "</head><body>"...)
 	doc = append(doc, body...)
 	doc = append(doc, "</body></html>"...)
 	return doc
+}
+
+// writeSiteFiles writes robots.txt and sitemap.xml when the site has a URL
+// (REQ-CNT-09).
+func writeSiteFiles(out string, site gxconfig.Site, paths []string) error {
+	if site.URL == "" {
+		return nil
+	}
+	base := strings.TrimSuffix(site.URL, "/")
+	var sitemap strings.Builder
+	sitemap.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
+	sitemap.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
+	for _, path := range paths {
+		fmt.Fprintf(&sitemap, "  <url><loc>%s</loc></url>\n", html.EscapeString(base+path))
+	}
+	sitemap.WriteString("</urlset>\n")
+	if err := os.WriteFile(filepath.Join(out, "sitemap.xml"), []byte(sitemap.String()), 0o644); err != nil {
+		return err
+	}
+	robots := "User-agent: *\nAllow: /\n\nSitemap: " + base + "/sitemap.xml\n"
+	return os.WriteFile(filepath.Join(out, "robots.txt"), []byte(robots), 0o644)
 }
 
 // freePort returns a free local port.
