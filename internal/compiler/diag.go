@@ -47,6 +47,8 @@ const (
 
 	CodeContentComponent = "GX8002"
 
+	CodeContentLink = "GX8003"
+
 	CodeCodeFile = "GX8004"
 
 	CodeActionMissing       = "GX4001"
@@ -121,6 +123,7 @@ var Catalog = []Info{
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},
 	{CodeContentComponent, "component is not declared in this collection"},
+	{CodeContentLink, "content link or anchor is broken"},
 	{CodeCodeFile, "code file or line range is missing"},
 }
 

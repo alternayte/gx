@@ -67,6 +67,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX7002 | gx.Secret cannot cross to the client",
 		"GX8001 | frontmatter is malformed or unknown",
 		"GX8002 | component is not declared in this collection",
+		"GX8003 | content link or anchor is broken",
 		"GX8004 | code file or line range is missing",
 	}
 	if !reflect.DeepEqual(got, want) {

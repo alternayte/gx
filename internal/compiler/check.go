@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"io/fs"
+	"net/http"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -11,6 +12,19 @@ import (
 // ordered by file, line and column. It checks props and components, then
 // type-checks every server expression.
 func Check(root string) []Diagnostic {
+	return CheckWith(root, CheckOptions{})
+}
+
+// CheckOptions configure one check (REQ-CNT-10).
+type CheckOptions struct {
+	// ExternalLinks requests every external content link.
+	ExternalLinks bool
+	// Client is the HTTP client of the external check.
+	Client *http.Client
+}
+
+// CheckWith checks a module with options (REQ-CNT-10).
+func CheckWith(root string, opt CheckOptions) []Diagnostic {
 	root = absoluteRoot(root)
 	l := newLoader()
 	dirs := collectDirs(root)
@@ -21,6 +35,9 @@ func Check(root string) []Diagnostic {
 	res, tdiags := l.analyze(root, dirs)
 	out = append(out, tdiags...)
 	out = append(out, checkContent(root, res.collections, nil)...)
+	if opt.ExternalLinks {
+		out = append(out, checkExternalLinks(res.collections, nil, opt.Client)...)
+	}
 	sortDiags(out)
 	return out
 }

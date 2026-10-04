@@ -162,6 +162,7 @@ func runCheck(args []string) int {
 	fs := flag.NewFlagSet("gx check", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	asJSON := fs.Bool("json", false, "print machine-readable output")
+	external := fs.Bool("external-links", false, "request every external content link")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -169,7 +170,7 @@ func runCheck(args []string) int {
 	if rest := fs.Args(); len(rest) > 0 {
 		dir = rest[0]
 	}
-	diags := compiler.Check(dir)
+	diags := compiler.CheckWith(dir, compiler.CheckOptions{ExternalLinks: *external})
 	diags = append(diags, compiler.Stale(dir)...)
 	if *asJSON {
 		return printJSON(diags)

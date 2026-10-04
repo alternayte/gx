@@ -5,7 +5,6 @@ import (
 	"go/token"
 	"go/types"
 	"io/fs"
-	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -149,17 +148,18 @@ func contentComponent(pkg *packages.Package, expr ast.Expr) (contentComp, bool) 
 func checkContent(root string, colls []contentCollection, read func(string) ([]byte, error)) []Diagnostic {
 	var out []Diagnostic
 	for _, coll := range colls {
+		files := map[string][]byte{}
+		var paths []string
 		for _, path := range markdownFiles(coll.dir) {
-			var src []byte
-			var err error
-			if read != nil {
-				src, err = read(path)
-			} else {
-				src, err = os.ReadFile(path)
-			}
+			src, err := readContent(path, read)
 			if err != nil {
 				continue
 			}
+			files[path] = src
+			paths = append(paths, path)
+		}
+		for _, path := range paths {
+			src := files[path]
 			out = checkFrontmatter(path, src, coll.meta, out)
 			for _, tag := range scanMarkdownTags(string(src)) {
 				comp, ok := coll.comps[tag.name]
@@ -197,6 +197,7 @@ func checkContent(root string, colls []contentCollection, read func(string) ([]b
 				}
 			}
 		}
+		out = append(out, checkCollectionLinks(coll, files)...)
 	}
 	return out
 }
