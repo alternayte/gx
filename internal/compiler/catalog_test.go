@@ -61,6 +61,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4009 | action method cannot be invoked from the client",
 		"GX4010 | unknown event modifier or special event",
 		"GX5001 | gx.Enum misses a constant of its type",
+		"GX5002 | duplicate view-transition-name in one template",
 		"GX5003 | class string is built at runtime",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 		"GX7002 | gx.Secret cannot cross to the client",

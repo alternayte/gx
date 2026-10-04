@@ -39,6 +39,8 @@ const (
 
 	CodeEnum = "GX5001"
 
+	CodeTransition = "GX5002"
+
 	CodeRuntimeClass = "GX5003"
 
 	CodeContentComponent = "GX8002"
@@ -109,6 +111,7 @@ var Catalog = []Info{
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeEventMod, "unknown event modifier or special event"},
 	{CodeEnum, "gx.Enum misses a constant of its type"},
+	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},

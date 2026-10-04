@@ -35,12 +35,16 @@ func Home(p HomeProps) gx.Node {
 //line Home.gx:14:7
 	_b.Add(gx.Text("\n"))
 //line Home.gx:15:1
-	_b.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: "@post('" + (cartroute.Transition{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("shop.Home", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Transition")))
-//line Home.gx:15:62
+	_b.Add(gx.El("img", gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.TransitionStyle(Hero(1)))), Kind: gx.AttrStyle}, gx.Attr{Key: "id", Value: "hero", Kind: gx.AttrText}, gx.Attr{Key: "width", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "height", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "alt", Value: "Hero", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23888'/%3E%3C/svg%3E", Kind: gx.AttrURL}}))
+//line Home.gx:15:224
 	_b.Add(gx.Text("\n"))
 //line Home.gx:16:1
+	_b.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: "@post('" + (cartroute.Transition{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("shop.Home", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Transition")))
+//line Home.gx:16:62
+	_b.Add(gx.Text("\n"))
+//line Home.gx:17:1
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: "transition-target", Kind: gx.AttrText}}, gx.Text("idle")))
-//line Home.gx:16:41
+//line Home.gx:17:41
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

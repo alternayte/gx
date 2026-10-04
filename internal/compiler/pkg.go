@@ -348,7 +348,7 @@ func isDirective(name string) bool {
 		return true
 	}
 	switch name {
-	case "show", "text", "key":
+	case "show", "text", "key", "transition":
 		return true
 	}
 	return false

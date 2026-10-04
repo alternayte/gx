@@ -499,6 +499,7 @@ func (g *gen) attrsExpr(el *Element) string {
 	var parts []string
 	var static []string
 	var classParts []string
+	var styleParts []string
 	if el == g.rootEl && len(g.file.Signals) > 0 {
 		static = append(static, g.signalsAttrs()...)
 	}
@@ -528,6 +529,10 @@ func (g *gen) attrsExpr(el *Element) string {
 		case AttrString:
 			if a.Name == "class" {
 				classParts = append(classParts, strconv.Quote(a.Value))
+				continue
+			}
+			if a.Name == "style" {
+				styleParts = append(styleParts, "gx.Style("+strconv.Quote(a.Value)+")")
 				continue
 			}
 		case AttrBool:
@@ -609,7 +614,13 @@ func (g *gen) attrsExpr(el *Element) string {
 			}
 			if a.Name == "style" {
 				if g.isStyleType(a) {
-					static = append(static, fmt.Sprintf("gx.Attr{Key: \"style\", Value: string(%s), Kind: gx.AttrStyle}", strings.TrimSpace(a.Value)))
+					styleParts = append(styleParts, "gx.Style("+strings.TrimSpace(a.Value)+")")
+				}
+				continue
+			}
+			if a.Name == "transition" {
+				if !strings.Contains(a.Value, "$") {
+					styleParts = append(styleParts, "gx.TransitionStyle("+strings.TrimSpace(a.Value)+")")
 				}
 				continue
 			}
@@ -633,6 +644,14 @@ func (g *gen) attrsExpr(el *Element) string {
 			}
 			static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
 				strconv.Quote(a.Name), value))
+		}
+	}
+	if len(styleParts) > 0 {
+		styleAttr := fmt.Sprintf("gx.Attr{Key: \"style\", Value: string(gx.StyleJoin(%s)), Kind: gx.AttrStyle}", strings.Join(styleParts, ", "))
+		if spread {
+			parts = append([]string{"gx.Attrs{" + styleAttr + "}"}, parts...)
+		} else {
+			static = append([]string{styleAttr}, static...)
 		}
 	}
 	if len(classParts) > 0 {

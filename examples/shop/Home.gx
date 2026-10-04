@@ -12,5 +12,6 @@ import (
 <div on:visible={cartroute.Lazy{}}>
   <span id="lazy-slot">waiting</span>
 </div>
+<img id="hero" width="40" height="40" alt="Hero" transition={Hero(1)} src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23888'/%3E%3C/svg%3E" />
 <button on:click={cartroute.Transition{}}>Transition</button>
 <span id="transition-target">idle</span>

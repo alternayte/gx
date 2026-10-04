@@ -59,6 +59,58 @@ const updateActive = (): void => {
   })
 }
 
+// reduceMotion reports the user's motion preference (REQ-STY-10).
+const reduceMotion = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// dedupeTransitionNames keeps the first view-transition-name and clears
+// duplicates before a transition (REQ-STY-08).
+const dedupeTransitionNames = (): void => {
+  const seen = new Set<string>()
+  document.querySelectorAll<HTMLElement>('[style*="view-transition-name"]').forEach((el) => {
+    const name = el.style.getPropertyValue('view-transition-name')
+    if (name === '') return
+    if (seen.has(name)) {
+      el.style.removeProperty('view-transition-name')
+      el.style.removeProperty('view-transition-class')
+      if (document.querySelector('meta[name="gx-dev"]')) {
+        console.warn(`gx: duplicate view-transition-name ${name}; the first element keeps it`)
+      }
+      return
+    }
+    seen.add(name)
+  })
+}
+
+// withViewTransition runs update inside a view transition when the browser
+// supports one and the user allows motion (REQ-STY-09, REQ-STY-10).
+const withViewTransition = async (update: () => Promise<void>): Promise<void> => {
+  const doc = document as Document & {
+    startViewTransition?: (cb: () => Promise<void>) => { finished: Promise<void> }
+  }
+  if (typeof doc.startViewTransition !== 'function' || reduceMotion()) {
+    await update()
+    return
+  }
+  dedupeTransitionNames()
+  const transition = doc.startViewTransition(async () => {
+    await update()
+  })
+  try {
+    await transition.finished
+  } catch {
+    // A skipped transition is not a page error.
+  }
+}
+
+// installReducedMotionCSS stops the transition pseudo-element animations
+// when the user asks for reduced motion (REQ-STY-10).
+const installReducedMotionCSS = (): void => {
+  const style = document.createElement('style')
+  style.textContent =
+    '@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }'
+  document.head.append(style)
+}
+
 type Frame = { event: string; data: string[] }
 
 const parseFrame = (raw: string): Frame | null => {
@@ -274,10 +326,14 @@ const navigate = async (url: string, push: boolean): Promise<void> => {
     location.href = url
     return
   }
-  await readFrames(res)
-  if (push) history.pushState({ gx: true }, '', url)
-  window.scrollTo(0, 0)
-  updateActive()
+  await withViewTransition(async () => {
+    // Gx owns scroll: scroll before the morph so an on:visible element of
+    // the new page never sees the old scroll position.
+    window.scrollTo(0, 0)
+    await readFrames(res)
+    if (push) history.pushState({ gx: true }, '', url)
+    updateActive()
+  })
 }
 
 if (typeof document !== 'undefined') {
@@ -307,6 +363,8 @@ if (typeof document !== 'undefined') {
     void submitForm(form, (e as SubmitEvent).submitter as HTMLElement | null)
   }, true)
   watchValidation()
+  installReducedMotionCSS()
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual' 
   document.addEventListener('DOMContentLoaded', updateActive)
   updateActive()
   document.addEventListener('DOMContentLoaded', checkInstances)

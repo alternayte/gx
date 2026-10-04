@@ -132,3 +132,80 @@ test('REQ-STY-03 the gallery follows the theme tokens in dark mode', async () =>
   const forcedLight = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
   expect(forcedLight).toBe(light)
 })
+
+test('REQ-STY-07/09 navigation starts a view transition with the typed name', async () => {
+  page = await browser.newPage()
+  await page.goto(url + '/')
+  const name = await page.evaluate(
+    () => getComputedStyle(document.querySelector('#hero') as Element).viewTransitionName,
+  )
+  expect(name).toBe('hero-1')
+  await page.evaluate(() => {
+    const w = window as unknown as { __gxTransitions: number }
+    w.__gxTransitions = 0
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown }
+    const orig = doc.startViewTransition?.bind(doc)
+    if (orig) {
+      doc.startViewTransition = (cb: () => void) => {
+        w.__gxTransitions += 1
+        return orig(cb)
+      }
+    }
+  })
+  await page.click('a:text-is("About")')
+  await page.waitForFunction(() => document.title === 'Gx shop about')
+  const transitions = await page.evaluate(
+    () => (window as unknown as { __gxTransitions: number }).__gxTransitions,
+  )
+  expect(transitions).toBeGreaterThan(0)
+})
+
+test('REQ-STY-10 reduced motion skips the view transition', async () => {
+  page = await browser.newPage()
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto(url + '/')
+  await page.evaluate(() => {
+    const w = window as unknown as { __gxTransitions: number }
+    w.__gxTransitions = 0
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown }
+    const orig = doc.startViewTransition?.bind(doc)
+    if (orig) {
+      doc.startViewTransition = (cb: () => void) => {
+        w.__gxTransitions += 1
+        return orig(cb)
+      }
+    }
+  })
+  await page.click('a:text-is("About")')
+  await page.waitForFunction(() => document.title === 'Gx shop about')
+  const transitions = await page.evaluate(
+    () => (window as unknown as { __gxTransitions: number }).__gxTransitions,
+  )
+  expect(transitions).toBe(0)
+})
+
+test('REQ-STY-08 a forced duplicate view-transition-name still transitions', async () => {
+  page = await browser.newPage()
+  const warnings: string[] = []
+  page.on('console', (msg) => {
+    if (msg.type() === 'warning') warnings.push(msg.text())
+  })
+  await page.goto(url + '/')
+  await page.evaluate(() => {
+    const meta = document.createElement('meta')
+    meta.name = 'gx-dev'
+    meta.content = '1'
+    document.head.append(meta)
+    const hero = document.querySelector('#hero') as HTMLElement
+    const dup = hero.cloneNode(true) as HTMLElement
+    dup.id = 'hero-dup'
+    dup.style.viewTransitionName = 'hero-1'
+    dup.style.viewTransitionClass = 'hero'
+    hero.after(dup)
+  })
+  await page.click('a:text-is("About")')
+  await page.waitForFunction(() => document.title === 'Gx shop about')
+  expect(await page.evaluate(() => new URL(location.href).pathname)).toBe('/about')
+  expect(await page.$('#hero')).not.toBeNull()
+  expect(warnings.some((w) => w.includes('duplicate view-transition-name'))).toBe(true)
+})

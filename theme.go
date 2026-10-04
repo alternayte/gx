@@ -9,6 +9,11 @@ const DefaultThemeCSS = `@import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Cross-document view transitions for full loads (REQ-STY-09). */
+@view-transition {
+  navigation: auto;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
