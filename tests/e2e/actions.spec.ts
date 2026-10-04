@@ -113,6 +113,14 @@ test('REQ-ACT-01 toast answer shows a toast', async () => {
   await waitForText('#gx-toaster', 'Saved')
 })
 
+test('REQ-REG-11 a toast lands in the toaster region as a status node', async () => {
+  await clickCart('Alpha', 'Toast')
+  await waitForText('#gx-toaster', 'Saved')
+  const toast = page.locator('#gx-toaster [data-gx-toast]')
+  expect(await toast.getAttribute('role')).toBe('status')
+  expect((await toast.textContent())?.trim()).toBe('Saved')
+})
+
 test('REQ-ACT-01 no-patch answer keeps the page', async () => {
   await clickCart('Alpha', 'Nothing')
   await Bun.sleep(300)
