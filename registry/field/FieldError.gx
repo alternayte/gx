@@ -1,0 +1,9 @@
+package field
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<p role="alert" class={gx.Cx("text-sm font-normal text-destructive", p.Class)} {...p.Attrs}>{p.Children}</p>

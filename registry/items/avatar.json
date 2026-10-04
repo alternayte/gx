@@ -1,0 +1,31 @@
+{
+  "name": "avatar",
+  "version": "0.1.0",
+  "description": "A user image with a fallback.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Avatar.gx",
+      "target": "ui/avatar/Avatar.gx",
+      "content": "package avatar\n\nprops {\n  Src      gx.URL\n  Alt      string   = \"\"\n  Fallback string   = \"\"\n  Size     Size     = Md\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative flex shrink-0 overflow-hidden rounded-full\", sizeClass[p.Size], p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg src={p.Src} alt={p.Alt} class=\"aspect-square size-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan class=\"flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "ac790febdd449e4d507e9cad8eafa46a6444463c5da9735ec718095e1eb5cf16"
+    },
+    {
+      "path": "Avatar.fixtures.go",
+      "target": "ui/avatar/Avatar.fixtures.go",
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\nvar AvatarFixtures = gx.Fixtures[AvatarProps]{\n\t\"Fallback\": {Fallback: \"NA\"},\n\t\"Small\":    {Fallback: \"NA\", Size: Sm},\n\t\"Large\":    {Fallback: \"NA\", Size: Lg},\n}\n",
+      "sha256": "5771f46e8d90accb558f417442df6ee8a3634fea0d544314b0775df845e2b913"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/avatar/styles.go",
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of an avatar.\ntype Size string\n\n// The sizes of avatar.Avatar.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-6 text-xs\",\n\tMd: \"size-8\",\n\tLg: \"size-10 text-base\",\n}\n",
+      "sha256": "c28a1ff03eadf165e635af6b8a7c70323da102515acd002107f75720fbb0224b"
+    }
+  ],
+  "requiredTokens": [
+    "--muted",
+    "--muted-foreground"
+  ],
+  "usage": "# Avatar\n\nA user image with a fallback.\n\n## Usage\n\n```gx\n\u003cavatar.Avatar src={gx.URL(user.Image)} alt={user.Name} fallback=\"NA\" /\u003e\n```\n\n## Do\n\n- Always set `Alt` when the image carries meaning.\n- Set `Fallback` to the initials of the user.\n\n## Don't\n\n- Do not build an image URL from a raw string. Use `gx.URL`.\n- Do not use an avatar as the only label of an action.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

@@ -1,0 +1,9 @@
+package pagination
+
+props {
+  Href  gx.URL
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<PaginationLink href={p.Href} size={Text} class={p.Class} attrs={p.attrs()}><span>Previous</span></PaginationLink>

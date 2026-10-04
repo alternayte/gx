@@ -1,0 +1,10 @@
+package field
+
+props {
+  Variant  Variant  = Legend
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<legend data-variant={p.Variant} class={gx.Cx("mb-3 font-medium", legendClass[p.Variant], p.Class)} {...p.Attrs}>{p.Children}</legend>

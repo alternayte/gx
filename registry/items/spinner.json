@@ -1,0 +1,30 @@
+{
+  "name": "spinner",
+  "version": "0.1.0",
+  "description": "An indicator for an unknown wait.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Spinner.gx",
+      "target": "ui/spinner/Spinner.gx",
+      "content": "package spinner\n\nprops {\n  Label string   = \"\"\n  Size  Size     = Md\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan role=\"status\" class={gx.Cx(\"inline-flex items-center gap-2 text-muted-foreground\", p.Class)} {...p.Attrs}\u003e\n  \u003csvg class={gx.Cx(\"animate-spin\", sizeClass[p.Size])} viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"\u003e\n    \u003ccircle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"\u003e\u003c/circle\u003e\n    \u003cpath class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z\"\u003e\u003c/path\u003e\n  \u003c/svg\u003e\n  if p.Label != \"\" {\n    \u003cspan\u003e{p.Label}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "42ff1e12429a6df8094f6ba3e3055c7ea79ad59f6778d92f33c38d9945b096a6"
+    },
+    {
+      "path": "Spinner.fixtures.go",
+      "target": "ui/spinner/Spinner.fixtures.go",
+      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\nvar SpinnerFixtures = gx.Fixtures[SpinnerProps]{\n\t\"Small\": {Size: Sm},\n\t\"Label\": {Label: \"Loading\"},\n\t\"Large\": {Size: Lg, Label: \"Loading\"},\n}\n",
+      "sha256": "73cbe35869e10d025da1b57284e9d967e2bd03f58819a271e47a1ad1937461d6"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/spinner/styles.go",
+      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of a spinner.\ntype Size string\n\n// The sizes of spinner.Spinner.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-4\",\n\tMd: \"size-5\",\n\tLg: \"size-8\",\n}\n",
+      "sha256": "afbb8532952714ae8d701cd5e8fbbe00cee9df0198d4060ae4a1c2f9d0e17f3b"
+    }
+  ],
+  "requiredTokens": [
+    "--muted-foreground"
+  ],
+  "usage": "# Spinner\n\nAn indicator for an unknown wait.\n\n## Usage\n\n```gx\n\u003cspinner.Spinner label=\"Loading\" /\u003e\n```\n\n## Do\n\n- Add a label when the wait is longer than a moment.\n- Keep the spinner near the content it replaces.\n\n## Don't\n\n- Do not use a spinner for a known duration. Use a progress bar.\n- Do not show more than one spinner for one wait.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

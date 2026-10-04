@@ -1,0 +1,24 @@
+{
+  "name": "skeleton",
+  "version": "0.1.0",
+  "description": "A placeholder while content loads.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Skeleton.gx",
+      "target": "ui/skeleton/Skeleton.gx",
+      "content": "package skeleton\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"animate-pulse rounded-md bg-muted\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "6982087ffacd495ae8c6861890900429e4b38bfdbf5342562881269d1c27eb33"
+    },
+    {
+      "path": "Skeleton.fixtures.go",
+      "target": "ui/skeleton/Skeleton.fixtures.go",
+      "content": "package skeleton\n\nimport \"github.com/alternayte/gx\"\n\nvar SkeletonFixtures = gx.Fixtures[SkeletonProps]{\n\t\"Line\":   {Class: \"h-4 w-40\"},\n\t\"Circle\": {Class: \"size-10 rounded-full\"},\n\t\"Card\":   {Class: \"h-24 w-60\"},\n}\n",
+      "sha256": "31cef0f7b7a7d3b3bbe2716f43af18604e65616c5652d1ed4a892050a97ac564"
+    }
+  ],
+  "requiredTokens": [
+    "--muted"
+  ],
+  "usage": "# Skeleton\n\nA placeholder while content loads.\n\n## Usage\n\n```gx\n\u003cskeleton.Skeleton class=\"h-4 w-40\" /\u003e\n```\n\n## Do\n\n- Match the size of the content that will replace it.\n- Use two or three skeletons for a list.\n\n## Don't\n\n- Do not leave a skeleton on the page after the load finishes.\n- Do not show a skeleton for longer than a moment.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

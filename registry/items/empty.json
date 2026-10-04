@@ -1,0 +1,64 @@
+{
+  "name": "empty",
+  "version": "0.1.0",
+  "description": "A placeholder for an empty result.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Empty.gx",
+      "target": "ui/empty/Empty.gx",
+      "content": "package empty\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border border-dashed border-border p-6 text-center md:p-12\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "474ba15ca3c29a529c819cb6989a35021519fce1afdc12f41a2788a875dfa760"
+    },
+    {
+      "path": "EmptyHeader.gx",
+      "target": "ui/empty/EmptyHeader.gx",
+      "content": "package empty\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex max-w-sm flex-col items-center gap-2 text-center\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "08705655b4a940c44093cf151e9c0ed7b34da0f07ee61edae57722ff76a5f639"
+    },
+    {
+      "path": "EmptyTitle.gx",
+      "target": "ui/empty/EmptyTitle.gx",
+      "content": "package empty\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"text-lg font-medium tracking-tight\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "87a9bb569a65811f665fa43403e0fcefa70b23755c33ba3e0a78cb428b80997d"
+    },
+    {
+      "path": "EmptyDescription.gx",
+      "target": "ui/empty/EmptyDescription.gx",
+      "content": "package empty\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp class={gx.Cx(\"text-sm text-muted-foreground [\u0026\u003ea]:underline [\u0026\u003ea]:underline-offset-4 [\u0026\u003ea:hover]:text-primary\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "88145aea3996e3d004ac278fbb21eccd365068c6d984379cea1e029a1078cbde"
+    },
+    {
+      "path": "EmptyContent.gx",
+      "target": "ui/empty/EmptyContent.gx",
+      "content": "package empty\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "05a168e14fb0d8e1e2112a7342e5979a0d4950bb0bb3d9355744f072f0961498"
+    },
+    {
+      "path": "EmptyMedia.gx",
+      "target": "ui/empty/EmptyMedia.gx",
+      "content": "package empty\n\nprops {\n  Variant  Variant  = Default\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-variant={p.Variant} class={gx.Cx(\"flex shrink-0 items-center justify-center\", variantClass[p.Variant], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "ab44670dfd586fe0f98273ffae80dfe303a83ed91c2d696bacdcfaa4a33553c2"
+    },
+    {
+      "path": "Empty.fixtures.go",
+      "target": "ui/empty/Empty.fixtures.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyFixtures = gx.Fixtures[EmptyProps]{\n\t\"Full\": {Children: gx.Frag(\n\t\tEmptyHeader(EmptyHeaderProps{Children: gx.Frag(\n\t\t\tEmptyMedia(EmptyMediaProps{Variant: Icon, Children: gx.Text(\"+\")}),\n\t\t\tEmptyTitle(EmptyTitleProps{Children: gx.Text(\"No projects\")}),\n\t\t\tEmptyDescription(EmptyDescriptionProps{Children: gx.Text(\"Create your first project to start.\")}),\n\t\t)}),\n\t\tEmptyContent(EmptyContentProps{Children: gx.Text(\"New project\")}),\n\t)},\n}\n\nvar EmptyHeaderFixtures = gx.Fixtures[EmptyHeaderProps]{\"Empty\": {}}\nvar EmptyTitleFixtures = gx.Fixtures[EmptyTitleProps]{\"Title\": {Children: gx.Text(\"No projects\")}}\nvar EmptyDescriptionFixtures = gx.Fixtures[EmptyDescriptionProps]{\"Text\": {Children: gx.Text(\"Create your first project.\")}}\nvar EmptyContentFixtures = gx.Fixtures[EmptyContentProps]{\"Empty\": {}}\nvar EmptyMediaFixtures = gx.Fixtures[EmptyMediaProps]{\"Icon\": {Variant: Icon, Children: gx.Text(\"+\")}}\n",
+      "sha256": "3e759bbbf916ad61a9b403a61d07cf442146015ba2fa6d7054edf28fe267dcba"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/empty/styles.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the look of the media slot of an empty state.\ntype Variant string\n\n// The variants of empty.EmptyMedia.\nconst (\n\tDefault Variant = \"default\"\n\tIcon    Variant = \"icon\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"\",\n\tIcon:    \"flex size-10 items-center justify-center rounded-lg bg-muted text-foreground [\u0026\u003esvg]:size-5\",\n}\n",
+      "sha256": "75e792a06d5e6088d870fdbaa89aa73c397b861baddeca399c08a36b68eb5300"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--muted",
+    "--muted-foreground",
+    "--primary",
+    "--foreground"
+  ],
+  "usage": "# Empty\n\nA placeholder for an empty result.\n\n## Usage\n\n```gx\n\u003cempty.Empty\u003e\n  \u003cempty.EmptyHeader\u003e\n    \u003cempty.EmptyTitle\u003eNo projects\u003c/empty.EmptyTitle\u003e\n    \u003cempty.EmptyDescription\u003eCreate your first project to start.\u003c/empty.EmptyDescription\u003e\n  \u003c/empty.EmptyHeader\u003e\n  \u003cempty.EmptyContent\u003e\n    \u003ca href={projects.New{}}\u003eNew project\u003c/a\u003e\n  \u003c/empty.EmptyContent\u003e\n\u003c/empty.Empty\u003e\n```\n\n## Do\n\n- Explain why the area is empty.\n- Offer the next action in `EmptyContent`.\n\n## Don't\n\n- Do not use an empty state for an error. Use an alert.\n- Do not hide the primary action of the page.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

@@ -1,0 +1,11 @@
+package pagination
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<span aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
+  <span aria-hidden="true">…</span>
+  <span class="sr-only">More pages</span>
+</span>

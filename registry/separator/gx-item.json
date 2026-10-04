@@ -1,0 +1,1 @@
+{"name":"separator","version":"0.1.0","description":"A visual divider between content.","kind":"component","files":[{"path":"Separator.gx","target":"ui/separator/Separator.gx"},{"path":"Separator.fixtures.go","target":"ui/separator/Separator.fixtures.go"},{"path":"styles.go","target":"ui/separator/styles.go"}],"requiredTokens":["--border"]}

@@ -1,0 +1,38 @@
+{
+  "name": "button",
+  "version": "0.1.0",
+  "description": "A button with the shadcn variants and sizes.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Button.gx",
+      "target": "ui/button/Button.gx",
+      "content": "package button\n\nprops {\n  Variant  Variant  = Default\n  Size     Size     = Md\n  Type     string   = \"button\"\n  Class    string   = \"\"\n  Children gx.Node    \n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type={p.Type} class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "34f05524f6ee583eab2fad9d74d8dd593d8265339281f54f6c3958a3150d4958"
+    },
+    {
+      "path": "Button.fixtures.go",
+      "target": "ui/button/Button.fixtures.go",
+      "content": "package button\n\nimport \"github.com/alternayte/gx\"\n\nvar ButtonFixtures = gx.Fixtures[ButtonProps]{\n\t\"Default\":     {Children: gx.Text(\"Button\")},\n\t\"Secondary\":   {Variant: Secondary, Children: gx.Text(\"Secondary\")},\n\t\"Destructive\": {Variant: Destructive, Children: gx.Text(\"Delete\")},\n\t\"Outline\":     {Variant: Outline, Children: gx.Text(\"Outline\")},\n\t\"Ghost\":       {Variant: Ghost, Children: gx.Text(\"Ghost\")},\n\t\"Link\":        {Variant: Link, Children: gx.Text(\"Link\")},\n\t\"Small\":       {Size: Sm, Children: gx.Text(\"Small\")},\n\t\"Large\":       {Size: Lg, Children: gx.Text(\"Large\")},\n\t\"Icon\":        {Size: Icon, Children: gx.Text(\"+\")},\n\t\"Disabled\":    {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: gx.Text(\"Disabled\")},\n}\n",
+      "sha256": "4183166b50f9b99ccf2f5a44a3fff535aef7bb0e06463b907d93d1a36594bead"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/button/styles.go",
+      "content": "package button\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the visual style of a button.\ntype Variant string\n\n// The variants of button.Button.\nconst (\n\tDefault     Variant = \"default\"\n\tSecondary   Variant = \"secondary\"\n\tDestructive Variant = \"destructive\"\n\tOutline     Variant = \"outline\"\n\tGhost       Variant = \"ghost\"\n\tLink        Variant = \"link\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"bg-primary text-primary-foreground shadow-xs hover:bg-primary/90\",\n\tSecondary:   \"bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80\",\n\tDestructive: \"bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20\",\n\tOutline:     \"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground\",\n\tGhost:       \"hover:bg-accent hover:text-accent-foreground\",\n\tLink:        \"text-primary underline-offset-4 hover:underline\",\n}\n\n// Size is the height and padding of a button.\ntype Size string\n\n// The sizes of button.Button.\nconst (\n\tSm   Size = \"sm\"\n\tMd   Size = \"md\"\n\tLg   Size = \"lg\"\n\tIcon Size = \"icon\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm:   \"h-8 rounded-md gap-1.5 px-3 has-[\u003esvg]:px-2.5\",\n\tMd:   \"h-9 rounded-md px-4 py-2 has-[\u003esvg]:px-3\",\n\tLg:   \"h-10 rounded-md px-6 has-[\u003esvg]:px-4\",\n\tIcon: \"size-9\",\n}\n\n// class returns the classes of one button state.\nfunc (p ButtonProps) class() string {\n\tconst base = \"inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4\"\n\treturn gx.Cx(base, variantClass[p.Variant], sizeClass[p.Size], p.Class)\n}\n",
+      "sha256": "1550d74562759c91a9651ea76dc61d13478b3b04f9b102a301b4391a84e970ff"
+    }
+  ],
+  "requiredTokens": [
+    "--primary",
+    "--primary-foreground",
+    "--secondary",
+    "--secondary-foreground",
+    "--destructive",
+    "--accent",
+    "--accent-foreground",
+    "--background",
+    "--ring"
+  ],
+  "usage": "# Button\n\nA clickable control with variant and size options.\n\n## Usage\n\n```gx\n\u003cui.Button\u003eSave\u003c/ui.Button\u003e\n\u003cui.Button variant={ui.Destructive}\u003eDelete\u003c/ui.Button\u003e\n\u003cui.Button variant={ui.Outline} size={ui.Sm}\u003eCancel\u003c/ui.Button\u003e\n```\n\nPass `Type` when the button submits a form: `\u003cui.Button type=\"submit\"\u003eSend\u003c/ui.Button\u003e`.\n\n## Do\n\n- Use one `default` button per view for the main action.\n- Set `type=\"submit\"` on a form button. The default `button` type does not submit.\n\n## Don't\n\n- Do not use a button as a link. Use `\u003cui.LinkButton\u003e` (docs kit) or an `\u003ca\u003e` with a typed `href`.\n- Do not put a button inside another button.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the button. |\n| Enter | Activates the button. |\n| Space | Activates the button. |\n"
+}

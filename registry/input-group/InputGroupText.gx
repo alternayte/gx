@@ -1,0 +1,9 @@
+package inputgroup
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<span class={gx.Cx("flex items-center gap-2 text-sm text-muted-foreground [&>svg]:size-4", p.Class)} {...p.Attrs}>{p.Children}</span>

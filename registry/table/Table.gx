@@ -1,0 +1,11 @@
+package table
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="relative w-full overflow-x-auto">
+  <table class={gx.Cx("w-full caption-bottom text-sm", p.Class)} {...p.Attrs}>{p.Children}</table>
+</div>

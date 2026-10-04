@@ -1,0 +1,1 @@
+{"name":"button-group","version":"0.1.0","description":"A row of related buttons.","kind":"component","files":[{"path":"ButtonGroup.gx","target":"ui/button-group/ButtonGroup.gx"},{"path":"ButtonGroup.fixtures.go","target":"ui/button-group/ButtonGroup.fixtures.go"}],"registryDependencies":["button"],"requiredTokens":["--ring"]}

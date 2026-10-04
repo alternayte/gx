@@ -1,6 +1,60 @@
 {
   "items": [
     {
+      "name": "alert",
+      "version": "0.1.0",
+      "description": "A callout for an important message.",
+      "kind": "component"
+    },
+    {
+      "name": "aspect-ratio",
+      "version": "0.1.0",
+      "description": "A box that keeps a fixed width to height ratio.",
+      "kind": "component"
+    },
+    {
+      "name": "avatar",
+      "version": "0.1.0",
+      "description": "A user image with a fallback.",
+      "kind": "component"
+    },
+    {
+      "name": "badge",
+      "version": "0.1.0",
+      "description": "A small label for a status or a count.",
+      "kind": "component"
+    },
+    {
+      "name": "breadcrumb",
+      "version": "0.1.0",
+      "description": "A trail of links to the current page.",
+      "kind": "component"
+    },
+    {
+      "name": "button",
+      "version": "0.1.0",
+      "description": "A button with the shadcn variants and sizes.",
+      "kind": "component"
+    },
+    {
+      "name": "button-group",
+      "version": "0.1.0",
+      "description": "A row of related buttons.",
+      "kind": "component"
+    },
+    {
+      "name": "card",
+      "version": "0.1.0",
+      "description": "A bordered surface for grouped content.",
+      "kind": "component"
+    },
+    {
+      "name": "checkbox",
+      "version": "0.1.0",
+      "description": "A single boolean control with a label.",
+      "kind": "component"
+    },
+    {
       "name": "docs",
       "version": "0.1.0",
       "description": "The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks.",
@@ -11,6 +65,102 @@
       "version": "0.1.0",
       "description": "The Gx docs shell: header, sidebar, table of contents, pagination, splash, 404 and search dialog.",
       "kind": "block"
+    },
+    {
+      "name": "empty",
+      "version": "0.1.0",
+      "description": "A placeholder for an empty result.",
+      "kind": "component"
+    },
+    {
+      "name": "field",
+      "version": "0.1.0",
+      "description": "Layout and labels for one form field.",
+      "kind": "component"
+    },
+    {
+      "name": "input",
+      "version": "0.1.0",
+      "description": "A single-line text control.",
+      "kind": "component"
+    },
+    {
+      "name": "input-group",
+      "version": "0.1.0",
+      "description": "An input with an addon or a text prefix.",
+      "kind": "component"
+    },
+    {
+      "name": "item",
+      "version": "0.1.0",
+      "description": "A row for one entry in a list.",
+      "kind": "component"
+    },
+    {
+      "name": "kbd",
+      "version": "0.1.0",
+      "description": "A key or key combination.",
+      "kind": "component"
+    },
+    {
+      "name": "label",
+      "version": "0.1.0",
+      "description": "A caption for a form control.",
+      "kind": "component"
+    },
+    {
+      "name": "pagination",
+      "version": "0.1.0",
+      "description": "Links between pages of a result set.",
+      "kind": "component"
+    },
+    {
+      "name": "progress",
+      "version": "0.1.0",
+      "description": "A bar that shows the completion of a task.",
+      "kind": "component"
+    },
+    {
+      "name": "radio-group",
+      "version": "0.1.0",
+      "description": "A group of exclusive choices.",
+      "kind": "component"
+    },
+    {
+      "name": "separator",
+      "version": "0.1.0",
+      "description": "A visual divider between content.",
+      "kind": "component"
+    },
+    {
+      "name": "skeleton",
+      "version": "0.1.0",
+      "description": "A placeholder while content loads.",
+      "kind": "component"
+    },
+    {
+      "name": "spinner",
+      "version": "0.1.0",
+      "description": "An indicator for an unknown wait.",
+      "kind": "component"
+    },
+    {
+      "name": "switch",
+      "version": "0.1.0",
+      "description": "A control for an immediate on or off setting.",
+      "kind": "component"
+    },
+    {
+      "name": "table",
+      "version": "0.1.0",
+      "description": "A data table built from composable parts.",
+      "kind": "component"
+    },
+    {
+      "name": "textarea",
+      "version": "0.1.0",
+      "description": "A multi-line text control.",
+      "kind": "component"
     }
   ]
 }

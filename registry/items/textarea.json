@@ -1,0 +1,26 @@
+{
+  "name": "textarea",
+  "version": "0.1.0",
+  "description": "A multi-line text control.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Textarea.gx",
+      "target": "ui/textarea/Textarea.gx",
+      "content": "package textarea\n\nprops {\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Rows        int      = 4\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003ctextarea name={p.Name} rows={p.Rows} placeholder={p.Placeholder} class={gx.Cx(\"flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs}\u003e{p.Value}\u003c/textarea\u003e\n",
+      "sha256": "2aa5145b1fa24cd7e23121e6337f10227dc6c4aa5addd816a5b71295d240a872"
+    },
+    {
+      "path": "Textarea.fixtures.go",
+      "target": "ui/textarea/Textarea.fixtures.go",
+      "content": "package textarea\n\nimport \"github.com/alternayte/gx\"\n\nvar TextareaFixtures = gx.Fixtures[TextareaProps]{\n\t\"Placeholder\": {Placeholder: \"Tell us more.\"},\n\t\"Filled\":      {Value: \"A short note.\"},\n\t\"Disabled\":    {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n}\n",
+      "sha256": "3de4843336c79c06e66b4aff22d5e23799d32d6ad88d7d77015fa8bc0715f8b1"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring",
+    "--muted-foreground"
+  ],
+  "usage": "# Textarea\n\nA multi-line text control.\n\n## Usage\n\n```gx\n\u003ctextarea.Textarea name=\"note\" rows={6} placeholder=\"Tell us more.\" /\u003e\n```\n\n## Do\n\n- Use a textarea for a message longer than one line.\n- Set `Rows` to the expected size.\n\n## Don't\n\n- Do not use a textarea for a single value.\n- Do not disable the resize handle unless the layout needs it.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the textarea. |\n| Enter | Inserts a new line. |\n"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "checkbox",
+  "version": "0.1.0",
+  "description": "A single boolean control with a label.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Checkbox.gx",
+      "target": "ui/checkbox/Checkbox.gx",
+      "content": "package checkbox\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"on\"\n  Checked  bool     = false\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"flex items-center gap-2 text-sm\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Checked} class=\"size-4 rounded border-input accent-primary\" /\u003e\n  if p.Children != nil {\n    \u003cspan\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/label\u003e\n",
+      "sha256": "46a80566070b9c8264faf33b9ba4750bf939b8cd48571d75b245dd8b43a3f03a"
+    },
+    {
+      "path": "Checkbox.fixtures.go",
+      "target": "ui/checkbox/Checkbox.fixtures.go",
+      "content": "package checkbox\n\nimport \"github.com/alternayte/gx\"\n\nvar CheckboxFixtures = gx.Fixtures[CheckboxProps]{\n\t\"Unchecked\": {Name: \"terms\", Children: gx.Text(\"Accept the terms\")},\n\t\"Checked\":   {Name: \"terms\", Checked: true, Children: gx.Text(\"Accept the terms\")},\n\t\"Disabled\":  {Name: \"terms\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: gx.Text(\"Disabled\")},\n}\n",
+      "sha256": "7fe9a00db1663c00d5b5d52406e565ba9195797aa252c7445c864e55ae414377"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--primary"
+  ],
+  "usage": "# Checkbox\n\nA single boolean control with a label.\n\n## Usage\n\n```gx\n\u003ccheckbox.Checkbox name=\"terms\" checked={p.Accepted}\u003eAccept the terms\u003c/checkbox.Checkbox\u003e\n```\n\n## Do\n\n- Use one checkbox per independent choice.\n- Wrap the control and its label in the component.\n\n## Don't\n\n- Do not use a checkbox for a mutually exclusive choice. Use a radio group.\n- Do not use a checkbox for an immediate action. Use a switch.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checkbox. |\n| Space | Toggles the value. |\n"
+}

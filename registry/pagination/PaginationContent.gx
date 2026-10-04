@@ -1,0 +1,9 @@
+package pagination
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<ul class={gx.Cx("flex flex-row items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</ul>

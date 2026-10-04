@@ -1,0 +1,1 @@
+{"name":"switch","version":"0.1.0","description":"A control for an immediate on or off setting.","kind":"component","files":[{"path":"Switch.gx","target":"ui/switch/Switch.gx"},{"path":"Switch.fixtures.go","target":"ui/switch/Switch.fixtures.go"}],"requiredTokens":["--input","--primary","--background"]}

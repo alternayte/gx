@@ -1,0 +1,10 @@
+package aspectratio
+
+props {
+  Ratio    string   = "16 / 9"
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div style={gx.Style("aspect-ratio: " + p.Ratio)} class={gx.Cx("w-full overflow-hidden rounded-md", p.Class)} {...p.Attrs}>{p.Children}</div>

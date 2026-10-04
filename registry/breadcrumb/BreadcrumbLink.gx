@@ -1,0 +1,10 @@
+package breadcrumb
+
+props {
+  Href     gx.URL
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a href={p.Href} class={gx.Cx("transition-colors hover:text-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>

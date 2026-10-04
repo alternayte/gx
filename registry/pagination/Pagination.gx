@@ -1,0 +1,9 @@
+package pagination
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<nav role="navigation" aria-label="pagination" class={gx.Cx("mx-auto flex w-full justify-center", p.Class)} {...p.Attrs}>{p.Children}</nav>

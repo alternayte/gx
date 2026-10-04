@@ -1,0 +1,1 @@
+{"name":"label","version":"0.1.0","description":"A caption for a form control.","kind":"component","files":[{"path":"Label.gx","target":"ui/label/Label.gx"},{"path":"Label.fixtures.go","target":"ui/label/Label.fixtures.go"}]}

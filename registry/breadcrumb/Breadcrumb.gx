@@ -1,0 +1,9 @@
+package breadcrumb
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<nav aria-label="breadcrumb" class={p.Class} {...p.Attrs}>{p.Children}</nav>

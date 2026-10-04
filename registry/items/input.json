@@ -1,0 +1,26 @@
+{
+  "name": "input",
+  "version": "0.1.0",
+  "description": "A single-line text control.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Input.gx",
+      "target": "ui/input/Input.gx",
+      "content": "package input\n\nprops {\n  Type        string   = \"text\"\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput type={p.Type} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx(\"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs} /\u003e\n",
+      "sha256": "37581e442508be0bbd08d4a956ae0a211bb55febcf887b6cf144008e98aa4c0f"
+    },
+    {
+      "path": "Input.fixtures.go",
+      "target": "ui/input/Input.fixtures.go",
+      "content": "package input\n\nimport \"github.com/alternayte/gx\"\n\nvar InputFixtures = gx.Fixtures[InputProps]{\n\t\"Text\":     {Placeholder: \"Email\"},\n\t\"Filled\":   {Value: \"ada@example.com\"},\n\t\"Disabled\": {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n\t\"File\":     {Type: \"file\"},\n}\n",
+      "sha256": "621222b7e103c8552736785d20059a61347ff0d4a4be9fbf18f926f46d8996d8"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring",
+    "--muted-foreground"
+  ],
+  "usage": "# Input\n\nA single-line text control.\n\n## Usage\n\n```gx\n\u003cinput.Input name=\"email\" type=\"email\" placeholder=\"Email\" /\u003e\n```\n\nFor a form with rules and errors, use the generated `gx.FormField` control instead.\n\n## Do\n\n- Always pair an input with a label.\n- Set `Type` to the data the field expects.\n\n## Don't\n\n- Do not use placeholder text as a label.\n- Do not build `value` from untrusted text without escaping. Gx escapes attribute values.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the input. |\n| Enter | Submits the form when the input is in a form. |\n"
+}

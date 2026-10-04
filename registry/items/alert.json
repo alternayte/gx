@@ -1,0 +1,33 @@
+{
+  "name": "alert",
+  "version": "0.1.0",
+  "description": "A callout for an important message.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Alert.gx",
+      "target": "ui/alert/Alert.gx",
+      "content": "package alert\n\nprops {\n  Variant  Variant  = Default\n  Title    string   = \"\"\n  Icon     gx.Node  = nil\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"alert\" class={p.class()} {...p.Attrs}\u003e\n  if p.Icon != nil {\n    \u003cspan class=\"mt-0.5 [\u0026\u003esvg]:size-4\"\u003e {p.Icon} \u003c/span\u003e\n  }\n  \u003cdiv class=\"grid gap-1\"\u003e\n    if p.Title != \"\" {\n      \u003cp class=\"font-medium\"\u003e{p.Title}\u003c/p\u003e\n    }\n    if p.Children != nil {\n      \u003cdiv class=\"text-sm [\u0026_p]:leading-relaxed\"\u003e{p.Children}\u003c/div\u003e\n    }\n  \u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "2f58b4aedc031e75a8102bc92d4b486d51e71b984bfcb6f004ff05449089aa32"
+    },
+    {
+      "path": "Alert.fixtures.go",
+      "target": "ui/alert/Alert.fixtures.go",
+      "content": "package alert\n\nimport \"github.com/alternayte/gx\"\n\nvar AlertFixtures = gx.Fixtures[AlertProps]{\n\t\"Default\":     {Title: \"Heads up\", Children: gx.Text(\"You can add components to your app.\")},\n\t\"Destructive\": {Variant: Destructive, Title: \"Error\", Children: gx.Text(\"Your session expired. Sign in again.\")},\n}\n",
+      "sha256": "d423b064ae332a9501a22996cca3a0555e3541068b109010ea26087c9fc085b8"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/alert/styles.go",
+      "content": "package alert\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the tone of an alert.\ntype Variant string\n\n// The variants of alert.Alert.\nconst (\n\tDefault     Variant = \"default\"\n\tDestructive Variant = \"destructive\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"bg-card text-card-foreground\",\n\tDestructive: \"border-destructive/50 text-destructive [\u0026\u003esvg]:text-destructive\",\n}\n\n// class returns the classes of one alert.\nfunc (p AlertProps) class() string {\n\tconst base = \"relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border border-border px-4 py-3 text-sm has-[\u003esvg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[\u003esvg]:gap-x-3 [\u0026\u003esvg]:size-4 [\u0026\u003esvg]:translate-y-0.5\"\n\tgrid := \"grid-cols-[0_1fr]\"\n\tif p.Icon != nil {\n\t\tgrid = \"grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3\"\n\t}\n\treturn gx.Cx(base, grid, variantClass[p.Variant], p.Class)\n}\n",
+      "sha256": "af16f623089f32602be57fd484087a4d2355793c2869787f1dba951889396ec1"
+    }
+  ],
+  "requiredTokens": [
+    "--card",
+    "--card-foreground",
+    "--destructive",
+    "--border"
+  ],
+  "usage": "# Alert\n\nA callout for an important message.\n\n## Usage\n\n```gx\n\u003calert.Alert title=\"Heads up\"\u003e\n  \u003cp\u003eYou can add components to your app.\u003c/p\u003e\n\u003c/alert.Alert\u003e\n```\n\n## Do\n\n- Put the message in the title and the detail in the body.\n- Use `Destructive` for an error.\n\n## Don't\n\n- Do not use an alert for a success message. Use a toast.\n- Do not put more than one action in an alert.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

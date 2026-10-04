@@ -1,0 +1,26 @@
+{
+  "name": "kbd",
+  "version": "0.1.0",
+  "description": "A key or key combination.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Kbd.gx",
+      "target": "ui/kbd/Kbd.gx",
+      "content": "package kbd\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ckbd class={gx.Cx(\"inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/kbd\u003e\n",
+      "sha256": "0447508915a1ee67bce6464c7c88fa8bc47e67b6854a08790173061cd475cdf4"
+    },
+    {
+      "path": "Kbd.fixtures.go",
+      "target": "ui/kbd/Kbd.fixtures.go",
+      "content": "package kbd\n\nimport \"github.com/alternayte/gx\"\n\nvar KbdFixtures = gx.Fixtures[KbdProps]{\n\t\"Key\":   {Children: gx.Text(\"K\")},\n\t\"Combo\": {Children: gx.Text(\"Ctrl\")},\n}\n",
+      "sha256": "1af797a5b1d069cd6eb1871bc5aaa331c664291b2527045abb8c83bd659f22b6"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--muted",
+    "--muted-foreground"
+  ],
+  "usage": "# Kbd\n\nA key or key combination.\n\n## Usage\n\n```gx\n\u003ckbd.Kbd\u003eCtrl\u003c/kbd.Kbd\u003e \u003ckbd.Kbd\u003eK\u003c/kbd\u003e\n```\n\n## Do\n\n- Write one key per element.\n- Use the same order as the physical keys.\n\n## Don't\n\n- Do not use a kbd for a mouse action.\n- Do not use a kbd for a sentence.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

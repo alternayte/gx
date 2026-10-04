@@ -1,0 +1,67 @@
+{
+  "name": "field",
+  "version": "0.1.0",
+  "description": "Layout and labels for one form field.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Field.gx",
+      "target": "ui/field/Field.gx",
+      "content": "package field\n\nprops {\n  Invalid  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-invalid={p.Invalid} class={gx.Cx(\"group/field flex w-full flex-col gap-2 data-[invalid=true]:text-destructive\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "4266202fbd7fa537a484a8f9bffa896059c52e6d061435a94896126b3c56c6cd"
+    },
+    {
+      "path": "FieldLabel.gx",
+      "target": "ui/field/FieldLabel.gx",
+      "content": "package field\n\nprops {\n  For      string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel for={p.For} class={gx.Cx(\"flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[invalid=true]/field:text-destructive\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/label\u003e\n",
+      "sha256": "58047cea3b1b6f7f071e3dd139c6241c0e47f460c0395b34c4f72938eccbd927"
+    },
+    {
+      "path": "FieldDescription.gx",
+      "target": "ui/field/FieldDescription.gx",
+      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp class={gx.Cx(\"text-sm leading-normal font-normal text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "60b4fd4895a2d221345d4419a7bfc79b93d6d929c3c2637507e3a55213afdd6b"
+    },
+    {
+      "path": "FieldError.gx",
+      "target": "ui/field/FieldError.gx",
+      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp role=\"alert\" class={gx.Cx(\"text-sm font-normal text-destructive\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "84cacc217108a23abfa6e34ea07f62fb2e037ad0d4bf483e08cfdf62be4a157b"
+    },
+    {
+      "path": "FieldGroup.gx",
+      "target": "ui/field/FieldGroup.gx",
+      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"group/field-group flex w-full flex-col gap-7\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "6a288724e9db67bd7167a63830aa23226c1638f1e454b01519757968a835386d"
+    },
+    {
+      "path": "FieldSet.gx",
+      "target": "ui/field/FieldSet.gx",
+      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cfieldset class={gx.Cx(\"flex flex-col gap-6\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/fieldset\u003e\n",
+      "sha256": "f3d63a74da1207f0737198f43bfc32074836f39bcb3f9d247775d0a8bdffe185"
+    },
+    {
+      "path": "FieldLegend.gx",
+      "target": "ui/field/FieldLegend.gx",
+      "content": "package field\n\nprops {\n  Variant  Variant  = Legend\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clegend data-variant={p.Variant} class={gx.Cx(\"mb-3 font-medium\", legendClass[p.Variant], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/legend\u003e\n",
+      "sha256": "ae3c6145581fbb6a694b8d313af209830666fa9710790953b70a81aa38345213"
+    },
+    {
+      "path": "Field.fixtures.go",
+      "target": "ui/field/Field.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldFixtures = gx.Fixtures[FieldProps]{\n\t\"LabelAndInput\": {Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"We never share your email.\")}),\n\t)},\n\t\"Invalid\": {Invalid: true, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldError(FieldErrorProps{Children: gx.Text(\"Enter a valid email address.\")}),\n\t)},\n}\n\nvar FieldLabelFixtures = gx.Fixtures[FieldLabelProps]{\"Label\": {For: \"email\", Children: gx.Text(\"Email\")}}\nvar FieldDescriptionFixtures = gx.Fixtures[FieldDescriptionProps]{\"Text\": {Children: gx.Text(\"A short hint.\")}}\nvar FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{\"Error\": {Children: gx.Text(\"This field is required.\")}}\nvar FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{\"Empty\": {}}\nvar FieldSetFixtures = gx.Fixtures[FieldSetProps]{\"Empty\": {}}\nvar FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{\"Legend\": {Children: gx.Text(\"Address\")}}\n",
+      "sha256": "ff9b391d9ae1e216b8c5051b6fd99104cab57533f2502801bbe973376e8a1bf6"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/field/styles.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the size of a field legend.\ntype Variant string\n\n// The variants of field.FieldLegend.\nconst (\n\tLegend Variant = \"legend\"\n\tLabel  Variant = \"label\"\n)\n\nvar legendClass = gx.Enum[Variant]{\n\tLegend: \"text-base\",\n\tLabel:  \"text-sm\",\n}\n",
+      "sha256": "855e1712cc199c5faf47bb54aa0276e7cdc4f7e69f24c72b0299e45454cef692"
+    }
+  ],
+  "requiredTokens": [
+    "--destructive",
+    "--muted-foreground"
+  ],
+  "usage": "# Field\n\nLayout and labels for one form field.\n\n## Usage\n\n```gx\n\u003cfield.Field\u003e\n  \u003cfield.FieldLabel for=\"email\"\u003eEmail\u003c/field.FieldLabel\u003e\n  \u003cinput.Input name=\"email\" type=\"email\" /\u003e\n  \u003cfield.FieldDescription\u003eWe never share your email.\u003c/field.FieldDescription\u003e\n\u003c/field.Field\u003e\n```\n\nFor a generated form field with rules and errors, use the `gx.FormField` control.\n\n## Do\n\n- Set `Invalid` on the field when a rule fails.\n- Put the error in `FieldError` below the control.\n\n## Don't\n\n- Do not use a field for a layout grid. Use CSS.\n- Do not set `For` to an id that does not exist.\n\n## Keyboard\n\nThis component is static. It adds no key bindings.\n"
+}

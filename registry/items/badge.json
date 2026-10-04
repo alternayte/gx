@@ -1,0 +1,35 @@
+{
+  "name": "badge",
+  "version": "0.1.0",
+  "description": "A small label for a status or a count.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Badge.gx",
+      "target": "ui/badge/Badge.gx",
+      "content": "package badge\n\nprops {\n  Variant  Variant  = Default\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
+      "sha256": "42d5cdbe05cf53c0ed2635cc735c92d8c8671fb81862911424f56cd71903db9e"
+    },
+    {
+      "path": "Badge.fixtures.go",
+      "target": "ui/badge/Badge.fixtures.go",
+      "content": "package badge\n\nimport \"github.com/alternayte/gx\"\n\nvar BadgeFixtures = gx.Fixtures[BadgeProps]{\n\t\"Default\":     {Children: gx.Text(\"Badge\")},\n\t\"Secondary\":   {Variant: Secondary, Children: gx.Text(\"Secondary\")},\n\t\"Destructive\": {Variant: Destructive, Children: gx.Text(\"Destructive\")},\n\t\"Outline\":     {Variant: Outline, Children: gx.Text(\"Outline\")},\n}\n",
+      "sha256": "74066f2b14e71485afc9982f72504c4d63d84e3d794883cf4e1eb38673fbd79a"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/badge/styles.go",
+      "content": "package badge\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the visual style of a badge.\ntype Variant string\n\n// The variants of badge.Badge.\nconst (\n\tDefault     Variant = \"default\"\n\tSecondary   Variant = \"secondary\"\n\tDestructive Variant = \"destructive\"\n\tOutline     Variant = \"outline\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"border-transparent bg-primary text-primary-foreground\",\n\tSecondary:   \"border-transparent bg-secondary text-secondary-foreground\",\n\tDestructive: \"border-transparent bg-destructive text-white\",\n\tOutline:     \"text-foreground\",\n}\n\n// class returns the classes of one badge.\nfunc (p BadgeProps) class() string {\n\tconst base = \"inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 [\u0026\u003esvg]:pointer-events-none [\u0026\u003esvg]:size-3\"\n\treturn gx.Cx(base, variantClass[p.Variant], p.Class)\n}\n",
+      "sha256": "71b8cba2151d6d345754fc45c987976a6db07cd432519b78bca67c4832ad0b83"
+    }
+  ],
+  "requiredTokens": [
+    "--primary",
+    "--primary-foreground",
+    "--secondary",
+    "--secondary-foreground",
+    "--destructive",
+    "--ring"
+  ],
+  "usage": "# Badge\n\nA small label for a status or a count.\n\n## Usage\n\n```gx\n\u003cbadge.Badge\u003eNew\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Destructive}\u003eFailed\u003c/badge.Badge\u003e\n```\n\n## Do\n\n- Keep the label short, one or two words.\n- Use `Destructive` only for a failed or dangerous state.\n\n## Don't\n\n- Do not use a badge as a button.\n- Do not put a long sentence in a badge.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

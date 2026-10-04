@@ -1,0 +1,1 @@
+{"name":"aspect-ratio","version":"0.1.0","description":"A box that keeps a fixed width to height ratio.","kind":"component","files":[{"path":"AspectRatio.gx","target":"ui/aspect-ratio/AspectRatio.gx"},{"path":"AspectRatio.fixtures.go","target":"ui/aspect-ratio/AspectRatio.fixtures.go"}]}

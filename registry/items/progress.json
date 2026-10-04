@@ -1,0 +1,25 @@
+{
+  "name": "progress",
+  "version": "0.1.0",
+  "description": "A bar that shows the completion of a task.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Progress.gx",
+      "target": "ui/progress/Progress.gx",
+      "content": "package progress\n\nprops {\n  Value int      = 0\n  Max   int      = 100\n  Label string   = \"\"\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cprogress value={p.Value} max={p.Max} aria-label={p.Label} class={gx.Cx(\"h-2 w-full overflow-hidden rounded-full [\u0026::-moz-progress-bar]:bg-primary [\u0026::-webkit-progress-bar]:rounded-full [\u0026::-webkit-progress-bar]:bg-muted [\u0026::-webkit-progress-value]:rounded-full [\u0026::-webkit-progress-value]:bg-primary\", p.Class)} {...p.Attrs}\u003e\u003c/progress\u003e\n",
+      "sha256": "6b47d665150da7c3f5c090258b9b283b4572e699ea5aad4a1d683ee6d25a2a73"
+    },
+    {
+      "path": "Progress.fixtures.go",
+      "target": "ui/progress/Progress.fixtures.go",
+      "content": "package progress\n\nimport \"github.com/alternayte/gx\"\n\nvar ProgressFixtures = gx.Fixtures[ProgressProps]{\n\t\"Half\":  {Value: 50, Label: \"Upload\"},\n\t\"Full\":  {Value: 100, Label: \"Upload\"},\n\t\"Empty\": {Value: 0, Label: \"Upload\"},\n}\n",
+      "sha256": "3a22ec4936118f3aef9dfb1a318da9bed0bcfd51c39c118a91dadc0fc944dad1"
+    }
+  ],
+  "requiredTokens": [
+    "--primary",
+    "--muted"
+  ],
+  "usage": "# Progress\n\nA bar that shows the completion of a task.\n\n## Usage\n\n```gx\n\u003cprogress.Progress value={p.Done} max={p.Total} label=\"Upload\" /\u003e\n```\n\n## Do\n\n- Set `Label` so the bar has an accessible name.\n- Update the value as the task advances.\n\n## Don't\n\n- Do not use a progress bar for an unknown duration. Use a spinner.\n- Do not animate the bar backward without a reason.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

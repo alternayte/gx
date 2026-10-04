@@ -1,0 +1,9 @@
+package table
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<th class={gx.Cx("h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground", p.Class)} {...p.Attrs}>{p.Children}</th>

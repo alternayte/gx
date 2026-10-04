@@ -1,0 +1,69 @@
+{
+  "name": "item",
+  "version": "0.1.0",
+  "description": "A row for one entry in a list.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Item.gx",
+      "target": "ui/item/Item.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "a79b790e8d30ff35d135aad76f35119fbc5bd594887ba4eaa65f20c16ab9465b"
+    },
+    {
+      "path": "ItemMedia.gx",
+      "target": "ui/item/ItemMedia.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex shrink-0 items-center justify-center gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "9c329139ce410d22678de180f82615a0001538a53d88513516cc4bab3bf4d950"
+    },
+    {
+      "path": "ItemContent.gx",
+      "target": "ui/item/ItemContent.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex flex-1 flex-col gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "2e10dcc8e702c5d46fda08e7cc5e2b9abb4946a6808d733eb76083236fae98ad"
+    },
+    {
+      "path": "ItemTitle.gx",
+      "target": "ui/item/ItemTitle.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex w-fit items-center gap-2 text-sm leading-snug font-medium\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "7493b4859a81f7dc5949ddabc8fa501c204278b4b86303d765dc328f1c812754"
+    },
+    {
+      "path": "ItemDescription.gx",
+      "target": "ui/item/ItemDescription.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp class={gx.Cx(\"line-clamp-2 text-sm leading-normal font-normal text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "c5004ea4de9f099a49e40b643fb08536460f7ab07c164c5beb9416b6f9563682"
+    },
+    {
+      "path": "ItemActions.gx",
+      "target": "ui/item/ItemActions.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex items-center gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "8dedd6edcee6241479d416e78f900d2ffb155073c108e216cf587881247610c8"
+    },
+    {
+      "path": "ItemHeader.gx",
+      "target": "ui/item/ItemHeader.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex basis-full items-center justify-between\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "9c89c83a88ef15e47784d7576cb43e6bb071107b0b8f20ca47378aa9eb9dc2ba"
+    },
+    {
+      "path": "ItemFooter.gx",
+      "target": "ui/item/ItemFooter.gx",
+      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex basis-full items-center justify-between\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "9c89c83a88ef15e47784d7576cb43e6bb071107b0b8f20ca47378aa9eb9dc2ba"
+    },
+    {
+      "path": "Item.fixtures.go",
+      "target": "ui/item/Item.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemFixtures = gx.Fixtures[ItemProps]{\n\t\"Full\": {Class: \"p-4\", Children: gx.Frag(\n\t\tItemMedia(ItemMediaProps{Children: gx.Text(\"*\")}),\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Item title\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"A short description of the item.\")}),\n\t\t)}),\n\t\tItemActions(ItemActionsProps{Children: gx.Text(\"Open\")}),\n\t)},\n}\n\nvar ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{\"Empty\": {}}\nvar ItemContentFixtures = gx.Fixtures[ItemContentProps]{\"Empty\": {}}\nvar ItemTitleFixtures = gx.Fixtures[ItemTitleProps]{\"Title\": {Children: gx.Text(\"Item title\")}}\nvar ItemDescriptionFixtures = gx.Fixtures[ItemDescriptionProps]{\"Text\": {Children: gx.Text(\"Description\")}}\nvar ItemActionsFixtures = gx.Fixtures[ItemActionsProps]{\"Empty\": {}}\nvar ItemHeaderFixtures = gx.Fixtures[ItemHeaderProps]{\"Empty\": {}}\nvar ItemFooterFixtures = gx.Fixtures[ItemFooterProps]{\"Empty\": {}}\n",
+      "sha256": "89f5ecf3ba6992d26768795ff27141d0a0435db987e1dbb1b9f7851ad8e21eb7"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--ring",
+    "--accent",
+    "--muted-foreground"
+  ],
+  "usage": "# Item\n\nA row for one entry in a list.\n\n## Usage\n\n```gx\n\u003citem.Item class=\"p-4\"\u003e\n  \u003citem.ItemMedia\u003e*\u003c/item.ItemMedia\u003e\n  \u003citem.ItemContent\u003e\n    \u003citem.ItemTitle\u003eItem title\u003c/item.ItemTitle\u003e\n    \u003citem.ItemDescription\u003eA short description.\u003c/item.ItemDescription\u003e\n  \u003c/item.ItemContent\u003e\n  \u003citem.ItemActions\u003e\u003ca href={items.Show{ID: it.ID}}\u003eOpen\u003c/a\u003e\u003c/item.ItemActions\u003e\n\u003c/item.Item\u003e\n```\n\n## Do\n\n- Keep one row per entry.\n- Put the row action in `ItemActions`.\n\n## Don't\n\n- Do not put a whole table in an item.\n- Do not nest one item in another.\n\n## Keyboard\n\nRows take focus only when they contain a link or a control.\n"
+}

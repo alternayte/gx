@@ -1,0 +1,10 @@
+package field
+
+props {
+  For      string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<label for={p.For} class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[invalid=true]/field:text-destructive", p.Class)} {...p.Attrs}>{p.Children}</label>

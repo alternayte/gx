@@ -1,0 +1,10 @@
+package badge
+
+props {
+  Variant  Variant  = Default
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<span class={p.class()} {...p.Attrs}>{p.Children}</span>

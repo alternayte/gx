@@ -1,0 +1,27 @@
+{
+  "name": "button-group",
+  "version": "0.1.0",
+  "description": "A row of related buttons.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "ButtonGroup.gx",
+      "target": "ui/button-group/ButtonGroup.gx",
+      "content": "package buttongroup\n\nprops {\n  Children gx.Node\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" class={gx.Cx(\"inline-flex -space-x-px shadow-xs [\u0026\u003ebutton]:rounded-none [\u0026\u003ebutton:first-child]:rounded-l-md [\u0026\u003ebutton:last-child]:rounded-r-md [\u0026\u003ebutton:not(:first-child)]:border-l-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "51d516b556e976452091b3e2f0212c9d25b6e619612be81d70859b0338fdba2a"
+    },
+    {
+      "path": "ButtonGroup.fixtures.go",
+      "target": "ui/button-group/ButtonGroup.fixtures.go",
+      "content": "package buttongroup\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\nvar ButtonGroupFixtures = gx.Fixtures[ButtonGroupProps]{\n\t\"Three\": {Children: gx.Frag(\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"One\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Two\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Three\")}),\n\t)},\n}\n",
+      "sha256": "1a5c618c51d55aa793177ccaf2bed9fe56afd672c3f33ae62064e56c8d49cbaf"
+    }
+  ],
+  "registryDependencies": [
+    "button"
+  ],
+  "requiredTokens": [
+    "--ring"
+  ],
+  "usage": "# Button Group\n\nA row of related buttons.\n\n## Usage\n\n```gx\n\u003cbuttongroup.ButtonGroup\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eOne\u003c/button.Button\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eTwo\u003c/button.Button\u003e\n\u003c/buttongroup.ButtonGroup\u003e\n```\n\n## Do\n\n- Group buttons that act on the same object.\n- Give each button a distinct label.\n\n## Don't\n\n- Do not group unrelated actions.\n- Do not nest a button group inside another button group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus between the buttons. |\n| Enter | Activates the focused button. |\n"
+}

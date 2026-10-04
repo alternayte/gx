@@ -1,0 +1,1 @@
+{"name":"textarea","version":"0.1.0","description":"A multi-line text control.","kind":"component","files":[{"path":"Textarea.gx","target":"ui/textarea/Textarea.gx"},{"path":"Textarea.fixtures.go","target":"ui/textarea/Textarea.fixtures.go"}],"requiredTokens":["--input","--ring","--muted-foreground"]}

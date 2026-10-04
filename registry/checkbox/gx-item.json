@@ -1,0 +1,1 @@
+{"name":"checkbox","version":"0.1.0","description":"A single boolean control with a label.","kind":"component","files":[{"path":"Checkbox.gx","target":"ui/checkbox/Checkbox.gx"},{"path":"Checkbox.fixtures.go","target":"ui/checkbox/Checkbox.fixtures.go"}],"requiredTokens":["--input","--primary"]}

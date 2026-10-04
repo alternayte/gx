@@ -1,0 +1,1 @@
+{"name":"skeleton","version":"0.1.0","description":"A placeholder while content loads.","kind":"component","files":[{"path":"Skeleton.gx","target":"ui/skeleton/Skeleton.gx"},{"path":"Skeleton.fixtures.go","target":"ui/skeleton/Skeleton.fixtures.go"}],"requiredTokens":["--muted"]}

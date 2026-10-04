@@ -1,0 +1,27 @@
+{
+  "name": "card",
+  "version": "0.1.0",
+  "description": "A bordered surface for grouped content.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Card.gx",
+      "target": "ui/card/Card.gx",
+      "content": "package card\n\nprops {\n  Title       string   = \"\"\n  Description string   = \"\"\n  Footer      gx.Node  = nil\n  Class       string   = \"\"\n  Children    gx.Node  = nil\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex flex-col gap-6 rounded-xl border border-border bg-card py-6 text-card-foreground shadow-sm\", p.Class)} {...p.Attrs}\u003e\n  if p.Title != \"\" || p.Description != \"\" {\n    \u003cdiv class=\"grid gap-1.5 px-6\"\u003e\n      if p.Title != \"\" {\n        \u003ch3 class=\"leading-none font-semibold\"\u003e{p.Title}\u003c/h3\u003e\n      }\n      if p.Description != \"\" {\n        \u003cp class=\"text-muted-foreground text-sm\"\u003e{p.Description}\u003c/p\u003e\n      }\n    \u003c/div\u003e\n  }\n  if p.Children != nil {\n    \u003cdiv class=\"px-6\"\u003e{p.Children}\u003c/div\u003e\n  }\n  if p.Footer != nil {\n    \u003cdiv class=\"flex items-center px-6\"\u003e{p.Footer}\u003c/div\u003e\n  }\n\u003c/div\u003e\n",
+      "sha256": "7d147b5135a5fc880e653244a5a44fbfa6a54fadca861f918f401870decd090a"
+    },
+    {
+      "path": "Card.fixtures.go",
+      "target": "ui/card/Card.fixtures.go",
+      "content": "package card\n\nimport \"github.com/alternayte/gx\"\n\nvar CardFixtures = gx.Fixtures[CardProps]{\n\t\"Full\":      {Title: \"Card title\", Description: \"A short description.\", Children: gx.Text(\"Card body.\"), Footer: gx.Text(\"Footer\")},\n\t\"TitleOnly\": {Title: \"Title only\"},\n\t\"BodyOnly\":  {Children: gx.Text(\"Body only.\")},\n}\n",
+      "sha256": "2f95cb634fb0bce4d63ca582c9c9f22400342b261d9a99fa23abdb7f1d57d353"
+    }
+  ],
+  "requiredTokens": [
+    "--card",
+    "--card-foreground",
+    "--border",
+    "--muted-foreground"
+  ],
+  "usage": "# Card\n\nA bordered surface for grouped content.\n\n## Usage\n\n```gx\n\u003ccard.Card title=\"Revenue\" description=\"Last 30 days\"\u003e\n  \u003cp\u003e$12,400\u003c/p\u003e\n\u003c/card.Card\u003e\n```\n\n## Do\n\n- Use one card per unit of content.\n- Use the `Footer` node for a card action.\n\n## Don't\n\n- Do not nest cards.\n- Do not use a card for the whole page.\n\n## Keyboard\n\nThis component is static. It takes no focus and has no key bindings.\n"
+}

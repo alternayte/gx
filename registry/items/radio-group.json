@@ -1,0 +1,36 @@
+{
+  "name": "radio-group",
+  "version": "0.1.0",
+  "description": "A group of exclusive choices.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "RadioGroup.gx",
+      "target": "ui/radio-group/RadioGroup.gx",
+      "content": "package radiogroup\n\nprops {\n  Name        string      = \"\"\n  Orientation Orientation = Vertical\n  Class       string      = \"\"\n  Children    gx.Node\n  Attrs       gx.Attrs    = nil\n}\n\n\u003cdiv role=\"radiogroup\" aria-orientation={p.Orientation} class={gx.Cx(\"grid gap-2\", orientationClass[p.Orientation], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "5a9fc6c1325e13a374508718e1263bdcf6ef11e5509ee96c982b99c06a22c807"
+    },
+    {
+      "path": "RadioGroupItem.gx",
+      "target": "ui/radio-group/RadioGroupItem.gx",
+      "content": "package radiogroup\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"\"\n  Checked  bool     = false\n  Label    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"flex items-center gap-2 text-sm\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" name={p.Name} value={p.Value} checked={p.Checked} class=\"size-4 accent-primary\" /\u003e\n  if p.Label != \"\" {\n    \u003cspan\u003e{p.Label}\u003c/span\u003e\n  }\n  if p.Children != nil {\n    \u003cspan\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/label\u003e\n",
+      "sha256": "6a8749ca1aa53401a4bde2b03ffa379c755c58bc2915ce497fdad443700407ff"
+    },
+    {
+      "path": "RadioGroup.fixtures.go",
+      "target": "ui/radio-group/RadioGroup.fixtures.go",
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{\n\t\"Vertical\": {\n\t\tName: \"plan\",\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"free\", Checked: true, Label: \"Free\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"pro\", Label: \"Pro\"}),\n\t\t),\n\t},\n\t\"Horizontal\": {\n\t\tName:        \"size\",\n\t\tOrientation: Horizontal,\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"s\", Checked: true, Label: \"Small\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"m\", Label: \"Medium\"}),\n\t\t),\n\t},\n}\n\nvar RadioGroupItemFixtures = gx.Fixtures[RadioGroupItemProps]{\n\t\"Unchecked\": {Name: \"plan\", Value: \"free\", Label: \"Free\"},\n\t\"Checked\":   {Name: \"plan\", Value: \"pro\", Checked: true, Label: \"Pro\"},\n}\n",
+      "sha256": "83f62df2b4d77cb9e5b944f2096d852be4dacbbbb050220a37e05a8be9fd8f16"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/radio-group/styles.go",
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the layout direction of a radio group.\ntype Orientation string\n\n// The orientations of radiogroup.RadioGroup.\nconst (\n\tVertical   Orientation = \"vertical\"\n\tHorizontal Orientation = \"horizontal\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tVertical:   \"grid-cols-1\",\n\tHorizontal: \"grid-flow-col auto-cols-max gap-4\",\n}\n",
+      "sha256": "fa3b85ae2d59a8411f245bdfe1c1cbf431fd2375b31a68065742860c715379da"
+    }
+  ],
+  "requiredTokens": [
+    "--primary"
+  ],
+  "usage": "# Radio Group\n\nA group of exclusive choices.\n\n## Usage\n\n```gx\n\u003cradiogroup.RadioGroup name=\"plan\"\u003e\n  \u003cradiogroup.RadioGroupItem name=\"plan\" value=\"free\" checked={true} label=\"Free\" /\u003e\n  \u003cradiogroup.RadioGroupItem name=\"plan\" value=\"pro\" label=\"Pro\" /\u003e\n\u003c/radiogroup.RadioGroup\u003e\n```\n\n## Do\n\n- Give every item the same `Name`.\n- Set `Checked` on exactly one item.\n\n## Don't\n\n- Do not use a radio group for a boolean. Use a checkbox or a switch.\n- Do not mix two names in one group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checked item. |\n| Arrow keys | Moves the choice and selects it. |\n| Space | Selects the focused item. |\n"
+}
