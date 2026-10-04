@@ -2,7 +2,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # The gate. Run this before every commit.
-verify: build vet runtime test checks e2e parity
+verify: build vet runtime test checks e2e parity fallback
 
 # The same gate under the global agent-instruction name.
 check: verify
@@ -92,4 +92,4 @@ a11y:
 
 # The fallback path of partly supported platform features (REQ-REG-13).
 fallback:
-    cd tests/e2e && bun test --timeout=300000 fallback.browsers.ts
+    cd tests/e2e && bun test --timeout=300000 ./fallback.browsers.ts
