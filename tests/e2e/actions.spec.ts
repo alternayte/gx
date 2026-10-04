@@ -178,6 +178,9 @@ test('REQ-ACT-06 the dev runtime reports a duplicate signal scope', async () => 
 })
 
 test('REQ-RTE-12 a partial navigation keeps the layout DOM node', async () => {
+  // The lazy-slot test leaves the page scrolled; the on:visible action would
+  // fire during the back navigation and change the slot before the check.
+  await page.evaluate(() => window.scrollTo(0, 0))
   await page.evaluate(() => {
     ;(document.querySelector('header') as unknown as { __keep: number }).__keep = 1
   })

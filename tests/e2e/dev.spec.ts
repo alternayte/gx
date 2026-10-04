@@ -104,3 +104,31 @@ test('REQ-DEV-06 a broken template shows the overlay and the fix recovers', asyn
   expect(await page.textContent('h1')).toBe('Two carts')
   expect(new URL(page.url()).pathname).toBe('/')
 }, 60000)
+
+test('REQ-AI-03 the dev gallery renders fixtures and missing components', async () => {
+  const res = await fetch(url + '/_gx/gallery')
+  expect(res.status).toBe(200)
+  const body = await res.text()
+  // The cart fixtures render.
+  expect(body).toContain('data-fixture="Cart-Default"')
+  expect(body).toContain('data-fixture="Cart-Empty"')
+  expect(body).toContain('Fixture cart')
+  // A component without a fixtures file shows as missing.
+  expect(body).toContain('data-fixture="Checkbox"')
+  expect(body).toContain('missing fixtures')
+})
+
+test('REQ-STY-03 the gallery follows the theme tokens in dark mode', async () => {
+  page = await browser.newPage()
+  await page.goto(url + '/_gx/gallery')
+  const light = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+  await page.evaluate(() => document.documentElement.classList.add('dark'))
+  const dark = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+  expect(light).not.toBe(dark)
+  await page.evaluate(() => {
+    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.add('light')
+  })
+  const forcedLight = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+  expect(forcedLight).toBe(light)
+})

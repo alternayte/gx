@@ -59,6 +59,7 @@ func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diag
 		out[path] = src
 	}
 	out[classesFilePath(root)] = classesBytes(collectClasses(dirs, l, res.pkgs))
+	out[galleryFilePath(root)] = renderGallery(root, dirs, l, res.pkgs)
 	if len(diags) > 0 {
 		sortDiags(diags)
 		return nil, diags, res, l, dirs

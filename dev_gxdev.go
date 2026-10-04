@@ -11,4 +11,8 @@ func (a *App) devRoutes() {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"dev":true}`))
 	}))
+	a.mux.Handle("GET /_gx/gallery", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_ = RenderRequest(w, r, galleryPageHTML())
+	}))
 }

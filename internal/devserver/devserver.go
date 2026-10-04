@@ -173,6 +173,9 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 		return false, diagsOverlay(diags)
 	} else {
 		for path, src := range files {
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				return false, &Overlay{Title: "generate failed", Text: err.Error()}
+			}
 			if err := os.WriteFile(path, src, 0o644); err != nil {
 				return false, &Overlay{Title: "generate failed", Text: err.Error()}
 			}

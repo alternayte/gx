@@ -23,6 +23,7 @@ func listenAddr() string {
 func main() {
 	addr := flag.String("addr", listenAddr(), "listen address")
 	flag.Parse()
+	setupGallery()
 	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
 	app.Group("/", shop.ShellLayout, gx.Nav(gx.MorphNavigation), shop.Routes)
 	log.Printf("shop listening on http://%s", *addr)

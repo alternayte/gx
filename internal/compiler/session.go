@@ -193,6 +193,7 @@ func (s *Session) incremental(root string, changed map[string]bool, stamps map[s
 		return nil, diags
 	}
 	out[classesFilePath(root)] = classesBytes(collectClasses(s.dirs, s.l, s.res.pkgs))
+	out[galleryFilePath(root)] = renderGallery(root, s.dirs, s.l, s.res.pkgs)
 	s.files = out
 	s.lastDiags = nil
 	s.stamps = stamps
