@@ -1,0 +1,158 @@
+{
+  "name": "docs",
+  "version": "0.1.0",
+  "description": "The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "Aside.fixtures.go",
+      "target": "ui/docs/Aside.fixtures.go"
+    },
+    {
+      "path": "Aside.gx",
+      "target": "ui/docs/Aside.gx"
+    },
+    {
+      "path": "Badge.fixtures.go",
+      "target": "ui/docs/Badge.fixtures.go"
+    },
+    {
+      "path": "Badge.gx",
+      "target": "ui/docs/Badge.gx"
+    },
+    {
+      "path": "Card.fixtures.go",
+      "target": "ui/docs/Card.fixtures.go"
+    },
+    {
+      "path": "Card.gx",
+      "target": "ui/docs/Card.gx"
+    },
+    {
+      "path": "CardGrid.fixtures.go",
+      "target": "ui/docs/CardGrid.fixtures.go"
+    },
+    {
+      "path": "CardGrid.gx",
+      "target": "ui/docs/CardGrid.gx"
+    },
+    {
+      "path": "Code.fixtures.go",
+      "target": "ui/docs/Code.fixtures.go"
+    },
+    {
+      "path": "Code.gx",
+      "target": "ui/docs/Code.gx"
+    },
+    {
+      "path": "FileTree.fixtures.go",
+      "target": "ui/docs/FileTree.fixtures.go"
+    },
+    {
+      "path": "FileTree.gx",
+      "target": "ui/docs/FileTree.gx"
+    },
+    {
+      "path": "FileTreeItemRow.fixtures.go",
+      "target": "ui/docs/FileTreeItemRow.fixtures.go"
+    },
+    {
+      "path": "FileTreeItemRow.gx",
+      "target": "ui/docs/FileTreeItemRow.gx"
+    },
+    {
+      "path": "Hero.fixtures.go",
+      "target": "ui/docs/Hero.fixtures.go"
+    },
+    {
+      "path": "Hero.gx",
+      "target": "ui/docs/Hero.gx"
+    },
+    {
+      "path": "Icon.fixtures.go",
+      "target": "ui/docs/Icon.fixtures.go"
+    },
+    {
+      "path": "Icon.gx",
+      "target": "ui/docs/Icon.gx"
+    },
+    {
+      "path": "LLMSkip.fixtures.go",
+      "target": "ui/docs/LLMSkip.fixtures.go"
+    },
+    {
+      "path": "LLMSkip.gx",
+      "target": "ui/docs/LLMSkip.gx"
+    },
+    {
+      "path": "LinkButton.fixtures.go",
+      "target": "ui/docs/LinkButton.fixtures.go"
+    },
+    {
+      "path": "LinkButton.gx",
+      "target": "ui/docs/LinkButton.gx"
+    },
+    {
+      "path": "LinkCard.fixtures.go",
+      "target": "ui/docs/LinkCard.fixtures.go"
+    },
+    {
+      "path": "LinkCard.gx",
+      "target": "ui/docs/LinkCard.gx"
+    },
+    {
+      "path": "Steps.fixtures.go",
+      "target": "ui/docs/Steps.fixtures.go"
+    },
+    {
+      "path": "Steps.gx",
+      "target": "ui/docs/Steps.gx"
+    },
+    {
+      "path": "TabItem.fixtures.go",
+      "target": "ui/docs/TabItem.fixtures.go"
+    },
+    {
+      "path": "TabItem.gx",
+      "target": "ui/docs/TabItem.gx"
+    },
+    {
+      "path": "Tabs.fixtures.go",
+      "target": "ui/docs/Tabs.fixtures.go"
+    },
+    {
+      "path": "Tabs.gx",
+      "target": "ui/docs/Tabs.gx"
+    },
+    {
+      "path": "aside.go",
+      "target": "ui/docs/aside.go"
+    },
+    {
+      "path": "badge.go",
+      "target": "ui/docs/badge.go"
+    },
+    {
+      "path": "filetree.go",
+      "target": "ui/docs/filetree.go"
+    },
+    {
+      "path": "linkbutton.go",
+      "target": "ui/docs/linkbutton.go"
+    }
+  ],
+  "requiredTokens": [
+    "--background",
+    "--foreground",
+    "--primary",
+    "--primary-foreground",
+    "--secondary",
+    "--secondary-foreground",
+    "--muted",
+    "--muted-foreground",
+    "--accent",
+    "--border",
+    "--card",
+    "--destructive"
+  ]
+}

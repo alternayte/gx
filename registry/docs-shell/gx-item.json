@@ -1,0 +1,126 @@
+{
+  "name": "docs-shell",
+  "version": "0.1.0",
+  "description": "The Gx docs shell: header, sidebar, table of contents, pagination, splash, 404 and search dialog.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "Header.fixtures.go",
+      "target": "ui/docs-shell/Header.fixtures.go"
+    },
+    {
+      "path": "Header.gx",
+      "target": "ui/docs-shell/Header.gx"
+    },
+    {
+      "path": "NotFound.fixtures.go",
+      "target": "ui/docs-shell/NotFound.fixtures.go"
+    },
+    {
+      "path": "NotFound.gx",
+      "target": "ui/docs-shell/NotFound.gx"
+    },
+    {
+      "path": "PageMeta.fixtures.go",
+      "target": "ui/docs-shell/PageMeta.fixtures.go"
+    },
+    {
+      "path": "PageMeta.gx",
+      "target": "ui/docs-shell/PageMeta.gx"
+    },
+    {
+      "path": "Pagination.fixtures.go",
+      "target": "ui/docs-shell/Pagination.fixtures.go"
+    },
+    {
+      "path": "Pagination.gx",
+      "target": "ui/docs-shell/Pagination.gx"
+    },
+    {
+      "path": "SearchDialog.fixtures.go",
+      "target": "ui/docs-shell/SearchDialog.fixtures.go"
+    },
+    {
+      "path": "SearchDialog.gx",
+      "target": "ui/docs-shell/SearchDialog.gx"
+    },
+    {
+      "path": "Shell.fixtures.go",
+      "target": "ui/docs-shell/Shell.fixtures.go"
+    },
+    {
+      "path": "Shell.gx",
+      "target": "ui/docs-shell/Shell.gx"
+    },
+    {
+      "path": "Sidebar.fixtures.go",
+      "target": "ui/docs-shell/Sidebar.fixtures.go"
+    },
+    {
+      "path": "Sidebar.gx",
+      "target": "ui/docs-shell/Sidebar.gx"
+    },
+    {
+      "path": "SidebarGroup.fixtures.go",
+      "target": "ui/docs-shell/SidebarGroup.fixtures.go"
+    },
+    {
+      "path": "SidebarGroup.gx",
+      "target": "ui/docs-shell/SidebarGroup.gx"
+    },
+    {
+      "path": "SidebarItem.fixtures.go",
+      "target": "ui/docs-shell/SidebarItem.fixtures.go"
+    },
+    {
+      "path": "SidebarItem.gx",
+      "target": "ui/docs-shell/SidebarItem.gx"
+    },
+    {
+      "path": "Splash.fixtures.go",
+      "target": "ui/docs-shell/Splash.fixtures.go"
+    },
+    {
+      "path": "Splash.gx",
+      "target": "ui/docs-shell/Splash.gx"
+    },
+    {
+      "path": "ThemeSelect.fixtures.go",
+      "target": "ui/docs-shell/ThemeSelect.fixtures.go"
+    },
+    {
+      "path": "ThemeSelect.gx",
+      "target": "ui/docs-shell/ThemeSelect.gx"
+    },
+    {
+      "path": "Toc.fixtures.go",
+      "target": "ui/docs-shell/Toc.fixtures.go"
+    },
+    {
+      "path": "Toc.gx",
+      "target": "ui/docs-shell/Toc.gx"
+    },
+    {
+      "path": "fixtures.go",
+      "target": "ui/docs-shell/fixtures.go"
+    },
+    {
+      "path": "helpers.go",
+      "target": "ui/docs-shell/helpers.go"
+    },
+    {
+      "path": "nav.go",
+      "target": "ui/docs-shell/nav.go"
+    }
+  ],
+  "requiredTokens": [
+    "--background",
+    "--foreground",
+    "--primary",
+    "--primary-foreground",
+    "--muted",
+    "--muted-foreground",
+    "--accent",
+    "--border"
+  ]
+}

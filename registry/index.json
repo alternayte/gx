@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "name": "docs",
+      "version": "0.1.0",
+      "description": "The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks.",
+      "kind": "block"
+    },
+    {
+      "name": "docs-shell",
+      "version": "0.1.0",
+      "description": "The Gx docs shell: header, sidebar, table of contents, pagination, splash, 404 and search dialog.",
+      "kind": "block"
+    }
+  ]
+}

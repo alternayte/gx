@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/alternayte/gx/registry/schema/item.schema.json",
+  "title": "Gx registry item",
+  "type": "object",
+  "required": ["name", "version", "description", "kind", "files", "usage"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v?\\d+\\.\\d+\\.\\d+$"
+    },
+    "description": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["component", "block", "theme"] },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "target", "content", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "target": {
+            "type": "string",
+            "minLength": 1,
+            "not": { "pattern": "^(/|\\.\\.)" }
+          },
+          "content": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "registryDependencies": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+    },
+    "iconPacks": { "type": "array", "items": { "type": "string" } },
+    "jsPins": { "type": "array", "items": { "type": "string" } },
+    "requiredTokens": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^--" }
+    },
+    "usage": { "type": "string" }
+  }
+}

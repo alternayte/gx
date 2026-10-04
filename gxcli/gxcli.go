@@ -24,6 +24,7 @@ import (
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
 	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
+	"github.com/alternayte/gx/internal/registry"
 	"github.com/alternayte/gx/internal/starlight"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 )
@@ -59,6 +60,8 @@ func Main(args []string) int {
 		return runExport(args[1:])
 	case "import":
 		return runImport(args[1:])
+	case "registry":
+		return runRegistry(args[1:])
 	case "help", "-h", "--help":
 		usage(os.Stdout)
 		return 0
@@ -85,6 +88,7 @@ Commands:
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
   import    convert another tool: gx import starlight --out <dir> <src>
+  registry  build a publishable component registry
 `)
 }
 
@@ -343,6 +347,37 @@ func runExport(args []string) int {
 		return 1
 	}
 	fmt.Printf("exported %d pages to %s\n", len(res.Paths), *out)
+	return 0
+}
+
+// runRegistry builds a publishable registry (REQ-REG-01).
+func runRegistry(args []string) int {
+	if len(args) == 0 || args[0] != "build" {
+		fmt.Fprintln(os.Stderr, "usage: gx registry build [--out <dir>] <src>")
+		return 2
+	}
+	fs := flag.NewFlagSet("gx registry build", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	out := fs.String("out", "", "output directory (default the source directory)")
+	if err := fs.Parse(args[1:]); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx registry build [--out <dir>] <src>")
+		return 2
+	}
+	src := rest[0]
+	dest := *out
+	if dest == "" {
+		dest = src
+	}
+	index, err := registry.Build(src, dest)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx registry build: %v\n", err)
+		return 1
+	}
+	fmt.Printf("registry: %d items\n", len(index.Items))
 	return 0
 }
 
