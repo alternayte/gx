@@ -15,7 +15,7 @@ func Sidebar(p SidebarProps) gx.Node {
 	var _b gx.Builder
 //line Sidebar.gx:8:1
 	var _b1 gx.Builder
-//line Sidebar.gx:8:103
+//line Sidebar.gx:8:96
 	_b1.Add(gx.Text("\n  "))
 //line Sidebar.gx:9:3
 	var _b2 gx.Builder
@@ -35,7 +35,7 @@ func Sidebar(p SidebarProps) gx.Node {
 	_b1.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-6 pr-4", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Docs", Kind: gx.AttrText}}, _b2.Node()))
 //line Sidebar.gx:13:9
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("aside", gx.Attrs{gx.Attr{Key: "class", Value: "gx-sidebar w-64 shrink-0 border-r border-border", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-sidebar", Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true), gx.Bool("hidden", true)}, _b1.Node()))
+	_b.Add(gx.El("aside", gx.Attrs{gx.Attr{Key: "class", Value: "gx-sidebar w-64 shrink-0 border-r border-border", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-sidebar", Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true)}, _b1.Node()))
 //line Sidebar.gx:14:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

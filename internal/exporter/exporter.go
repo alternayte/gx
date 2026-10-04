@@ -135,6 +135,7 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 		}
 	}
 	res := &Result{Pages: map[string][]byte{}, Paths: manifest.Paths, Assets: manifest.Assets}
+	iw := &imageWriter{dir: dir, out: out}
 	for _, path := range manifest.Paths {
 		body, status, err := fetchPage(ctx, base, path)
 		if err != nil {
@@ -144,7 +145,7 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 			return nil, fmt.Errorf("gx export: %s: %s", path, http.StatusText(status))
 		}
 		res.Pages[path] = body
-		if err := writePage(out, path, body, site.Site, metas[path]); err != nil {
+		if err := writePage(out, path, iw.rewriteImages(body), site.Site, metas[path]); err != nil {
 			return nil, err
 		}
 		fmt.Fprintf(opt.Log, "exported %s\n", path)
