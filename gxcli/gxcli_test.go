@@ -235,6 +235,7 @@ func TestREQ_TLS_03_LintCommand(t *testing.T) {
 		"go.mod":         mod,
 		"cart/cart.go":   "package cart\n\nimport gx \"github.com/alternayte/gx\"\n\nvar userInput string\n\nvar a = gx.SafeHTML(userInput)\n",
 		"route/route.go": "package route\n\nfunc Nope() {}\n",
+		"ui/styles.go":   "package ui\n\nimport \"github.com/alternayte/gx\"\n\ntype V string\n\nconst (\n\tA V = \"a\"\n\tB V = \"b\"\n)\n\nvar m = gx.Enum[V]{A: \"x\"}\n",
 	} {
 		p := filepath.Join(dir, filepath.FromSlash(rel))
 		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
@@ -250,7 +251,7 @@ func TestREQ_TLS_03_LintCommand(t *testing.T) {
 			t.Error("lint accepted a module with findings")
 		}
 	})
-	for _, want := range []string{"GX7001", "GX3005", "cart.go", "route.go"} {
+	for _, want := range []string{"GX7001", "GX3005", "GX5001", "cart.go", "route.go"} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("lint output lacks %q:\n%s", want, out)
 		}

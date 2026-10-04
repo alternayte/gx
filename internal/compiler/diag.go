@@ -37,6 +37,8 @@ const (
 	CodeTrustedHTML = "GX7001"
 	CodeSecret      = "GX7002"
 
+	CodeEnum = "GX5001"
+
 	CodeContentComponent = "GX8002"
 
 	CodeActionMissing       = "GX4001"
@@ -104,6 +106,7 @@ var Catalog = []Info{
 	{CodeSignalRules, "signal-bound fields need rules or gx.Unchecked"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeEventMod, "unknown event modifier or special event"},
+	{CodeEnum, "gx.Enum misses a constant of its type"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentComponent, "component is not declared in this collection"},

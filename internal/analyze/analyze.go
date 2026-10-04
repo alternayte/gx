@@ -31,9 +31,86 @@ var RoutePackage = &analysis.Analyzer{
 	Run:  runRoutePackage,
 }
 
+// EnumCoverage reports a gx.Enum[T] map that misses a constant of T
+// (GX5001, REQ-STY-05).
+var EnumCoverage = &analysis.Analyzer{
+	Name: "gxenum",
+	Doc:  "report a gx.Enum map that misses a constant of its type (GX5001)",
+	Run:  runEnum,
+}
+
 // Analyzers returns the Gx analyzers in a stable order (REQ-TLS-03).
 func Analyzers() []*analysis.Analyzer {
-	return []*analysis.Analyzer{SafeHTML, RoutePackage}
+	return []*analysis.Analyzer{SafeHTML, RoutePackage, EnumCoverage}
+}
+
+func runEnum(pass *analysis.Pass) (any, error) {
+	for _, file := range pass.Files {
+		name := pass.Fset.Position(file.Pos()).Filename
+		if strings.HasSuffix(name, "_gx.go") || strings.HasSuffix(name, "_test.go") {
+			continue
+		}
+		ast.Inspect(file, func(n ast.Node) bool {
+			lit, ok := n.(*ast.CompositeLit)
+			if !ok {
+				return true
+			}
+			named, ok := pass.TypesInfo.TypeOf(lit).(*types.Named)
+			if !ok || named.Obj() == nil || named.Obj().Pkg() == nil {
+				return true
+			}
+			if named.Obj().Pkg().Path() != gxPath || named.Obj().Name() != "Enum" {
+				return true
+			}
+			args := named.TypeArgs()
+			if args == nil || args.Len() != 1 {
+				return true
+			}
+			have := map[string]bool{}
+			for _, elt := range lit.Elts {
+				kv, ok := elt.(*ast.KeyValueExpr)
+				if !ok {
+					continue
+				}
+				if id, ok := kv.Key.(*ast.Ident); ok {
+					have[id.Name] = true
+				}
+			}
+			for _, c := range enumConsts(args.At(0)) {
+				if have[c.Name()] {
+					continue
+				}
+				pass.Report(analysis.Diagnostic{
+					Pos:      lit.Pos(),
+					End:      lit.End(),
+					Category: "GX5001",
+					Message:  "gx.Enum misses " + quote(c.Name()) + "; every constant of the type needs an entry",
+				})
+			}
+			return true
+		})
+	}
+	return nil, nil
+}
+
+// enumConsts returns the package-level constants of a named type.
+func enumConsts(t types.Type) []*types.Const {
+	named, ok := t.(*types.Named)
+	if !ok || named.Obj() == nil || named.Obj().Pkg() == nil {
+		return nil
+	}
+	scope := named.Obj().Pkg().Scope()
+	var out []*types.Const
+	for _, name := range scope.Names() {
+		c, ok := scope.Lookup(name).(*types.Const)
+		if !ok {
+			continue
+		}
+		if types.Identical(c.Type(), named) {
+			out = append(out, c)
+		}
+	}
+	return out
 }
 
 func runSafeHTML(pass *analysis.Pass) (any, error) {
