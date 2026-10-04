@@ -31,8 +31,8 @@
     {
       "path": "MenubarItem.fixtures.go",
       "target": "ui/menubar/MenubarItem.fixtures.go",
-      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{\"Item\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n",
-      "sha256": "38342f2c31c27608006307327f698d5fe552f7f83aa33910323079d118de244e"
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{\"Item\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n\n// MenubarItemWrap renders the item inside a bar, as a page uses it.\nfunc MenubarItemWrap(n gx.Node) gx.Node {\n\treturn Menubar(MenubarProps{Children: n})\n}\n",
+      "sha256": "aeef0c6edd2ae0159dc89ed66bc350257f7005c901184e84a170d8a610809702"
     }
   ],
   "requiredTokens": [

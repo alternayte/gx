@@ -15,8 +15,8 @@ type KbdProps struct {
 func Kbd(p KbdProps) gx.Node {
 	var _b gx.Builder
 //line Kbd.gx:9:1
-	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Kbd.gx:9:218
+	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Kbd.gx:9:212
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -39,6 +39,6 @@ props {
   </div>
   <div class="hidden flex-col justify-between bg-muted p-10 lg:flex">
     <a href="/" class="font-semibold no-underline">Gx</a>
-    <p class="max-w-sm text-sm text-muted-foreground">Typed templates, routes and forms in one loop.</p>
+    <p class="max-w-sm text-sm text-foreground/80">Typed templates, routes and forms in one loop.</p>
   </div>
 </div>

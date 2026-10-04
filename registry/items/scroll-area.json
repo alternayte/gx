@@ -7,8 +7,8 @@
     {
       "path": "ScrollArea.gx",
       "target": "ui/scroll-area/ScrollArea.gx",
-      "content": "package scrollarea\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"relative overflow-auto\", p.Class)} style={gx.Style(\"scrollbar-width: thin\")} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "20d6eae823e547dacec71e193ba0164ec2faac357af037c798c94b6959db0986"
+      "content": "package scrollarea\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"relative overflow-auto\", p.Class)} tabindex=\"0\" style={gx.Style(\"scrollbar-width: thin\")} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "0b904a0c1edbf5d7a6427f8f5df0b709656789fb6d1ccdfbb6c902f3823be21d"
     },
     {
       "path": "ScrollArea.fixtures.go",

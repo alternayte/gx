@@ -26,6 +26,7 @@ func galleryFilePath(root string) string {
 type fixtureSet struct {
 	component string   // component name, from the file base
 	varName   string   // the declared gx.Fixtures var
+	wrapVar   string   // optional <Component>Wrap(n) gx.Node function
 	keys      []string // fixture names, sorted
 	file      string   // the component's .gx file
 }
@@ -104,13 +105,18 @@ func renderGallery(root string, dirs []string, l *loader, pkgs []*packages.Packa
 	for _, comp := range comps {
 		set, ok := fixtures[filepath.Clean(filepath.Join(comp.dir, comp.name+".gx"))]
 		if !ok || len(set.keys) == 0 {
-			fmt.Fprintf(&b, "\t\t{Component: %q, Missing: true},\n", comp.name)
+			fmt.Fprintf(&b, "\t\t{Component: %q, Package: %q, Missing: true},\n", comp.name, comp.pkgPath)
 			continue
 		}
 		alias := aliases[comp.pkgPath]
 		for _, key := range set.keys {
-			fmt.Fprintf(&b, "\t\t{Component: %q, Name: %q, Node: func() gx.Node { return %s.%s(%s.%s[%q]) }},\n",
-				comp.name, key, alias, comp.name, alias, set.varName, key)
+			if set.wrapVar != "" {
+				fmt.Fprintf(&b, "\t\t{Component: %q, Package: %q, Name: %q, Node: func() gx.Node { return %s.%s(%s.%s(%s.%s[%q])) }},\n",
+					comp.name, comp.pkgPath, key, alias, set.wrapVar, alias, comp.name, alias, set.varName, key)
+				continue
+			}
+			fmt.Fprintf(&b, "\t\t{Component: %q, Package: %q, Name: %q, Node: func() gx.Node { return %s.%s(%s.%s[%q]) }},\n",
+				comp.name, comp.pkgPath, key, alias, comp.name, alias, set.varName, key)
 		}
 	}
 	b.WriteString("\t}\n}\n")
@@ -140,6 +146,12 @@ func collectFixtures(pkgs []*packages.Package) map[string]fixtureSet {
 			component := strings.TrimSuffix(base, ".fixtures.go")
 			gxFile := filepath.Join(filepath.Dir(path), component+".gx")
 			for _, decl := range file.Decls {
+				if fn, ok := decl.(*ast.FuncDecl); ok && fn.Recv == nil && fn.Name.Name == component+"Wrap" {
+					set := out[filepath.Clean(gxFile)]
+					set.component, set.file, set.wrapVar = component, gxFile, fn.Name.Name
+					out[filepath.Clean(gxFile)] = set
+					continue
+				}
 				gen, ok := decl.(*ast.GenDecl)
 				if !ok || gen.Tok != token.VAR {
 					continue
@@ -150,6 +162,9 @@ func collectFixtures(pkgs []*packages.Package) map[string]fixtureSet {
 						continue
 					}
 					set := fixtureSet{component: component, varName: vs.Names[0].Name, file: gxFile}
+					if prev, ok := out[filepath.Clean(gxFile)]; ok {
+						set.wrapVar = prev.wrapVar
+					}
 					if vs.Type != nil && isGxFixturesType(pkg, vs.Type) {
 						// A declared type without a literal has no keys yet.
 					}

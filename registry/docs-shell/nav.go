@@ -45,7 +45,7 @@ type Config struct {
 
 // Page is the shell data of one page (REQ-CNT-06).
 type Page struct {
-	Title   string
+	Title string
 	// Path is the site path of the page, for example /start/.
 	Path string
 	// Section is the sidebar group label of the page.

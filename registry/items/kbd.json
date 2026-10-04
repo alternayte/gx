@@ -7,8 +7,8 @@
     {
       "path": "Kbd.gx",
       "target": "ui/kbd/Kbd.gx",
-      "content": "package kbd\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ckbd class={gx.Cx(\"inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/kbd\u003e\n",
-      "sha256": "0447508915a1ee67bce6464c7c88fa8bc47e67b6854a08790173061cd475cdf4"
+      "content": "package kbd\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ckbd class={gx.Cx(\"inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/kbd\u003e\n",
+      "sha256": "21cbd4677bcd9c5430078efede9431ff94e55322df10f74c137eeffb1d489e4b"
     },
     {
       "path": "Kbd.fixtures.go",

@@ -13,8 +13,8 @@
     {
       "path": "Input.fixtures.go",
       "target": "ui/input/Input.fixtures.go",
-      "content": "package input\n\nimport \"github.com/alternayte/gx\"\n\nvar InputFixtures = gx.Fixtures[InputProps]{\n\t\"Text\":     {Placeholder: \"Email\"},\n\t\"Filled\":   {Value: \"ada@example.com\"},\n\t\"Disabled\": {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n\t\"File\":     {Type: \"file\"},\n}\n",
-      "sha256": "621222b7e103c8552736785d20059a61347ff0d4a4be9fbf18f926f46d8996d8"
+      "content": "package input\n\nimport \"github.com/alternayte/gx\"\n\nvar InputFixtures = gx.Fixtures[InputProps]{\n\t\"Text\":     {Placeholder: \"Email\"},\n\t\"Filled\":   {Value: \"ada@example.com\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Email\"}}},\n\t\"Disabled\": {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n\t\"File\":     {Type: \"file\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"File\"}}},\n}\n",
+      "sha256": "03981d58d6d21260105b8fe87c8ea077e2b5e937d51b696ac134433bc6c2df39"
     },
     {
       "path": "styles.go",

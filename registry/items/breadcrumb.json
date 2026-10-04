@@ -61,8 +61,8 @@
     {
       "path": "BreadcrumbItem.fixtures.go",
       "target": "ui/breadcrumb/BreadcrumbItem.fixtures.go",
-      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbItemFixtures = gx.Fixtures[BreadcrumbItemProps]{\"Empty\": {}}\n",
-      "sha256": "bb302e5b0e19f47857094314c0384870155f5ce895a8942a0411762bcc8f4159"
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbItemFixtures = gx.Fixtures[BreadcrumbItemProps]{\"Empty\": {}}\n\n// BreadcrumbItemWrap renders the item inside a list, as a page uses it.\nfunc BreadcrumbItemWrap(n gx.Node) gx.Node {\n\treturn BreadcrumbList(BreadcrumbListProps{Children: n})\n}\n",
+      "sha256": "157718e16073c1227c72927728753f3e4d62c0ff38343f639d13b59b76bd42c7"
     },
     {
       "path": "BreadcrumbLink.fixtures.go",

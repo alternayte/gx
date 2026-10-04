@@ -1,20 +1,11 @@
 {
   "registry": {
     "items": {
-      "alert-dialog": {
+      "scroll-area": {
         "version": "0.1.0",
         "files": {
-          "ui/alert-dialog/AlertDialog.fixtures.go": "dd7cf86dbe660297b4cf97bf40c48e36d8a67ffd4ae76c98b55f5f34871a8e20",
-          "ui/alert-dialog/AlertDialog.gx": "7b2278e39e0a4f0786ca7692e4390db2f71eed2a09f8245b7afd0100acc70419",
-          "ui/alert-dialog/styles.go": "39adcea0f2f801c4802ad88ca514ce8798fec1892a82b35d660f84a0e7a9785f"
-        }
-      },
-      "button": {
-        "version": "0.1.0",
-        "files": {
-          "ui/button/Button.fixtures.go": "4183166b50f9b99ccf2f5a44a3fff535aef7bb0e06463b907d93d1a36594bead",
-          "ui/button/Button.gx": "caa72918fb1980617055c83622820db1f0fe5fdb7a48e3369af555389a3fea73",
-          "ui/button/styles.go": "dbd272487b3a503b1aa00c95c9de7cf6a93b488a83c414a85c6f609a796be14d"
+          "ui/scroll-area/ScrollArea.fixtures.go": "eb3e41415af947e4883fd3a18f9ab26bc53dd5fd5ddbe4b9e5a1e729592b37b5",
+          "ui/scroll-area/ScrollArea.gx": "0b904a0c1edbf5d7a6427f8f5df0b709656789fb6d1ccdfbb6c902f3823be21d"
         }
       }
     }

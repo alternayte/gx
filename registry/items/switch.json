@@ -7,14 +7,14 @@
     {
       "path": "Switch.gx",
       "target": "ui/switch/Switch.gx",
-      "content": "package switches\n\nprops {\n  Name    string   = \"\"\n  Value   string   = \"on\"\n  Checked bool     = false\n  Class   string   = \"\"\n  Attrs   gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" role=\"switch\" name={p.Name} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  \u003cspan class=\"pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4\"\u003e\u003c/span\u003e\n\u003c/label\u003e\n",
-      "sha256": "7a1967f5444497e24cbfd90df431a98d7ad25c5fc6987ee171c1713ee5ee78d4"
+      "content": "package switches\n\nprops {\n  Name    string   = \"\"\n  Label   string   = \"\"\n  Value   string   = \"on\"\n  Checked bool     = false\n  Class   string   = \"\"\n  Attrs   gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" role=\"switch\" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  \u003cspan class=\"pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4\"\u003e\u003c/span\u003e\n\u003c/label\u003e\n",
+      "sha256": "989b955e605515f5908948d428435531b7bdb7ae8f2e5a666947cc983b5d1fc5"
     },
     {
       "path": "Switch.fixtures.go",
       "target": "ui/switch/Switch.fixtures.go",
-      "content": "package switches\n\nimport \"github.com/alternayte/gx\"\n\nvar SwitchFixtures = gx.Fixtures[SwitchProps]{\n\t\"Off\":      {Name: \"wifi\"},\n\t\"On\":       {Name: \"wifi\", Checked: true},\n\t\"Disabled\": {Name: \"wifi\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}},\n}\n",
-      "sha256": "a264afecbfe565d999631a77f972bb5b9736bdb9ddc68c637acf51b3343d4a9e"
+      "content": "package switches\n\nimport \"github.com/alternayte/gx\"\n\nvar SwitchFixtures = gx.Fixtures[SwitchProps]{\n\t\"Off\":      {Name: \"wifi\", Label: \"Wifi\"},\n\t\"On\":       {Name: \"wifi\", Label: \"Wifi\", Checked: true},\n\t\"Disabled\": {Name: \"wifi\", Label: \"Wifi\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}},\n}\n",
+      "sha256": "15a93a544267db943cc2bb3f3a060dc1abcf366eb6aa3e943081da57774a51c1"
     }
   ],
   "requiredTokens": [

@@ -27,6 +27,7 @@ func galleryNode() Node {
 			b.Add(El("section", Attrs{
 				{Key: "class", Value: "fixture missing", Kind: AttrText},
 				{Key: "data-fixture", Value: f.Component, Kind: AttrText},
+				{Key: "data-package", Value: f.Package, Kind: AttrText},
 			},
 				El("h2", nil, Text(f.Component)),
 				El("p", nil, Text("missing fixtures: add "+f.Component+".fixtures.go")),
@@ -40,6 +41,7 @@ func galleryNode() Node {
 		b.Add(El("section", Attrs{
 			{Key: "class", Value: "fixture", Kind: AttrText},
 			{Key: "data-fixture", Value: f.Component + "-" + f.Name, Kind: AttrText},
+			{Key: "data-package", Value: f.Package, Kind: AttrText},
 		},
 			El("h2", nil, Text(f.Component+" - "+f.Name)),
 			El("div", Attrs{{Key: "class", Value: "fixture-body", Kind: AttrText}}, body),

@@ -73,8 +73,8 @@
     {
       "path": "PaginationItem.fixtures.go",
       "target": "ui/pagination/PaginationItem.fixtures.go",
-      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationItemFixtures = gx.Fixtures[PaginationItemProps]{\"Empty\": {}}\n",
-      "sha256": "0b1f5ad45e2d66c51486f3f65425042a476461c696e719e1c5e6c153e4b41dda"
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationItemFixtures = gx.Fixtures[PaginationItemProps]{\"Empty\": {}}\n\n// PaginationItemWrap renders the item inside a list, as a page uses it.\nfunc PaginationItemWrap(n gx.Node) gx.Node {\n\treturn PaginationContent(PaginationContentProps{Children: n})\n}\n",
+      "sha256": "752ef646b208feabd6aec4362b37fdf1c78fd080415869375874335b5745b375"
     },
     {
       "path": "PaginationLink.fixtures.go",

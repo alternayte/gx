@@ -13,8 +13,8 @@
     {
       "path": "Textarea.fixtures.go",
       "target": "ui/textarea/Textarea.fixtures.go",
-      "content": "package textarea\n\nimport \"github.com/alternayte/gx\"\n\nvar TextareaFixtures = gx.Fixtures[TextareaProps]{\n\t\"Placeholder\": {Placeholder: \"Tell us more.\"},\n\t\"Filled\":      {Value: \"A short note.\"},\n\t\"Disabled\":    {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n}\n",
-      "sha256": "3de4843336c79c06e66b4aff22d5e23799d32d6ad88d7d77015fa8bc0715f8b1"
+      "content": "package textarea\n\nimport \"github.com/alternayte/gx\"\n\nvar TextareaFixtures = gx.Fixtures[TextareaProps]{\n\t\"Placeholder\": {Placeholder: \"Tell us more.\"},\n\t\"Filled\":      {Value: \"A short note.\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Note\"}}},\n\t\"Disabled\":    {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n}\n",
+      "sha256": "6cf88cb3b061958b144b06ff094977798a6876eceb02b2182cde488745f6b4a6"
     },
     {
       "path": "styles.go",

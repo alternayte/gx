@@ -30,9 +30,9 @@ func TestREQ_AI_03_Fixtures(t *testing.T) {
 	for _, want := range []string{
 		"//go:build gxdev",
 		"package gxdev_gallery",
-		`{Component: "Card", Name: "Default", Node: func() gx.Node { return ui.Card(ui.Fixtures["Default"]) }}`,
-		`{Component: "Card", Name: "Long", Node: func() gx.Node { return ui.Card(ui.Fixtures["Long"]) }}`,
-		`{Component: "Button", Missing: true}`,
+		`{Component: "Card", Package: "app/ui", Name: "Default", Node: func() gx.Node { return ui.Card(ui.Fixtures["Default"]) }}`,
+		`{Component: "Card", Package: "app/ui", Name: "Long", Node: func() gx.Node { return ui.Card(ui.Fixtures["Long"]) }}`,
+		`{Component: "Button", Package: "app/ui", Missing: true}`,
 	} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("gallery file lacks %q:\n%s", want, got)

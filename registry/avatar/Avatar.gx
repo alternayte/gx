@@ -13,6 +13,6 @@ props {
   if p.Src != "" {
     <img src={p.Src} alt={p.Alt} class="aspect-square size-full object-cover" />
   } else if p.Fallback != "" {
-    <span class="flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">{p.Fallback}</span>
+    <span class="flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium">{p.Fallback}</span>
   }
 </span>

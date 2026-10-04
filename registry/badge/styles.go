@@ -16,7 +16,7 @@ const (
 var variantClass = gx.Enum[Variant]{
 	Default:     "border-transparent bg-primary text-primary-foreground",
 	Secondary:   "border-transparent bg-secondary text-secondary-foreground",
-	Destructive: "border-transparent bg-destructive text-white",
+	Destructive: "border-transparent bg-destructive text-destructive-foreground",
 	Outline:     "text-foreground",
 }
 

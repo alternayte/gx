@@ -2,6 +2,7 @@ package switches
 
 props {
   Name    string   = ""
+  Label   string   = ""
   Value   string   = "on"
   Checked bool     = false
   Class   string   = ""
@@ -9,6 +10,6 @@ props {
 }
 
 <label class={gx.Cx("inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary", p.Class)} {...p.Attrs}>
-  <input type="checkbox" role="switch" name={p.Name} value={p.Value} checked={p.Checked} class="peer sr-only" />
+  <input type="checkbox" role="switch" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} class="peer sr-only" />
   <span class="pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4"></span>
 </label>

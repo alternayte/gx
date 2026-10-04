@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("relative overflow-auto", p.Class)} style={gx.Style("scrollbar-width: thin")} {...p.Attrs}>{p.Children}</div>
+<div class={gx.Cx("relative overflow-auto", p.Class)} tabindex="0" style={gx.Style("scrollbar-width: thin")} {...p.Attrs}>{p.Children}</div>

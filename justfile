@@ -78,3 +78,7 @@ evidence:
 
 evidence-check:
     go run ./internal/build/evidence --check
+
+# Registry accessibility: zero serious or critical axe violations (REQ-REG-09).
+a11y:
+    cd tests/e2e && bun test --timeout=300000 a11y.spec.ts

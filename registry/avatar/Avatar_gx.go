@@ -35,8 +35,8 @@ func Avatar(p AvatarProps) gx.Node {
 //line Avatar.gx:15:31
 			_b1.Add(gx.Text("\n    "))
 //line Avatar.gx:16:5
-			_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Fallback)))
-//line Avatar.gx:16:145
+			_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium", Kind: gx.AttrText}}, gx.Text(p.Fallback)))
+//line Avatar.gx:16:123
 			_b1.Add(gx.Text("\n  "))
 		}
 	}

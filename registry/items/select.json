@@ -7,8 +7,8 @@
     {
       "path": "Select.gx",
       "target": "ui/select/Select.gx",
-      "content": "package selectbox\n\nprops {\n  Name     string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cselect name={p.Name} class={gx.Cx(\"h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/select\u003e\n",
-      "sha256": "90fb034b9f1cb9d5ce7762657d8bdf8aad2c0046d0b3de90c9bb0509d063c1bd"
+      "content": "package selectbox\n\nprops {\n  Name     string   = \"\"\n  Label    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cselect name={p.Name} aria-label={p.Label} class={gx.Cx(\"h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/select\u003e\n",
+      "sha256": "c42374b7838a83733cc9a73e8762cfa0c8f6492ea49f75fcfb1b2cdc3e5f4ce2"
     },
     {
       "path": "SelectOption.gx",
@@ -19,8 +19,8 @@
     {
       "path": "Select.fixtures.go",
       "target": "ui/select/Select.fixtures.go",
-      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectFixtures = gx.Fixtures[SelectProps]{\n\t\"Plan\": {Name: \"plan\", Class: \"w-48\", Children: gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"free\", Selected: true, Children: gx.Text(\"Free\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"pro\", Children: gx.Text(\"Pro\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"team\", Children: gx.Text(\"Team\")}),\n\t)},\n\t\"Disabled\": {Name: \"plan\", Class: \"w-48\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: SelectOption(SelectOptionProps{Value: \"free\", Children: gx.Text(\"Free\")})},\n}\n",
-      "sha256": "bbab3360204bc142d54b807240e42ac49a3537c7e37f8314ef10c94553442362"
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectFixtures = gx.Fixtures[SelectProps]{\n\t\"Plan\": {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Children: gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"free\", Selected: true, Children: gx.Text(\"Free\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"pro\", Children: gx.Text(\"Pro\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"team\", Children: gx.Text(\"Team\")}),\n\t)},\n\t\"Disabled\": {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: SelectOption(SelectOptionProps{Value: \"free\", Children: gx.Text(\"Free\")})},\n}\n",
+      "sha256": "6546334b5eed514232f6c1bf63d7837a6c75aef5d6d5d85a9604946588712b8b"
     },
     {
       "path": "SelectOption.fixtures.go",

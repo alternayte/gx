@@ -13,8 +13,8 @@
     {
       "path": "TabItem.gx",
       "target": "ui/tabs/TabItem.gx",
-      "content": "package tabs\n\nprops {\n  Label    string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"\", p.Class)} data-gx-tab-item {...p.Attrs}\u003e\n  \u003cbutton type=\"button\" role=\"tab\" aria-selected=\"false\" tabindex=\"-1\" data-gx-tab={p.Label} class=\"-mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground\"\u003e{p.Label}\u003c/button\u003e\n  \u003cdiv class=\"pt-4\" role=\"tabpanel\" data-gx-tab-panel\u003e{p.Children}\u003c/div\u003e\n\u003c/div\u003e\n",
-      "sha256": "6e0c84401b9632d133a4f5cac7379c721e98f1381a53d098a3b39a8bfaafd693"
+      "content": "package tabs\n\nprops {\n  Label    string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"\", p.Class)} data-gx-tab-item {...p.Attrs}\u003e\n  \u003cbutton type=\"button\" aria-expanded=\"false\" tabindex=\"-1\" data-gx-tab={p.Label} class=\"-mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground\"\u003e{p.Label}\u003c/button\u003e\n  \u003cdiv class=\"pt-4\" data-gx-tab-panel\u003e{p.Children}\u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "dfbb29c5fa7e14344c3b8bfa0833eca856950f89375d0f56409417f0954c19fc"
     },
     {
       "path": "Tabs.fixtures.go",
@@ -25,8 +25,8 @@
     {
       "path": "TabItem.fixtures.go",
       "target": "ui/tabs/TabItem.fixtures.go",
-      "content": "package tabs\n\nimport \"github.com/alternayte/gx\"\n\nvar TabItemFixtures = gx.Fixtures[TabItemProps]{\n\t\"Item\": {Label: \"Account\", Children: gx.Text(\"Panel.\")},\n}\n",
-      "sha256": "566f3f23b3d9f16cb65f1041675ced74aa8d86ebd0aaf79c5bddc3b841e8c152"
+      "content": "package tabs\n\nimport \"github.com/alternayte/gx\"\n\nvar TabItemFixtures = gx.Fixtures[TabItemProps]{\n\t\"Item\": {Label: \"Account\", Children: gx.Text(\"Panel.\")},\n}\n\n// TabItemWrap renders the item inside a tab group, as a page uses it.\nfunc TabItemWrap(n gx.Node) gx.Node {\n\treturn Tabs(TabsProps{Children: n})\n}\n",
+      "sha256": "4343c56b671c5cb28a4a019d9d93bc40cd5636a8913e5e38dafecddbd87a89f8"
     }
   ],
   "requiredTokens": [

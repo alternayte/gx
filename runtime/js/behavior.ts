@@ -123,7 +123,7 @@ const applyTab = (wrapper: Element, label: string): void => {
   const chosen = tabs.find((tab) => tab.label === label) ?? tabs[0]
   for (const tab of tabs) {
     const selected = tab === chosen
-    tab.button.setAttribute('aria-selected', selected ? 'true' : 'false')
+    tab.button.setAttribute('aria-expanded', selected ? 'true' : 'false')
     tab.button.setAttribute('tabindex', selected ? '0' : '-1')
     if (selected) tab.button.setAttribute('data-selected', 'true')
     else tab.button.removeAttribute('data-selected')

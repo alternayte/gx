@@ -14,9 +14,11 @@ type Fixtures[Props any] map[string]Props
 // Missing set and no Node.
 type Fixture struct {
 	Component string
-	Name      string
-	Node      func() Node
-	Missing   bool
+	// Package is the import path of the component, for the dev gallery.
+	Package string
+	Name    string
+	Node    func() Node
+	Missing bool
 }
 
 var galleryState struct {

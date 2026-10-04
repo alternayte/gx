@@ -43,14 +43,14 @@
     {
       "path": "ContextMenuItem.fixtures.go",
       "target": "ui/context-menu/ContextMenuItem.fixtures.go",
-      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{\"Item\": {Children: gx.Text(\"Copy\")}}\n",
-      "sha256": "33e2fc6298288e448ce09dc964fbfe0915eb67a1fc1b3b32c317128f1898a991"
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{\"Item\": {Children: gx.Text(\"Copy\")}}\n\n// ContextMenuItemWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}}, n)\n}\n",
+      "sha256": "817819c691be5ef4cf634a886b7de450e022904aacb0e704835391499eccb654"
     },
     {
       "path": "ContextMenuLink.fixtures.go",
       "target": "ui/context-menu/ContextMenuLink.fixtures.go",
-      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n",
-      "sha256": "5356ce30a2eb3bdc453b87d1e13a6885f8ec019e2bbb42e5ac9c48640d109c26"
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n\n// ContextMenuLinkWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuLinkWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}}, n)\n}\n",
+      "sha256": "736774d50b804048a068f0a1d170f32cbc6dbb487bba812c6b7aab776eb2a351"
     },
     {
       "path": "ContextMenuSeparator.fixtures.go",

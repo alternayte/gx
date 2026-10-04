@@ -34,7 +34,7 @@ props {
             <field.FieldLabel>Product news</field.FieldLabel>
             <field.FieldDescription>One message each month.</field.FieldDescription>
           </field.Field>
-          <switches.Switch name="news" />
+          <switches.Switch name="news" label="Product news" />
         </div>
         <separator.Separator />
         <div class="flex items-center justify-between gap-4">
@@ -42,7 +42,7 @@ props {
             <field.FieldLabel>Security alerts</field.FieldLabel>
             <field.FieldDescription>Sign-in and password changes.</field.FieldDescription>
           </field.Field>
-          <switches.Switch name="alerts" checked={true} />
+          <switches.Switch name="alerts" label="Security alerts" checked={true} />
         </div>
       </div>
     </card.Card>

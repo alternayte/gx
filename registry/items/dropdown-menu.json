@@ -49,8 +49,8 @@
     {
       "path": "DropdownMenuItem.fixtures.go",
       "target": "ui/dropdown-menu/DropdownMenuItem.fixtures.go",
-      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuItemFixtures = gx.Fixtures[DropdownMenuItemProps]{\"Item\": {Children: gx.Text(\"Profile\")}}\n",
-      "sha256": "8c71f44ee6088b2a988d2a7095c4f43bbb49db882fafbd17b35d10a1ce16cd17"
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuItemFixtures = gx.Fixtures[DropdownMenuItemProps]{\"Item\": {Children: gx.Text(\"Profile\")}}\n\n// DropdownMenuItemWrap renders the item inside a menu, as a page uses it.\nfunc DropdownMenuItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}}, n)\n}\n",
+      "sha256": "d94632fae2f3b2a10b101bf1a15b7d35a3e3e41dc465cd958df3aa29fe749181"
     },
     {
       "path": "DropdownMenuLabel.fixtures.go",
@@ -61,8 +61,8 @@
     {
       "path": "DropdownMenuLink.fixtures.go",
       "target": "ui/dropdown-menu/DropdownMenuLink.fixtures.go",
-      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuLinkFixtures = gx.Fixtures[DropdownMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}}\n",
-      "sha256": "2ade0745e6a3aa07a062c1f15fb13b31b8a5e4805ffe05d3bd90a9a6cf205231"
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuLinkFixtures = gx.Fixtures[DropdownMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}}\n\n// DropdownMenuLinkWrap renders the item inside a menu, as a page uses it.\nfunc DropdownMenuLinkWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}}, n)\n}\n",
+      "sha256": "8aec81acd844129ba66a326cd2bdeb41dc24d808623d628c83edec89c307f62b"
     },
     {
       "path": "DropdownMenuSeparator.fixtures.go",

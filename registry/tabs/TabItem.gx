@@ -8,6 +8,6 @@ props {
 }
 
 <div class={gx.Cx("", p.Class)} data-gx-tab-item {...p.Attrs}>
-  <button type="button" role="tab" aria-selected="false" tabindex="-1" data-gx-tab={p.Label} class="-mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground">{p.Label}</button>
-  <div class="pt-4" role="tabpanel" data-gx-tab-panel>{p.Children}</div>
+  <button type="button" aria-expanded="false" tabindex="-1" data-gx-tab={p.Label} class="-mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground">{p.Label}</button>
+  <div class="pt-4" data-gx-tab-panel>{p.Children}</div>
 </div>

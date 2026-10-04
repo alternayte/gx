@@ -159,12 +159,12 @@ test('REQ-REG-07 collapsible toggles with Space', async () => {
 })
 
 test('REQ-REG-07 tabs switch with the arrow keys', async () => {
-  const account = fixture('Tabs-Two').getByRole('tab', { name: 'Account' })
+  const account = fixture('Tabs-Two').getByRole('button', { name: 'Account' })
   await account.focus()
   await page.keyboard.press('ArrowRight')
   await page.waitForFunction(() => {
     const tab = document.querySelector('[data-fixture="Tabs-Two"] [data-gx-tab="Password"]')
-    return tab?.getAttribute('aria-selected') === 'true'
+    return tab?.getAttribute('aria-expanded') === 'true'
   })
 })
 
@@ -208,9 +208,9 @@ test('REQ-REG-07 navigation menu and sidebar links take focus', async () => {
   expect(await sidebar.getAttribute('tabindex')).not.toBe('-1')
 })
 
-test('REQ-REG-07 scroll area and toast stay out of the tab order', async () => {
-  const area = fixture('ScrollArea-Vertical').locator('div').first()
-  expect(await area.getAttribute('tabindex')).toBeNull()
+test('REQ-REG-07 scroll area takes focus and the toast stays out', async () => {
+  const area = fixture('ScrollArea-Vertical').locator('.fixture-body > div')
+  expect(await area.getAttribute('tabindex')).toBe('0')
   const live = fixture('Toaster-WithToast').locator('#gx-toaster')
   expect(await live.getAttribute('aria-live')).toBe('polite')
 })

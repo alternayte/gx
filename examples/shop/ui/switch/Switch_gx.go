@@ -8,6 +8,7 @@ import (
 
 type SwitchProps struct {
 	Name    string
+	Label   string
 	Value   string
 	Checked bool
 	Class   string
@@ -16,9 +17,9 @@ type SwitchProps struct {
 
 func Switch(p SwitchProps) gx.Node {
 	var _b gx.Builder
-//line Switch.gx:11:1
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "switch", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked)}), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4", Kind: gx.AttrText}}), gx.Text("\n"))))
-//line Switch.gx:14:9
+//line Switch.gx:12:1
+	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "switch", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked)}), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4", Kind: gx.AttrText}}), gx.Text("\n"))))
+//line Switch.gx:15:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

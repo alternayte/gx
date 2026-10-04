@@ -7,8 +7,8 @@
     {
       "path": "Avatar.gx",
       "target": "ui/avatar/Avatar.gx",
-      "content": "package avatar\n\nprops {\n  Src      gx.URL\n  Alt      string   = \"\"\n  Fallback string   = \"\"\n  Size     Size     = Md\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative flex shrink-0 overflow-hidden rounded-full\", p.sizeClass(), p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg src={p.Src} alt={p.Alt} class=\"aspect-square size-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan class=\"flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "6f08e1a6e2d4c0dfb0f78d81245d36e133d87d899b637ad978194b272bbfc8e2"
+      "content": "package avatar\n\nprops {\n  Src      gx.URL\n  Alt      string   = \"\"\n  Fallback string   = \"\"\n  Size     Size     = Md\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative flex shrink-0 overflow-hidden rounded-full\", p.sizeClass(), p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg src={p.Src} alt={p.Alt} class=\"aspect-square size-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan class=\"flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "f7c445e6daee68f4cae138b1d6f7e6e873fbf2b228a34ebfb97e3f78f011e9ac"
     },
     {
       "path": "Avatar.fixtures.go",
