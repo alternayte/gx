@@ -12,7 +12,3 @@ var InputGroupFixtures = gx.Fixtures[InputGroupProps]{
 		InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupText(InputGroupTextProps{Children: gx.Text(".com")})}),
 	)},
 }
-
-var InputGroupAddonFixtures = gx.Fixtures[InputGroupAddonProps]{"Text": {Children: gx.Text("@")}}
-var InputGroupInputFixtures = gx.Fixtures[InputGroupInputProps]{"Placeholder": {Placeholder: "Value"}}
-var InputGroupTextFixtures = gx.Fixtures[InputGroupTextProps]{"Text": {Children: gx.Text("Text")}}

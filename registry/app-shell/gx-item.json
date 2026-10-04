@@ -1,0 +1,1 @@
+{"name":"app-shell","version":"0.1.0","description":"An app page frame with a sidebar, a header and a main area.","kind":"block","files":[{"path":"AppShell.gx","target":"ui/app-shell/AppShell.gx"},{"path":"AppShell.fixtures.go","target":"ui/app-shell/AppShell.fixtures.go"}],"registryDependencies":["sidebar"],"requiredTokens":["--border","--sidebar","--sidebar-foreground"]}

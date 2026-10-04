@@ -1,0 +1,40 @@
+{
+  "name": "toggle-group",
+  "version": "0.1.0",
+  "description": "A segmented control of exclusive choices.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "ToggleGroup.gx",
+      "target": "ui/toggle-group/ToggleGroup.gx",
+      "content": "package togglegroup\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" class={gx.Cx(\"inline-flex items-center gap-1 rounded-md border border-border p-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "f4b97c16b13816012f6069f9150623d58735941c5a13c3aa5fdc4445b06b382a"
+    },
+    {
+      "path": "ToggleGroupItem.gx",
+      "target": "ui/toggle-group/ToggleGroupItem.gx",
+      "content": "package togglegroup\n\nprops {\n  Name     string\n  Value    string\n  Checked  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-7 items-center justify-center gap-1 rounded-sm px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" name={p.Name} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "74fc52517162bf3aad41e0e034d3238831a9d49f3e71828c559a4018c470a9e2"
+    },
+    {
+      "path": "ToggleGroup.fixtures.go",
+      "target": "ui/toggle-group/ToggleGroup.fixtures.go",
+      "content": "package togglegroup\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleGroupFixtures = gx.Fixtures[ToggleGroupProps]{\n\t\"Three\": {Children: gx.Frag(\n\t\tToggleGroupItem(ToggleGroupItemProps{Name: \"align\", Value: \"left\", Checked: true, Children: gx.Text(\"Left\")}),\n\t\tToggleGroupItem(ToggleGroupItemProps{Name: \"align\", Value: \"center\", Children: gx.Text(\"Center\")}),\n\t\tToggleGroupItem(ToggleGroupItemProps{Name: \"align\", Value: \"right\", Children: gx.Text(\"Right\")}),\n\t)},\n}\n",
+      "sha256": "9d8b5c7e9ed25971fc416249e451f0a966c97c80a1ed485e64199a946dd914cc"
+    },
+    {
+      "path": "ToggleGroupItem.fixtures.go",
+      "target": "ui/toggle-group/ToggleGroupItem.fixtures.go",
+      "content": "package togglegroup\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleGroupItemFixtures = gx.Fixtures[ToggleGroupItemProps]{\n\t\"Checked\": {Name: \"align\", Value: \"left\", Checked: true, Children: gx.Text(\"Left\")},\n}\n",
+      "sha256": "16f1d1fd3a3eb0cf6f62a8b407c07529f66e6622ec63e9c7b5cb8c1281e5e9b7"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--muted",
+    "--accent",
+    "--accent-foreground",
+    "--foreground"
+  ],
+  "usage": "# Toggle Group\n\nA segmented control of exclusive choices.\n\n## Usage\n\n```gx\n\u003ctogglegroup.ToggleGroup\u003e\n  \u003ctogglegroup.ToggleGroupItem name=\"align\" value=\"left\" checked={true}\u003eLeft\u003c/togglegroup.ToggleGroupItem\u003e\n  \u003ctogglegroup.ToggleGroupItem name=\"align\" value=\"center\"\u003eCenter\u003c/togglegroup.ToggleGroupItem\u003e\n\u003c/togglegroup.ToggleGroup\u003e\n```\n\nThe group is a set of styled radio inputs, so it works without JavaScript.\n\n## Do\n\n- Give every item the same `Name`.\n- Set `Checked` on exactly one item.\n\n## Don't\n\n- Do not use a toggle group for independent choices. Use toggles.\n- Do not mix two groups under one name.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checked item. |\n| Arrow keys | Moves the choice and selects it. |\n| Space | Selects the focused item. |\n"
+}

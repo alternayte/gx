@@ -1,0 +1,28 @@
+{
+  "name": "toggle",
+  "version": "0.1.0",
+  "description": "A two-state button.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Toggle.gx",
+      "target": "ui/toggle/Toggle.gx",
+      "content": "package toggle\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"on\"\n  Pressed  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/50\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Pressed} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "8bdfdc7502b964260f97f8dc7a3b12b0a7727be62001730c4b0ae396b3807320"
+    },
+    {
+      "path": "Toggle.fixtures.go",
+      "target": "ui/toggle/Toggle.fixtures.go",
+      "content": "package toggle\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleFixtures = gx.Fixtures[ToggleProps]{\n\t\"Off\":      {Name: \"bold\", Children: gx.Text(\"Bold\")},\n\t\"On\":       {Name: \"bold\", Pressed: true, Children: gx.Text(\"Bold\")},\n\t\"Disabled\": {Name: \"bold\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: gx.Text(\"Bold\")},\n}\n",
+      "sha256": "3d25aa0f916a13f15d5c2d63a7b75ccdb3009a77aa917b6f2023eb2660723313"
+    }
+  ],
+  "requiredTokens": [
+    "--muted",
+    "--accent",
+    "--accent-foreground",
+    "--ring",
+    "--foreground"
+  ],
+  "usage": "# Toggle\n\nA two-state button.\n\n## Usage\n\n```gx\n\u003ctoggle.Toggle name=\"bold\" pressed={p.Bold}\u003eBold\u003c/toggle.Toggle\u003e\n```\n\nThe toggle is a styled checkbox, so it works without JavaScript.\n\n## Do\n\n- Give the toggle a name that reads as a state.\n- Use it for a formatting choice.\n\n## Don't\n\n- Do not use a toggle for an immediate setting. Use a switch.\n- Do not use a toggle for a group of choices. Use a toggle group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the toggle. |\n| Space | Toggles the state. |\n"
+}

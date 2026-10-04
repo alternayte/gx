@@ -1,0 +1,31 @@
+package appshell
+
+import "github.com/alternayte/gx/registry/sidebar"
+
+props {
+  Title    string
+  Nav      gx.Node
+  Footer   gx.Node  = nil
+  Children gx.Node
+}
+
+<div class="flex min-h-screen">
+  <sidebar.Sidebar id="gx-sidebar">
+    <sidebar.SidebarHeader>
+      <span class="font-semibold">{p.Title}</span>
+    </sidebar.SidebarHeader>
+    <sidebar.SidebarContent>
+      {p.Nav}
+    </sidebar.SidebarContent>
+    if p.Footer != nil {
+      <sidebar.SidebarFooter>{p.Footer}</sidebar.SidebarFooter>
+    }
+  </sidebar.Sidebar>
+  <div class="flex min-w-0 flex-1 flex-col">
+    <header class="flex h-14 items-center gap-3 border-b border-border px-4">
+      <button type="button" data-gx-menu aria-controls="gx-sidebar" aria-expanded="false" class="rounded-md border border-border px-2 py-1 text-sm lg:hidden">Menu</button>
+      <h1 class="text-sm font-semibold">{p.Title}</h1>
+    </header>
+    <main class="flex-1 p-6">{p.Children}</main>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+{
+  "name": "context-menu",
+  "version": "0.1.0",
+  "description": "A menu that opens on a right click.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "ContextMenu.gx",
+      "target": "ui/context-menu/ContextMenu.gx",
+      "content": "package contextmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"fixed m-0 z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "94ef794b814ffd4db3b379cae087057d04b9cbe1839a89ab09d3c39586c7e518"
+    },
+    {
+      "path": "ContextMenuTrigger.gx",
+      "target": "ui/context-menu/ContextMenuTrigger.gx",
+      "content": "package contextmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-gx-contextmenu={\"#\" + p.Id} class={gx.Cx(\"flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground select-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "e2d5fbb8f642aed3385e7f80b57ebb2b8f6cbdcb0b23d7e826e761b633ce7f1d"
+    },
+    {
+      "path": "ContextMenuItem.gx",
+      "target": "ui/context-menu/ContextMenuItem.gx",
+      "content": "package contextmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" data-gx-roving-item data-gx-close class={gx.Cx(\"flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "dcdcdab79a22b41b05d991dc6a411558bd8b9027b5d316888ffcc84bb089f2d9"
+    },
+    {
+      "path": "ContextMenuLink.gx",
+      "target": "ui/context-menu/ContextMenuLink.gx",
+      "content": "package contextmenu\n\nprops {\n  Href     gx.URL\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx(\"flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "7d0191271781c35fdc3571184789d94c7fe1cbecb9b2fccd51a6c4202b470f54"
+    },
+    {
+      "path": "ContextMenuSeparator.gx",
+      "target": "ui/context-menu/ContextMenuSeparator.gx",
+      "content": "package contextmenu\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"separator\" class={gx.Cx(\"-mx-1 my-1 h-px bg-border\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "87dd3fd8e74864e6cc7c0803e9fa837adefb82a0a0b816d1f45c121b4bf8db6e"
+    },
+    {
+      "path": "ContextMenu.fixtures.go",
+      "target": "ui/context-menu/ContextMenu.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuFixtures = gx.Fixtures[ContextMenuProps]{\n\t\"Menu\": {Id: \"demo-context\", Children: gx.Frag(\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Copy\")}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Cut\")}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuLink(ContextMenuLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t)},\n}\n",
+      "sha256": "b7fe8f7bfdf627d6c9fe48dc7c4e11edd3989c44384762d733ba0301524b2ddd"
+    },
+    {
+      "path": "ContextMenuItem.fixtures.go",
+      "target": "ui/context-menu/ContextMenuItem.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{\"Item\": {Children: gx.Text(\"Copy\")}}\n",
+      "sha256": "33e2fc6298288e448ce09dc964fbfe0915eb67a1fc1b3b32c317128f1898a991"
+    },
+    {
+      "path": "ContextMenuLink.fixtures.go",
+      "target": "ui/context-menu/ContextMenuLink.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n",
+      "sha256": "5356ce30a2eb3bdc453b87d1e13a6885f8ec019e2bbb42e5ac9c48640d109c26"
+    },
+    {
+      "path": "ContextMenuSeparator.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSeparator.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuSeparatorFixtures = gx.Fixtures[ContextMenuSeparatorProps]{\"Default\": {}}\n",
+      "sha256": "d762c5ddc74f826f5e01aa2793df1dfa8083c526e2e29b1d9293321ed2f20079"
+    },
+    {
+      "path": "ContextMenuTrigger.fixtures.go",
+      "target": "ui/context-menu/ContextMenuTrigger.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuTriggerFixtures = gx.Fixtures[ContextMenuTriggerProps]{\"Default\": {Id: \"demo-context\", Children: gx.Text(\"Right-click here\")}}\n",
+      "sha256": "ef749fdbed04380938dc7ac336a2244e313c5bf79d07ccb49e001e28df6df9d2"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--muted-foreground"
+  ],
+  "usage": "# Context Menu\n\nA menu that opens on a right click.\n\n## Usage\n\n```gx\n\u003ccontextmenu.ContextMenuTrigger id=\"row-menu\"\u003eRight-click here\u003c/contextmenu.ContextMenuTrigger\u003e\n\u003ccontextmenu.ContextMenu id=\"row-menu\"\u003e\n  \u003ccontextmenu.ContextMenuItem\u003eCopy\u003c/contextmenu.ContextMenuItem\u003e\n  \u003ccontextmenu.ContextMenuSeparator /\u003e\n  \u003ccontextmenu.ContextMenuLink href={gx.URL(\"/docs\")}\u003eDocs\u003c/contextmenu.ContextMenuLink\u003e\n\u003c/contextmenu.ContextMenu\u003e\n```\n\n## Do\n\n- Attach the menu to the object it acts on.\n- Keep the same items as the visible row menu.\n\n## Don't\n\n- Do not hide the only action behind a right click.\n- Do not open a context menu on a whole page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Context menu key | Opens the menu at the focused item. |\n| Arrow keys | Moves through the items. |\n| Escape | Closes the menu. |\n"
+}

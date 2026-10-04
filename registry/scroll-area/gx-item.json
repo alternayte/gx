@@ -1,0 +1,1 @@
+{"name":"scroll-area","version":"0.1.0","description":"A box with a styled scrollbar.","kind":"component","files":[{"path":"ScrollArea.gx","target":"ui/scroll-area/ScrollArea.gx"},{"path":"ScrollArea.fixtures.go","target":"ui/scroll-area/ScrollArea.fixtures.go"}],"requiredTokens":["--border"]}

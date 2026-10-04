@@ -1,0 +1,31 @@
+{
+  "name": "data-table-page",
+  "version": "0.1.0",
+  "description": "A page frame for a server-driven data table.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "DataTablePage.gx",
+      "target": "ui/data-table-page/DataTablePage.gx",
+      "content": "package datatablepage\n\nimport (\n\t\"github.com/alternayte/gx/registry/card\"\n\t\"github.com/alternayte/gx/registry/input\"\n)\n\nprops {\n  Title       string\n  Description string   = \"\"\n  Filter      gx.Node  = nil\n  Table       gx.Node\n  Pagination  gx.Node  = nil\n}\n\n\u003cdiv class=\"mx-auto flex w-full max-w-5xl flex-col gap-6\"\u003e\n  \u003cdiv class=\"flex flex-wrap items-end justify-between gap-4\"\u003e\n    \u003cdiv class=\"flex flex-col gap-1\"\u003e\n      \u003ch1 class=\"text-xl font-semibold\"\u003e{p.Title}\u003c/h1\u003e\n      if p.Description != \"\" {\n        \u003cp class=\"text-sm text-muted-foreground\"\u003e{p.Description}\u003c/p\u003e\n      }\n    \u003c/div\u003e\n    if p.Filter != nil {\n      \u003cdiv class=\"w-56\"\u003e\n        {p.Filter}\n      \u003c/div\u003e\n    }\n  \u003c/div\u003e\n  \u003ccard.Card\u003e\n    {p.Table}\n  \u003c/card.Card\u003e\n  if p.Pagination != nil {\n    \u003cdiv class=\"flex justify-center\"\u003e{p.Pagination}\u003c/div\u003e\n  }\n\u003c/div\u003e\n",
+      "sha256": "d62cb9aed740feef4ac78c0cad6be908510eff6027ea402d0689a6a433e04d88"
+    },
+    {
+      "path": "DataTablePage.fixtures.go",
+      "target": "ui/data-table-page/DataTablePage.fixtures.go",
+      "content": "package datatablepage\n\nimport \"github.com/alternayte/gx\"\n\nvar DataTablePageFixtures = gx.Fixtures[DataTablePageProps]{\n\t\"Default\": {\n\t\tTitle:       \"Invoices\",\n\t\tDescription: \"Every invoice for this workspace.\",\n\t\tFilter:      gx.Text(\"Search\"),\n\t\tTable:       gx.Text(\"Table slot\"),\n\t\tPagination:  gx.Text(\"Pagination slot\"),\n\t},\n}\n",
+      "sha256": "d87c5424176603d7dc3b49b56d067c68092d6a6ad7dafb7db52e5a78dc0b92ef"
+    }
+  ],
+  "registryDependencies": [
+    "card",
+    "input"
+  ],
+  "requiredTokens": [
+    "--border",
+    "--card",
+    "--card-foreground",
+    "--muted-foreground"
+  ],
+  "usage": "# Data Table Page\n\nA page frame for a server-driven data table.\n\n## Usage\n\n```gx\n\u003cdatatablepage.DataTablePage title=\"Invoices\" filter={filterInput} table={table} pagination={paging} /\u003e\n```\n\nThe block is copied source. The table and the paging links come from the app, so the sort, filter and page state stay typed in Go.\n\n## Do\n\n- Put the filter in the header row.\n- Keep the table in one card.\n\n## Don't\n\n- Do not page on the client.\n- Do not render more rows than the page size.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves to the filter, then the table links, then the paging links. |\n| Enter | Follows the focused sort or page link. |\n"
+}

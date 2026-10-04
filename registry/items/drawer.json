@@ -1,0 +1,32 @@
+{
+  "name": "drawer",
+  "version": "0.1.0",
+  "description": "A bottom panel for a short task.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Drawer.gx",
+      "target": "ui/drawer/Drawer.gx",
+      "content": "package drawer\n\nprops {\n  Id          string\n  Title       string   = \"\"\n  Description string   = \"\"\n  Trigger     gx.Node  = nil\n  Footer      gx.Node  = nil\n  Open        bool     = false\n  Class       string   = \"\"\n  Children    gx.Node  = nil\n  Attrs       gx.Attrs = nil\n}\n\n\u003cspan class=\"contents\"\u003e\n  if p.Trigger != nil {\n    \u003cspan data-gx-open={\"#\" + p.Id} class=\"contents\"\u003e{p.Trigger}\u003c/span\u003e\n  }\n  \u003cdialog id={p.Id} open={p.Open} data-gx-dismiss class={gx.Cx(\"fixed inset-x-0 bottom-0 top-auto m-0 flex w-full flex-col gap-4 rounded-t-xl border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50\", p.Class)} {...p.Attrs}\u003e\n    \u003cdiv class=\"mx-auto h-1.5 w-12 rounded-full bg-muted\"\u003e\u003c/div\u003e\n    \u003cdiv class=\"flex flex-col gap-1.5 text-center sm:text-left\"\u003e\n      if p.Title != \"\" {\n        \u003ch2 class=\"text-lg leading-none font-semibold\"\u003e{p.Title}\u003c/h2\u003e\n      }\n      if p.Description != \"\" {\n        \u003cp class=\"text-sm text-muted-foreground\"\u003e{p.Description}\u003c/p\u003e\n      }\n    \u003c/div\u003e\n    if p.Children != nil {\n      \u003cdiv class=\"text-sm\"\u003e{p.Children}\u003c/div\u003e\n    }\n    if p.Footer != nil {\n      \u003cdiv class=\"flex flex-col gap-2\"\u003e{p.Footer}\u003c/div\u003e\n    }\n  \u003c/dialog\u003e\n\u003c/span\u003e\n",
+      "sha256": "1ceba6fa1c85a768c83432e2173dddd3be457b060e4d76ae17180b471acfb73c"
+    },
+    {
+      "path": "Drawer.fixtures.go",
+      "target": "ui/drawer/Drawer.fixtures.go",
+      "content": "package drawer\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\nvar DrawerFixtures = gx.Fixtures[DrawerProps]{\n\t\"Default\": {\n\t\tId:          \"demo-drawer\",\n\t\tTitle:       \"Share this page\",\n\t\tDescription: \"Choose a destination.\",\n\t\tChildren:    gx.Text(\"Drawer body.\"),\n\t\tFooter:      button.Button(button.ButtonProps{Children: gx.Text(\"Copy link\")}),\n\t\tTrigger:     button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Open drawer\")}),\n\t},\n}\n",
+      "sha256": "466e49d1ec84d9317386578e87b8ab48f60749b6073a6e61972264bb044c238f"
+    }
+  ],
+  "registryDependencies": [
+    "button"
+  ],
+  "requiredTokens": [
+    "--border",
+    "--card",
+    "--card-foreground",
+    "--muted-foreground",
+    "--muted",
+    "--accent"
+  ],
+  "usage": "# Drawer\n\nA bottom panel for a short task.\n\n## Usage\n\n```gx\n\u003cdrawer.Drawer id=\"share\" title=\"Share this page\"\u003e\n  \u003c:trigger\u003e\u003cbutton.Button variant={button.Outline}\u003eShare\u003c/button.Button\u003e\u003c/:trigger\u003e\n  \u003cp\u003eChoose a destination.\u003c/p\u003e\n\u003c/drawer.Drawer\u003e\n```\n\n## Do\n\n- Use a drawer for a short, focused task on a small screen.\n- Keep the footer actions in one column.\n\n## Don't\n\n- Do not put a long form in a drawer.\n- Do not nest a drawer in a sheet.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Enter, Space | Opens the drawer from the trigger. |\n| Tab | Cycles through the controls of the drawer. |\n| Escape | Closes the drawer. |\n"
+}

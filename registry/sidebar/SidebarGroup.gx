@@ -1,0 +1,15 @@
+package sidebar
+
+props {
+  Title    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("flex flex-col gap-1 py-2", p.Class)} {...p.Attrs}>
+  if p.Title != "" {
+    <p class="px-2 text-xs font-medium text-muted-foreground">{p.Title}</p>
+  }
+  {p.Children}
+</div>

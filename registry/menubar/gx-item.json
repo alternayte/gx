@@ -1,0 +1,35 @@
+{
+  "name": "menubar",
+  "version": "0.1.0",
+  "description": "A horizontal bar of menu actions.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Menubar.gx",
+      "target": "ui/menubar/Menubar.gx"
+    },
+    {
+      "path": "MenubarItem.gx",
+      "target": "ui/menubar/MenubarItem.gx"
+    },
+    {
+      "path": "Menubar.fixtures.go",
+      "target": "ui/menubar/Menubar.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/menubar/styles.go"
+    },
+    {
+      "path": "MenubarItem.fixtures.go",
+      "target": "ui/menubar/MenubarItem.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--background",
+    "--accent",
+    "--accent-foreground",
+    "--foreground"
+  ]
+}

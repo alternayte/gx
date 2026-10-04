@@ -1,0 +1,38 @@
+{
+  "name": "login",
+  "version": "0.1.0",
+  "description": "A sign-in page block with a form and a brand panel.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "Login.gx",
+      "target": "ui/login/Login.gx",
+      "content": "package login\n\nimport (\n\t\"github.com/alternayte/gx/registry/button\"\n\t\"github.com/alternayte/gx/registry/card\"\n\t\"github.com/alternayte/gx/registry/field\"\n\t\"github.com/alternayte/gx/registry/input\"\n\t\"github.com/alternayte/gx/registry/label\"\n)\n\nprops {\n  Title       string = \"Sign in\"\n  Description string = \"Enter your email and password.\"\n  Action      gx.URL = \"\"\n}\n\n\u003cdiv class=\"grid min-h-screen lg:grid-cols-2\"\u003e\n  \u003cdiv class=\"flex items-center justify-center p-6\"\u003e\n    \u003ccard.Card title={p.Title} description={p.Description} class=\"w-full max-w-sm\"\u003e\n      \u003cform method=\"post\" action={p.Action} class=\"flex flex-col gap-4\"\u003e\n        \u003cfield.Field\u003e\n          \u003cfield.FieldLabel for=\"email\"\u003eEmail\u003c/field.FieldLabel\u003e\n          \u003cinput.Input id=\"email\" name=\"email\" type=\"email\" placeholder=\"you@example.com\" /\u003e\n        \u003c/field.Field\u003e\n        \u003cfield.Field\u003e\n          \u003cfield.FieldLabel for=\"password\"\u003ePassword\u003c/field.FieldLabel\u003e\n          \u003cinput.Input id=\"password\" name=\"password\" type=\"password\" /\u003e\n        \u003c/field.Field\u003e\n        \u003cbutton.Button type=\"submit\" class=\"w-full\"\u003eSign in\u003c/button.Button\u003e\n        \u003cp class=\"text-center text-sm text-muted-foreground\"\u003e\n          \u003clabel.Label for=\"email\"\u003eNeed an account?\u003c/label.Label\u003e\n          \u003ca href=\"/signup\" class=\"underline underline-offset-4\"\u003eCreate one\u003c/a\u003e\n        \u003c/p\u003e\n      \u003c/form\u003e\n    \u003c/card.Card\u003e\n  \u003c/div\u003e\n  \u003cdiv class=\"hidden flex-col justify-between bg-muted p-10 lg:flex\"\u003e\n    \u003ca href=\"/\" class=\"font-semibold no-underline\"\u003eGx\u003c/a\u003e\n    \u003cp class=\"max-w-sm text-sm text-muted-foreground\"\u003eA typed Go framework for server-rendered web apps.\u003c/p\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "cae56eb799a0fc7857bab1f417b79fbbe872054cf7bd48c3c6b89b90225c8f0d"
+    },
+    {
+      "path": "Login.fixtures.go",
+      "target": "ui/login/Login.fixtures.go",
+      "content": "package login\n\nimport \"github.com/alternayte/gx\"\n\nvar LoginFixtures = gx.Fixtures[LoginProps]{\n\t\"Default\": {},\n}\n",
+      "sha256": "4072d4526c2358a763f169c8a56f8db1fd53df79d6e7ca06e36bc91464589a1a"
+    }
+  ],
+  "registryDependencies": [
+    "button",
+    "card",
+    "field",
+    "input",
+    "label"
+  ],
+  "requiredTokens": [
+    "--muted",
+    "--muted-foreground",
+    "--border",
+    "--card",
+    "--primary",
+    "--primary-foreground",
+    "--ring",
+    "--input"
+  ],
+  "usage": "# Login\n\nA sign-in page block with a form and a brand panel.\n\n## Usage\n\n```gx\n\u003clogin.Login action=\"/signin\" /\u003e\n```\n\nThe block is copied source. Replace the raw form with a typed `gx.Form` and route input when the app has its sign-in route.\n\n## Do\n\n- Keep the form to two fields.\n- Link to the sign-up page.\n\n## Don't\n\n- Do not show a password hint on the page.\n- Do not remove the brand panel on wide screens.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the email field, the password field and the button. |\n| Enter | Submits the form from a field. |\n"
+}

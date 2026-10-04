@@ -1,0 +1,9 @@
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("flex-1 overflow-y-auto p-2", p.Class)} {...p.Attrs}>{p.Children}</div>

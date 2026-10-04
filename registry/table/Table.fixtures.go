@@ -24,11 +24,3 @@ var TableFixtures = gx.Fixtures[TableProps]{
 		)}),
 	)},
 }
-
-var TableHeaderFixtures = gx.Fixtures[TableHeaderProps]{"Empty": {}}
-var TableBodyFixtures = gx.Fixtures[TableBodyProps]{"Empty": {}}
-var TableFooterFixtures = gx.Fixtures[TableFooterProps]{"Empty": {}}
-var TableRowFixtures = gx.Fixtures[TableRowProps]{"Empty": {}}
-var TableHeadFixtures = gx.Fixtures[TableHeadProps]{"Header": {Children: gx.Text("Column")}}
-var TableCellFixtures = gx.Fixtures[TableCellProps]{"Cell": {Children: gx.Text("Value")}}
-var TableCaptionFixtures = gx.Fixtures[TableCaptionProps]{"Caption": {Children: gx.Text("A caption.")}}

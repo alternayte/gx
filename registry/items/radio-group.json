@@ -19,14 +19,20 @@
     {
       "path": "RadioGroup.fixtures.go",
       "target": "ui/radio-group/RadioGroup.fixtures.go",
-      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{\n\t\"Vertical\": {\n\t\tName: \"plan\",\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"free\", Checked: true, Label: \"Free\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"pro\", Label: \"Pro\"}),\n\t\t),\n\t},\n\t\"Horizontal\": {\n\t\tName:        \"size\",\n\t\tOrientation: Horizontal,\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"s\", Checked: true, Label: \"Small\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"m\", Label: \"Medium\"}),\n\t\t),\n\t},\n}\n\nvar RadioGroupItemFixtures = gx.Fixtures[RadioGroupItemProps]{\n\t\"Unchecked\": {Name: \"plan\", Value: \"free\", Label: \"Free\"},\n\t\"Checked\":   {Name: \"plan\", Value: \"pro\", Checked: true, Label: \"Pro\"},\n}\n",
-      "sha256": "83f62df2b4d77cb9e5b944f2096d852be4dacbbbb050220a37e05a8be9fd8f16"
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{\n\t\"Vertical\": {\n\t\tName: \"plan\",\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"free\", Checked: true, Label: \"Free\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"pro\", Label: \"Pro\"}),\n\t\t),\n\t},\n\t\"Horizontal\": {\n\t\tName:        \"size\",\n\t\tOrientation: Horizontal,\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"s\", Checked: true, Label: \"Small\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"m\", Label: \"Medium\"}),\n\t\t),\n\t},\n}\n",
+      "sha256": "faf942101480a679e997bd7f3dd8bf436f61443e97770df5e2c50e3df1996187"
     },
     {
       "path": "styles.go",
       "target": "ui/radio-group/styles.go",
       "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the layout direction of a radio group.\ntype Orientation string\n\n// The orientations of radiogroup.RadioGroup.\nconst (\n\tVertical   Orientation = \"vertical\"\n\tHorizontal Orientation = \"horizontal\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tVertical:   \"grid-cols-1\",\n\tHorizontal: \"grid-flow-col auto-cols-max gap-4\",\n}\n",
       "sha256": "fa3b85ae2d59a8411f245bdfe1c1cbf431fd2375b31a68065742860c715379da"
+    },
+    {
+      "path": "RadioGroupItem.fixtures.go",
+      "target": "ui/radio-group/RadioGroupItem.fixtures.go",
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupItemFixtures = gx.Fixtures[RadioGroupItemProps]{\n\t\"Unchecked\": {Name: \"plan\", Value: \"free\", Label: \"Free\"},\n\t\"Checked\":   {Name: \"plan\", Value: \"pro\", Checked: true, Label: \"Pro\"},\n}\n",
+      "sha256": "6f5f976503d5fa466f7dc040e2b88ac5b692f24ca43b9483f1a483ba9ccb60f2"
     }
   ],
   "requiredTokens": [

@@ -1,0 +1,46 @@
+{
+  "name": "menubar",
+  "version": "0.1.0",
+  "description": "A horizontal bar of menu actions.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Menubar.gx",
+      "target": "ui/menubar/Menubar.gx",
+      "content": "package menubar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"menubar\" data-gx-roving=\"nowrap\" class={gx.Cx(\"flex h-9 items-center gap-1 rounded-md border border-border bg-background p-1 shadow-xs\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "ff94109c4fb1dca2fb0487b54e2ec31a1347a7ce98a8ffd7678dbd12b89f6c6e"
+    },
+    {
+      "path": "MenubarItem.gx",
+      "target": "ui/menubar/MenubarItem.gx",
+      "content": "package menubar\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item aria-current={p.current()} class={gx.Cx(\"inline-flex items-center rounded-sm px-2 py-1 text-sm font-medium no-underline outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "4947e2854aff76210fefcbc79d585d1ccf19f02ce36ebcf539e2e1353bbbf172"
+    },
+    {
+      "path": "Menubar.fixtures.go",
+      "target": "ui/menubar/Menubar.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarFixtures = gx.Fixtures[MenubarProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tMenubarItem(MenubarItemProps{Href: gx.URL(\"/\"), Active: true, Children: gx.Text(\"Home\")}),\n\t\tMenubarItem(MenubarItemProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t)},\n}\n",
+      "sha256": "c7edae52445b52fcfe94b825145fbdc519b77b5ab7a0630fc59e475a367d0a6e"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/menubar/styles.go",
+      "content": "package menubar\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-accent text-accent-foreground\",\n\tfalse: \"text-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p MenubarItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
+      "sha256": "0892ed2772c48ed346987b3eac6aaea0f2f3d8426855168d40672f8099bc021e"
+    },
+    {
+      "path": "MenubarItem.fixtures.go",
+      "target": "ui/menubar/MenubarItem.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{\"Item\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n",
+      "sha256": "38342f2c31c27608006307327f698d5fe552f7f83aa33910323079d118de244e"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--background",
+    "--accent",
+    "--accent-foreground",
+    "--foreground"
+  ],
+  "usage": "# Menubar\n\nA horizontal bar of menu actions.\n\n## Usage\n\n```gx\n\u003cmenubar.Menubar\u003e\n  \u003cmenubar.MenubarItem href={gx.URL(\"/\")} active={true}\u003eHome\u003c/menubar.MenubarItem\u003e\n  \u003cmenubar.MenubarItem href={gx.URL(\"/docs\")}\u003eDocs\u003c/menubar.MenubarItem\u003e\n\u003c/menubar.Menubar\u003e\n```\n\n## Do\n\n- Keep the bar to one row.\n- Mark the current page with `Active`.\n\n## Don't\n\n- Do not mix unrelated destinations in one menubar.\n- Do not use a menubar for a site header. Use the navigation menu.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Enters the bar at the first item. |\n| Left, Right | Moves focus between items. |\n| Home, End | Moves to the first or last item. |\n| Enter | Follows the focused link. |\n"
+}

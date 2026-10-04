@@ -1,0 +1,89 @@
+{
+  "name": "dropdown-menu",
+  "version": "0.1.0",
+  "description": "A menu of actions behind a trigger.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "DropdownMenu.gx",
+      "target": "ui/dropdown-menu/DropdownMenu.gx",
+      "content": "package dropdownmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"z-50 min-w-40 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "6278074646d773d2d10061b5d3d8bc3548c1f58f51c6ff11a12854f7faa6fb27"
+    },
+    {
+      "path": "DropdownMenuTrigger.gx",
+      "target": "ui/dropdown-menu/DropdownMenuTrigger.gx",
+      "content": "package dropdownmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" popovertarget={p.Id} aria-haspopup=\"menu\" class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "77d11fe49777560c3d0ee4615882f06c1259a5be2837cf6d998174e71cd8becf"
+    },
+    {
+      "path": "DropdownMenuItem.gx",
+      "target": "ui/dropdown-menu/DropdownMenuItem.gx",
+      "content": "package dropdownmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" data-gx-roving-item data-gx-close class={gx.Cx(\"flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "a3a61ff4c61d6bd7e190b93d67579841151916abb44f325e8a00d24a9102a71f"
+    },
+    {
+      "path": "DropdownMenuLink.gx",
+      "target": "ui/dropdown-menu/DropdownMenuLink.gx",
+      "content": "package dropdownmenu\n\nprops {\n  Href     gx.URL\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx(\"flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "921d16544536e6ae4975f9959852da83a717ff4984a52d855c4b89c5a8ac418c"
+    },
+    {
+      "path": "DropdownMenuSeparator.gx",
+      "target": "ui/dropdown-menu/DropdownMenuSeparator.gx",
+      "content": "package dropdownmenu\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"separator\" class={gx.Cx(\"-mx-1 my-1 h-px bg-border\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "8853201d228a7da00dd55d1b28db66439a3023b9a04a6d1312555b948cc9d3b2"
+    },
+    {
+      "path": "DropdownMenuLabel.gx",
+      "target": "ui/dropdown-menu/DropdownMenuLabel.gx",
+      "content": "package dropdownmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"presentation\" class={gx.Cx(\"px-2 py-1.5 text-xs font-medium text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "a8bd2d153706f0ce0477126a7aa3fcef8d55242ce01ec04c5e53bacfdb730b53"
+    },
+    {
+      "path": "DropdownMenu.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenu.fixtures.go",
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuFixtures = gx.Fixtures[DropdownMenuProps]{\n\t\"Menu\": {Id: \"demo-dropdown\", Children: gx.Frag(\n\t\tDropdownMenuLabel(DropdownMenuLabelProps{Children: gx.Text(\"My account\")}),\n\t\tDropdownMenuSeparator(DropdownMenuSeparatorProps{}),\n\t\tDropdownMenuItem(DropdownMenuItemProps{Children: gx.Text(\"Profile\")}),\n\t\tDropdownMenuLink(DropdownMenuLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}),\n\t\tDropdownMenuSeparator(DropdownMenuSeparatorProps{}),\n\t\tDropdownMenuItem(DropdownMenuItemProps{Children: gx.Text(\"Sign out\")}),\n\t)},\n}\n",
+      "sha256": "9a306706b5d3a09b54ee4b64d575ae66d1f83f88ee18e156adcb4f785cf0206a"
+    },
+    {
+      "path": "DropdownMenuItem.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuItem.fixtures.go",
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuItemFixtures = gx.Fixtures[DropdownMenuItemProps]{\"Item\": {Children: gx.Text(\"Profile\")}}\n",
+      "sha256": "8c71f44ee6088b2a988d2a7095c4f43bbb49db882fafbd17b35d10a1ce16cd17"
+    },
+    {
+      "path": "DropdownMenuLabel.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuLabel.fixtures.go",
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuLabelFixtures = gx.Fixtures[DropdownMenuLabelProps]{\"Label\": {Children: gx.Text(\"Label\")}}\n",
+      "sha256": "2ba9ecdbd9847d8b5482754cd547b3936dede7530550752ebe65675afe72087f"
+    },
+    {
+      "path": "DropdownMenuLink.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuLink.fixtures.go",
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuLinkFixtures = gx.Fixtures[DropdownMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}}\n",
+      "sha256": "2ade0745e6a3aa07a062c1f15fb13b31b8a5e4805ffe05d3bd90a9a6cf205231"
+    },
+    {
+      "path": "DropdownMenuSeparator.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuSeparator.fixtures.go",
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuSeparatorFixtures = gx.Fixtures[DropdownMenuSeparatorProps]{\"Default\": {}}\n",
+      "sha256": "37638f767f9c0ef1750daee0859a2511a249a94497599bafda84180ce55ed5ec"
+    },
+    {
+      "path": "DropdownMenuTrigger.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go",
+      "content": "package dropdownmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar DropdownMenuTriggerFixtures = gx.Fixtures[DropdownMenuTriggerProps]{\"Default\": {Id: \"demo-dropdown\", Children: gx.Text(\"Open menu\")}}\n",
+      "sha256": "602e7ca65c5b93ab549e291e1cf52389b45175ef3a0e1186d49f560f6947ea2c"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--muted-foreground"
+  ],
+  "usage": "# Dropdown Menu\n\nA menu of actions behind a trigger.\n\n## Usage\n\n```gx\n\u003cdropdownmenu.DropdownMenuTrigger id=\"account\"\u003eAccount\u003c/dropdownmenu.DropdownMenuTrigger\u003e\n\u003cdropdownmenu.DropdownMenu id=\"account\"\u003e\n  \u003cdropdownmenu.DropdownMenuLabel\u003eMy account\u003c/dropdownmenu.DropdownMenuLabel\u003e\n  \u003cdropdownmenu.DropdownMenuSeparator /\u003e\n  \u003cdropdownmenu.DropdownMenuLink href={gx.URL(\"/profile\")}\u003eProfile\u003c/dropdownmenu.DropdownMenuLink\u003e\n  \u003cdropdownmenu.DropdownMenuItem\u003eSign out\u003c/dropdownmenu.DropdownMenuItem\u003e\n\u003c/dropdownmenu.DropdownMenu\u003e\n```\n\n## Do\n\n- Keep one word or one short phrase per item.\n- Put destructive actions last, after a separator.\n\n## Don't\n\n- Do not use a dropdown menu as a select control. Use `select`.\n- Do not nest a dropdown menu in another dropdown menu.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Enter, Space | Opens the menu. |\n| Arrow keys | Moves through the items. |\n| Enter | Runs the focused item. |\n| Escape | Closes the menu. |\n"
+}

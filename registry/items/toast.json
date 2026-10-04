@@ -1,0 +1,21 @@
+{
+  "name": "toast",
+  "version": "0.1.0",
+  "description": "A region for server-pushed toasts.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Toaster.gx",
+      "target": "ui/toast/Toaster.gx",
+      "content": "package toast\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id=\"gx-toaster\" aria-live=\"polite\" aria-atomic=\"true\" class={gx.Cx(\"fixed right-4 bottom-4 z-50 flex w-72 flex-col gap-2\", p.Class)} {...p.Attrs}\u003e\n  if p.Children != nil {\n    {p.Children}\n  }\n\u003c/div\u003e\n",
+      "sha256": "711eb4facd906c888a54b05fda1c7377c43c4cbdfaa9c627c95b215ae155f2b8"
+    },
+    {
+      "path": "Toaster.fixtures.go",
+      "target": "ui/toast/Toaster.fixtures.go",
+      "content": "package toast\n\nimport \"github.com/alternayte/gx\"\n\nvar ToasterFixtures = gx.Fixtures[ToasterProps]{\n\t\"Empty\":     {},\n\t\"WithToast\": {Children: gx.ToastNode(\"Saved\")},\n}\n",
+      "sha256": "43988a2a27d69087cef00b72e2b30076cfeb7c6a8c55ae130917682957215bf2"
+    }
+  ],
+  "usage": "# Toast\n\nA region for server-pushed toasts.\n\n## Usage\n\nRender the toaster once, in the root layout.\n\n```gx\n\u003ctoast.Toaster /\u003e\n```\n\nAn action pushes a toast through the adapter:\n\n```go\nreturn c.Toast(\"Saved\")\n```\n\n## Do\n\n- Render one toaster in the root layout.\n- Keep the message short.\n\n## Don't\n\n- Do not render a toaster per page.\n- Do not use a toast for a value the user must not miss. Use an alert.\n\n## Keyboard\n\nThe toaster is an `aria-live` region; it takes no focus.\n"
+}

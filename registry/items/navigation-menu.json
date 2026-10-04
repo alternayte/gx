@@ -1,0 +1,45 @@
+{
+  "name": "navigation-menu",
+  "version": "0.1.0",
+  "description": "A row of primary links.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "NavigationMenu.gx",
+      "target": "ui/navigation-menu/NavigationMenu.gx",
+      "content": "package navigationmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cnav class={gx.Cx(\"relative flex items-center gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/nav\u003e\n",
+      "sha256": "2d873fc8f1f96113f70b608d96f8f2d3a93895f04c8fb2c480dae1380ec845e1"
+    },
+    {
+      "path": "NavigationMenuItem.gx",
+      "target": "ui/navigation-menu/NavigationMenuItem.gx",
+      "content": "package navigationmenu\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} aria-current={p.current()} class={gx.Cx(\"inline-flex h-9 items-center rounded-md px-4 text-sm font-medium no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/50\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "725b52e1dec9cc9fbec92b062ef2f209e8b4456b3692ced765331ff26bfe14e9"
+    },
+    {
+      "path": "NavigationMenu.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenu.fixtures.go",
+      "content": "package navigationmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar NavigationMenuFixtures = gx.Fixtures[NavigationMenuProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tNavigationMenuItem(NavigationMenuItemProps{Href: gx.URL(\"/\"), Active: true, Children: gx.Text(\"Home\")}),\n\t\tNavigationMenuItem(NavigationMenuItemProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t)},\n}\n",
+      "sha256": "a52a64b7ae3656185b9a1113b2641ad1cca47d31b7dd94ad086417f66c13ae5b"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/navigation-menu/styles.go",
+      "content": "package navigationmenu\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-accent text-accent-foreground\",\n\tfalse: \"text-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p NavigationMenuItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
+      "sha256": "c8c3f98b4ac3eef96d9587853b26d4ef5be463e8f4bd631d1fbfc115db230c45"
+    },
+    {
+      "path": "NavigationMenuItem.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenuItem.fixtures.go",
+      "content": "package navigationmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar NavigationMenuItemFixtures = gx.Fixtures[NavigationMenuItemProps]{\n\t\"Item\":   {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")},\n\t\"Active\": {Href: gx.URL(\"/\"), Active: true, Children: gx.Text(\"Home\")},\n}\n",
+      "sha256": "1e6e30b2f9944ead1f73592f1e6495abe34c9456b0c7f5e71656cbffe8fa05f1"
+    }
+  ],
+  "requiredTokens": [
+    "--foreground",
+    "--accent",
+    "--accent-foreground",
+    "--ring"
+  ],
+  "usage": "# Navigation Menu\n\nA row of primary links.\n\n## Usage\n\n```gx\n\u003cnavigationmenu.NavigationMenu\u003e\n  \u003cnavigationmenu.NavigationMenuItem href={gx.URL(\"/\")} active={true}\u003eHome\u003c/navigationmenu.NavigationMenuItem\u003e\n  \u003cnavigationmenu.NavigationMenuItem href={gx.URL(\"/docs\")}\u003eDocs\u003c/navigationmenu.NavigationMenuItem\u003e\n\u003c/navigationmenu.NavigationMenu\u003e\n```\n\n## Do\n\n- Pass a typed route to `Href`.\n- Mark the current page with `Active`.\n\n## Don't\n\n- Do not use it for a footer row of links.\n- Do not mix it with a menubar on one row.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the links. |\n| Enter | Follows the focused link. |\n"
+}

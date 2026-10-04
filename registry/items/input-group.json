@@ -31,14 +31,32 @@
     {
       "path": "InputGroup.fixtures.go",
       "target": "ui/input-group/InputGroup.fixtures.go",
-      "content": "package inputgroup\n\nimport \"github.com/alternayte/gx\"\n\nvar InputGroupFixtures = gx.Fixtures[InputGroupProps]{\n\t\"LeadingText\": {Children: gx.Frag(\n\t\tInputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text(\"$\")})}),\n\t\tInputGroupInput(InputGroupInputProps{Placeholder: \"0.00\"}),\n\t)},\n\t\"TrailingText\": {Children: gx.Frag(\n\t\tInputGroupInput(InputGroupInputProps{Placeholder: \"example.com\"}),\n\t\tInputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupText(InputGroupTextProps{Children: gx.Text(\".com\")})}),\n\t)},\n}\n\nvar InputGroupAddonFixtures = gx.Fixtures[InputGroupAddonProps]{\"Text\": {Children: gx.Text(\"@\")}}\nvar InputGroupInputFixtures = gx.Fixtures[InputGroupInputProps]{\"Placeholder\": {Placeholder: \"Value\"}}\nvar InputGroupTextFixtures = gx.Fixtures[InputGroupTextProps]{\"Text\": {Children: gx.Text(\"Text\")}}\n",
-      "sha256": "4812db53f2ac6d967820aa1415c41a331a2d6778126e9f8e607d9eed3a22fa3e"
+      "content": "package inputgroup\n\nimport \"github.com/alternayte/gx\"\n\nvar InputGroupFixtures = gx.Fixtures[InputGroupProps]{\n\t\"LeadingText\": {Children: gx.Frag(\n\t\tInputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text(\"$\")})}),\n\t\tInputGroupInput(InputGroupInputProps{Placeholder: \"0.00\"}),\n\t)},\n\t\"TrailingText\": {Children: gx.Frag(\n\t\tInputGroupInput(InputGroupInputProps{Placeholder: \"example.com\"}),\n\t\tInputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupText(InputGroupTextProps{Children: gx.Text(\".com\")})}),\n\t)},\n}\n",
+      "sha256": "5fbfa79a1777adedce1f268c0dc9ebb6b97f225dcaaa59beaa67d4179040f62c"
     },
     {
       "path": "styles.go",
       "target": "ui/input-group/styles.go",
       "content": "package inputgroup\n\nimport \"github.com/alternayte/gx\"\n\n// Align is the position of an addon inside an input group.\ntype Align string\n\n// The alignments of inputgroup.InputGroupAddon.\nconst (\n\tInlineStart Align = \"inline-start\"\n\tInlineEnd   Align = \"inline-end\"\n\tBlockStart  Align = \"block-start\"\n\tBlockEnd    Align = \"block-end\"\n)\n\nvar alignClass = gx.Enum[Align]{\n\tInlineStart: \"order-first pl-3 has-[\u003ebutton]:ml-[-0.45rem] has-[\u003ekbd]:ml-[-0.35rem]\",\n\tInlineEnd:   \"order-last pr-3 has-[\u003ebutton]:mr-[-0.45rem] has-[\u003ekbd]:mr-[-0.35rem]\",\n\tBlockStart:  \"order-first w-full justify-start px-3 pt-3\",\n\tBlockEnd:    \"order-last w-full justify-start px-3 pb-3\",\n}\n",
       "sha256": "3d2c970274ffea5427c632642b47646156fea21d642bec71b2012bead2502473"
+    },
+    {
+      "path": "InputGroupAddon.fixtures.go",
+      "target": "ui/input-group/InputGroupAddon.fixtures.go",
+      "content": "package inputgroup\n\nimport \"github.com/alternayte/gx\"\n\nvar InputGroupAddonFixtures = gx.Fixtures[InputGroupAddonProps]{\"Text\": {Children: gx.Text(\"@\")}}\n",
+      "sha256": "064d395aaaabc33269472e5e4c58978dbe2617b9decd3058d1b88b15c01e9d6c"
+    },
+    {
+      "path": "InputGroupInput.fixtures.go",
+      "target": "ui/input-group/InputGroupInput.fixtures.go",
+      "content": "package inputgroup\n\nimport \"github.com/alternayte/gx\"\n\nvar InputGroupInputFixtures = gx.Fixtures[InputGroupInputProps]{\"Placeholder\": {Placeholder: \"Value\"}}\n",
+      "sha256": "825ce469d958266208db1ace452c7d37d6ed7af8b27374db8500abbf4fe837b8"
+    },
+    {
+      "path": "InputGroupText.fixtures.go",
+      "target": "ui/input-group/InputGroupText.fixtures.go",
+      "content": "package inputgroup\n\nimport \"github.com/alternayte/gx\"\n\nvar InputGroupTextFixtures = gx.Fixtures[InputGroupTextProps]{\"Text\": {Children: gx.Text(\"Text\")}}\n",
+      "sha256": "eab6f041ca03a7f9ff5ba7c1fe847efb3d9fbf5893e7eee4a9a4e4ba0062f791"
     }
   ],
   "requiredTokens": [

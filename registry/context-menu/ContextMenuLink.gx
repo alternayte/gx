@@ -1,0 +1,10 @@
+package contextmenu
+
+props {
+  Href     gx.URL
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent", p.Class)} {...p.Attrs}>{p.Children}</a>

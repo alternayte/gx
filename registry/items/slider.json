@@ -1,0 +1,25 @@
+{
+  "name": "slider",
+  "version": "0.1.0",
+  "description": "A native range control.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Slider.gx",
+      "target": "ui/slider/Slider.gx",
+      "content": "package slider\n\nprops {\n  Name  string   = \"\"\n  Min   int      = 0\n  Max   int      = 100\n  Value int      = 0\n  Step  int      = 1\n  Label string   = \"\"\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cinput type=\"range\" name={p.Name} min={p.Min} max={p.Max} value={p.Value} step={p.Step} aria-label={p.Label} class={gx.Cx(\"h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary\", p.Class)} {...p.Attrs} /\u003e\n",
+      "sha256": "a8a52b1376e67422d30f31e454048d8deb83fc565128bc75391f94b59834cba7"
+    },
+    {
+      "path": "Slider.fixtures.go",
+      "target": "ui/slider/Slider.fixtures.go",
+      "content": "package slider\n\nimport \"github.com/alternayte/gx\"\n\nvar SliderFixtures = gx.Fixtures[SliderProps]{\n\t\"Half\":  {Name: \"volume\", Value: 50, Label: \"Volume\"},\n\t\"Full\":  {Name: \"volume\", Value: 100, Label: \"Volume\"},\n\t\"Range\": {Name: \"price\", Min: 10, Max: 200, Value: 80, Step: 10, Label: \"Price\"},\n}\n",
+      "sha256": "6af2a073521beaa2cfd073829c96d5b14ea9d19ea47d4848229a9879f573efb2"
+    }
+  ],
+  "requiredTokens": [
+    "--muted",
+    "--primary"
+  ],
+  "usage": "# Slider\n\nA native range control.\n\n## Usage\n\n```gx\n\u003cslider.Slider name=\"volume\" value={p.Volume} label=\"Volume\" /\u003e\n```\n\nThe component is a styled native `\u003cinput type=\"range\"\u003e`.\n\n## Do\n\n- Set `Min`, `Max` and `Step` for the range.\n- Give the slider a `Label`.\n\n## Don't\n\n- Do not use a slider for an exact number. Use an input.\n- Do not omit the label.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the slider. |\n| Arrow keys | Changes the value by one step. |\n| Home, End | Moves to the minimum or maximum. |\n"
+}

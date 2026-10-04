@@ -55,8 +55,8 @@
     {
       "path": "Code.fixtures.go",
       "target": "ui/docs/Code.fixtures.go",
-      "content": "package docs\n\nimport \"github.com/alternayte/gx\"\n\nvar CodeFixtures = gx.Fixtures[CodeProps]{\n\t\"Go\": {Code: gx.Code{File: \"main.go\", Lang: \"go\", Source: \"package main\\n\\nfunc main() {}\\n\"}, Title: \"main.go\"},\n\t\"Marked\": {Code: gx.Code{File: \"main.go\", Lang: \"go\", Source: \"package main\\n\\nfunc main() {}\\n\"}, Marks: []int{1}},\n}\n",
-      "sha256": "2261e2ead0414bcc8eba3304077aee0e60d1b02e0129215f5d6acc31e4b92c37"
+      "content": "package docs\n\nimport \"github.com/alternayte/gx\"\n\nvar CodeFixtures = gx.Fixtures[CodeProps]{\n\t\"Go\":     {Code: gx.Code{File: \"main.go\", Lang: \"go\", Source: \"package main\\n\\nfunc main() {}\\n\"}, Title: \"main.go\"},\n\t\"Marked\": {Code: gx.Code{File: \"main.go\", Lang: \"go\", Source: \"package main\\n\\nfunc main() {}\\n\"}, Marks: []int{1}},\n}\n",
+      "sha256": "4d57df646ef643df2bf1aee7d29cf9e38c81771f9ed1ca80da1ce4751ac7eca0"
     },
     {
       "path": "Code.gx",
@@ -91,8 +91,8 @@
     {
       "path": "Hero.fixtures.go",
       "target": "ui/docs/Hero.fixtures.go",
-      "content": "package docs\n\nimport \"github.com/alternayte/gx\"\n\nvar HeroFixtures = gx.Fixtures[HeroProps]{\n\t\"Full\": {Title: \"Gx\", Tagline: \"Server-rendered Go web apps.\", Actions: gx.Raw(gx.SafeHTML(`\u003ca href=\"/start\"\u003eGet started\u003c/a\u003e`))}, //gx:trusted a fixture is repository source (SI-12)\n\t\"Title\": {Title: \"Title only\"},\n}\n",
-      "sha256": "fed2c99fc711c355acde1dfaedce7f166726d8b77d9c821dd3b4d87867fc673a"
+      "content": "package docs\n\nimport \"github.com/alternayte/gx\"\n\nvar HeroFixtures = gx.Fixtures[HeroProps]{\n\t\"Full\":  {Title: \"Gx\", Tagline: \"Server-rendered Go web apps.\", Actions: gx.Raw(gx.SafeHTML(`\u003ca href=\"/start\"\u003eGet started\u003c/a\u003e`))}, //gx:trusted a fixture is repository source (SI-12)\n\t\"Title\": {Title: \"Title only\"},\n}\n",
+      "sha256": "e8b06f2c65a5820f04460f597a03b5d089ce663e0bff74b2ef9f2ad788cc1d07"
     },
     {
       "path": "Hero.gx",
@@ -139,8 +139,8 @@
     {
       "path": "LinkCard.fixtures.go",
       "target": "ui/docs/LinkCard.fixtures.go",
-      "content": "package docs\n\nimport \"github.com/alternayte/gx\"\n\nvar LinkCardFixtures = gx.Fixtures[LinkCardProps]{\n\t\"Full\": {Href: gx.URL(\"/errors/GX1000\"), Title: \"Diagnostics\", Description: \"Every code has a page.\", Children: gx.Text(\"Read on.\")},\n\t\"Short\": {Href: gx.URL(\"/start\"), Title: \"Start\"},\n}\n",
-      "sha256": "a56e566a3d82ac421f7348bf7909791308ab4545dfcaa09b48f6ed0103290625"
+      "content": "package docs\n\nimport \"github.com/alternayte/gx\"\n\nvar LinkCardFixtures = gx.Fixtures[LinkCardProps]{\n\t\"Full\":  {Href: gx.URL(\"/errors/GX1000\"), Title: \"Diagnostics\", Description: \"Every code has a page.\", Children: gx.Text(\"Read on.\")},\n\t\"Short\": {Href: gx.URL(\"/start\"), Title: \"Start\"},\n}\n",
+      "sha256": "89ba552c2fab4621fdd710e8d17eae8bb3d7978d78c39583acd1a9e8eeee611b"
     },
     {
       "path": "LinkCard.gx",

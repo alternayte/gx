@@ -49,14 +49,50 @@
     {
       "path": "Pagination.fixtures.go",
       "target": "ui/pagination/Pagination.fixtures.go",
-      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar paginationOne = gx.URL(\"/?page=1\")\nvar paginationTwo = gx.URL(\"/?page=2\")\n\nvar PaginationFixtures = gx.Fixtures[PaginationProps]{\n\t\"Trail\": {Children: PaginationContent(PaginationContentProps{Children: gx.Frag(\n\t\tPaginationItem(PaginationItemProps{Children: PaginationPrevious(PaginationPreviousProps{Href: paginationOne})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationLink(PaginationLinkProps{Href: paginationOne, Active: true, Children: gx.Text(\"1\")})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationLink(PaginationLinkProps{Href: paginationTwo, Children: gx.Text(\"2\")})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationEllipsis(PaginationEllipsisProps{})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationNext(PaginationNextProps{Href: paginationTwo})}),\n\t)})},\n}\n\nvar PaginationContentFixtures = gx.Fixtures[PaginationContentProps]{\"Empty\": {}}\nvar PaginationItemFixtures = gx.Fixtures[PaginationItemProps]{\"Empty\": {}}\nvar PaginationLinkFixtures = gx.Fixtures[PaginationLinkProps]{\n\t\"Inactive\": {Href: paginationTwo, Children: gx.Text(\"2\")},\n\t\"Active\":   {Href: paginationOne, Active: true, Children: gx.Text(\"1\")},\n}\nvar PaginationPreviousFixtures = gx.Fixtures[PaginationPreviousProps]{\"Default\": {Href: paginationOne}}\nvar PaginationNextFixtures = gx.Fixtures[PaginationNextProps]{\"Default\": {Href: paginationTwo}}\nvar PaginationEllipsisFixtures = gx.Fixtures[PaginationEllipsisProps]{\"Default\": {}}\n",
-      "sha256": "d105432cca1cc256d7ce3ff623a61c77ea74e60eb9314ef56ccf20dc44cc9ad5"
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationFixtures = gx.Fixtures[PaginationProps]{\n\t\"Trail\": {Children: PaginationContent(PaginationContentProps{Children: gx.Frag(\n\t\tPaginationItem(PaginationItemProps{Children: PaginationPrevious(PaginationPreviousProps{Href: gx.URL(\"/?page=1\")})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationLink(PaginationLinkProps{Href: gx.URL(\"/?page=1\"), Active: true, Children: gx.Text(\"1\")})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationLink(PaginationLinkProps{Href: gx.URL(\"/?page=2\"), Children: gx.Text(\"2\")})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationEllipsis(PaginationEllipsisProps{})}),\n\t\tPaginationItem(PaginationItemProps{Children: PaginationNext(PaginationNextProps{Href: gx.URL(\"/?page=2\")})}),\n\t)})},\n}\n",
+      "sha256": "5cd90e543ea18042fb09bc7c1fd32c188f2f64df5413f9c4b7f2bb877901ed2e"
     },
     {
       "path": "styles.go",
       "target": "ui/pagination/styles.go",
       "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the shape of a pagination link.\ntype Size string\n\n// The sizes of pagination.PaginationLink.\nconst (\n\tIcon Size = \"icon\"\n\tText Size = \"text\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tIcon: \"size-9\",\n\tText: \"h-9 px-3\",\n}\n\n// current returns the aria-current value of one link.\nfunc (p PaginationLinkProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n\n// class returns the classes of one pagination link.\nfunc (p PaginationLinkProps) class() string {\n\tbase := \"inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50\"\n\tif p.Active {\n\t\treturn gx.Cx(base, sizeClass[p.Size], \"border border-border\", p.Class)\n\t}\n\treturn gx.Cx(base, sizeClass[p.Size], p.Class)\n}\n\n// attrs returns the link attributes of the previous link.\nfunc (p PaginationPreviousProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{{Key: \"aria-label\", Value: \"Go to previous page\"}}, p.Attrs...)\n}\n\n// attrs returns the link attributes of the next link.\nfunc (p PaginationNextProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{{Key: \"aria-label\", Value: \"Go to next page\"}}, p.Attrs...)\n}\n",
       "sha256": "9810c7e57c5b53dd86d6f9914721b3a7462ebd9f84b615b04d03f19fe1db4b7e"
+    },
+    {
+      "path": "PaginationContent.fixtures.go",
+      "target": "ui/pagination/PaginationContent.fixtures.go",
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationContentFixtures = gx.Fixtures[PaginationContentProps]{\"Empty\": {}}\n",
+      "sha256": "3be7c0f3f6adfad794dec29a7b84c5e631b25951cb5ca0bf95e6c5fdf0792144"
+    },
+    {
+      "path": "PaginationEllipsis.fixtures.go",
+      "target": "ui/pagination/PaginationEllipsis.fixtures.go",
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationEllipsisFixtures = gx.Fixtures[PaginationEllipsisProps]{\"Default\": {}}\n",
+      "sha256": "33e9f893cea3d6d28e3a6bf6e61ebc4cb11dfa5df86aefd093137aa9272c4bb4"
+    },
+    {
+      "path": "PaginationItem.fixtures.go",
+      "target": "ui/pagination/PaginationItem.fixtures.go",
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationItemFixtures = gx.Fixtures[PaginationItemProps]{\"Empty\": {}}\n",
+      "sha256": "0b1f5ad45e2d66c51486f3f65425042a476461c696e719e1c5e6c153e4b41dda"
+    },
+    {
+      "path": "PaginationLink.fixtures.go",
+      "target": "ui/pagination/PaginationLink.fixtures.go",
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationLinkFixtures = gx.Fixtures[PaginationLinkProps]{\n\t\"Inactive\": {Href: gx.URL(\"/?page=2\"), Children: gx.Text(\"2\")},\n\t\"Active\":   {Href: gx.URL(\"/?page=1\"), Active: true, Children: gx.Text(\"1\")},\n}\n",
+      "sha256": "00d2759e2034138c2bcbad9e783ba3a4fede9c08a19239fbc15e00fad6adbed8"
+    },
+    {
+      "path": "PaginationNext.fixtures.go",
+      "target": "ui/pagination/PaginationNext.fixtures.go",
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationNextFixtures = gx.Fixtures[PaginationNextProps]{\"Default\": {Href: gx.URL(\"/?page=2\")}}\n",
+      "sha256": "32e9a3b478936e49fd3e88a2be44233033779b0ecd4297a261ce1c44ec85b5c5"
+    },
+    {
+      "path": "PaginationPrevious.fixtures.go",
+      "target": "ui/pagination/PaginationPrevious.fixtures.go",
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationPreviousFixtures = gx.Fixtures[PaginationPreviousProps]{\"Default\": {Href: gx.URL(\"/?page=1\")}}\n",
+      "sha256": "894a40adfecacbdfbfc950843ecd1de318803ee8f7a20f940c2143ca3afc15f7"
     }
   ],
   "requiredTokens": [

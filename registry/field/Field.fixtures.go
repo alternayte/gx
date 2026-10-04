@@ -12,10 +12,3 @@ var FieldFixtures = gx.Fixtures[FieldProps]{
 		FieldError(FieldErrorProps{Children: gx.Text("Enter a valid email address.")}),
 	)},
 }
-
-var FieldLabelFixtures = gx.Fixtures[FieldLabelProps]{"Label": {For: "email", Children: gx.Text("Email")}}
-var FieldDescriptionFixtures = gx.Fixtures[FieldDescriptionProps]{"Text": {Children: gx.Text("A short hint.")}}
-var FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{"Error": {Children: gx.Text("This field is required.")}}
-var FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{"Empty": {}}
-var FieldSetFixtures = gx.Fixtures[FieldSetProps]{"Empty": {}}
-var FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{"Legend": {Children: gx.Text("Address")}}

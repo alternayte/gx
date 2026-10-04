@@ -1,0 +1,14 @@
+package collapsible
+
+props {
+  Summary  gx.Node
+  Open     bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<details open={p.Open} class={gx.Cx("group", p.Class)} {...p.Attrs}>
+  <summary class="flex cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">{p.Summary}</summary>
+  <div class="pt-2">{p.Children}</div>
+</details>

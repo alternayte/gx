@@ -1,0 +1,1 @@
+{"name":"toast","version":"0.1.0","description":"A region for server-pushed toasts.","kind":"component","files":[{"path":"Toaster.gx","target":"ui/toast/Toaster.gx"},{"path":"Toaster.fixtures.go","target":"ui/toast/Toaster.fixtures.go"}]}

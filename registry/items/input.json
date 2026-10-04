@@ -7,8 +7,8 @@
     {
       "path": "Input.gx",
       "target": "ui/input/Input.gx",
-      "content": "package input\n\nprops {\n  Type        string   = \"text\"\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput type={p.Type} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx(\"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs} /\u003e\n",
-      "sha256": "37581e442508be0bbd08d4a956ae0a211bb55febcf887b6cf144008e98aa4c0f"
+      "content": "package input\n\nprops {\n  Id          string   = \"\"\n  Type        string   = \"text\"\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput id={p.Id} type={p.Type} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx(\"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs} /\u003e\n",
+      "sha256": "72e8aff8526c606af60dfb1252909117ddf064919652fb25c42fab9574e93185"
     },
     {
       "path": "Input.fixtures.go",

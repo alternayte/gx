@@ -1,0 +1,27 @@
+{
+  "name": "hover-card",
+  "version": "0.1.0",
+  "description": "A richer preview on hover or focus.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "HoverCard.gx",
+      "target": "ui/hover-card/HoverCard.gx",
+      "content": "package hovercard\n\nprops {\n  Trigger  gx.Node\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"group relative inline-flex\", p.Class)} {...p.Attrs}\u003e\n  {p.Trigger}\n  \u003cspan class=\"pointer-events-none absolute top-full left-0 z-50 mt-2 hidden w-64 rounded-md border border-border bg-popover p-4 text-sm text-popover-foreground shadow-md group-hover:block group-focus-within:block\"\u003e{p.Children}\u003c/span\u003e\n\u003c/span\u003e\n",
+      "sha256": "ca1459672c41508a46ccd77460bfb78683b7b27c675e80f2551bed172c5dcf95"
+    },
+    {
+      "path": "HoverCard.fixtures.go",
+      "target": "ui/hover-card/HoverCard.fixtures.go",
+      "content": "package hovercard\n\nimport \"github.com/alternayte/gx\"\n\nvar HoverCardFixtures = gx.Fixtures[HoverCardProps]{\n\t\"User\": {\n\t\tTrigger: gx.Text(\"@ada\"),\n\t\tChildren: gx.Frag(\n\t\t\tgx.El(\"p\", gx.Attrs{{Key: \"class\", Value: \"font-medium\"}}, gx.Text(\"Ada Lovelace\")),\n\t\t\tgx.El(\"p\", gx.Attrs{{Key: \"class\", Value: \"text-muted-foreground\"}}, gx.Text(\"First programmer.\")),\n\t\t),\n\t},\n}\n",
+      "sha256": "81516d31bd7dc0d9ab458b4e79fa94d7201ac3e3ad39480eb7c11c83b5a0814d"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--muted-foreground"
+  ],
+  "usage": "# Hover Card\n\nA richer preview on hover or focus.\n\n## Usage\n\n```gx\n\u003chovercard.HoverCard trigger={gx.Text(\"@ada\")}\u003e\n  \u003cp\u003eAda Lovelace\u003c/p\u003e\n  \u003cp\u003eFirst programmer.\u003c/p\u003e\n\u003c/hovercard.HoverCard\u003e\n```\n\nThe card is CSS only. It shows on hover and on keyboard focus.\n\n## Do\n\n- Keep the preview short.\n- Use it for a profile or a link preview.\n\n## Don't\n\n- Do not put a form in a hover card.\n- Do not rely on a hover card for a touch-only device.\n\n## Keyboard\n\nThe card appears when the trigger takes keyboard focus.\n"
+}

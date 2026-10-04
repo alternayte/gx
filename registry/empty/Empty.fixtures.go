@@ -12,9 +12,3 @@ var EmptyFixtures = gx.Fixtures[EmptyProps]{
 		EmptyContent(EmptyContentProps{Children: gx.Text("New project")}),
 	)},
 }
-
-var EmptyHeaderFixtures = gx.Fixtures[EmptyHeaderProps]{"Empty": {}}
-var EmptyTitleFixtures = gx.Fixtures[EmptyTitleProps]{"Title": {Children: gx.Text("No projects")}}
-var EmptyDescriptionFixtures = gx.Fixtures[EmptyDescriptionProps]{"Text": {Children: gx.Text("Create your first project.")}}
-var EmptyContentFixtures = gx.Fixtures[EmptyContentProps]{"Empty": {}}
-var EmptyMediaFixtures = gx.Fixtures[EmptyMediaProps]{"Icon": {Variant: Icon, Children: gx.Text("+")}}

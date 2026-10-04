@@ -1,0 +1,11 @@
+package navigationmenu
+
+props {
+  Href     gx.URL
+  Active   bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a href={p.Href} aria-current={p.current()} class={gx.Cx("inline-flex h-9 items-center rounded-md px-4 text-sm font-medium no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/50", activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>

@@ -1,1 +1,68 @@
-{"name":"breadcrumb","version":"0.1.0","description":"A trail of links to the current page.","kind":"component","files":[{"path":"Breadcrumb.gx","target":"ui/breadcrumb/Breadcrumb.gx"},{"path":"BreadcrumbList.gx","target":"ui/breadcrumb/BreadcrumbList.gx"},{"path":"BreadcrumbItem.gx","target":"ui/breadcrumb/BreadcrumbItem.gx"},{"path":"BreadcrumbLink.gx","target":"ui/breadcrumb/BreadcrumbLink.gx"},{"path":"BreadcrumbPage.gx","target":"ui/breadcrumb/BreadcrumbPage.gx"},{"path":"BreadcrumbSeparator.gx","target":"ui/breadcrumb/BreadcrumbSeparator.gx"},{"path":"BreadcrumbEllipsis.gx","target":"ui/breadcrumb/BreadcrumbEllipsis.gx"},{"path":"Breadcrumb.fixtures.go","target":"ui/breadcrumb/Breadcrumb.fixtures.go"}],"requiredTokens":["--foreground","--muted-foreground"]}
+{
+  "name": "breadcrumb",
+  "version": "0.1.0",
+  "description": "A trail of links to the current page.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Breadcrumb.gx",
+      "target": "ui/breadcrumb/Breadcrumb.gx"
+    },
+    {
+      "path": "BreadcrumbList.gx",
+      "target": "ui/breadcrumb/BreadcrumbList.gx"
+    },
+    {
+      "path": "BreadcrumbItem.gx",
+      "target": "ui/breadcrumb/BreadcrumbItem.gx"
+    },
+    {
+      "path": "BreadcrumbLink.gx",
+      "target": "ui/breadcrumb/BreadcrumbLink.gx"
+    },
+    {
+      "path": "BreadcrumbPage.gx",
+      "target": "ui/breadcrumb/BreadcrumbPage.gx"
+    },
+    {
+      "path": "BreadcrumbSeparator.gx",
+      "target": "ui/breadcrumb/BreadcrumbSeparator.gx"
+    },
+    {
+      "path": "BreadcrumbEllipsis.gx",
+      "target": "ui/breadcrumb/BreadcrumbEllipsis.gx"
+    },
+    {
+      "path": "Breadcrumb.fixtures.go",
+      "target": "ui/breadcrumb/Breadcrumb.fixtures.go"
+    },
+    {
+      "path": "BreadcrumbEllipsis.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbEllipsis.fixtures.go"
+    },
+    {
+      "path": "BreadcrumbItem.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbItem.fixtures.go"
+    },
+    {
+      "path": "BreadcrumbLink.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbLink.fixtures.go"
+    },
+    {
+      "path": "BreadcrumbList.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbList.fixtures.go"
+    },
+    {
+      "path": "BreadcrumbPage.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbPage.fixtures.go"
+    },
+    {
+      "path": "BreadcrumbSeparator.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbSeparator.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--foreground",
+    "--muted-foreground"
+  ]
+}

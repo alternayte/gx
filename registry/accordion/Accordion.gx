@@ -1,0 +1,10 @@
+package accordion
+
+props {
+  Name     string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("w-full", p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -55,8 +55,50 @@
     {
       "path": "Table.fixtures.go",
       "target": "ui/table/Table.fixtures.go",
-      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableFixtures = gx.Fixtures[TableProps]{\n\t\"Simple\": {Children: gx.Frag(\n\t\tTableCaption(TableCaptionProps{Children: gx.Text(\"A list of invoices.\")}),\n\t\tTableHeader(TableHeaderProps{Children: TableRow(TableRowProps{Children: gx.Frag(\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Invoice\")}),\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Status\")}),\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Amount\")}),\n\t\t)})}),\n\t\tTableBody(TableBodyProps{Children: gx.Frag(\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-001\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Paid\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$120.00\")}),\n\t\t\t)}),\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-002\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Open\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$80.00\")}),\n\t\t\t)}),\n\t\t)}),\n\t)},\n}\n\nvar TableHeaderFixtures = gx.Fixtures[TableHeaderProps]{\"Empty\": {}}\nvar TableBodyFixtures = gx.Fixtures[TableBodyProps]{\"Empty\": {}}\nvar TableFooterFixtures = gx.Fixtures[TableFooterProps]{\"Empty\": {}}\nvar TableRowFixtures = gx.Fixtures[TableRowProps]{\"Empty\": {}}\nvar TableHeadFixtures = gx.Fixtures[TableHeadProps]{\"Header\": {Children: gx.Text(\"Column\")}}\nvar TableCellFixtures = gx.Fixtures[TableCellProps]{\"Cell\": {Children: gx.Text(\"Value\")}}\nvar TableCaptionFixtures = gx.Fixtures[TableCaptionProps]{\"Caption\": {Children: gx.Text(\"A caption.\")}}\n",
-      "sha256": "1827fbe5a973282669b72fe0b743afe48df10262cee2a43a12b5a27884ce05c3"
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableFixtures = gx.Fixtures[TableProps]{\n\t\"Simple\": {Children: gx.Frag(\n\t\tTableCaption(TableCaptionProps{Children: gx.Text(\"A list of invoices.\")}),\n\t\tTableHeader(TableHeaderProps{Children: TableRow(TableRowProps{Children: gx.Frag(\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Invoice\")}),\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Status\")}),\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Amount\")}),\n\t\t)})}),\n\t\tTableBody(TableBodyProps{Children: gx.Frag(\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-001\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Paid\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$120.00\")}),\n\t\t\t)}),\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-002\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Open\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$80.00\")}),\n\t\t\t)}),\n\t\t)}),\n\t)},\n}\n",
+      "sha256": "841fb08d8533c967fd6d33c51f0a6771970c21a73dee8c929d538f1070bf925d"
+    },
+    {
+      "path": "TableBody.fixtures.go",
+      "target": "ui/table/TableBody.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableBodyFixtures = gx.Fixtures[TableBodyProps]{\"Empty\": {}}\n",
+      "sha256": "b962e7381eb8e6a8b1abc4123cbadccf58870e4f7fc5b2bf149d4c7a11b2c0dd"
+    },
+    {
+      "path": "TableCaption.fixtures.go",
+      "target": "ui/table/TableCaption.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableCaptionFixtures = gx.Fixtures[TableCaptionProps]{\"Caption\": {Children: gx.Text(\"A caption.\")}}\n",
+      "sha256": "2f23ddea3a53ac2b2699934bda7dd69288a25b8213336940fb24818fbf19ae94"
+    },
+    {
+      "path": "TableCell.fixtures.go",
+      "target": "ui/table/TableCell.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableCellFixtures = gx.Fixtures[TableCellProps]{\"Cell\": {Children: gx.Text(\"Value\")}}\n",
+      "sha256": "9d9a8428307396899670bee842f8c338627f6ae2d9d85e324d1655ffd1c5e7bb"
+    },
+    {
+      "path": "TableFooter.fixtures.go",
+      "target": "ui/table/TableFooter.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableFooterFixtures = gx.Fixtures[TableFooterProps]{\"Empty\": {}}\n",
+      "sha256": "a397a00ea6ddf9bd9eccc0965d1a014386d1580e2215b6d1da63aa6480ab2403"
+    },
+    {
+      "path": "TableHead.fixtures.go",
+      "target": "ui/table/TableHead.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableHeadFixtures = gx.Fixtures[TableHeadProps]{\"Header\": {Children: gx.Text(\"Column\")}}\n",
+      "sha256": "a9d60477e9e4c9469d09c69c51199b0dd9ee421f531e6fab49609497e2a71083"
+    },
+    {
+      "path": "TableHeader.fixtures.go",
+      "target": "ui/table/TableHeader.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableHeaderFixtures = gx.Fixtures[TableHeaderProps]{\"Empty\": {}}\n",
+      "sha256": "304ef5096002dccbc7025e2df632a6e7eb45c4a6e2c45e1968dc0a5ef11f541c"
+    },
+    {
+      "path": "TableRow.fixtures.go",
+      "target": "ui/table/TableRow.fixtures.go",
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableRowFixtures = gx.Fixtures[TableRowProps]{\"Empty\": {}}\n",
+      "sha256": "ff6479d3559e93511ca6f3845acad6c0a94276d00b122b54fc2faacfc2edb61d"
     }
   ],
   "requiredTokens": [

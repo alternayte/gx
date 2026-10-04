@@ -1,0 +1,34 @@
+{
+  "name": "navigation-menu",
+  "version": "0.1.0",
+  "description": "A row of primary links.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "NavigationMenu.gx",
+      "target": "ui/navigation-menu/NavigationMenu.gx"
+    },
+    {
+      "path": "NavigationMenuItem.gx",
+      "target": "ui/navigation-menu/NavigationMenuItem.gx"
+    },
+    {
+      "path": "NavigationMenu.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenu.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/navigation-menu/styles.go"
+    },
+    {
+      "path": "NavigationMenuItem.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenuItem.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--foreground",
+    "--accent",
+    "--accent-foreground",
+    "--ring"
+  ]
+}

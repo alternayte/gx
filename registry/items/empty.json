@@ -43,14 +43,44 @@
     {
       "path": "Empty.fixtures.go",
       "target": "ui/empty/Empty.fixtures.go",
-      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyFixtures = gx.Fixtures[EmptyProps]{\n\t\"Full\": {Children: gx.Frag(\n\t\tEmptyHeader(EmptyHeaderProps{Children: gx.Frag(\n\t\t\tEmptyMedia(EmptyMediaProps{Variant: Icon, Children: gx.Text(\"+\")}),\n\t\t\tEmptyTitle(EmptyTitleProps{Children: gx.Text(\"No projects\")}),\n\t\t\tEmptyDescription(EmptyDescriptionProps{Children: gx.Text(\"Create your first project to start.\")}),\n\t\t)}),\n\t\tEmptyContent(EmptyContentProps{Children: gx.Text(\"New project\")}),\n\t)},\n}\n\nvar EmptyHeaderFixtures = gx.Fixtures[EmptyHeaderProps]{\"Empty\": {}}\nvar EmptyTitleFixtures = gx.Fixtures[EmptyTitleProps]{\"Title\": {Children: gx.Text(\"No projects\")}}\nvar EmptyDescriptionFixtures = gx.Fixtures[EmptyDescriptionProps]{\"Text\": {Children: gx.Text(\"Create your first project.\")}}\nvar EmptyContentFixtures = gx.Fixtures[EmptyContentProps]{\"Empty\": {}}\nvar EmptyMediaFixtures = gx.Fixtures[EmptyMediaProps]{\"Icon\": {Variant: Icon, Children: gx.Text(\"+\")}}\n",
-      "sha256": "3e759bbbf916ad61a9b403a61d07cf442146015ba2fa6d7054edf28fe267dcba"
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyFixtures = gx.Fixtures[EmptyProps]{\n\t\"Full\": {Children: gx.Frag(\n\t\tEmptyHeader(EmptyHeaderProps{Children: gx.Frag(\n\t\t\tEmptyMedia(EmptyMediaProps{Variant: Icon, Children: gx.Text(\"+\")}),\n\t\t\tEmptyTitle(EmptyTitleProps{Children: gx.Text(\"No projects\")}),\n\t\t\tEmptyDescription(EmptyDescriptionProps{Children: gx.Text(\"Create your first project to start.\")}),\n\t\t)}),\n\t\tEmptyContent(EmptyContentProps{Children: gx.Text(\"New project\")}),\n\t)},\n}\n",
+      "sha256": "ea9cdc106d23bb1ed1e1c051e5de4dee58ee41ee27edf5bbf6dfa4fe5c54c0c4"
     },
     {
       "path": "styles.go",
       "target": "ui/empty/styles.go",
       "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the look of the media slot of an empty state.\ntype Variant string\n\n// The variants of empty.EmptyMedia.\nconst (\n\tDefault Variant = \"default\"\n\tIcon    Variant = \"icon\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"\",\n\tIcon:    \"flex size-10 items-center justify-center rounded-lg bg-muted text-foreground [\u0026\u003esvg]:size-5\",\n}\n",
       "sha256": "75e792a06d5e6088d870fdbaa89aa73c397b861baddeca399c08a36b68eb5300"
+    },
+    {
+      "path": "EmptyContent.fixtures.go",
+      "target": "ui/empty/EmptyContent.fixtures.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyContentFixtures = gx.Fixtures[EmptyContentProps]{\"Empty\": {}}\n",
+      "sha256": "16f46679b81fabe08920c746e207fb139adf1b422ea46aa608ddd91b6c1cc703"
+    },
+    {
+      "path": "EmptyDescription.fixtures.go",
+      "target": "ui/empty/EmptyDescription.fixtures.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyDescriptionFixtures = gx.Fixtures[EmptyDescriptionProps]{\"Text\": {Children: gx.Text(\"Create your first project.\")}}\n",
+      "sha256": "04c747f12293262eeaa07f300f731b5bbc0db18c2e4a1b01ed3c9c71676d567f"
+    },
+    {
+      "path": "EmptyHeader.fixtures.go",
+      "target": "ui/empty/EmptyHeader.fixtures.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyHeaderFixtures = gx.Fixtures[EmptyHeaderProps]{\"Empty\": {}}\n",
+      "sha256": "29c7f59f1802ff1b94b82b2ac5e6b99a49a375f9b6551024be1073cb8a0317be"
+    },
+    {
+      "path": "EmptyMedia.fixtures.go",
+      "target": "ui/empty/EmptyMedia.fixtures.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyMediaFixtures = gx.Fixtures[EmptyMediaProps]{\"Icon\": {Variant: Icon, Children: gx.Text(\"+\")}}\n",
+      "sha256": "88c328f74687df553d56f99702361f824c2f07ecd0160aa90b8578f1b042cad4"
+    },
+    {
+      "path": "EmptyTitle.fixtures.go",
+      "target": "ui/empty/EmptyTitle.fixtures.go",
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\nvar EmptyTitleFixtures = gx.Fixtures[EmptyTitleProps]{\"Title\": {Children: gx.Text(\"No projects\")}}\n",
+      "sha256": "efe5b5a5c7e2d32fbc039f07302c640575c791c3fa1e1c61b90a014a4d9b8af9"
     }
   ],
   "requiredTokens": [

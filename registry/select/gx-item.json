@@ -1,0 +1,28 @@
+{
+  "name": "select",
+  "version": "0.1.0",
+  "description": "A native list of exclusive choices.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Select.gx",
+      "target": "ui/select/Select.gx"
+    },
+    {
+      "path": "SelectOption.gx",
+      "target": "ui/select/SelectOption.gx"
+    },
+    {
+      "path": "Select.fixtures.go",
+      "target": "ui/select/Select.fixtures.go"
+    },
+    {
+      "path": "SelectOption.fixtures.go",
+      "target": "ui/select/SelectOption.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring"
+  ]
+}

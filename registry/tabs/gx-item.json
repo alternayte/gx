@@ -1,0 +1,29 @@
+{
+  "name": "tabs",
+  "version": "0.1.0",
+  "description": "Exclusive panels behind a row of tab buttons.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Tabs.gx",
+      "target": "ui/tabs/Tabs.gx"
+    },
+    {
+      "path": "TabItem.gx",
+      "target": "ui/tabs/TabItem.gx"
+    },
+    {
+      "path": "Tabs.fixtures.go",
+      "target": "ui/tabs/Tabs.fixtures.go"
+    },
+    {
+      "path": "TabItem.fixtures.go",
+      "target": "ui/tabs/TabItem.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--foreground",
+    "--muted-foreground",
+    "--border"
+  ]
+}

@@ -49,14 +49,50 @@
     {
       "path": "Field.fixtures.go",
       "target": "ui/field/Field.fixtures.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldFixtures = gx.Fixtures[FieldProps]{\n\t\"LabelAndInput\": {Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"We never share your email.\")}),\n\t)},\n\t\"Invalid\": {Invalid: true, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldError(FieldErrorProps{Children: gx.Text(\"Enter a valid email address.\")}),\n\t)},\n}\n\nvar FieldLabelFixtures = gx.Fixtures[FieldLabelProps]{\"Label\": {For: \"email\", Children: gx.Text(\"Email\")}}\nvar FieldDescriptionFixtures = gx.Fixtures[FieldDescriptionProps]{\"Text\": {Children: gx.Text(\"A short hint.\")}}\nvar FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{\"Error\": {Children: gx.Text(\"This field is required.\")}}\nvar FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{\"Empty\": {}}\nvar FieldSetFixtures = gx.Fixtures[FieldSetProps]{\"Empty\": {}}\nvar FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{\"Legend\": {Children: gx.Text(\"Address\")}}\n",
-      "sha256": "ff9b391d9ae1e216b8c5051b6fd99104cab57533f2502801bbe973376e8a1bf6"
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldFixtures = gx.Fixtures[FieldProps]{\n\t\"LabelAndInput\": {Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"We never share your email.\")}),\n\t)},\n\t\"Invalid\": {Invalid: true, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldError(FieldErrorProps{Children: gx.Text(\"Enter a valid email address.\")}),\n\t)},\n}\n",
+      "sha256": "ab0e3cd1e25d8333b59a5a840dd18e0d7b7bf194916e8978352eaaee8c5e7055"
     },
     {
       "path": "styles.go",
       "target": "ui/field/styles.go",
       "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the size of a field legend.\ntype Variant string\n\n// The variants of field.FieldLegend.\nconst (\n\tLegend Variant = \"legend\"\n\tLabel  Variant = \"label\"\n)\n\nvar legendClass = gx.Enum[Variant]{\n\tLegend: \"text-base\",\n\tLabel:  \"text-sm\",\n}\n",
       "sha256": "855e1712cc199c5faf47bb54aa0276e7cdc4f7e69f24c72b0299e45454cef692"
+    },
+    {
+      "path": "FieldDescription.fixtures.go",
+      "target": "ui/field/FieldDescription.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldDescriptionFixtures = gx.Fixtures[FieldDescriptionProps]{\"Text\": {Children: gx.Text(\"A short hint.\")}}\n",
+      "sha256": "6fe552c07f133f10d9fbd62539190056d3c85cc8f742f717647afb3aaafbd7a5"
+    },
+    {
+      "path": "FieldError.fixtures.go",
+      "target": "ui/field/FieldError.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{\"Error\": {Children: gx.Text(\"This field is required.\")}}\n",
+      "sha256": "afba242560eef86ce4b16ceac12d316020ef5ff68436ed1a3c4341060f98219b"
+    },
+    {
+      "path": "FieldGroup.fixtures.go",
+      "target": "ui/field/FieldGroup.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{\"Empty\": {}}\n",
+      "sha256": "9e4c56a0fce0efcaf8061729d683eafd2e5812c3e1cf0de534089c508744fe80"
+    },
+    {
+      "path": "FieldLabel.fixtures.go",
+      "target": "ui/field/FieldLabel.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldLabelFixtures = gx.Fixtures[FieldLabelProps]{\"Label\": {For: \"email\", Children: gx.Text(\"Email\")}}\n",
+      "sha256": "a0477570c4a3125d2c116fa572ffc1475f16397277d2169da92b6a87a5a42f70"
+    },
+    {
+      "path": "FieldLegend.fixtures.go",
+      "target": "ui/field/FieldLegend.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{\"Legend\": {Children: gx.Text(\"Address\")}}\n",
+      "sha256": "560e2f34e7936297568f843ba9310fcaca69f63bfdca11162ef1a63eb4753003"
+    },
+    {
+      "path": "FieldSet.fixtures.go",
+      "target": "ui/field/FieldSet.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldSetFixtures = gx.Fixtures[FieldSetProps]{\"Empty\": {}}\n",
+      "sha256": "87781363f219c6d1a3b2332172fd1903da95720216406fdbf88025d69841a9b1"
     }
   ],
   "requiredTokens": [

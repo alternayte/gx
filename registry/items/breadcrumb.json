@@ -49,8 +49,44 @@
     {
       "path": "Breadcrumb.fixtures.go",
       "target": "ui/breadcrumb/Breadcrumb.fixtures.go",
-      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar breadcrumbURL = gx.URL(\"/\")\nvar breadcrumbDocs = gx.URL(\"/docs\")\n\nvar BreadcrumbFixtures = gx.Fixtures[BreadcrumbProps]{\n\t\"Trail\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: breadcrumbURL, Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: breadcrumbDocs, Children: gx.Text(\"Docs\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text(\"Breadcrumb\")})}),\n\t)})},\n\t\"Ellipsis\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: breadcrumbURL, Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbEllipsis(BreadcrumbEllipsisProps{})}),\n\t)})},\n}\n\nvar BreadcrumbListFixtures = gx.Fixtures[BreadcrumbListProps]{\"Empty\": {}}\nvar BreadcrumbItemFixtures = gx.Fixtures[BreadcrumbItemProps]{\"Empty\": {}}\nvar BreadcrumbLinkFixtures = gx.Fixtures[BreadcrumbLinkProps]{\"Link\": {Href: breadcrumbURL, Children: gx.Text(\"Home\")}}\nvar BreadcrumbPageFixtures = gx.Fixtures[BreadcrumbPageProps]{\"Page\": {Children: gx.Text(\"Page\")}}\nvar BreadcrumbSeparatorFixtures = gx.Fixtures[BreadcrumbSeparatorProps]{\"Default\": {}}\nvar BreadcrumbEllipsisFixtures = gx.Fixtures[BreadcrumbEllipsisProps]{\"Default\": {}}\n",
-      "sha256": "1cfc9001f29c5ac5c2197d21d3517fa832a6c6ca30092ef80d3fbb2e90bd22b3"
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbFixtures = gx.Fixtures[BreadcrumbProps]{\n\t\"Trail\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text(\"Breadcrumb\")})}),\n\t)})},\n\t\"Ellipsis\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbEllipsis(BreadcrumbEllipsisProps{})}),\n\t)})},\n}\n",
+      "sha256": "177bf813fa801840fe20a8f5c62f394367910bf33444243216f715402712c8f4"
+    },
+    {
+      "path": "BreadcrumbEllipsis.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbEllipsis.fixtures.go",
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbEllipsisFixtures = gx.Fixtures[BreadcrumbEllipsisProps]{\"Default\": {}}\n",
+      "sha256": "88dfdab33a9da79fcdbb4560798b7b3c99dbd04baf29fecf98ff65ab3a90b641"
+    },
+    {
+      "path": "BreadcrumbItem.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbItem.fixtures.go",
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbItemFixtures = gx.Fixtures[BreadcrumbItemProps]{\"Empty\": {}}\n",
+      "sha256": "bb302e5b0e19f47857094314c0384870155f5ce895a8942a0411762bcc8f4159"
+    },
+    {
+      "path": "BreadcrumbLink.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbLink.fixtures.go",
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbLinkFixtures = gx.Fixtures[BreadcrumbLinkProps]{\"Link\": {Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")}}\n",
+      "sha256": "8f8dc13c19a6ce5f79b3a59ffd8386b201e7fdfb9c2a501b132e9e34392f0be5"
+    },
+    {
+      "path": "BreadcrumbList.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbList.fixtures.go",
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbListFixtures = gx.Fixtures[BreadcrumbListProps]{\"Empty\": {}}\n",
+      "sha256": "a8b0cb6ed0cd7ca6ca55da85576af67271bd2527965da78ddde9d81c86164f9f"
+    },
+    {
+      "path": "BreadcrumbPage.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbPage.fixtures.go",
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbPageFixtures = gx.Fixtures[BreadcrumbPageProps]{\"Page\": {Children: gx.Text(\"Page\")}}\n",
+      "sha256": "ae4412b7a5aff395182048834f4bb1fdb412a5a29214bf8045c1e895bf73a5d1"
+    },
+    {
+      "path": "BreadcrumbSeparator.fixtures.go",
+      "target": "ui/breadcrumb/BreadcrumbSeparator.fixtures.go",
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbSeparatorFixtures = gx.Fixtures[BreadcrumbSeparatorProps]{\"Default\": {}}\n",
+      "sha256": "86a0f15d050aae4bdac4d2bf35a1e36a2b8326785cc99d544ad03e51cedbb150"
     }
   ],
   "requiredTokens": [

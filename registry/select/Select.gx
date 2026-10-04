@@ -1,0 +1,10 @@
+package selectbox
+
+props {
+  Name     string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<select name={p.Name} class={gx.Cx("h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</select>

@@ -1,0 +1,31 @@
+{
+  "name": "popover",
+  "version": "0.1.0",
+  "description": "A small panel anchored to a trigger.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Popover.gx",
+      "target": "ui/popover/Popover.gx"
+    },
+    {
+      "path": "PopoverTrigger.gx",
+      "target": "ui/popover/PopoverTrigger.gx"
+    },
+    {
+      "path": "Popover.fixtures.go",
+      "target": "ui/popover/Popover.fixtures.go"
+    },
+    {
+      "path": "PopoverTrigger.fixtures.go",
+      "target": "ui/popover/PopoverTrigger.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--accent",
+    "--ring"
+  ]
+}

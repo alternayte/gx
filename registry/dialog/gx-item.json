@@ -1,0 +1,1 @@
+{"name":"dialog","version":"0.1.0","description":"A modal overlay with a trigger.","kind":"component","files":[{"path":"Dialog.gx","target":"ui/dialog/Dialog.gx"},{"path":"Dialog.fixtures.go","target":"ui/dialog/Dialog.fixtures.go"}],"registryDependencies":["button"],"requiredTokens":["--border","--card","--card-foreground","--muted-foreground","--accent","--accent-foreground"]}

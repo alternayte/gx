@@ -1,0 +1,37 @@
+{
+  "name": "select",
+  "version": "0.1.0",
+  "description": "A native list of exclusive choices.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Select.gx",
+      "target": "ui/select/Select.gx",
+      "content": "package selectbox\n\nprops {\n  Name     string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cselect name={p.Name} class={gx.Cx(\"h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/select\u003e\n",
+      "sha256": "90fb034b9f1cb9d5ce7762657d8bdf8aad2c0046d0b3de90c9bb0509d063c1bd"
+    },
+    {
+      "path": "SelectOption.gx",
+      "target": "ui/select/SelectOption.gx",
+      "content": "package selectbox\n\nprops {\n  Value    string = \"\"\n  Selected bool   = false\n  Children gx.Node\n}\n\n\u003coption value={p.Value} selected={p.Selected}\u003e{p.Children}\u003c/option\u003e\n",
+      "sha256": "1aa31f87bfd568a90bac9d0063d8ff101c1804aaa81903c3fc9b648b5bd3a1ec"
+    },
+    {
+      "path": "Select.fixtures.go",
+      "target": "ui/select/Select.fixtures.go",
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectFixtures = gx.Fixtures[SelectProps]{\n\t\"Plan\": {Name: \"plan\", Class: \"w-48\", Children: gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"free\", Selected: true, Children: gx.Text(\"Free\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"pro\", Children: gx.Text(\"Pro\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"team\", Children: gx.Text(\"Team\")}),\n\t)},\n\t\"Disabled\": {Name: \"plan\", Class: \"w-48\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: SelectOption(SelectOptionProps{Value: \"free\", Children: gx.Text(\"Free\")})},\n}\n",
+      "sha256": "bbab3360204bc142d54b807240e42ac49a3537c7e37f8314ef10c94553442362"
+    },
+    {
+      "path": "SelectOption.fixtures.go",
+      "target": "ui/select/SelectOption.fixtures.go",
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectOptionFixtures = gx.Fixtures[SelectOptionProps]{\"Option\": {Value: \"free\", Children: gx.Text(\"Free\")}}\n",
+      "sha256": "b56f51952e9c85e1ac390e68ae68cdf90f238b7b89fe19cb8f254dd6afe81d54"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring"
+  ],
+  "usage": "# Select\n\nA native list of exclusive choices.\n\n## Usage\n\n```gx\n\u003cselect.Select name=\"plan\"\u003e\n  \u003cselect.SelectOption value=\"free\" selected={true}\u003eFree\u003c/select.SelectOption\u003e\n  \u003cselect.SelectOption value=\"pro\"\u003ePro\u003c/select.SelectOption\u003e\n\u003c/select.Select\u003e\n```\n\nThe component is a styled native `\u003cselect\u003e`, so the keyboard and the mobile picker come from the browser.\n\n## Do\n\n- Mark one option with `Selected`.\n- Pair the select with a label.\n\n## Don't\n\n- Do not use a select for fewer than four options. Use a radio group.\n- Do not leave the select without a name in a form.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the select. |\n| Arrow keys | Moves through the options. |\n| Enter, Space | Opens or commits the choice. |\n"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "collapsible",
+  "version": "0.1.0",
+  "description": "One panel that opens on demand.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Collapsible.gx",
+      "target": "ui/collapsible/Collapsible.gx",
+      "content": "package collapsible\n\nprops {\n  Summary  gx.Node\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails open={p.Open} class={gx.Cx(\"group\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"flex cursor-pointer list-none items-center gap-2 [\u0026::-webkit-details-marker]:hidden\"\u003e{p.Summary}\u003c/summary\u003e\n  \u003cdiv class=\"pt-2\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
+      "sha256": "47de56acfcec9ff1a32a0bfa0fb4a726988731808e8e5ad93cb372d2c8199ec7"
+    },
+    {
+      "path": "Collapsible.fixtures.go",
+      "target": "ui/collapsible/Collapsible.fixtures.go",
+      "content": "package collapsible\n\nimport \"github.com/alternayte/gx\"\n\nvar CollapsibleFixtures = gx.Fixtures[CollapsibleProps]{\n\t\"Open\":   {Summary: gx.Text(\"Show details\"), Open: true, Children: gx.Text(\"Hidden content.\")},\n\t\"Closed\": {Summary: gx.Text(\"Show details\"), Children: gx.Text(\"Hidden content.\")},\n}\n",
+      "sha256": "9c020f8b90e99acf39fc2e062f63c1b0ecc86bcf17e3c6c8c9c1937157e0f1bc"
+    }
+  ],
+  "usage": "# Collapsible\n\nOne panel that opens on demand.\n\n## Usage\n\n```gx\n\u003ccollapsible.Collapsible summary={gx.Text(\"Show details\")}\u003e\n  \u003cp\u003eHidden content.\u003c/p\u003e\n\u003c/collapsible.Collapsible\u003e\n```\n\nThe panel uses the native `\u003cdetails\u003e` element.\n\n## Do\n\n- Use it for one optional block of content.\n- Put a verb in the summary.\n\n## Don't\n\n- Do not hide essential content.\n- Do not use a collapsible for a list of questions. Use an accordion.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the summary. |\n| Enter, Space | Opens or closes the panel. |\n"
+}

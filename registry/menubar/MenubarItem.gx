@@ -1,0 +1,11 @@
+package menubar
+
+props {
+  Href     gx.URL
+  Active   bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item aria-current={p.current()} class={gx.Cx("inline-flex items-center rounded-sm px-2 py-1 text-sm font-medium no-underline outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>

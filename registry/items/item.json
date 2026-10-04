@@ -55,8 +55,50 @@
     {
       "path": "Item.fixtures.go",
       "target": "ui/item/Item.fixtures.go",
-      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemFixtures = gx.Fixtures[ItemProps]{\n\t\"Full\": {Class: \"p-4\", Children: gx.Frag(\n\t\tItemMedia(ItemMediaProps{Children: gx.Text(\"*\")}),\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Item title\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"A short description of the item.\")}),\n\t\t)}),\n\t\tItemActions(ItemActionsProps{Children: gx.Text(\"Open\")}),\n\t)},\n}\n\nvar ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{\"Empty\": {}}\nvar ItemContentFixtures = gx.Fixtures[ItemContentProps]{\"Empty\": {}}\nvar ItemTitleFixtures = gx.Fixtures[ItemTitleProps]{\"Title\": {Children: gx.Text(\"Item title\")}}\nvar ItemDescriptionFixtures = gx.Fixtures[ItemDescriptionProps]{\"Text\": {Children: gx.Text(\"Description\")}}\nvar ItemActionsFixtures = gx.Fixtures[ItemActionsProps]{\"Empty\": {}}\nvar ItemHeaderFixtures = gx.Fixtures[ItemHeaderProps]{\"Empty\": {}}\nvar ItemFooterFixtures = gx.Fixtures[ItemFooterProps]{\"Empty\": {}}\n",
-      "sha256": "89f5ecf3ba6992d26768795ff27141d0a0435db987e1dbb1b9f7851ad8e21eb7"
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemFixtures = gx.Fixtures[ItemProps]{\n\t\"Full\": {Class: \"p-4\", Children: gx.Frag(\n\t\tItemMedia(ItemMediaProps{Children: gx.Text(\"*\")}),\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Item title\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"A short description of the item.\")}),\n\t\t)}),\n\t\tItemActions(ItemActionsProps{Children: gx.Text(\"Open\")}),\n\t)},\n}\n",
+      "sha256": "1add5a68503902605b01e58125b428df9a2f802a8d7e936d124a1853f521b2b7"
+    },
+    {
+      "path": "ItemActions.fixtures.go",
+      "target": "ui/item/ItemActions.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemActionsFixtures = gx.Fixtures[ItemActionsProps]{\"Empty\": {}}\n",
+      "sha256": "d0eb580d919e3d48532cda177513ebc102beb9756bcd4e54902dcdd247558011"
+    },
+    {
+      "path": "ItemContent.fixtures.go",
+      "target": "ui/item/ItemContent.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemContentFixtures = gx.Fixtures[ItemContentProps]{\"Empty\": {}}\n",
+      "sha256": "6cc56f50dd7b0bb020db4cc35a616d00f32173c1d7b166ad3cf4c99e11504a75"
+    },
+    {
+      "path": "ItemDescription.fixtures.go",
+      "target": "ui/item/ItemDescription.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemDescriptionFixtures = gx.Fixtures[ItemDescriptionProps]{\"Text\": {Children: gx.Text(\"Description\")}}\n",
+      "sha256": "6e7d9a8e3a243e3521f3c646bfd18350ec61436acf6e43d9a8442cd874ca1e99"
+    },
+    {
+      "path": "ItemFooter.fixtures.go",
+      "target": "ui/item/ItemFooter.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemFooterFixtures = gx.Fixtures[ItemFooterProps]{\"Empty\": {}}\n",
+      "sha256": "f99dbcbb41a062a851749bd0e848fa1f506eb7041065639c459ec86f74c4de9e"
+    },
+    {
+      "path": "ItemHeader.fixtures.go",
+      "target": "ui/item/ItemHeader.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemHeaderFixtures = gx.Fixtures[ItemHeaderProps]{\"Empty\": {}}\n",
+      "sha256": "b17a1a5793d7414bf0ab5ac28f63270654bebe1e12b9cf926c221ee69f3a1219"
+    },
+    {
+      "path": "ItemMedia.fixtures.go",
+      "target": "ui/item/ItemMedia.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{\"Empty\": {}}\n",
+      "sha256": "d69e24de2791f5e7ed84e6204cc044499851b91d7629d22367cb3e1d39cb6616"
+    },
+    {
+      "path": "ItemTitle.fixtures.go",
+      "target": "ui/item/ItemTitle.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemTitleFixtures = gx.Fixtures[ItemTitleProps]{\"Title\": {Children: gx.Text(\"Item title\")}}\n",
+      "sha256": "f20d4563c1c44b9f9ec207f8ce9d7e2abc7ff2b0dd2eda11985d46363383cdae"
     }
   ],
   "requiredTokens": [

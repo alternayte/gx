@@ -1,0 +1,1 @@
+{"name":"hover-card","version":"0.1.0","description":"A richer preview on hover or focus.","kind":"component","files":[{"path":"HoverCard.gx","target":"ui/hover-card/HoverCard.gx"},{"path":"HoverCard.fixtures.go","target":"ui/hover-card/HoverCard.fixtures.go"}],"requiredTokens":["--border","--popover","--popover-foreground","--muted-foreground"]}

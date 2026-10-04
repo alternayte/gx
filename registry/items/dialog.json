@@ -1,0 +1,32 @@
+{
+  "name": "dialog",
+  "version": "0.1.0",
+  "description": "A modal overlay with a trigger.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Dialog.gx",
+      "target": "ui/dialog/Dialog.gx",
+      "content": "package dialog\n\nprops {\n  Id          string\n  Title       string   = \"\"\n  Description string   = \"\"\n  Trigger     gx.Node  = nil\n  Footer      gx.Node  = nil\n  Open        bool     = false\n  Class       string   = \"\"\n  Children    gx.Node  = nil\n  Attrs       gx.Attrs = nil\n}\n\n\u003cspan class=\"contents\"\u003e\n  if p.Trigger != nil {\n    \u003cspan data-gx-open={\"#\" + p.Id} class=\"contents\"\u003e{p.Trigger}\u003c/span\u003e\n  }\n  \u003cdialog id={p.Id} open={p.Open} data-gx-dismiss class={gx.Cx(\"fixed inset-0 m-auto h-fit w-full max-w-lg rounded-xl border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50\", p.Class)} {...p.Attrs}\u003e\n    \u003cdiv class=\"flex flex-col gap-4\"\u003e\n      \u003cdiv class=\"flex items-start justify-between gap-4\"\u003e\n        \u003cdiv class=\"flex flex-col gap-1.5\"\u003e\n          if p.Title != \"\" {\n            \u003ch2 class=\"text-lg leading-none font-semibold\"\u003e{p.Title}\u003c/h2\u003e\n          }\n          if p.Description != \"\" {\n            \u003cp class=\"text-sm text-muted-foreground\"\u003e{p.Description}\u003c/p\u003e\n          }\n        \u003c/div\u003e\n        \u003cbutton type=\"button\" data-gx-close aria-label=\"Close\" class=\"rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground\"\u003e×\u003c/button\u003e\n      \u003c/div\u003e\n      if p.Children != nil {\n        \u003cdiv class=\"text-sm\"\u003e{p.Children}\u003c/div\u003e\n      }\n      if p.Footer != nil {\n        \u003cdiv class=\"flex flex-col-reverse gap-2 sm:flex-row sm:justify-end\"\u003e{p.Footer}\u003c/div\u003e\n      }\n    \u003c/div\u003e\n  \u003c/dialog\u003e\n\u003c/span\u003e\n",
+      "sha256": "963d3388db830a8e947b21449e3f681ad3a5e7e8136e360aaadb4b5a78d4e3ae"
+    },
+    {
+      "path": "Dialog.fixtures.go",
+      "target": "ui/dialog/Dialog.fixtures.go",
+      "content": "package dialog\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\nvar DialogFixtures = gx.Fixtures[DialogProps]{\n\t\"Default\": {\n\t\tId:          \"demo-dialog\",\n\t\tTitle:       \"Edit profile\",\n\t\tDescription: \"Change your display name.\",\n\t\tChildren:    gx.Text(\"Dialog body.\"),\n\t\tFooter:      button.Button(button.ButtonProps{Children: gx.Text(\"Save\")}),\n\t\tTrigger:     button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Open dialog\")}),\n\t},\n}\n",
+      "sha256": "a84e23e01d61e0d0afd4e318fe1244c9545ee5563a43724f6c155f3341094784"
+    }
+  ],
+  "registryDependencies": [
+    "button"
+  ],
+  "requiredTokens": [
+    "--border",
+    "--card",
+    "--card-foreground",
+    "--muted-foreground",
+    "--accent",
+    "--accent-foreground"
+  ],
+  "usage": "# Dialog\n\nA modal overlay with a trigger.\n\n## Usage\n\n```gx\n\u003cdialog.Dialog id=\"edit\" title=\"Edit profile\" footer={saveButton}\u003e\n  \u003c:trigger\u003e\u003cbutton.Button variant={button.Outline}\u003eOpen\u003c/button.Button\u003e\u003c/:trigger\u003e\n  \u003cp\u003eDialog body.\u003c/p\u003e\n\u003c/dialog.Dialog\u003e\n```\n\n## Do\n\n- Give every dialog a unique `Id`.\n- Put the main action in `Footer` and a close control in the corner.\n\n## Don't\n\n- Do not open a dialog from another dialog.\n- Do not put a long form in a dialog. Use a page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Enter, Space | Opens the dialog from the trigger. |\n| Tab | Cycles through the controls of the dialog. |\n| Escape | Closes the dialog. |\n"
+}

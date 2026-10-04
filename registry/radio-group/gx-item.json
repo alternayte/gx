@@ -1,1 +1,31 @@
-{"name":"radio-group","version":"0.1.0","description":"A group of exclusive choices.","kind":"component","files":[{"path":"RadioGroup.gx","target":"ui/radio-group/RadioGroup.gx"},{"path":"RadioGroupItem.gx","target":"ui/radio-group/RadioGroupItem.gx"},{"path":"RadioGroup.fixtures.go","target":"ui/radio-group/RadioGroup.fixtures.go"},{"path":"styles.go","target":"ui/radio-group/styles.go"}],"requiredTokens":["--primary"]}
+{
+  "name": "radio-group",
+  "version": "0.1.0",
+  "description": "A group of exclusive choices.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "RadioGroup.gx",
+      "target": "ui/radio-group/RadioGroup.gx"
+    },
+    {
+      "path": "RadioGroupItem.gx",
+      "target": "ui/radio-group/RadioGroupItem.gx"
+    },
+    {
+      "path": "RadioGroup.fixtures.go",
+      "target": "ui/radio-group/RadioGroup.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/radio-group/styles.go"
+    },
+    {
+      "path": "RadioGroupItem.fixtures.go",
+      "target": "ui/radio-group/RadioGroupItem.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--primary"
+  ]
+}

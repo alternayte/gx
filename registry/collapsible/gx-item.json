@@ -1,0 +1,1 @@
+{"name":"collapsible","version":"0.1.0","description":"One panel that opens on demand.","kind":"component","files":[{"path":"Collapsible.gx","target":"ui/collapsible/Collapsible.gx"},{"path":"Collapsible.fixtures.go","target":"ui/collapsible/Collapsible.fixtures.go"}]}

@@ -1,0 +1,68 @@
+{
+  "name": "sidebar",
+  "version": "0.1.0",
+  "description": "A vertical panel for the app or docs navigation.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Sidebar.gx",
+      "target": "ui/sidebar/Sidebar.gx"
+    },
+    {
+      "path": "SidebarHeader.gx",
+      "target": "ui/sidebar/SidebarHeader.gx"
+    },
+    {
+      "path": "SidebarContent.gx",
+      "target": "ui/sidebar/SidebarContent.gx"
+    },
+    {
+      "path": "SidebarFooter.gx",
+      "target": "ui/sidebar/SidebarFooter.gx"
+    },
+    {
+      "path": "SidebarGroup.gx",
+      "target": "ui/sidebar/SidebarGroup.gx"
+    },
+    {
+      "path": "SidebarItem.gx",
+      "target": "ui/sidebar/SidebarItem.gx"
+    },
+    {
+      "path": "Sidebar.fixtures.go",
+      "target": "ui/sidebar/Sidebar.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/sidebar/styles.go"
+    },
+    {
+      "path": "SidebarContent.fixtures.go",
+      "target": "ui/sidebar/SidebarContent.fixtures.go"
+    },
+    {
+      "path": "SidebarFooter.fixtures.go",
+      "target": "ui/sidebar/SidebarFooter.fixtures.go"
+    },
+    {
+      "path": "SidebarGroup.fixtures.go",
+      "target": "ui/sidebar/SidebarGroup.fixtures.go"
+    },
+    {
+      "path": "SidebarHeader.fixtures.go",
+      "target": "ui/sidebar/SidebarHeader.fixtures.go"
+    },
+    {
+      "path": "SidebarItem.fixtures.go",
+      "target": "ui/sidebar/SidebarItem.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--sidebar",
+    "--sidebar-foreground",
+    "--sidebar-accent",
+    "--sidebar-accent-foreground",
+    "--muted-foreground"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "dropdown-menu",
+  "version": "0.1.0",
+  "description": "A menu of actions behind a trigger.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "DropdownMenu.gx",
+      "target": "ui/dropdown-menu/DropdownMenu.gx"
+    },
+    {
+      "path": "DropdownMenuTrigger.gx",
+      "target": "ui/dropdown-menu/DropdownMenuTrigger.gx"
+    },
+    {
+      "path": "DropdownMenuItem.gx",
+      "target": "ui/dropdown-menu/DropdownMenuItem.gx"
+    },
+    {
+      "path": "DropdownMenuLink.gx",
+      "target": "ui/dropdown-menu/DropdownMenuLink.gx"
+    },
+    {
+      "path": "DropdownMenuSeparator.gx",
+      "target": "ui/dropdown-menu/DropdownMenuSeparator.gx"
+    },
+    {
+      "path": "DropdownMenuLabel.gx",
+      "target": "ui/dropdown-menu/DropdownMenuLabel.gx"
+    },
+    {
+      "path": "DropdownMenu.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenu.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuItem.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuItem.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuLabel.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuLabel.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuLink.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuLink.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuSeparator.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuSeparator.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuTrigger.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--muted-foreground"
+  ]
+}

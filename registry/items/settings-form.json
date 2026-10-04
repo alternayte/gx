@@ -1,0 +1,38 @@
+{
+  "name": "settings-form",
+  "version": "0.1.0",
+  "description": "A settings page block with profile and notification cards.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "SettingsForm.gx",
+      "target": "ui/settings-form/SettingsForm.gx",
+      "content": "package settingsform\n\nimport (\n\t\"github.com/alternayte/gx/registry/button\"\n\t\"github.com/alternayte/gx/registry/card\"\n\t\"github.com/alternayte/gx/registry/field\"\n\t\"github.com/alternayte/gx/registry/input\"\n\t\"github.com/alternayte/gx/registry/separator\"\n\tswitches \"github.com/alternayte/gx/registry/switch\"\n)\n\nprops {\n  Action gx.URL = \"\"\n}\n\n\u003cdiv class=\"mx-auto flex w-full max-w-2xl flex-col gap-6\"\u003e\n  \u003cform method=\"post\" action={p.Action} class=\"flex flex-col gap-6\"\u003e\n    \u003ccard.Card title=\"Profile\" description=\"Your public name and email.\"\u003e\n      \u003cdiv class=\"flex flex-col gap-4\"\u003e\n        \u003cfield.Field\u003e\n          \u003cfield.FieldLabel for=\"name\"\u003eName\u003c/field.FieldLabel\u003e\n          \u003cinput.Input id=\"name\" name=\"name\" type=\"text\" /\u003e\n        \u003c/field.Field\u003e\n        \u003cfield.Field\u003e\n          \u003cfield.FieldLabel for=\"email\"\u003eEmail\u003c/field.FieldLabel\u003e\n          \u003cinput.Input id=\"email\" name=\"email\" type=\"email\" /\u003e\n        \u003c/field.Field\u003e\n      \u003c/div\u003e\n    \u003c/card.Card\u003e\n    \u003ccard.Card title=\"Notifications\" description=\"Choose what reaches your inbox.\"\u003e\n      \u003cdiv class=\"flex flex-col gap-4\"\u003e\n        \u003cdiv class=\"flex items-center justify-between gap-4\"\u003e\n          \u003cfield.Field\u003e\n            \u003cfield.FieldLabel\u003eProduct news\u003c/field.FieldLabel\u003e\n            \u003cfield.FieldDescription\u003eOne message each month.\u003c/field.FieldDescription\u003e\n          \u003c/field.Field\u003e\n          \u003cswitches.Switch name=\"news\" /\u003e\n        \u003c/div\u003e\n        \u003cseparator.Separator /\u003e\n        \u003cdiv class=\"flex items-center justify-between gap-4\"\u003e\n          \u003cfield.Field\u003e\n            \u003cfield.FieldLabel\u003eSecurity alerts\u003c/field.FieldLabel\u003e\n            \u003cfield.FieldDescription\u003eSign-in and password changes.\u003c/field.FieldDescription\u003e\n          \u003c/field.Field\u003e\n          \u003cswitches.Switch name=\"alerts\" checked={true} /\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e\n    \u003c/card.Card\u003e\n    \u003cdiv class=\"flex justify-end\"\u003e\n      \u003cbutton.Button type=\"submit\"\u003eSave changes\u003c/button.Button\u003e\n    \u003c/div\u003e\n  \u003c/form\u003e\n\u003c/div\u003e\n",
+      "sha256": "6ffc81e5c682d73e9cd1f1d7b0aee08299883656e0d08ce19a826cbc9e2f1247"
+    },
+    {
+      "path": "SettingsForm.fixtures.go",
+      "target": "ui/settings-form/SettingsForm.fixtures.go",
+      "content": "package settingsform\n\nimport \"github.com/alternayte/gx\"\n\nvar SettingsFormFixtures = gx.Fixtures[SettingsFormProps]{\n\t\"Default\": {},\n}\n",
+      "sha256": "635ff80655925db74448f2b02834a8b5ffdfd50782d8d812520b40310c504c9f"
+    }
+  ],
+  "registryDependencies": [
+    "button",
+    "card",
+    "field",
+    "input",
+    "separator",
+    "switch"
+  ],
+  "requiredTokens": [
+    "--border",
+    "--card",
+    "--card-foreground",
+    "--muted-foreground",
+    "--input",
+    "--ring",
+    "--primary"
+  ],
+  "usage": "# Settings Form\n\nA settings page block with profile and notification cards.\n\n## Usage\n\n```gx\n\u003csettingsform.SettingsForm action=\"/settings\" /\u003e\n```\n\nThe block is copied source. Replace the raw form with a typed `gx.Form` when the app has rules for the fields.\n\n## Do\n\n- Group related settings in one card.\n- Keep the save button after the last card.\n\n## Don't\n\n- Do not save each switch on its own.\n- Do not put more than three cards on one page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between fields, switches and the save button. |\n| Space | Toggles a switch. |\n| Enter | Submits the form from a field. |\n"
+}

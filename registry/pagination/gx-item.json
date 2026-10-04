@@ -1,1 +1,74 @@
-{"name":"pagination","version":"0.1.0","description":"Links between pages of a result set.","kind":"component","files":[{"path":"Pagination.gx","target":"ui/pagination/Pagination.gx"},{"path":"PaginationContent.gx","target":"ui/pagination/PaginationContent.gx"},{"path":"PaginationItem.gx","target":"ui/pagination/PaginationItem.gx"},{"path":"PaginationLink.gx","target":"ui/pagination/PaginationLink.gx"},{"path":"PaginationPrevious.gx","target":"ui/pagination/PaginationPrevious.gx"},{"path":"PaginationNext.gx","target":"ui/pagination/PaginationNext.gx"},{"path":"PaginationEllipsis.gx","target":"ui/pagination/PaginationEllipsis.gx"},{"path":"Pagination.fixtures.go","target":"ui/pagination/Pagination.fixtures.go"},{"path":"styles.go","target":"ui/pagination/styles.go"}],"requiredTokens":["--border","--accent","--accent-foreground","--ring"]}
+{
+  "name": "pagination",
+  "version": "0.1.0",
+  "description": "Links between pages of a result set.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Pagination.gx",
+      "target": "ui/pagination/Pagination.gx"
+    },
+    {
+      "path": "PaginationContent.gx",
+      "target": "ui/pagination/PaginationContent.gx"
+    },
+    {
+      "path": "PaginationItem.gx",
+      "target": "ui/pagination/PaginationItem.gx"
+    },
+    {
+      "path": "PaginationLink.gx",
+      "target": "ui/pagination/PaginationLink.gx"
+    },
+    {
+      "path": "PaginationPrevious.gx",
+      "target": "ui/pagination/PaginationPrevious.gx"
+    },
+    {
+      "path": "PaginationNext.gx",
+      "target": "ui/pagination/PaginationNext.gx"
+    },
+    {
+      "path": "PaginationEllipsis.gx",
+      "target": "ui/pagination/PaginationEllipsis.gx"
+    },
+    {
+      "path": "Pagination.fixtures.go",
+      "target": "ui/pagination/Pagination.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/pagination/styles.go"
+    },
+    {
+      "path": "PaginationContent.fixtures.go",
+      "target": "ui/pagination/PaginationContent.fixtures.go"
+    },
+    {
+      "path": "PaginationEllipsis.fixtures.go",
+      "target": "ui/pagination/PaginationEllipsis.fixtures.go"
+    },
+    {
+      "path": "PaginationItem.fixtures.go",
+      "target": "ui/pagination/PaginationItem.fixtures.go"
+    },
+    {
+      "path": "PaginationLink.fixtures.go",
+      "target": "ui/pagination/PaginationLink.fixtures.go"
+    },
+    {
+      "path": "PaginationNext.fixtures.go",
+      "target": "ui/pagination/PaginationNext.fixtures.go"
+    },
+    {
+      "path": "PaginationPrevious.fixtures.go",
+      "target": "ui/pagination/PaginationPrevious.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--accent",
+    "--accent-foreground",
+    "--ring"
+  ]
+}

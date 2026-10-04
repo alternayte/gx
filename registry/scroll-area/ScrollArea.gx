@@ -1,0 +1,9 @@
+package scrollarea
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("relative overflow-auto", p.Class)} style={gx.Style("scrollbar-width: thin")} {...p.Attrs}>{p.Children}</div>

@@ -1,10 +1,28 @@
 {
   "items": [
     {
+      "name": "accordion",
+      "version": "0.1.0",
+      "description": "A stack of panels that open one at a time.",
+      "kind": "component"
+    },
+    {
       "name": "alert",
       "version": "0.1.0",
       "description": "A callout for an important message.",
       "kind": "component"
+    },
+    {
+      "name": "alert-dialog",
+      "version": "0.1.0",
+      "description": "A modal that asks for a decision.",
+      "kind": "component"
+    },
+    {
+      "name": "app-shell",
+      "version": "0.1.0",
+      "description": "An app page frame with a sidebar, a header and a main area.",
+      "kind": "block"
     },
     {
       "name": "aspect-ratio",
@@ -55,6 +73,30 @@
       "kind": "component"
     },
     {
+      "name": "collapsible",
+      "version": "0.1.0",
+      "description": "One panel that opens on demand.",
+      "kind": "component"
+    },
+    {
+      "name": "context-menu",
+      "version": "0.1.0",
+      "description": "A menu that opens on a right click.",
+      "kind": "component"
+    },
+    {
+      "name": "data-table-page",
+      "version": "0.1.0",
+      "description": "A page frame for a server-driven data table.",
+      "kind": "block"
+    },
+    {
+      "name": "dialog",
+      "version": "0.1.0",
+      "description": "A modal overlay with a trigger.",
+      "kind": "component"
+    },
+    {
       "name": "docs",
       "version": "0.1.0",
       "description": "The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks.",
@@ -67,6 +109,18 @@
       "kind": "block"
     },
     {
+      "name": "drawer",
+      "version": "0.1.0",
+      "description": "A bottom panel for a short task.",
+      "kind": "component"
+    },
+    {
+      "name": "dropdown-menu",
+      "version": "0.1.0",
+      "description": "A menu of actions behind a trigger.",
+      "kind": "component"
+    },
+    {
       "name": "empty",
       "version": "0.1.0",
       "description": "A placeholder for an empty result.",
@@ -76,6 +130,12 @@
       "name": "field",
       "version": "0.1.0",
       "description": "Layout and labels for one form field.",
+      "kind": "component"
+    },
+    {
+      "name": "hover-card",
+      "version": "0.1.0",
+      "description": "A richer preview on hover or focus.",
       "kind": "component"
     },
     {
@@ -109,9 +169,33 @@
       "kind": "component"
     },
     {
+      "name": "login",
+      "version": "0.1.0",
+      "description": "A sign-in page block with a form and a brand panel.",
+      "kind": "block"
+    },
+    {
+      "name": "menubar",
+      "version": "0.1.0",
+      "description": "A horizontal bar of menu actions.",
+      "kind": "component"
+    },
+    {
+      "name": "navigation-menu",
+      "version": "0.1.0",
+      "description": "A row of primary links.",
+      "kind": "component"
+    },
+    {
       "name": "pagination",
       "version": "0.1.0",
       "description": "Links between pages of a result set.",
+      "kind": "component"
+    },
+    {
+      "name": "popover",
+      "version": "0.1.0",
+      "description": "A small panel anchored to a trigger.",
       "kind": "component"
     },
     {
@@ -127,15 +211,57 @@
       "kind": "component"
     },
     {
+      "name": "scroll-area",
+      "version": "0.1.0",
+      "description": "A box with a styled scrollbar.",
+      "kind": "component"
+    },
+    {
+      "name": "select",
+      "version": "0.1.0",
+      "description": "A native list of exclusive choices.",
+      "kind": "component"
+    },
+    {
       "name": "separator",
       "version": "0.1.0",
       "description": "A visual divider between content.",
       "kind": "component"
     },
     {
+      "name": "settings-form",
+      "version": "0.1.0",
+      "description": "A settings page block with profile and notification cards.",
+      "kind": "block"
+    },
+    {
+      "name": "sheet",
+      "version": "0.1.0",
+      "description": "A panel that slides in from an edge.",
+      "kind": "component"
+    },
+    {
+      "name": "sidebar",
+      "version": "0.1.0",
+      "description": "A vertical panel for the app or docs navigation.",
+      "kind": "component"
+    },
+    {
+      "name": "signup",
+      "version": "0.1.0",
+      "description": "A sign-up page block with fields, terms and a brand panel.",
+      "kind": "block"
+    },
+    {
       "name": "skeleton",
       "version": "0.1.0",
       "description": "A placeholder while content loads.",
+      "kind": "component"
+    },
+    {
+      "name": "slider",
+      "version": "0.1.0",
+      "description": "A native range control.",
       "kind": "component"
     },
     {
@@ -157,9 +283,39 @@
       "kind": "component"
     },
     {
+      "name": "tabs",
+      "version": "0.1.0",
+      "description": "Exclusive panels behind a row of tab buttons.",
+      "kind": "component"
+    },
+    {
       "name": "textarea",
       "version": "0.1.0",
       "description": "A multi-line text control.",
+      "kind": "component"
+    },
+    {
+      "name": "toast",
+      "version": "0.1.0",
+      "description": "A region for server-pushed toasts.",
+      "kind": "component"
+    },
+    {
+      "name": "toggle",
+      "version": "0.1.0",
+      "description": "A two-state button.",
+      "kind": "component"
+    },
+    {
+      "name": "toggle-group",
+      "version": "0.1.0",
+      "description": "A segmented control of exclusive choices.",
+      "kind": "component"
+    },
+    {
+      "name": "tooltip",
+      "version": "0.1.0",
+      "description": "A short hint on hover or focus.",
       "kind": "component"
     }
   ]

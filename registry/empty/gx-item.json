@@ -1,1 +1,67 @@
-{"name":"empty","version":"0.1.0","description":"A placeholder for an empty result.","kind":"component","files":[{"path":"Empty.gx","target":"ui/empty/Empty.gx"},{"path":"EmptyHeader.gx","target":"ui/empty/EmptyHeader.gx"},{"path":"EmptyTitle.gx","target":"ui/empty/EmptyTitle.gx"},{"path":"EmptyDescription.gx","target":"ui/empty/EmptyDescription.gx"},{"path":"EmptyContent.gx","target":"ui/empty/EmptyContent.gx"},{"path":"EmptyMedia.gx","target":"ui/empty/EmptyMedia.gx"},{"path":"Empty.fixtures.go","target":"ui/empty/Empty.fixtures.go"},{"path":"styles.go","target":"ui/empty/styles.go"}],"requiredTokens":["--border","--muted","--muted-foreground","--primary","--foreground"]}
+{
+  "name": "empty",
+  "version": "0.1.0",
+  "description": "A placeholder for an empty result.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Empty.gx",
+      "target": "ui/empty/Empty.gx"
+    },
+    {
+      "path": "EmptyHeader.gx",
+      "target": "ui/empty/EmptyHeader.gx"
+    },
+    {
+      "path": "EmptyTitle.gx",
+      "target": "ui/empty/EmptyTitle.gx"
+    },
+    {
+      "path": "EmptyDescription.gx",
+      "target": "ui/empty/EmptyDescription.gx"
+    },
+    {
+      "path": "EmptyContent.gx",
+      "target": "ui/empty/EmptyContent.gx"
+    },
+    {
+      "path": "EmptyMedia.gx",
+      "target": "ui/empty/EmptyMedia.gx"
+    },
+    {
+      "path": "Empty.fixtures.go",
+      "target": "ui/empty/Empty.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/empty/styles.go"
+    },
+    {
+      "path": "EmptyContent.fixtures.go",
+      "target": "ui/empty/EmptyContent.fixtures.go"
+    },
+    {
+      "path": "EmptyDescription.fixtures.go",
+      "target": "ui/empty/EmptyDescription.fixtures.go"
+    },
+    {
+      "path": "EmptyHeader.fixtures.go",
+      "target": "ui/empty/EmptyHeader.fixtures.go"
+    },
+    {
+      "path": "EmptyMedia.fixtures.go",
+      "target": "ui/empty/EmptyMedia.fixtures.go"
+    },
+    {
+      "path": "EmptyTitle.fixtures.go",
+      "target": "ui/empty/EmptyTitle.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--muted",
+    "--muted-foreground",
+    "--primary",
+    "--foreground"
+  ]
+}

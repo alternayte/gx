@@ -1,0 +1,95 @@
+{
+  "name": "sidebar",
+  "version": "0.1.0",
+  "description": "A vertical panel for the app or docs navigation.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Sidebar.gx",
+      "target": "ui/sidebar/Sidebar.gx",
+      "content": "package sidebar\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003caside id={p.Id} data-gx-sidebar class={gx.Cx(\"flex w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/aside\u003e\n",
+      "sha256": "4ae8d16f02bf1def163fdbfbcf36c19e0c4ba91ae8049c59777b8edcc8084504"
+    },
+    {
+      "path": "SidebarHeader.gx",
+      "target": "ui/sidebar/SidebarHeader.gx",
+      "content": "package sidebar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex items-center gap-2 p-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "f1827943255ea06b52f50cd75f144e4595791681ccdda6f7bd3275a45ae7e56a"
+    },
+    {
+      "path": "SidebarContent.gx",
+      "target": "ui/sidebar/SidebarContent.gx",
+      "content": "package sidebar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex-1 overflow-y-auto p-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "499fd7ed05b10515c118073dc55f90952f32e577bafda40acb2bb255680ec4f5"
+    },
+    {
+      "path": "SidebarFooter.gx",
+      "target": "ui/sidebar/SidebarFooter.gx",
+      "content": "package sidebar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"mt-auto p-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "854ab688be197ad37b939f2c76ad7ce05958f5b471bd0450c8c48051858003b2"
+    },
+    {
+      "path": "SidebarGroup.gx",
+      "target": "ui/sidebar/SidebarGroup.gx",
+      "content": "package sidebar\n\nprops {\n  Title    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex flex-col gap-1 py-2\", p.Class)} {...p.Attrs}\u003e\n  if p.Title != \"\" {\n    \u003cp class=\"px-2 text-xs font-medium text-muted-foreground\"\u003e{p.Title}\u003c/p\u003e\n  }\n  {p.Children}\n\u003c/div\u003e\n",
+      "sha256": "d3cd852a9f9ee69fdca71f5654c75833c891528057adc651738867b87f0ee0c7"
+    },
+    {
+      "path": "SidebarItem.gx",
+      "target": "ui/sidebar/SidebarItem.gx",
+      "content": "package sidebar\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} aria-current={p.current()} class={gx.Cx(\"flex items-center gap-2 rounded-md px-2 py-1.5 text-sm no-underline transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "536b58ab168f4b1afbb4cda9d14bd3e6235fdbf3a6f9771c11c6595a6e315c56"
+    },
+    {
+      "path": "Sidebar.fixtures.go",
+      "target": "ui/sidebar/Sidebar.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarFixtures = gx.Fixtures[SidebarProps]{\n\t\"Full\": {Id: \"demo-sidebar\", Class: \"h-72\", Children: gx.Frag(\n\t\tSidebarHeader(SidebarHeaderProps{Children: gx.Text(\"Gx\")}),\n\t\tSidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Title: \"Menu\", Children: gx.Frag(\n\t\t\tSidebarItem(SidebarItemProps{Href: gx.URL(\"/\"), Active: true, Children: gx.Text(\"Home\")}),\n\t\t\tSidebarItem(SidebarItemProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t\t)})}),\n\t\tSidebarFooter(SidebarFooterProps{Children: gx.Text(\"v0.1.0\")}),\n\t)},\n\t\"Hidden\": {Id: \"demo-sidebar-hidden\", Attrs: gx.Attrs{gx.Bool(\"hidden\", true)}},\n}\n",
+      "sha256": "3496c7bb6ee1e4cbe02f67cb8fa14a267baf36e1bee21b139e5f1db89e5cc42a"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/sidebar/styles.go",
+      "content": "package sidebar\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-sidebar-accent font-medium text-sidebar-accent-foreground\",\n\tfalse: \"text-sidebar-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p SidebarItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
+      "sha256": "67503340679a7112723c34e3e3bee63d9d06c6838cf5930c483d1fb6cd168c73"
+    },
+    {
+      "path": "SidebarContent.fixtures.go",
+      "target": "ui/sidebar/SidebarContent.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarContentFixtures = gx.Fixtures[SidebarContentProps]{\"Empty\": {}}\n",
+      "sha256": "0495918e94149f50960693231d3d5f216f91b06e07e9058d24d4d7cb7b53726d"
+    },
+    {
+      "path": "SidebarFooter.fixtures.go",
+      "target": "ui/sidebar/SidebarFooter.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarFooterFixtures = gx.Fixtures[SidebarFooterProps]{\"Empty\": {}}\n",
+      "sha256": "ec7da04800836a40b2b1923937a618c42448c2cbc49a3b041285ec3f7fc8b520"
+    },
+    {
+      "path": "SidebarGroup.fixtures.go",
+      "target": "ui/sidebar/SidebarGroup.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{\"Group\": {Title: \"Menu\", Children: gx.Text(\"Items\")}}\n",
+      "sha256": "8af214259769c39b00004e6960518dced5608fd348388c5b6e3ea5d2d245c3cb"
+    },
+    {
+      "path": "SidebarHeader.fixtures.go",
+      "target": "ui/sidebar/SidebarHeader.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarHeaderFixtures = gx.Fixtures[SidebarHeaderProps]{\"Empty\": {}}\n",
+      "sha256": "669980f0deeb773f1e30ea1fbf7a3f861561d11fcccb1c31eb2220e715527089"
+    },
+    {
+      "path": "SidebarItem.fixtures.go",
+      "target": "ui/sidebar/SidebarItem.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarItemFixtures = gx.Fixtures[SidebarItemProps]{\"Item\": {Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")}}\n",
+      "sha256": "1e94c6275b1dd49cbb8bc2111205ca4e7caabedd19d7b0f835667a184d9d6f4d"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--sidebar",
+    "--sidebar-foreground",
+    "--sidebar-accent",
+    "--sidebar-accent-foreground",
+    "--muted-foreground"
+  ],
+  "usage": "# Sidebar\n\nA vertical panel for the app or docs navigation.\n\n## Usage\n\n```gx\n\u003csidebar.Sidebar id=\"gx-sidebar\"\u003e\n  \u003csidebar.SidebarHeader\u003eGx\u003c/sidebar.SidebarHeader\u003e\n  \u003csidebar.SidebarContent\u003e\n    \u003csidebar.SidebarGroup title=\"Menu\"\u003e\n      \u003csidebar.SidebarItem href={gx.URL(\"/\")} active={true}\u003eHome\u003c/sidebar.SidebarItem\u003e\n    \u003c/sidebar.SidebarGroup\u003e\n  \u003c/sidebar.SidebarContent\u003e\n\u003c/sidebar.Sidebar\u003e\n```\n\nPair the sidebar with a button that carries `data-gx-menu` and `aria-controls` set to the sidebar id.\n\n## Do\n\n- Give the sidebar the id `gx-sidebar` when it pairs with the shell menu button.\n- Keep groups short.\n\n## Don't\n\n- Do not put a second sidebar on one page.\n- Do not hide the sidebar on a wide screen.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the items. |\n| Enter | Follows the focused link. |\n"
+}

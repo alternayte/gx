@@ -1,0 +1,1 @@
+{"name":"tooltip","version":"0.1.0","description":"A short hint on hover or focus.","kind":"component","files":[{"path":"Tooltip.gx","target":"ui/tooltip/Tooltip.gx"},{"path":"Tooltip.fixtures.go","target":"ui/tooltip/Tooltip.fixtures.go"},{"path":"styles.go","target":"ui/tooltip/styles.go"}],"requiredTokens":["--primary","--primary-foreground"]}

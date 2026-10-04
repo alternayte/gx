@@ -1,1 +1,50 @@
-{"name":"input-group","version":"0.1.0","description":"An input with an addon or a text prefix.","kind":"component","files":[{"path":"InputGroup.gx","target":"ui/input-group/InputGroup.gx"},{"path":"InputGroupAddon.gx","target":"ui/input-group/InputGroupAddon.gx"},{"path":"InputGroupInput.gx","target":"ui/input-group/InputGroupInput.gx"},{"path":"InputGroupText.gx","target":"ui/input-group/InputGroupText.gx"},{"path":"InputGroup.fixtures.go","target":"ui/input-group/InputGroup.fixtures.go"},{"path":"styles.go","target":"ui/input-group/styles.go"}],"requiredTokens":["--input","--ring","--muted-foreground","--destructive"]}
+{
+  "name": "input-group",
+  "version": "0.1.0",
+  "description": "An input with an addon or a text prefix.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "InputGroup.gx",
+      "target": "ui/input-group/InputGroup.gx"
+    },
+    {
+      "path": "InputGroupAddon.gx",
+      "target": "ui/input-group/InputGroupAddon.gx"
+    },
+    {
+      "path": "InputGroupInput.gx",
+      "target": "ui/input-group/InputGroupInput.gx"
+    },
+    {
+      "path": "InputGroupText.gx",
+      "target": "ui/input-group/InputGroupText.gx"
+    },
+    {
+      "path": "InputGroup.fixtures.go",
+      "target": "ui/input-group/InputGroup.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/input-group/styles.go"
+    },
+    {
+      "path": "InputGroupAddon.fixtures.go",
+      "target": "ui/input-group/InputGroupAddon.fixtures.go"
+    },
+    {
+      "path": "InputGroupInput.fixtures.go",
+      "target": "ui/input-group/InputGroupInput.fixtures.go"
+    },
+    {
+      "path": "InputGroupText.fixtures.go",
+      "target": "ui/input-group/InputGroupText.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring",
+    "--muted-foreground",
+    "--destructive"
+  ]
+}

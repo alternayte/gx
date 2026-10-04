@@ -1,0 +1,28 @@
+{
+  "name": "accordion",
+  "version": "0.1.0",
+  "description": "A stack of panels that open one at a time.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Accordion.gx",
+      "target": "ui/accordion/Accordion.gx"
+    },
+    {
+      "path": "AccordionItem.gx",
+      "target": "ui/accordion/AccordionItem.gx"
+    },
+    {
+      "path": "Accordion.fixtures.go",
+      "target": "ui/accordion/Accordion.fixtures.go"
+    },
+    {
+      "path": "AccordionItem.fixtures.go",
+      "target": "ui/accordion/AccordionItem.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--muted-foreground"
+  ]
+}

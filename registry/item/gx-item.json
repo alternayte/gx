@@ -1,1 +1,78 @@
-{"name":"item","version":"0.1.0","description":"A row for one entry in a list.","kind":"component","files":[{"path":"Item.gx","target":"ui/item/Item.gx"},{"path":"ItemMedia.gx","target":"ui/item/ItemMedia.gx"},{"path":"ItemContent.gx","target":"ui/item/ItemContent.gx"},{"path":"ItemTitle.gx","target":"ui/item/ItemTitle.gx"},{"path":"ItemDescription.gx","target":"ui/item/ItemDescription.gx"},{"path":"ItemActions.gx","target":"ui/item/ItemActions.gx"},{"path":"ItemHeader.gx","target":"ui/item/ItemHeader.gx"},{"path":"ItemFooter.gx","target":"ui/item/ItemFooter.gx"},{"path":"Item.fixtures.go","target":"ui/item/Item.fixtures.go"}],"requiredTokens":["--border","--ring","--accent","--muted-foreground"]}
+{
+  "name": "item",
+  "version": "0.1.0",
+  "description": "A row for one entry in a list.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Item.gx",
+      "target": "ui/item/Item.gx"
+    },
+    {
+      "path": "ItemMedia.gx",
+      "target": "ui/item/ItemMedia.gx"
+    },
+    {
+      "path": "ItemContent.gx",
+      "target": "ui/item/ItemContent.gx"
+    },
+    {
+      "path": "ItemTitle.gx",
+      "target": "ui/item/ItemTitle.gx"
+    },
+    {
+      "path": "ItemDescription.gx",
+      "target": "ui/item/ItemDescription.gx"
+    },
+    {
+      "path": "ItemActions.gx",
+      "target": "ui/item/ItemActions.gx"
+    },
+    {
+      "path": "ItemHeader.gx",
+      "target": "ui/item/ItemHeader.gx"
+    },
+    {
+      "path": "ItemFooter.gx",
+      "target": "ui/item/ItemFooter.gx"
+    },
+    {
+      "path": "Item.fixtures.go",
+      "target": "ui/item/Item.fixtures.go"
+    },
+    {
+      "path": "ItemActions.fixtures.go",
+      "target": "ui/item/ItemActions.fixtures.go"
+    },
+    {
+      "path": "ItemContent.fixtures.go",
+      "target": "ui/item/ItemContent.fixtures.go"
+    },
+    {
+      "path": "ItemDescription.fixtures.go",
+      "target": "ui/item/ItemDescription.fixtures.go"
+    },
+    {
+      "path": "ItemFooter.fixtures.go",
+      "target": "ui/item/ItemFooter.fixtures.go"
+    },
+    {
+      "path": "ItemHeader.fixtures.go",
+      "target": "ui/item/ItemHeader.fixtures.go"
+    },
+    {
+      "path": "ItemMedia.fixtures.go",
+      "target": "ui/item/ItemMedia.fixtures.go"
+    },
+    {
+      "path": "ItemTitle.fixtures.go",
+      "target": "ui/item/ItemTitle.fixtures.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--ring",
+    "--accent",
+    "--muted-foreground"
+  ]
+}

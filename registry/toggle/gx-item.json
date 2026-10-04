@@ -1,0 +1,1 @@
+{"name":"toggle","version":"0.1.0","description":"A two-state button.","kind":"component","files":[{"path":"Toggle.gx","target":"ui/toggle/Toggle.gx"},{"path":"Toggle.fixtures.go","target":"ui/toggle/Toggle.fixtures.go"}],"requiredTokens":["--muted","--accent","--accent-foreground","--ring","--foreground"]}
