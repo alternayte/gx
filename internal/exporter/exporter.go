@@ -18,6 +18,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/pagefind"
@@ -38,10 +39,11 @@ type Options struct {
 	Index func(ctx context.Context, root, siteDir string) error
 }
 
-// Manifest is the dev-only export listing (REQ-EXP-01).
+// Manifest is the dev-only export listing (REQ-EXP-01, REQ-CNT-08).
 type Manifest struct {
-	Paths  []string `json:"paths"`
-	Assets []string `json:"assets"`
+	Paths  []string         `json:"paths"`
+	Assets []string         `json:"assets"`
+	LLMS   *gx.LLMSManifest `json:"llms"`
 }
 
 // Result carries the exported pages for the follow-up writers
@@ -55,6 +57,8 @@ type Result struct {
 	Assets []string
 	// NotFound is the rendered 404 page.
 	NotFound []byte
+	// LLMS is the llms.txt manifest of the app, when it has one.
+	LLMS *gx.LLMSManifest
 }
 
 // Export builds and renders the app into opt.Out (REQ-EXP-01).
@@ -151,6 +155,10 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 			return nil, err
 		}
 	}
+	if err := writeLLMS(out, manifest.LLMS); err != nil {
+		return nil, err
+	}
+	res.LLMS = manifest.LLMS
 	index := opt.Index
 	if index == nil {
 		index = func(ctx context.Context, root, siteDir string) error {
@@ -182,6 +190,8 @@ func buildApp(ctx context.Context, dir, mainPkg, bin string, log io.Writer) erro
 	}
 	cmd := exec.CommandContext(ctx, "go", "build", "-tags", "gxdev", "-o", bin, mainPkg)
 	cmd.Dir = dir
+	// A fresh module may need to record the gx dependency graph.
+	cmd.Env = append(os.Environ(), "GOFLAGS=-mod=mod")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("gx export: build: %w\n%s", err, out)
@@ -330,4 +340,66 @@ func freePort() (int, error) {
 	}
 	defer l.Close()
 	return l.Addr().(*net.TCPAddr).Port, nil
+}
+
+// writeLLMS writes llms.txt, llms-full.txt, llms-small.txt and a raw .md
+// copy of every page (REQ-CNT-08).
+func writeLLMS(out string, m *gx.LLMSManifest) error {
+	if m == nil || len(m.Entries) == 0 {
+		return nil
+	}
+	var index strings.Builder
+	fmt.Fprintf(&index, "# %s\n\n", m.Site)
+	if m.Summary != "" {
+		fmt.Fprintf(&index, "> %s\n\n", m.Summary)
+	}
+	for _, e := range m.Entries {
+		if e.Skip {
+			continue
+		}
+		fmt.Fprintf(&index, "- [%s](%s)", e.Title, e.Path)
+		if e.Description != "" {
+			fmt.Fprintf(&index, ": %s", e.Description)
+		}
+		index.WriteString("\n")
+	}
+	var full strings.Builder
+	fmt.Fprintf(&full, "# %s\n\n", m.Site)
+	if m.Summary != "" {
+		fmt.Fprintf(&full, "> %s\n\n", m.Summary)
+	}
+	var small strings.Builder
+	fmt.Fprintf(&small, "# %s\n\n", m.Site)
+	for _, e := range m.Entries {
+		if e.Skip {
+			continue
+		}
+		fmt.Fprintf(&full, "---\n\n# %s\n\n%s\n\n", e.Title, strings.TrimSpace(e.Body))
+		fmt.Fprintf(&small, "- [%s](%s)\n", e.Title, e.Path)
+	}
+	files := map[string]string{
+		"llms.txt":       index.String(),
+		"llms-full.txt":  full.String(),
+		"llms-small.txt": small.String(),
+	}
+	for name, body := range files {
+		if err := os.WriteFile(filepath.Join(out, name), []byte(body), 0o644); err != nil {
+			return err
+		}
+	}
+	// A raw Markdown copy of every page, skipped pages included.
+	for _, e := range m.Entries {
+		rel := strings.Trim(e.Path, "/")
+		if rel == "" {
+			rel = "index"
+		}
+		full := filepath.Join(out, filepath.FromSlash(rel)+".md")
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(full, []byte(strings.TrimSpace(e.Body)+"\n"), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
 }

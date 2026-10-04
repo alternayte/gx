@@ -62,10 +62,26 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 	if len(Stylesheet()) > 0 {
 		assets = append(assets, "/_gx/app.css")
 	}
+	var llms LLMSManifest
+	for _, route := range a.routes {
+		src, ok := route.handler.(interface{ llmsManifest() LLMSManifest })
+		if !ok {
+			continue
+		}
+		m := src.llmsManifest()
+		if llms.Site == "" {
+			llms.Site = m.Site
+		}
+		if llms.Summary == "" {
+			llms.Summary = m.Summary
+		}
+		llms.Entries = append(llms.Entries, m.Entries...)
+	}
 	out := struct {
-		Paths  []string `json:"paths"`
-		Assets []string `json:"assets"`
-	}{Paths: paths, Assets: assets}
+		Paths  []string     `json:"paths"`
+		Assets []string     `json:"assets"`
+		LLMS   LLMSManifest `json:"llms"`
+	}{Paths: paths, Assets: assets, LLMS: llms}
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(out)
 }

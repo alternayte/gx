@@ -34,6 +34,7 @@ func Fixtures() []gx.Fixture {
 		{Component: "Hero", Name: "Title", Node: func() gx.Node { return docs.Hero(docs.HeroFixtures["Title"]) }},
 		{Component: "Icon", Name: "Decorative", Node: func() gx.Node { return docs.Icon(docs.IconFixtures["Decorative"]) }},
 		{Component: "Icon", Name: "Labelled", Node: func() gx.Node { return docs.Icon(docs.IconFixtures["Labelled"]) }},
+		{Component: "LLMSkip", Name: "Default", Node: func() gx.Node { return docs.LLMSkip(docs.LLMSkipFixtures["Default"]) }},
 		{Component: "LinkButton", Name: "Ghost", Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Ghost"]) }},
 		{Component: "LinkButton", Name: "Outline", Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Outline"]) }},
 		{Component: "LinkButton", Name: "Primary", Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Primary"]) }},

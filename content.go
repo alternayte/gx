@@ -204,33 +204,41 @@ func (p ContentPage) URL() string {
 	return "/" + p.Slug + "/"
 }
 
+// ContentRoute serves one content collection (REQ-CNT-02) and carries the
+// configuration of the llms.txt export (REQ-CNT-08).
+type ContentRoute[Meta any] struct {
+	coll *collection[Meta]
+	view func(Entry[Meta]) Node
+	llms *LLMSOptions[Meta]
+}
+
 // ContentPages makes the content route of the collection (REQ-CNT-02): one
 // URL per entry under "/{slug...}". view builds the page from the typed
 // frontmatter and the raw Markdown body; the docs kit renders the body.
-func ContentPages[Meta any](c *collection[Meta], view func(Meta, []byte) Node) Handler {
+func ContentPages[Meta any](c *collection[Meta], view func(Meta, []byte) Node) *ContentRoute[Meta] {
 	return ContentEntries(c, func(e Entry[Meta]) Node { return view(e.Meta, e.Body) })
 }
 
 // ContentEntries makes one route per entry and passes the whole Entry to
 // view (REQ-CNT-06). The docs shell needs the slug to build links, the
 // table of contents and the previous and next pages.
-func ContentEntries[Meta any](c *collection[Meta], view func(Entry[Meta]) Node) Handler {
-	return &contentEntryPages[Meta]{coll: c, view: view}
+func ContentEntries[Meta any](c *collection[Meta], view func(Entry[Meta]) Node) *ContentRoute[Meta] {
+	return &ContentRoute[Meta]{coll: c, view: view}
 }
 
-// contentEntryPages serves every entry of one collection.
-type contentEntryPages[Meta any] struct {
-	coll *collection[Meta]
-	view func(Entry[Meta]) Node
+// LLMS configures the llms.txt files of this collection (REQ-CNT-08).
+func (h *ContentRoute[Meta]) LLMS(opt LLMSOptions[Meta]) *ContentRoute[Meta] {
+	h.llms = &opt
+	return h
 }
 
 // Pattern implements Handler (REQ-CNT-02). The trailing wildcard serves a
 // nested entry slug ("guides/routing") as one path.
-func (h *contentEntryPages[Meta]) Pattern() string { return "/{slug...}" }
+func (h *ContentRoute[Meta]) Pattern() string { return "/{slug...}" }
 
 // ServeHTTP renders the entry named by the path value. The empty slug is
 // the collection index (REQ-CNT-06).
-func (h *contentEntryPages[Meta]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *ContentRoute[Meta]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug")
 	if slug == "" {
 		slug = "index"
@@ -247,14 +255,36 @@ func (h *contentEntryPages[Meta]) ServeHTTP(w http.ResponseWriter, r *http.Reque
 }
 
 // hasStatic implements the export source (REQ-CNT-02, REQ-EXP-01).
-func (h *contentEntryPages[Meta]) hasStatic() bool { return true }
+func (h *ContentRoute[Meta]) hasStatic() bool { return true }
 
 // staticInputs returns every entry slug for the static export.
-func (h *contentEntryPages[Meta]) staticInputs() ([]any, error) {
+func (h *ContentRoute[Meta]) staticInputs() ([]any, error) {
 	entries := h.coll.Entries()
 	out := make([]any, 0, len(entries))
 	for _, e := range entries {
 		out = append(out, ContentPage{Slug: e.Slug})
 	}
 	return out, nil
+}
+
+// llmsManifest implements the export manifest source (REQ-CNT-08).
+func (h *ContentRoute[Meta]) llmsManifest() LLMSManifest {
+	if h.llms == nil {
+		return LLMSManifest{}
+	}
+	m := LLMSManifest{Site: h.llms.Site, Summary: h.llms.Summary}
+	for _, e := range h.coll.Entries() {
+		entry := LLMSEntry{Path: string(ContentPage{Slug: e.Slug}.URL()), Body: stripLLMSkip(string(e.Body))}
+		if h.llms.Title != nil {
+			entry.Title = h.llms.Title(e.Meta)
+		}
+		if h.llms.Description != nil {
+			entry.Description = h.llms.Description(e.Meta)
+		}
+		if h.llms.Skip != nil {
+			entry.Skip = h.llms.Skip(e.Meta)
+		}
+		m.Entries = append(m.Entries, entry)
+	}
+	return m
 }

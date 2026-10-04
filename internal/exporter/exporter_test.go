@@ -80,3 +80,73 @@ func TestREQ_EXP_01_StaticExport(t *testing.T) {
 		t.Fatalf("index ran on %q, want %q", indexed, out)
 	}
 }
+
+// TestREQ_CNT_08_LLMS covers the llms.txt export: the three files, the raw
+// .md copy of every page, a page skipped through frontmatter and a section
+// removed with <docs.LLMSkip> (REQ-CNT-08).
+func TestREQ_CNT_08_LLMS(t *testing.T) {
+	mod := "module app\n\ngo 1.25.0\n\nrequire github.com/alternayte/gx v0.0.0\n\nreplace github.com/alternayte/gx => " + filepath.ToSlash(repoRoot(t)) + "\n"
+	dir := writeTree(t, map[string]string{
+		"go.mod":                 mod,
+		"content/docs/index.md":  "---\ntitle: Home\ndescription: The docs home.\n---\n\n# Home\n\nStart here.\n",
+		"content/docs/start.md":  "---\ntitle: Introduction\ndescription: Start here.\n---\n\n# Introduction\n\nWelcome.\n\n<docs.LLMSkip>\nSecret setup text.\n</docs.LLMSkip>\n\nMore text.\n",
+		"content/docs/hidden.md": "---\ntitle: Hidden\ndescription: Not for models.\nllms: skip\n---\n\n# Hidden\n\nHidden body.\n",
+		"products/content.go":    "package products\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/content\"\n)\n\ntype DocMeta struct {\n\tTitle       string `yaml:\"title\"`\n\tDescription string `yaml:\"description\"`\n\tLLMS        string `yaml:\"llms\"`\n}\n\nvar Docs = gx.Collection[DocMeta](\"content/docs\")\n\nfunc View(e gx.Entry[DocMeta]) gx.Node {\n\treturn gx.El(\"h1\", nil, gx.Text(e.Meta.Title))\n}\n\nvar Routes = gx.Collect(gx.ContentEntries(Docs, View).LLMS(gx.LLMSOptions[DocMeta]{\n\tSite:        \"Deedbox\",\n\tSummary:     \"Event sourcing docs.\",\n\tTitle:       func(m DocMeta) string { return m.Title },\n\tDescription: func(m DocMeta) string { return m.Description },\n\tSkip:        func(m DocMeta) bool { return m.LLMS == \"skip\" },\n}))\n\nfunc init() { content.Install() }\n",
+		"main.go":                "package main\n\nimport (\n\t\"net/http\"\n\t\"os\"\n\n\t\"github.com/alternayte/gx\"\n\t\"app/products\"\n)\n\nfunc main() {\n\tapp := gx.New(gx.Config{})\n\tapp.Group(\"/\", products.Routes)\n\t_ = http.ListenAndServe(os.Getenv(\"GX_DEV_ADDR\"), app)\n}\n",
+	})
+	out := filepath.Join(dir, "dist")
+	_, err := exporter.Export(context.Background(), exporter.Options{
+		Dir:  dir,
+		Out:  out,
+		Main: ".",
+		Index: func(ctx context.Context, root, siteDir string) error {
+			return nil
+		},
+	})
+	if err != nil {
+		t.Fatalf("Export: %v", err)
+	}
+	read := func(name string) string {
+		t.Helper()
+		data, err := os.ReadFile(filepath.Join(out, filepath.FromSlash(name)))
+		if err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+		return string(data)
+	}
+	llms := read("llms.txt")
+	for _, want := range []string{"# Deedbox", "> Event sourcing docs.", "- [Introduction](/start/): Start here."} {
+		if !strings.Contains(llms, want) {
+			t.Errorf("llms.txt lacks %q:\n%s", want, llms)
+		}
+	}
+	if strings.Contains(llms, "Hidden") {
+		t.Errorf("llms.txt holds the skipped page:\n%s", llms)
+	}
+	full := read("llms-full.txt")
+	for _, want := range []string{"Welcome.", "More text."} {
+		if !strings.Contains(full, want) {
+			t.Errorf("llms-full.txt lacks %q:\n%s", want, full)
+		}
+	}
+	for _, bad := range []string{"Secret setup text.", "Hidden body."} {
+		if strings.Contains(full, bad) {
+			t.Errorf("llms-full.txt holds %q:\n%s", bad, full)
+		}
+	}
+	small := read("llms-small.txt")
+	if !strings.Contains(small, "- [Introduction](/start/)") {
+		t.Errorf("llms-small.txt lacks the link:\n%s", small)
+	}
+	if strings.Contains(small, "Start here.") {
+		t.Errorf("llms-small.txt holds descriptions:\n%s", small)
+	}
+	start := read("start.md")
+	if !strings.Contains(start, "Welcome.") || strings.Contains(start, "Secret setup text.") {
+		t.Errorf("start.md = %q", start)
+	}
+	hidden := read("hidden.md")
+	if !strings.Contains(hidden, "Hidden body.") {
+		t.Errorf("hidden.md = %q", hidden)
+	}
+}

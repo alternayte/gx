@@ -1,0 +1,5 @@
+package docs
+
+props {
+  Children gx.Node = nil
+}
