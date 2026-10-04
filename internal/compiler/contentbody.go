@@ -30,13 +30,14 @@ type contentAttr struct {
 
 // parseContentTree parses a Markdown body into prose chunks and nested
 // component tags. Fenced code, inline code and HTML comments stay text
-// (REQ-CNT-03).
-func parseContentTree(src string) ([]contentNode, []Diagnostic) {
+// (REQ-CNT-03). lineOffset is the number of file lines before the body, so
+// positions stay in file coordinates.
+func parseContentTree(src string, lineOffset int) ([]contentNode, []Diagnostic) {
 	root := &contentNode{}
 	stack := []*contentNode{root}
 	var prose strings.Builder
 	var diags []Diagnostic
-	line, col := 1, 1
+	line, col := 1+lineOffset, 1
 	i := 0
 	atLineStart := true
 
@@ -347,4 +348,31 @@ func walkContentTags(nodes []contentNode, fn func(*contentTag)) {
 		}
 		walkContentTags(nodes[i].kids, fn)
 	}
+}
+
+// splitContentBody returns the Markdown body without its YAML frontmatter
+// and the number of file lines before it.
+func splitContentBody(data []byte) ([]byte, int) {
+	s := string(data)
+	if !strings.HasPrefix(s, "---\n") {
+		return data, 0
+	}
+	rest := s[4:]
+	idx := strings.Index(rest, "\n---")
+	if idx < 0 {
+		return data, 0
+	}
+	after := rest[idx+1:]
+	if nl := strings.IndexByte(after, '\n'); nl >= 0 {
+		after = after[nl+1:]
+	}
+	after = strings.TrimPrefix(after, "\n")
+	return []byte(after), strings.Count(s[:len(s)-len(after)], "\n")
+}
+
+// bodyAfterFrontmatter returns the Markdown body without its YAML
+// frontmatter.
+func bodyAfterFrontmatter(data []byte) []byte {
+	body, _ := splitContentBody(data)
+	return body
 }

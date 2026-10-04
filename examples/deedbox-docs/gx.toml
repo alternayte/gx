@@ -1,0 +1,5 @@
+[site]
+url = "https://deedbox-docs.pages.dev"
+title = "Deedbox"
+title_template = "%s | Deedbox"
+description = "Event-source part of your app. Postgres or SQL Server. EF Core, Dapper, or neither."

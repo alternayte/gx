@@ -1,0 +1,19 @@
+---
+description: What Deedbox does not do in 0.1, stated plainly.
+order: 8
+sidebarGroup: Concepts
+title: Known limits
+---
+
+This page lists the limits of Deedbox 0.1, so you can plan around them.
+
+- **Appends take turns.** One counter orders all appends. See [the benchmarks](/operations/benchmarks/) for the ceiling.
+- **Two streams in one transaction can deadlock.** A transaction that appends to two streams can deadlock with a concurrent append; the database aborts one. Nothing is lost. Append to one stream per transaction, or retry.
+- **One message per event.** Deedbox.QueueBox writes at most one message for each event, to one topic. To move consumers to a new contract, see [change a message's contract](/how-to/wire-queuebox/#move-consumers-to-a-new-contract).
+- **One database per store.** Database-per-tenant comes in a later release.
+- **Rebuilds are in place.** The read model is empty or partial during a rebuild. To keep serving reads, build the new read model under a new name; see [replace a read model without downtime](/how-to/replace-a-read-model/).
+- **A crashed instance holds back inline switches for 30 seconds.** Deedbox counts an instance as live until its heartbeat is 30 seconds old, and a new inline projection stays in catch-up while a live instance can skip it; see [inline or async projections](/concepts/inline-or-async/#deploy-inline-projections-safely).
+- **Projections run one event at a time, in order.**
+- **Only top-level properties hold personal data.**
+- **Start-up needs the database.** Deedbox checks the schema when the host starts. Build-time OpenAPI generation starts the host too; skip hosted services when `Assembly.GetEntryAssembly()?.GetName().Name` is `GetDocument.Insider`.
+- **Metadata is set through `DeedboxContext`.** There is no ASP.NET Core helper; use the [middleware](/how-to/use-tenants/) shown in the tenants guide.

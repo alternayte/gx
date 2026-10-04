@@ -233,7 +233,8 @@ func checkContent(root string, colls []contentCollection, read func(string) ([]b
 		for _, path := range paths {
 			src := files[path]
 			out = checkFrontmatter(path, src, coll.meta, out)
-			nodes, ndiags := parseContentTree(string(src))
+			body, lineOffset := splitContentBody(src)
+			nodes, ndiags := parseContentTree(string(body), lineOffset)
 			for _, d := range ndiags {
 				d.File = path
 				out = append(out, d)

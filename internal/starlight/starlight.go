@@ -1,27 +1,38 @@
-// Package starlight converts a Starlight project into a Gx content tree
-// (REQ-CNT-13): frontmatter, the sidebar config from astro.config, MDX to
-// Markdown, and Starlight component tags to the docs kit. Everything it
-// cannot convert lands in the report.
 package starlight
 
 import (
+	"archive/tar"
+	"bytes"
+	"compress/gzip"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
 
 // Options configure one import.
 type Options struct {
-	// Src is the Starlight project root.
+	// Src is a local Starlight project root, an http(s) URL of a tarball,
+	// or a GitHub repository URL. A GitHub URL downloads the repository
+	// archive and finds the Starlight project (REQ-CNT-13).
 	Src string
 	// Out is the Gx content directory.
 	Out string
+	// GitHubBase overrides https://codeload.github.com for tests.
+	GitHubBase string
+	// Client is the HTTP client of a remote import.
+	Client *http.Client
+	// Log receives progress lines. Defaults to io.Discard.
+	Log io.Writer
 }
 
 // Report lists what the import did and what it could not convert.
@@ -46,6 +57,22 @@ var kitComponents = map[string]string{
 	"FileTree":   "FileTree",
 }
 
+// propRenames maps a Starlight prop to its docs kit prop.
+var propRenames = map[string]map[string]string{
+	"Tabs":     {"syncKey": "sync"},
+	"Aside":    {"type": "kind"},
+	"Badge":    {"text": "label"},
+	"LinkCard": {"href": "href"},
+}
+
+// droppedProps maps a Starlight prop the docs kit does not have.
+var droppedProps = map[string]map[string]bool{
+	"Card":       {"icon": true},
+	"LinkCard":   {"icon": true, "attrs": true},
+	"LinkButton": {"icon": true},
+	"Aside":      {"title": true},
+}
+
 // supportedKeys are the DocMeta keys the converter emits (REQ-CNT-13).
 var supportedKeys = map[string]bool{
 	"title": true, "description": true, "order": true, "badge": true,
@@ -56,24 +83,42 @@ var supportedKeys = map[string]bool{
 // Convert imports a Starlight project into a Gx content directory.
 func Convert(opt Options) (Report, error) {
 	var report Report
+	if opt.Log == nil {
+		opt.Log = io.Discard
+	}
 	if opt.Src == "" || opt.Out == "" {
 		return report, fmt.Errorf("starlight: src and out are required")
 	}
-	contentDir := filepath.Join(opt.Src, "src", "content", "docs")
-	if _, err := os.Stat(contentDir); err != nil {
-		contentDir = filepath.Join(opt.Src, "content", "docs")
+	src := opt.Src
+	if isRemote(src) {
+		dir, err := fetchProject(opt)
+		if err != nil {
+			return report, err
+		}
+		defer os.RemoveAll(dir)
+		src = dir
 	}
-	if _, err := os.Stat(contentDir); err != nil {
-		return report, fmt.Errorf("starlight: no content directory under %s", opt.Src)
+	project, err := findProject(src)
+	if err != nil {
+		return report, err
 	}
-	sidebar, sidebarNotes, err := loadSidebar(opt.Src)
+	contentDir := project
+	for _, candidate := range []string{
+		filepath.Join(project, "src", "content", "docs"),
+		filepath.Join(project, "content", "docs"),
+	} {
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			contentDir = candidate
+			break
+		}
+	}
+	sidebar, sidebarNotes, err := loadSidebar(project)
 	report.Notes = append(report.Notes, sidebarNotes...)
 	if err != nil {
 		report.Notes = append(report.Notes, err.Error())
 	}
-
 	var files []string
-	_ = filepath.WalkDir(contentDir, func(path string, d os.DirEntry, err error) error {
+	_ = filepath.WalkDir(contentDir, func(file string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -84,13 +129,13 @@ func Convert(opt Options) (Report, error) {
 			return nil
 		}
 		if strings.HasSuffix(d.Name(), ".md") || strings.HasSuffix(d.Name(), ".mdx") {
-			files = append(files, path)
+			files = append(files, file)
 		}
 		return nil
 	})
 	sort.Strings(files)
-	for _, path := range files {
-		rel, err := filepath.Rel(contentDir, path)
+	for _, file := range files {
+		rel, err := filepath.Rel(contentDir, file)
 		if err != nil {
 			continue
 		}
@@ -99,18 +144,19 @@ func Convert(opt Options) (Report, error) {
 		if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
 			return report, err
 		}
-		data, err := os.ReadFile(path)
+		data, err := os.ReadFile(file)
 		if err != nil {
 			return report, err
 		}
 		front, body := splitFrontmatter(data)
 		meta, notes := convertFrontmatter(front, sidebar, slug)
 		report.Notes = append(report.Notes, notes...)
-		if strings.HasSuffix(path, ".mdx") {
-			body, notes = convertMDX(body)
-			for _, note := range notes {
-				report.Notes = append(report.Notes, rel+": "+note)
-			}
+		body, notes, err = convertBody(body, filepath.Dir(file), map[string]bool{file: true})
+		if err != nil {
+			return report, err
+		}
+		for _, note := range notes {
+			report.Notes = append(report.Notes, rel+": "+note)
 		}
 		var b strings.Builder
 		if len(meta) > 0 {
@@ -127,8 +173,179 @@ func Convert(opt Options) (Report, error) {
 			return report, err
 		}
 		report.Converted++
+		fmt.Fprintf(opt.Log, "imported %s\n", slug)
 	}
 	return report, nil
+}
+
+// isRemote reports whether src is an http(s) URL.
+func isRemote(src string) bool {
+	return strings.HasPrefix(src, "http://") || strings.HasPrefix(src, "https://")
+}
+
+// findProject returns the directory that holds astro.config or
+// src/content/docs, starting at src and looking one level down.
+func findProject(src string) (string, error) {
+	if hasStarlight(src) {
+		return src, nil
+	}
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return "", fmt.Errorf("starlight: %w", err)
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		candidate := filepath.Join(src, entry.Name())
+		if hasStarlight(candidate) {
+			return candidate, nil
+		}
+	}
+	return "", fmt.Errorf("starlight: no Starlight project under %s", src)
+}
+
+// hasStarlight reports whether dir holds a Starlight project.
+func hasStarlight(dir string) bool {
+	for _, name := range []string{"astro.config.mjs", "astro.config.ts", "astro.config.js", "astro.config.mts"} {
+		if _, err := os.Stat(filepath.Join(dir, name)); err == nil {
+			return true
+		}
+	}
+	if info, err := os.Stat(filepath.Join(dir, "src", "content", "docs")); err == nil && info.IsDir() {
+		return true
+	}
+	return false
+}
+
+// fetchProject downloads a remote project archive and returns its root.
+func fetchProject(opt Options) (string, error) {
+	client := opt.Client
+	if client == nil {
+		client = &http.Client{Timeout: 5 * time.Minute}
+	}
+	base := opt.GitHubBase
+	if base == "" {
+		base = "https://codeload.github.com"
+	}
+	urls := []string{opt.Src}
+	if owner, repo, sub, ok := parseGitHub(opt.Src); ok {
+		urls = nil
+		for _, ref := range []string{"main", "master"} {
+			urls = append(urls, strings.TrimSuffix(base, "/")+"/"+owner+"/"+repo+"/tar.gz/"+ref)
+		}
+		_ = sub
+	}
+	var lastErr error
+	for _, url := range urls {
+		data, err := download(client, url)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+		dir, err := os.MkdirTemp("", "gx-starlight-")
+		if err != nil {
+			return "", err
+		}
+		if err := extract(data, dir); err != nil {
+			os.RemoveAll(dir)
+			lastErr = err
+			continue
+		}
+		return dir, nil
+	}
+	if lastErr == nil {
+		lastErr = fmt.Errorf("starlight: cannot download %s", opt.Src)
+	}
+	return "", lastErr
+}
+
+// parseGitHub splits a GitHub URL into owner, repo and an optional tree
+// subdirectory.
+func parseGitHub(raw string) (owner, repo, sub string, ok bool) {
+	rest := raw
+	for _, prefix := range []string{"https://github.com/", "http://github.com/", "github.com/"} {
+		if strings.HasPrefix(rest, prefix) {
+			rest = strings.TrimPrefix(rest, prefix)
+			break
+		}
+	}
+	parts := strings.Split(strings.Trim(rest, "/"), "/")
+	if len(parts) < 2 || parts[0] == "" || parts[1] == "" {
+		return "", "", "", false
+	}
+	owner, repo = parts[0], strings.TrimSuffix(parts[1], ".git")
+	if len(parts) >= 4 && parts[2] == "tree" {
+		sub = strings.Join(parts[3:], "/")
+	}
+	return owner, repo, path.Clean(sub), true
+}
+
+// download reads one URL.
+func download(client *http.Client, url string) ([]byte, error) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("starlight: download %s: %w", url, err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("starlight: download %s: %s", url, resp.Status)
+	}
+	return io.ReadAll(resp.Body)
+}
+
+// extract unpacks a gzip tarball into dir, stripping its first path
+// element.
+func extract(data []byte, dir string) error {
+	gz, err := gzip.NewReader(bytes.NewReader(data))
+	if err != nil {
+		return fmt.Errorf("starlight: %w", err)
+	}
+	defer gz.Close()
+	tr := tar.NewReader(gz)
+	for {
+		hdr, err := tr.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return fmt.Errorf("starlight: %w", err)
+		}
+		name := path.Clean(hdr.Name)
+		if i := strings.IndexByte(name, '/'); i >= 0 {
+			name = name[i+1:]
+		}
+		if name == "" || strings.HasPrefix(name, "..") {
+			continue
+		}
+		full := filepath.Join(dir, filepath.FromSlash(name))
+		switch hdr.Typeflag {
+		case tar.TypeDir:
+			if err := os.MkdirAll(full, 0o755); err != nil {
+				return err
+			}
+		case tar.TypeReg:
+			if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+				return err
+			}
+			out, err := os.Create(full)
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(out, tr); err != nil {
+				_ = out.Close()
+				return err
+			}
+			if err := out.Close(); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 // splitFrontmatter returns the YAML frontmatter and the body.
@@ -182,6 +399,16 @@ func convertFrontmatter(front []byte, sidebar sidebarConfig, slug string) (map[s
 			}
 		case "hero":
 			out["template"] = "splash"
+			if hero, ok := value.(map[string]any); ok {
+				if tagline, ok := hero["tagline"]; ok {
+					if _, exists := out["description"]; !exists {
+						out["description"] = tagline
+					}
+				}
+				if actions, ok := hero["actions"].([]any); ok && len(actions) > 0 {
+					notes = append(notes, slug+": the hero actions are not converted; add them to the splash component")
+				}
+			}
 		default:
 			notes = append(notes, slug+": frontmatter "+key+" is not supported and was dropped")
 		}
@@ -208,59 +435,414 @@ func convertFrontmatter(front []byte, sidebar sidebarConfig, slug string) (map[s
 			}
 		}
 	}
+	for _, dir := range sortedKeys(sidebar.auto) {
+		if slug == dir || strings.HasPrefix(slug, dir+"/") {
+			if _, exists := out["sidebarGroup"]; !exists {
+				out["sidebarGroup"] = sidebar.auto[dir]
+			}
+			if sidebar.collapsedAuto[dir] {
+				if _, exists := out["collapsed"]; !exists {
+					out["collapsed"] = true
+				}
+			}
+			break
+		}
+	}
 	if len(out) == 0 {
 		return nil, notes
 	}
 	return out, notes
 }
 
-// importLine finds an MDX import statement.
-var importLine = regexp.MustCompile(`(?m)^import\s+[^\n]*?from\s+['"]([^'"]+)['"];?[ \t]*\n?`)
+// sortedKeys returns the keys of a map, longest first.
+func sortedKeys(m map[string]string) []string {
+	out := make([]string, 0, len(m))
+	for key := range m {
+		out = append(out, key)
+	}
+	sort.Slice(out, func(i, j int) bool { return len(out[i]) > len(out[j]) })
+	return out
+}
 
-// tagPattern finds an opening or closing component tag.
-var tagPattern = regexp.MustCompile(`</?([A-Z][A-Za-z0-9]*)`)
+// importDefault finds `import Name from 'path'`.
+var importDefault = regexp.MustCompile(`(?m)^import\s+([A-Za-z_$][A-Za-z0-9_$]*)\s+from\s+['"]([^'"]+)['"];?[ \t]*\n?`)
 
-// convertMDX strips imports and rewrites Starlight component tags
-// (REQ-CNT-13).
-func convertMDX(body []byte) ([]byte, []string) {
-	var notes []string
+// importNamed finds `import { A, B } from 'path'`.
+var importNamed = regexp.MustCompile(`(?m)^import\s*\{([^}]*)\}\s*from\s*['"]([^'"]+)['"];?[ \t]*\n?`)
+
+// convertBody converts one MDX body: imports become snippet inlines or
+// notes, and component tags become docs kit tags (REQ-CNT-13).
+func convertBody(body []byte, dir string, seen map[string]bool) ([]byte, []string, error) {
 	text := string(body)
-	for _, m := range importLine.FindAllStringSubmatch(text, -1) {
-		if strings.Contains(m[1], "@astrojs/starlight/components") {
+	var notes []string
+	snippets := map[string]string{}
+	known := map[string]bool{}
+	for _, m := range importDefault.FindAllStringSubmatch(text, -1) {
+		alias, target := m[1], m[2]
+		if strings.HasSuffix(target, ".md") || strings.HasSuffix(target, ".mdx") {
+			snippets[alias] = filepath.Join(dir, filepath.FromSlash(target))
 			continue
 		}
-		notes = append(notes, "removed import of "+m[1])
+		if strings.Contains(target, "@astrojs/starlight/components") {
+			continue
+		}
+		notes = append(notes, "removed import of "+target)
 	}
-	text = importLine.ReplaceAllString(text, "")
-	for _, line := range strings.Split(text, "\n") {
+	for _, m := range importNamed.FindAllStringSubmatch(text, -1) {
+		target := m[2]
+		if strings.Contains(target, "@astrojs/starlight/components") {
+			for _, name := range strings.Split(m[1], ",") {
+				name = strings.TrimSpace(name)
+				if name != "" {
+					known[name] = true
+				}
+			}
+			continue
+		}
+		notes = append(notes, "removed import from "+target)
+		for _, name := range strings.Split(m[1], ",") {
+			name = strings.TrimSpace(name)
+			if name != "" {
+				known[name] = true
+			}
+		}
+	}
+	out, notes2, err := rewriteTags(text, dir, snippets, known, seen)
+	notes = append(notes, notes2...)
+	if err != nil {
+		return nil, notes, err
+	}
+	out = importDefault.ReplaceAllString(out, "")
+	out = importNamed.ReplaceAllString(out, "")
+	for _, line := range strings.Split(out, "\n") {
 		if strings.HasPrefix(strings.TrimSpace(line), "import ") {
 			notes = append(notes, "an import spans several lines and was left in place")
 			break
 		}
 	}
-	text = tagPattern.ReplaceAllStringFunc(text, func(tag string) string {
-		name := tagPattern.FindStringSubmatch(tag)[1]
-		kit, ok := kitComponents[name]
-		if !ok {
-			notes = append(notes, "component <"+name+"> has no docs kit counterpart")
-			return tag
-		}
-		if strings.HasPrefix(tag, "</") {
-			return "</docs." + kit
-		}
-		return "<docs." + kit
-	})
-	text = strings.ReplaceAll(text, `<docs.Aside type="`, `<docs.Aside kind="`)
-	text = strings.ReplaceAll(text, `<docs.Badge text="`, `<docs.Badge label="`)
-	return []byte(text), notes
+	return []byte(out), notes, nil
 }
 
-// sidebarItem is one manual sidebar entry.
-type sidebarItem struct {
-	slug  string
-	label string
-	badge string
+// rewriteTags rewrites component tags outside code fences and inline code.
+func rewriteTags(text, dir string, snippets map[string]string, known map[string]bool, seen map[string]bool) (string, []string, error) {
+	var b strings.Builder
+	var notes []string
+	i := 0
+	atLineStart := true
+	for i < len(text) {
+		switch {
+		case atLineStart && (strings.HasPrefix(text[i:], "```") || strings.HasPrefix(text[i:], "~~~")):
+			fence := text[i : i+3]
+			end := strings.IndexByte(text[i:], '\n')
+			if end < 0 {
+				b.WriteString(text[i:])
+				i = len(text)
+				continue
+			}
+			b.WriteString(text[i : i+end+1])
+			i += end + 1
+			for i < len(text) {
+				lineEnd := strings.IndexByte(text[i:], '\n')
+				stop := len(text)
+				if lineEnd >= 0 {
+					stop = i + lineEnd + 1
+				}
+				b.WriteString(text[i:stop])
+				trimmed := strings.TrimSpace(text[i:stop])
+				i = stop
+				if strings.HasPrefix(trimmed, strings.Repeat(fence[:1], 3)) {
+					break
+				}
+			}
+			atLineStart = false
+		case atLineStart && (strings.HasPrefix(text[i:], "    ") || strings.HasPrefix(text[i:], "\t")):
+			// An indented code block line.
+			end := strings.IndexByte(text[i:], '\n')
+			if end < 0 {
+				b.WriteString(text[i:])
+				i = len(text)
+				continue
+			}
+			b.WriteString(text[i : i+end+1])
+			i += end + 1
+		case text[i] == '\n':
+			b.WriteByte('\n')
+			i++
+			atLineStart = true
+		case text[i] == '`':
+			run := 0
+			for i+run < len(text) && text[i+run] == '`' {
+				run++
+			}
+			marker := strings.Repeat("`", run)
+			end := strings.Index(text[i+run:], marker)
+			if end < 0 {
+				b.WriteString(text[i:])
+				i = len(text)
+				continue
+			}
+			stop := i + run + end + run
+			b.WriteString(text[i:stop])
+			i = stop
+			atLineStart = false
+		case i+1 < len(text) && text[i] == '<' && text[i+1] == '/':
+			name, _ := readName(text[i+2:])
+			if name == "" || !isUpperName(name) {
+				end := strings.IndexByte(text[i:], '>')
+				if end < 0 {
+					b.WriteString(text[i:])
+					i = len(text)
+					continue
+				}
+				b.WriteString(text[i : i+end+1])
+				i += end + 1
+				atLineStart = false
+				continue
+			}
+			end := strings.IndexByte(text[i:], '>')
+			if end < 0 {
+				b.WriteString(text[i:])
+				i = len(text)
+				continue
+			}
+			b.WriteString("</docs." + baseName(name) + ">")
+			i += end + 1
+			atLineStart = false
+		case text[i] == '<':
+			name, n := readName(text[i+1:])
+			if name == "" || !isUpperName(name) {
+				end := strings.IndexByte(text[i:], '>')
+				if end < 0 {
+					b.WriteString(text[i:])
+					i = len(text)
+					continue
+				}
+				b.WriteString(text[i : i+end+1])
+				i += end + 1
+				atLineStart = false
+				continue
+			}
+			end := findTagEnd(text, i+1+n)
+			if end < 0 {
+				b.WriteString(text[i:])
+				i = len(text)
+				continue
+			}
+			raw := text[i : end+1]
+			selfClose := strings.HasSuffix(strings.TrimSpace(raw), "/>")
+			if file, ok := snippets[name]; ok {
+				inlined, err := inlineSnippet(file, seen)
+				if err != nil {
+					return "", notes, err
+				}
+				converted, more, err := convertBody([]byte(inlined), filepath.Dir(file), seen)
+				if err != nil {
+					return "", notes, err
+				}
+				notes = append(notes, more...)
+				b.Write(converted)
+				i = end + 1
+				atLineStart = false
+				continue
+			}
+			rewritten, note, drop := rewriteTag(raw, name, selfClose, known)
+			if note != "" {
+				notes = append(notes, note)
+			}
+			if !drop {
+				b.WriteString(rewritten)
+			}
+			i = end + 1
+			atLineStart = false
+		default:
+			b.WriteByte(text[i])
+			i++
+		}
+	}
+	return b.String(), notes, nil
 }
+
+// inlineSnippet reads one MDX include, with a cycle guard.
+func inlineSnippet(file string, seen map[string]bool) (string, error) {
+	if seen[file] {
+		return "", fmt.Errorf("starlight: the snippet %s includes itself", file)
+	}
+	seen[file] = true
+	data, err := os.ReadFile(file)
+	if err != nil {
+		return "", fmt.Errorf("starlight: %w", err)
+	}
+	_, body := splitFrontmatter(data)
+	return string(body), nil
+}
+
+// rewriteTag rewrites one component tag. It reports a note, or drop when
+// the tag has no docs kit counterpart.
+func rewriteTag(raw, name string, selfClose bool, known map[string]bool) (out, note string, drop bool) {
+	kit, ok := kitComponents[name]
+	if !ok {
+		return "", "component <" + name + "> has no docs kit counterpart and was removed", true
+	}
+	inner := strings.TrimSuffix(strings.TrimPrefix(raw, "<"+name), ">")
+	inner = strings.TrimSuffix(strings.TrimSuffix(inner, "/"), ">")
+	inner = strings.TrimSuffix(strings.TrimSpace(inner), "/")
+	props, notes := rewriteProps(name, inner)
+	end := ">"
+	if selfClose {
+		end = " />"
+	}
+	out = "<docs." + kit
+	if props != "" {
+		out += " " + props
+	}
+	out += end
+	return out, strings.Join(notes, "; "), false
+}
+
+// rewriteProps renames and drops the props of one tag.
+func rewriteProps(name, inner string) (string, []string) {
+	var out []string
+	var notes []string
+	i := 0
+	for i < len(inner) {
+		for i < len(inner) && isSpace(inner[i]) {
+			i++
+		}
+		if i >= len(inner) {
+			break
+		}
+		start := i
+		for i < len(inner) && !isSpace(inner[i]) && inner[i] != '=' {
+			i++
+		}
+		key := inner[start:i]
+		for i < len(inner) && isSpace(inner[i]) {
+			i++
+		}
+		value := ""
+		if i < len(inner) && inner[i] == '=' {
+			i++
+			for i < len(inner) && isSpace(inner[i]) {
+				i++
+			}
+			if i < len(inner) && (inner[i] == '"' || inner[i] == '\'') {
+				quote := inner[i]
+				i++
+				valueStart := i
+				for i < len(inner) && inner[i] != quote {
+					i++
+				}
+				value = inner[valueStart:i]
+				if i < len(inner) {
+					i++
+				}
+			} else if i < len(inner) && inner[i] == '{' {
+				depth := 0
+				valueStart := i
+				for i < len(inner) {
+					if inner[i] == '{' {
+						depth++
+					}
+					if inner[i] == '}' {
+						depth--
+						if depth == 0 {
+							i++
+							break
+						}
+					}
+					i++
+				}
+				value = inner[valueStart:i]
+			}
+		}
+		if key == "" {
+			i++
+			continue
+		}
+		if droppedProps[name][key] {
+			notes = append(notes, "the "+key+" prop of <"+name+"> was dropped")
+			continue
+		}
+		if renamed, ok := propRenames[name][key]; ok {
+			key = renamed
+			notes = append(notes, "the <"+name+"> prop was renamed to "+renamed)
+		}
+		if value == "" {
+			out = append(out, key)
+			continue
+		}
+		if strings.HasPrefix(value, "{") {
+			out = append(out, key+"="+value)
+			continue
+		}
+		out = append(out, key+"=\""+value+"\"")
+	}
+	return strings.Join(out, " "), notes
+}
+
+// findTagEnd returns the index of the ">" that closes a tag, respecting
+// quoted values and brace expressions.
+func findTagEnd(text string, i int) int {
+	for i < len(text) {
+		switch text[i] {
+		case '"', '\'':
+			quote := text[i]
+			i++
+			for i < len(text) && text[i] != quote {
+				i++
+			}
+		case '{':
+			depth := 0
+			for i < len(text) {
+				if text[i] == '{' {
+					depth++
+				}
+				if text[i] == '}' {
+					depth--
+					if depth == 0 {
+						break
+					}
+				}
+				i++
+			}
+		case '>':
+			return i
+		}
+		i++
+	}
+	return -1
+}
+
+// readName reads a tag name.
+func readName(s string) (string, int) {
+	i := 0
+	for i < len(s) && (isNameByte(s[i]) || s[i] == '.') {
+		i++
+	}
+	return s[:i], i
+}
+
+// baseName returns a tag name without its qualifier.
+func baseName(name string) string {
+	if dot := strings.LastIndexByte(name, '.'); dot >= 0 {
+		return name[dot+1:]
+	}
+	return name
+}
+
+// isUpperName reports whether a tag names a component.
+func isUpperName(name string) bool {
+	base := baseName(name)
+	return base != "" && base[0] >= 'A' && base[0] <= 'Z'
+}
+
+// isNameByte reports whether c can stand in a tag name.
+func isNameByte(c byte) bool {
+	return c == '_' || c == '-' || c == '$' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
+}
+
+// isSpace reports whether c is whitespace.
+func isSpace(c byte) bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r' }
 
 // sidebarPage is the sidebar mapping of one page.
 type sidebarPage struct {
@@ -273,34 +855,45 @@ type sidebarPage struct {
 // sidebarConfig is the parsed manual sidebar.
 type sidebarConfig struct {
 	pages map[string]sidebarPage
+	// auto maps an autogenerated directory to its group label.
+	auto map[string]string
+	// collapsedAuto holds the autogenerated directories whose group
+	// starts closed.
+	collapsedAuto map[string]bool
 }
 
 // loadSidebar finds astro.config and parses its starlight sidebar. The
 // notes list what the manual sidebar config could not carry over.
 func loadSidebar(src string) (sidebarConfig, []string, error) {
-	var path string
+	var file string
 	for _, name := range []string{"astro.config.mjs", "astro.config.ts", "astro.config.js", "astro.config.mts"} {
 		candidate := filepath.Join(src, name)
 		if _, err := os.Stat(candidate); err == nil {
-			path = candidate
+			file = candidate
 			break
 		}
 	}
-	if path == "" {
-		return sidebarConfig{pages: map[string]sidebarPage{}}, nil, nil
+	if file == "" {
+		return sidebarConfig{pages: map[string]sidebarPage{}, auto: map[string]string{}, collapsedAuto: map[string]bool{}}, nil, nil
 	}
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(file)
 	if err != nil {
-		return sidebarConfig{pages: map[string]sidebarPage{}}, nil, err
+		return sidebarConfig{pages: map[string]sidebarPage{}, auto: map[string]string{}, collapsedAuto: map[string]bool{}}, nil, err
 	}
 	groups, err := parseSidebar(string(data))
-	cfg := sidebarConfig{pages: map[string]sidebarPage{}}
+	cfg := sidebarConfig{pages: map[string]sidebarPage{}, auto: map[string]string{}, collapsedAuto: map[string]bool{}}
 	if err != nil {
 		return cfg, nil, err
 	}
 	var notes []string
 	for _, group := range groups {
 		notes = append(notes, group.notes...)
+		for _, dir := range group.autoDirs {
+			cfg.auto[dir] = group.label
+			if group.collapsed {
+				cfg.collapsedAuto[dir] = true
+			}
+		}
 		for i, item := range group.items {
 			if item.slug == "" {
 				continue
@@ -316,11 +909,19 @@ func loadSidebar(src string) (sidebarConfig, []string, error) {
 	return cfg, notes, nil
 }
 
+// sidebarItem is one manual sidebar entry.
+type sidebarItem struct {
+	slug  string
+	label string
+	badge string
+}
+
 // sidebarGroup is one manual group of the Starlight sidebar.
 type sidebarGroup struct {
 	label     string
 	collapsed bool
 	items     []sidebarItem
+	autoDirs  []string
 	notes     []string
 }
 
@@ -328,26 +929,32 @@ type sidebarGroup struct {
 // with a small JavaScript-subset parser (REQ-CNT-13).
 func parseSidebar(text string) ([]sidebarGroup, error) {
 	p := &jsParser{src: stripJSComments(text)}
-	for p.find("sidebar") {
-		p.skipSpace()
-		if !p.take(':') {
-			continue
-		}
-		p.skipSpace()
-		value, err := p.value()
-		if err != nil {
-			return nil, err
-		}
-		if _, ok := value.([]any); !ok {
-			return nil, fmt.Errorf("starlight: the sidebar config is not a literal array; convert it by hand")
-		}
-		return sidebarGroups(value), nil
+	if !p.find("sidebar") {
+		return nil, nil
 	}
-	return nil, nil
+	p.skipSpace()
+	if !p.take(':') {
+		return nil, nil
+	}
+	p.skipSpace()
+	value, err := p.value()
+	if err != nil {
+		return nil, err
+	}
+	if _, ok := value.([]any); !ok {
+		return nil, fmt.Errorf("starlight: the sidebar config is not a literal array; convert it by hand")
+	}
+	return sidebarGroups(value), nil
 }
 
-// sidebarGroups converts parsed sidebar values into groups.
+// sidebarGroups converts parsed sidebar values into groups. Nested groups
+// fold into their parent label.
 func sidebarGroups(value any) []sidebarGroup {
+	return sidebarGroupsIn(value, "")
+}
+
+// sidebarGroupsIn converts one level of the sidebar.
+func sidebarGroupsIn(value any, prefix string) []sidebarGroup {
 	list, _ := value.([]any)
 	var out []sidebarGroup
 	for _, entry := range list {
@@ -355,14 +962,21 @@ func sidebarGroups(value any) []sidebarGroup {
 		if !ok {
 			continue
 		}
-		group := sidebarGroup{label: stringOf(obj["label"])}
-		if collapsed, ok := obj["collapsed"].(bool); ok {
-			group.collapsed = collapsed
-			group.notes = append(group.notes, "the sidebar group "+group.label+" is collapsed; the shell collapses it when a page sets collapsed: true")
+		label := stringOf(obj["label"])
+		full := label
+		if prefix != "" {
+			full = prefix
+		}
+		group := sidebarGroup{label: full}
+		if collapsed, ok := obj["collapsed"].(bool); ok && collapsed {
+			group.collapsed = true
 		}
 		if auto, ok := obj["autogenerate"].(map[string]any); ok {
-			group.notes = append(group.notes, "the sidebar auto-generates from "+stringOf(auto["directory"])+"; folder order applies")
+			dir := strings.Trim(stringOf(auto["directory"]), "/")
+			group.autoDirs = append(group.autoDirs, dir)
+			group.notes = append(group.notes, "the sidebar auto-generates from "+dir+"; folder order applies")
 		}
+		var nested []sidebarGroup
 		items, _ := obj["items"].([]any)
 		for _, raw := range items {
 			switch item := raw.(type) {
@@ -373,14 +987,28 @@ func sidebarGroups(value any) []sidebarGroup {
 					group.notes = append(group.notes, "the sidebar link "+link+" is external; add it to the app nav")
 					continue
 				}
-				group.items = append(group.items, sidebarItem{
-					slug:  strings.TrimSuffix(strings.Trim(stringOf(item["slug"]), "/"), ".md"),
-					label: stringOf(item["label"]),
-					badge: stringOf(item["badge"]),
-				})
+				if slug := stringOf(item["slug"]); slug != "" {
+					group.items = append(group.items, sidebarItem{
+						slug:  strings.TrimSuffix(strings.Trim(slug, "/"), ".md"),
+						label: stringOf(item["label"]),
+						badge: stringOf(item["badge"]),
+					})
+					continue
+				}
+				if _, ok := item["autogenerate"]; ok {
+					if auto, ok := item["autogenerate"].(map[string]any); ok {
+						dir := strings.Trim(stringOf(auto["directory"]), "/")
+						group.autoDirs = append(group.autoDirs, dir)
+						group.notes = append(group.notes, "the sidebar auto-generates from "+dir+"; folder order applies")
+					}
+					continue
+				}
+				// A nested group keeps its own label; the app nests it.
+				nested = append(nested, sidebarGroupsIn([]any{item}, "")...)
 			}
 		}
 		out = append(out, group)
+		out = append(out, nested...)
 	}
 	return out
 }

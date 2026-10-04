@@ -1,0 +1,69 @@
+---
+description: Rotate the master key, or move it out of the database, without touching events.
+sidebarGroup: How-to guides
+title: Rotate keys
+---
+
+
+This guide shows you how to rotate the master key or change where it lives. No event is re-encrypted: the master key only wraps one key per tenant.
+
+## Rotate a key ring
+
+1. Generate a new 32-byte key: `openssl rand -base64 32`.
+2. Put it first in the ring, and keep the old key after it: `v2:<new key>,v1:<old key>`.
+3. Deploy. New tenant keys use `v2`; existing ones still unwrap with `v1`.
+4. Re-wrap the existing tenant keys:
+
+   ```sh
+   deedbox keys rewrap --from env:DEEDBOX_MASTER_KEY --to env:DEEDBOX_MASTER_KEY --provider postgres
+   ```
+
+5. Remove `v1` from the ring and deploy again.
+
+<!-- snippet: keys-environment -->
+```cs
+// DEEDBOX_MASTER_KEY holds a key ring: v2:<base64 of 32 random bytes>,v1:<older key>
+services.AddDeedbox(es => es
+    .UsePostgres(connStr)
+    .Keys(keys => keys
+        .FromEnvironment("DEEDBOX_MASTER_KEY")
+        .RedactWith("[erased]"))
+    .Stream<Manuscript>(s => s.Events<ReviewerInvited, CoAuthorAdded>()));
+```
+<!-- endSnippet -->
+
+
+## Move out of the database
+
+1. Set the new key ring in `DEEDBOX_NEW_MASTER_KEY`.
+2. Run `deedbox keys rewrap --from database --to env:DEEDBOX_NEW_MASTER_KEY`. This also deletes the master key stored in the database.
+3. Change the app's key mode to `FromEnvironment` and deploy.
+
+## Use Azure Key Vault
+
+<!-- snippet: keys-azure -->
+```cs
+services.AddDeedbox(es => es
+    .UsePostgres(connStr)
+    .Keys(keys => keys.UseAzureKeyVault(
+        new Uri("https://my-vault.vault.azure.net/keys/deedbox"),
+        new DefaultAzureCredential()))
+    .Stream<Manuscript>(s => s.Events<ReviewerInvited, CoAuthorAdded>()));
+```
+<!-- endSnippet -->
+
+
+`deedbox keys rewrap --to azure:https://my-vault.vault.azure.net/keys/deedbox` moves to Key Vault. The CLI signs in with `DefaultAzureCredential`.
+
+## Shred a whole tenant
+
+To erase every personal field of a tenant at once, destroy its key:
+
+<!-- snippet: shred-tenant -->
+```cs
+await admin.ShredTenantAsync("acme");
+```
+<!-- endSnippet -->
+
+
+From the CLI: `deedbox tenant shred acme --yes`. This cannot be undone.

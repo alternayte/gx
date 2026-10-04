@@ -98,7 +98,8 @@ func (w *contentWriter) collection(coll contentCollection) error {
 			continue
 		}
 		slug := contentFileSlug(coll.dir, path)
-		nodes, _ := parseContentTree(string(src))
+		body, _ := splitContentBody(src)
+		nodes, _ := parseContentTree(string(body), 0)
 		expr, err := w.nodes(nodes)
 		if err != nil {
 			return err

@@ -1,0 +1,27 @@
+---
+description: The tables Deedbox owns, and what each column holds.
+order: 3
+sidebarGroup: Reference
+title: Schema tables
+---
+
+This page describes the tables in the Deedbox schema. Deedbox owns only these tables; your read models stay in your own tables.
+
+| Table | Key | Holds |
+| --- | --- | --- |
+| `streams` | `(tenant_id, stream_id)` | One row per stream: `stream_type`, `version`, stored `state`, `state_version`, `state_at` (the version the state reflects), `deleted_at`. |
+| `events` | `global_position` | Every event: `event_id`, `tenant_id`, `stream_id`, `version`, `stream_type`, `event_type`, `event_version`, `payload`, `metadata`, `occurred_at`. Unique on `event_id` and on `(tenant_id, stream_id, version)`. |
+| `position` | one row | The global position counter. |
+| `event_types` | `(stream_type, event_type, event_version)` | Every event type ever stored; the start-up check reads it. |
+| `checkpoints` | `name` | One row per projection and subscription: `position`, `mode`, `status`, `error`, and `handles`, the event types it handles. |
+| `instances` | `instance_id` | One row per live app instance: what it runs and what it can append. Each instance refreshes its row every 10 seconds and deletes it when it stops. |
+| `jobs` | `id` | Rebuilds, skips, erasures, snapshot rebuilds and destroyed pseudonym periods; the audit trail. |
+| `master_keys` | `(tenant_id, key_version)` | Wrapped tenant keys; shredded tenants leave tombstone rows. |
+| `subject_keys` | `(tenant_id, subject_id)` | Wrapped subject keys. Erasure deletes a row. |
+| `subject_streams` | `(tenant_id, subject_id, stream_id)` | Which streams hold which subject's data. |
+| `pseudonym_keys` | `(tenant_id, period_id)` | One pseudonym secret per tenant and period, wrapped by the master key, and the prefix the period uses. A destroyed period leaves a tombstone row with `destroyed_at`. |
+| `schema_version` | `version` | Applied migrations. |
+
+On Postgres, JSON columns are `jsonb`. On SQL Server, they are `nvarchar(max)`, or `json` with [native json](/how-to/apply-the-schema/#use-native-json-columns-on-sql-server), and key columns use the `Latin1_General_100_BIN2` collation, so IDs compare case-sensitively on both databases.
+
+Migrations are numbered, idempotent and forward-only. See [apply the schema](/how-to/apply-the-schema/).

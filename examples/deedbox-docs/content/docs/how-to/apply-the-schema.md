@@ -1,0 +1,76 @@
+---
+description: Create and upgrade the Deedbox tables at start-up, with the CLI, with EF Core migrations, or with DbUp.
+sidebarGroup: How-to guides
+title: Apply the schema
+---
+
+
+This guide shows you the ways to create and upgrade the Deedbox tables. Deedbox never changes the schema unless you ask it to. Without a current schema, start-up fails with the exact fix ([DBX001](/reference/errors/dbx001/)).
+
+## At start-up
+
+Call `ApplySchemaOnStartup()` in `AddDeedbox`. Pods take a database lock, so concurrent pods apply each migration once.
+
+## With the CLI
+
+```sh
+dotnet tool install -g Deedbox.Cli
+deedbox schema apply --provider postgres --connection "$DEEDBOX_CONNECTION"
+```
+
+Or print the SQL for a DBA:
+
+```sh
+deedbox schema script --provider sqlserver --from 0 > deedbox.sql
+```
+
+`--from` is the version the database has now. The scripts are idempotent, and each records itself in `schema_version`.
+
+## In an EF Core migration
+
+<!-- snippet: schema-ef-migration -->
+```cs
+// An EF Core migration that creates the Deedbox tables without adding them to your model.
+public partial class AddDeedbox : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder) =>
+        migrationBuilder.Sql(PostgresSchema.Script(fromVersion: 0));   // SqlServerSchema.Script on SQL Server
+}
+```
+<!-- endSnippet -->
+
+
+The tables stay out of your EF Core model. For an upgrade, add a new migration with `Script(fromVersion: n)`.
+
+## With DbUp or Flyway
+
+Save the output of `deedbox schema script` as a numbered script in your migrations folder. For SQL Server, the script separates batches with `GO`.
+
+## Use native json columns on SQL Server
+
+By default, SQL Server stores JSON in `nvarchar(max)` columns. On SQL Server 2025, Azure SQL Database and Azure SQL Managed Instance, you can store it in the native `json` type instead:
+
+<!-- snippet: register-sqlserver-native-json -->
+```cs
+builder.Services.AddDeedbox(es => es
+    .UseSqlServer(connStr, sql => sql.NativeJson = true) // SQL Server 2025 or Azure SQL
+    .ApplySchemaOnStartup()                             // converts nvarchar(max) columns to json
+    .Stream<Cart>(s => s.Events<ItemAdded, CheckedOut>()));
+```
+<!-- endSnippet -->
+
+
+Applying the schema with this option converts each JSON column that is still `nvarchar(max)`. The conversion rewrites every row of the table, so plan it for a large store. The same option works with the CLI and in a script:
+
+```sh
+deedbox schema apply --provider sqlserver --native-json --connection "$DEEDBOX_CONNECTION"
+deedbox schema script --provider sqlserver --native-json > deedbox.sql
+```
+
+`SqlServerSchema.Script(fromVersion, schema, nativeJson: true)` gives the same SQL for an EF Core migration. The conversion batch runs after the migrations, every time, and changes only the columns that are not converted yet.
+
+With the option on, start-up fails with [DBX034](/reference/errors/dbx034/) when the server has no `json` type, or when a column is not converted yet. The database returns the JSON without insignificant whitespace; Deedbox reads it the same way.
+
+## Use another schema name
+
+`.Schema("es")` puts the tables in `es` instead of `deedbox`. Names are lower-case letters, digits and underscores, at most 50 characters.

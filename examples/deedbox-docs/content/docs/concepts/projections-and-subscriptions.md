@@ -1,0 +1,47 @@
+---
+description: The difference between writing a read model and causing a side effect.
+order: 3
+sidebarGroup: Concepts
+title: Projections and subscriptions
+---
+
+
+This page explains the two kinds of handler and the guarantee each one gives.
+
+| | Projection | Subscription |
+| --- | --- | --- |
+| Writes to | The same database | Anything: email, HTTP, other systems |
+| Checkpoint | In the same transaction as its writes | After the handler succeeds |
+| Guarantee | Each event's effect happens exactly once | Each event arrives at least once |
+| Idempotency key | Not needed | `EventId`, or `StreamId` with `Version` |
+| Run modes | Inline or async | Async only |
+
+A projection can promise exactly once because its writes and its checkpoint commit together. A subscription cannot: an email can be sent and the process can die before the checkpoint moves. Pass the event ID on as an idempotency key.
+
+<!-- snippet: subscription -->
+```cs
+// A subscription does anything outside the database. Delivery is at least once,
+// so pass the event ID on as an idempotency key.
+public sealed class SendReceipt : Subscription
+{
+    // Subscriptions are created once; a scoped service comes from ctx.Services instead.
+    public SendReceipt(IEmailSender email) =>
+        On<CheckedOut>((_, ctx) => email.SendReceipt(ctx.Envelope.StreamId, ctx.Envelope.EventId, ctx.CancellationToken));
+}
+```
+<!-- endSnippet -->
+
+
+## When a handler fails
+
+1. The runner retries the event with growing delays, up to `HandlerRetries` times.
+2. Then it sets that consumer to `stalled`, and records the stream, version, event type and exception.
+3. Metrics, logs, the health check and `deedbox status` report it.
+4. The runner retries the event every 5 minutes, one attempt at a time across all instances. When the event succeeds, the consumer runs again.
+5. You fix the cause, or [skip the one event](/operations/poison-event/) with an audited job.
+
+No timeout ever moves a consumer past an event it did not handle.
+
+## Causation and tracing
+
+A subscription's `ctx.Services` is a scope made for the event. A store resolved there appends with the event's tenant and correlation ID, and records the event as the cause. Each handler call runs in a trace span whose parent is the append that wrote the event.

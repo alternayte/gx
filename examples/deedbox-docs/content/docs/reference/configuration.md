@@ -1,0 +1,34 @@
+---
+description: Every setting, with its default.
+order: 2
+sidebarGroup: Reference
+title: Configuration options
+---
+
+This page lists every setting of `AddDeedbox`.
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `UsePostgres(...)` or `UseSqlServer(...)` | none; required | The database: a connection string, an app-owned `NpgsqlDataSource`, or `sp => connectionString`. The last form reads the connection string from the app's services at start-up, so configuration that tests override, as with `WebApplicationFactory`, applies. |
+| `UseSqlServer(..., sql => sql.NativeJson = true)` | off | Stores JSON in SQL Server's native `json` type. Needs SQL Server 2025 or Azure SQL. |
+| `Schema(name)` | `deedbox` | The schema for Deedbox's tables. |
+| `ApplySchemaOnStartup()` | off | Applies pending migrations at start-up, under a lock. |
+| `ExecuteRetries(n)` | 3 | How often `Execute` reruns a decision after a creation race. |
+| `ConfigureJson(o => ...)` | web defaults (camelCase); enums as numbers | Deedbox's own JSON options. The app's global options never apply. |
+| `UseJsonContext(context)` | reflection | Source-generated contracts, for trimmed and native AOT apps. |
+| `Keys(k => ...)` | none; required with `[PersonalData]` | `StoreInDatabase()`, `FromEnvironment(var)`, `FromKeyRing(ring)`, `Use(provider)`, `RedactWith(text)`. |
+| `PseudonymPrefix(prefix)` | `person:` | The prefix of every subject ID that `IPseudonyms` computes. Set it once; a period keeps the prefix it was created with. |
+| `Runner(r => r.Enabled)` | true | Runs async projections, subscriptions and jobs in this process. |
+| `Runner(r => r.BatchSize)` | 500 | Most events per batch. |
+| `Runner(r => r.MinPollDelay)` | 50 ms | First wait when idle. |
+| `Runner(r => r.MaxPollDelay)` | 5 s | Longest wait when idle. Postgres wakes sooner on LISTEN/NOTIFY. |
+| `Runner(r => r.HandlerRetries)` | 5 | Retries before a consumer stalls. A stalled consumer still retries every 5 minutes. |
+| `Runner(r => r.RetryDelay)` | 1 s | First retry delay; it doubles, up to 5 minutes. |
+| `Runner(r => r.StallAfter)` | 10 min | The health check's "not moving" limit. |
+
+Per stream type:
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `StateVersion(n)` | 1 | Raise it when the state record changes. |
+| `Snapshots(policy)` | `EveryAppend` | When to store state: `EveryAppend`, `Every(n)`, `Never`. |

@@ -1,0 +1,46 @@
+---
+description: Handle an event that a handler cannot process.
+order: 2
+sidebarGroup: Operations
+title: Poison event
+---
+
+
+This runbook helps you handle a poison event: an event that makes a handler throw every time.
+
+## What Deedbox has done
+
+1. It retried the event, with growing delays, `HandlerRetries` times.
+2. It set the consumer to `stalled` and recorded the event. Other consumers keep running.
+3. It retries the event every 5 minutes. When the event succeeds, the consumer runs again without a restart.
+4. No event after it was applied, and no event was skipped.
+
+If the cause was outside the handler, such as a service that was down, the consumer runs again at the next retry after the cause is gone.
+
+## Steps
+
+1. Run `deedbox status`. It shows the event ID, event type, stream, version and exception, the attempts so far, and the time of the next retry.
+2. Read the stream and the exception. Decide whether the handler, the event or a service it calls is wrong.
+3. If the handler is wrong, fix it and deploy. At start-up, a poison stall gets one more round of retries at once, and the consumer moves on once the event succeeds.
+4. If the event can never be handled, skip it:
+
+   ```sh
+   deedbox skip cart_totals --event 01a0d1cd-e1f2-73f6-9d0b-bd9eec9e61c9 --wait
+   ```
+
+   The job checks that this is the event the consumer stalled on, moves the checkpoint one event past it, and records the event and the stall in the jobs table.
+
+The same operations are on the admin API:
+
+<!-- snippet: admin-api -->
+```cs
+var status = await admin.GetStatusAsync();
+foreach (var consumer in status.Consumers)
+    Console.WriteLine($"{consumer.Name}: {consumer.Status}, {consumer.Lag} behind");
+
+var rebuild = await admin.RebuildAsync("cart_summary");
+var skip = await admin.SkipAsync("cart_totals", stalledEventId);
+var job = await admin.GetJobAsync(rebuild);
+```
+<!-- endSnippet -->
+

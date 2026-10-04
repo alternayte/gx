@@ -47,6 +47,10 @@ bench-export:
 bench-dev:
     go test ./internal/devserver -run TestNFR_02 -v
 
+# The Deedbox docs parity checklist (REQ-CNT-14).
+parity-docs:
+    cd tests/e2e && bun test deedbox.spec.ts
+
 # The LSP latency budgets (NFR-06).
 bench-lsp:
     go test ./internal/lsp -run TestNFR_06 -v

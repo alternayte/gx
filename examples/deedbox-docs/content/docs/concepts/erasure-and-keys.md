@@ -1,0 +1,47 @@
+---
+description: How crypto-shredding erases personal data from streams you keep.
+order: 6
+sidebarGroup: Concepts
+title: Erasure and the key hierarchy
+---
+
+This page explains how Deedbox encrypts personal data, and what erasure does.
+
+The keys form a chain:
+
+1. The **master key** lives in the database, in a key ring from configuration, or in Azure Key Vault.
+2. It wraps one **tenant key** per tenant, which each process unwraps once.
+3. Each tenant key wraps the **subject keys** in the `subject_keys` table.
+4. Each subject key encrypts that subject's **personal-data fields** in event payloads.
+
+- Each `[PersonalData]` field is encrypted with AES-256-GCM under its subject's key.
+- Each subject key is wrapped by its tenant's key. Each tenant key is wrapped by the master key.
+- Reads and rebuilds use only local AES. They never call a key service.
+- Erasing a subject deletes their key. Every copy of their data, in every stream, becomes unreadable at once.
+- Shredding a tenant destroys the tenant key, all its subject keys and all its pseudonym secrets.
+
+## Pseudonymous subject IDs
+
+The master key also wraps one **pseudonym secret** per tenant and period, in the `pseudonym_keys` table. A secret is a random key. It is not derived from the tenant key, so each can be destroyed on its own.
+
+- `IPseudonyms.SubjectForAsync(identity, periodId)` returns the prefix plus the first 128 bits of HMAC-SHA256(secret, identity), in base32. The same identity and period give the same subject ID on every instance.
+- Each period has its own secret, so the same person has a different subject ID in each period.
+- Erasure by identity computes the subject ID in every period whose secret still exists, and erases each subject as above.
+- Destroying a period's secret makes its subject IDs impossible to link to a person again. The period stays closed.
+- Re-wrapping or rotating the master key does not change a secret, so no subject ID changes.
+- Reads and rebuilds never use a pseudonym secret.
+
+See [use pseudonymous subject IDs](/how-to/use-pseudonymous-ids/).
+
+## What is safe to rely on
+
+- A missing subject key is the only thing that reads as erased. A key that does not verify, or a master key that cannot unwrap a tenant key, stops Deedbox with an error. A misconfiguration never looks like an erasure.
+- Subject keys are cached for one operation only, so an erasure on one instance applies on every instance at once.
+- The stored state of a stream with personal data is encrypted with the tenant key, and cleared when a subject in it is erased.
+
+## What it does not cover
+
+- Backups taken before an erasure keep the subject key until they age out.
+- Your projections and subscriptions receive decrypted data. Scrub it when they handle `SubjectErased`.
+- Metadata, stream IDs and subject IDs are plain text. Use [pseudonymous subject IDs](/how-to/use-pseudonymous-ids/) instead of emails or logins.
+- A person who holds a pseudonym secret and a list of candidate identities can re-identify that period's subjects. Pseudonymized data is still personal data under the GDPR.

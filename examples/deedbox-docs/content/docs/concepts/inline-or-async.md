@@ -1,0 +1,53 @@
+---
+description: How the two run modes differ, and which one each read model needs.
+order: 4
+sidebarGroup: Concepts
+title: Inline or async projections
+---
+
+This page helps you choose a run mode for each projection. Each projection has exactly one mode, set when you register it: `Projection<T>(name, Run.Inline)` or `Projection<T>(name, Run.Async)`.
+
+## How they differ
+
+| | Inline | Async |
+| --- | --- | --- |
+| Runs | In the append's transaction, before the commit | In the background runner, after the commit |
+| A read after a command | Sees the command's effect | Can be behind by the lag, often milliseconds |
+| A failing handler | Fails the append; the command sees the exception | Retries, then stalls the projection; appends go on |
+| Cost to the append | The handler's time, inside the stream lock | None |
+| Reads events | One append at a time | In batches of up to `BatchSize`; a `BatchProjection` gets the whole batch |
+| Guarantee | Exactly once: the writes commit with the events | Exactly once: the writes commit with the checkpoint |
+| Several app instances | Every instance runs it in its own appends | One instance at a time runs it; the others wait |
+| Rebuild | The runner replays it, then switches it back to inline | The runner replays it |
+
+Inline handlers run before the position counter update, so they do not hold the counter lock. They do keep the stream locked, and the transaction open, while they run.
+
+## Choose inline when
+
+- A user must see their own write at once, such as an editor's screen right after a decision.
+- A rule in the read model must hold together with the events, such as a unique name.
+- The handler is quick, and it writes only to the same database.
+
+## Choose async when
+
+- The read model can be a little behind: public pages, dashboards, reports, search.
+- The handler is slow, or it rebuilds often, or it reads many events at once.
+- A failure must not stop writes. A stalled async projection waits for a fix; an inline one fails every append that it handles.
+- The work leaves the database. That is a [subscription](/concepts/projections-and-subscriptions/), which is always async.
+
+## Mix them
+
+One stream can feed several projections, each in its own mode. A common set is an inline projection for the screens that edit, and an async one for public reads or a search index. Each projection keeps its own checkpoint, so each one rebuilds on its own.
+
+## Change a projection's mode
+
+A projection whose mode changes stalls until you rebuild it, because its stored progress belongs to the other mode ([rebuild a projection](/how-to/rebuild-a-projection/)). To change the mode without a gap in the read model, register the new mode under a new name, and switch the reads when it catches up. See [replace a read model without downtime](/how-to/replace-a-read-model/).
+
+## Deploy inline projections safely
+
+An instance that does not run an inline projection cannot apply it to its own appends. That happens during a rolling deploy, when old and new versions run side by side, or after a rollback. Deedbox handles both, with a heartbeat that each instance writes: what it runs, and what event types it can append.
+
+- **A new inline projection** starts in catch-up. The runner applies events by position, whichever instance appended them. The projection switches to inline only when no live instance can append its events without running it, so it waits until the old instances stop.
+- **An instance that starts without a running inline projection**, but can append its events, first moves that projection back to catch-up from the current head. The instances that run the projection then apply the old instance's appends by position, and switch it back to inline when the old instances stop.
+
+While a projection waits, `deedbox status` shows it as `rebuilding` with a small lag, and the log names the instances it waits for. An instance that stops cleanly leaves at once. One that crashes counts as live for 30 seconds after its last heartbeat, so the switch to inline waits that long.
