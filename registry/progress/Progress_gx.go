@@ -17,8 +17,8 @@ type ProgressProps struct {
 func Progress(p ProgressProps) gx.Node {
 	var _b gx.Builder
 //line Progress.gx:11:1
-	_b.Add(gx.El("progress", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-2 w-full overflow-hidden rounded-full [&::-moz-progress-bar]:bg-primary [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.Max), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)))
-//line Progress.gx:11:338
+	_b.Add(gx.El("progress", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-2 w-full overflow-hidden rounded-full [&::-moz-progress-bar]:bg-primary [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)))
+//line Progress.gx:11:340
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

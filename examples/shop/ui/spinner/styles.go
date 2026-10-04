@@ -17,3 +17,11 @@ var sizeClass = gx.Enum[Size]{
 	Md: "size-5",
 	Lg: "size-8",
 }
+
+// sizeClass returns the classes of one spinner size; a zero value is Md.
+func (p SpinnerProps) sizeClass() string {
+	if p.Size == "" {
+		return sizeClass[Md]
+	}
+	return sizeClass[p.Size]
+}

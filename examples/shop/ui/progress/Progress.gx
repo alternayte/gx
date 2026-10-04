@@ -8,4 +8,4 @@ props {
   Attrs gx.Attrs = nil
 }
 
-<progress value={p.Value} max={p.Max} aria-label={p.Label} class={gx.Cx("h-2 w-full overflow-hidden rounded-full [&::-moz-progress-bar]:bg-primary [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary", p.Class)} {...p.Attrs}></progress>
+<progress value={p.Value} max={p.max()} aria-label={p.Label} class={gx.Cx("h-2 w-full overflow-hidden rounded-full [&::-moz-progress-bar]:bg-primary [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary", p.Class)} {...p.Attrs}></progress>

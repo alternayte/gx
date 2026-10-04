@@ -7,8 +7,8 @@
     {
       "path": "Spinner.gx",
       "target": "ui/spinner/Spinner.gx",
-      "content": "package spinner\n\nprops {\n  Label string   = \"\"\n  Size  Size     = Md\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan role=\"status\" class={gx.Cx(\"inline-flex items-center gap-2 text-muted-foreground\", p.Class)} {...p.Attrs}\u003e\n  \u003csvg class={gx.Cx(\"animate-spin\", sizeClass[p.Size])} viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"\u003e\n    \u003ccircle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"\u003e\u003c/circle\u003e\n    \u003cpath class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z\"\u003e\u003c/path\u003e\n  \u003c/svg\u003e\n  if p.Label != \"\" {\n    \u003cspan\u003e{p.Label}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "42ff1e12429a6df8094f6ba3e3055c7ea79ad59f6778d92f33c38d9945b096a6"
+      "content": "package spinner\n\nprops {\n  Label string   = \"\"\n  Size  Size     = Md\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan role=\"status\" class={gx.Cx(\"inline-flex items-center gap-2 text-muted-foreground\", p.Class)} {...p.Attrs}\u003e\n  \u003csvg class={gx.Cx(\"animate-spin\", p.sizeClass())} viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"\u003e\n    \u003ccircle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"\u003e\u003c/circle\u003e\n    \u003cpath class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z\"\u003e\u003c/path\u003e\n  \u003c/svg\u003e\n  if p.Label != \"\" {\n    \u003cspan\u003e{p.Label}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "a549bf63b1349479cd231a660cf39a832eb9caa9ab87f30d3b7115b8ceb2e608"
     },
     {
       "path": "Spinner.fixtures.go",
@@ -19,8 +19,8 @@
     {
       "path": "styles.go",
       "target": "ui/spinner/styles.go",
-      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of a spinner.\ntype Size string\n\n// The sizes of spinner.Spinner.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-4\",\n\tMd: \"size-5\",\n\tLg: \"size-8\",\n}\n",
-      "sha256": "afbb8532952714ae8d701cd5e8fbbe00cee9df0198d4060ae4a1c2f9d0e17f3b"
+      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of a spinner.\ntype Size string\n\n// The sizes of spinner.Spinner.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-4\",\n\tMd: \"size-5\",\n\tLg: \"size-8\",\n}\n\n// sizeClass returns the classes of one spinner size; a zero value is Md.\nfunc (p SpinnerProps) sizeClass() string {\n\tif p.Size == \"\" {\n\t\treturn sizeClass[Md]\n\t}\n\treturn sizeClass[p.Size]\n}\n",
+      "sha256": "2933658b669842b14bf6d37c4f1efdaa6a7bae1fae14a2ef883c1c9ecb310ec7"
     }
   ],
   "requiredTokens": [

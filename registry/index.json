@@ -85,6 +85,12 @@
       "kind": "component"
     },
     {
+      "name": "data-table",
+      "version": "0.1.0",
+      "description": "A server-driven table with typed columns, sort headers and paging.",
+      "kind": "component"
+    },
+    {
       "name": "data-table-page",
       "version": "0.1.0",
       "description": "A page frame for a server-driven data table.",

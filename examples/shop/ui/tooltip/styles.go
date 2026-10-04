@@ -19,3 +19,11 @@ var sideClass = gx.Enum[Side]{
 	Left:   "right-full top-1/2 mr-1.5 -translate-y-1/2",
 	Right:  "left-full top-1/2 ml-1.5 -translate-y-1/2",
 }
+
+// sideClass returns the classes of one tooltip side; a zero value is Top.
+func (p TooltipProps) sideClass() string {
+	if p.Side == "" {
+		return sideClass[Top]
+	}
+	return sideClass[p.Side]
+}

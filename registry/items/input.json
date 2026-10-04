@@ -7,14 +7,20 @@
     {
       "path": "Input.gx",
       "target": "ui/input/Input.gx",
-      "content": "package input\n\nprops {\n  Id          string   = \"\"\n  Type        string   = \"text\"\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput id={p.Id} type={p.Type} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx(\"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs} /\u003e\n",
-      "sha256": "72e8aff8526c606af60dfb1252909117ddf064919652fb25c42fab9574e93185"
+      "content": "package input\n\nprops {\n  Id          string   = \"\"\n  Type        string   = \"text\"\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput id={p.Id} type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx(\"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs} /\u003e\n",
+      "sha256": "179aa11cfd578d24d1055849a64ab4219db52cecfd12fa205abf87fea28aff0b"
     },
     {
       "path": "Input.fixtures.go",
       "target": "ui/input/Input.fixtures.go",
       "content": "package input\n\nimport \"github.com/alternayte/gx\"\n\nvar InputFixtures = gx.Fixtures[InputProps]{\n\t\"Text\":     {Placeholder: \"Email\"},\n\t\"Filled\":   {Value: \"ada@example.com\"},\n\t\"Disabled\": {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n\t\"File\":     {Type: \"file\"},\n}\n",
       "sha256": "621222b7e103c8552736785d20059a61347ff0d4a4be9fbf18f926f46d8996d8"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/input/styles.go",
+      "content": "package input\n\n// inputType returns the type of the input; a zero value is text.\nfunc (p InputProps) inputType() string {\n\tif p.Type == \"\" {\n\t\treturn \"text\"\n\t}\n\treturn p.Type\n}\n",
+      "sha256": "be9805b57a16cf51f1e90da7c45cd571afccbbf048ef8342f2cd1e1d7a192493"
     }
   ],
   "requiredTokens": [

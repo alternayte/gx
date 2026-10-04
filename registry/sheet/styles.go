@@ -19,3 +19,11 @@ var sideClass = gx.Enum[Side]{
 	Top:    "inset-x-0 top-0 bottom-auto w-full rounded-b-xl border-b",
 	Bottom: "inset-x-0 bottom-0 top-auto w-full rounded-t-xl border-t",
 }
+
+// sideClass returns the classes of one sheet side; a zero value is Right.
+func (p SheetProps) sideClass() string {
+	if p.Side == "" {
+		return sideClass[Right]
+	}
+	return sideClass[p.Side]
+}

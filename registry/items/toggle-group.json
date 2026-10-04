@@ -25,8 +25,8 @@
     {
       "path": "ToggleGroupItem.fixtures.go",
       "target": "ui/toggle-group/ToggleGroupItem.fixtures.go",
-      "content": "package togglegroup\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleGroupItemFixtures = gx.Fixtures[ToggleGroupItemProps]{\n\t\"Checked\": {Name: \"align\", Value: \"left\", Checked: true, Children: gx.Text(\"Left\")},\n}\n",
-      "sha256": "16f1d1fd3a3eb0cf6f62a8b407c07529f66e6622ec63e9c7b5cb8c1281e5e9b7"
+      "content": "package togglegroup\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleGroupItemFixtures = gx.Fixtures[ToggleGroupItemProps]{\n\t\"Checked\": {Name: \"align-demo\", Value: \"left\", Checked: true, Children: gx.Text(\"Left\")},\n}\n",
+      "sha256": "96579e631dfde36a8a7db734f3d3329c3a3c62d119508ad7e8f225c99d703bc0"
     }
   ],
   "requiredTokens": [

@@ -1,1 +1,24 @@
-{"name":"slider","version":"0.1.0","description":"A native range control.","kind":"component","files":[{"path":"Slider.gx","target":"ui/slider/Slider.gx"},{"path":"Slider.fixtures.go","target":"ui/slider/Slider.fixtures.go"}],"requiredTokens":["--muted","--primary"]}
+{
+  "name": "slider",
+  "version": "0.1.0",
+  "description": "A native range control.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Slider.gx",
+      "target": "ui/slider/Slider.gx"
+    },
+    {
+      "path": "Slider.fixtures.go",
+      "target": "ui/slider/Slider.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/slider/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--muted",
+    "--primary"
+  ]
+}

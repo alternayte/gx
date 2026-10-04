@@ -1,0 +1,12 @@
+{
+  "name": "data-table",
+  "version": "0.1.0",
+  "description": "A server-driven table with typed columns, sort headers and paging.",
+  "kind": "component",
+  "files": [
+    {"path": "DataTable.go", "target": "ui/data-table/DataTable.go"},
+    {"path": "DataTable.fixtures.go", "target": "ui/data-table/DataTable.fixtures.go"}
+  ],
+  "registryDependencies": ["table", "pagination"],
+  "requiredTokens": ["--border", "--muted-foreground", "--accent", "--accent-foreground", "--ring"]
+}

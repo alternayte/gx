@@ -13,8 +13,8 @@
     {
       "path": "HoverCard.fixtures.go",
       "target": "ui/hover-card/HoverCard.fixtures.go",
-      "content": "package hovercard\n\nimport \"github.com/alternayte/gx\"\n\nvar HoverCardFixtures = gx.Fixtures[HoverCardProps]{\n\t\"User\": {\n\t\tTrigger: gx.Text(\"@ada\"),\n\t\tChildren: gx.Frag(\n\t\t\tgx.El(\"p\", gx.Attrs{{Key: \"class\", Value: \"font-medium\"}}, gx.Text(\"Ada Lovelace\")),\n\t\t\tgx.El(\"p\", gx.Attrs{{Key: \"class\", Value: \"text-muted-foreground\"}}, gx.Text(\"First programmer.\")),\n\t\t),\n\t},\n}\n",
-      "sha256": "81516d31bd7dc0d9ab458b4e79fa94d7201ac3e3ad39480eb7c11c83b5a0814d"
+      "content": "package hovercard\n\nimport \"github.com/alternayte/gx\"\n\nvar HoverCardFixtures = gx.Fixtures[HoverCardProps]{\n\t\"User\": {\n\t\tTrigger: gx.El(\"button\", gx.Attrs{{Key: \"type\", Value: \"button\"}}, gx.Text(\"@ada\")),\n\t\tChildren: gx.Frag(\n\t\t\tgx.El(\"p\", gx.Attrs{{Key: \"class\", Value: \"font-medium\"}}, gx.Text(\"Ada Lovelace\")),\n\t\t\tgx.El(\"p\", gx.Attrs{{Key: \"class\", Value: \"text-muted-foreground\"}}, gx.Text(\"First programmer.\")),\n\t\t),\n\t},\n}\n",
+      "sha256": "965c99c495401dbbdc8b4216755a5e788cca1466cdc7cfea4453e48879b86f74"
     }
   ],
   "requiredTokens": [

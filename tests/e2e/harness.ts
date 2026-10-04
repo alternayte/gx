@@ -23,11 +23,19 @@ export type Shop = {
   stop: () => void
 }
 
+export type ShopOptions = {
+  // gxdev builds the app with the gxdev tag, so the dev gallery exists.
+  gxdev?: boolean
+}
+
 // startShop builds the example app and starts it.
-export async function startShop(): Promise<Shop> {
+export async function startShop(opts: ShopOptions = {}): Promise<Shop> {
   const dir = mkdtempSync(join(tmpdir(), 'gx-shop-'))
   const bin = join(dir, process.platform === 'win32' ? 'shop.exe' : 'shop')
-  const build = spawn(['go', 'build', '-o', bin, './cmd/shop'], { cwd: shopDir })
+  const args = ['go', 'build', '-o', bin]
+  if (opts.gxdev) args.push('-tags', 'gxdev')
+  args.push('./cmd/shop')
+  const build = spawn(args, { cwd: shopDir })
   const buildCode = await build.exited
   if (buildCode !== 0) {
     const err = await new Response(build.stderr).text()

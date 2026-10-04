@@ -1,1 +1,25 @@
-{"name":"input","version":"0.1.0","description":"A single-line text control.","kind":"component","files":[{"path":"Input.gx","target":"ui/input/Input.gx"},{"path":"Input.fixtures.go","target":"ui/input/Input.fixtures.go"}],"requiredTokens":["--input","--ring","--muted-foreground"]}
+{
+  "name": "input",
+  "version": "0.1.0",
+  "description": "A single-line text control.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Input.gx",
+      "target": "ui/input/Input.gx"
+    },
+    {
+      "path": "Input.fixtures.go",
+      "target": "ui/input/Input.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/input/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring",
+    "--muted-foreground"
+  ]
+}

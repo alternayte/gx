@@ -9,7 +9,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<span class={gx.Cx("relative flex shrink-0 overflow-hidden rounded-full", sizeClass[p.Size], p.Class)} {...p.Attrs}>
+<span class={gx.Cx("relative flex shrink-0 overflow-hidden rounded-full", p.sizeClass(), p.Class)} {...p.Attrs}>
   if p.Src != "" {
     <img src={p.Src} alt={p.Alt} class="aspect-square size-full object-cover" />
   } else if p.Fallback != "" {

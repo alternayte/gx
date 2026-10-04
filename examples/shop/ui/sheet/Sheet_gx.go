@@ -38,7 +38,7 @@ func Sheet(p SheetProps) gx.Node {
 	_b1.Add(gx.Text("\n  "))
 //line Sheet.gx:20:3
 	var _b2 gx.Builder
-//line Sheet.gx:20:224
+//line Sheet.gx:20:220
 	_b2.Add(gx.Text("\n    "))
 //line Sheet.gx:21:5
 	var _b3 gx.Builder
@@ -102,7 +102,7 @@ func Sheet(p SheetProps) gx.Node {
 	}
 //line Sheet.gx:37:6
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed m-0 flex flex-col gap-4 border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50", sideClass[p.Side], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
+	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed m-0 flex flex-col gap-4 border border-border bg-card p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.sideClass(), p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
 //line Sheet.gx:38:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))

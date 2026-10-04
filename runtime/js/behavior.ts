@@ -211,6 +211,30 @@ const onKeydown = (e: KeyboardEvent): void => {
     }
     return
   }
+  // ArrowDown on a menu trigger opens the menu and enters the item list.
+  if (e.key === 'ArrowDown' && at?.hasAttribute?.('popovertarget')) {
+    const menu = document.getElementById(at.getAttribute('popovertarget') ?? '')
+    if (menu) {
+      e.preventDefault()
+      if (!isOpen(menu)) open(menu)
+      const items = rovingItems(menu)
+      if (items.length > 0) setCurrent(items, 0, false)
+    }
+    return
+  }
+  const tab = at?.closest?.('[data-gx-tab]') as HTMLElement | null
+  if (tab && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+    const wrapper = tab.closest('[data-gx-tabs]')
+    if (wrapper) {
+      e.preventDefault()
+      const tabs = tabsOf(wrapper)
+      const i = tabs.findIndex((entry) => entry.button === tab)
+      const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length
+      tabs[next].button.focus()
+      selectTab(wrapper, tabs[next].label, true)
+    }
+    return
+  }
   const box = at?.closest?.('[data-gx-roving]') as HTMLElement | null
   if (!box) return
   const items = rovingItems(box)
@@ -287,6 +311,13 @@ const onOpenClick = (e: Event): void => {
   open(target)
 }
 
+// onCancel keeps a manual dialog open when the browser fires cancel on
+// Escape (REQ-REG-07).
+const onCancel = (e: Event): void => {
+  const dialog = e.target as HTMLElement | null
+  if (dialog?.getAttribute?.('data-gx-dismiss') === 'manual') e.preventDefault()
+}
+
 const onToggle = (e: Event): void => {
   const el = e.target as HTMLElement | null
   if (!(el instanceof HTMLDialogElement) || !el.open || !el.hasAttribute('data-gx-trap')) return
@@ -313,6 +344,7 @@ if (typeof document !== 'undefined') {
   document.addEventListener('keydown', onKeydown, true)
   document.addEventListener('pointerdown', onPointerdown, true)
   document.addEventListener('toggle', onToggle, true)
+  document.addEventListener('cancel', onCancel, true)
   install()
   new MutationObserver(install).observe(document.documentElement, { subtree: true, childList: true })
 }

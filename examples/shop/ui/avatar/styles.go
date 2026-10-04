@@ -17,3 +17,11 @@ var sizeClass = gx.Enum[Size]{
 	Md: "size-8",
 	Lg: "size-10 text-base",
 }
+
+// sizeClass returns the classes of one avatar size; a zero value is Md.
+func (p AvatarProps) sizeClass() string {
+	if p.Size == "" {
+		return sizeClass[Md]
+	}
+	return sizeClass[p.Size]
+}

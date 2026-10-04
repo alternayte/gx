@@ -37,8 +37,8 @@
     {
       "path": "EmptyMedia.gx",
       "target": "ui/empty/EmptyMedia.gx",
-      "content": "package empty\n\nprops {\n  Variant  Variant  = Default\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-variant={p.Variant} class={gx.Cx(\"flex shrink-0 items-center justify-center\", variantClass[p.Variant], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "ab44670dfd586fe0f98273ffae80dfe303a83ed91c2d696bacdcfaa4a33553c2"
+      "content": "package empty\n\nprops {\n  Variant  Variant  = Default\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-variant={p.Variant} class={gx.Cx(\"flex shrink-0 items-center justify-center\", p.variantClass(), p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "a4d69805bf041c25ffbb7184b2a53d1bcbedbff6402630d178fb9d1366c7be52"
     },
     {
       "path": "Empty.fixtures.go",
@@ -49,8 +49,8 @@
     {
       "path": "styles.go",
       "target": "ui/empty/styles.go",
-      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the look of the media slot of an empty state.\ntype Variant string\n\n// The variants of empty.EmptyMedia.\nconst (\n\tDefault Variant = \"default\"\n\tIcon    Variant = \"icon\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"\",\n\tIcon:    \"flex size-10 items-center justify-center rounded-lg bg-muted text-foreground [\u0026\u003esvg]:size-5\",\n}\n",
-      "sha256": "75e792a06d5e6088d870fdbaa89aa73c397b861baddeca399c08a36b68eb5300"
+      "content": "package empty\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the look of the media slot of an empty state.\ntype Variant string\n\n// The variants of empty.EmptyMedia.\nconst (\n\tDefault Variant = \"default\"\n\tIcon    Variant = \"icon\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"\",\n\tIcon:    \"flex size-10 items-center justify-center rounded-lg bg-muted text-foreground [\u0026\u003esvg]:size-5\",\n}\n\n// variantClass returns the classes of one media variant; a zero value is\n// Default.\nfunc (p EmptyMediaProps) variantClass() string {\n\tif p.Variant == \"\" {\n\t\treturn variantClass[Default]\n\t}\n\treturn variantClass[p.Variant]\n}\n",
+      "sha256": "48f055efb5b54eb4fa30101e7f46b9b3b4d89c55eb38b006c291d009829db938"
     },
     {
       "path": "EmptyContent.fixtures.go",

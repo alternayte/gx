@@ -43,8 +43,8 @@
     {
       "path": "FieldLegend.gx",
       "target": "ui/field/FieldLegend.gx",
-      "content": "package field\n\nprops {\n  Variant  Variant  = Legend\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clegend data-variant={p.Variant} class={gx.Cx(\"mb-3 font-medium\", legendClass[p.Variant], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/legend\u003e\n",
-      "sha256": "ae3c6145581fbb6a694b8d313af209830666fa9710790953b70a81aa38345213"
+      "content": "package field\n\nprops {\n  Variant  Variant  = Legend\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clegend data-variant={p.Variant} class={gx.Cx(\"mb-3 font-medium\", p.legendClass(), p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/legend\u003e\n",
+      "sha256": "58a1634805fa5bcb7bc20bb20a11ed0d7938fe391f3273bcc6bab0d8770d3366"
     },
     {
       "path": "Field.fixtures.go",
@@ -55,8 +55,8 @@
     {
       "path": "styles.go",
       "target": "ui/field/styles.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the size of a field legend.\ntype Variant string\n\n// The variants of field.FieldLegend.\nconst (\n\tLegend Variant = \"legend\"\n\tLabel  Variant = \"label\"\n)\n\nvar legendClass = gx.Enum[Variant]{\n\tLegend: \"text-base\",\n\tLabel:  \"text-sm\",\n}\n",
-      "sha256": "855e1712cc199c5faf47bb54aa0276e7cdc4f7e69f24c72b0299e45454cef692"
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the size of a field legend.\ntype Variant string\n\n// The variants of field.FieldLegend.\nconst (\n\tLegend Variant = \"legend\"\n\tLabel  Variant = \"label\"\n)\n\nvar legendClass = gx.Enum[Variant]{\n\tLegend: \"text-base\",\n\tLabel:  \"text-sm\",\n}\n\n// legendClass returns the classes of one legend variant; a zero value is\n// Legend.\nfunc (p FieldLegendProps) legendClass() string {\n\tif p.Variant == \"\" {\n\t\treturn legendClass[Legend]\n\t}\n\treturn legendClass[p.Variant]\n}\n",
+      "sha256": "067968b9f2e22b13361b5898253f6538f2be13c226fb6785b19e8a74425d3400"
     },
     {
       "path": "FieldDescription.fixtures.go",

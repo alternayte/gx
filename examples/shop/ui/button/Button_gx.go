@@ -18,8 +18,8 @@ type ButtonProps struct {
 func Button(p ButtonProps) gx.Node {
 	var _b gx.Builder
 //line Button.gx:12:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.Type, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Button.gx:12:75
+	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.typeAttr(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Button.gx:12:81
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

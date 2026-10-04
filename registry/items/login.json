@@ -13,8 +13,8 @@
     {
       "path": "Login.fixtures.go",
       "target": "ui/login/Login.fixtures.go",
-      "content": "package login\n\nimport \"github.com/alternayte/gx\"\n\nvar LoginFixtures = gx.Fixtures[LoginProps]{\n\t\"Default\": {},\n}\n",
-      "sha256": "4072d4526c2358a763f169c8a56f8db1fd53df79d6e7ca06e36bc91464589a1a"
+      "content": "package login\n\nimport \"github.com/alternayte/gx\"\n\nvar LoginFixtures = gx.Fixtures[LoginProps]{\n\t\"Default\": {Title: \"Sign in\", Description: \"Enter your email and password.\"},\n}\n",
+      "sha256": "c2e005ed8f46e41d7b0e2160cc3affc48283723ada116ec2bf4dbf7d3fd71f77"
     }
   ],
   "registryDependencies": [

@@ -19,7 +19,7 @@ func Avatar(p AvatarProps) gx.Node {
 	var _b gx.Builder
 //line Avatar.gx:12:1
 	var _b1 gx.Builder
-//line Avatar.gx:12:117
+//line Avatar.gx:12:113
 	_b1.Add(gx.Text("\n  "))
 //line Avatar.gx:13:3
 	if p.Src != "" {
@@ -42,7 +42,7 @@ func Avatar(p AvatarProps) gx.Node {
 	}
 //line Avatar.gx:17:4
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex shrink-0 overflow-hidden rounded-full", sizeClass[p.Size], p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex shrink-0 overflow-hidden rounded-full", p.sizeClass(), p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
 //line Avatar.gx:18:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

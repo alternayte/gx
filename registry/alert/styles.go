@@ -23,5 +23,9 @@ func (p AlertProps) class() string {
 	if p.Icon != nil {
 		grid = "grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3"
 	}
-	return gx.Cx(base, grid, variantClass[p.Variant], p.Class)
+	variant := p.Variant
+	if variant == "" {
+		variant = Default
+	}
+	return gx.Cx(base, grid, variantClass[variant], p.Class)
 }

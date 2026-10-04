@@ -42,8 +42,26 @@ var sizeClass = gx.Enum[Size]{
 	Icon: "size-9",
 }
 
+// typeAttr returns the button type; a zero value is "button".
+func (p ButtonProps) typeAttr() string {
+	if p.Type == "" {
+		return "button"
+	}
+	return p.Type
+}
+
 // class returns the classes of one button state.
 func (p ButtonProps) class() string {
 	const base = "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
-	return gx.Cx(base, variantClass[p.Variant], sizeClass[p.Size], p.Class)
+	// A zero-value prop is the default, so a Go caller and a .gx caller
+	// render the same markup.
+	variant := p.Variant
+	if variant == "" {
+		variant = Default
+	}
+	size := p.Size
+	if size == "" {
+		size = Md
+	}
+	return gx.Cx(base, variantClass[variant], sizeClass[size], p.Class)
 }

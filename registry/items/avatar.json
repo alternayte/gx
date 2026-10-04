@@ -7,8 +7,8 @@
     {
       "path": "Avatar.gx",
       "target": "ui/avatar/Avatar.gx",
-      "content": "package avatar\n\nprops {\n  Src      gx.URL\n  Alt      string   = \"\"\n  Fallback string   = \"\"\n  Size     Size     = Md\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative flex shrink-0 overflow-hidden rounded-full\", sizeClass[p.Size], p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg src={p.Src} alt={p.Alt} class=\"aspect-square size-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan class=\"flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "ac790febdd449e4d507e9cad8eafa46a6444463c5da9735ec718095e1eb5cf16"
+      "content": "package avatar\n\nprops {\n  Src      gx.URL\n  Alt      string   = \"\"\n  Fallback string   = \"\"\n  Size     Size     = Md\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative flex shrink-0 overflow-hidden rounded-full\", p.sizeClass(), p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg src={p.Src} alt={p.Alt} class=\"aspect-square size-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan class=\"flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "6f08e1a6e2d4c0dfb0f78d81245d36e133d87d899b637ad978194b272bbfc8e2"
     },
     {
       "path": "Avatar.fixtures.go",
@@ -19,8 +19,8 @@
     {
       "path": "styles.go",
       "target": "ui/avatar/styles.go",
-      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of an avatar.\ntype Size string\n\n// The sizes of avatar.Avatar.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-6 text-xs\",\n\tMd: \"size-8\",\n\tLg: \"size-10 text-base\",\n}\n",
-      "sha256": "c28a1ff03eadf165e635af6b8a7c70323da102515acd002107f75720fbb0224b"
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of an avatar.\ntype Size string\n\n// The sizes of avatar.Avatar.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-6 text-xs\",\n\tMd: \"size-8\",\n\tLg: \"size-10 text-base\",\n}\n\n// sizeClass returns the classes of one avatar size; a zero value is Md.\nfunc (p AvatarProps) sizeClass() string {\n\tif p.Size == \"\" {\n\t\treturn sizeClass[Md]\n\t}\n\treturn sizeClass[p.Size]\n}\n",
+      "sha256": "3ed59233be8e69e692b154cbcf76f73ae69c4c1cb1786a52c7063217831dc2f0"
     }
   ],
   "requiredTokens": [

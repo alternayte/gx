@@ -82,8 +82,8 @@ func AlertDialog(p AlertDialogProps) gx.Node {
 //line AlertDialog.gx:31:75
 	_b5.Add(gx.Text("\n        "))
 //line AlertDialog.gx:32:9
-	_b5.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs hover:bg-accent hover:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Text(p.Cancel)))
-//line AlertDialog.gx:32:242
+	_b5.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs hover:bg-accent hover:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Text(p.cancel())))
+//line AlertDialog.gx:32:244
 	_b5.Add(gx.Text("\n        "))
 //line AlertDialog.gx:33:9
 	if p.Confirm != nil {

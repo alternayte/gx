@@ -9,4 +9,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<button type={p.Type} class={p.class()} {...p.Attrs}>{p.Children}</button>
+<button type={p.typeAttr()} class={p.class()} {...p.Attrs}>{p.Children}</button>

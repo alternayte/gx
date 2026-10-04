@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<legend data-variant={p.Variant} class={gx.Cx("mb-3 font-medium", legendClass[p.Variant], p.Class)} {...p.Attrs}>{p.Children}</legend>
+<legend data-variant={p.Variant} class={gx.Cx("mb-3 font-medium", p.legendClass(), p.Class)} {...p.Attrs}>{p.Children}</legend>

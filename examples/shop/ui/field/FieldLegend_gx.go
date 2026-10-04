@@ -16,8 +16,8 @@ type FieldLegendProps struct {
 func FieldLegend(p FieldLegendProps) gx.Node {
 	var _b gx.Builder
 //line FieldLegend.gx:10:1
-	_b.Add(gx.El("legend", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-3 font-medium", legendClass[p.Variant], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-variant", Value: string(p.Variant), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldLegend.gx:10:135
+	_b.Add(gx.El("legend", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-3 font-medium", p.legendClass(), p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-variant", Value: string(p.Variant), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line FieldLegend.gx:10:128
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

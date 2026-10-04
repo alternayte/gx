@@ -23,5 +23,9 @@ var variantClass = gx.Enum[Variant]{
 // class returns the classes of one badge.
 func (p BadgeProps) class() string {
 	const base = "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 [&>svg]:pointer-events-none [&>svg]:size-3"
-	return gx.Cx(base, variantClass[p.Variant], p.Class)
+	variant := p.Variant
+	if variant == "" {
+		variant = Default
+	}
+	return gx.Cx(base, variantClass[variant], p.Class)
 }

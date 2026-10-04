@@ -1,1 +1,24 @@
-{"name":"progress","version":"0.1.0","description":"A bar that shows the completion of a task.","kind":"component","files":[{"path":"Progress.gx","target":"ui/progress/Progress.gx"},{"path":"Progress.fixtures.go","target":"ui/progress/Progress.fixtures.go"}],"requiredTokens":["--primary","--muted"]}
+{
+  "name": "progress",
+  "version": "0.1.0",
+  "description": "A bar that shows the completion of a task.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Progress.gx",
+      "target": "ui/progress/Progress.gx"
+    },
+    {
+      "path": "Progress.fixtures.go",
+      "target": "ui/progress/Progress.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/progress/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--primary",
+    "--muted"
+  ]
+}

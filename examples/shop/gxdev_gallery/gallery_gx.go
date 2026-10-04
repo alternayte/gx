@@ -231,7 +231,6 @@ func Fixtures() []gx.Fixture {
 		{Component: "Textarea", Name: "Disabled", Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Disabled"]) }},
 		{Component: "Textarea", Name: "Filled", Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Filled"]) }},
 		{Component: "Textarea", Name: "Placeholder", Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Placeholder"]) }},
-		{Component: "Toaster", Name: "Empty", Node: func() gx.Node { return toast.Toaster(toast.ToasterFixtures["Empty"]) }},
 		{Component: "Toaster", Name: "WithToast", Node: func() gx.Node { return toast.Toaster(toast.ToasterFixtures["WithToast"]) }},
 		{Component: "Toggle", Name: "Disabled", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Disabled"]) }},
 		{Component: "Toggle", Name: "Off", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Off"]) }},

@@ -20,8 +20,8 @@ type SliderProps struct {
 func Slider(p SliderProps) gx.Node {
 	var _b gx.Builder
 //line Slider.gx:14:1
-	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "range", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: gx.TextValue(p.Min), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.Max), Kind: gx.AttrText}, gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "step", Value: gx.TextValue(p.Step), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)))
-//line Slider.gx:14:230
+	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "range", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: gx.TextValue(p.min()), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "step", Value: gx.TextValue(p.step()), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)))
+//line Slider.gx:14:236
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

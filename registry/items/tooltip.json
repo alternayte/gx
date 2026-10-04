@@ -7,20 +7,20 @@
     {
       "path": "Tooltip.gx",
       "target": "ui/tooltip/Tooltip.gx",
-      "content": "package tooltip\n\nprops {\n  Content  string   = \"\"\n  Side     Side     = Top\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"group relative inline-flex\", p.Class)} {...p.Attrs}\u003e\n  {p.Children}\n  if p.Content != \"\" {\n    \u003cspan role=\"tooltip\" class={gx.Cx(\"pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-md group-hover:block group-focus-within:block\", sideClass[p.Side])}\u003e{p.Content}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "5b1d779134116e19b4acb0c283a21f0a7acca4cf2dc98d99ad694da25ef542fe"
+      "content": "package tooltip\n\nprops {\n  Content  string   = \"\"\n  Side     Side     = Top\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"group relative inline-flex\", p.Class)} {...p.Attrs}\u003e\n  {p.Children}\n  if p.Content != \"\" {\n    \u003cspan role=\"tooltip\" class={gx.Cx(\"pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-md group-hover:block group-focus-within:block\", p.sideClass())}\u003e{p.Content}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
+      "sha256": "27858c9be24641a9bb375b28547cf7e67dac94cb5f29bc39b1b9f453f3739e4b"
     },
     {
       "path": "Tooltip.fixtures.go",
       "target": "ui/tooltip/Tooltip.fixtures.go",
-      "content": "package tooltip\n\nimport \"github.com/alternayte/gx\"\n\nvar TooltipFixtures = gx.Fixtures[TooltipProps]{\n\t\"Top\":    {Content: \"Add to library\", Children: gx.Text(\"Hover me\")},\n\t\"Right\":  {Content: \"Add to library\", Side: Right, Children: gx.Text(\"Hover me\")},\n\t\"Bottom\": {Content: \"Add to library\", Side: Bottom, Children: gx.Text(\"Hover me\")},\n\t\"Left\":   {Content: \"Add to library\", Side: Left, Children: gx.Text(\"Hover me\")},\n}\n",
-      "sha256": "77c1dc7889cf765f9953f5c8ad72834a47ef13d7b3386f59ec68fbbb98277c8a"
+      "content": "package tooltip\n\nimport \"github.com/alternayte/gx\"\n\nvar TooltipFixtures = gx.Fixtures[TooltipProps]{\n\t\"Top\":    {Content: \"Add to library\", Children: gx.El(\"button\", gx.Attrs{{Key: \"type\", Value: \"button\"}}, gx.Text(\"Hover me\"))},\n\t\"Right\":  {Content: \"Add to library\", Side: Right, Children: gx.El(\"button\", gx.Attrs{{Key: \"type\", Value: \"button\"}}, gx.Text(\"Hover me\"))},\n\t\"Bottom\": {Content: \"Add to library\", Side: Bottom, Children: gx.El(\"button\", gx.Attrs{{Key: \"type\", Value: \"button\"}}, gx.Text(\"Hover me\"))},\n\t\"Left\":   {Content: \"Add to library\", Side: Left, Children: gx.El(\"button\", gx.Attrs{{Key: \"type\", Value: \"button\"}}, gx.Text(\"Hover me\"))},\n}\n",
+      "sha256": "fee88b3b7d6d8bd856bda3d7a13951d734082ad85694618d5b4af2e21c071ba9"
     },
     {
       "path": "styles.go",
       "target": "ui/tooltip/styles.go",
-      "content": "package tooltip\n\nimport \"github.com/alternayte/gx\"\n\n// Side is the edge a tooltip appears on.\ntype Side string\n\n// The sides of tooltip.Tooltip.\nconst (\n\tTop    Side = \"top\"\n\tBottom Side = \"bottom\"\n\tLeft   Side = \"left\"\n\tRight  Side = \"right\"\n)\n\nvar sideClass = gx.Enum[Side]{\n\tTop:    \"bottom-full left-1/2 mb-1.5 -translate-x-1/2\",\n\tBottom: \"top-full left-1/2 mt-1.5 -translate-x-1/2\",\n\tLeft:   \"right-full top-1/2 mr-1.5 -translate-y-1/2\",\n\tRight:  \"left-full top-1/2 ml-1.5 -translate-y-1/2\",\n}\n",
-      "sha256": "4e21956f48b97d780350155b0478de4597aa22437723d703c7de4f7b397dc047"
+      "content": "package tooltip\n\nimport \"github.com/alternayte/gx\"\n\n// Side is the edge a tooltip appears on.\ntype Side string\n\n// The sides of tooltip.Tooltip.\nconst (\n\tTop    Side = \"top\"\n\tBottom Side = \"bottom\"\n\tLeft   Side = \"left\"\n\tRight  Side = \"right\"\n)\n\nvar sideClass = gx.Enum[Side]{\n\tTop:    \"bottom-full left-1/2 mb-1.5 -translate-x-1/2\",\n\tBottom: \"top-full left-1/2 mt-1.5 -translate-x-1/2\",\n\tLeft:   \"right-full top-1/2 mr-1.5 -translate-y-1/2\",\n\tRight:  \"left-full top-1/2 ml-1.5 -translate-y-1/2\",\n}\n\n// sideClass returns the classes of one tooltip side; a zero value is Top.\nfunc (p TooltipProps) sideClass() string {\n\tif p.Side == \"\" {\n\t\treturn sideClass[Top]\n\t}\n\treturn sideClass[p.Side]\n}\n",
+      "sha256": "7feb8942ab87a8412df07daf3858b47effd8f81300e2b869c7ceb8e444867c18"
     }
   ],
   "requiredTokens": [

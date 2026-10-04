@@ -13,8 +13,8 @@
     {
       "path": "Signup.fixtures.go",
       "target": "ui/signup/Signup.fixtures.go",
-      "content": "package signup\n\nimport \"github.com/alternayte/gx\"\n\nvar SignupFixtures = gx.Fixtures[SignupProps]{\n\t\"Default\": {},\n}\n",
-      "sha256": "c5cee490fdbad7d370537f12cd8c5ca4d16a7cba51b3b2a995bda4fa4ee3a461"
+      "content": "package signup\n\nimport \"github.com/alternayte/gx\"\n\nvar SignupFixtures = gx.Fixtures[SignupProps]{\n\t\"Default\": {Title: \"Create an account\", Description: \"Start with your email.\"},\n}\n",
+      "sha256": "24c15cf9e4f7eae2aa4f6beec795dac1c841725ddfc24932421a553d5adb02ed"
     }
   ],
   "registryDependencies": [
