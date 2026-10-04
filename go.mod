@@ -8,6 +8,7 @@ require (
 	github.com/starfederation/datastar-go v1.2.2
 	github.com/yuin/goldmark v1.8.6
 	golang.org/x/tools v0.49.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

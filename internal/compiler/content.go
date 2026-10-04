@@ -19,6 +19,7 @@ import (
 type contentCollection struct {
 	dir   string // absolute directory
 	comps map[string]contentComp
+	meta  map[string]string // Meta frontmatter fields, nil when unknown
 }
 
 // contentComp is one component of a collection's Components list.
@@ -68,6 +69,15 @@ func collectCollections(pkgs []*packages.Package) []contentCollection {
 					base = filepath.Join(root, filepath.FromSlash(dir))
 				}
 				coll := contentCollection{dir: filepath.Clean(base), comps: map[string]contentComp{}}
+				metaType := pkg.TypesInfo.TypeOf(inner)
+				if ptr, ok := metaType.(*types.Pointer); ok {
+					metaType = ptr.Elem()
+				}
+				if named, ok := metaType.(*types.Named); ok {
+					if args := named.TypeArgs(); args != nil && args.Len() == 1 {
+						coll.meta = yamlFields(args.At(0))
+					}
+				}
 				for _, arg := range call.Args {
 					if comp, ok := contentComponent(pkg, arg); ok {
 						coll.comps[comp.name] = comp
@@ -150,6 +160,7 @@ func checkContent(root string, colls []contentCollection, read func(string) ([]b
 			if err != nil {
 				continue
 			}
+			out = checkFrontmatter(path, src, coll.meta, out)
 			for _, tag := range scanMarkdownTags(string(src)) {
 				comp, ok := coll.comps[tag.name]
 				if !ok {

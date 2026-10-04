@@ -65,6 +65,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX5003 | class string is built at runtime",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 		"GX7002 | gx.Secret cannot cross to the client",
+		"GX8001 | frontmatter is malformed or unknown",
 		"GX8002 | component is not declared in this collection",
 	}
 	if !reflect.DeepEqual(got, want) {

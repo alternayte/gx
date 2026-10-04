@@ -43,6 +43,8 @@ const (
 
 	CodeRuntimeClass = "GX5003"
 
+	CodeContentFrontmatter = "GX8001"
+
 	CodeContentComponent = "GX8002"
 
 	CodeActionMissing       = "GX4001"
@@ -115,6 +117,7 @@ var Catalog = []Info{
 	{CodeRuntimeClass, "class string is built at runtime"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
+	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},
 	{CodeContentComponent, "component is not declared in this collection"},
 }
 
