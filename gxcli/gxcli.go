@@ -2,6 +2,7 @@
 package gxcli
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -20,6 +21,7 @@ import (
 	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
+	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/exporter"
 	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/gxstyles"
@@ -27,9 +29,14 @@ import (
 	"github.com/alternayte/gx/internal/lsp"
 	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
 	"github.com/alternayte/gx/internal/registry"
+	"github.com/alternayte/gx/internal/scaffold"
 	"github.com/alternayte/gx/internal/starlight"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 )
+
+// Version is the Gx release this command line tool belongs to. `gx init`
+// writes it into the go.mod of a new app.
+const Version = "0.1.0"
 
 // Main runs the gx command with the given arguments and returns an exit code.
 func Main(args []string) int {
@@ -38,6 +45,12 @@ func Main(args []string) int {
 		return 2
 	}
 	switch args[0] {
+	case "init":
+		return runInit(args[1:])
+	case "new":
+		return runNew(args[1:])
+	case "agents":
+		return runAgents(args[1:])
 	case "fmt":
 		return runFmt(args[1:])
 	case "check":
@@ -86,6 +99,9 @@ func usage(w io.Writer) {
 	fmt.Fprint(w, `usage: gx <command> [arguments]
 
 Commands:
+  init      write a new app: gx init [--adapter datastar] [--module <path>] [dir]
+  new       add typed code: gx new page|action|form|component|slice <name>
+  agents    refresh the managed section of AGENTS.md with --update
   fmt       format .gx files in place, or stdin when no path is given
   check     check a module and fail on stale generated code, with --json
   generate  write the generated Go files of a module
@@ -104,6 +120,97 @@ Commands:
   diff      show local, base and upstream changes of an item
   update    merge the current registry version into an item
 `)
+}
+
+// runInit writes a new app (REQ-DEV-10).
+func runInit(args []string) int {
+	fs := flag.NewFlagSet("gx init", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	adapter := fs.String("adapter", "", "hypermedia adapter (datastar); gx init asks when the flag is absent")
+	module := fs.String("module", "", "Go module path (default: the directory name)")
+	replace := fs.String("replace", "", "use a local checkout of Gx, for work on Gx itself")
+	registrySource := fs.String("registry", "", "component registry URL or directory for gx.toml")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	if *adapter == "" {
+		// One question, with the default in brackets. A closed or empty
+		// stdin takes the default, so a script needs no flag.
+		fmt.Print("Adapter [datastar]: ")
+		line, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		fmt.Println()
+		*adapter = strings.TrimSpace(line)
+		if *adapter == "" {
+			*adapter = "datastar"
+		}
+	}
+	files, err := scaffold.Init(scaffold.Options{
+		Dir: dir, Module: *module, Adapter: *adapter, Version: Version, Replace: *replace, Registry: *registrySource,
+	})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx init: %v\n", err)
+		return 1
+	}
+	for _, file := range files {
+		fmt.Println("wrote", file)
+	}
+	fmt.Printf("\nNext:\n  cd %s\n  go run ./cmd/gx dev\n", dir)
+	return 0
+}
+
+// runNew adds a page, an action, a form, a component or a slice to an app
+// (REQ-DEV-10).
+func runNew(args []string) int {
+	if len(args) < 2 {
+		fmt.Fprintf(os.Stderr, "usage: gx new %s <name> [app]\n", strings.Join(scaffold.Kinds, "|"))
+		return 2
+	}
+	dir := "."
+	if len(args) > 2 {
+		dir = args[2]
+	}
+	files, err := scaffold.New(dir, args[0], args[1])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx new: %v\n", err)
+		return 1
+	}
+	for _, file := range files {
+		fmt.Println("wrote", file)
+	}
+	return 0
+}
+
+// runAgents refreshes the managed section of AGENTS.md (REQ-AI-05).
+func runAgents(args []string) int {
+	fs := flag.NewFlagSet("gx agents", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	update := fs.Bool("update", false, "rewrite the managed section of AGENTS.md")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if !*update {
+		fmt.Fprintln(os.Stderr, "usage: gx agents --update [app]")
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	changed, err := scaffold.UpdateAgents(dir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx agents: %v\n", err)
+		return 1
+	}
+	if changed {
+		fmt.Println("updated AGENTS.md")
+	} else {
+		fmt.Println("AGENTS.md is current")
+	}
+	return 0
 }
 
 func runFmt(args []string) int {
@@ -434,7 +541,13 @@ func runBuild(args []string) int {
 	}
 	bin := *out
 	if bin == "" {
-		bin = filepath.Join(dir, "app")
+		// The app directory holds app/theme.css, so the binary cannot be
+		// <dir>/app: it goes to bin/, named after its main package.
+		bin = execname.Name(filepath.Join(dir, "bin", mainName(dir, *main)))
+		if err := os.MkdirAll(filepath.Dir(bin), 0o755); err != nil {
+			fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+			return 1
+		}
 	}
 	// go build runs in dir, so a relative output path must not resolve there.
 	if abs, err := filepath.Abs(bin); err == nil {
@@ -448,6 +561,18 @@ func runBuild(args []string) int {
 		return 1
 	}
 	return 0
+}
+
+// mainName returns the name of the binary of a main package path.
+func mainName(dir, mainPkg string) string {
+	name := filepath.Base(filepath.Clean(mainPkg))
+	if name == "." || name == string(filepath.Separator) {
+		if abs, err := filepath.Abs(dir); err == nil {
+			return filepath.Base(abs)
+		}
+		return "app"
+	}
+	return name
 }
 
 // runExport renders a module to static files (REQ-EXP-01).

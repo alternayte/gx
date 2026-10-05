@@ -94,7 +94,8 @@ func DetectMain(dir string) (string, error) {
 	}
 	var found []string
 	for _, e := range entries {
-		if !e.IsDir() {
+		// cmd/gx is the project's own Gx command line tool, not the app.
+		if !e.IsDir() || e.Name() == "gx" {
 			continue
 		}
 		if _, err := os.Stat(filepath.Join(dir, "cmd", e.Name(), "main.go")); err == nil {
