@@ -20,7 +20,7 @@ func (p *SignupViewProps) GxSetForm(v gx.FormValue) {
 func SignupView(p SignupViewProps) gx.Node {
 	var _b gx.Builder
 //line SignupView.gx:12:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop signup", Meta: nil, Links: nil}))
+	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop signup", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
 //line SignupView.gx:12:35
 	_b.Add(gx.Text("\n"))
 //line SignupView.gx:13:1

@@ -15,7 +15,7 @@ type PreviewProps struct {
 func Preview(p PreviewProps) gx.Node {
 	var _b gx.Builder
 //line Preview.gx:9:1
-	_b.Add(gx.Head(gx.HeadProps{Title: p.Title, Meta: nil, Links: nil}))
+	_b.Add(gx.Head(gx.HeadProps{Title: p.Title, Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
 //line Preview.gx:9:28
 	_b.Add(gx.Text("\n"))
 //line Preview.gx:11:73

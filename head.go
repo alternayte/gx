@@ -20,6 +20,11 @@ type HeadProps struct {
 	Title string `json:"title,omitempty"`
 	Meta  []Meta `json:"meta,omitempty"`
 	Links []Link `json:"links,omitempty"`
+	// Lang, HtmlClass and BodyClass set attributes of the document shell.
+	// The deepest value wins; Lang defaults to "en".
+	Lang      string `json:"lang,omitempty"`
+	HtmlClass string `json:"htmlClass,omitempty"`
+	BodyClass string `json:"bodyClass,omitempty"`
 }
 
 // Head marks the head of a page or layout. The deepest title wins and the
@@ -35,6 +40,9 @@ type renderState struct {
 	head        HeadProps
 	hasHead     bool
 	titleDepth  int
+	langDepth   int
+	htmlDepth   int
+	bodyDepth   int
 	headWritten bool
 	requestURI  string
 }
@@ -65,7 +73,17 @@ func collectHead(n Node, st *renderState, depth int) {
 func mergeHead(st *renderState, p HeadProps, depth int) {
 	if !st.hasHead {
 		st.head, st.hasHead, st.titleDepth = p, true, depth
+		st.langDepth, st.htmlDepth, st.bodyDepth = depth, depth, depth
 		return
+	}
+	if p.Lang != "" && depth >= st.langDepth {
+		st.head.Lang, st.langDepth = p.Lang, depth
+	}
+	if p.HtmlClass != "" && depth >= st.htmlDepth {
+		st.head.HtmlClass, st.htmlDepth = p.HtmlClass, depth
+	}
+	if p.BodyClass != "" && depth >= st.bodyDepth {
+		st.head.BodyClass, st.bodyDepth = p.BodyClass, depth
 	}
 	if p.Title != "" && depth >= st.titleDepth {
 		st.head.Title, st.titleDepth = p.Title, depth

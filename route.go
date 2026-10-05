@@ -257,6 +257,8 @@ func New(cfg Config) *App {
 	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast}
 	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
 	a.devRoutes()
+	// The theme script needs no adapter: it only reads the stored theme.
+	a.registerAsset("theme.js", themeRuntimeJS)
 	if cfg.Adapter != nil {
 		SetAdapter(cfg.Adapter)
 		a.registerAssets(cfg.Adapter)
@@ -274,14 +276,18 @@ func (a *App) registerAssets(adapter Adapter) {
 		assets[name] = data
 	}
 	for name, data := range assets {
-		body := data
-		a.assets = append(a.assets, "/_gx/"+name)
-		a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", assetType(name))
-			w.Header().Set("Cache-Control", "public, max-age=3600")
-			_, _ = w.Write(body)
-		}))
+		a.registerAsset(name, data)
 	}
+}
+
+// registerAsset serves one file under /_gx/ and lists it for the export.
+func (a *App) registerAsset(name string, body []byte) {
+	a.assets = append(a.assets, "/_gx/"+name)
+	a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", assetType(name))
+		w.Header().Set("Cache-Control", "public, max-age=3600")
+		_, _ = w.Write(body)
+	}))
 }
 
 // serveStylesheet serves the app stylesheet installed with SetStylesheet
@@ -357,9 +363,9 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) serve(w http.ResponseWriter, r *http.Request) {
-	// Buffer a page when an adapter or a stylesheet needs to join it
-	// (request lifecycle step 6); action streams pass through.
-	if wantsEventStream(r) || (a.adapter == nil && len(Stylesheet()) == 0) {
+	// Buffer a page so the document shell, the stylesheet and the scripts
+	// can join it (request lifecycle step 6); action streams pass through.
+	if wantsEventStream(r) {
 		a.mux.ServeHTTP(w, r)
 		return
 	}

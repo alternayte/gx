@@ -79,7 +79,7 @@ func TestREQ_RTE_08_ConcurrentLoaders(t *testing.T) {
 	if rec.Code != 200 {
 		t.Fatalf("status %d: %s", rec.Code, rec.Body.String())
 	}
-	if got, want := rec.Body.String(), "<main><section>ok</section></main>"; got != want {
+	if got, want := rec.Body.String(), shell("<main><section>ok</section></main>"); got != want {
 		t.Fatalf("body = %q, want %q", got, want)
 	}
 	if elapsed > 80*time.Millisecond {
@@ -107,12 +107,18 @@ func TestREQ_RTE_09_Middleware(t *testing.T) {
 	app.Group("/", mark("a"), mark("b"), gx.Collect(pg))
 	rec := httptest.NewRecorder()
 	app.ServeHTTP(rec, httptest.NewRequest("GET", "/slow", nil))
-	if rec.Body.String() != "ok" {
+	if rec.Body.String() != shell("ok") {
 		t.Fatalf("body = %q", rec.Body.String())
 	}
 	if len(order) != 2 || order[0] != "a" || order[1] != "b" {
 		t.Fatalf("middleware order = %v, want [a b]", order)
 	}
+}
+
+// shell returns the document shell the app writes around a page with no
+// head, no stylesheet and no script.
+func shell(body string) string {
+	return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>` + body + `</body></html>`
 }
 
 func TestREQ_RTE_10_ErrorStatuses(t *testing.T) {
@@ -133,7 +139,7 @@ func TestREQ_RTE_10_ErrorStatuses(t *testing.T) {
 		status int
 		body   string
 	}{
-		{"404", gx.NotFound(), 404, "missing"},
+		{"404", gx.NotFound(), 404, shell("missing")},
 		{"403", gx.Forbidden(), 403, "Forbidden\n"},
 		{"500", errors.New("boom"), 500, "Internal Server Error\n"},
 	} {
@@ -292,7 +298,7 @@ func TestREQ_RTE_18_Mount(t *testing.T) {
 	mux.Handle("/shop/", http.StripPrefix("/shop", app))
 	rec := httptest.NewRecorder()
 	mux.ServeHTTP(rec, httptest.NewRequest("GET", "/shop/slow", nil))
-	if rec.Code != 200 || rec.Body.String() != "ok" {
+	if rec.Code != 200 || rec.Body.String() != shell("ok") {
 		t.Fatalf("mounted app: %d %q", rec.Code, rec.Body.String())
 	}
 	if gx.BasePath() != "/shop" {
@@ -319,7 +325,7 @@ func TestREQ_RTE_19_NoSpecialMiddleware(t *testing.T) {
 	h := std("app")(app)
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, httptest.NewRequest("GET", "/slow", nil))
-	if rec.Body.String() != "ok" {
+	if rec.Body.String() != shell("ok") {
 		t.Fatalf("app body = %q", rec.Body.String())
 	}
 

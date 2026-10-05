@@ -13,7 +13,7 @@ type AboutProps struct {
 func About(p AboutProps) gx.Node {
 	var _b gx.Builder
 //line About.gx:5:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop about", Meta: nil, Links: nil}))
+	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop about", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
 //line About.gx:5:34
 	_b.Add(gx.Text("\n"))
 //line About.gx:6:1

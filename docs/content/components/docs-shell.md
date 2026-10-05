@@ -236,6 +236,7 @@ props {
   Children gx.Node
 }
 
+<gx.Head bodyClass="bg-background text-foreground antialiased" />
 <a class="gx-skip-link sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground" href="#gx-main">Skip to content</a>
 <div class="gx-shell min-h-screen">
   <Header site={p.Site} />

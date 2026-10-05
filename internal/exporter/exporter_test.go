@@ -185,7 +185,7 @@ func TestREQ_CNT_09_HeadMeta(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	wantHead := `<meta charset="utf-8"><title>Introduction | Deedbox docs</title><meta name="description" content="Start here."><link rel="canonical" href="https://docs.example.com/start/"><meta property="og:url" content="https://docs.example.com/start/"><meta property="og:title" content="Introduction | Deedbox docs"><meta property="og:description" content="Start here."><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Introduction | Deedbox docs"><meta name="twitter:description" content="Start here.">`
+	wantHead := `<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Introduction | Deedbox docs</title><meta name="description" content="Start here."><link rel="canonical" href="https://docs.example.com/start/"><meta property="og:url" content="https://docs.example.com/start/"><meta property="og:title" content="Introduction | Deedbox docs"><meta property="og:description" content="Start here."><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Introduction | Deedbox docs"><meta name="twitter:description" content="Start here.">`
 	if !strings.Contains(string(page), "<head>"+wantHead+"</head>") {
 		t.Fatalf("head:\n%s", page)
 	}

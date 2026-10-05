@@ -5,6 +5,7 @@
 package exporter
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -369,7 +370,6 @@ func extractTitle(body []byte) string {
 // title, description, canonical, Open Graph and Twitter card.
 func buildHead(site gxconfig.Site, path, title, description string) string {
 	var b strings.Builder
-	b.WriteString(`<meta charset="utf-8">`)
 	fmt.Fprintf(&b, `<title>%s</title>`, html.EscapeString(title))
 	if description != "" {
 		fmt.Fprintf(&b, `<meta name="description" content="%s">`, html.EscapeString(description))
@@ -392,19 +392,56 @@ func buildHead(site gxconfig.Site, path, title, description string) string {
 	return b.String()
 }
 
-// document wraps a Gx page fragment in a complete HTML document with the
-// exported head (REQ-EXP-01, REQ-CNT-09). The inline title moves to the
-// head.
+// document puts the exported head into the document the app served
+// (REQ-EXP-01, REQ-CNT-09). The app writes the document shell; the export
+// replaces its title and description with the site forms and adds the
+// canonical and social tags. A body with no head is a hand-written
+// response and gets a shell of its own.
 func document(body []byte, head string) []byte {
-	body = titleTag.ReplaceAll(body, nil)
-	doc := make([]byte, 0, len(body)+len(head)+80)
-	doc = append(doc, "<!doctype html><html lang=\"en\"><head>"...)
+	i := bytes.Index(body, []byte("<head>"))
+	if i < 0 {
+		body = titleTag.ReplaceAll(body, nil)
+		doc := make([]byte, 0, len(body)+len(head)+80)
+		doc = append(doc, "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"...)
+		doc = append(doc, head...)
+		doc = append(doc, "</head><body>"...)
+		doc = append(doc, body...)
+		doc = append(doc, "</body></html>"...)
+		return doc
+	}
+	i += len("<head>")
+	end := bytes.Index(body, []byte("</head>"))
+	if end < i {
+		end = i
+	}
+	served := body[i:end]
+	served = titleTag.ReplaceAll(served, nil)
+	served = descriptionTag.ReplaceAll(served, nil)
+	// The charset and the viewport stay first; the exported tags follow.
+	lead := charsetTag
+	served = bytes.Replace(served, []byte(charsetTag), nil, 1)
+	if bytes.HasPrefix(served, []byte(viewportTag)) {
+		lead += viewportTag
+		served = served[len(viewportTag):]
+	}
+	doc := make([]byte, 0, len(body)+len(head))
+	doc = append(doc, body[:i]...)
+	doc = append(doc, lead...)
 	doc = append(doc, head...)
-	doc = append(doc, "</head><body>"...)
-	doc = append(doc, body...)
-	doc = append(doc, "</body></html>"...)
+	doc = append(doc, served...)
+	doc = append(doc, body[end:]...)
 	return doc
 }
+
+// charsetTag is the charset the document shell writes first.
+const charsetTag = `<meta charset="utf-8">`
+
+// viewportTag is the viewport the document shell writes second.
+const viewportTag = `<meta name="viewport" content="width=device-width, initial-scale=1">`
+
+// descriptionTag finds the description a page set through gx.Head; the
+// export writes its own.
+var descriptionTag = regexp.MustCompile(`(?is)<meta name="description"[^>]*>`)
 
 // writeSiteFiles writes robots.txt and sitemap.xml when the site has a URL
 // (REQ-CNT-09).

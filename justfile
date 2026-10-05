@@ -11,6 +11,7 @@ check: verify
 runtime:
     bun build runtime/js/gx.ts --outfile runtime/js/gx.js --target browser --minify
     bun build runtime/js/behavior.ts --outfile runtime/js/behavior.js --target browser --minify
+    bun build runtime/js/theme.ts --outfile runtime/js/theme.js --target browser --minify
     bun build runtime/js/dev.ts --outfile internal/devserver/devclient.js --target browser --minify
 
 # Drive the real app in a real browser. The repo's own gate only (G3).

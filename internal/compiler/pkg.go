@@ -249,6 +249,9 @@ func gxHeadComponent() *Component {
 		{Name: "Title", Type: "string", HasDefault: true, Default: `""`},
 		{Name: "Meta", Type: "[]gx.Meta", HasDefault: true, Default: "nil"},
 		{Name: "Links", Type: "[]gx.Link", HasDefault: true, Default: "nil"},
+		{Name: "Lang", Type: "string", HasDefault: true, Default: `""`},
+		{Name: "HtmlClass", Type: "string", HasDefault: true, Default: `""`},
+		{Name: "BodyClass", Type: "string", HasDefault: true, Default: `""`},
 	}}
 }
 

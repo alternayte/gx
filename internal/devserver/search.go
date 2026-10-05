@@ -1,6 +1,7 @@
 package devserver
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -149,9 +150,13 @@ func writeSearchPage(root, path string, body []byte) error {
 	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
 		return err
 	}
-	// Gx pages are HTML fragments; Pagefind indexes complete documents.
-	doc := append([]byte("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"></head><body>"), body...)
-	doc = append(doc, []byte("</body></html>")...)
+	// The app serves complete documents, which Pagefind indexes as they
+	// are. A hand-written fragment still gets a shell.
+	doc := body
+	if !bytes.Contains(body, []byte("<html")) {
+		doc = append([]byte("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"></head><body>"), body...)
+		doc = append(doc, []byte("</body></html>")...)
+	}
 	return os.WriteFile(full, doc, 0o644)
 }
 

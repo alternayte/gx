@@ -229,10 +229,27 @@ func RenderNode(w io.Writer, n Node) error {
 // active page (REQ-RTE-13). The rendered markers feed the runtime script
 // decision of the app (NFR-04).
 func RenderRequest(w io.Writer, r *http.Request, n Node) error {
-	if needs := runtimeNeedsOf(r); needs != nil {
-		*needs = scanRuntimeNeeds(n)
+	needs := runtimeNeedsOf(r)
+	if needs == nil {
+		_, err := io.WriteString(w, StringRequest(r, n))
+		return err
 	}
-	_, err := io.WriteString(w, StringRequest(r, n))
+	*needs = scanRuntimeNeeds(n)
+	if needs.ownDocument {
+		// The node writes its own html element, so the head stays where
+		// the node put it.
+		_, err := io.WriteString(w, StringRequest(r, n))
+		return err
+	}
+	// The app writes the document shell around this fragment, and the
+	// gx.Head output moves into its head.
+	st := &renderState{requestURI: r.URL.RequestURI(), headWritten: true}
+	collectHead(n, st, 1)
+	var head, body strings.Builder
+	renderHead(&head, st)
+	renderNode(&body, n, st)
+	needs.shell = &shellParts{head: head.String(), props: st.head}
+	_, err := io.WriteString(w, body.String())
 	return err
 }
 

@@ -15,7 +15,7 @@ type HomeProps struct {
 func Home(p HomeProps) gx.Node {
 	var _b gx.Builder
 //line Home.gx:8:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop home", Meta: nil, Links: nil}))
+	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop home", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
 //line Home.gx:8:33
 	_b.Add(gx.Text("\n"))
 //line Home.gx:9:1

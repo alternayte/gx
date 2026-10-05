@@ -18,6 +18,21 @@ var coreRuntimeJS []byte
 //go:embed runtime/js/behavior.js
 var behaviorRuntimeJS []byte
 
+// themeRuntimeJS is the built theme script. It is a classic script: it runs
+// before the first paint and sets the stored theme class on the html
+// element.
+//
+//go:embed runtime/js/theme.js
+var themeRuntimeJS []byte
+
+// themeRuntime returns the script tag of the theme script. It has no defer
+// and no module type, so the parser runs it before it paints.
+func themeRuntime() Node {
+	return El("script", Attrs{
+		{Key: "src", Value: BasePath() + "/_gx/theme.js", Kind: AttrURL},
+	})
+}
+
 // coreRuntime returns the script tag of the Gx browser runtime.
 func coreRuntime() Node {
 	return El("script", Attrs{
@@ -47,6 +62,19 @@ type runtimeNeeds struct {
 	// behavior is true when the page uses a component behaviour
 	// (REQ-REG-07).
 	behavior bool
+	// theme is true when the page has a theme control; the stored theme
+	// then applies before the first paint.
+	theme bool
+	// ownDocument is true when the page writes its own html element.
+	ownDocument bool
+	// shell holds the head of a fragment page for the document shell.
+	shell *shellParts
+}
+
+// shellParts is what a rendered fragment hands to the document shell.
+type shellParts struct {
+	head  string
+	props HeadProps
 }
 
 type runtimeNeedsKey struct{}
@@ -85,7 +113,13 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 				needs.core = true
 			}
 		case *elNode:
+			if t.name == "html" {
+				needs.ownDocument = true
+			}
 			for _, a := range t.attrs {
+				if a.Key == "data-gx-theme" {
+					needs.theme = true
+				}
 				switch {
 				case adapterMarker(a.Key):
 					needs.adapter = true

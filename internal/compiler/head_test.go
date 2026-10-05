@@ -13,7 +13,7 @@ func TestREQ_RTE_11_HeadCodegen(t *testing.T) {
 	})
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "ui/page/Page_gx.go")])
-	if !strings.Contains(src, "gx.Head(gx.HeadProps{Title: p.Title, Meta: p.Meta, Links: nil})") {
+	if !strings.Contains(src, "gx.Head(gx.HeadProps{Title: p.Title, Meta: p.Meta, Links: nil, Lang: \"\", HtmlClass: \"\", BodyClass: \"\"})") {
 		t.Fatalf("Page_gx.go does not call gx.Head:\n%s", src)
 	}
 }

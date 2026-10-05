@@ -115,7 +115,12 @@ func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeed
 	}
 	body := b.body.Bytes()
 	ct := b.header.Get("Content-Type")
-	if status == http.StatusOK && strings.Contains(ct, "text/html") {
+	switch {
+	case needs != nil && needs.shell != nil && strings.Contains(ct, "text/html"):
+		// A rendered fragment becomes a document at every status, so an
+		// error view is styled too.
+		body = a.document(body, needs)
+	case status == http.StatusOK && strings.Contains(ct, "text/html"):
 		body = a.inject(body, needs)
 	}
 	for k, vs := range b.header {
@@ -130,10 +135,48 @@ func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeed
 	_, _ = w.Write(body)
 }
 
-// inject adds the Gx runtime and the adapter scripts to a page. A page with
-// no signals, actions, forms, navigation or behaviours ships no JS at all
-// (NFR-04).
-func (a *App) inject(page []byte, needs *runtimeNeeds) []byte {
+// document writes the document shell around a rendered fragment: the
+// doctype, the html element, a head with the charset, the viewport, the
+// gx.Head output, the stylesheet link and the scripts, and the body. The
+// stylesheet sits in the head, so the page never paints unstyled.
+func (a *App) document(fragment []byte, needs *runtimeNeeds) []byte {
+	props := needs.shell.props
+	lang := props.Lang
+	if lang == "" {
+		lang = "en"
+	}
+	var b bytes.Buffer
+	b.Grow(len(fragment) + len(needs.shell.head) + 512)
+	b.WriteString(`<!doctype html><html lang="`)
+	b.WriteString(escapeAttr(lang))
+	b.WriteByte('"')
+	if props.HtmlClass != "" {
+		b.WriteString(` class="`)
+		b.WriteString(escapeAttr(props.HtmlClass))
+		b.WriteByte('"')
+	}
+	b.WriteString(`><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">`)
+	if needs.theme {
+		b.WriteString(String(themeRuntime()))
+	}
+	b.WriteString(needs.shell.head)
+	b.Write(a.headAssets(needs))
+	b.WriteString(`</head><body`)
+	if props.BodyClass != "" {
+		b.WriteString(` class="`)
+		b.WriteString(escapeAttr(props.BodyClass))
+		b.WriteByte('"')
+	}
+	b.WriteByte('>')
+	b.Write(fragment)
+	b.WriteString(`</body></html>`)
+	return b.Bytes()
+}
+
+// headAssets returns the stylesheet link and the scripts of one page. A page
+// with no signals, actions, forms, navigation or behaviours ships no JS at
+// all (NFR-04).
+func (a *App) headAssets(needs *runtimeNeeds) []byte {
 	var b bytes.Buffer
 	if link := stylesheetLink(); link != "" {
 		b.WriteString(link)
@@ -153,7 +196,13 @@ func (a *App) inject(page []byte, needs *runtimeNeeds) []byte {
 			b.WriteString(String(behaviorRuntime()))
 		}
 	}
-	add := b.Bytes()
+	return b.Bytes()
+}
+
+// inject adds the stylesheet link and the scripts to a page that wrote its
+// own document.
+func (a *App) inject(page []byte, needs *runtimeNeeds) []byte {
+	add := a.headAssets(needs)
 	if len(add) == 0 {
 		return page
 	}

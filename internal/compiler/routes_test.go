@@ -58,10 +58,10 @@ func TestREQ_RTE_01_RouteMatches(t *testing.T) {
 			"\t\tapp.ServeHTTP(rec, req)\n" +
 			"\t\treturn rec\n" +
 			"\t}\n" +
-			"\tif rec := get(\"/products/42?tab=details\"); rec.Code != 200 || rec.Body.String() != \"<p>id=42 tab=details page=0</p>\" {\n" +
+			"\tif rec := get(\"/products/42?tab=details\"); rec.Code != 200 || rec.Body.String() != \"<!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"></head><body><p>id=42 tab=details page=0</p></body></html>\" {\n" +
 			"\t\tt.Fatalf(\"details: %d %q\", rec.Code, rec.Body.String())\n" +
 			"\t}\n" +
-			"\tif rec := get(\"/products/42\"); rec.Code != 200 || rec.Body.String() != \"<p>id=42 tab=overview page=0</p>\" {\n" +
+			"\tif rec := get(\"/products/42\"); rec.Code != 200 || rec.Body.String() != \"<!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"></head><body><p>id=42 tab=overview page=0</p></body></html>\" {\n" +
 			"\t\tt.Fatalf(\"default: %d %q\", rec.Code, rec.Body.String())\n" +
 			"\t}\n" +
 			"\tif rec := get(\"/products/42?page=abc\"); rec.Code != 400 {\n" +
