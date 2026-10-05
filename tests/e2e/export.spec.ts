@@ -1,7 +1,8 @@
 // The exported static site in a real browser: content images carry their
 // size, so the page does not shift (REQ-CNT-11).
 import { afterAll, beforeAll, expect, test } from 'bun:test'
-import { chromium, type Browser, type Page } from 'playwright-core'
+import { type Browser, type Page } from 'playwright-core'
+import { launchBrowser } from './harness'
 import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -62,16 +63,11 @@ beforeAll(async () => {
       return new Response(file)
     },
   })
-  browser = await chromium.launch({ channel: 'chrome', headless: true })
+  browser = await launchBrowser()
 }, 180000)
 
 afterAll(async () => {
   await Bun.sleep(200)
-  try {
-    await browser?.close()
-  } catch {
-    // already closed
-  }
   server?.stop(true)
   if (dir) rmSync(dir, { recursive: true, force: true })
 })

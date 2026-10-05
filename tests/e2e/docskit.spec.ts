@@ -1,7 +1,8 @@
 // The docs kit in a real browser: synced tabs, a remembered choice and
 // build-time code frames (REQ-CNT-05).
 import { afterAll, beforeAll, expect, test } from 'bun:test'
-import { chromium, type Browser, type Page } from 'playwright-core'
+import { type Browser, type Page } from 'playwright-core'
+import { launchBrowser } from './harness'
 import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -134,16 +135,11 @@ beforeAll(async () => {
     stderr: 'ignore',
   })
   await waitForUrl(url + '/')
-  browser = await chromium.launch({ channel: 'chrome', headless: true })
+  browser = await launchBrowser()
 }), 240000
 
 afterAll(async () => {
   await Bun.sleep(200)
-  try {
-    await browser?.close()
-  } catch {
-    // already closed
-  }
   app?.kill()
   await Bun.sleep(200)
   if (dir) rmSync(dir, { recursive: true, force: true })

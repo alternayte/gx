@@ -1,7 +1,8 @@
 // The dev loop in a real browser: reachable app, overlay on error, morph
 // after the fix (REQ-DEV-01, REQ-DEV-03, REQ-DEV-06).
 import { afterAll, beforeAll, expect, test } from 'bun:test'
-import { chromium, type Browser, type Page } from 'playwright-core'
+import { type Browser, type Page } from 'playwright-core'
+import { launchBrowser } from './harness'
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -55,16 +56,11 @@ beforeAll(async () => {
     detached: true,
   })
   await waitForUrl(url + '/')
-  browser = await chromium.launch({ channel: 'chrome', headless: true })
+  browser = await launchBrowser()
 }), 180000
 
 afterAll(async () => {
   await Bun.sleep(300)
-  try {
-    await browser?.close()
-  } catch {
-    // already closed
-  }
   if (dev?.pid) {
     try {
       process.kill(-dev.pid, 'SIGTERM')

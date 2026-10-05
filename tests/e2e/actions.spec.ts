@@ -1,7 +1,7 @@
 // Action answers and signal scoping, driven in a real browser (M4).
 import { afterAll, afterEach, beforeAll, beforeEach, expect, test } from 'bun:test'
-import { chromium, type Browser, type Page } from 'playwright-core'
-import { startShop, type Shop } from './harness'
+import { type Browser, type Page } from 'playwright-core'
+import { launchBrowser, startShop, type Shop } from './harness'
 
 let shop: Shop
 let browser: Browser
@@ -9,18 +9,13 @@ let page: Page
 
 beforeAll(async () => {
   shop = await startShop()
-  browser = await chromium.launch({ channel: 'chrome', headless: true })
+  browser = await launchBrowser()
 }), 180000
 
 afterAll(async () => {
   // Let pending CDP preview callbacks drain before the browser goes away;
   // playwright-core can otherwise report a dropped handle while it closes.
   await Bun.sleep(300)
-  try {
-    await browser?.close()
-  } catch {
-    // already closed
-  }
   await Bun.sleep(100)
   shop?.stop()
 })

@@ -2,8 +2,8 @@
 // gallery (REQ-REG-09, NFR-09).
 import { afterAll, afterEach, beforeAll, beforeEach, expect, test } from 'bun:test'
 import { readFileSync } from 'node:fs'
-import { chromium, type Browser, type Page } from 'playwright-core'
-import { startShop, type Shop } from './harness'
+import { type Browser, type Page } from 'playwright-core'
+import { launchBrowser, startShop, type Shop } from './harness'
 
 const axeSource = readFileSync(new URL('./node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
 
@@ -16,16 +16,11 @@ let page: Page
 
 beforeAll(async () => {
   shop = await startShop({ gxdev: true })
-  browser = await chromium.launch({ channel: 'chrome', headless: true })
+  browser = await launchBrowser()
 }), 180000
 
 afterAll(async () => {
   await Bun.sleep(300)
-  try {
-    await browser?.close()
-  } catch {
-    // already closed
-  }
   await Bun.sleep(100)
   shop?.stop()
 })

@@ -7,10 +7,10 @@
 // pixels of the content box differ.
 import { afterAll, beforeAll, expect, test } from "bun:test"
 import { readFileSync } from "node:fs"
-import { chromium, type Browser, type Page } from "playwright-core"
+import { type Browser, type Page } from "playwright-core"
 import pixelmatch from "pixelmatch"
 import { PNG } from "pngjs"
-import { startShop, type Shop } from "./harness"
+import { launchBrowser, startShop, type Shop } from "./harness"
 
 type Entry = {
   ref: string
@@ -43,16 +43,11 @@ let page: Page
 beforeAll(async () => {
   shop = await startShop({ gxdev: true })
   ref = startRef()
-  browser = await chromium.launch({ channel: "chrome", headless: true })
+  browser = await launchBrowser()
 }), 180000
 
 afterAll(async () => {
   await Bun.sleep(300)
-  try {
-    await browser?.close()
-  } catch {
-    // already closed
-  }
   ref?.stop()
   shop?.stop()
 })

@@ -1,6 +1,7 @@
 // The gx e2e harness. It builds the example shop and starts it on a free
 // port. Bun and Playwright are for the repo's own tests only (G3).
 import { spawn } from 'bun'
+import { chromium, type Browser } from 'playwright-core'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
@@ -66,5 +67,29 @@ async function waitFor(url: string): Promise<void> {
     }
     if (Date.now() > deadline) throw new Error(`shop did not start at ${url}`)
     await Bun.sleep(100)
+  }
+}
+
+// One Chrome serves every spec file of a test process. Under bun, closing a
+// Playwright browser breaks the next browser the same process launches: its
+// pages never report a load, and the run hangs. So no spec file closes the
+// browser; preload.ts closes it once, after the last file.
+let shared: Promise<Browser> | undefined
+
+// launchBrowser returns the Chrome of this test process.
+export function launchBrowser(): Promise<Browser> {
+  shared ??= chromium.launch({ channel: 'chrome', headless: true })
+  return shared
+}
+
+// closeBrowser closes the Chrome of this test process, if one started.
+export async function closeBrowser(): Promise<void> {
+  if (!shared) return
+  const browser = await shared
+  shared = undefined
+  try {
+    await browser.close()
+  } catch {
+    // already closed
   }
 }
