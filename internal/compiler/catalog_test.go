@@ -21,7 +21,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		}
 		seen[info.Code] = true
 		got = append(got, info.Code+" | "+info.Title)
-		page := filepath.Join("..", "..", "docs", "errors", info.Code+".md")
+		page := filepath.Join("..", "..", "docs", "content", "errors", info.Code+".md")
 		if _, err := os.Stat(page); err != nil {
 			t.Errorf("no docs page for %s: %v", info.Code, err)
 		}

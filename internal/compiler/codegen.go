@@ -75,7 +75,9 @@ func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diag
 func Stale(root string) []Diagnostic {
 	files, diags := Generate(root)
 	if len(diags) > 0 {
-		return nil // Check reports these.
+		// The check reports most of these too. The generator alone finds a
+		// value that cannot render (GX2013), so they are not dropped.
+		return diags
 	}
 	paths := make([]string, 0, len(files))
 	for path := range files {
@@ -90,9 +92,16 @@ func Stale(root string) []Diagnostic {
 		if onDisk, err := os.ReadFile(path); err == nil && bytes.Equal(onDisk, files[path]) {
 			continue
 		}
+		// A component file names its .gx source. A route file, the content
+		// renderer and the gallery have no .gx source, so they name the
+		// generated file.
+		source := strings.TrimSuffix(path, "_gx.go") + ".gx"
+		if _, err := os.Stat(source); err != nil {
+			source = path
+		}
 		out = append(out, Diagnostic{
 			Code: CodeStale,
-			File: strings.TrimSuffix(path, "_gx.go") + ".gx",
+			File: source,
 			Line: 1,
 			Col:  1,
 			Msg:  "generated code is missing or stale; run gx generate",

@@ -184,8 +184,7 @@ type CheckOutput struct {
 }
 
 func (s *Server) check(ctx context.Context, _ *mcp.CallToolRequest, _ noInput) (*mcp.CallToolResult, CheckOutput, error) {
-	diags := compiler.CheckWith(s.opt.Dir, compiler.CheckOptions{})
-	diags = append(diags, compiler.Stale(s.opt.Dir)...)
+	diags := compiler.CheckApp(s.opt.Dir, compiler.CheckOptions{})
 	out := CheckOutput{OK: len(diags) == 0, Diagnostics: []Diagnostic{}}
 	for _, d := range diags {
 		out.Diagnostics = append(out.Diagnostics, Diagnostic{

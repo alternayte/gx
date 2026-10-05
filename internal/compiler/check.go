@@ -42,6 +42,26 @@ func CheckWith(root string, opt CheckOptions) []Diagnostic {
 	return out
 }
 
+// CheckApp is the whole check of an app, as `gx check` runs it: every
+// diagnostic of CheckWith, the diagnostics that only the generator can give,
+// and a GX1002 for each generated file that is missing or stale. A
+// diagnostic that both passes find is reported once.
+func CheckApp(root string, opt CheckOptions) []Diagnostic {
+	out := CheckWith(root, opt)
+	seen := map[Diagnostic]bool{}
+	for _, d := range out {
+		seen[d] = true
+	}
+	for _, d := range Stale(root) {
+		if !seen[d] {
+			seen[d] = true
+			out = append(out, d)
+		}
+	}
+	sortDiags(out)
+	return out
+}
+
 // absoluteRoot makes the tree root absolute so that overlay keys match the
 // paths go/packages reports.
 func absoluteRoot(root string) string {

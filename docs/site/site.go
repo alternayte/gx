@@ -23,7 +23,18 @@ type Meta struct {
 	Group string `yaml:"group"`
 	// Item is the registry item of a component page.
 	Item string `yaml:"item"`
+	// Section is the sidebar section of a page that is not a component
+	// page: Start, Tutorial, Guides, Reference, Diagnostics or Compare.
+	Section string `yaml:"section"`
+	// Order sorts the pages of one section. A page with no order comes
+	// last, in title order.
+	Order int `yaml:"order"`
+	// Code is the diagnostic code of a diagnostic page.
+	Code string `yaml:"code"`
 }
+
+// sections is the order of the sidebar sections before the components.
+var sections = []string{"Start", "Tutorial", "Guides", "Reference", "Compare", "Diagnostics"}
 
 // Pages is the content collection of the site.
 var Pages = gx.Collection[Meta]("content").Components(
@@ -123,16 +134,46 @@ func entryHref(slug string) gx.URL {
 // Nav builds the sidebar: the index, then one group per kind of item, each
 // in title order.
 func Nav() shell.Nav {
-	nav := shell.Nav{Groups: []shell.NavGroup{{
-		Label: "Overview",
-		Items: []shell.NavItem{{Label: "All components", Href: entryHref(indexSlug)}},
-	}}}
+	var nav shell.Nav
+	bySection := map[string][]gx.Entry[Meta]{}
 	byGroup := map[string][]gx.Entry[Meta]{}
 	for _, e := range Pages.Entries() {
-		if e.Meta.Item != "" {
+		switch {
+		case e.Meta.Item != "":
 			byGroup[e.Meta.Group] = append(byGroup[e.Meta.Group], e)
+		case e.Meta.Section != "":
+			bySection[e.Meta.Section] = append(bySection[e.Meta.Section], e)
 		}
 	}
+	for _, label := range sections {
+		entries := bySection[label]
+		if len(entries) == 0 {
+			continue
+		}
+		sort.SliceStable(entries, func(i, j int) bool {
+			a, b := entries[i], entries[j]
+			if a.Meta.Order != b.Meta.Order {
+				if a.Meta.Order == 0 {
+					return false
+				}
+				if b.Meta.Order == 0 {
+					return true
+				}
+				return a.Meta.Order < b.Meta.Order
+			}
+			return strings.ToLower(a.Meta.Title) < strings.ToLower(b.Meta.Title)
+		})
+		// The diagnostics are a long list that a reader opens from a link.
+		group := shell.NavGroup{Label: label, Collapsed: label == "Diagnostics"}
+		for _, e := range entries {
+			group.Items = append(group.Items, shell.NavItem{Label: e.Meta.Title, Href: entryHref(e.Slug)})
+		}
+		nav.Groups = append(nav.Groups, group)
+	}
+	nav.Groups = append(nav.Groups, shell.NavGroup{
+		Label: "Components",
+		Items: []shell.NavItem{{Label: "All components", Href: entryHref(indexSlug)}},
+	})
 	for _, label := range registry.Groups {
 		entries := byGroup[label]
 		if len(entries) == 0 {
@@ -157,7 +198,11 @@ func Nav() shell.Nav {
 // pageFor builds the shell data of one entry: the table of contents and
 // the previous and next pages in sidebar order.
 func pageFor(e gx.Entry[Meta]) shell.Page {
-	p := shell.Page{Title: e.Meta.Title, Path: string(entryHref(e.Slug)), Section: e.Meta.Group}
+	section := e.Meta.Group
+	if e.Meta.Section != "" {
+		section = e.Meta.Section
+	}
+	p := shell.Page{Title: e.Meta.Title, Path: string(entryHref(e.Slug)), Section: section}
 	for _, h := range content.Headings(e.Body) {
 		p.TOC = append(p.TOC, shell.Heading{Level: h.Level, Text: h.Text, ID: h.ID})
 	}

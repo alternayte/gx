@@ -307,8 +307,7 @@ func runCheck(args []string) int {
 	if rest := fs.Args(); len(rest) > 0 {
 		dir = rest[0]
 	}
-	diags := compiler.CheckWith(dir, compiler.CheckOptions{ExternalLinks: *external})
-	diags = append(diags, compiler.Stale(dir)...)
+	diags := compiler.CheckApp(dir, compiler.CheckOptions{ExternalLinks: *external})
 	if *asJSON {
 		return printJSON(diags)
 	}

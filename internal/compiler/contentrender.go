@@ -20,7 +20,7 @@ func renderContentBodies(colls []contentCollection) map[string][]byte {
 	byPkg := map[string][]contentCollection{}
 	var dirs []string
 	for _, coll := range colls {
-		if coll.pkgDir == "" || coll.varName == "" {
+		if coll.pkgDir == "" || coll.varName == "" || coll.bare {
 			continue
 		}
 		if _, ok := byPkg[coll.pkgDir]; !ok {

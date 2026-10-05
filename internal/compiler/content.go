@@ -29,6 +29,10 @@ type contentCollection struct {
 	metaType    string
 	metaPkgPath string
 	metaPkgName string
+	// bare marks a collection with no Components call. It is checked like
+	// the others, and it gets no generated body renderer: its Markdown
+	// holds no component tag.
+	bare bool
 }
 
 // contentComp is one component of a collection's Components list.
@@ -42,24 +46,34 @@ type contentComp struct {
 	propsType string
 }
 
-// collectCollections finds every gx.Collection(...).Components(...) call and
-// the component set of each (REQ-CNT-03).
+// collectCollections finds every gx.Collection(...) call, with or without a
+// Components call, and the component set of each (REQ-CNT-02, REQ-CNT-03).
 func collectCollections(pkgs []*packages.Package) []contentCollection {
 	var out []contentCollection
 	for _, pkg := range pkgs {
 		for _, file := range pkg.Syntax {
+			// withComponents holds the Collection calls that a Components
+			// call wraps. The walk reaches the outer call first.
+			withComponents := map[*ast.CallExpr]bool{}
 			ast.Inspect(file, func(n ast.Node) bool {
 				call, ok := n.(*ast.CallExpr)
 				if !ok {
 					return true
 				}
-				sel, ok := call.Fun.(*ast.SelectorExpr)
-				if !ok || sel.Sel.Name != "Components" {
-					return true
+				var inner *ast.CallExpr
+				if sel, ok := call.Fun.(*ast.SelectorExpr); ok && sel.Sel.Name == "Components" {
+					if x, ok := sel.X.(*ast.CallExpr); ok && isGxFuncExpr(pkg, x.Fun, "Collection") {
+						inner = x
+						withComponents[x] = true
+					}
 				}
-				inner, ok := sel.X.(*ast.CallExpr)
-				if !ok || !isGxFuncExpr(pkg, inner.Fun, "Collection") {
-					return true
+				if inner == nil {
+					// A collection that names no component has the same
+					// frontmatter and link checks.
+					if withComponents[call] || !isGxFuncExpr(pkg, call.Fun, "Collection") {
+						return true
+					}
+					inner, call = call, nil
 				}
 				if len(inner.Args) == 0 {
 					return true
@@ -108,9 +122,13 @@ func collectCollections(pkgs []*packages.Package) []contentCollection {
 						}
 					}
 				}
-				for _, arg := range call.Args {
-					if comp, ok := contentComponent(pkg, arg); ok {
-						coll.comps[comp.name] = comp
+				if call == nil {
+					coll.bare = true
+				} else {
+					for _, arg := range call.Args {
+						if comp, ok := contentComponent(pkg, arg); ok {
+							coll.comps[comp.name] = comp
+						}
 					}
 				}
 				out = append(out, coll)
