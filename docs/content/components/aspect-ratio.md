@@ -9,7 +9,7 @@ item: "aspect-ratio"
 <Example item="aspect-ratio" name="aspect-ratio-wide" label="Aspect Ratio: Wide">
 
 ```gx
-<aspectratio.AspectRatio ratio="16 / 9">16 / 9</aspectratio.AspectRatio>
+<aspectratio.AspectRatio ratio="16 / 9" class="rounded-lg bg-muted">16 / 9</aspectratio.AspectRatio>
 ```
 
 </Example>
@@ -31,6 +31,7 @@ The command writes these files.
 | --- | --- |
 | `AspectRatio.gx` | `ui/aspect-ratio/AspectRatio.gx` |
 | `AspectRatio.fixtures.go` | `ui/aspect-ratio/AspectRatio.fixtures.go` |
+| `styles.go` | `ui/aspect-ratio/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -47,7 +48,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div style={gx.Style("aspect-ratio: " + p.Ratio)} class={gx.Cx("w-full overflow-hidden rounded-md", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="aspect-ratio" style={gx.Style("aspect-ratio: " + p.ratio())} class={gx.Cx("relative w-full overflow-hidden", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```go title="ui/aspect-ratio/AspectRatio.fixtures.go"
@@ -56,8 +57,20 @@ package aspectratio
 import "github.com/alternayte/gx"
 
 var AspectRatioFixtures = gx.Fixtures[AspectRatioProps]{
-	"Wide":   {Ratio: "16 / 9", Children: gx.Text("16 / 9")},
-	"Square": {Ratio: "1 / 1", Children: gx.Text("1 / 1")},
+	"Wide":   {Ratio: "16 / 9", Class: "rounded-lg bg-muted", Children: gx.Text("16 / 9")},
+	"Square": {Ratio: "1 / 1", Class: "max-w-40 rounded-lg bg-muted", Children: gx.Text("1 / 1")},
+}
+```
+
+```go title="ui/aspect-ratio/styles.go"
+package aspectratio
+
+// ratio returns the CSS ratio; a zero value is 16 / 9.
+func (p AspectRatioProps) ratio() string {
+	if p.Ratio == "" {
+		return "16 / 9"
+	}
+	return p.Ratio
 }
 ```
 
@@ -67,7 +80,7 @@ var AspectRatioFixtures = gx.Fixtures[AspectRatioProps]{
 ## Usage
 
 ```gx
-<aspectratio.AspectRatio ratio="16 / 9">
+<aspectratio.AspectRatio ratio="16 / 9" class="rounded-lg bg-muted">
   <img src={gx.URL("/hero.jpg")} alt="Hero" class="size-full object-cover" />
 </aspectratio.AspectRatio>
 ```
@@ -79,7 +92,7 @@ var AspectRatioFixtures = gx.Fixtures[AspectRatioProps]{
 <Example item="aspect-ratio" name="aspect-ratio-wide" label="Aspect Ratio: Wide">
 
 ```gx
-<aspectratio.AspectRatio ratio="16 / 9">16 / 9</aspectratio.AspectRatio>
+<aspectratio.AspectRatio ratio="16 / 9" class="rounded-lg bg-muted">16 / 9</aspectratio.AspectRatio>
 ```
 
 </Example>
@@ -89,7 +102,7 @@ var AspectRatioFixtures = gx.Fixtures[AspectRatioProps]{
 <Example item="aspect-ratio" name="aspect-ratio-square" label="Aspect Ratio: Square">
 
 ```gx
-<aspectratio.AspectRatio ratio="1 / 1">1 / 1</aspectratio.AspectRatio>
+<aspectratio.AspectRatio ratio="1 / 1" class="max-w-40 rounded-lg bg-muted">1 / 1</aspectratio.AspectRatio>
 ```
 
 </Example>

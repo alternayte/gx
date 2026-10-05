@@ -23,6 +23,10 @@ A data table built from composable parts.
 
 For sorting, filtering and paging over many rows, use the data table component.
 
+`TableFooter` holds the total rows. Set `data-state="selected"` on a `TableRow` to mark it.
+A row that holds an expanded control takes the hover colour.
+Pass `class="text-right"` to a `TableHead` and its cells for a number column.
+
 ## Do
 
 - Put a `TableCaption` on every table.

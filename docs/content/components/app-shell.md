@@ -11,11 +11,27 @@ item: "app-shell"
 ```gx
 <appshell.AppShell title="Acme">
   <:nav>
-    <sidebar.SidebarGroup title="Menu">
-      <sidebar.SidebarItem href={gx.URL("/")} active>Home</sidebar.SidebarItem>
-      <sidebar.SidebarItem href={gx.URL("/docs")}>Docs</sidebar.SidebarItem>
+    <sidebar.SidebarGroup>
+      <sidebar.SidebarGroupLabel>Menu</sidebar.SidebarGroupLabel>
+      <sidebar.SidebarGroupContent>
+        <sidebar.SidebarMenu>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/")} active>
+              {gx.El("span", nil, gx.Text("Home"))}
+            </sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/docs")}>
+              {gx.El("span", nil, gx.Text("Docs"))}
+            </sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+        </sidebar.SidebarMenu>
+      </sidebar.SidebarGroupContent>
     </sidebar.SidebarGroup>
   </:nav>
+  <:footer>
+    {gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}
+  </:footer>
   Page content.
 </appshell.AppShell>
 ```
@@ -64,7 +80,7 @@ props {
 <div class="flex min-h-screen">
   <sidebar.Sidebar id="gx-sidebar">
     <sidebar.SidebarHeader>
-      <span class="font-semibold">{p.Title}</span>
+      <span class="px-2 py-1 text-sm font-semibold">{p.Title}</span>
     </sidebar.SidebarHeader>
     <sidebar.SidebarContent>
       {p.Nav}
@@ -74,8 +90,8 @@ props {
     }
   </sidebar.Sidebar>
   <div class="flex min-w-0 flex-1 flex-col">
-    <header class="flex h-14 items-center gap-3 border-b border-border px-4">
-      <button type="button" data-gx-menu aria-controls="gx-sidebar" aria-expanded="false" class="rounded-md border border-border px-2 py-1 text-sm lg:hidden">Menu</button>
+    <header class="flex h-14 items-center gap-2 border-b border-border px-4">
+      <sidebar.SidebarTrigger class="-ml-1 lg:hidden" />
       <h1 class="text-sm font-semibold">{p.Title}</h1>
     </header>
     <main class="flex-1 p-6">{p.Children}</main>
@@ -94,10 +110,14 @@ import (
 var AppShellFixtures = gx.Fixtures[AppShellProps]{
 	"Default": {
 		Title: "Acme",
-		Nav: sidebar.SidebarGroup(sidebar.SidebarGroupProps{Title: "Menu", Children: gx.Frag(
-			sidebar.SidebarItem(sidebar.SidebarItemProps{Href: gx.URL("/"), Active: true, Children: gx.Text("Home")}),
-			sidebar.SidebarItem(sidebar.SidebarItemProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
+		Nav: sidebar.SidebarGroup(sidebar.SidebarGroupProps{Children: gx.Frag(
+			sidebar.SidebarGroupLabel(sidebar.SidebarGroupLabelProps{Children: gx.Text("Menu")}),
+			sidebar.SidebarGroupContent(sidebar.SidebarGroupContentProps{Children: sidebar.SidebarMenu(sidebar.SidebarMenuProps{Children: gx.Frag(
+				sidebar.SidebarMenuItem(sidebar.SidebarMenuItemProps{Children: sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonProps{Href: gx.URL("/"), Active: true, Children: gx.El("span", nil, gx.Text("Home"))})}),
+				sidebar.SidebarMenuItem(sidebar.SidebarMenuItemProps{Children: sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonProps{Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))})}),
+			)})}),
 		)}),
+		Footer:   gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0")),
 		Children: gx.Text("Page content."),
 	},
 }
@@ -127,11 +147,27 @@ The block is copied source. Wrap it in a `gx.Layout` so every page shares the fr
 ```gx
 <appshell.AppShell title="Acme">
   <:nav>
-    <sidebar.SidebarGroup title="Menu">
-      <sidebar.SidebarItem href={gx.URL("/")} active>Home</sidebar.SidebarItem>
-      <sidebar.SidebarItem href={gx.URL("/docs")}>Docs</sidebar.SidebarItem>
+    <sidebar.SidebarGroup>
+      <sidebar.SidebarGroupLabel>Menu</sidebar.SidebarGroupLabel>
+      <sidebar.SidebarGroupContent>
+        <sidebar.SidebarMenu>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/")} active>
+              {gx.El("span", nil, gx.Text("Home"))}
+            </sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/docs")}>
+              {gx.El("span", nil, gx.Text("Docs"))}
+            </sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+        </sidebar.SidebarMenu>
+      </sidebar.SidebarGroupContent>
     </sidebar.SidebarGroup>
   </:nav>
+  <:footer>
+    {gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}
+  </:footer>
   Page content.
 </appshell.AppShell>
 ```

@@ -1,11 +1,13 @@
 package pagination
 
+import "github.com/alternayte/gx/examples/shop/ui/icons"
+
 props {
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<span aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
-  <span aria-hidden="true">…</span>
+<span aria-hidden="true" data-slot="pagination-ellipsis" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
+  <icons.Ellipsis class="size-4" />
   <span class="sr-only">More pages</span>
 </span>

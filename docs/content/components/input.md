@@ -51,7 +51,7 @@ props {
   Attrs       gx.Attrs = nil
 }
 
-<input id={p.Id} type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx("h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", p.Class)} {...p.Attrs} />
+<input id={p.Id} type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot="input" class={gx.Cx(Class, p.Class)} {...p.Attrs} />
 ```
 
 ```go title="ui/input/Input.fixtures.go"
@@ -63,12 +63,21 @@ var InputFixtures = gx.Fixtures[InputProps]{
 	"Text":     {Placeholder: "Email"},
 	"Filled":   {Value: "ada@example.com", Attrs: gx.Attrs{{Key: "aria-label", Value: "Email"}}},
 	"Disabled": {Attrs: gx.Attrs{gx.Bool("disabled", true)}, Placeholder: "Disabled"},
+	"Invalid":  {Value: "ada@", Attrs: gx.Attrs{{Key: "aria-label", Value: "Email"}, {Key: "aria-invalid", Value: "true"}}},
 	"File":     {Type: "file", Attrs: gx.Attrs{{Key: "aria-label", Value: "File"}}},
 }
 ```
 
 ```go title="ui/input/styles.go"
 package input
+
+// Control is the classes of an input without its focus ring. A group that
+// draws the ring on its own border takes these classes for its control.
+const Control = "h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40"
+
+// Class is the classes of an input. A control that looks like an input
+// takes these classes.
+const Class = Control + " focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
 
 // inputType returns the type of the input; a zero value is text.
 func (p InputProps) inputType() string {
@@ -82,7 +91,7 @@ func (p InputProps) inputType() string {
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`.
+The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `--primary`, `--primary-foreground`, `--foreground`, `--destructive`.
 
 ## Usage
 
@@ -91,6 +100,9 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`.
 ```
 
 For a form with rules and errors, use the generated `gx.FormField` control instead.
+
+Set `aria-invalid="true"` through `Attrs` to show the error border.
+`input.Class` holds the classes of the input for another control that must look the same.
 
 ## Examples
 
@@ -120,6 +132,16 @@ For a form with rules and errors, use the generated `gx.FormField` control inste
 
 ```gx
 <input.Input attrs={gx.Attrs{gx.Bool("disabled", true)}} placeholder="Disabled" />
+```
+
+</Example>
+
+### Invalid
+
+<Example item="input" name="input-invalid" label="Input: Invalid">
+
+```gx
+<input.Input value="ada@" attrs={gx.Attrs{{Key: "aria-label", Value: "Email"}, {Key: "aria-invalid", Value: "true"}}} />
 ```
 
 </Example>

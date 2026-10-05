@@ -9,10 +9,16 @@ item: "input-group"
 <Example item="input-group" name="input-group-leading-text" label="Input Group: InputGroup: Leading text">
 
 ```gx
-<inputgroup.InputGroup>
-  <inputgroup.InputGroupAddon><inputgroup.InputGroupText>$</inputgroup.InputGroupText></inputgroup.InputGroupAddon>
-  <inputgroup.InputGroupInput placeholder="0.00" />
-</inputgroup.InputGroup>
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["LeadingText"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"LeadingText": {Children: gx.Frag(
+  InputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text("$")})}),
+  InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
+)}
 ```
 
 </Example>
@@ -28,6 +34,8 @@ Run the command in the app module.
 gx add input-group
 ```
 
+The command also installs [`button`](/components/button/), [`icons`](/components/icons/), [`input`](/components/input/) and [`textarea`](/components/textarea/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -41,9 +49,15 @@ The command writes these files.
 | `InputGroupAddon.fixtures.go` | `ui/input-group/InputGroupAddon.fixtures.go` |
 | `InputGroupInput.fixtures.go` | `ui/input-group/InputGroupInput.fixtures.go` |
 | `InputGroupText.fixtures.go` | `ui/input-group/InputGroupText.fixtures.go` |
+| `InputGroupButton.gx` | `ui/input-group/InputGroupButton.gx` |
+| `InputGroupButton.fixtures.go` | `ui/input-group/InputGroupButton.fixtures.go` |
+| `InputGroupTextarea.gx` | `ui/input-group/InputGroupTextarea.gx` |
+| `InputGroupTextarea.fixtures.go` | `ui/input-group/InputGroupTextarea.fixtures.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`button`](/components/button/), [`icons`](/components/icons/), [`input`](/components/input/) and [`textarea`](/components/textarea/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -56,7 +70,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div role="group" class={gx.Cx("group/input-group relative flex h-9 w-full min-w-0 items-center rounded-md border border-input shadow-xs transition-[color,box-shadow] outline-none focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-[[data-gx-invalid]]:border-destructive", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="input-group" role="group" class={gx.Cx("group/input-group relative flex w-full items-center rounded-md border border-input shadow-xs transition-[color,box-shadow] outline-none dark:bg-input/30 h-9 min-w-0 has-[>textarea]:h-auto has-[>[data-align=inline-start]]:[&>input]:pl-2 has-[>[data-align=inline-end]]:[&>input]:pr-2 has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-destructive/20 dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/input-group/InputGroupAddon.gx"
@@ -69,13 +83,16 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div data-align={p.Align} class={gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none [&>svg]:size-4", alignClass[p.Align], p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" data-slot="input-group-addon" data-align={p.align()} class={gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4", alignClass[Align(p.align())], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/input-group/InputGroupInput.gx"
 package inputgroup
 
+import "github.com/alternayte/gx/registry/input"
+
 props {
+  Id          string   = ""
   Type        string   = "text"
   Name        string   = ""
   Value       string   = ""
@@ -84,7 +101,7 @@ props {
   Attrs       gx.Attrs = nil
 }
 
-<input type={p.Type} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx("flex-1 rounded-none border-0 bg-transparent px-3 py-1 text-base shadow-none outline-none placeholder:text-muted-foreground focus-visible:ring-0 md:text-sm", p.Class)} {...p.Attrs} />
+<input type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot="input-group-control" class={gx.Cx(input.Control, "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class)} {...p.attrs()} />
 ```
 
 ```gx title="ui/input-group/InputGroupText.gx"
@@ -96,22 +113,58 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<span class={gx.Cx("flex items-center gap-2 text-sm text-muted-foreground [&>svg]:size-4", p.Class)} {...p.Attrs}>{p.Children}</span>
+<span class={gx.Cx("flex items-center gap-2 text-sm text-muted-foreground [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>{p.Children}</span>
 ```
 
 ```go title="ui/input-group/InputGroup.fixtures.go"
 package inputgroup
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
+
+// name returns the accessible name of a fixture control.
+func name(label string) gx.Attrs {
+	return gx.Attrs{{Key: "aria-label", Value: label}}
+}
 
 var InputGroupFixtures = gx.Fixtures[InputGroupProps]{
 	"LeadingText": {Children: gx.Frag(
 		InputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text("$")})}),
-		InputGroupInput(InputGroupInputProps{Placeholder: "0.00"}),
+		InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
 	)},
 	"TrailingText": {Children: gx.Frag(
-		InputGroupInput(InputGroupInputProps{Placeholder: "example.com"}),
+		InputGroupInput(InputGroupInputProps{Placeholder: "example", Attrs: name("Domain")}),
 		InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupText(InputGroupTextProps{Children: gx.Text(".com")})}),
+	)},
+	"Button": {Children: gx.Frag(
+		InputGroupInput(InputGroupInputProps{Placeholder: "Search", Attrs: name("Search")}),
+		InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupButton(InputGroupButtonProps{Children: gx.Text("Search")})}),
+	)},
+	"IconButton": {Children: gx.Frag(
+		InputGroupInput(InputGroupInputProps{Value: "ada@example.com", Attrs: name("Email")}),
+		InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupButton(InputGroupButtonProps{
+			Size:     IconXs,
+			Attrs:    name("Clear"),
+			Children: icons.X(icons.XProps{}),
+		})}),
+	)},
+	"Invalid": {Children: gx.Frag(
+		InputGroupAddon(InputGroupAddonProps{Children: icons.Info(icons.InfoProps{})}),
+		InputGroupInput(InputGroupInputProps{Value: "ada@", Attrs: gx.Attrs{{Key: "aria-label", Value: "Email"}, {Key: "aria-invalid", Value: "true"}}}),
+	)},
+	"Textarea": {Children: gx.Frag(
+		InputGroupTextarea(InputGroupTextareaProps{Placeholder: "Ask a question.", Attrs: name("Question")}),
+		InputGroupAddon(InputGroupAddonProps{Align: BlockEnd, Children: gx.Frag(
+			InputGroupText(InputGroupTextProps{Children: gx.Text("120 characters left")}),
+			InputGroupButton(InputGroupButtonProps{Variant: button.Default, Size: Sm, Class: "ml-auto", Children: gx.Text("Send")}),
+		)}),
+	)},
+	"BlockStart": {Children: gx.Frag(
+		InputGroupAddon(InputGroupAddonProps{Align: BlockStart, Children: InputGroupText(InputGroupTextProps{Children: gx.Text("Amount")})}),
+		InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
 	)},
 }
 ```
@@ -119,7 +172,10 @@ var InputGroupFixtures = gx.Fixtures[InputGroupProps]{
 ```go title="ui/input-group/styles.go"
 package inputgroup
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
 
 // Align is the position of an addon inside an input group.
 type Align string
@@ -135,8 +191,86 @@ const (
 var alignClass = gx.Enum[Align]{
 	InlineStart: "order-first pl-3 has-[>button]:ml-[-0.45rem] has-[>kbd]:ml-[-0.35rem]",
 	InlineEnd:   "order-last pr-3 has-[>button]:mr-[-0.45rem] has-[>kbd]:mr-[-0.35rem]",
-	BlockStart:  "order-first w-full justify-start px-3 pt-3",
-	BlockEnd:    "order-last w-full justify-start px-3 pb-3",
+	BlockStart:  "order-first w-full justify-start px-3 pt-3 group-has-[>input]/input-group:pt-2.5 [.border-b]:pb-3",
+	BlockEnd:    "order-last w-full justify-start px-3 pb-3 group-has-[>input]/input-group:pb-2.5 [.border-t]:pt-3",
+}
+
+// align returns the data-align value; a zero value is InlineStart. The
+// group reads this attribute to pad its control.
+func (p InputGroupAddonProps) align() string {
+	if p.Align == "" {
+		return string(InlineStart)
+	}
+	return string(p.Align)
+}
+
+// Size is the height and padding of a button inside an input group.
+type Size string
+
+// The sizes of inputgroup.InputGroupButton.
+const (
+	Xs     Size = "xs"
+	Sm     Size = "sm"
+	IconXs Size = "icon-xs"
+	IconSm Size = "icon-sm"
+)
+
+var sizeClass = gx.Enum[Size]{
+	Xs:     "h-6 gap-1 rounded-[calc(var(--radius)-5px)] px-2 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5",
+	Sm:     "h-8 gap-1.5 rounded-md px-2.5 has-[>svg]:px-2.5",
+	IconXs: "size-6 rounded-[calc(var(--radius)-5px)] p-0 has-[>svg]:p-0",
+	IconSm: "size-8 p-0 has-[>svg]:p-0",
+}
+
+// buttonSize is the button size that each group size starts from: the
+// group classes replace its height and padding.
+var buttonSize = map[Size]button.Size{
+	Xs:     button.Md,
+	Sm:     button.Md,
+	IconXs: button.Icon,
+	IconSm: button.Icon,
+}
+
+// size returns the button size; a zero value is Xs.
+func (p InputGroupButtonProps) size() Size {
+	if p.Size == "" {
+		return Xs
+	}
+	return p.Size
+}
+
+// variant returns the button variant; a zero value is Ghost.
+func (p InputGroupButtonProps) variant() button.Variant {
+	if p.Variant == "" {
+		return button.Ghost
+	}
+	return p.Variant
+}
+
+// inputType returns the type of the input; a zero value is text.
+func (p InputGroupInputProps) inputType() string {
+	if p.Type == "" {
+		return "text"
+	}
+	return p.Type
+}
+
+// attrs returns the id when the input has one, then the caller's
+// attributes.
+func (p InputGroupInputProps) attrs() gx.Attrs {
+	if p.Id == "" {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "id", Value: p.Id}}, p.Attrs...)
+}
+
+// attrs returns the id when the textarea has one, then the caller's
+// attributes.
+func (p InputGroupTextareaProps) attrs() gx.Attrs {
+	if p.Id == "" {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "id", Value: p.Id}}, p.Attrs...)
 }
 ```
 
@@ -153,7 +287,13 @@ package inputgroup
 
 import "github.com/alternayte/gx"
 
-var InputGroupInputFixtures = gx.Fixtures[InputGroupInputProps]{"Placeholder": {Placeholder: "Value"}}
+var InputGroupInputFixtures = gx.Fixtures[InputGroupInputProps]{"Placeholder": {Placeholder: "Value", Attrs: name("Value")}}
+
+// InputGroupInputWrap renders the input in a group, which draws its border
+// and its focus ring.
+func InputGroupInputWrap(n gx.Node) gx.Node {
+	return InputGroup(InputGroupProps{Children: n})
+}
 ```
 
 ```go title="ui/input-group/InputGroupText.fixtures.go"
@@ -164,6 +304,72 @@ import "github.com/alternayte/gx"
 var InputGroupTextFixtures = gx.Fixtures[InputGroupTextProps]{"Text": {Children: gx.Text("Text")}}
 ```
 
+```gx title="ui/input-group/InputGroupButton.gx"
+package inputgroup
+
+import "github.com/alternayte/gx/registry/button"
+
+props {
+  Variant  button.Variant = button.Ghost
+  Size     Size           = Xs
+  Type     string         = "button"
+  Class    string         = ""
+  Children gx.Node
+  Attrs    gx.Attrs       = nil
+}
+
+<button.Button type={p.Type} variant={p.variant()} size={buttonSize[p.size()]} class={gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class)} attrs={p.Attrs}>{p.Children}</button.Button>
+```
+
+```go title="ui/input-group/InputGroupButton.fixtures.go"
+package inputgroup
+
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
+
+var InputGroupButtonFixtures = gx.Fixtures[InputGroupButtonProps]{
+	"ExtraSmall": {Children: gx.Text("Search")},
+	"Small":      {Size: Sm, Children: gx.Text("Search")},
+	"IconXs":     {Size: IconXs, Attrs: name("Clear"), Children: icons.X(icons.XProps{})},
+	"IconSm":     {Size: IconSm, Attrs: name("Clear"), Children: icons.X(icons.XProps{})},
+}
+```
+
+```gx title="ui/input-group/InputGroupTextarea.gx"
+package inputgroup
+
+import "github.com/alternayte/gx/registry/textarea"
+
+props {
+  Id          string   = ""
+  Name        string   = ""
+  Value       string   = ""
+  Placeholder string   = ""
+  Class       string   = ""
+  Attrs       gx.Attrs = nil
+}
+
+<textarea name={p.Name} placeholder={p.Placeholder} data-slot="input-group-control" class={gx.Cx(textarea.Control, "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class)} {...p.attrs()}>{p.Value}</textarea>
+```
+
+```go title="ui/input-group/InputGroupTextarea.fixtures.go"
+package inputgroup
+
+import "github.com/alternayte/gx"
+
+var InputGroupTextareaFixtures = gx.Fixtures[InputGroupTextareaProps]{
+	"Placeholder": {Placeholder: "Ask a question.", Attrs: name("Question")},
+}
+
+// InputGroupTextareaWrap renders the textarea in a group, which draws its
+// border and its focus ring.
+func InputGroupTextareaWrap(n gx.Node) gx.Node {
+	return InputGroup(InputGroupProps{Children: n})
+}
+```
+
 </docs.TabItem>
 </docs.Tabs>
 
@@ -171,14 +377,29 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `
 
 ## Usage
 
+An input or a textarea with text, icons or buttons inside its border.
+
 ```gx
 <inputgroup.InputGroup>
-  <inputgroup.InputGroupAddon>
-    <inputgroup.InputGroupText>$</inputgroup.InputGroupText>
+  <inputgroup.InputGroupAddon><icons.Info /></inputgroup.InputGroupAddon>
+  <inputgroup.InputGroupInput name="q" placeholder="Search" />
+  <inputgroup.InputGroupAddon align={inputgroup.InlineEnd}>
+    <inputgroup.InputGroupButton>Search</inputgroup.InputGroupButton>
   </inputgroup.InputGroupAddon>
-  <inputgroup.InputGroupInput placeholder="0.00" />
+</inputgroup.InputGroup>
+
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupTextarea name="message" placeholder="Ask a question." />
+  <inputgroup.InputGroupAddon align={inputgroup.BlockEnd}>
+    <inputgroup.InputGroupText>120 characters left</inputgroup.InputGroupText>
+  </inputgroup.InputGroupAddon>
 </inputgroup.InputGroup>
 ```
+
+An addon has four positions: `InlineStart`, `InlineEnd`, `BlockStart` and `BlockEnd`. A block addon makes the group a column.
+`InputGroupButton` is a ghost button with the sizes `Xs`, `Sm`, `IconXs` and `IconSm`.
+The group shows the focus ring of its control. It shows the error border when the control has `aria-invalid="true"`.
+A click on an addon does not focus the control. Put the addon text in a `<label for>` when a click must focus it.
 
 ## Examples
 
@@ -187,10 +408,16 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `
 <Example item="input-group" name="input-group-leading-text" label="Input Group: InputGroup: Leading text">
 
 ```gx
-<inputgroup.InputGroup>
-  <inputgroup.InputGroupAddon><inputgroup.InputGroupText>$</inputgroup.InputGroupText></inputgroup.InputGroupAddon>
-  <inputgroup.InputGroupInput placeholder="0.00" />
-</inputgroup.InputGroup>
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["LeadingText"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"LeadingText": {Children: gx.Frag(
+  InputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text("$")})}),
+  InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
+)}
 ```
 
 </Example>
@@ -200,12 +427,112 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `
 <Example item="input-group" name="input-group-trailing-text" label="Input Group: InputGroup: Trailing text">
 
 ```gx
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["TrailingText"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"TrailingText": {Children: gx.Frag(
+  InputGroupInput(InputGroupInputProps{Placeholder: "example", Attrs: name("Domain")}),
+  InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupText(InputGroupTextProps{Children: gx.Text(".com")})}),
+)}
+```
+
+</Example>
+
+### InputGroup: Button
+
+<Example item="input-group" name="input-group-button" label="Input Group: InputGroup: Button">
+
+```gx
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["Button"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"Button": {Children: gx.Frag(
+  InputGroupInput(InputGroupInputProps{Placeholder: "Search", Attrs: name("Search")}),
+  InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupButton(InputGroupButtonProps{Children: gx.Text("Search")})}),
+)}
+```
+
+</Example>
+
+### InputGroup: Icon button
+
+<Example item="input-group" name="input-group-icon-button" label="Input Group: InputGroup: Icon button">
+
+```gx
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["IconButton"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"IconButton": {Children: gx.Frag(
+  InputGroupInput(InputGroupInputProps{Value: "ada@example.com", Attrs: name("Email")}),
+  InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupButton(InputGroupButtonProps{
+    Size:     IconXs,
+    Attrs:    name("Clear"),
+    Children: icons.X(icons.XProps{}),
+  })}),
+)}
+```
+
+</Example>
+
+### InputGroup: Invalid
+
+<Example item="input-group" name="input-group-invalid" label="Input Group: InputGroup: Invalid">
+
+```gx
 <inputgroup.InputGroup>
-  <inputgroup.InputGroupInput placeholder="example.com" />
-  <inputgroup.InputGroupAddon align={inputgroup.InlineEnd}>
-    <inputgroup.InputGroupText>.com</inputgroup.InputGroupText>
-  </inputgroup.InputGroupAddon>
+  <inputgroup.InputGroupAddon><icons.Info /></inputgroup.InputGroupAddon>
+  <inputgroup.InputGroupInput value="ada@" attrs={gx.Attrs{{Key: "aria-label", Value: "Email"}, {Key: "aria-invalid", Value: "true"}}} />
 </inputgroup.InputGroup>
+```
+
+</Example>
+
+### InputGroup: Textarea
+
+<Example item="input-group" name="input-group-textarea" label="Input Group: InputGroup: Textarea">
+
+```gx
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["Textarea"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"Textarea": {Children: gx.Frag(
+  InputGroupTextarea(InputGroupTextareaProps{Placeholder: "Ask a question.", Attrs: name("Question")}),
+  InputGroupAddon(InputGroupAddonProps{Align: BlockEnd, Children: gx.Frag(
+    InputGroupText(InputGroupTextProps{Children: gx.Text("120 characters left")}),
+    InputGroupButton(InputGroupButtonProps{Variant: button.Default, Size: Sm, Class: "ml-auto", Children: gx.Text("Send")}),
+  )}),
+)}
+```
+
+</Example>
+
+### InputGroup: Block start
+
+<Example item="input-group" name="input-group-block-start" label="Input Group: InputGroup: Block start">
+
+```gx
+{inputgroup.InputGroup(inputgroup.InputGroupFixtures["BlockStart"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroup.fixtures.go"
+"BlockStart": {Children: gx.Frag(
+  InputGroupAddon(InputGroupAddonProps{Align: BlockStart, Children: InputGroupText(InputGroupTextProps{Children: gx.Text("Amount")})}),
+  InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
+)}
 ```
 
 </Example>
@@ -220,12 +547,70 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `
 
 </Example>
 
+### InputGroupButton: Extra small
+
+<Example item="input-group" name="input-group-button-extra-small" label="Input Group: InputGroupButton: Extra small">
+
+```gx
+<inputgroup.InputGroupButton>Search</inputgroup.InputGroupButton>
+```
+
+</Example>
+
+### InputGroupButton: Small
+
+<Example item="input-group" name="input-group-button-small" label="Input Group: InputGroupButton: Small">
+
+```gx
+<inputgroup.InputGroupButton size={inputgroup.Sm}>Search</inputgroup.InputGroupButton>
+```
+
+</Example>
+
+### InputGroupButton: Icon xs
+
+<Example item="input-group" name="input-group-button-icon-xs" label="Input Group: InputGroupButton: Icon xs">
+
+```gx
+{inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconXs"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroupButton.fixtures.go"
+"IconXs":     {Size: IconXs, Attrs: name("Clear"), Children: icons.X(icons.XProps{})}
+```
+
+</Example>
+
+### InputGroupButton: Icon sm
+
+<Example item="input-group" name="input-group-button-icon-sm" label="Input Group: InputGroupButton: Icon sm">
+
+```gx
+{inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconSm"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroupButton.fixtures.go"
+"IconSm":     {Size: IconSm, Attrs: name("Clear"), Children: icons.X(icons.XProps{})}
+```
+
+</Example>
+
 ### InputGroupInput: Placeholder
 
 <Example item="input-group" name="input-group-input-placeholder" label="Input Group: InputGroupInput: Placeholder">
 
 ```gx
-<inputgroup.InputGroupInput placeholder="Value" />
+{inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroupInput.fixtures.go"
+"Placeholder": {Placeholder: "Value", Attrs: name("Value")}
 ```
 
 </Example>
@@ -240,19 +625,35 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `
 
 </Example>
 
+### InputGroupTextarea: Placeholder
+
+<Example item="input-group" name="input-group-textarea-placeholder" label="Input Group: InputGroupTextarea: Placeholder">
+
+```gx
+{inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/input-group/InputGroupTextarea.fixtures.go"
+"Placeholder": {Placeholder: "Ask a question.", Attrs: name("Question")}
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Put short text or an icon in the addon.
-- Use `Align` to move the addon to the end.
+- Give the control an `aria-label` or a label. An addon is not a label.
+- Put a block addon with a textarea.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not put a label inside the addon. Use a `label.Label` above the group.
-- Do not put more than one input in a group.
+- Do not put more than one control in a group.
+- Do not use an addon for an error message. Use a field error.
 
 </docs.Card>
 </docs.CardGrid>
@@ -261,5 +662,5 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves focus to the input or the addon button. |
-| Enter | Submits the form when the input is in a form. |
+| Tab | Moves focus to the control, then to each button of the group. |
+| Enter, Space | Activates the focused button. |

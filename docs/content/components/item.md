@@ -9,14 +9,13 @@ item: "item"
 <Example item="item" name="item-full" label="Item: Item: Full">
 
 ```gx
-<item.Item class="p-4">
-  <item.ItemMedia>*</item.ItemMedia>
-  <item.ItemContent>
-    <item.ItemTitle>Item title</item.ItemTitle>
-    <item.ItemDescription>A short description of the item.</item.ItemDescription>
-  </item.ItemContent>
-  <item.ItemActions>Open</item.ItemActions>
-</item.Item>
+{item.Item(item.ItemFixtures["Full"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/item/Item.fixtures.go"
+"Full":    {Variant: Outline, Children: body()}
 ```
 
 </Example>
@@ -31,6 +30,8 @@ Run the command in the app module.
 ```sh frame="terminal" title="Terminal"
 gx add item
 ```
+
+The command also installs [`button`](/components/button/) and [`icons`](/components/icons/).
 
 The command writes these files.
 
@@ -52,9 +53,16 @@ The command writes these files.
 | `ItemHeader.fixtures.go` | `ui/item/ItemHeader.fixtures.go` |
 | `ItemMedia.fixtures.go` | `ui/item/ItemMedia.fixtures.go` |
 | `ItemTitle.fixtures.go` | `ui/item/ItemTitle.fixtures.go` |
+| `ItemGroup.gx` | `ui/item/ItemGroup.gx` |
+| `ItemGroup.fixtures.go` | `ui/item/ItemGroup.fixtures.go` |
+| `ItemSeparator.gx` | `ui/item/ItemSeparator.gx` |
+| `ItemSeparator.fixtures.go` | `ui/item/ItemSeparator.fixtures.go` |
+| `styles.go` | `ui/item/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`button`](/components/button/) and [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -62,24 +70,32 @@ Copy each file to its path in the app. Change each import of a registry package 
 package item
 
 props {
+  Variant  Variant  = Default
+  Size     Size     = Md
+  Href     gx.URL   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50", p.Class)} {...p.Attrs}>{p.Children}</div>
+if p.Href != "" {
+  <a href={p.Href} data-slot="item" data-variant={p.variant()} data-size={p.size()} class={p.class()} {...p.Attrs}>{p.Children}</a>
+} else {
+  <div data-slot="item" data-variant={p.variant()} data-size={p.size()} class={p.class()} {...p.Attrs}>{p.Children}</div>
+}
 ```
 
 ```gx title="ui/item/ItemMedia.gx"
 package item
 
 props {
+  Variant  Media    = MediaDefault
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex shrink-0 items-center justify-center gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-media" data-variant={p.variant()} class={gx.Cx("flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none", mediaClass[Media(p.variant())], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/item/ItemContent.gx"
@@ -91,7 +107,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex flex-1 flex-col gap-1", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-content" class={gx.Cx("flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/item/ItemTitle.gx"
@@ -103,7 +119,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-title" class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/item/ItemDescription.gx"
@@ -115,7 +131,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<p class={gx.Cx("line-clamp-2 text-sm leading-normal font-normal text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</p>
+<p data-slot="item-description" class={gx.Cx("line-clamp-2 text-sm leading-normal font-normal [text-wrap:balance] text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</p>
 ```
 
 ```gx title="ui/item/ItemActions.gx"
@@ -127,7 +143,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex items-center gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-actions" class={gx.Cx("flex items-center gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/item/ItemHeader.gx"
@@ -139,7 +155,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex basis-full items-center justify-between", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-header" class={gx.Cx("flex basis-full items-center justify-between gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/item/ItemFooter.gx"
@@ -151,22 +167,54 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex basis-full items-center justify-between", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-footer" class={gx.Cx("flex basis-full items-center justify-between gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```go title="ui/item/Item.fixtures.go"
 package item
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
 
-var ItemFixtures = gx.Fixtures[ItemProps]{
-	"Full": {Class: "p-4", Children: gx.Frag(
-		ItemMedia(ItemMediaProps{Children: gx.Text("*")}),
+// body is the content of the item fixtures: an icon, a title with a
+// description, and one action.
+func body() gx.Node {
+	return gx.Frag(
+		ItemMedia(ItemMediaProps{Variant: MediaIcon, Children: icons.Info(icons.InfoProps{})}),
 		ItemContent(ItemContentProps{Children: gx.Frag(
 			ItemTitle(ItemTitleProps{Children: gx.Text("Item title")}),
 			ItemDescription(ItemDescriptionProps{Children: gx.Text("A short description of the item.")}),
 		)}),
-		ItemActions(ItemActionsProps{Children: gx.Text("Open")}),
+		ItemActions(ItemActionsProps{Children: button.Button(button.ButtonProps{Variant: button.Outline, Size: button.Sm, Children: gx.Text("Open")})}),
+	)
+}
+
+var ItemFixtures = gx.Fixtures[ItemProps]{
+	"Full":    {Variant: Outline, Children: body()},
+	"Default": {Children: body()},
+	"Muted":   {Variant: Muted, Children: body()},
+	"Small": {Variant: Outline, Size: Sm, Children: gx.Frag(
+		ItemMedia(ItemMediaProps{Children: icons.CircleCheck(icons.CircleCheckProps{Class: "size-5"})}),
+		ItemContent(ItemContentProps{Children: ItemTitle(ItemTitleProps{Children: gx.Text("Your profile is verified.")})}),
+		ItemActions(ItemActionsProps{Children: icons.ChevronRight(icons.ChevronRightProps{Class: "size-4"})}),
+	)},
+	"Link": {Variant: Outline, Size: Sm, Href: gx.URL("/docs"), Children: gx.Frag(
+		ItemContent(ItemContentProps{Children: gx.Frag(
+			ItemTitle(ItemTitleProps{Children: gx.Text("Read the docs")}),
+			ItemDescription(ItemDescriptionProps{Children: gx.Text("The item is one link.")}),
+		)}),
+		ItemActions(ItemActionsProps{Children: icons.ChevronRight(icons.ChevronRightProps{Class: "size-4"})}),
+	)},
+	"HeaderAndFooter": {Variant: Outline, Children: gx.Frag(
+		ItemHeader(ItemHeaderProps{Children: gx.Text("Header")}),
+		ItemContent(ItemContentProps{Children: gx.Frag(
+			ItemTitle(ItemTitleProps{Children: gx.Text("Item title")}),
+			ItemDescription(ItemDescriptionProps{Children: gx.Text("A short description of the item.")}),
+		)}),
+		ItemFooter(ItemFooterProps{Children: gx.Text("Footer")}),
 	)},
 }
 ```
@@ -214,9 +262,18 @@ var ItemHeaderFixtures = gx.Fixtures[ItemHeaderProps]{"Empty": {}}
 ```go title="ui/item/ItemMedia.fixtures.go"
 package item
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
 
-var ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{"Empty": {}}
+var ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{
+	"Icon":    {Variant: MediaIcon, Children: icons.Info(icons.InfoProps{})},
+	"Default": {Children: icons.Info(icons.InfoProps{Class: "size-5"})},
+	"Image": {Variant: MediaImage, Children: gx.El("div", gx.Attrs{
+		{Key: "class", Value: "size-full bg-muted"},
+	})},
+}
 ```
 
 ```go title="ui/item/ItemTitle.fixtures.go"
@@ -227,23 +284,171 @@ import "github.com/alternayte/gx"
 var ItemTitleFixtures = gx.Fixtures[ItemTitleProps]{"Title": {Children: gx.Text("Item title")}}
 ```
 
+```gx title="ui/item/ItemGroup.gx"
+package item
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="item-group" class={gx.Cx("group/item-group flex flex-col", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```go title="ui/item/ItemGroup.fixtures.go"
+package item
+
+import "github.com/alternayte/gx"
+
+var ItemGroupFixtures = gx.Fixtures[ItemGroupProps]{
+	"Separated": {Children: gx.Frag(
+		Item(ItemProps{Children: ItemContent(ItemContentProps{Children: gx.Frag(
+			ItemTitle(ItemTitleProps{Children: gx.Text("Ada Lovelace")}),
+			ItemDescription(ItemDescriptionProps{Children: gx.Text("ada@example.com")}),
+		)})}),
+		ItemSeparator(ItemSeparatorProps{}),
+		Item(ItemProps{Children: ItemContent(ItemContentProps{Children: gx.Frag(
+			ItemTitle(ItemTitleProps{Children: gx.Text("Grace Hopper")}),
+			ItemDescription(ItemDescriptionProps{Children: gx.Text("grace@example.com")}),
+		)})}),
+	)},
+}
+```
+
+```gx title="ui/item/ItemSeparator.gx"
+package item
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div data-slot="item-separator" role="none" data-orientation="horizontal" class={gx.Cx("h-px w-full shrink-0 bg-border my-0", p.Class)} {...p.Attrs}></div>
+```
+
+```go title="ui/item/ItemSeparator.fixtures.go"
+package item
+
+import "github.com/alternayte/gx"
+
+var ItemSeparatorFixtures = gx.Fixtures[ItemSeparatorProps]{"Default": {}}
+```
+
+```go title="ui/item/styles.go"
+package item
+
+import "github.com/alternayte/gx"
+
+// Variant is the surface of an item.
+type Variant string
+
+// The variants of item.Item.
+const (
+	Default Variant = "default"
+	Outline Variant = "outline"
+	Muted   Variant = "muted"
+)
+
+var variantClass = gx.Enum[Variant]{
+	Default: "bg-transparent",
+	Outline: "border-border",
+	Muted:   "bg-muted/50",
+}
+
+// Size is the padding and the gap of an item.
+type Size string
+
+// The sizes of item.Item.
+const (
+	Md Size = "default"
+	Sm Size = "sm"
+)
+
+var sizeClass = gx.Enum[Size]{
+	Md: "gap-4 p-4",
+	Sm: "gap-2.5 px-4 py-3",
+}
+
+// Media is the look of the media slot of an item.
+type Media string
+
+// The variants of item.ItemMedia.
+const (
+	MediaDefault Media = "default"
+	MediaIcon    Media = "icon"
+	MediaImage   Media = "image"
+)
+
+var mediaClass = gx.Enum[Media]{
+	MediaDefault: "bg-transparent",
+	MediaIcon:    "size-8 rounded-sm border border-border bg-muted [&_svg:not([class*='size-'])]:size-4",
+	MediaImage:   "size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover",
+}
+
+// variant returns the data-variant value; a zero value is Default.
+func (p ItemProps) variant() string {
+	if p.Variant == "" {
+		return string(Default)
+	}
+	return string(p.Variant)
+}
+
+// size returns the data-size value; a zero value is Md.
+func (p ItemProps) size() string {
+	if p.Size == "" {
+		return string(Md)
+	}
+	return string(p.Size)
+}
+
+// class returns the classes of one item.
+func (p ItemProps) class() string {
+	const base = "group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50"
+	return gx.Cx(base, variantClass[Variant(p.variant())], sizeClass[Size(p.size())], p.Class)
+}
+
+// variant returns the data-variant value; a zero value is MediaDefault.
+func (p ItemMediaProps) variant() string {
+	if p.Variant == "" {
+		return string(MediaDefault)
+	}
+	return string(p.Variant)
+}
+```
+
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--ring`, `--accent`, `--muted-foreground`.
+The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`, `--accent`, `--ring`, `--primary`.
 
 ## Usage
 
+A row with media, a title, a description and actions.
+
 ```gx
-<item.Item class="p-4">
-  <item.ItemMedia>*</item.ItemMedia>
+<item.Item variant={item.Outline}>
+  <item.ItemMedia variant={item.MediaIcon}><icons.Info /></item.ItemMedia>
   <item.ItemContent>
     <item.ItemTitle>Item title</item.ItemTitle>
-    <item.ItemDescription>A short description.</item.ItemDescription>
+    <item.ItemDescription>A short description of the item.</item.ItemDescription>
   </item.ItemContent>
-  <item.ItemActions><a href={items.Show{ID: it.ID}}>Open</a></item.ItemActions>
+  <item.ItemActions>
+    <button.Button variant={button.Outline} size={button.Sm}>Open</button.Button>
+  </item.ItemActions>
 </item.Item>
+
+<item.ItemGroup>
+  <item.Item>...</item.Item>
+  <item.ItemSeparator />
+  <item.Item>...</item.Item>
+</item.ItemGroup>
 ```
+
+The variants are `Default`, `Outline` and `Muted`. The sizes are `Md` and `Sm`.
+`ItemMedia` has the variants `MediaDefault`, `MediaIcon` and `MediaImage`. The media aligns with the title when the item has a description.
+Set `Href` to make the whole item one link. A link item has a hover state.
+`ItemHeader` and `ItemFooter` take a full row above and below the content.
 
 ## Examples
 
@@ -252,13 +457,91 @@ The theme must define these tokens: `--border`, `--ring`, `--accent`, `--muted-f
 <Example item="item" name="item-full" label="Item: Item: Full">
 
 ```gx
-<item.Item class="p-4">
-  <item.ItemMedia>*</item.ItemMedia>
+{item.Item(item.ItemFixtures["Full"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/item/Item.fixtures.go"
+"Full":    {Variant: Outline, Children: body()}
+```
+
+</Example>
+
+### Item: Default
+
+<Example item="item" name="item-default" label="Item: Item: Default">
+
+```gx
+{item.Item(item.ItemFixtures["Default"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/item/Item.fixtures.go"
+"Default": {Children: body()}
+```
+
+</Example>
+
+### Item: Muted
+
+<Example item="item" name="item-muted" label="Item: Item: Muted">
+
+```gx
+{item.Item(item.ItemFixtures["Muted"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/item/Item.fixtures.go"
+"Muted":   {Variant: Muted, Children: body()}
+```
+
+</Example>
+
+### Item: Small
+
+<Example item="item" name="item-small" label="Item: Item: Small">
+
+```gx
+<item.Item variant={item.Outline} size={item.Sm}>
+  <item.ItemMedia><icons.CircleCheck class="size-5" /></item.ItemMedia>
+  <item.ItemContent><item.ItemTitle>Your profile is verified.</item.ItemTitle></item.ItemContent>
+  <item.ItemActions><icons.ChevronRight class="size-4" /></item.ItemActions>
+</item.Item>
+```
+
+</Example>
+
+### Item: Link
+
+<Example item="item" name="item-link" label="Item: Item: Link">
+
+```gx
+<item.Item variant={item.Outline} size={item.Sm} href={gx.URL("/docs")}>
+  <item.ItemContent>
+    <item.ItemTitle>Read the docs</item.ItemTitle>
+    <item.ItemDescription>The item is one link.</item.ItemDescription>
+  </item.ItemContent>
+  <item.ItemActions><icons.ChevronRight class="size-4" /></item.ItemActions>
+</item.Item>
+```
+
+</Example>
+
+### Item: Header and footer
+
+<Example item="item" name="item-header-and-footer" label="Item: Item: Header and footer">
+
+```gx
+<item.Item variant={item.Outline}>
+  <item.ItemHeader>Header</item.ItemHeader>
   <item.ItemContent>
     <item.ItemTitle>Item title</item.ItemTitle>
     <item.ItemDescription>A short description of the item.</item.ItemDescription>
   </item.ItemContent>
-  <item.ItemActions>Open</item.ItemActions>
+  <item.ItemFooter>Footer</item.ItemFooter>
 </item.Item>
 ```
 
@@ -304,6 +587,30 @@ The theme must define these tokens: `--border`, `--ring`, `--accent`, `--muted-f
 
 </Example>
 
+### ItemGroup: Separated
+
+<Example item="item" name="item-group-separated" label="Item: ItemGroup: Separated">
+
+```gx
+<item.ItemGroup>
+  <item.Item>
+    <item.ItemContent>
+      <item.ItemTitle>Ada Lovelace</item.ItemTitle>
+      <item.ItemDescription>ada@example.com</item.ItemDescription>
+    </item.ItemContent>
+  </item.Item>
+  <item.ItemSeparator />
+  <item.Item>
+    <item.ItemContent>
+      <item.ItemTitle>Grace Hopper</item.ItemTitle>
+      <item.ItemDescription>grace@example.com</item.ItemDescription>
+    </item.ItemContent>
+  </item.Item>
+</item.ItemGroup>
+```
+
+</Example>
+
 ### ItemHeader: Empty
 
 <Example item="item" name="item-header-empty" label="Item: ItemHeader: Empty">
@@ -314,12 +621,46 @@ The theme must define these tokens: `--border`, `--ring`, `--accent`, `--muted-f
 
 </Example>
 
-### ItemMedia: Empty
+### ItemMedia: Icon
 
-<Example item="item" name="item-media-empty" label="Item: ItemMedia: Empty">
+<Example item="item" name="item-media-icon" label="Item: ItemMedia: Icon">
 
 ```gx
-<item.ItemMedia children={gx.Frag()} />
+<item.ItemMedia variant={item.MediaIcon}><icons.Info /></item.ItemMedia>
+```
+
+</Example>
+
+### ItemMedia: Default
+
+<Example item="item" name="item-media-default" label="Item: ItemMedia: Default">
+
+```gx
+<item.ItemMedia><icons.Info class="size-5" /></item.ItemMedia>
+```
+
+</Example>
+
+### ItemMedia: Image
+
+<Example item="item" name="item-media-image" label="Item: ItemMedia: Image">
+
+```gx
+<item.ItemMedia variant={item.MediaImage}>
+  {gx.El("div", gx.Attrs{
+    {Key: "class", Value: "size-full bg-muted"},
+  })}
+</item.ItemMedia>
+```
+
+</Example>
+
+### ItemSeparator: Default
+
+<Example item="item" name="item-separator-default" label="Item: ItemSeparator: Default">
+
+```gx
+<item.ItemSeparator />
 ```
 
 </Example>
@@ -339,14 +680,14 @@ The theme must define these tokens: `--border`, `--ring`, `--accent`, `--muted-f
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Keep one row per entry.
-- Put the row action in `ItemActions`.
+- Keep the title to one line.
+- Use `ItemGroup` and `ItemSeparator` for a list of items.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not put a whole table in an item.
-- Do not nest one item in another.
+- Do not put a button in an item that has `Href`. A link does not hold a button.
+- Do not use an item for tabular data. Use a table.
 
 </docs.Card>
 </docs.CardGrid>
@@ -355,4 +696,5 @@ The theme must define these tokens: `--border`, `--ring`, `--accent`, `--muted-f
 
 | Key | Action |
 | --- | --- |
-| None | The component is static. |
+| Tab | Moves focus to a link item, then to the controls in `ItemActions`. |
+| Enter | Follows a link item. |

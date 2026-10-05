@@ -6,7 +6,7 @@ group: "Components"
 item: "avatar"
 ---
 
-<Example item="avatar" name="avatar-fallback" label="Avatar: Fallback">
+<Example item="avatar" name="avatar-fallback" label="Avatar: Avatar: Fallback">
 
 ```gx
 <avatar.Avatar fallback="NA" src={""} />
@@ -32,6 +32,12 @@ The command writes these files.
 | `Avatar.gx` | `ui/avatar/Avatar.gx` |
 | `Avatar.fixtures.go` | `ui/avatar/Avatar.fixtures.go` |
 | `styles.go` | `ui/avatar/styles.go` |
+| `AvatarBadge.gx` | `ui/avatar/AvatarBadge.gx` |
+| `AvatarBadge.fixtures.go` | `ui/avatar/AvatarBadge.fixtures.go` |
+| `AvatarGroup.gx` | `ui/avatar/AvatarGroup.gx` |
+| `AvatarGroup.fixtures.go` | `ui/avatar/AvatarGroup.fixtures.go` |
+| `AvatarGroupCount.gx` | `ui/avatar/AvatarGroupCount.gx` |
+| `AvatarGroupCount.fixtures.go` | `ui/avatar/AvatarGroupCount.fixtures.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -46,15 +52,19 @@ props {
   Alt      string   = ""
   Fallback string   = ""
   Size     Size     = Md
+  Badge    gx.Node  = nil
   Class    string   = ""
   Attrs    gx.Attrs = nil
 }
 
-<span class={gx.Cx("relative flex shrink-0 overflow-hidden rounded-full", p.sizeClass(), p.Class)} {...p.Attrs}>
+<span data-slot="avatar" data-size={p.size()} class={gx.Cx("group/avatar relative flex size-8 shrink-0 rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6", p.Class)} {...p.Attrs}>
   if p.Src != "" {
-    <img src={p.Src} alt={p.Alt} class="aspect-square size-full object-cover" />
+    <img data-slot="avatar-image" src={p.Src} alt={p.Alt} class="aspect-square size-full rounded-full object-cover" />
   } else if p.Fallback != "" {
-    <span class="flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium">{p.Fallback}</span>
+    <span data-slot="avatar-fallback" class="flex size-full items-center justify-center rounded-full bg-muted text-sm text-foreground group-data-[size=sm]/avatar:text-xs">{p.Fallback}</span>
+  }
+  if p.Badge != nil {
+    {p.Badge}
   }
 </span>
 ```
@@ -68,13 +78,15 @@ var AvatarFixtures = gx.Fixtures[AvatarProps]{
 	"Fallback": {Fallback: "NA"},
 	"Small":    {Fallback: "NA", Size: Sm},
 	"Large":    {Fallback: "NA", Size: Lg},
+	"Badge":    {Fallback: "NA", Badge: AvatarBadge(AvatarBadgeProps{})},
+	"LargeBadge": {Fallback: "NA", Size: Lg, Badge: AvatarBadge(AvatarBadgeProps{
+		Class: "bg-green-600 dark:bg-green-800",
+	})},
 }
 ```
 
 ```go title="ui/avatar/styles.go"
 package avatar
-
-import "github.com/alternayte/gx"
 
 // Size is the diameter of an avatar.
 type Size string
@@ -82,41 +94,123 @@ type Size string
 // The sizes of avatar.Avatar.
 const (
 	Sm Size = "sm"
-	Md Size = "md"
+	Md Size = "default"
 	Lg Size = "lg"
 )
 
-var sizeClass = gx.Enum[Size]{
-	Sm: "size-6 text-xs",
-	Md: "size-8",
-	Lg: "size-10 text-base",
+// size returns the data-size value; a zero value is Md. The size classes
+// of the avatar, its fallback and its badge follow this attribute.
+func (p AvatarProps) size() string {
+	if p.Size == "" {
+		return string(Md)
+	}
+	return string(p.Size)
+}
+```
+
+```gx title="ui/avatar/AvatarBadge.gx"
+package avatar
+
+props {
+  Class    string   = ""
+  Children gx.Node  = nil
+  Attrs    gx.Attrs = nil
 }
 
-// sizeClass returns the classes of one avatar size; a zero value is Md.
-func (p AvatarProps) sizeClass() string {
-	if p.Size == "" {
-		return sizeClass[Md]
-	}
-	return sizeClass[p.Size]
+<span data-slot="avatar-badge" class={gx.Cx("absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background select-none group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[&>svg]:hidden group-data-[size=default]/avatar:size-2.5 group-data-[size=default]/avatar:[&>svg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[&>svg]:size-2", p.Class)} {...p.Attrs}>{p.Children}</span>
+```
+
+```go title="ui/avatar/AvatarBadge.fixtures.go"
+package avatar
+
+import "github.com/alternayte/gx"
+
+var AvatarBadgeFixtures = gx.Fixtures[AvatarBadgeProps]{"Default": {}}
+
+// AvatarBadgeWrap renders the badge on an avatar, as a page uses it.
+func AvatarBadgeWrap(n gx.Node) gx.Node {
+	return Avatar(AvatarProps{Fallback: "NA", Badge: n})
 }
+```
+
+```gx title="ui/avatar/AvatarGroup.gx"
+package avatar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="avatar-group" class={gx.Cx("group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```go title="ui/avatar/AvatarGroup.fixtures.go"
+package avatar
+
+import "github.com/alternayte/gx"
+
+var AvatarGroupFixtures = gx.Fixtures[AvatarGroupProps]{
+	"Three": {Children: gx.Frag(
+		Avatar(AvatarProps{Fallback: "NA"}),
+		Avatar(AvatarProps{Fallback: "AL"}),
+		Avatar(AvatarProps{Fallback: "GH"}),
+		AvatarGroupCount(AvatarGroupCountProps{Children: gx.Text("+3")}),
+	)},
+	"Small": {Children: gx.Frag(
+		Avatar(AvatarProps{Fallback: "NA", Size: Sm}),
+		Avatar(AvatarProps{Fallback: "AL", Size: Sm}),
+		AvatarGroupCount(AvatarGroupCountProps{Children: gx.Text("+2")}),
+	)},
+}
+```
+
+```gx title="ui/avatar/AvatarGroupCount.gx"
+package avatar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="avatar-group-count" class={gx.Cx("relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-foreground ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```go title="ui/avatar/AvatarGroupCount.fixtures.go"
+package avatar
+
+import "github.com/alternayte/gx"
+
+var AvatarGroupCountFixtures = gx.Fixtures[AvatarGroupCountProps]{"Count": {Children: gx.Text("+3")}}
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--muted`, `--muted-foreground`.
+The theme must define these tokens: `--muted`, `--foreground`, `--primary`, `--primary-foreground`, `--background`.
 
 ## Usage
 
 ```gx
 <avatar.Avatar src={gx.URL(user.Image)} alt={user.Name} fallback="NA" />
+<avatar.Avatar fallback="NA" size={avatar.Lg} badge={<avatar.AvatarBadge />} />
+
+<avatar.AvatarGroup>
+  <avatar.Avatar fallback="NA" />
+  <avatar.Avatar fallback="AL" />
+  <avatar.AvatarGroupCount>+3</avatar.AvatarGroupCount>
+</avatar.AvatarGroup>
 ```
+
+The sizes are `Sm`, `Md` and `Lg`. The fallback, the badge and the group count follow the size of the avatar.
+`AvatarBadge` takes an icon as its child. A small avatar hides the icon.
 
 ## Examples
 
-### Fallback
+### Avatar: Fallback
 
-<Example item="avatar" name="avatar-fallback" label="Avatar: Fallback">
+<Example item="avatar" name="avatar-fallback" label="Avatar: Avatar: Fallback">
 
 ```gx
 <avatar.Avatar fallback="NA" src={""} />
@@ -124,9 +218,9 @@ The theme must define these tokens: `--muted`, `--muted-foreground`.
 
 </Example>
 
-### Small
+### Avatar: Small
 
-<Example item="avatar" name="avatar-small" label="Avatar: Small">
+<Example item="avatar" name="avatar-small" label="Avatar: Avatar: Small">
 
 ```gx
 <avatar.Avatar fallback="NA" size={avatar.Sm} src={""} />
@@ -134,12 +228,83 @@ The theme must define these tokens: `--muted`, `--muted-foreground`.
 
 </Example>
 
-### Large
+### Avatar: Large
 
-<Example item="avatar" name="avatar-large" label="Avatar: Large">
+<Example item="avatar" name="avatar-large" label="Avatar: Avatar: Large">
 
 ```gx
 <avatar.Avatar fallback="NA" size={avatar.Lg} src={""} />
+```
+
+</Example>
+
+### Avatar: Badge
+
+<Example item="avatar" name="avatar-badge" label="Avatar: Avatar: Badge">
+
+```gx
+<avatar.Avatar fallback="NA" src={""}><:badge><avatar.AvatarBadge /></:badge></avatar.Avatar>
+```
+
+</Example>
+
+### Avatar: Large badge
+
+<Example item="avatar" name="avatar-large-badge" label="Avatar: Avatar: Large badge">
+
+```gx
+<avatar.Avatar fallback="NA" size={avatar.Lg} src={""}>
+  <:badge><avatar.AvatarBadge class="bg-green-600 dark:bg-green-800" /></:badge>
+</avatar.Avatar>
+```
+
+</Example>
+
+### AvatarBadge: Default
+
+<Example item="avatar" name="avatar-badge-default" label="Avatar: AvatarBadge: Default">
+
+```gx
+<avatar.AvatarBadge />
+```
+
+</Example>
+
+### AvatarGroup: Three
+
+<Example item="avatar" name="avatar-group-three" label="Avatar: AvatarGroup: Three">
+
+```gx
+<avatar.AvatarGroup>
+  <avatar.Avatar fallback="NA" src={""} />
+  <avatar.Avatar fallback="AL" src={""} />
+  <avatar.Avatar fallback="GH" src={""} />
+  <avatar.AvatarGroupCount>+3</avatar.AvatarGroupCount>
+</avatar.AvatarGroup>
+```
+
+</Example>
+
+### AvatarGroup: Small
+
+<Example item="avatar" name="avatar-group-small" label="Avatar: AvatarGroup: Small">
+
+```gx
+<avatar.AvatarGroup>
+  <avatar.Avatar fallback="NA" size={avatar.Sm} src={""} />
+  <avatar.Avatar fallback="AL" size={avatar.Sm} src={""} />
+  <avatar.AvatarGroupCount>+2</avatar.AvatarGroupCount>
+</avatar.AvatarGroup>
+```
+
+</Example>
+
+### AvatarGroupCount: Count
+
+<Example item="avatar" name="avatar-group-count-count" label="Avatar: AvatarGroupCount: Count">
+
+```gx
+<avatar.AvatarGroupCount>+3</avatar.AvatarGroupCount>
 ```
 
 </Example>
@@ -151,6 +316,7 @@ The theme must define these tokens: `--muted`, `--muted-foreground`.
 
 - Always set `Alt` when the image carries meaning.
 - Set `Fallback` to the initials of the user.
+- Use one size for every avatar of a group.
 
 </docs.Card>
 <docs.Card title="Don't">

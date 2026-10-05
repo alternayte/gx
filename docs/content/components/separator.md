@@ -9,7 +9,7 @@ item: "separator"
 <Example item="separator" name="separator-horizontal" label="Separator: Horizontal">
 
 ```gx
-<separator.Separator class="w-40" />
+<separator.Separator decorative class="w-40" />
 ```
 
 </Example>
@@ -48,7 +48,7 @@ props {
   Attrs       gx.Attrs    = nil
 }
 
-<div {...p.attrs()}></div>
+<div data-slot="separator" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}></div>
 ```
 
 ```go title="ui/separator/Separator.fixtures.go"
@@ -57,8 +57,9 @@ package separator
 import "github.com/alternayte/gx"
 
 var SeparatorFixtures = gx.Fixtures[SeparatorProps]{
-	"Horizontal": {Class: "w-40"},
-	"Vertical":   {Orientation: Vertical, Class: "h-8"},
+	"Horizontal": {Decorative: true, Class: "w-40"},
+	"Vertical":   {Decorative: true, Orientation: Vertical, Class: "h-8"},
+	"Semantic":   {Class: "w-40"},
 }
 ```
 
@@ -81,26 +82,27 @@ var orientationClass = gx.Enum[Orientation]{
 	Vertical:   "h-full w-px",
 }
 
-// sizeClass returns the classes of one orientation; a zero value is
+// orientation returns the data-orientation value; a zero value is
 // Horizontal.
-func (p SeparatorProps) sizeClass() string {
+func (p SeparatorProps) orientation() string {
 	if p.Orientation == "" {
-		return orientationClass[Horizontal]
+		return string(Horizontal)
 	}
-	return orientationClass[p.Orientation]
+	return string(p.Orientation)
 }
 
-// attrs returns the attributes of one separator.
+// attrs returns the role of one separator, then the caller's attributes. A
+// decorative separator has no role. A semantic separator names its
+// orientation when it is vertical.
 func (p SeparatorProps) attrs() gx.Attrs {
-	a := gx.Attrs{
-		{Key: "role", Value: "separator"},
-		{Key: "data-orientation", Value: string(p.Orientation)},
-		{Key: "class", Value: gx.Cx("shrink-0 bg-border", p.sizeClass(), p.Class)},
+	a := gx.Attrs{{Key: "role", Value: "none"}}
+	if !p.Decorative {
+		a = gx.Attrs{{Key: "role", Value: "separator"}}
+		if p.Orientation == Vertical {
+			a = append(a, gx.Attr{Key: "aria-orientation", Value: "vertical"})
+		}
 	}
-	if p.Decorative {
-		a = append(a, gx.Attr{Key: "aria-hidden", Value: "true"})
-	}
-	return a
+	return append(a, p.Attrs...)
 }
 ```
 
@@ -116,6 +118,8 @@ The theme must define these tokens: `--border`.
 <separator.Separator orientation={separator.Vertical} class="h-6" />
 ```
 
+A decorative separator has the role `none`. A separator with `decorative={false}` has the role `separator`.
+
 ## Examples
 
 ### Horizontal
@@ -123,7 +127,7 @@ The theme must define these tokens: `--border`.
 <Example item="separator" name="separator-horizontal" label="Separator: Horizontal">
 
 ```gx
-<separator.Separator class="w-40" />
+<separator.Separator decorative class="w-40" />
 ```
 
 </Example>
@@ -133,7 +137,17 @@ The theme must define these tokens: `--border`.
 <Example item="separator" name="separator-vertical" label="Separator: Vertical">
 
 ```gx
-<separator.Separator orientation={separator.Vertical} class="h-8" />
+<separator.Separator decorative orientation={separator.Vertical} class="h-8" />
+```
+
+</Example>
+
+### Semantic
+
+<Example item="separator" name="separator-semantic" label="Separator: Semantic">
+
+```gx
+<separator.Separator class="w-40" />
 ```
 
 </Example>

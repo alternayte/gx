@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<ol class={gx.Cx("flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground sm:gap-2.5", p.Class)} {...p.Attrs}>{p.Children}</ol>
+<ol data-slot="breadcrumb-list" class={gx.Cx("flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5", p.Class)} {...p.Attrs}>{p.Children}</ol>

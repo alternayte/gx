@@ -16,24 +16,25 @@ var orientationClass = gx.Enum[Orientation]{
 	Vertical:   "h-full w-px",
 }
 
-// sizeClass returns the classes of one orientation; a zero value is
+// orientation returns the data-orientation value; a zero value is
 // Horizontal.
-func (p SeparatorProps) sizeClass() string {
+func (p SeparatorProps) orientation() string {
 	if p.Orientation == "" {
-		return orientationClass[Horizontal]
+		return string(Horizontal)
 	}
-	return orientationClass[p.Orientation]
+	return string(p.Orientation)
 }
 
-// attrs returns the attributes of one separator.
+// attrs returns the role of one separator, then the caller's attributes. A
+// decorative separator has no role. A semantic separator names its
+// orientation when it is vertical.
 func (p SeparatorProps) attrs() gx.Attrs {
-	a := gx.Attrs{
-		{Key: "role", Value: "separator"},
-		{Key: "data-orientation", Value: string(p.Orientation)},
-		{Key: "class", Value: gx.Cx("shrink-0 bg-border", p.sizeClass(), p.Class)},
+	a := gx.Attrs{{Key: "role", Value: "none"}}
+	if !p.Decorative {
+		a = gx.Attrs{{Key: "role", Value: "separator"}}
+		if p.Orientation == Vertical {
+			a = append(a, gx.Attr{Key: "aria-orientation", Value: "vertical"})
+		}
 	}
-	if p.Decorative {
-		a = append(a, gx.Attr{Key: "aria-hidden", Value: "true"})
-	}
-	return a
+	return append(a, p.Attrs...)
 }

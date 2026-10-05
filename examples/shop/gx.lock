@@ -13,9 +13,9 @@
       "alert": {
         "version": "0.1.0",
         "files": {
-          "ui/alert/Alert.fixtures.go": "d423b064ae332a9501a22996cca3a0555e3541068b109010ea26087c9fc085b8",
-          "ui/alert/Alert.gx": "05d4f25757ed01b09d7c45fa1e4ed367c7937aeab52ad88422803a2accb01081",
-          "ui/alert/styles.go": "653f2f59bd3e81287711a31ff4a99ec6fe65e6e5469ceb3abf907324a05c7ce1"
+          "ui/alert/Alert.fixtures.go": "ef001f0d36983ea086d91241717f8724025eaa7d77451a9fb6cf319185f6423f",
+          "ui/alert/Alert.gx": "1de935f8045963bc560715defc07d1df0e2bba3be51f59d0eaeb380d316600f9",
+          "ui/alert/styles.go": "051823082a0f09f68df789c1f95e2f64330e68081b90468e2d30fa8d24864471"
         }
       },
       "alert-dialog": {
@@ -29,72 +29,84 @@
       "app-shell": {
         "version": "0.1.0",
         "files": {
-          "ui/app-shell/AppShell.fixtures.go": "fba724695c66d3118cf4bd9b96c247da0758086c53a22e786649c84bb1b14320",
-          "ui/app-shell/AppShell.gx": "2da95d275628fd535a7470adb28bf4409cf6634ba2ff6ea00c9ba8656b2ddb35"
+          "ui/app-shell/AppShell.fixtures.go": "017925e69d67480a2b49ebbdbf422a6b3cc3ef7b9d38b5062a026f6ab2188e56",
+          "ui/app-shell/AppShell.gx": "95a64affa2d7d012e12b5deae63f9452700a97ac1c5b50ef9196de82d6298138"
         }
       },
       "aspect-ratio": {
         "version": "0.1.0",
         "files": {
-          "ui/aspect-ratio/AspectRatio.fixtures.go": "db6be10bd030d6c86a9dbbf4dc68b9ebdb30580e2455e9eb0cd6822d5aad4f8d",
-          "ui/aspect-ratio/AspectRatio.gx": "133afe46173a8c0f83861906c8071f11855a0ac102a28b3214e7db5fe310b244"
+          "ui/aspect-ratio/AspectRatio.fixtures.go": "b24bf33d5c367cb1ef5121fb473248cd3143ce182dbadc8180b33d7a76e41fdf",
+          "ui/aspect-ratio/AspectRatio.gx": "258e57b6c4d5588c6045a52da5a32bdaf239ba63b6d8e80f8f182981156d3a7c",
+          "ui/aspect-ratio/styles.go": "dd3fd4acdbfe3b3ff91cbc6c1e64bc73a462d5c28c3668a5e7f665ef68ec41a5"
         }
       },
       "avatar": {
         "version": "0.1.0",
         "files": {
-          "ui/avatar/Avatar.fixtures.go": "5771f46e8d90accb558f417442df6ee8a3634fea0d544314b0775df845e2b913",
-          "ui/avatar/Avatar.gx": "f7c445e6daee68f4cae138b1d6f7e6e873fbf2b228a34ebfb97e3f78f011e9ac",
-          "ui/avatar/styles.go": "3ed59233be8e69e692b154cbcf76f73ae69c4c1cb1786a52c7063217831dc2f0"
+          "ui/avatar/Avatar.fixtures.go": "b5e9a15e3a1ac4ba44ecd7524bcb705e6b38dbcfdd3b3fc5da6529dc712e9401",
+          "ui/avatar/Avatar.gx": "fdd9fc0be2c8095062164ada9cc0c832de8f96fa8e329b4caf4f3272ac8fc3b0",
+          "ui/avatar/AvatarBadge.fixtures.go": "94d72265b8ba10556e641cf17226210882e2a14be49f7c46b5f62c69a570a796",
+          "ui/avatar/AvatarBadge.gx": "42e29329d2089aba7cff6c60e4d2f768967332cc08394329cab22d7bedcfb508",
+          "ui/avatar/AvatarGroup.fixtures.go": "588f555278ffbffb4e91e65f07ec1492f9f50a227932e54bd876750cd39fdd5d",
+          "ui/avatar/AvatarGroup.gx": "aaa6f78adb1512d7f078a082d0b01bbefa7dcf5031aac58eb3e9b2f563e5dfd9",
+          "ui/avatar/AvatarGroupCount.fixtures.go": "bca86151daa3ebca1a5b5d0fc3d457beee979f405c9bdae2e6043fb485872973",
+          "ui/avatar/AvatarGroupCount.gx": "ce2a589348ef47f04f7ff82177a9b990f6d099fdb4d2f977da6de3908987bcfe",
+          "ui/avatar/styles.go": "ad0b82baf0652fe2bbfaf0676badf065b5860bbcbf3b21b78f350ab07711829b"
         }
       },
       "badge": {
         "version": "0.1.0",
         "files": {
-          "ui/badge/Badge.fixtures.go": "74066f2b14e71485afc9982f72504c4d63d84e3d794883cf4e1eb38673fbd79a",
-          "ui/badge/Badge.gx": "42d5cdbe05cf53c0ed2635cc735c92d8c8671fb81862911424f56cd71903db9e",
-          "ui/badge/styles.go": "1658071f8b595f31b046b3b772987ea9c2443891d46c4183c52718dda7c67750"
+          "ui/badge/Badge.fixtures.go": "3e756b62557b3b8ec4f2d74edda311b9d2e3778be5914d9d48ee2ab0cd2f2c79",
+          "ui/badge/Badge.gx": "fd88f354fda8e64089326041166c9f06c309bd722bb4ede25a90125407d90780",
+          "ui/badge/styles.go": "046aff2bb61e9e257a9a03848589e6cd6ece3ee93ce362272f5c90989acabb28"
         }
       },
       "breadcrumb": {
         "version": "0.1.0",
         "files": {
-          "ui/breadcrumb/Breadcrumb.fixtures.go": "177bf813fa801840fe20a8f5c62f394367910bf33444243216f715402712c8f4",
-          "ui/breadcrumb/Breadcrumb.gx": "1fecc25fa4101e1435810798dd979c263700dc45f2cb35ed1376d33636ed9632",
+          "ui/breadcrumb/Breadcrumb.fixtures.go": "974741d46a94e8c5672af245edfdc174979248866e78bb0ff9cb2f40744404dd",
+          "ui/breadcrumb/Breadcrumb.gx": "356670972c62d33776cbf96639c69ad1e4ef7530228b8097ee712da58301daf8",
           "ui/breadcrumb/BreadcrumbEllipsis.fixtures.go": "88dfdab33a9da79fcdbb4560798b7b3c99dbd04baf29fecf98ff65ab3a90b641",
-          "ui/breadcrumb/BreadcrumbEllipsis.gx": "fe43266a4f872c32035a93d31efda5436107913832b3b71649c674fe2d1c32fa",
+          "ui/breadcrumb/BreadcrumbEllipsis.gx": "e80988af3e3dd349116ef2e62b798454c1dc52b6e3f783e6929d2c0c957c29cf",
           "ui/breadcrumb/BreadcrumbItem.fixtures.go": "157718e16073c1227c72927728753f3e4d62c0ff38343f639d13b59b76bd42c7",
-          "ui/breadcrumb/BreadcrumbItem.gx": "ee91412892efdbc2872cbc45cf97609ad6f3776f1e70fbebdf4a0d2bec5e01ae",
+          "ui/breadcrumb/BreadcrumbItem.gx": "fc4775dc8986b25e3b177064a168a508553bb1a62e938f860bd685131a783778",
           "ui/breadcrumb/BreadcrumbLink.fixtures.go": "8f8dc13c19a6ce5f79b3a59ffd8386b201e7fdfb9c2a501b132e9e34392f0be5",
-          "ui/breadcrumb/BreadcrumbLink.gx": "12e64cd4c78e39863c1a1eec29e657578e24725a29db1336b110f31834a1f740",
+          "ui/breadcrumb/BreadcrumbLink.gx": "2ecbf86fb87d01d2d36657cb156ab0cc7a7807955d814b70b411ea975ecd93d8",
           "ui/breadcrumb/BreadcrumbList.fixtures.go": "a8b0cb6ed0cd7ca6ca55da85576af67271bd2527965da78ddde9d81c86164f9f",
-          "ui/breadcrumb/BreadcrumbList.gx": "e3f2027921cb762e0263e2fc9cf6d987d0b3f36adc8aa04c4f0c0f17e0cda321",
+          "ui/breadcrumb/BreadcrumbList.gx": "f2fe0ebe9eb2d12618961ff6444e65a4509e58512fac9898cba9b651d7506207",
           "ui/breadcrumb/BreadcrumbPage.fixtures.go": "ae4412b7a5aff395182048834f4bb1fdb412a5a29214bf8045c1e895bf73a5d1",
-          "ui/breadcrumb/BreadcrumbPage.gx": "f53ddf3aa0532b2c5ea054f5988db86a0d92710d32cbfeb84cc15283a60a34a6",
-          "ui/breadcrumb/BreadcrumbSeparator.fixtures.go": "86a0f15d050aae4bdac4d2bf35a1e36a2b8326785cc99d544ad03e51cedbb150",
-          "ui/breadcrumb/BreadcrumbSeparator.gx": "c9dba650e1df7f2782c95aa245e47f413eb9528c08eba0148f0480b4b2d70055"
+          "ui/breadcrumb/BreadcrumbPage.gx": "ae837743b3dd49b02d65a08836c6e87980fee62426c0bf9131dc69d493d1bd92",
+          "ui/breadcrumb/BreadcrumbSeparator.fixtures.go": "00825f2e09466b1e0ba88a5f80d016329b7b2d1c888b0a6b7653ddfbe9c05a0b",
+          "ui/breadcrumb/BreadcrumbSeparator.gx": "e2851db337e995b8eeec05d26dd6dc4eba5a0d2e8a78a9ea19918aeb521bf28b"
         }
       },
       "button": {
         "version": "0.1.0",
         "files": {
-          "ui/button/Button.fixtures.go": "4183166b50f9b99ccf2f5a44a3fff535aef7bb0e06463b907d93d1a36594bead",
-          "ui/button/Button.gx": "caa72918fb1980617055c83622820db1f0fe5fdb7a48e3369af555389a3fea73",
-          "ui/button/styles.go": "f97f4cb16bed25227aa2d57ae0483e1351f7df019686d2e028974ac70f3f1029"
+          "ui/button/Button.fixtures.go": "e15539e80929be9ed65ff0fb844cd5ce78f3a6e892e9af1fcba4fbf7c12fa6cf",
+          "ui/button/Button.gx": "5ef657c881926859fc9761aefe12e777e0e40ca2ae5280b82679823207c2fcaf",
+          "ui/button/styles.go": "8eb4884f26195c6ea77018a2cfd2eaa4d3eec7e4bd2b9901241aac51cc6926e9"
         }
       },
       "button-group": {
         "version": "0.1.0",
         "files": {
-          "ui/button-group/ButtonGroup.fixtures.go": "1815d28487381760eb6a351773922bad47083efbebd613a8ccb4931ce1ffedbd",
-          "ui/button-group/ButtonGroup.gx": "51d516b556e976452091b3e2f0212c9d25b6e619612be81d70859b0338fdba2a"
+          "ui/button-group/ButtonGroup.fixtures.go": "5b68ff46b8e409b2aad81ad9fcc9dd2c6731a5d252e7e89c5985c21683fe419c",
+          "ui/button-group/ButtonGroup.gx": "124a00dbf3d140de646c20535d14352aafa77c3bac05cead4a2191fa80b29839",
+          "ui/button-group/ButtonGroupSeparator.fixtures.go": "e1893654c0d7779a80519e734a223bf0880ba2de1e1737e1e70ff760ffa08da8",
+          "ui/button-group/ButtonGroupSeparator.gx": "3054adb0d874b15405069a5cb56994b7b5d7e3d94ffd829b00070dcb7f7796c2",
+          "ui/button-group/ButtonGroupText.fixtures.go": "4548ffabe30481d096a6ebbb4f6c83b01291b60e6dedcf9f51572840e7a1f27b",
+          "ui/button-group/ButtonGroupText.gx": "fbb8c832f46c945aadaf036d74c7172a41ac2e1b87a326a3596dc3cac208cf4e",
+          "ui/button-group/styles.go": "8f2334e5b2f585f417727561334bf73316a6495c11c0c0aa46f981b5ad44c7c3"
         }
       },
       "card": {
         "version": "0.1.0",
         "files": {
-          "ui/card/Card.fixtures.go": "2f95cb634fb0bce4d63ca582c9c9f22400342b261d9a99fa23abdb7f1d57d353",
-          "ui/card/Card.gx": "7d147b5135a5fc880e653244a5a44fbfa6a54fadca861f918f401870decd090a"
+          "ui/card/Card.fixtures.go": "5f95992925b83a367b96586207476c4757aff9aa548061b670b6451babec4f00",
+          "ui/card/Card.gx": "49ab4ae395387c51f8529a9307e9cfa6843b9f60cd2d6640aa7448a371f10d96"
         }
       },
       "checkbox": {
@@ -149,7 +161,7 @@
       "data-table-page": {
         "version": "0.1.0",
         "files": {
-          "ui/data-table-page/DataTablePage.fixtures.go": "d87c5424176603d7dc3b49b56d067c68092d6a6ad7dafb7db52e5a78dc0b92ef",
+          "ui/data-table-page/DataTablePage.fixtures.go": "29fbc9b3ef8b45aff8713556ce6c93afc3bed3045b025bb57c523da7e3f15abd",
           "ui/data-table-page/DataTablePage.gx": "5590e6a33b993dd7516fbca311379fec1cd800a80626d7c1a5593a397f449d8e"
         }
       },
@@ -199,39 +211,45 @@
       "empty": {
         "version": "0.1.0",
         "files": {
-          "ui/empty/Empty.fixtures.go": "ea9cdc106d23bb1ed1e1c051e5de4dee58ee41ee27edf5bbf6dfa4fe5c54c0c4",
-          "ui/empty/Empty.gx": "474ba15ca3c29a529c819cb6989a35021519fce1afdc12f41a2788a875dfa760",
+          "ui/empty/Empty.fixtures.go": "2f7b786503e9a08dcc9a9769efad97ff7c8a04a250be32ddf71f1c12024570a3",
+          "ui/empty/Empty.gx": "41f8333cba6dba3e2cd523e1ffeae53d0cd7bb8c207495e2139778fe57d6daa3",
           "ui/empty/EmptyContent.fixtures.go": "16f46679b81fabe08920c746e207fb139adf1b422ea46aa608ddd91b6c1cc703",
-          "ui/empty/EmptyContent.gx": "05a168e14fb0d8e1e2112a7342e5979a0d4950bb0bb3d9355744f072f0961498",
+          "ui/empty/EmptyContent.gx": "11c7e4867ad2c9b2b8c67124ce2203b515f03673ac28ac3e0e4cbbabf172aad5",
           "ui/empty/EmptyDescription.fixtures.go": "04c747f12293262eeaa07f300f731b5bbc0db18c2e4a1b01ed3c9c71676d567f",
-          "ui/empty/EmptyDescription.gx": "88145aea3996e3d004ac278fbb21eccd365068c6d984379cea1e029a1078cbde",
+          "ui/empty/EmptyDescription.gx": "2613dcaf7f9989b1fafd56d741fce2fa5498e7d440f0b8553f8dd9eacfd96003",
           "ui/empty/EmptyHeader.fixtures.go": "29c7f59f1802ff1b94b82b2ac5e6b99a49a375f9b6551024be1073cb8a0317be",
-          "ui/empty/EmptyHeader.gx": "08705655b4a940c44093cf151e9c0ed7b34da0f07ee61edae57722ff76a5f639",
-          "ui/empty/EmptyMedia.fixtures.go": "88c328f74687df553d56f99702361f824c2f07ecd0160aa90b8578f1b042cad4",
-          "ui/empty/EmptyMedia.gx": "a4d69805bf041c25ffbb7184b2a53d1bcbedbff6402630d178fb9d1366c7be52",
+          "ui/empty/EmptyHeader.gx": "f536a0285a375ab337df779551182ece78976ba5d8417628a057af46cd94c6c4",
+          "ui/empty/EmptyMedia.fixtures.go": "14178ae51dd8de370f5b995fbf27eb74e5ebc0b98add39738f75f9d01a0fe07a",
+          "ui/empty/EmptyMedia.gx": "30afd42fdf19a7c9f93981b8b084076a9ab8f56981b709a28dd7d11f16ea9220",
           "ui/empty/EmptyTitle.fixtures.go": "efe5b5a5c7e2d32fbc039f07302c640575c791c3fa1e1c61b90a014a4d9b8af9",
-          "ui/empty/EmptyTitle.gx": "87a9bb569a65811f665fa43403e0fcefa70b23755c33ba3e0a78cb428b80997d",
-          "ui/empty/styles.go": "48f055efb5b54eb4fa30101e7f46b9b3b4d89c55eb38b006c291d009829db938"
+          "ui/empty/EmptyTitle.gx": "7a926218c5ef29023ed1d2a4ff8bd485f47301395c706fac1dc82b871344e38b",
+          "ui/empty/styles.go": "c585c8229eced96320ebe8db70f80a101c17506b9e92ca7704b65945931d6ceb"
         }
       },
       "field": {
         "version": "0.1.0",
         "files": {
-          "ui/field/Field.fixtures.go": "ab0e3cd1e25d8333b59a5a840dd18e0d7b7bf194916e8978352eaaee8c5e7055",
-          "ui/field/Field.gx": "4266202fbd7fa537a484a8f9bffa896059c52e6d061435a94896126b3c56c6cd",
+          "ui/field/Field.fixtures.go": "a7afef606c5f00b5a9d02a9ea150ccf675328d4a4ec3c065a3f599350ceeadc6",
+          "ui/field/Field.gx": "1458ec0f886d15434a0acd5eb3a587b40b27867e47fa1cb428be2959a3883ab1",
+          "ui/field/FieldContent.fixtures.go": "81661b2b640116d49678d9b89dcbdf63924359c55fce7b4d96750fc11a0472f8",
+          "ui/field/FieldContent.gx": "d92fc15b0fe0c245c74fd366f5239e68b99fc82ddbbc789c869e53403d5bdbe6",
           "ui/field/FieldDescription.fixtures.go": "6fe552c07f133f10d9fbd62539190056d3c85cc8f742f717647afb3aaafbd7a5",
-          "ui/field/FieldDescription.gx": "60b4fd4895a2d221345d4419a7bfc79b93d6d929c3c2637507e3a55213afdd6b",
-          "ui/field/FieldError.fixtures.go": "afba242560eef86ce4b16ceac12d316020ef5ff68436ed1a3c4341060f98219b",
-          "ui/field/FieldError.gx": "84cacc217108a23abfa6e34ea07f62fb2e037ad0d4bf483e08cfdf62be4a157b",
-          "ui/field/FieldGroup.fixtures.go": "9e4c56a0fce0efcaf8061729d683eafd2e5812c3e1cf0de534089c508744fe80",
-          "ui/field/FieldGroup.gx": "6a288724e9db67bd7167a63830aa23226c1638f1e454b01519757968a835386d",
+          "ui/field/FieldDescription.gx": "83cb52645869d8726b9ed357c8aebdc3f49c13659199ecac16972867bfa195cc",
+          "ui/field/FieldError.fixtures.go": "65ca1eba97f4a62b873c4b9ac41f0bac17390f82b1265349414149f394b40551",
+          "ui/field/FieldError.gx": "cf6c4c05ec81be1369f36d53610a022f8af750165534e75440cc97974b6d2882",
+          "ui/field/FieldGroup.fixtures.go": "7026d628706332d5ff0a694f1110edfb6981b56bb97ff159bb474082536418b0",
+          "ui/field/FieldGroup.gx": "fc8a165464a79ddb7b118ab7fa33fb64474e6fb64241fee97d8a413ff3f7552d",
           "ui/field/FieldLabel.fixtures.go": "a0477570c4a3125d2c116fa572ffc1475f16397277d2169da92b6a87a5a42f70",
-          "ui/field/FieldLabel.gx": "58047cea3b1b6f7f071e3dd139c6241c0e47f460c0395b34c4f72938eccbd927",
-          "ui/field/FieldLegend.fixtures.go": "560e2f34e7936297568f843ba9310fcaca69f63bfdca11162ef1a63eb4753003",
-          "ui/field/FieldLegend.gx": "58a1634805fa5bcb7bc20bb20a11ed0d7938fe391f3273bcc6bab0d8770d3366",
-          "ui/field/FieldSet.fixtures.go": "87781363f219c6d1a3b2332172fd1903da95720216406fdbf88025d69841a9b1",
-          "ui/field/FieldSet.gx": "f3d63a74da1207f0737198f43bfc32074836f39bcb3f9d247775d0a8bdffe185",
-          "ui/field/styles.go": "067968b9f2e22b13361b5898253f6538f2be13c226fb6785b19e8a74425d3400"
+          "ui/field/FieldLabel.gx": "68f312d524972ec7c5b975fd925bd22262e7181fe5aae9fca1ace6bb76f52764",
+          "ui/field/FieldLegend.fixtures.go": "2a68ee0439e9d0aca575841172f501eb21bceb1ee4bea33d28cb01ce965d776d",
+          "ui/field/FieldLegend.gx": "1101fd9b600ac13fa1e8b908689af8288f4eafa770277e48b2d3ff7e13d2972f",
+          "ui/field/FieldSeparator.fixtures.go": "8539a1aecfc063289bfe278e31d6abde38a4122d5b20626c6a3d9ba55610299a",
+          "ui/field/FieldSeparator.gx": "e3a492ef1d305a12c30157050a080a4b444ef632d8acec5ed52dce65e89194b9",
+          "ui/field/FieldSet.fixtures.go": "fd0c0d51b7b18daa2777ac92638f2cb35e2d9f19f51ea17462b040f46568cfaf",
+          "ui/field/FieldSet.gx": "d8667669192fb8e4a4e95b26c85cf1498631f4bed981d804ca17a57f6072f909",
+          "ui/field/FieldTitle.fixtures.go": "c207a6293c48163e53c97f1293d0a9d5d5682b4e2d0d0e78d1faac10dd96349d",
+          "ui/field/FieldTitle.gx": "d28d7ce2501e3628621dc6cc9b48fda1235998d871fcaa516e6a69f7aa93a111",
+          "ui/field/styles.go": "b4de46cdf5f36b3f914dd20a148f1e1fdbc845c5a8de21312d0e16ac86a07683"
         }
       },
       "hover-card": {
@@ -278,65 +296,77 @@
       "input": {
         "version": "0.1.0",
         "files": {
-          "ui/input/Input.fixtures.go": "03981d58d6d21260105b8fe87c8ea077e2b5e937d51b696ac134433bc6c2df39",
-          "ui/input/Input.gx": "67d796fa29a0b700b63e85ecfcd5115ca38e0c0e00939ebbf43cf80ce6d38441",
-          "ui/input/styles.go": "be9805b57a16cf51f1e90da7c45cd571afccbbf048ef8342f2cd1e1d7a192493"
+          "ui/input/Input.fixtures.go": "8a85faa3882a922b53cbd13a47c463622b1a7e1c85a763ede69d807924822144",
+          "ui/input/Input.gx": "53d60a9513f18e77c88cc2544f5744cc965082c4cbedee05f3f679441260101d",
+          "ui/input/styles.go": "4ee82b2c0a7fcdce62ad3becd5a691ed9118cfab4e1b613e4c9819d7ecac9c5c"
         }
       },
       "input-group": {
         "version": "0.1.0",
         "files": {
-          "ui/input-group/InputGroup.fixtures.go": "5fbfa79a1777adedce1f268c0dc9ebb6b97f225dcaaa59beaa67d4179040f62c",
-          "ui/input-group/InputGroup.gx": "ad968cac1c039bd11100fb204e53600a99b2cb3647b3aefdf045b1b6bd21289e",
+          "ui/input-group/InputGroup.fixtures.go": "c68a291df986f97ca23757ab4ca3275c7533f6bebe6ee28e2fae6f2f5e8b6c2b",
+          "ui/input-group/InputGroup.gx": "0ff2b6dca3005f304d456b24c8300710659d2920cac2432084f387d6dd511e51",
           "ui/input-group/InputGroupAddon.fixtures.go": "064d395aaaabc33269472e5e4c58978dbe2617b9decd3058d1b88b15c01e9d6c",
-          "ui/input-group/InputGroupAddon.gx": "58f3f5701e2190e1820883eacb25afa8abc5df946b340f4052181a605e4aba41",
-          "ui/input-group/InputGroupInput.fixtures.go": "825ce469d958266208db1ace452c7d37d6ed7af8b27374db8500abbf4fe837b8",
-          "ui/input-group/InputGroupInput.gx": "e194218d5c518097dbc41737a67974e135982238cf889344deb563d31dbb5847",
+          "ui/input-group/InputGroupAddon.gx": "607bdff3a163923639a66963895109a97095d9a3bd6ac6dfd3beb7c869c53e56",
+          "ui/input-group/InputGroupButton.fixtures.go": "5f4ebf6f23688e883755b01be43a02830e88993dbc5b6f4679af2324bfb84237",
+          "ui/input-group/InputGroupButton.gx": "c69cbeadce5a9d39355b0f9831086f91d6acfe212876f57a914250c235cf780c",
+          "ui/input-group/InputGroupInput.fixtures.go": "815f7d1a5572ab043d5499df5ff154b847a3e6642556856cdff990c5e82c4006",
+          "ui/input-group/InputGroupInput.gx": "b2ee90916330484e41133dc41718fea6a891280580701587aa87d360f65a3eb8",
           "ui/input-group/InputGroupText.fixtures.go": "eab6f041ca03a7f9ff5ba7c1fe847efb3d9fbf5893e7eee4a9a4e4ba0062f791",
-          "ui/input-group/InputGroupText.gx": "4a138c069f2aa175ce5a7de61bf85b83ec1b77971b55de973696e31e31d3b2ac",
-          "ui/input-group/styles.go": "3d2c970274ffea5427c632642b47646156fea21d642bec71b2012bead2502473"
+          "ui/input-group/InputGroupText.gx": "19ca9afdd4ffefa764d2cd31ff0b8e42880ad2a4d88d03809b1a41bfd34a2870",
+          "ui/input-group/InputGroupTextarea.fixtures.go": "2d5c45e2a72a4ea9b76a72867e2f2ad577b7091a2cf317933ba0f53361805c95",
+          "ui/input-group/InputGroupTextarea.gx": "6aabc87dfcb9e7cecbcc39e62cc405e4352836fa3100e018f1b233ba2d3f413a",
+          "ui/input-group/styles.go": "94b0ecbb74b333137485231b3438f8646427f84fd106980f645950490d32d2a9"
         }
       },
       "item": {
         "version": "0.1.0",
         "files": {
-          "ui/item/Item.fixtures.go": "1add5a68503902605b01e58125b428df9a2f802a8d7e936d124a1853f521b2b7",
-          "ui/item/Item.gx": "9f3271ee68f66e562738474f8764d416a07180467a7967a13a0aae2390248550",
+          "ui/item/Item.fixtures.go": "32f3bebc46997374883dda9eed37338bd52998f2bea2c84140aa630bafd31ea7",
+          "ui/item/Item.gx": "30bc2f916dac38d870227632588eb94deeecf93b3784abd8dc75f3ff144ec92b",
           "ui/item/ItemActions.fixtures.go": "d0eb580d919e3d48532cda177513ebc102beb9756bcd4e54902dcdd247558011",
-          "ui/item/ItemActions.gx": "8dedd6edcee6241479d416e78f900d2ffb155073c108e216cf587881247610c8",
+          "ui/item/ItemActions.gx": "408fa7da282d896c63e899f7db3adb2d2349942927efc1b064098688fc8fdc06",
           "ui/item/ItemContent.fixtures.go": "6cc56f50dd7b0bb020db4cc35a616d00f32173c1d7b166ad3cf4c99e11504a75",
-          "ui/item/ItemContent.gx": "2e10dcc8e702c5d46fda08e7cc5e2b9abb4946a6808d733eb76083236fae98ad",
+          "ui/item/ItemContent.gx": "553b151f8e6c5abac37ce8c76c220755027227ea02890c1dfb4b666bdfc92b3e",
           "ui/item/ItemDescription.fixtures.go": "6e7d9a8e3a243e3521f3c646bfd18350ec61436acf6e43d9a8442cd874ca1e99",
-          "ui/item/ItemDescription.gx": "c5004ea4de9f099a49e40b643fb08536460f7ab07c164c5beb9416b6f9563682",
+          "ui/item/ItemDescription.gx": "cf8a01b7a17bcc20b5c23dea7e2d048f1877b4c3979cc67f406903f61cda119a",
           "ui/item/ItemFooter.fixtures.go": "f99dbcbb41a062a851749bd0e848fa1f506eb7041065639c459ec86f74c4de9e",
-          "ui/item/ItemFooter.gx": "9c89c83a88ef15e47784d7576cb43e6bb071107b0b8f20ca47378aa9eb9dc2ba",
+          "ui/item/ItemFooter.gx": "0d130d848e1df755b95e47e1003be086217fa13750b36036240377ac0088b8d0",
+          "ui/item/ItemGroup.fixtures.go": "e6e7556e372f5eb7cd963997d1ec7f8d6b07b02716346e397fc3912f2168f6a5",
+          "ui/item/ItemGroup.gx": "e2e19d4f47afeafcf3f974a1e9b7bc29a680d4987c3981678673e0fe05883f15",
           "ui/item/ItemHeader.fixtures.go": "b17a1a5793d7414bf0ab5ac28f63270654bebe1e12b9cf926c221ee69f3a1219",
-          "ui/item/ItemHeader.gx": "9c89c83a88ef15e47784d7576cb43e6bb071107b0b8f20ca47378aa9eb9dc2ba",
-          "ui/item/ItemMedia.fixtures.go": "d69e24de2791f5e7ed84e6204cc044499851b91d7629d22367cb3e1d39cb6616",
-          "ui/item/ItemMedia.gx": "9c329139ce410d22678de180f82615a0001538a53d88513516cc4bab3bf4d950",
+          "ui/item/ItemHeader.gx": "9a0abcbfa819589fefb2f305ceba26bc31b58c4b93e9f6073c6dbf90e960d58a",
+          "ui/item/ItemMedia.fixtures.go": "142d0d06e0e52e6b0328635c210010a84cbbab23ea9456ee0373a481ff462aff",
+          "ui/item/ItemMedia.gx": "d1eb60d75eb907f21cbf971dccded317c4d71ec1bcf3051a3708e507bddb5047",
+          "ui/item/ItemSeparator.fixtures.go": "3068d55725c6a3bf88cd4f1860674f5ab25ec808c681ad04340ea8dec22916b6",
+          "ui/item/ItemSeparator.gx": "d30ef69d3a32284536528a5f5fa2a35bd828eea2ecb9ace02c32056d11073c66",
           "ui/item/ItemTitle.fixtures.go": "f20d4563c1c44b9f9ec207f8ce9d7e2abc7ff2b0dd2eda11985d46363383cdae",
-          "ui/item/ItemTitle.gx": "7493b4859a81f7dc5949ddabc8fa501c204278b4b86303d765dc328f1c812754"
+          "ui/item/ItemTitle.gx": "cd4fd5778bf5489f7ded411283af09bff90ab83075a4ba3e080292b145a372c4",
+          "ui/item/styles.go": "50caddcfedd57cbe44e3530d8721a0607242ed58d6d0a733165bdb894038475b"
         }
       },
       "kbd": {
         "version": "0.1.0",
         "files": {
           "ui/kbd/Kbd.fixtures.go": "1af797a5b1d069cd6eb1871bc5aaa331c664291b2527045abb8c83bd659f22b6",
-          "ui/kbd/Kbd.gx": "21cbd4677bcd9c5430078efede9431ff94e55322df10f74c137eeffb1d489e4b"
+          "ui/kbd/Kbd.gx": "9f498d9427e62f580c08ca0d1c9e1c791e7c2840632f217f87fb3a1c48da99c8",
+          "ui/kbd/KbdGroup.fixtures.go": "945e10358f42aae9f2c94614009c6e828842231d571c754e32701b3bd5a88d0d",
+          "ui/kbd/KbdGroup.gx": "d5f11085904969d9fd7d0028eaac8318b5b2fd391bb6fc485b8caa612bd3eacb"
         }
       },
       "label": {
         "version": "0.1.0",
         "files": {
           "ui/label/Label.fixtures.go": "f92a559b1b84f7ac18be05092372b29c20bd8a738a5d5c0d53a7caac829cfab0",
-          "ui/label/Label.gx": "6803792ae2ccd080ea5cc61cc39da9fcf5616982c40a06abbfa053f42af6661d"
+          "ui/label/Label.gx": "a112e492e0bc60bf9bccd234a2a1fadceecba1748e801d0e126cedf1bebd7b69",
+          "ui/label/styles.go": "e0c66f64b68ad79387c31621fa2f520672dbd26be4cdd8949f05eea8668aa201"
         }
       },
       "login": {
         "version": "0.1.0",
         "files": {
           "ui/login/Login.fixtures.go": "c2e005ed8f46e41d7b0e2160cc3affc48283723ada116ec2bf4dbf7d3fd71f77",
-          "ui/login/Login.gx": "55e58a94ebb57f1f98ace6a9ff459fd819a9cec8323c8d7c2e5a972804c4be60"
+          "ui/login/Login.gx": "681c16aa8ff0145699da8f96dd7b0b1434ee9d74acc5122f736944ba49e25ff5"
         }
       },
       "menubar": {
@@ -387,20 +417,20 @@
         "version": "0.1.0",
         "files": {
           "ui/pagination/Pagination.fixtures.go": "5cd90e543ea18042fb09bc7c1fd32c188f2f64df5413f9c4b7f2bb877901ed2e",
-          "ui/pagination/Pagination.gx": "8438c7a4465a1b1b0a075292435fbbdab6c72e9256c7ce418e7369f4ba7ce346",
+          "ui/pagination/Pagination.gx": "8ac0caecdcee95e6916fa560e97bf296486dbfe04b8ed48ec0435eb547f88acb",
           "ui/pagination/PaginationContent.fixtures.go": "3be7c0f3f6adfad794dec29a7b84c5e631b25951cb5ca0bf95e6c5fdf0792144",
-          "ui/pagination/PaginationContent.gx": "a9046293c0d9ccba87c77a54cce331784d9784b5603976e4198709f25ad0ecb2",
+          "ui/pagination/PaginationContent.gx": "f2b75c026e1c4b4a08b2153deb37777c921e389848df61503d128dfaf6307b57",
           "ui/pagination/PaginationEllipsis.fixtures.go": "33e9f893cea3d6d28e3a6bf6e61ebc4cb11dfa5df86aefd093137aa9272c4bb4",
-          "ui/pagination/PaginationEllipsis.gx": "ee1262be31ee5a15a5b1f645cdc3632c54de15c1c6dc70c46285d98efd7a6d8b",
+          "ui/pagination/PaginationEllipsis.gx": "3c789d20d599cf3fdf056a3777b55ae3922a2a0b0684200398a3fb2eb6aa7c40",
           "ui/pagination/PaginationItem.fixtures.go": "752ef646b208feabd6aec4362b37fdf1c78fd080415869375874335b5745b375",
-          "ui/pagination/PaginationItem.gx": "037054126378d7dde0e990c3884663041682855b8333191f195ce593b1900455",
+          "ui/pagination/PaginationItem.gx": "2e50649d4d1111e12d54cb4c3efe0f541c913b9fee97edb7deb67615fb7965f4",
           "ui/pagination/PaginationLink.fixtures.go": "00d2759e2034138c2bcbad9e783ba3a4fede9c08a19239fbc15e00fad6adbed8",
-          "ui/pagination/PaginationLink.gx": "d57c45ee7a84ff913a210f3faa8737797e31b61b5c9dc5ad0812544432ff4f8c",
+          "ui/pagination/PaginationLink.gx": "19887b9ce2a14113979b1a9e608726a9b210dca29a6ec487eca9dd6d7c3fc645",
           "ui/pagination/PaginationNext.fixtures.go": "32e9a3b478936e49fd3e88a2be44233033779b0ecd4297a261ce1c44ec85b5c5",
-          "ui/pagination/PaginationNext.gx": "a118d04eab606f766e2d5df3df98471cd9a659a07ab7d5ff73d2302bdccc615d",
+          "ui/pagination/PaginationNext.gx": "8d2298d30284c154bdeb0fa4e2d2b4c14458963dc9554f7052c74671dd6485a8",
           "ui/pagination/PaginationPrevious.fixtures.go": "894a40adfecacbdfbfc950843ecd1de318803ee8f7a20f940c2143ca3afc15f7",
-          "ui/pagination/PaginationPrevious.gx": "4059a78a2dba72bf5f1488f6dd2372e5e5c84df0af94e11f434d9645766b5b68",
-          "ui/pagination/styles.go": "10f46a3468e87d330d65804082be6d8baf7bfafbf61e0b9964e2b70f2c9b8a3f"
+          "ui/pagination/PaginationPrevious.gx": "48ce39fdb5fd240595e81c57ea83d726b297d598f853d0f68ce5ccdf8f73b5ae",
+          "ui/pagination/styles.go": "bee658147e5ab71906d9a3af2518097b1cafe7f02cb4f7dacd751e55df3d95a3"
         }
       },
       "popover": {
@@ -461,16 +491,16 @@
       "separator": {
         "version": "0.1.0",
         "files": {
-          "ui/separator/Separator.fixtures.go": "2a45758af50b52b3b7ec945cabe08473b735edaca6e987541cb3c51c61f76232",
-          "ui/separator/Separator.gx": "5b5532f36974763a30a4bd59387a755c5fd1daf8bfcb086644b8b9873cfc0323",
-          "ui/separator/styles.go": "0e4ff0b1177424059295b008a80dd7818ff47b3006afaff64143ea0a2a49918d"
+          "ui/separator/Separator.fixtures.go": "68fd47e86d8f2ce5331e769d8ebda3b448ac74634c3057b738c14bdbf5c346e6",
+          "ui/separator/Separator.gx": "4a704f0df5a0ba8bab5cd213ccee67bb2d3ca44cd09180725f708207d0452b2d",
+          "ui/separator/styles.go": "956f2ad864294c96c8c2765d0c52e3c19a8a793d9086be5ed8fbab25c856950b"
         }
       },
       "settings-form": {
         "version": "0.1.0",
         "files": {
           "ui/settings-form/SettingsForm.fixtures.go": "635ff80655925db74448f2b02834a8b5ffdfd50782d8d812520b40310c504c9f",
-          "ui/settings-form/SettingsForm.gx": "8475087e129a29a3aee028b1d008620d822745b96d946750de67b24b44b47e17"
+          "ui/settings-form/SettingsForm.gx": "b5b663955dca024492d8dae510b89798826e95404a0562837beeec3d479b8e60"
         }
       },
       "sheet": {
@@ -484,33 +514,63 @@
       "sidebar": {
         "version": "0.1.0",
         "files": {
-          "ui/sidebar/Sidebar.fixtures.go": "3496c7bb6ee1e4cbe02f67cb8fa14a267baf36e1bee21b139e5f1db89e5cc42a",
-          "ui/sidebar/Sidebar.gx": "4ae8d16f02bf1def163fdbfbcf36c19e0c4ba91ae8049c59777b8edcc8084504",
+          "ui/sidebar/Sidebar.fixtures.go": "e699d2a59883c846932090383ae2713479b140a9dc7dcb2180dfc9a2e19374fc",
+          "ui/sidebar/Sidebar.gx": "75e7241feae54fdfa2a7a404de0d1f9db9e61a165d8925509df098c62e778cf0",
           "ui/sidebar/SidebarContent.fixtures.go": "0495918e94149f50960693231d3d5f216f91b06e07e9058d24d4d7cb7b53726d",
-          "ui/sidebar/SidebarContent.gx": "499fd7ed05b10515c118073dc55f90952f32e577bafda40acb2bb255680ec4f5",
+          "ui/sidebar/SidebarContent.gx": "ce0380dba8da071ed2f3ba179e66f0516341d96b24d7677b54b9afb3e6776f1d",
           "ui/sidebar/SidebarFooter.fixtures.go": "ec7da04800836a40b2b1923937a618c42448c2cbc49a3b041285ec3f7fc8b520",
-          "ui/sidebar/SidebarFooter.gx": "854ab688be197ad37b939f2c76ad7ce05958f5b471bd0450c8c48051858003b2",
-          "ui/sidebar/SidebarGroup.fixtures.go": "8af214259769c39b00004e6960518dced5608fd348388c5b6e3ea5d2d245c3cb",
-          "ui/sidebar/SidebarGroup.gx": "d3cd852a9f9ee69fdca71f5654c75833c891528057adc651738867b87f0ee0c7",
+          "ui/sidebar/SidebarFooter.gx": "96fed22dca893594d2e8aa0efd8b5e1a51b9284dc1ef57ec3d979f7863a258a2",
+          "ui/sidebar/SidebarGroup.fixtures.go": "b2606e0b84c23620ddee04fab74239e64f322b4d77dc4f6d91467596d8289e29",
+          "ui/sidebar/SidebarGroup.gx": "19511989383206a01ad49ebdc153921847b876a43d4dbeff2a5d13ccbbdabe4f",
+          "ui/sidebar/SidebarGroupAction.fixtures.go": "480fe82a3ee8cb08a020bd70a7327560a648723850ce0ecb5cee4cfe08f97435",
+          "ui/sidebar/SidebarGroupAction.gx": "b9cf205a8a9ea83e1b9c7aa0e28526d0846a88cdf7353fa2dff69fe3a355768a",
+          "ui/sidebar/SidebarGroupContent.fixtures.go": "aceb37865165ed6bd81c54fd7c468528c8f4190c99e5a31354e465dd10f561b6",
+          "ui/sidebar/SidebarGroupContent.gx": "4ee2faa0ae66ba49f4533b45e09ba70ac10cf39ae866c5867600e0add85895fb",
+          "ui/sidebar/SidebarGroupLabel.fixtures.go": "cc9fe6e68790c199b5781c39bea8d73e5e9cdaf98b9db4a18e858b5d0f4bdf60",
+          "ui/sidebar/SidebarGroupLabel.gx": "07f7060e05cfa08e22b2e39938ced3f8096ddba5d582289f4e137ee6a465a002",
           "ui/sidebar/SidebarHeader.fixtures.go": "669980f0deeb773f1e30ea1fbf7a3f861561d11fcccb1c31eb2220e715527089",
-          "ui/sidebar/SidebarHeader.gx": "f1827943255ea06b52f50cd75f144e4595791681ccdda6f7bd3275a45ae7e56a",
-          "ui/sidebar/SidebarItem.fixtures.go": "1e94c6275b1dd49cbb8bc2111205ca4e7caabedd19d7b0f835667a184d9d6f4d",
-          "ui/sidebar/SidebarItem.gx": "536b58ab168f4b1afbb4cda9d14bd3e6235fdbf3a6f9771c11c6595a6e315c56",
-          "ui/sidebar/styles.go": "67503340679a7112723c34e3e3bee63d9d06c6838cf5930c483d1fb6cd168c73"
+          "ui/sidebar/SidebarHeader.gx": "01634cde16ba6edde76440cae61774b338c12aae1c77c8ccecbd90ed5cb749bb",
+          "ui/sidebar/SidebarInput.fixtures.go": "0ca5f687c4175de7abf8f150b26ec426baf569d56b9755430135ead63e943848",
+          "ui/sidebar/SidebarInput.gx": "68c3f6dd25f2edc59a552177e6be17a301affaa733b83d59501742eb653a217d",
+          "ui/sidebar/SidebarInset.fixtures.go": "b98d481a3bf1eb72df355fb7a2c93f2fb914982d670c767bc020bd1269ef5ac7",
+          "ui/sidebar/SidebarInset.gx": "6f33be15389b0574f82e14b112416b922af3b4703a3b4934b9043e8068c3b3aa",
+          "ui/sidebar/SidebarMenu.fixtures.go": "723a97789be5b27f1da68b7aec3135149a60eec1f5f3c22e0d276ab9f8a0f2d6",
+          "ui/sidebar/SidebarMenu.gx": "1568fd065dcc40e9005b660697a3ca076942f694dbd6624e6254433c339e6690",
+          "ui/sidebar/SidebarMenuAction.fixtures.go": "2ae31b3e61852a3f0b34fa549043a41ed961015acf39bd99935059301f9723fb",
+          "ui/sidebar/SidebarMenuAction.gx": "c08d5a54676890392d6d0b796a7765c2ef6492a1cd58e93f9df652714c3bba5e",
+          "ui/sidebar/SidebarMenuBadge.fixtures.go": "6986f7fa0198db0d523c029a5c500a70aa70b2dc8086c85e565c93ef8f8ab08e",
+          "ui/sidebar/SidebarMenuBadge.gx": "85859ec99ade6dddb7a744aca333da5fac3ad947ddbfd60a95d5c8606291085d",
+          "ui/sidebar/SidebarMenuButton.fixtures.go": "ee0f835d47c5c47eb64cc4c07d6f0576781ebb9257738b30f1ae6f72d3bd905d",
+          "ui/sidebar/SidebarMenuButton.gx": "ca72105e31b02e1d2b4e29a299f00ccd94ba3b38a4df756a1e62a7b5a7cc790b",
+          "ui/sidebar/SidebarMenuItem.fixtures.go": "a09dbf53d03bde775e3cdd309c3b48ffdf349701b6944db9198c6c752a5f6184",
+          "ui/sidebar/SidebarMenuItem.gx": "024d51914d71e4a302241f1df9ef14c8860d9548f39dd691de888641f0e1e9e7",
+          "ui/sidebar/SidebarMenuSkeleton.fixtures.go": "162af8d18d8899edece1080a4d8d7e1cf98b9e769df5c370b4c89005a995f597",
+          "ui/sidebar/SidebarMenuSkeleton.gx": "de700189ee00c2e8105ca1ae56f9e7d276c2482c68c2dc7a0042f8cde58b225b",
+          "ui/sidebar/SidebarMenuSub.fixtures.go": "361ba94b57a43b7b201760b1fef35821cce54023a351c51d07f6560d2d48e88c",
+          "ui/sidebar/SidebarMenuSub.gx": "118589ef6dbb2fd9ccbf395444508874bc7e99dcfe069cf8ff19d08b9e97db37",
+          "ui/sidebar/SidebarMenuSubButton.fixtures.go": "7f92170c236f104482d7f78ecbe56afa0686e80d9c8f4878299bd5ec53d9a4eb",
+          "ui/sidebar/SidebarMenuSubButton.gx": "311e516dc73593c00a6cf0a54dc1cf8e8ce2bfe414bb6c436468d1bce77cf4fb",
+          "ui/sidebar/SidebarMenuSubItem.fixtures.go": "16bcfcc730b2eee0af742ec7d5cae8bcd5b2f3a0248717fcf0d67635d7e64565",
+          "ui/sidebar/SidebarMenuSubItem.gx": "a6b0861435de590f2ae153962fadb2f6d000f0fce7f85a48fd38545f5c38a496",
+          "ui/sidebar/SidebarSeparator.fixtures.go": "cf5abe3bb50b66e694f241126dead5f6d2060fa9194a207f4971df5f81a34405",
+          "ui/sidebar/SidebarSeparator.gx": "cf5f32ee422df6d2ac1ebda2b306ca3aad27e8bdc10ed6566fd022e27e7a5904",
+          "ui/sidebar/SidebarTrigger.fixtures.go": "c3b67e609542be04725f54459046cebeaa6a9668b88217fe28123aecec2f25dc",
+          "ui/sidebar/SidebarTrigger.gx": "323886a37ef6c300c289d648ea1925160355af91e88b3430b0bce4eb5f956e77",
+          "ui/sidebar/styles.go": "dc0a34c26ddd98f30706ce36a4763b1186d7bc8a473d12bde9666077ec5d2da2"
         }
       },
       "signup": {
         "version": "0.1.0",
         "files": {
           "ui/signup/Signup.fixtures.go": "24c15cf9e4f7eae2aa4f6beec795dac1c841725ddfc24932421a553d5adb02ed",
-          "ui/signup/Signup.gx": "1e88bb1fc118e8b12ca00b04df0306bfaaa96e5c44e8f8c0e8a94eae0088fbc1"
+          "ui/signup/Signup.gx": "eddcbd1e4e2ffd157e4dda50eb780b4cdcf5d10f8eb59163d05969ff63bd9cf6"
         }
       },
       "skeleton": {
         "version": "0.1.0",
         "files": {
           "ui/skeleton/Skeleton.fixtures.go": "31cef0f7b7a7d3b3bbe2716f43af18604e65616c5652d1ed4a892050a97ac564",
-          "ui/skeleton/Skeleton.gx": "6982087ffacd495ae8c6861890900429e4b38bfdbf5342562881269d1c27eb33"
+          "ui/skeleton/Skeleton.gx": "c0ba823481ff2dc826a897f024e9c3704b3b37fe4d4d70a57acf8b186cea4a70"
         }
       },
       "slider": {
@@ -524,9 +584,9 @@
       "spinner": {
         "version": "0.1.0",
         "files": {
-          "ui/spinner/Spinner.fixtures.go": "73cbe35869e10d025da1b57284e9d967e2bd03f58819a271e47a1ad1937461d6",
-          "ui/spinner/Spinner.gx": "a549bf63b1349479cd231a660cf39a832eb9caa9ab87f30d3b7115b8ceb2e608",
-          "ui/spinner/styles.go": "2933658b669842b14bf6d37c4f1efdaa6a7bae1fae14a2ef883c1c9ecb310ec7"
+          "ui/spinner/Spinner.fixtures.go": "b68a6256dcaddb185083ecce2411380306d8547f2bf12257c9eb10932f645338",
+          "ui/spinner/Spinner.gx": "1b5b25267cad2940042e094eebf3f645b22800164ef9ba009bd66b10233b8a01",
+          "ui/spinner/styles.go": "3ec1c6eb001bf6a1ad1d419f87fc69055952cb0e6b34ca32adcf9e11ac09526c"
         }
       },
       "switch": {
@@ -539,22 +599,22 @@
       "table": {
         "version": "0.1.0",
         "files": {
-          "ui/table/Table.fixtures.go": "841fb08d8533c967fd6d33c51f0a6771970c21a73dee8c929d538f1070bf925d",
-          "ui/table/Table.gx": "2983e49ee921f8dcd511d4c5f0ed5d1fa187c9d85887dd22171d630317d66bd6",
+          "ui/table/Table.fixtures.go": "06b40d8ec44996506f2fc33135d5f0f382ec4c9c8d48700313e58cb88e3b9fd8",
+          "ui/table/Table.gx": "b324df8dc880ae65b9932ca6d25ee8bceab968ab779f1b657fbd689bacd9e7dc",
           "ui/table/TableBody.fixtures.go": "b962e7381eb8e6a8b1abc4123cbadccf58870e4f7fc5b2bf149d4c7a11b2c0dd",
-          "ui/table/TableBody.gx": "10773d0658b08aadfdb65896e2dd7054ee1989f80eac1eb055921847ef8a12cc",
+          "ui/table/TableBody.gx": "64efe488fc34096c9cf4e609c4328be68fc0aa6e63d1c0dbd2b8e359df62813f",
           "ui/table/TableCaption.fixtures.go": "2f23ddea3a53ac2b2699934bda7dd69288a25b8213336940fb24818fbf19ae94",
-          "ui/table/TableCaption.gx": "62a173ff0694665461ea4857951e7bbcd1d8dadb06dac9b7a6fe4094d4b8cef8",
+          "ui/table/TableCaption.gx": "0dde781eac8cfda56d9189f64dfd13e25e77fedca14614cf78b1420350106dbd",
           "ui/table/TableCell.fixtures.go": "9d9a8428307396899670bee842f8c338627f6ae2d9d85e324d1655ffd1c5e7bb",
-          "ui/table/TableCell.gx": "3ce72988f5ba99e72198768967cc495f939ac56073a13747a3a6d097e34be22c",
+          "ui/table/TableCell.gx": "4c7e988d2c12cc605a94a94cca9f07c651f00bfdec6207ebff5a14d466b17db9",
           "ui/table/TableFooter.fixtures.go": "a397a00ea6ddf9bd9eccc0965d1a014386d1580e2215b6d1da63aa6480ab2403",
-          "ui/table/TableFooter.gx": "10340c041c2ddf073e92435ae00ebd7e96a91bef2428f47b31bffaffcc073189",
+          "ui/table/TableFooter.gx": "72c762afaec4780d26ae850f50a7d9e478f6d5e32c03ad113fe96088adccd02a",
           "ui/table/TableHead.fixtures.go": "a9d60477e9e4c9469d09c69c51199b0dd9ee421f531e6fab49609497e2a71083",
-          "ui/table/TableHead.gx": "21a16cbf8815ff72a4bdf3bd26e50300539235f549d1784210b5ef7667f03763",
+          "ui/table/TableHead.gx": "5e4d88fb0bc1796b7851ad03bba03220640d86f2afb583383e0e50305cb69130",
           "ui/table/TableHeader.fixtures.go": "304ef5096002dccbc7025e2df632a6e7eb45c4a6e2c45e1968dc0a5ef11f541c",
-          "ui/table/TableHeader.gx": "16520b19f7047b47b7ce444743ec6c2ba8a8a1e70c0220e6b203dec0df9fe449",
+          "ui/table/TableHeader.gx": "8ed94d19e079dac08e3fa243c2a3b4b6121968e1852a80a6a3844f60f40521de",
           "ui/table/TableRow.fixtures.go": "ff6479d3559e93511ca6f3845acad6c0a94276d00b122b54fc2faacfc2edb61d",
-          "ui/table/TableRow.gx": "6c2468013c1ac953a4a7b88472337340c5fa15912dedfef614b733d1116f37d3"
+          "ui/table/TableRow.gx": "8dc1d22d2590d2f62727e17b6e53e9046abddc12ca1201b08bce21c492523cad"
         }
       },
       "tabs": {
@@ -569,9 +629,9 @@
       "textarea": {
         "version": "0.1.0",
         "files": {
-          "ui/textarea/Textarea.fixtures.go": "6cf88cb3b061958b144b06ff094977798a6876eceb02b2182cde488745f6b4a6",
-          "ui/textarea/Textarea.gx": "3b1feb1f6e70f824ccd82034af648b261e192d555c8de09e091e863c94171cca",
-          "ui/textarea/styles.go": "4b1263988af5bfe691256af3189b81e15a031f8356b485f2570fa6733c06a996"
+          "ui/textarea/Textarea.fixtures.go": "88d49a875726c06aac609666a21d5ff9ff134ab7da39b7770407bccf25c3c82a",
+          "ui/textarea/Textarea.gx": "f3c929056de3e2d0e1b6a13fb630d871cedf1039efea5765734e5d31885286f5",
+          "ui/textarea/styles.go": "ae2b59f4f3a7c12b68e14692790b34395ca326d47ac02707d3c66e83d347cd79"
         }
       },
       "toast": {

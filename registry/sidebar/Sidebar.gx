@@ -2,9 +2,10 @@ package sidebar
 
 props {
   Id       string
+  Side     Side     = Left
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<aside id={p.Id} data-gx-sidebar class={gx.Cx("flex w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground", p.Class)} {...p.Attrs}>{p.Children}</aside>
+<aside id={p.Id} data-gx-sidebar data-slot="sidebar" data-side={p.side()} class={gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class)} {...p.Attrs}>{p.Children}</aside>

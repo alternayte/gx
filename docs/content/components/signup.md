@@ -61,23 +61,27 @@ props {
 <div class="grid min-h-screen lg:grid-cols-2">
   <div class="flex items-center justify-center p-6">
     <card.Card title={p.Title} description={p.Description} class="w-full max-w-sm">
-      <form method="post" action={p.Action} class="flex flex-col gap-4">
-        <field.Field>
-          <field.FieldLabel for="name">Name</field.FieldLabel>
-          <input.Input id="name" name="name" type="text" />
-        </field.Field>
-        <field.Field>
-          <field.FieldLabel for="email">Email</field.FieldLabel>
-          <input.Input id="email" name="email" type="email" placeholder="you@example.com" />
-        </field.Field>
-        <field.Field>
-          <field.FieldLabel for="password">Password</field.FieldLabel>
-          <input.Input id="password" name="password" type="password" />
-          <field.FieldDescription>At least 12 characters.</field.FieldDescription>
-        </field.Field>
-        <checkbox.Checkbox name="terms">I accept the terms</checkbox.Checkbox>
-        <button.Button type="submit" class="w-full">Create account</button.Button>
-        <p class="text-center text-sm text-muted-foreground">Already have an account? <a href="/login" class="underline underline-offset-4">Sign in</a></p>
+      <form method="post" action={p.Action}>
+        <field.FieldGroup>
+          <field.Field>
+            <field.FieldLabel for="name">Name</field.FieldLabel>
+            <input.Input id="name" name="name" type="text" />
+          </field.Field>
+          <field.Field>
+            <field.FieldLabel for="email">Email</field.FieldLabel>
+            <input.Input id="email" name="email" type="email" placeholder="you@example.com" />
+          </field.Field>
+          <field.Field>
+            <field.FieldLabel for="password">Password</field.FieldLabel>
+            <input.Input id="password" name="password" type="password" />
+            <field.FieldDescription>At least 12 characters.</field.FieldDescription>
+          </field.Field>
+          <checkbox.Checkbox name="terms">I accept the terms</checkbox.Checkbox>
+          <div class="flex flex-col gap-3">
+            <button.Button type="submit" class="w-full">Create account</button.Button>
+            <p class="text-center text-sm text-muted-foreground">Already have an account? <a href="/login" class="underline underline-offset-4 hover:text-primary">Sign in</a></p>
+          </div>
+        </field.FieldGroup>
       </form>
     </card.Card>
   </div>

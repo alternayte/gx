@@ -9,16 +9,14 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div role="alert" class={p.class()} {...p.Attrs}>
+<div data-slot="alert" role="alert" class={p.class()} {...p.Attrs}>
   if p.Icon != nil {
-    <span class="[&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"> {p.Icon} </span>
+    {p.Icon}
   }
-  <div class="col-start-2 grid justify-items-start gap-1">
-    if p.Title != "" {
-      <p class="line-clamp-1 min-h-4 font-medium tracking-tight">{p.Title}</p>
-    }
-    if p.Children != nil {
-      <div class={gx.Cx("text-sm text-muted-foreground [&_p]:leading-relaxed", p.descClass())}>{p.Children}</div>
-    }
-  </div>
+  if p.Title != "" {
+    <div data-slot="alert-title" class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight">{p.Title}</div>
+  }
+  if p.Children != nil {
+    <div data-slot="alert-description" class="col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed">{p.Children}</div>
+  }
 </div>

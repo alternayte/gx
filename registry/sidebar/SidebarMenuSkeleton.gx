@@ -1,0 +1,15 @@
+package sidebar
+
+props {
+  ShowIcon bool     = false
+  Width    string   = "70%"
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="sidebar-menu-skeleton" data-sidebar="menu-skeleton" class={gx.Cx("flex h-8 items-center gap-2 rounded-md px-2", p.Class)} {...p.Attrs}>
+  if p.ShowIcon {
+    <div data-slot="skeleton" data-sidebar="menu-skeleton-icon" class="size-4 animate-pulse rounded-md bg-accent"></div>
+  }
+  <div data-slot="skeleton" data-sidebar="menu-skeleton-text" style={gx.Style("--skeleton-width: " + p.width())} class="h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-accent"></div>
+</div>

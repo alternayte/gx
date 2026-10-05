@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("mt-auto p-4", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="sidebar-footer" data-sidebar="footer" class={gx.Cx("flex flex-col gap-2 p-2", p.Class)} {...p.Attrs}>{p.Children}</div>

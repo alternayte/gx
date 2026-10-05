@@ -16,8 +16,8 @@ type LabelProps struct {
 func Label(p LabelProps) gx.Node {
 	var _b gx.Builder
 //line Label.gx:10:1
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "for", Value: p.For, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Label.gx:10:148
+	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "label", Kind: gx.AttrText}}, p.attrs()), p.Children))
+//line Label.gx:10:299
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

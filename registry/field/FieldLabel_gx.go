@@ -16,8 +16,8 @@ type FieldLabelProps struct {
 func FieldLabel(p FieldLabelProps) gx.Node {
 	var _b gx.Builder
 //line FieldLabel.gx:10:1
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[invalid=true]/field:text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "for", Value: p.For, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldLabel.gx:10:191
+	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-4 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-label", Kind: gx.AttrText}}, p.attrs()), p.Children))
+//line FieldLabel.gx:10:671
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

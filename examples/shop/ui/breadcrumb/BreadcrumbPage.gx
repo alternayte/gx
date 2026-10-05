@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<span role="link" aria-disabled="true" aria-current="page" class={gx.Cx("font-normal text-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
+<span data-slot="breadcrumb-page" role="link" aria-disabled="true" aria-current="page" class={gx.Cx("font-normal text-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>

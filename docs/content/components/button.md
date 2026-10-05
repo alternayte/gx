@@ -25,6 +25,8 @@ Run the command in the app module.
 gx add button
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -36,6 +38,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`icons`](/components/icons/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/button/Button.gx"
@@ -46,17 +50,23 @@ props {
   Size     Size     = Md
   Type     string   = "button"
   Class    string   = ""
-  Children gx.Node    
+  Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<button type={p.typeAttr()} class={p.class()} {...p.Attrs}>{p.Children}</button>
+<button data-slot="button" data-variant={p.variant()} data-size={p.size()} type={p.typeAttr()} class={Class(p.Variant, p.Size, p.Class)} {...p.Attrs}>{p.Children}</button>
 ```
 
 ```go title="ui/button/Button.fixtures.go"
 package button
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
+
+// iconLabel is the accessible name of an icon-only fixture.
+var iconLabel = gx.Attrs{{Key: "aria-label", Value: "Next"}}
 
 var ButtonFixtures = gx.Fixtures[ButtonProps]{
 	"Default":     {Children: gx.Text("Button")},
@@ -65,9 +75,14 @@ var ButtonFixtures = gx.Fixtures[ButtonProps]{
 	"Outline":     {Variant: Outline, Children: gx.Text("Outline")},
 	"Ghost":       {Variant: Ghost, Children: gx.Text("Ghost")},
 	"Link":        {Variant: Link, Children: gx.Text("Link")},
+	"ExtraSmall":  {Size: Xs, Children: gx.Text("Extra small")},
 	"Small":       {Size: Sm, Children: gx.Text("Small")},
 	"Large":       {Size: Lg, Children: gx.Text("Large")},
-	"Icon":        {Size: Icon, Children: gx.Text("+")},
+	"WithIcon":    {Variant: Outline, Children: gx.Frag(gx.Text("Next"), icons.ChevronRight(icons.ChevronRightProps{}))},
+	"Icon":        {Variant: Outline, Size: Icon, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})},
+	"IconXs":      {Variant: Outline, Size: IconXs, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})},
+	"IconSm":      {Variant: Outline, Size: IconSm, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})},
+	"IconLg":      {Variant: Outline, Size: IconLg, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})},
 	"Disabled":    {Attrs: gx.Attrs{gx.Bool("disabled", true)}, Children: gx.Text("Disabled")},
 }
 ```
@@ -91,11 +106,11 @@ const (
 )
 
 var variantClass = gx.Enum[Variant]{
-	Default:     "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-	Secondary:   "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+	Default:     "bg-primary text-primary-foreground hover:bg-primary/90",
+	Secondary:   "bg-secondary text-secondary-foreground hover:bg-secondary/80",
 	Destructive: "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
-	Outline:     "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
-	Ghost:       "hover:bg-accent hover:text-accent-foreground",
+	Outline:     "border border-border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+	Ghost:       "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 	Link:        "text-primary underline-offset-4 hover:underline",
 }
 
@@ -104,17 +119,25 @@ type Size string
 
 // The sizes of button.Button.
 const (
-	Sm   Size = "sm"
-	Md   Size = "md"
-	Lg   Size = "lg"
-	Icon Size = "icon"
+	Xs     Size = "xs"
+	Sm     Size = "sm"
+	Md     Size = "default"
+	Lg     Size = "lg"
+	Icon   Size = "icon"
+	IconXs Size = "icon-xs"
+	IconSm Size = "icon-sm"
+	IconLg Size = "icon-lg"
 )
 
 var sizeClass = gx.Enum[Size]{
-	Sm:   "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-	Md:   "h-9 rounded-md px-4 py-2 has-[>svg]:px-3",
-	Lg:   "h-10 rounded-md px-6 has-[>svg]:px-4",
-	Icon: "size-9",
+	Xs:     "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
+	Sm:     "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
+	Md:     "h-9 px-4 py-2 has-[>svg]:px-3",
+	Lg:     "h-10 rounded-md px-6 has-[>svg]:px-4",
+	Icon:   "size-9",
+	IconXs: "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
+	IconSm: "size-8",
+	IconLg: "size-10",
 }
 
 // typeAttr returns the button type; a zero value is "button".
@@ -125,39 +148,62 @@ func (p ButtonProps) typeAttr() string {
 	return p.Type
 }
 
-// class returns the classes of one button state.
-func (p ButtonProps) class() string {
-	const base = "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+// variant returns the data-variant value; a zero value is Default.
+func (p ButtonProps) variant() string {
+	if p.Variant == "" {
+		return string(Default)
+	}
+	return string(p.Variant)
+}
+
+// size returns the data-size value; a zero value is Md.
+func (p ButtonProps) size() string {
+	if p.Size == "" {
+		return string(Md)
+	}
+	return string(p.Size)
+}
+
+// Class returns the classes of one button state. A link that looks like a
+// button takes these classes on its anchor.
+func Class(variant Variant, size Size, extra ...string) string {
+	const base = "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
 	// A zero-value prop is the default, so a Go caller and a .gx caller
 	// render the same markup.
-	variant := p.Variant
 	if variant == "" {
 		variant = Default
 	}
-	size := p.Size
 	if size == "" {
 		size = Md
 	}
-	return gx.Cx(base, variantClass[variant], sizeClass[size], p.Class)
+	return gx.Cx(append([]string{base, variantClass[variant], sizeClass[size]}, extra...)...)
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--destructive`, `--accent`, `--accent-foreground`, `--background`, `--ring`.
+The theme must define these tokens: `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--destructive`, `--accent`, `--accent-foreground`, `--background`, `--border`, `--input`, `--ring`.
 
 ## Usage
 
 A clickable control with variant and size options.
 
 ```gx
-<ui.Button>Save</ui.Button>
-<ui.Button variant={ui.Destructive}>Delete</ui.Button>
-<ui.Button variant={ui.Outline} size={ui.Sm}>Cancel</ui.Button>
+<button.Button>Save</button.Button>
+<button.Button variant={button.Destructive}>Delete</button.Button>
+<button.Button variant={button.Outline} size={button.Sm}>Cancel</button.Button>
+<button.Button variant={button.Ghost} size={button.Icon} attrs={gx.Attrs{{Key: "aria-label", Value: "Close"}}}>
+  <icons.X />
+</button.Button>
 ```
 
-Pass `Type` when the button submits a form: `<ui.Button type="submit">Send</ui.Button>`.
+Pass `Type` when the button submits a form: `<button.Button type="submit">Send</button.Button>`.
+
+The sizes are `Xs`, `Sm`, `Md`, `Lg`, `Icon`, `IconXs`, `IconSm` and `IconLg`.
+An icon without a `size-` class takes the size of the button.
+
+A link that looks like a button takes `button.Class` on its anchor: `<a href={route} class={button.Class(button.Outline, button.Sm)}>Docs</a>`.
 
 ## Examples
 
@@ -221,6 +267,16 @@ Pass `Type` when the button submits a form: `<ui.Button type="submit">Send</ui.B
 
 </Example>
 
+### Extra small
+
+<Example item="button" name="button-extra-small" label="Button: Extra small">
+
+```gx
+<button.Button size={button.Xs}>Extra small</button.Button>
+```
+
+</Example>
+
 ### Small
 
 <Example item="button" name="button-small" label="Button: Small">
@@ -241,12 +297,79 @@ Pass `Type` when the button submits a form: `<ui.Button type="submit">Send</ui.B
 
 </Example>
 
+### With icon
+
+<Example item="button" name="button-with-icon" label="Button: With icon">
+
+```gx
+<button.Button variant={button.Outline}>
+  Next
+  <icons.ChevronRight />
+</button.Button>
+```
+
+</Example>
+
 ### Icon
 
 <Example item="button" name="button-icon" label="Button: Icon">
 
 ```gx
-<button.Button size={button.Icon}>+</button.Button>
+{button.Button(button.ButtonFixtures["Icon"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/button/Button.fixtures.go"
+"Icon":        {Variant: Outline, Size: Icon, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+```
+
+</Example>
+
+### Icon xs
+
+<Example item="button" name="button-icon-xs" label="Button: Icon xs">
+
+```gx
+{button.Button(button.ButtonFixtures["IconXs"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/button/Button.fixtures.go"
+"IconXs":      {Variant: Outline, Size: IconXs, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+```
+
+</Example>
+
+### Icon sm
+
+<Example item="button" name="button-icon-sm" label="Button: Icon sm">
+
+```gx
+{button.Button(button.ButtonFixtures["IconSm"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/button/Button.fixtures.go"
+"IconSm":      {Variant: Outline, Size: IconSm, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+```
+
+</Example>
+
+### Icon lg
+
+<Example item="button" name="button-icon-lg" label="Button: Icon lg">
+
+```gx
+{button.Button(button.ButtonFixtures["IconLg"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/button/Button.fixtures.go"
+"IconLg":      {Variant: Outline, Size: IconLg, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
 ```
 
 </Example>
@@ -268,11 +391,12 @@ Pass `Type` when the button submits a form: `<ui.Button type="submit">Send</ui.B
 
 - Use one `default` button per view for the main action.
 - Set `type="submit"` on a form button. The default `button` type does not submit.
+- Give an icon-only button an `aria-label`.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not use a button as a link. Use `<ui.LinkButton>` (docs kit) or an `<a>` with a typed `href`.
+- Do not use a button as a link. Use an `<a>` with a typed `href` and `button.Class`.
 - Do not put a button inside another button.
 
 </docs.Card>

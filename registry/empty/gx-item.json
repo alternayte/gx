@@ -57,11 +57,14 @@
       "target": "ui/empty/EmptyTitle.fixtures.go"
     }
   ],
+  "registryDependencies": [
+    "button",
+    "icons"
+  ],
   "requiredTokens": [
-    "--border",
     "--muted",
     "--muted-foreground",
-    "--primary",
-    "--foreground"
+    "--foreground",
+    "--primary"
   ]
 }

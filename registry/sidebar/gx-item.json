@@ -21,20 +21,80 @@
       "target": "ui/sidebar/SidebarFooter.gx"
     },
     {
+      "path": "SidebarInset.gx",
+      "target": "ui/sidebar/SidebarInset.gx"
+    },
+    {
+      "path": "SidebarSeparator.gx",
+      "target": "ui/sidebar/SidebarSeparator.gx"
+    },
+    {
+      "path": "SidebarInput.gx",
+      "target": "ui/sidebar/SidebarInput.gx"
+    },
+    {
+      "path": "SidebarTrigger.gx",
+      "target": "ui/sidebar/SidebarTrigger.gx"
+    },
+    {
       "path": "SidebarGroup.gx",
       "target": "ui/sidebar/SidebarGroup.gx"
     },
     {
-      "path": "SidebarItem.gx",
-      "target": "ui/sidebar/SidebarItem.gx"
+      "path": "SidebarGroupLabel.gx",
+      "target": "ui/sidebar/SidebarGroupLabel.gx"
+    },
+    {
+      "path": "SidebarGroupAction.gx",
+      "target": "ui/sidebar/SidebarGroupAction.gx"
+    },
+    {
+      "path": "SidebarGroupContent.gx",
+      "target": "ui/sidebar/SidebarGroupContent.gx"
+    },
+    {
+      "path": "SidebarMenu.gx",
+      "target": "ui/sidebar/SidebarMenu.gx"
+    },
+    {
+      "path": "SidebarMenuItem.gx",
+      "target": "ui/sidebar/SidebarMenuItem.gx"
+    },
+    {
+      "path": "SidebarMenuButton.gx",
+      "target": "ui/sidebar/SidebarMenuButton.gx"
+    },
+    {
+      "path": "SidebarMenuAction.gx",
+      "target": "ui/sidebar/SidebarMenuAction.gx"
+    },
+    {
+      "path": "SidebarMenuBadge.gx",
+      "target": "ui/sidebar/SidebarMenuBadge.gx"
+    },
+    {
+      "path": "SidebarMenuSkeleton.gx",
+      "target": "ui/sidebar/SidebarMenuSkeleton.gx"
+    },
+    {
+      "path": "SidebarMenuSub.gx",
+      "target": "ui/sidebar/SidebarMenuSub.gx"
+    },
+    {
+      "path": "SidebarMenuSubItem.gx",
+      "target": "ui/sidebar/SidebarMenuSubItem.gx"
+    },
+    {
+      "path": "SidebarMenuSubButton.gx",
+      "target": "ui/sidebar/SidebarMenuSubButton.gx"
     },
     {
       "path": "Sidebar.fixtures.go",
       "target": "ui/sidebar/Sidebar.fixtures.go"
     },
     {
-      "path": "styles.go",
-      "target": "ui/sidebar/styles.go"
+      "path": "SidebarHeader.fixtures.go",
+      "target": "ui/sidebar/SidebarHeader.fixtures.go"
     },
     {
       "path": "SidebarContent.fixtures.go",
@@ -45,24 +105,92 @@
       "target": "ui/sidebar/SidebarFooter.fixtures.go"
     },
     {
+      "path": "SidebarInset.fixtures.go",
+      "target": "ui/sidebar/SidebarInset.fixtures.go"
+    },
+    {
+      "path": "SidebarSeparator.fixtures.go",
+      "target": "ui/sidebar/SidebarSeparator.fixtures.go"
+    },
+    {
+      "path": "SidebarInput.fixtures.go",
+      "target": "ui/sidebar/SidebarInput.fixtures.go"
+    },
+    {
+      "path": "SidebarTrigger.fixtures.go",
+      "target": "ui/sidebar/SidebarTrigger.fixtures.go"
+    },
+    {
       "path": "SidebarGroup.fixtures.go",
       "target": "ui/sidebar/SidebarGroup.fixtures.go"
     },
     {
-      "path": "SidebarHeader.fixtures.go",
-      "target": "ui/sidebar/SidebarHeader.fixtures.go"
+      "path": "SidebarGroupLabel.fixtures.go",
+      "target": "ui/sidebar/SidebarGroupLabel.fixtures.go"
     },
     {
-      "path": "SidebarItem.fixtures.go",
-      "target": "ui/sidebar/SidebarItem.fixtures.go"
+      "path": "SidebarGroupAction.fixtures.go",
+      "target": "ui/sidebar/SidebarGroupAction.fixtures.go"
+    },
+    {
+      "path": "SidebarGroupContent.fixtures.go",
+      "target": "ui/sidebar/SidebarGroupContent.fixtures.go"
+    },
+    {
+      "path": "SidebarMenu.fixtures.go",
+      "target": "ui/sidebar/SidebarMenu.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuItem.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuItem.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuButton.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuButton.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuAction.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuAction.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuBadge.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuBadge.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuSkeleton.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSkeleton.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuSub.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSub.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuSubItem.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSubItem.fixtures.go"
+    },
+    {
+      "path": "SidebarMenuSubButton.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSubButton.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/sidebar/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "button",
+    "icons",
+    "input"
   ],
   "requiredTokens": [
     "--border",
+    "--background",
+    "--accent",
     "--sidebar",
     "--sidebar-foreground",
     "--sidebar-accent",
     "--sidebar-accent-foreground",
-    "--muted-foreground"
+    "--sidebar-border",
+    "--sidebar-ring"
   ]
 }

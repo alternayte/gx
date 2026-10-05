@@ -6,7 +6,7 @@ group: "Components"
 item: "kbd"
 ---
 
-<Example item="kbd" name="kbd-key" label="Kbd: Key">
+<Example item="kbd" name="kbd-key" label="Kbd: Kbd: Key">
 
 ```gx
 <kbd.Kbd>K</kbd.Kbd>
@@ -31,6 +31,8 @@ The command writes these files.
 | --- | --- |
 | `Kbd.gx` | `ui/kbd/Kbd.gx` |
 | `Kbd.fixtures.go` | `ui/kbd/Kbd.fixtures.go` |
+| `KbdGroup.gx` | `ui/kbd/KbdGroup.gx` |
+| `KbdGroup.fixtures.go` | `ui/kbd/KbdGroup.fixtures.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -46,7 +48,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<kbd class={gx.Cx("inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-foreground", p.Class)} {...p.Attrs}>{p.Children}</kbd>
+<kbd data-slot="kbd" class={gx.Cx("pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-foreground select-none [&_svg:not([class*='size-'])]:size-3 [[data-slot=tooltip-content]_&]:bg-background/20 [[data-slot=tooltip-content]_&]:text-background dark:[[data-slot=tooltip-content]_&]:bg-background/10", p.Class)} {...p.Attrs}>{p.Children}</kbd>
 ```
 
 ```go title="ui/kbd/Kbd.fixtures.go"
@@ -60,22 +62,58 @@ var KbdFixtures = gx.Fixtures[KbdProps]{
 }
 ```
 
+```gx title="ui/kbd/KbdGroup.gx"
+package kbd
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<kbd data-slot="kbd-group" class={gx.Cx("inline-flex items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</kbd>
+```
+
+```go title="ui/kbd/KbdGroup.fixtures.go"
+package kbd
+
+import "github.com/alternayte/gx"
+
+var KbdGroupFixtures = gx.Fixtures[KbdGroupProps]{
+	"Shortcut": {Children: gx.Frag(
+		Kbd(KbdProps{Children: gx.Text("Ctrl")}),
+		gx.El("span", nil, gx.Text("+")),
+		Kbd(KbdProps{Children: gx.Text("K")}),
+	)},
+}
+```
+
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`.
+The theme must define these tokens: `--muted`, `--foreground`, `--background`.
 
 ## Usage
 
+A key or a key combination.
+
 ```gx
-<kbd.Kbd>Ctrl</kbd.Kbd> <kbd.Kbd>K</kbd>
+<kbd.Kbd>Esc</kbd.Kbd>
+
+<kbd.KbdGroup>
+  <kbd.Kbd>Ctrl</kbd.Kbd>
+  <span>+</span>
+  <kbd.Kbd>K</kbd.Kbd>
+</kbd.KbdGroup>
 ```
+
+`KbdGroup` keeps the keys of one shortcut on one line.
 
 ## Examples
 
-### Key
+### Kbd: Key
 
-<Example item="kbd" name="kbd-key" label="Kbd: Key">
+<Example item="kbd" name="kbd-key" label="Kbd: Kbd: Key">
 
 ```gx
 <kbd.Kbd>K</kbd.Kbd>
@@ -83,12 +121,26 @@ The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`.
 
 </Example>
 
-### Combo
+### Kbd: Combo
 
-<Example item="kbd" name="kbd-combo" label="Kbd: Combo">
+<Example item="kbd" name="kbd-combo" label="Kbd: Kbd: Combo">
 
 ```gx
 <kbd.Kbd>Ctrl</kbd.Kbd>
+```
+
+</Example>
+
+### KbdGroup: Shortcut
+
+<Example item="kbd" name="kbd-group-shortcut" label="Kbd: KbdGroup: Shortcut">
+
+```gx
+<kbd.KbdGroup>
+  <kbd.Kbd>Ctrl</kbd.Kbd>
+  {gx.El("span", nil, gx.Text("+"))}
+  <kbd.Kbd>K</kbd.Kbd>
+</kbd.KbdGroup>
 ```
 
 </Example>
@@ -98,14 +150,14 @@ The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`.
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Write one key per element.
-- Use the same order as the physical keys.
+- Write the key as it is printed on the keyboard.
+- Put one key in one `Kbd`.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not use a kbd for a mouse action.
-- Do not use a kbd for a sentence.
+- Do not use a kbd for a button. It does not take a click.
+- Do not put a sentence in a kbd.
 
 </docs.Card>
 </docs.CardGrid>

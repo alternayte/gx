@@ -10,7 +10,8 @@ item: "field"
 
 ```gx
 <field.Field>
-  <field.FieldLabel for="email">Email</field.FieldLabel>
+  <field.FieldLabel for="field-email">Email</field.FieldLabel>
+  <input.Input id="field-email" type="email" placeholder="you@example.com" />
   <field.FieldDescription>We never share your email.</field.FieldDescription>
 </field.Field>
 ```
@@ -27,6 +28,8 @@ Run the command in the app module.
 ```sh frame="terminal" title="Terminal"
 gx add field
 ```
+
+The command also installs [`input`](/components/input/).
 
 The command writes these files.
 
@@ -47,9 +50,17 @@ The command writes these files.
 | `FieldLabel.fixtures.go` | `ui/field/FieldLabel.fixtures.go` |
 | `FieldLegend.fixtures.go` | `ui/field/FieldLegend.fixtures.go` |
 | `FieldSet.fixtures.go` | `ui/field/FieldSet.fixtures.go` |
+| `FieldContent.gx` | `ui/field/FieldContent.gx` |
+| `FieldContent.fixtures.go` | `ui/field/FieldContent.fixtures.go` |
+| `FieldTitle.gx` | `ui/field/FieldTitle.gx` |
+| `FieldTitle.fixtures.go` | `ui/field/FieldTitle.fixtures.go` |
+| `FieldSeparator.gx` | `ui/field/FieldSeparator.gx` |
+| `FieldSeparator.fixtures.go` | `ui/field/FieldSeparator.fixtures.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`input`](/components/input/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -57,13 +68,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package field
 
 props {
-  Invalid  bool     = false
-  Class    string   = ""
-  Children gx.Node
-  Attrs    gx.Attrs = nil
+  Orientation Orientation = Vertical
+  Invalid     bool        = false
+  Disabled    bool        = false
+  Class       string      = ""
+  Children    gx.Node
+  Attrs       gx.Attrs    = nil
 }
 
-<div data-invalid={p.Invalid} class={gx.Cx("group/field flex w-full flex-col gap-2 data-[invalid=true]:text-destructive", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" data-slot="field" data-orientation={p.orientation()} class={gx.Cx("group/field flex w-full gap-3 data-[invalid=true]:text-destructive", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}>{p.Children}</div>
 ```
 
 ```gx title="ui/field/FieldLabel.gx"
@@ -76,7 +89,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<label for={p.For} class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[invalid=true]/field:text-destructive", p.Class)} {...p.Attrs}>{p.Children}</label>
+<label data-slot="field-label" class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-4 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10", p.Class)} {...p.attrs()}>{p.Children}</label>
 ```
 
 ```gx title="ui/field/FieldDescription.gx"
@@ -88,19 +101,34 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<p class={gx.Cx("text-sm leading-normal font-normal text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</p>
+<p data-slot="field-description" class={gx.Cx("text-sm leading-normal font-normal text-muted-foreground group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&]:-mt-1.5 [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</p>
 ```
 
 ```gx title="ui/field/FieldError.gx"
 package field
 
 props {
+  Errors   []string = nil
   Class    string   = ""
-  Children gx.Node
+  Children gx.Node  = nil
   Attrs    gx.Attrs = nil
 }
 
-<p role="alert" class={gx.Cx("text-sm font-normal text-destructive", p.Class)} {...p.Attrs}>{p.Children}</p>
+if p.Children != nil || len(p.messages()) > 0 {
+  <div role="alert" data-slot="field-error" class={gx.Cx("text-sm font-normal text-destructive", p.Class)} {...p.Attrs}>
+    if p.Children != nil {
+      {p.Children}
+    } else if len(p.messages()) == 1 {
+      {p.messages()[0]}
+    } else {
+      <ul class="ml-4 flex list-disc flex-col gap-1">
+        for _, message := range p.messages() {
+          <li>{message}</li>
+        }
+      </ul>
+    }
+  </div>
+}
 ```
 
 ```gx title="ui/field/FieldGroup.gx"
@@ -112,7 +140,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("group/field-group flex w-full flex-col gap-7", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="field-group" class={gx.Cx("group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/field/FieldSet.gx"
@@ -124,7 +152,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<fieldset class={gx.Cx("flex flex-col gap-6", p.Class)} {...p.Attrs}>{p.Children}</fieldset>
+<fieldset data-slot="field-set" class={gx.Cx("flex flex-col gap-6 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3", p.Class)} {...p.Attrs}>{p.Children}</fieldset>
 ```
 
 ```gx title="ui/field/FieldLegend.gx"
@@ -137,23 +165,53 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<legend data-variant={p.Variant} class={gx.Cx("mb-3 font-medium", p.legendClass(), p.Class)} {...p.Attrs}>{p.Children}</legend>
+<legend data-slot="field-legend" data-variant={p.variant()} class={gx.Cx("mb-3 font-medium data-[variant=legend]:text-base data-[variant=label]:text-sm", p.Class)} {...p.Attrs}>{p.Children}</legend>
 ```
 
 ```go title="ui/field/Field.fixtures.go"
 package field
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/input"
+)
 
 var FieldFixtures = gx.Fixtures[FieldProps]{
 	"LabelAndInput": {Children: gx.Frag(
-		FieldLabel(FieldLabelProps{For: "email", Children: gx.Text("Email")}),
+		FieldLabel(FieldLabelProps{For: "field-email", Children: gx.Text("Email")}),
+		input.Input(input.InputProps{Id: "field-email", Type: "email", Placeholder: "you@example.com"}),
 		FieldDescription(FieldDescriptionProps{Children: gx.Text("We never share your email.")}),
 	)},
 	"Invalid": {Invalid: true, Children: gx.Frag(
-		FieldLabel(FieldLabelProps{For: "email", Children: gx.Text("Email")}),
+		FieldLabel(FieldLabelProps{For: "field-invalid", Children: gx.Text("Email")}),
+		input.Input(input.InputProps{Id: "field-invalid", Type: "email", Value: "ada@", Attrs: gx.Attrs{{Key: "aria-invalid", Value: "true"}}}),
 		FieldError(FieldErrorProps{Children: gx.Text("Enter a valid email address.")}),
 	)},
+	"Disabled": {Disabled: true, Children: gx.Frag(
+		FieldLabel(FieldLabelProps{For: "field-disabled", Children: gx.Text("Email")}),
+		input.Input(input.InputProps{Id: "field-disabled", Type: "email", Attrs: gx.Attrs{gx.Bool("disabled", true)}}),
+	)},
+	"Horizontal": {Orientation: Horizontal, Children: gx.Frag(
+		FieldContent(FieldContentProps{Children: gx.Frag(
+			FieldTitle(FieldTitleProps{Children: gx.Text("Product news")}),
+			FieldDescription(FieldDescriptionProps{Children: gx.Text("One message each month.")}),
+		)}),
+		gx.El("input", gx.Attrs{
+			{Key: "type", Value: "checkbox"},
+			{Key: "aria-label", Value: "Product news"},
+			{Key: "class", Value: "size-4 accent-primary"},
+		}),
+	)},
+	"Responsive": {Orientation: Responsive, Children: gx.Frag(
+		FieldLabel(FieldLabelProps{For: "field-responsive", Children: gx.Text("Name")}),
+		input.Input(input.InputProps{Id: "field-responsive"}),
+	)},
+}
+
+// FieldWrap renders the field in a field group, as a form uses it. The
+// group is the container that a responsive field measures.
+func FieldWrap(n gx.Node) gx.Node {
+	return FieldGroup(FieldGroupProps{Children: n})
 }
 ```
 
@@ -171,18 +229,74 @@ const (
 	Label  Variant = "label"
 )
 
-var legendClass = gx.Enum[Variant]{
-	Legend: "text-base",
-	Label:  "text-sm",
+// variant returns the data-variant value; a zero value is Legend. The
+// legend size and the gap below it follow this attribute.
+func (p FieldLegendProps) variant() string {
+	if p.Variant == "" {
+		return string(Legend)
+	}
+	return string(p.Variant)
 }
 
-// legendClass returns the classes of one legend variant; a zero value is
-// Legend.
-func (p FieldLegendProps) legendClass() string {
-	if p.Variant == "" {
-		return legendClass[Legend]
+// Orientation is the direction of the label and the control of a field.
+type Orientation string
+
+// The orientations of field.Field. Responsive is vertical in a narrow
+// field group and horizontal in a wide one.
+const (
+	Vertical   Orientation = "vertical"
+	Horizontal Orientation = "horizontal"
+	Responsive Orientation = "responsive"
+)
+
+var orientationClass = gx.Enum[Orientation]{
+	Vertical:   "flex-col [&>*]:w-full [&>.sr-only]:w-auto",
+	Horizontal: "flex-row items-center [&>[data-slot=field-label]]:flex-auto has-[>[data-slot=field-content]]:items-start has-[>[data-slot=field-content]]:[&>:is([role=checkbox],[role=radio],input[type=checkbox],input[type=radio])]:mt-px",
+	Responsive: "flex-col @md/field-group:flex-row @md/field-group:items-center [&>*]:w-full @md/field-group:[&>*]:w-auto [&>.sr-only]:w-auto @md/field-group:[&>[data-slot=field-label]]:flex-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:has-[>[data-slot=field-content]]:[&>:is([role=checkbox],[role=radio],input[type=checkbox],input[type=radio])]:mt-px",
+}
+
+// orientation returns the data-orientation value; a zero value is Vertical.
+func (p FieldProps) orientation() string {
+	if p.Orientation == "" {
+		return string(Vertical)
 	}
-	return legendClass[p.Variant]
+	return string(p.Orientation)
+}
+
+// attrs returns the state attributes of one field, then the caller's. The
+// field and its label read data-invalid and data-disabled.
+func (p FieldProps) attrs() gx.Attrs {
+	var a gx.Attrs
+	if p.Invalid {
+		a = append(a, gx.Attr{Key: "data-invalid", Value: "true"})
+	}
+	if p.Disabled {
+		a = append(a, gx.Attr{Key: "data-disabled", Value: "true"})
+	}
+	return append(a, p.Attrs...)
+}
+
+// attrs returns the for attribute when the label names a control, then the
+// caller's attributes.
+func (p FieldLabelProps) attrs() gx.Attrs {
+	if p.For == "" {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "for", Value: p.For}}, p.Attrs...)
+}
+
+// messages returns the distinct, non-empty errors in their first order.
+func (p FieldErrorProps) messages() []string {
+	seen := make(map[string]bool, len(p.Errors))
+	out := make([]string, 0, len(p.Errors))
+	for _, message := range p.Errors {
+		if message == "" || seen[message] {
+			continue
+		}
+		seen[message] = true
+		out = append(out, message)
+	}
+	return out
 }
 ```
 
@@ -199,15 +313,34 @@ package field
 
 import "github.com/alternayte/gx"
 
-var FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{"Error": {Children: gx.Text("This field is required.")}}
+var FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{
+	"Error": {Children: gx.Text("This field is required.")},
+	"One":   {Errors: []string{"Enter a valid email address.", "Enter a valid email address."}},
+	"List":  {Errors: []string{"Use 12 characters or more.", "Use one number."}},
+}
 ```
 
 ```go title="ui/field/FieldGroup.fixtures.go"
 package field
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/input"
+)
 
-var FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{"Empty": {}}
+var FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{
+	"TwoFields": {Children: gx.Frag(
+		Field(FieldProps{Children: gx.Frag(
+			FieldLabel(FieldLabelProps{For: "group-name", Children: gx.Text("Name")}),
+			input.Input(input.InputProps{Id: "group-name"}),
+		)}),
+		FieldSeparator(FieldSeparatorProps{}),
+		Field(FieldProps{Children: gx.Frag(
+			FieldLabel(FieldLabelProps{For: "group-email", Children: gx.Text("Email")}),
+			input.Input(input.InputProps{Id: "group-email", Type: "email"}),
+		)}),
+	)},
+}
 ```
 
 ```go title="ui/field/FieldLabel.fixtures.go"
@@ -223,31 +356,145 @@ package field
 
 import "github.com/alternayte/gx"
 
-var FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{"Legend": {Children: gx.Text("Address")}}
+var FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{
+	"Legend": {Children: gx.Text("Address")},
+	"Label":  {Variant: Label, Children: gx.Text("Address")},
+}
+
+// FieldLegendWrap renders the legend in a field set, where a legend
+// belongs.
+func FieldLegendWrap(n gx.Node) gx.Node {
+	return FieldSet(FieldSetProps{Children: n})
+}
 ```
 
 ```go title="ui/field/FieldSet.fixtures.go"
 package field
 
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/input"
+)
+
+var FieldSetFixtures = gx.Fixtures[FieldSetProps]{
+	"Address": {Children: gx.Frag(
+		FieldLegend(FieldLegendProps{Children: gx.Text("Address")}),
+		FieldDescription(FieldDescriptionProps{Children: gx.Text("We send the invoice to this address.")}),
+		FieldGroup(FieldGroupProps{Children: gx.Frag(
+			Field(FieldProps{Children: gx.Frag(
+				FieldLabel(FieldLabelProps{For: "set-street", Children: gx.Text("Street")}),
+				input.Input(input.InputProps{Id: "set-street"}),
+			)}),
+			Field(FieldProps{Children: gx.Frag(
+				FieldLabel(FieldLabelProps{For: "set-city", Children: gx.Text("City")}),
+				input.Input(input.InputProps{Id: "set-city"}),
+			)}),
+		)}),
+	)},
+}
+```
+
+```gx title="ui/field/FieldContent.gx"
+package field
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="field-content" class={gx.Cx("group/field-content flex flex-1 flex-col gap-1.5 leading-snug", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```go title="ui/field/FieldContent.fixtures.go"
+package field
+
 import "github.com/alternayte/gx"
 
-var FieldSetFixtures = gx.Fixtures[FieldSetProps]{"Empty": {}}
+var FieldContentFixtures = gx.Fixtures[FieldContentProps]{
+	"TitleAndDescription": {Children: gx.Frag(
+		FieldTitle(FieldTitleProps{Children: gx.Text("Product news")}),
+		FieldDescription(FieldDescriptionProps{Children: gx.Text("One message each month.")}),
+	)},
+}
+```
+
+```gx title="ui/field/FieldTitle.gx"
+package field
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="field-label" class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```go title="ui/field/FieldTitle.fixtures.go"
+package field
+
+import "github.com/alternayte/gx"
+
+var FieldTitleFixtures = gx.Fixtures[FieldTitleProps]{"Title": {Children: gx.Text("Product news")}}
+```
+
+```gx title="ui/field/FieldSeparator.gx"
+package field
+
+props {
+  Class    string   = ""
+  Children gx.Node  = nil
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="field-separator" data-content={p.Children != nil} class={gx.Cx("relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2", p.Class)} {...p.Attrs}>
+  <div data-slot="separator" role="none" data-orientation="horizontal" class="absolute inset-0 top-1/2 h-px w-full shrink-0 bg-border"></div>
+  if p.Children != nil {
+    <span data-slot="field-separator-content" class="relative mx-auto block w-fit bg-background px-2 text-muted-foreground">{p.Children}</span>
+  }
+</div>
+```
+
+```go title="ui/field/FieldSeparator.fixtures.go"
+package field
+
+import "github.com/alternayte/gx"
+
+var FieldSeparatorFixtures = gx.Fixtures[FieldSeparatorProps]{
+	"Line": {},
+	"Text": {Children: gx.Text("Or continue with")},
+}
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--destructive`, `--muted-foreground`.
+The theme must define these tokens: `--destructive`, `--muted-foreground`, `--border`, `--background`, `--primary`.
 
 ## Usage
 
 ```gx
-<field.Field>
-  <field.FieldLabel for="email">Email</field.FieldLabel>
-  <input.Input name="email" type="email" />
-  <field.FieldDescription>We never share your email.</field.FieldDescription>
-</field.Field>
+<field.FieldGroup>
+  <field.Field>
+    <field.FieldLabel for="email">Email</field.FieldLabel>
+    <input.Input id="email" name="email" type="email" />
+    <field.FieldDescription>We never share your email.</field.FieldDescription>
+  </field.Field>
+  <field.FieldSeparator>Or</field.FieldSeparator>
+  <field.Field orientation={field.Horizontal}>
+    <field.FieldContent>
+      <field.FieldTitle>Product news</field.FieldTitle>
+      <field.FieldDescription>One message each month.</field.FieldDescription>
+    </field.FieldContent>
+    <switches.Switch name="news" label="Product news" />
+  </field.Field>
+</field.FieldGroup>
 ```
+
+`Field` has three orientations: `Vertical`, `Horizontal` and `Responsive`. A responsive field is horizontal when its `FieldGroup` is wide.
+`FieldSet` and `FieldLegend` group related fields. `FieldGroup` sets the space between fields.
+`FieldError` shows its children, or the distinct messages of `Errors`. It renders nothing when it has no message.
 
 For a generated form field with rules and errors, use the `gx.FormField` control.
 
@@ -259,7 +506,8 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 
 ```gx
 <field.Field>
-  <field.FieldLabel for="email">Email</field.FieldLabel>
+  <field.FieldLabel for="field-email">Email</field.FieldLabel>
+  <input.Input id="field-email" type="email" placeholder="you@example.com" />
   <field.FieldDescription>We never share your email.</field.FieldDescription>
 </field.Field>
 ```
@@ -272,9 +520,69 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 
 ```gx
 <field.Field invalid>
-  <field.FieldLabel for="email">Email</field.FieldLabel>
+  <field.FieldLabel for="field-invalid">Email</field.FieldLabel>
+  <input.Input id="field-invalid" type="email" value="ada@" attrs={gx.Attrs{{Key: "aria-invalid", Value: "true"}}} />
   <field.FieldError>Enter a valid email address.</field.FieldError>
 </field.Field>
+```
+
+</Example>
+
+### Field: Disabled
+
+<Example item="field" name="field-disabled" label="Field: Field: Disabled">
+
+```gx
+<field.Field disabled>
+  <field.FieldLabel for="field-disabled">Email</field.FieldLabel>
+  <input.Input id="field-disabled" type="email" attrs={gx.Attrs{gx.Bool("disabled", true)}} />
+</field.Field>
+```
+
+</Example>
+
+### Field: Horizontal
+
+<Example item="field" name="field-horizontal" label="Field: Field: Horizontal">
+
+```gx
+<field.Field orientation={field.Horizontal}>
+  <field.FieldContent>
+    <field.FieldTitle>Product news</field.FieldTitle>
+    <field.FieldDescription>One message each month.</field.FieldDescription>
+  </field.FieldContent>
+  {gx.El("input", gx.Attrs{
+    {Key: "type", Value: "checkbox"},
+    {Key: "aria-label", Value: "Product news"},
+    {Key: "class", Value: "size-4 accent-primary"},
+  })}
+</field.Field>
+```
+
+</Example>
+
+### Field: Responsive
+
+<Example item="field" name="field-responsive" label="Field: Field: Responsive">
+
+```gx
+<field.Field orientation={field.Responsive}>
+  <field.FieldLabel for="field-responsive">Name</field.FieldLabel>
+  <input.Input id="field-responsive" />
+</field.Field>
+```
+
+</Example>
+
+### FieldContent: Title and description
+
+<Example item="field" name="field-content-title-and-description" label="Field: FieldContent: Title and description">
+
+```gx
+<field.FieldContent>
+  <field.FieldTitle>Product news</field.FieldTitle>
+  <field.FieldDescription>One message each month.</field.FieldDescription>
+</field.FieldContent>
 ```
 
 </Example>
@@ -299,12 +607,42 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 
 </Example>
 
-### FieldGroup: Empty
+### FieldError: One
 
-<Example item="field" name="field-group-empty" label="Field: FieldGroup: Empty">
+<Example item="field" name="field-error-one" label="Field: FieldError: One">
 
 ```gx
-<field.FieldGroup children={gx.Frag()} />
+<field.FieldError errors={[]string{"Enter a valid email address.", "Enter a valid email address."}} />
+```
+
+</Example>
+
+### FieldError: List
+
+<Example item="field" name="field-error-list" label="Field: FieldError: List">
+
+```gx
+<field.FieldError errors={[]string{"Use 12 characters or more.", "Use one number."}} />
+```
+
+</Example>
+
+### FieldGroup: Two fields
+
+<Example item="field" name="field-group-two-fields" label="Field: FieldGroup: Two fields">
+
+```gx
+<field.FieldGroup>
+  <field.Field>
+    <field.FieldLabel for="group-name">Name</field.FieldLabel>
+    <input.Input id="group-name" />
+  </field.Field>
+  <field.FieldSeparator />
+  <field.Field>
+    <field.FieldLabel for="group-email">Email</field.FieldLabel>
+    <input.Input id="group-email" type="email" />
+  </field.Field>
+</field.FieldGroup>
 ```
 
 </Example>
@@ -329,12 +667,65 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 
 </Example>
 
-### FieldSet: Empty
+### FieldLegend: Label
 
-<Example item="field" name="field-set-empty" label="Field: FieldSet: Empty">
+<Example item="field" name="field-legend-label" label="Field: FieldLegend: Label">
 
 ```gx
-<field.FieldSet children={gx.Frag()} />
+<field.FieldLegend variant={field.Label}>Address</field.FieldLegend>
+```
+
+</Example>
+
+### FieldSeparator: Line
+
+<Example item="field" name="field-separator-line" label="Field: FieldSeparator: Line">
+
+```gx
+<field.FieldSeparator />
+```
+
+</Example>
+
+### FieldSeparator: Text
+
+<Example item="field" name="field-separator-text" label="Field: FieldSeparator: Text">
+
+```gx
+<field.FieldSeparator>Or continue with</field.FieldSeparator>
+```
+
+</Example>
+
+### FieldSet: Address
+
+<Example item="field" name="field-set-address" label="Field: FieldSet: Address">
+
+```gx
+<field.FieldSet>
+  <field.FieldLegend>Address</field.FieldLegend>
+  <field.FieldDescription>We send the invoice to this address.</field.FieldDescription>
+  <field.FieldGroup>
+    <field.Field>
+      <field.FieldLabel for="set-street">Street</field.FieldLabel>
+      <input.Input id="set-street" />
+    </field.Field>
+    <field.Field>
+      <field.FieldLabel for="set-city">City</field.FieldLabel>
+      <input.Input id="set-city" />
+    </field.Field>
+  </field.FieldGroup>
+</field.FieldSet>
+```
+
+</Example>
+
+### FieldTitle: Title
+
+<Example item="field" name="field-title-title" label="Field: FieldTitle: Title">
+
+```gx
+<field.FieldTitle>Product news</field.FieldTitle>
 ```
 
 </Example>
@@ -344,8 +735,9 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Set `Invalid` on the field when a rule fails.
+- Set `Invalid` on the field when a rule fails. Set `aria-invalid` on the control too.
 - Put the error in `FieldError` below the control.
+- Set `Disabled` on the field when its control is disabled.
 
 </docs.Card>
 <docs.Card title="Don't">

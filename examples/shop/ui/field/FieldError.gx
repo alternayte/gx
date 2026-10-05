@@ -1,9 +1,24 @@
 package field
 
 props {
+  Errors   []string = nil
   Class    string   = ""
-  Children gx.Node
+  Children gx.Node  = nil
   Attrs    gx.Attrs = nil
 }
 
-<p role="alert" class={gx.Cx("text-sm font-normal text-destructive", p.Class)} {...p.Attrs}>{p.Children}</p>
+if p.Children != nil || len(p.messages()) > 0 {
+  <div role="alert" data-slot="field-error" class={gx.Cx("text-sm font-normal text-destructive", p.Class)} {...p.Attrs}>
+    if p.Children != nil {
+      {p.Children}
+    } else if len(p.messages()) == 1 {
+      {p.messages()[0]}
+    } else {
+      <ul class="ml-4 flex list-disc flex-col gap-1">
+        for _, message := range p.messages() {
+          <li>{message}</li>
+        }
+      </ul>
+    }
+  </div>
+}

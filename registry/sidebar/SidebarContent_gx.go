@@ -15,8 +15,8 @@ type SidebarContentProps struct {
 func SidebarContent(p SidebarContentProps) gx.Node {
 	var _b gx.Builder
 //line SidebarContent.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex-1 overflow-y-auto p-2", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarContent.gx:9:90
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-h-0 flex-1 flex-col gap-2 overflow-auto", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "content", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line SidebarContent.gx:9:163
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

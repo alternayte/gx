@@ -6,10 +6,10 @@ group: "Components"
 item: "spinner"
 ---
 
-<Example item="spinner" name="spinner-small" label="Spinner: Small">
+<Example item="spinner" name="spinner-default" label="Spinner: Default">
 
 ```gx
-<spinner.Spinner size={spinner.Sm} />
+<spinner.Spinner />
 ```
 
 </Example>
@@ -42,21 +42,14 @@ Copy each file to its path in the app. Change each import of a registry package 
 package spinner
 
 props {
-  Label string   = ""
-  Size  Size     = Md
+  Label string   = "Loading"
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<span role="status" class={gx.Cx("inline-flex items-center gap-2 text-muted-foreground", p.Class)} {...p.Attrs}>
-  <svg class={gx.Cx("animate-spin", p.sizeClass())} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"></path>
-  </svg>
-  if p.Label != "" {
-    <span>{p.Label}</span>
-  }
-</span>
+<svg role="status" aria-label={p.label()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class={gx.Cx("size-4 animate-spin", p.Class)} {...p.Attrs}>
+  <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+</svg>
 ```
 
 ```go title="ui/spinner/Spinner.fixtures.go"
@@ -65,71 +58,48 @@ package spinner
 import "github.com/alternayte/gx"
 
 var SpinnerFixtures = gx.Fixtures[SpinnerProps]{
-	"Small": {Size: Sm},
-	"Label": {Label: "Loading"},
-	"Large": {Size: Lg, Label: "Loading"},
+	"Default": {},
+	"Large":   {Class: "size-8"},
+	"Muted":   {Class: "size-6 text-muted-foreground", Label: "Saving"},
 }
 ```
 
 ```go title="ui/spinner/styles.go"
 package spinner
 
-import "github.com/alternayte/gx"
-
-// Size is the diameter of a spinner.
-type Size string
-
-// The sizes of spinner.Spinner.
-const (
-	Sm Size = "sm"
-	Md Size = "md"
-	Lg Size = "lg"
-)
-
-var sizeClass = gx.Enum[Size]{
-	Sm: "size-4",
-	Md: "size-5",
-	Lg: "size-8",
-}
-
-// sizeClass returns the classes of one spinner size; a zero value is Md.
-func (p SpinnerProps) sizeClass() string {
-	if p.Size == "" {
-		return sizeClass[Md]
+// label returns the accessible name; a zero value is Loading.
+func (p SpinnerProps) label() string {
+	if p.Label == "" {
+		return "Loading"
 	}
-	return sizeClass[p.Size]
+	return p.Label
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--muted-foreground`.
-
 ## Usage
 
+An indicator for work in progress.
+
 ```gx
-<spinner.Spinner label="Loading" />
+<spinner.Spinner />
+<spinner.Spinner class="size-6 text-muted-foreground" label="Saving" />
+<button.Button attrs={gx.Attrs{gx.Bool("disabled", true)}}><spinner.Spinner />Saving</button.Button>
 ```
+
+The spinner is the loader icon with a rotation. Set the size and the colour with `Class`.
+`Label` is the name a screen reader announces. The default is `Loading`.
 
 ## Examples
 
-### Small
+### Default
 
-<Example item="spinner" name="spinner-small" label="Spinner: Small">
-
-```gx
-<spinner.Spinner size={spinner.Sm} />
-```
-
-</Example>
-
-### Label
-
-<Example item="spinner" name="spinner-label" label="Spinner: Label">
+<Example item="spinner" name="spinner-default" label="Spinner: Default">
 
 ```gx
-<spinner.Spinner label="Loading" />
+<spinner.Spinner />
 ```
 
 </Example>
@@ -139,7 +109,17 @@ The theme must define these tokens: `--muted-foreground`.
 <Example item="spinner" name="spinner-large" label="Spinner: Large">
 
 ```gx
-<spinner.Spinner size={spinner.Lg} label="Loading" />
+<spinner.Spinner class="size-8" />
+```
+
+</Example>
+
+### Muted
+
+<Example item="spinner" name="spinner-muted" label="Spinner: Muted">
+
+```gx
+<spinner.Spinner class="size-6 text-muted-foreground" label="Saving" />
 ```
 
 </Example>
@@ -149,14 +129,14 @@ The theme must define these tokens: `--muted-foreground`.
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Add a label when the wait is longer than a moment.
-- Keep the spinner near the content it replaces.
+- Show the spinner next to the text of the action that is in progress.
+- Change `Label` when the work is not a load.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not use a spinner for a known duration. Use a progress bar.
-- Do not show more than one spinner for one wait.
+- Do not show a spinner for a wait that has a known length. Use a progress bar.
+- Do not block the whole page with a spinner.
 
 </docs.Card>
 </docs.CardGrid>

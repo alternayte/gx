@@ -1,10 +1,12 @@
 package field
 
 props {
-  Invalid  bool     = false
-  Class    string   = ""
-  Children gx.Node
-  Attrs    gx.Attrs = nil
+  Orientation Orientation = Vertical
+  Invalid     bool        = false
+  Disabled    bool        = false
+  Class       string      = ""
+  Children    gx.Node
+  Attrs       gx.Attrs    = nil
 }
 
-<div data-invalid={p.Invalid} class={gx.Cx("group/field flex w-full flex-col gap-2 data-[invalid=true]:text-destructive", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" data-slot="field" data-orientation={p.orientation()} class={gx.Cx("group/field flex w-full gap-3 data-[invalid=true]:text-destructive", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}>{p.Children}</div>

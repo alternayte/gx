@@ -5,4 +5,4 @@ props {
   Attrs gx.Attrs = nil
 }
 
-<div class={gx.Cx("animate-pulse rounded-md bg-muted", p.Class)} {...p.Attrs}></div>
+<div data-slot="skeleton" class={gx.Cx("animate-pulse rounded-md bg-accent", p.Class)} {...p.Attrs}></div>

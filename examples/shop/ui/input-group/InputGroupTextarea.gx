@@ -1,0 +1,14 @@
+package inputgroup
+
+import "github.com/alternayte/gx/examples/shop/ui/textarea"
+
+props {
+  Id          string   = ""
+  Name        string   = ""
+  Value       string   = ""
+  Placeholder string   = ""
+  Class       string   = ""
+  Attrs       gx.Attrs = nil
+}
+
+<textarea name={p.Name} placeholder={p.Placeholder} data-slot="input-group-control" class={gx.Cx(textarea.Control, "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class)} {...p.attrs()}>{p.Value}</textarea>

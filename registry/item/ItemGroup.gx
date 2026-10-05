@@ -1,0 +1,9 @@
+package item
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="item-group" class={gx.Cx("group/item-group flex flex-col", p.Class)} {...p.Attrs}>{p.Children}</div>

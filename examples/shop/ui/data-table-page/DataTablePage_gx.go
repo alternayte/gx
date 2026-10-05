@@ -62,7 +62,7 @@ func DataTablePage(p DataTablePageProps) gx.Node {
 //line DataTablePage.gx:29:9
 	_b1.Add(gx.Text("\n  "))
 //line DataTablePage.gx:30:3
-	_b1.Add(card.Card(card.CardProps{Title: "", Description: "", Footer: nil, Class: "", Children: p.Table, Attrs: nil}))
+	_b1.Add(card.Card(card.CardProps{Title: "", Description: "", Action: nil, Footer: nil, Class: "", Children: p.Table, Attrs: nil}))
 //line DataTablePage.gx:32:15
 	_b1.Add(gx.Text("\n  "))
 //line DataTablePage.gx:33:3

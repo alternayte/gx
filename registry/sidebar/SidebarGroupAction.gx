@@ -1,0 +1,10 @@
+package sidebar
+
+props {
+  Label    string
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" aria-label={p.Label} data-slot="sidebar-group-action" data-sidebar="group-action" class={gx.Cx("absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden", p.Class)} {...p.Attrs}>{p.Children}</button>

@@ -4,6 +4,7 @@ package pagination
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/icons"
 )
 
 type PaginationEllipsisProps struct {
@@ -13,9 +14,9 @@ type PaginationEllipsisProps struct {
 
 func PaginationEllipsis(p PaginationEllipsisProps) gx.Node {
 	var _b gx.Builder
-//line PaginationEllipsis.gx:8:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex size-9 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, gx.Text("…")), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("More pages")), gx.Text("\n"))))
-//line PaginationEllipsis.gx:11:8
+//line PaginationEllipsis.gx:10:1
+	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex size-9 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination-ellipsis", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), icons.Ellipsis(icons.EllipsisProps{Label: "", Class: "size-4"}), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("More pages")), gx.Text("\n"))))
+//line PaginationEllipsis.gx:13:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -31,6 +31,7 @@ The command writes these files.
 | --- | --- |
 | `Label.gx` | `ui/label/Label.gx` |
 | `Label.fixtures.go` | `ui/label/Label.fixtures.go` |
+| `styles.go` | `ui/label/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -47,7 +48,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<label for={p.For} class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class)} {...p.Attrs}>{p.Children}</label>
+<label data-slot="label" class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class)} {...p.attrs()}>{p.Children}</label>
 ```
 
 ```go title="ui/label/Label.fixtures.go"
@@ -60,6 +61,21 @@ var LabelFixtures = gx.Fixtures[LabelProps]{
 }
 ```
 
+```go title="ui/label/styles.go"
+package label
+
+import "github.com/alternayte/gx"
+
+// attrs returns the for attribute when the label names a control, then the
+// caller's attributes.
+func (p LabelProps) attrs() gx.Attrs {
+	if p.For == "" {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "for", Value: p.For}}, p.Attrs...)
+}
+```
+
 </docs.TabItem>
 </docs.Tabs>
 
@@ -69,6 +85,8 @@ var LabelFixtures = gx.Fixtures[LabelProps]{
 <label.Label for="email">Email</label.Label>
 <input id="email" name="email" type="email" />
 ```
+
+The label dims when its control is a disabled `peer`, or when a parent `group` has `data-disabled="true"`.
 
 ## Examples
 

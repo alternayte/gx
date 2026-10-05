@@ -15,8 +15,8 @@ type PaginationItemProps struct {
 func PaginationItem(p PaginationItemProps) gx.Node {
 	var _b gx.Builder
 //line PaginationItem.gx:9:1
-	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PaginationItem.gx:9:51
+	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line PaginationItem.gx:9:79
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

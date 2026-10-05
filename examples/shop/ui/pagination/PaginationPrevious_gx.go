@@ -4,6 +4,8 @@ package pagination
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/button"
+	"github.com/alternayte/gx/examples/shop/ui/icons"
 )
 
 type PaginationPreviousProps struct {
@@ -14,9 +16,9 @@ type PaginationPreviousProps struct {
 
 func PaginationPrevious(p PaginationPreviousProps) gx.Node {
 	var _b gx.Builder
-//line PaginationPrevious.gx:9:1
-	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: Text, Class: p.Class, Children: gx.El("span", nil, gx.Text("Previous")), Attrs: p.attrs()}))
-//line PaginationPrevious.gx:9:115
+//line PaginationPrevious.gx:14:1
+	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pl-2.5", p.Class), Children: gx.Frag(icons.ChevronLeft(icons.ChevronLeftProps{Label: "", Class: ""}), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "hidden sm:block", Kind: gx.AttrText}}, gx.Text("Previous"))), Attrs: p.attrs()}))
+//line PaginationPrevious.gx:17:18
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

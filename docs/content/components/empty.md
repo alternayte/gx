@@ -11,11 +11,11 @@ item: "empty"
 ```gx
 <empty.Empty>
   <empty.EmptyHeader>
-    <empty.EmptyMedia variant={empty.Icon}>+</empty.EmptyMedia>
+    <empty.EmptyMedia variant={empty.Icon}><icons.Info /></empty.EmptyMedia>
     <empty.EmptyTitle>No projects</empty.EmptyTitle>
     <empty.EmptyDescription>Create your first project to start.</empty.EmptyDescription>
   </empty.EmptyHeader>
-  <empty.EmptyContent>New project</empty.EmptyContent>
+  <empty.EmptyContent><button.Button>New project</button.Button></empty.EmptyContent>
 </empty.Empty>
 ```
 
@@ -31,6 +31,8 @@ Run the command in the app module.
 ```sh frame="terminal" title="Terminal"
 gx add empty
 ```
+
+The command also installs [`button`](/components/button/) and [`icons`](/components/icons/).
 
 The command writes these files.
 
@@ -53,6 +55,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`button`](/components/button/) and [`icons`](/components/icons/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/empty/Empty.gx"
@@ -64,7 +68,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border border-dashed border-border p-6 text-center md:p-12", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty" class={gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center [text-wrap:balance] md:p-12", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyHeader.gx"
@@ -76,7 +80,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex max-w-sm flex-col items-center gap-2 text-center", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty-header" class={gx.Cx("flex max-w-sm flex-col items-center gap-2 text-center", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyTitle.gx"
@@ -88,7 +92,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("text-lg font-medium tracking-tight", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty-title" class={gx.Cx("text-lg font-medium tracking-tight", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyDescription.gx"
@@ -100,7 +104,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<p class={gx.Cx("text-sm text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</p>
+<div data-slot="empty-description" class={gx.Cx("text-sm leading-relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyContent.gx"
@@ -112,7 +116,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty-content" class={gx.Cx("flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyMedia.gx"
@@ -125,23 +129,31 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div data-variant={p.Variant} class={gx.Cx("flex shrink-0 items-center justify-center", p.variantClass(), p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty-icon" data-variant={p.variant()} class={gx.Cx("mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0", variantClass[Variant(p.variant())], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```go title="ui/empty/Empty.fixtures.go"
 package empty
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
 
 var EmptyFixtures = gx.Fixtures[EmptyProps]{
 	"Full": {Children: gx.Frag(
 		EmptyHeader(EmptyHeaderProps{Children: gx.Frag(
-			EmptyMedia(EmptyMediaProps{Variant: Icon, Children: gx.Text("+")}),
+			EmptyMedia(EmptyMediaProps{Variant: Icon, Children: icons.Info(icons.InfoProps{})}),
 			EmptyTitle(EmptyTitleProps{Children: gx.Text("No projects")}),
 			EmptyDescription(EmptyDescriptionProps{Children: gx.Text("Create your first project to start.")}),
 		)}),
-		EmptyContent(EmptyContentProps{Children: gx.Text("New project")}),
+		EmptyContent(EmptyContentProps{Children: button.Button(button.ButtonProps{Children: gx.Text("New project")})}),
 	)},
+	"Outline": {Class: "border", Children: EmptyHeader(EmptyHeaderProps{Children: gx.Frag(
+		EmptyTitle(EmptyTitleProps{Children: gx.Text("No results")}),
+		EmptyDescription(EmptyDescriptionProps{Children: gx.Text("Change the filter and search again.")}),
+	)})},
 }
 ```
 
@@ -160,17 +172,16 @@ const (
 )
 
 var variantClass = gx.Enum[Variant]{
-	Default: "",
-	Icon:    "flex size-10 items-center justify-center rounded-lg bg-muted text-foreground [&>svg]:size-5",
+	Default: "bg-transparent",
+	Icon:    "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6",
 }
 
-// variantClass returns the classes of one media variant; a zero value is
-// Default.
-func (p EmptyMediaProps) variantClass() string {
+// variant returns the data-variant value; a zero value is Default.
+func (p EmptyMediaProps) variant() string {
 	if p.Variant == "" {
-		return variantClass[Default]
+		return string(Default)
 	}
-	return variantClass[p.Variant]
+	return string(p.Variant)
 }
 ```
 
@@ -201,9 +212,15 @@ var EmptyHeaderFixtures = gx.Fixtures[EmptyHeaderProps]{"Empty": {}}
 ```go title="ui/empty/EmptyMedia.fixtures.go"
 package empty
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
 
-var EmptyMediaFixtures = gx.Fixtures[EmptyMediaProps]{"Icon": {Variant: Icon, Children: gx.Text("+")}}
+var EmptyMediaFixtures = gx.Fixtures[EmptyMediaProps]{
+	"Icon":    {Variant: Icon, Children: icons.Info(icons.InfoProps{})},
+	"Default": {Children: icons.Info(icons.InfoProps{Class: "size-8"})},
+}
 ```
 
 ```go title="ui/empty/EmptyTitle.fixtures.go"
@@ -217,21 +234,27 @@ var EmptyTitleFixtures = gx.Fixtures[EmptyTitleProps]{"Title": {Children: gx.Tex
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`, `--primary`, `--foreground`.
+The theme must define these tokens: `--muted`, `--muted-foreground`, `--foreground`, `--primary`.
 
 ## Usage
+
+A placeholder for a view with no data.
 
 ```gx
 <empty.Empty>
   <empty.EmptyHeader>
+    <empty.EmptyMedia variant={empty.Icon}><icons.Info /></empty.EmptyMedia>
     <empty.EmptyTitle>No projects</empty.EmptyTitle>
     <empty.EmptyDescription>Create your first project to start.</empty.EmptyDescription>
   </empty.EmptyHeader>
   <empty.EmptyContent>
-    <a href={projects.New{}}>New project</a>
+    <button.Button>New project</button.Button>
   </empty.EmptyContent>
 </empty.Empty>
 ```
+
+The empty state has no visible border. Add `class="border"` for a dashed outline.
+`EmptyMedia` with the `Icon` variant draws a tile behind the icon.
 
 ## Examples
 
@@ -242,11 +265,26 @@ The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`,
 ```gx
 <empty.Empty>
   <empty.EmptyHeader>
-    <empty.EmptyMedia variant={empty.Icon}>+</empty.EmptyMedia>
+    <empty.EmptyMedia variant={empty.Icon}><icons.Info /></empty.EmptyMedia>
     <empty.EmptyTitle>No projects</empty.EmptyTitle>
     <empty.EmptyDescription>Create your first project to start.</empty.EmptyDescription>
   </empty.EmptyHeader>
-  <empty.EmptyContent>New project</empty.EmptyContent>
+  <empty.EmptyContent><button.Button>New project</button.Button></empty.EmptyContent>
+</empty.Empty>
+```
+
+</Example>
+
+### Empty: Outline
+
+<Example item="empty" name="empty-outline" label="Empty: Empty: Outline">
+
+```gx
+<empty.Empty class="border">
+  <empty.EmptyHeader>
+    <empty.EmptyTitle>No results</empty.EmptyTitle>
+    <empty.EmptyDescription>Change the filter and search again.</empty.EmptyDescription>
+  </empty.EmptyHeader>
 </empty.Empty>
 ```
 
@@ -287,7 +325,17 @@ The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`,
 <Example item="empty" name="empty-media-icon" label="Empty: EmptyMedia: Icon">
 
 ```gx
-<empty.EmptyMedia variant={empty.Icon}>+</empty.EmptyMedia>
+<empty.EmptyMedia variant={empty.Icon}><icons.Info /></empty.EmptyMedia>
+```
+
+</Example>
+
+### EmptyMedia: Default
+
+<Example item="empty" name="empty-media-default" label="Empty: EmptyMedia: Default">
+
+```gx
+<empty.EmptyMedia><icons.Info class="size-8" /></empty.EmptyMedia>
 ```
 
 </Example>
@@ -307,14 +355,14 @@ The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`,
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Explain why the area is empty.
-- Offer the next action in `EmptyContent`.
+- Say what is missing in `EmptyTitle`.
+- Put the action that fixes the state in `EmptyContent`.
 
 </docs.Card>
 <docs.Card title="Don't">
 
 - Do not use an empty state for an error. Use an alert.
-- Do not hide the primary action of the page.
+- Do not put more than two actions in `EmptyContent`.
 
 </docs.Card>
 </docs.CardGrid>

@@ -5,13 +5,17 @@ A multi-line text control.
 ## Usage
 
 ```gx
-<textarea.Textarea name="note" rows={6} placeholder="Tell us more." />
+<textarea.Textarea name="note" placeholder="Tell us more." />
 ```
+
+The textarea grows with its content. It starts at two lines.
+`Rows` sets the height only in a browser without `field-sizing`.
+Set `aria-invalid="true"` through `Attrs` to show the error border.
 
 ## Do
 
 - Use a textarea for a message longer than one line.
-- Set `Rows` to the expected size.
+- Set a `max-h-` class when a long text must scroll.
 
 ## Don't
 

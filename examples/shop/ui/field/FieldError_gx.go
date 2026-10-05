@@ -7,6 +7,7 @@ import (
 )
 
 type FieldErrorProps struct {
+	Errors   []string
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -14,9 +15,61 @@ type FieldErrorProps struct {
 
 func FieldError(p FieldErrorProps) gx.Node {
 	var _b gx.Builder
-//line FieldError.gx:9:1
-	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm font-normal text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldError.gx:9:109
+//line FieldError.gx:10:1
+	if p.Children != nil || len(p.messages()) > 0 {
+//line FieldError.gx:10:48
+		_b.Add(gx.Text("\n  "))
+//line FieldError.gx:11:3
+		var _b1 gx.Builder
+//line FieldError.gx:11:121
+		_b1.Add(gx.Text("\n    "))
+//line FieldError.gx:12:5
+		if p.Children != nil {
+//line FieldError.gx:12:27
+			_b1.Add(gx.Text("\n      "))
+//line FieldError.gx:13:7
+			_b1.Add(p.Children)
+//line FieldError.gx:13:19
+			_b1.Add(gx.Text("\n    "))
+		} else {
+//line FieldError.gx:14:12
+			if len(p.messages()) == 1 {
+//line FieldError.gx:14:39
+				_b1.Add(gx.Text("\n      "))
+//line FieldError.gx:15:7
+				_b1.Add(gx.Text(p.messages()[0]))
+//line FieldError.gx:15:24
+				_b1.Add(gx.Text("\n    "))
+			} else {
+//line FieldError.gx:16:13
+				_b1.Add(gx.Text("\n      "))
+//line FieldError.gx:17:7
+				var _b2 gx.Builder
+//line FieldError.gx:17:54
+				_b2.Add(gx.Text("\n        "))
+//line FieldError.gx:18:9
+				for _, message := range p.messages() {
+//line FieldError.gx:18:47
+					_b2.Add(gx.Text("\n          "))
+//line FieldError.gx:19:11
+					_b2.Add(gx.El("li", nil, gx.Text(message)))
+//line FieldError.gx:19:29
+					_b2.Add(gx.Text("\n        "))
+				}
+//line FieldError.gx:20:10
+				_b2.Add(gx.Text("\n      "))
+				_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "ml-4 flex list-disc flex-col gap-1", Kind: gx.AttrText}}, _b2.Node()))
+//line FieldError.gx:21:12
+				_b1.Add(gx.Text("\n    "))
+			}
+		}
+//line FieldError.gx:22:6
+		_b1.Add(gx.Text("\n  "))
+		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm font-normal text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field-error", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line FieldError.gx:23:9
+		_b.Add(gx.Text("\n"))
+	}
+//line FieldError.gx:24:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

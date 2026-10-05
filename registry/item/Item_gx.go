@@ -7,6 +7,9 @@ import (
 )
 
 type ItemProps struct {
+	Variant  Variant
+	Size     Size
+	Href     gx.URL
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -14,9 +17,23 @@ type ItemProps struct {
 
 func Item(p ItemProps) gx.Node {
 	var _b gx.Builder
-//line Item.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Item.gx:9:314
+//line Item.gx:12:1
+	if p.Href != "" {
+//line Item.gx:12:18
+		_b.Add(gx.Text("\n  "))
+//line Item.gx:13:3
+		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Item.gx:13:132
+		_b.Add(gx.Text("\n"))
+	} else {
+//line Item.gx:14:9
+		_b.Add(gx.Text("\n  "))
+//line Item.gx:15:3
+		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Item.gx:15:122
+		_b.Add(gx.Text("\n"))
+	}
+//line Item.gx:16:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

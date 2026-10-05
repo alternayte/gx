@@ -1,9 +1,10 @@
 package item
 
 props {
+  Variant  Media    = MediaDefault
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex shrink-0 items-center justify-center gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-media" data-variant={p.variant()} class={gx.Cx("flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none", mediaClass[Media(p.variant())], p.Class)} {...p.Attrs}>{p.Children}</div>

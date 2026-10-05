@@ -1,0 +1,9 @@
+package avatar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="avatar-group" class={gx.Cx("group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background", p.Class)} {...p.Attrs}>{p.Children}</div>

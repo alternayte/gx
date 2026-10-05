@@ -25,6 +25,8 @@ Run the command in the app module.
 gx add badge
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -36,6 +38,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`icons`](/components/icons/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/badge/Badge.gx"
@@ -43,24 +47,36 @@ package badge
 
 props {
   Variant  Variant  = Default
+  Href     gx.URL   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<span class={p.class()} {...p.Attrs}>{p.Children}</span>
+if p.Href != "" {
+  <a href={p.Href} data-slot="badge" data-variant={p.variant()} class={p.class()} {...p.Attrs}>{p.Children}</a>
+} else {
+  <span data-slot="badge" data-variant={p.variant()} class={p.class()} {...p.Attrs}>{p.Children}</span>
+}
 ```
 
 ```go title="ui/badge/Badge.fixtures.go"
 package badge
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
 
 var BadgeFixtures = gx.Fixtures[BadgeProps]{
 	"Default":     {Children: gx.Text("Badge")},
 	"Secondary":   {Variant: Secondary, Children: gx.Text("Secondary")},
 	"Destructive": {Variant: Destructive, Children: gx.Text("Destructive")},
 	"Outline":     {Variant: Outline, Children: gx.Text("Outline")},
+	"Ghost":       {Variant: Ghost, Children: gx.Text("Ghost")},
+	"Link":        {Variant: Link, Href: gx.URL("/docs"), Children: gx.Text("Link")},
+	"WithIcon":    {Variant: Secondary, Children: gx.Frag(icons.CircleCheck(icons.CircleCheckProps{}), gx.Text("Verified"))},
+	"Anchor":      {Href: gx.URL("/docs"), Children: gx.Text("Docs")},
 }
 ```
 
@@ -78,37 +94,50 @@ const (
 	Secondary   Variant = "secondary"
 	Destructive Variant = "destructive"
 	Outline     Variant = "outline"
+	Ghost       Variant = "ghost"
+	Link        Variant = "link"
 )
 
 var variantClass = gx.Enum[Variant]{
-	Default:     "border-transparent bg-primary text-primary-foreground",
-	Secondary:   "border-transparent bg-secondary text-secondary-foreground",
-	Destructive: "border-transparent bg-destructive text-destructive-foreground",
-	Outline:     "text-foreground",
+	Default:     "bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+	Secondary:   "bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+	Destructive: "bg-destructive text-white focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 [a&]:hover:bg-destructive/90",
+	Outline:     "border-border text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+	Ghost:       "[a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+	Link:        "text-primary underline-offset-4 [a&]:hover:underline",
+}
+
+// variant returns the data-variant value; a zero value is Default.
+func (p BadgeProps) variant() string {
+	if p.Variant == "" {
+		return string(Default)
+	}
+	return string(p.Variant)
 }
 
 // class returns the classes of one badge.
 func (p BadgeProps) class() string {
-	const base = "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [&>svg]:pointer-events-none [&>svg]:size-3"
-	variant := p.Variant
-	if variant == "" {
-		variant = Default
-	}
-	return gx.Cx(base, variantClass[variant], p.Class)
+	const base = "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3"
+	return gx.Cx(base, variantClass[Variant(p.variant())], p.Class)
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--destructive`, `--ring`.
+The theme must define these tokens: `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--destructive`, `--accent`, `--accent-foreground`, `--border`, `--foreground`, `--ring`.
 
 ## Usage
 
 ```gx
 <badge.Badge>New</badge.Badge>
-<badge.Badge variant={badge.Destructive}>Failed</badge.Badge>
+<badge.Badge variant={badge.Outline}>Draft</badge.Badge>
+<badge.Badge variant={badge.Secondary}><icons.CircleCheck />Verified</badge.Badge>
+<badge.Badge variant={badge.Link} href={docsRoute}>Docs</badge.Badge>
 ```
+
+The variants are `Default`, `Secondary`, `Destructive`, `Outline`, `Ghost` and `Link`.
+Set `Href` to render the badge as a link. A link badge has a hover state.
 
 ## Examples
 
@@ -152,19 +181,62 @@ The theme must define these tokens: `--primary`, `--primary-foreground`, `--seco
 
 </Example>
 
+### Ghost
+
+<Example item="badge" name="badge-ghost" label="Badge: Ghost">
+
+```gx
+<badge.Badge variant={badge.Ghost}>Ghost</badge.Badge>
+```
+
+</Example>
+
+### Link
+
+<Example item="badge" name="badge-link" label="Badge: Link">
+
+```gx
+<badge.Badge variant={badge.Link} href={gx.URL("/docs")}>Link</badge.Badge>
+```
+
+</Example>
+
+### With icon
+
+<Example item="badge" name="badge-with-icon" label="Badge: With icon">
+
+```gx
+<badge.Badge variant={badge.Secondary}>
+  <icons.CircleCheck />
+  Verified
+</badge.Badge>
+```
+
+</Example>
+
+### Anchor
+
+<Example item="badge" name="badge-anchor" label="Badge: Anchor">
+
+```gx
+<badge.Badge href={gx.URL("/docs")}>Docs</badge.Badge>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Keep the label short, one or two words.
-- Use `Destructive` only for a failed or dangerous state.
+- Keep the text to one or two words.
+- Use `Destructive` only for an error or a removal.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not use a badge as a button.
-- Do not put a long sentence in a badge.
+- Do not use a badge as a button. Use a button.
+- Do not use colour as the only signal. Write the status in the text.
 
 </docs.Card>
 </docs.CardGrid>
@@ -173,4 +245,5 @@ The theme must define these tokens: `--primary`, `--primary-foreground`, `--seco
 
 | Key | Action |
 | --- | --- |
-| None | The component is static. |
+| Tab | Moves focus to a link badge. |
+| Enter | Follows a link badge. |

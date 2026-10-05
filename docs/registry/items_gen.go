@@ -86,6 +86,9 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "alert-default", Title: "Default", Component: "Alert", Fixtures: []string{"Alert/Default"}, Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["Default"]) }},
 			{Name: "alert-destructive", Title: "Destructive", Component: "Alert", Fixtures: []string{"Alert/Destructive"}, Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["Destructive"]) }},
+			{Name: "alert-icon", Title: "Icon", Component: "Alert", Fixtures: []string{"Alert/Icon"}, Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["Icon"]) }},
+			{Name: "alert-destructive-icon", Title: "Destructive icon", Component: "Alert", Fixtures: []string{"Alert/DestructiveIcon"}, Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["DestructiveIcon"]) }},
+			{Name: "alert-title-only", Title: "Title only", Component: "Alert", Fixtures: []string{"Alert/TitleOnly"}, Node: func() gx.Node { return alert.Alert(alert.AlertFixtures["TitleOnly"]) }},
 		},
 	},
 	{
@@ -123,9 +126,17 @@ var Items = []Item{
 		Group:       "Components",
 		Description: "A user image with a fallback.",
 		Examples: []Example{
-			{Name: "avatar-fallback", Title: "Fallback", Component: "Avatar", Fixtures: []string{"Avatar/Fallback"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Fallback"]) }},
-			{Name: "avatar-small", Title: "Small", Component: "Avatar", Fixtures: []string{"Avatar/Small"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Small"]) }},
-			{Name: "avatar-large", Title: "Large", Component: "Avatar", Fixtures: []string{"Avatar/Large"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Large"]) }},
+			{Name: "avatar-fallback", Title: "Avatar: Fallback", Component: "Avatar", Fixtures: []string{"Avatar/Fallback"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Fallback"]) }},
+			{Name: "avatar-small", Title: "Avatar: Small", Component: "Avatar", Fixtures: []string{"Avatar/Small"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Small"]) }},
+			{Name: "avatar-large", Title: "Avatar: Large", Component: "Avatar", Fixtures: []string{"Avatar/Large"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Large"]) }},
+			{Name: "avatar-badge", Title: "Avatar: Badge", Component: "Avatar", Fixtures: []string{"Avatar/Badge"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Badge"]) }},
+			{Name: "avatar-large-badge", Title: "Avatar: Large badge", Component: "Avatar", Fixtures: []string{"Avatar/LargeBadge"}, Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["LargeBadge"]) }},
+			{Name: "avatar-badge-default", Title: "AvatarBadge: Default", Component: "AvatarBadge", Fixtures: []string{"AvatarBadge/Default"}, Node: func() gx.Node {
+				return avatar.AvatarBadgeWrap(avatar.AvatarBadge(avatar.AvatarBadgeFixtures["Default"]))
+			}},
+			{Name: "avatar-group-three", Title: "AvatarGroup: Three", Component: "AvatarGroup", Fixtures: []string{"AvatarGroup/Three"}, Node: func() gx.Node { return avatar.AvatarGroup(avatar.AvatarGroupFixtures["Three"]) }},
+			{Name: "avatar-group-small", Title: "AvatarGroup: Small", Component: "AvatarGroup", Fixtures: []string{"AvatarGroup/Small"}, Node: func() gx.Node { return avatar.AvatarGroup(avatar.AvatarGroupFixtures["Small"]) }},
+			{Name: "avatar-group-count-count", Title: "AvatarGroupCount: Count", Component: "AvatarGroupCount", Fixtures: []string{"AvatarGroupCount/Count"}, Node: func() gx.Node { return avatar.AvatarGroupCount(avatar.AvatarGroupCountFixtures["Count"]) }},
 		},
 	},
 	{
@@ -138,6 +149,10 @@ var Items = []Item{
 			{Name: "badge-secondary", Title: "Secondary", Component: "Badge", Fixtures: []string{"Badge/Secondary"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Secondary"]) }},
 			{Name: "badge-destructive", Title: "Destructive", Component: "Badge", Fixtures: []string{"Badge/Destructive"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Destructive"]) }},
 			{Name: "badge-outline", Title: "Outline", Component: "Badge", Fixtures: []string{"Badge/Outline"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Outline"]) }},
+			{Name: "badge-ghost", Title: "Ghost", Component: "Badge", Fixtures: []string{"Badge/Ghost"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Ghost"]) }},
+			{Name: "badge-link", Title: "Link", Component: "Badge", Fixtures: []string{"Badge/Link"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Link"]) }},
+			{Name: "badge-with-icon", Title: "With icon", Component: "Badge", Fixtures: []string{"Badge/WithIcon"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["WithIcon"]) }},
+			{Name: "badge-anchor", Title: "Anchor", Component: "Badge", Fixtures: []string{"Badge/Anchor"}, Node: func() gx.Node { return badge.Badge(badge.BadgeFixtures["Anchor"]) }},
 		},
 	},
 	{
@@ -148,6 +163,7 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "breadcrumb-trail", Title: "Breadcrumb: Trail", Component: "Breadcrumb", Fixtures: []string{"Breadcrumb/Trail"}, Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["Trail"]) }},
 			{Name: "breadcrumb-ellipsis", Title: "Breadcrumb: Ellipsis", Component: "Breadcrumb", Fixtures: []string{"Breadcrumb/Ellipsis"}, Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["Ellipsis"]) }},
+			{Name: "breadcrumb-custom-separator", Title: "Breadcrumb: Custom separator", Component: "Breadcrumb", Fixtures: []string{"Breadcrumb/CustomSeparator"}, Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["CustomSeparator"]) }},
 			{Name: "breadcrumb-ellipsis-default", Title: "BreadcrumbEllipsis: Default", Component: "BreadcrumbEllipsis", Fixtures: []string{"BreadcrumbEllipsis/Default"}, Node: func() gx.Node { return breadcrumb.BreadcrumbEllipsis(breadcrumb.BreadcrumbEllipsisFixtures["Default"]) }},
 			{Name: "breadcrumb-item-empty", Title: "BreadcrumbItem: Empty", Component: "BreadcrumbItem", Fixtures: []string{"BreadcrumbItem/Empty"}, Node: func() gx.Node {
 				return breadcrumb.BreadcrumbItemWrap(breadcrumb.BreadcrumbItem(breadcrumb.BreadcrumbItemFixtures["Empty"]))
@@ -156,7 +172,7 @@ var Items = []Item{
 			{Name: "breadcrumb-list-empty", Title: "BreadcrumbList: Empty", Component: "BreadcrumbList", Fixtures: []string{"BreadcrumbList/Empty"}, Node: func() gx.Node { return breadcrumb.BreadcrumbList(breadcrumb.BreadcrumbListFixtures["Empty"]) }},
 			{Name: "breadcrumb-page-page", Title: "BreadcrumbPage: Page", Component: "BreadcrumbPage", Fixtures: []string{"BreadcrumbPage/Page"}, Node: func() gx.Node { return breadcrumb.BreadcrumbPage(breadcrumb.BreadcrumbPageFixtures["Page"]) }},
 			{Name: "breadcrumb-separator-default", Title: "BreadcrumbSeparator: Default", Component: "BreadcrumbSeparator", Fixtures: []string{"BreadcrumbSeparator/Default"}, Node: func() gx.Node {
-				return breadcrumb.BreadcrumbSeparator(breadcrumb.BreadcrumbSeparatorFixtures["Default"])
+				return breadcrumb.BreadcrumbSeparatorWrap(breadcrumb.BreadcrumbSeparator(breadcrumb.BreadcrumbSeparatorFixtures["Default"]))
 			}},
 		},
 	},
@@ -172,9 +188,14 @@ var Items = []Item{
 			{Name: "button-outline", Title: "Outline", Component: "Button", Fixtures: []string{"Button/Outline"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Outline"]) }},
 			{Name: "button-ghost", Title: "Ghost", Component: "Button", Fixtures: []string{"Button/Ghost"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Ghost"]) }},
 			{Name: "button-link", Title: "Link", Component: "Button", Fixtures: []string{"Button/Link"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Link"]) }},
+			{Name: "button-extra-small", Title: "Extra small", Component: "Button", Fixtures: []string{"Button/ExtraSmall"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["ExtraSmall"]) }},
 			{Name: "button-small", Title: "Small", Component: "Button", Fixtures: []string{"Button/Small"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Small"]) }},
 			{Name: "button-large", Title: "Large", Component: "Button", Fixtures: []string{"Button/Large"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Large"]) }},
+			{Name: "button-with-icon", Title: "With icon", Component: "Button", Fixtures: []string{"Button/WithIcon"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["WithIcon"]) }},
 			{Name: "button-icon", Title: "Icon", Component: "Button", Fixtures: []string{"Button/Icon"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Icon"]) }},
+			{Name: "button-icon-xs", Title: "Icon xs", Component: "Button", Fixtures: []string{"Button/IconXs"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["IconXs"]) }},
+			{Name: "button-icon-sm", Title: "Icon sm", Component: "Button", Fixtures: []string{"Button/IconSm"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["IconSm"]) }},
+			{Name: "button-icon-lg", Title: "Icon lg", Component: "Button", Fixtures: []string{"Button/IconLg"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["IconLg"]) }},
 			{Name: "button-disabled", Title: "Disabled", Component: "Button", Fixtures: []string{"Button/Disabled"}, Node: func() gx.Node { return button.Button(button.ButtonFixtures["Disabled"]) }},
 		},
 	},
@@ -184,7 +205,15 @@ var Items = []Item{
 		Group:       "Components",
 		Description: "A row of related buttons.",
 		Examples: []Example{
-			{Name: "button-group-three", Title: "Three", Component: "ButtonGroup", Fixtures: []string{"ButtonGroup/Three"}, Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Three"]) }},
+			{Name: "button-group-three", Title: "ButtonGroup: Three", Component: "ButtonGroup", Fixtures: []string{"ButtonGroup/Three"}, Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Three"]) }},
+			{Name: "button-group-vertical", Title: "ButtonGroup: Vertical", Component: "ButtonGroup", Fixtures: []string{"ButtonGroup/Vertical"}, Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Vertical"]) }},
+			{Name: "button-group-separator", Title: "ButtonGroup: Separator", Component: "ButtonGroup", Fixtures: []string{"ButtonGroup/Separator"}, Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Separator"]) }},
+			{Name: "button-group-text", Title: "ButtonGroup: Text", Component: "ButtonGroup", Fixtures: []string{"ButtonGroup/Text"}, Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Text"]) }},
+			{Name: "button-group-nested", Title: "ButtonGroup: Nested", Component: "ButtonGroup", Fixtures: []string{"ButtonGroup/Nested"}, Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Nested"]) }},
+			{Name: "button-group-separator-default", Title: "ButtonGroupSeparator: Default", Component: "ButtonGroupSeparator", Fixtures: []string{"ButtonGroupSeparator/Default"}, Node: func() gx.Node {
+				return buttongroup.ButtonGroupSeparatorWrap(buttongroup.ButtonGroupSeparator(buttongroup.ButtonGroupSeparatorFixtures["Default"]))
+			}},
+			{Name: "button-group-text-text", Title: "ButtonGroupText: Text", Component: "ButtonGroupText", Fixtures: []string{"ButtonGroupText/Text"}, Node: func() gx.Node { return buttongroup.ButtonGroupText(buttongroup.ButtonGroupTextFixtures["Text"]) }},
 		},
 	},
 	{
@@ -196,6 +225,7 @@ var Items = []Item{
 			{Name: "card-full", Title: "Full", Component: "Card", Fixtures: []string{"Card/Full"}, Node: func() gx.Node { return card.Card(card.CardFixtures["Full"]) }},
 			{Name: "card-title-only", Title: "Title only", Component: "Card", Fixtures: []string{"Card/TitleOnly"}, Node: func() gx.Node { return card.Card(card.CardFixtures["TitleOnly"]) }},
 			{Name: "card-body-only", Title: "Body only", Component: "Card", Fixtures: []string{"Card/BodyOnly"}, Node: func() gx.Node { return card.Card(card.CardFixtures["BodyOnly"]) }},
+			{Name: "card-action", Title: "Action", Component: "Card", Fixtures: []string{"Card/Action"}, Node: func() gx.Node { return card.Card(card.CardFixtures["Action"]) }},
 		},
 	},
 	{
@@ -448,10 +478,12 @@ var Items = []Item{
 		Description: "A placeholder for an empty result.",
 		Examples: []Example{
 			{Name: "empty-full", Title: "Empty: Full", Component: "Empty", Fixtures: []string{"Empty/Full"}, Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Full"]) }},
+			{Name: "empty-outline", Title: "Empty: Outline", Component: "Empty", Fixtures: []string{"Empty/Outline"}, Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Outline"]) }},
 			{Name: "empty-content-empty", Title: "EmptyContent: Empty", Component: "EmptyContent", Fixtures: []string{"EmptyContent/Empty"}, Node: func() gx.Node { return empty.EmptyContent(empty.EmptyContentFixtures["Empty"]) }},
 			{Name: "empty-description-text", Title: "EmptyDescription: Text", Component: "EmptyDescription", Fixtures: []string{"EmptyDescription/Text"}, Node: func() gx.Node { return empty.EmptyDescription(empty.EmptyDescriptionFixtures["Text"]) }},
 			{Name: "empty-header-empty", Title: "EmptyHeader: Empty", Component: "EmptyHeader", Fixtures: []string{"EmptyHeader/Empty"}, Node: func() gx.Node { return empty.EmptyHeader(empty.EmptyHeaderFixtures["Empty"]) }},
 			{Name: "empty-media-icon", Title: "EmptyMedia: Icon", Component: "EmptyMedia", Fixtures: []string{"EmptyMedia/Icon"}, Node: func() gx.Node { return empty.EmptyMedia(empty.EmptyMediaFixtures["Icon"]) }},
+			{Name: "empty-media-default", Title: "EmptyMedia: Default", Component: "EmptyMedia", Fixtures: []string{"EmptyMedia/Default"}, Node: func() gx.Node { return empty.EmptyMedia(empty.EmptyMediaFixtures["Default"]) }},
 			{Name: "empty-title-title", Title: "EmptyTitle: Title", Component: "EmptyTitle", Fixtures: []string{"EmptyTitle/Title"}, Node: func() gx.Node { return empty.EmptyTitle(empty.EmptyTitleFixtures["Title"]) }},
 		},
 	},
@@ -461,14 +493,24 @@ var Items = []Item{
 		Group:       "Components",
 		Description: "Layout and labels for one form field.",
 		Examples: []Example{
-			{Name: "field-label-and-input", Title: "Field: Label and input", Component: "Field", Fixtures: []string{"Field/LabelAndInput"}, Node: func() gx.Node { return field.Field(field.FieldFixtures["LabelAndInput"]) }},
-			{Name: "field-invalid", Title: "Field: Invalid", Component: "Field", Fixtures: []string{"Field/Invalid"}, Node: func() gx.Node { return field.Field(field.FieldFixtures["Invalid"]) }},
+			{Name: "field-label-and-input", Title: "Field: Label and input", Component: "Field", Fixtures: []string{"Field/LabelAndInput"}, Node: func() gx.Node { return field.FieldWrap(field.Field(field.FieldFixtures["LabelAndInput"])) }},
+			{Name: "field-invalid", Title: "Field: Invalid", Component: "Field", Fixtures: []string{"Field/Invalid"}, Node: func() gx.Node { return field.FieldWrap(field.Field(field.FieldFixtures["Invalid"])) }},
+			{Name: "field-disabled", Title: "Field: Disabled", Component: "Field", Fixtures: []string{"Field/Disabled"}, Node: func() gx.Node { return field.FieldWrap(field.Field(field.FieldFixtures["Disabled"])) }},
+			{Name: "field-horizontal", Title: "Field: Horizontal", Component: "Field", Fixtures: []string{"Field/Horizontal"}, Node: func() gx.Node { return field.FieldWrap(field.Field(field.FieldFixtures["Horizontal"])) }},
+			{Name: "field-responsive", Title: "Field: Responsive", Component: "Field", Fixtures: []string{"Field/Responsive"}, Node: func() gx.Node { return field.FieldWrap(field.Field(field.FieldFixtures["Responsive"])) }},
+			{Name: "field-content-title-and-description", Title: "FieldContent: Title and description", Component: "FieldContent", Fixtures: []string{"FieldContent/TitleAndDescription"}, Node: func() gx.Node { return field.FieldContent(field.FieldContentFixtures["TitleAndDescription"]) }},
 			{Name: "field-description-text", Title: "FieldDescription: Text", Component: "FieldDescription", Fixtures: []string{"FieldDescription/Text"}, Node: func() gx.Node { return field.FieldDescription(field.FieldDescriptionFixtures["Text"]) }},
 			{Name: "field-error-error", Title: "FieldError: Error", Component: "FieldError", Fixtures: []string{"FieldError/Error"}, Node: func() gx.Node { return field.FieldError(field.FieldErrorFixtures["Error"]) }},
-			{Name: "field-group-empty", Title: "FieldGroup: Empty", Component: "FieldGroup", Fixtures: []string{"FieldGroup/Empty"}, Node: func() gx.Node { return field.FieldGroup(field.FieldGroupFixtures["Empty"]) }},
+			{Name: "field-error-one", Title: "FieldError: One", Component: "FieldError", Fixtures: []string{"FieldError/One"}, Node: func() gx.Node { return field.FieldError(field.FieldErrorFixtures["One"]) }},
+			{Name: "field-error-list", Title: "FieldError: List", Component: "FieldError", Fixtures: []string{"FieldError/List"}, Node: func() gx.Node { return field.FieldError(field.FieldErrorFixtures["List"]) }},
+			{Name: "field-group-two-fields", Title: "FieldGroup: Two fields", Component: "FieldGroup", Fixtures: []string{"FieldGroup/TwoFields"}, Node: func() gx.Node { return field.FieldGroup(field.FieldGroupFixtures["TwoFields"]) }},
 			{Name: "field-label-label", Title: "FieldLabel: Label", Component: "FieldLabel", Fixtures: []string{"FieldLabel/Label"}, Node: func() gx.Node { return field.FieldLabel(field.FieldLabelFixtures["Label"]) }},
-			{Name: "field-legend-legend", Title: "FieldLegend: Legend", Component: "FieldLegend", Fixtures: []string{"FieldLegend/Legend"}, Node: func() gx.Node { return field.FieldLegend(field.FieldLegendFixtures["Legend"]) }},
-			{Name: "field-set-empty", Title: "FieldSet: Empty", Component: "FieldSet", Fixtures: []string{"FieldSet/Empty"}, Node: func() gx.Node { return field.FieldSet(field.FieldSetFixtures["Empty"]) }},
+			{Name: "field-legend-legend", Title: "FieldLegend: Legend", Component: "FieldLegend", Fixtures: []string{"FieldLegend/Legend"}, Node: func() gx.Node { return field.FieldLegendWrap(field.FieldLegend(field.FieldLegendFixtures["Legend"])) }},
+			{Name: "field-legend-label", Title: "FieldLegend: Label", Component: "FieldLegend", Fixtures: []string{"FieldLegend/Label"}, Node: func() gx.Node { return field.FieldLegendWrap(field.FieldLegend(field.FieldLegendFixtures["Label"])) }},
+			{Name: "field-separator-line", Title: "FieldSeparator: Line", Component: "FieldSeparator", Fixtures: []string{"FieldSeparator/Line"}, Node: func() gx.Node { return field.FieldSeparator(field.FieldSeparatorFixtures["Line"]) }},
+			{Name: "field-separator-text", Title: "FieldSeparator: Text", Component: "FieldSeparator", Fixtures: []string{"FieldSeparator/Text"}, Node: func() gx.Node { return field.FieldSeparator(field.FieldSeparatorFixtures["Text"]) }},
+			{Name: "field-set-address", Title: "FieldSet: Address", Component: "FieldSet", Fixtures: []string{"FieldSet/Address"}, Node: func() gx.Node { return field.FieldSet(field.FieldSetFixtures["Address"]) }},
+			{Name: "field-title-title", Title: "FieldTitle: Title", Component: "FieldTitle", Fixtures: []string{"FieldTitle/Title"}, Node: func() gx.Node { return field.FieldTitle(field.FieldTitleFixtures["Title"]) }},
 		},
 	},
 	{
@@ -514,6 +556,7 @@ var Items = []Item{
 			{Name: "input-text", Title: "Text", Component: "Input", Fixtures: []string{"Input/Text"}, Node: func() gx.Node { return input.Input(input.InputFixtures["Text"]) }},
 			{Name: "input-filled", Title: "Filled", Component: "Input", Fixtures: []string{"Input/Filled"}, Node: func() gx.Node { return input.Input(input.InputFixtures["Filled"]) }},
 			{Name: "input-disabled", Title: "Disabled", Component: "Input", Fixtures: []string{"Input/Disabled"}, Node: func() gx.Node { return input.Input(input.InputFixtures["Disabled"]) }},
+			{Name: "input-invalid", Title: "Invalid", Component: "Input", Fixtures: []string{"Input/Invalid"}, Node: func() gx.Node { return input.Input(input.InputFixtures["Invalid"]) }},
 			{Name: "input-file", Title: "File", Component: "Input", Fixtures: []string{"Input/File"}, Node: func() gx.Node { return input.Input(input.InputFixtures["File"]) }},
 		},
 	},
@@ -525,9 +568,23 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "input-group-leading-text", Title: "InputGroup: Leading text", Component: "InputGroup", Fixtures: []string{"InputGroup/LeadingText"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["LeadingText"]) }},
 			{Name: "input-group-trailing-text", Title: "InputGroup: Trailing text", Component: "InputGroup", Fixtures: []string{"InputGroup/TrailingText"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["TrailingText"]) }},
+			{Name: "input-group-button", Title: "InputGroup: Button", Component: "InputGroup", Fixtures: []string{"InputGroup/Button"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["Button"]) }},
+			{Name: "input-group-icon-button", Title: "InputGroup: Icon button", Component: "InputGroup", Fixtures: []string{"InputGroup/IconButton"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["IconButton"]) }},
+			{Name: "input-group-invalid", Title: "InputGroup: Invalid", Component: "InputGroup", Fixtures: []string{"InputGroup/Invalid"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["Invalid"]) }},
+			{Name: "input-group-textarea", Title: "InputGroup: Textarea", Component: "InputGroup", Fixtures: []string{"InputGroup/Textarea"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["Textarea"]) }},
+			{Name: "input-group-block-start", Title: "InputGroup: Block start", Component: "InputGroup", Fixtures: []string{"InputGroup/BlockStart"}, Node: func() gx.Node { return inputgroup.InputGroup(inputgroup.InputGroupFixtures["BlockStart"]) }},
 			{Name: "input-group-addon-text", Title: "InputGroupAddon: Text", Component: "InputGroupAddon", Fixtures: []string{"InputGroupAddon/Text"}, Node: func() gx.Node { return inputgroup.InputGroupAddon(inputgroup.InputGroupAddonFixtures["Text"]) }},
-			{Name: "input-group-input-placeholder", Title: "InputGroupInput: Placeholder", Component: "InputGroupInput", Fixtures: []string{"InputGroupInput/Placeholder"}, Node: func() gx.Node { return inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"]) }},
+			{Name: "input-group-button-extra-small", Title: "InputGroupButton: Extra small", Component: "InputGroupButton", Fixtures: []string{"InputGroupButton/ExtraSmall"}, Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["ExtraSmall"]) }},
+			{Name: "input-group-button-small", Title: "InputGroupButton: Small", Component: "InputGroupButton", Fixtures: []string{"InputGroupButton/Small"}, Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["Small"]) }},
+			{Name: "input-group-button-icon-xs", Title: "InputGroupButton: Icon xs", Component: "InputGroupButton", Fixtures: []string{"InputGroupButton/IconXs"}, Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconXs"]) }},
+			{Name: "input-group-button-icon-sm", Title: "InputGroupButton: Icon sm", Component: "InputGroupButton", Fixtures: []string{"InputGroupButton/IconSm"}, Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconSm"]) }},
+			{Name: "input-group-input-placeholder", Title: "InputGroupInput: Placeholder", Component: "InputGroupInput", Fixtures: []string{"InputGroupInput/Placeholder"}, Node: func() gx.Node {
+				return inputgroup.InputGroupInputWrap(inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"]))
+			}},
 			{Name: "input-group-text-text", Title: "InputGroupText: Text", Component: "InputGroupText", Fixtures: []string{"InputGroupText/Text"}, Node: func() gx.Node { return inputgroup.InputGroupText(inputgroup.InputGroupTextFixtures["Text"]) }},
+			{Name: "input-group-textarea-placeholder", Title: "InputGroupTextarea: Placeholder", Component: "InputGroupTextarea", Fixtures: []string{"InputGroupTextarea/Placeholder"}, Node: func() gx.Node {
+				return inputgroup.InputGroupTextareaWrap(inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"]))
+			}},
 		},
 	},
 	{
@@ -537,12 +594,21 @@ var Items = []Item{
 		Description: "A row for one entry in a list.",
 		Examples: []Example{
 			{Name: "item-full", Title: "Item: Full", Component: "Item", Fixtures: []string{"Item/Full"}, Node: func() gx.Node { return item.Item(item.ItemFixtures["Full"]) }},
+			{Name: "item-default", Title: "Item: Default", Component: "Item", Fixtures: []string{"Item/Default"}, Node: func() gx.Node { return item.Item(item.ItemFixtures["Default"]) }},
+			{Name: "item-muted", Title: "Item: Muted", Component: "Item", Fixtures: []string{"Item/Muted"}, Node: func() gx.Node { return item.Item(item.ItemFixtures["Muted"]) }},
+			{Name: "item-small", Title: "Item: Small", Component: "Item", Fixtures: []string{"Item/Small"}, Node: func() gx.Node { return item.Item(item.ItemFixtures["Small"]) }},
+			{Name: "item-link", Title: "Item: Link", Component: "Item", Fixtures: []string{"Item/Link"}, Node: func() gx.Node { return item.Item(item.ItemFixtures["Link"]) }},
+			{Name: "item-header-and-footer", Title: "Item: Header and footer", Component: "Item", Fixtures: []string{"Item/HeaderAndFooter"}, Node: func() gx.Node { return item.Item(item.ItemFixtures["HeaderAndFooter"]) }},
 			{Name: "item-actions-empty", Title: "ItemActions: Empty", Component: "ItemActions", Fixtures: []string{"ItemActions/Empty"}, Node: func() gx.Node { return item.ItemActions(item.ItemActionsFixtures["Empty"]) }},
 			{Name: "item-content-empty", Title: "ItemContent: Empty", Component: "ItemContent", Fixtures: []string{"ItemContent/Empty"}, Node: func() gx.Node { return item.ItemContent(item.ItemContentFixtures["Empty"]) }},
 			{Name: "item-description-text", Title: "ItemDescription: Text", Component: "ItemDescription", Fixtures: []string{"ItemDescription/Text"}, Node: func() gx.Node { return item.ItemDescription(item.ItemDescriptionFixtures["Text"]) }},
 			{Name: "item-footer-empty", Title: "ItemFooter: Empty", Component: "ItemFooter", Fixtures: []string{"ItemFooter/Empty"}, Node: func() gx.Node { return item.ItemFooter(item.ItemFooterFixtures["Empty"]) }},
+			{Name: "item-group-separated", Title: "ItemGroup: Separated", Component: "ItemGroup", Fixtures: []string{"ItemGroup/Separated"}, Node: func() gx.Node { return item.ItemGroup(item.ItemGroupFixtures["Separated"]) }},
 			{Name: "item-header-empty", Title: "ItemHeader: Empty", Component: "ItemHeader", Fixtures: []string{"ItemHeader/Empty"}, Node: func() gx.Node { return item.ItemHeader(item.ItemHeaderFixtures["Empty"]) }},
-			{Name: "item-media-empty", Title: "ItemMedia: Empty", Component: "ItemMedia", Fixtures: []string{"ItemMedia/Empty"}, Node: func() gx.Node { return item.ItemMedia(item.ItemMediaFixtures["Empty"]) }},
+			{Name: "item-media-icon", Title: "ItemMedia: Icon", Component: "ItemMedia", Fixtures: []string{"ItemMedia/Icon"}, Node: func() gx.Node { return item.ItemMedia(item.ItemMediaFixtures["Icon"]) }},
+			{Name: "item-media-default", Title: "ItemMedia: Default", Component: "ItemMedia", Fixtures: []string{"ItemMedia/Default"}, Node: func() gx.Node { return item.ItemMedia(item.ItemMediaFixtures["Default"]) }},
+			{Name: "item-media-image", Title: "ItemMedia: Image", Component: "ItemMedia", Fixtures: []string{"ItemMedia/Image"}, Node: func() gx.Node { return item.ItemMedia(item.ItemMediaFixtures["Image"]) }},
+			{Name: "item-separator-default", Title: "ItemSeparator: Default", Component: "ItemSeparator", Fixtures: []string{"ItemSeparator/Default"}, Node: func() gx.Node { return item.ItemSeparator(item.ItemSeparatorFixtures["Default"]) }},
 			{Name: "item-title-title", Title: "ItemTitle: Title", Component: "ItemTitle", Fixtures: []string{"ItemTitle/Title"}, Node: func() gx.Node { return item.ItemTitle(item.ItemTitleFixtures["Title"]) }},
 		},
 	},
@@ -552,8 +618,9 @@ var Items = []Item{
 		Group:       "Components",
 		Description: "A key or key combination.",
 		Examples: []Example{
-			{Name: "kbd-key", Title: "Key", Component: "Kbd", Fixtures: []string{"Kbd/Key"}, Node: func() gx.Node { return kbd.Kbd(kbd.KbdFixtures["Key"]) }},
-			{Name: "kbd-combo", Title: "Combo", Component: "Kbd", Fixtures: []string{"Kbd/Combo"}, Node: func() gx.Node { return kbd.Kbd(kbd.KbdFixtures["Combo"]) }},
+			{Name: "kbd-key", Title: "Kbd: Key", Component: "Kbd", Fixtures: []string{"Kbd/Key"}, Node: func() gx.Node { return kbd.Kbd(kbd.KbdFixtures["Key"]) }},
+			{Name: "kbd-combo", Title: "Kbd: Combo", Component: "Kbd", Fixtures: []string{"Kbd/Combo"}, Node: func() gx.Node { return kbd.Kbd(kbd.KbdFixtures["Combo"]) }},
+			{Name: "kbd-group-shortcut", Title: "KbdGroup: Shortcut", Component: "KbdGroup", Fixtures: []string{"KbdGroup/Shortcut"}, Node: func() gx.Node { return kbd.KbdGroup(kbd.KbdGroupFixtures["Shortcut"]) }},
 		},
 	},
 	{
@@ -758,6 +825,7 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "separator-horizontal", Title: "Horizontal", Component: "Separator", Fixtures: []string{"Separator/Horizontal"}, Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Horizontal"]) }},
 			{Name: "separator-vertical", Title: "Vertical", Component: "Separator", Fixtures: []string{"Separator/Vertical"}, Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Vertical"]) }},
+			{Name: "separator-semantic", Title: "Semantic", Component: "Separator", Fixtures: []string{"Separator/Semantic"}, Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Semantic"]) }},
 		},
 	},
 	{
@@ -787,12 +855,74 @@ var Items = []Item{
 		Description: "A vertical panel for the app or docs navigation.",
 		Examples: []Example{
 			{Name: "sidebar-full", Title: "Sidebar: Full", Component: "Sidebar", Fixtures: []string{"Sidebar/Full"}, Node: func() gx.Node { return sidebar.Sidebar(sidebar.SidebarFixtures["Full"]) }},
+			{Name: "sidebar-right", Title: "Sidebar: Right", Component: "Sidebar", Fixtures: []string{"Sidebar/Right"}, Node: func() gx.Node { return sidebar.Sidebar(sidebar.SidebarFixtures["Right"]) }},
 			{Name: "sidebar-hidden", Title: "Sidebar: Hidden", Component: "Sidebar", Fixtures: []string{"Sidebar/Hidden"}, Node: func() gx.Node { return sidebar.Sidebar(sidebar.SidebarFixtures["Hidden"]) }},
 			{Name: "sidebar-content-empty", Title: "SidebarContent: Empty", Component: "SidebarContent", Fixtures: []string{"SidebarContent/Empty"}, Node: func() gx.Node { return sidebar.SidebarContent(sidebar.SidebarContentFixtures["Empty"]) }},
 			{Name: "sidebar-footer-empty", Title: "SidebarFooter: Empty", Component: "SidebarFooter", Fixtures: []string{"SidebarFooter/Empty"}, Node: func() gx.Node { return sidebar.SidebarFooter(sidebar.SidebarFooterFixtures["Empty"]) }},
-			{Name: "sidebar-group-group", Title: "SidebarGroup: Group", Component: "SidebarGroup", Fixtures: []string{"SidebarGroup/Group"}, Node: func() gx.Node { return sidebar.SidebarGroup(sidebar.SidebarGroupFixtures["Group"]) }},
+			{Name: "sidebar-group-labelled", Title: "SidebarGroup: Labelled", Component: "SidebarGroup", Fixtures: []string{"SidebarGroup/Labelled"}, Node: func() gx.Node { return sidebar.SidebarGroup(sidebar.SidebarGroupFixtures["Labelled"]) }},
+			{Name: "sidebar-group-action-add", Title: "SidebarGroupAction: Add", Component: "SidebarGroupAction", Fixtures: []string{"SidebarGroupAction/Add"}, Node: func() gx.Node {
+				return sidebar.SidebarGroupActionWrap(sidebar.SidebarGroupAction(sidebar.SidebarGroupActionFixtures["Add"]))
+			}},
+			{Name: "sidebar-group-content-empty", Title: "SidebarGroupContent: Empty", Component: "SidebarGroupContent", Fixtures: []string{"SidebarGroupContent/Empty"}, Node: func() gx.Node { return sidebar.SidebarGroupContent(sidebar.SidebarGroupContentFixtures["Empty"]) }},
+			{Name: "sidebar-group-label-label", Title: "SidebarGroupLabel: Label", Component: "SidebarGroupLabel", Fixtures: []string{"SidebarGroupLabel/Label"}, Node: func() gx.Node { return sidebar.SidebarGroupLabel(sidebar.SidebarGroupLabelFixtures["Label"]) }},
 			{Name: "sidebar-header-empty", Title: "SidebarHeader: Empty", Component: "SidebarHeader", Fixtures: []string{"SidebarHeader/Empty"}, Node: func() gx.Node { return sidebar.SidebarHeader(sidebar.SidebarHeaderFixtures["Empty"]) }},
-			{Name: "sidebar-item-item", Title: "SidebarItem: Item", Component: "SidebarItem", Fixtures: []string{"SidebarItem/Item"}, Node: func() gx.Node { return sidebar.SidebarItem(sidebar.SidebarItemFixtures["Item"]) }},
+			{Name: "sidebar-input-search", Title: "SidebarInput: Search", Component: "SidebarInput", Fixtures: []string{"SidebarInput/Search"}, Node: func() gx.Node { return sidebar.SidebarInput(sidebar.SidebarInputFixtures["Search"]) }},
+			{Name: "sidebar-inset-page", Title: "SidebarInset: Page", Component: "SidebarInset", Fixtures: []string{"SidebarInset/Page"}, Node: func() gx.Node { return sidebar.SidebarInset(sidebar.SidebarInsetFixtures["Page"]) }},
+			{Name: "sidebar-menu-nested", Title: "SidebarMenu: Nested", Component: "SidebarMenu", Fixtures: []string{"SidebarMenu/Nested"}, Node: func() gx.Node { return sidebar.SidebarMenu(sidebar.SidebarMenuFixtures["Nested"]) }},
+			{Name: "sidebar-menu-loading", Title: "SidebarMenu: Loading", Component: "SidebarMenu", Fixtures: []string{"SidebarMenu/Loading"}, Node: func() gx.Node { return sidebar.SidebarMenu(sidebar.SidebarMenuFixtures["Loading"]) }},
+			{Name: "sidebar-menu-action-add", Title: "SidebarMenuAction: Add", Component: "SidebarMenuAction", Fixtures: []string{"SidebarMenuAction/Add"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuActionWrap(sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Add"]))
+			}},
+			{Name: "sidebar-menu-action-hover", Title: "SidebarMenuAction: Hover", Component: "SidebarMenuAction", Fixtures: []string{"SidebarMenuAction/Hover"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuActionWrap(sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Hover"]))
+			}},
+			{Name: "sidebar-menu-badge-count", Title: "SidebarMenuBadge: Count", Component: "SidebarMenuBadge", Fixtures: []string{"SidebarMenuBadge/Count"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuBadgeWrap(sidebar.SidebarMenuBadge(sidebar.SidebarMenuBadgeFixtures["Count"]))
+			}},
+			{Name: "sidebar-menu-button-link", Title: "SidebarMenuButton: Link", Component: "SidebarMenuButton", Fixtures: []string{"SidebarMenuButton/Link"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Link"]))
+			}},
+			{Name: "sidebar-menu-button-active", Title: "SidebarMenuButton: Active", Component: "SidebarMenuButton", Fixtures: []string{"SidebarMenuButton/Active"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Active"]))
+			}},
+			{Name: "sidebar-menu-button-button", Title: "SidebarMenuButton: Button", Component: "SidebarMenuButton", Fixtures: []string{"SidebarMenuButton/Button"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Button"]))
+			}},
+			{Name: "sidebar-menu-button-outline", Title: "SidebarMenuButton: Outline", Component: "SidebarMenuButton", Fixtures: []string{"SidebarMenuButton/Outline"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Outline"]))
+			}},
+			{Name: "sidebar-menu-button-small", Title: "SidebarMenuButton: Small", Component: "SidebarMenuButton", Fixtures: []string{"SidebarMenuButton/Small"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Small"]))
+			}},
+			{Name: "sidebar-menu-button-large", Title: "SidebarMenuButton: Large", Component: "SidebarMenuButton", Fixtures: []string{"SidebarMenuButton/Large"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Large"]))
+			}},
+			{Name: "sidebar-menu-item-empty", Title: "SidebarMenuItem: Empty", Component: "SidebarMenuItem", Fixtures: []string{"SidebarMenuItem/Empty"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuItemWrap(sidebar.SidebarMenuItem(sidebar.SidebarMenuItemFixtures["Empty"]))
+			}},
+			{Name: "sidebar-menu-skeleton-text", Title: "SidebarMenuSkeleton: Text", Component: "SidebarMenuSkeleton", Fixtures: []string{"SidebarMenuSkeleton/Text"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSkeletonWrap(sidebar.SidebarMenuSkeleton(sidebar.SidebarMenuSkeletonFixtures["Text"]))
+			}},
+			{Name: "sidebar-menu-skeleton-icon", Title: "SidebarMenuSkeleton: Icon", Component: "SidebarMenuSkeleton", Fixtures: []string{"SidebarMenuSkeleton/Icon"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSkeletonWrap(sidebar.SidebarMenuSkeleton(sidebar.SidebarMenuSkeletonFixtures["Icon"]))
+			}},
+			{Name: "sidebar-menu-sub-two", Title: "SidebarMenuSub: Two", Component: "SidebarMenuSub", Fixtures: []string{"SidebarMenuSub/Two"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSubWrap(sidebar.SidebarMenuSub(sidebar.SidebarMenuSubFixtures["Two"]))
+			}},
+			{Name: "sidebar-menu-sub-button-link", Title: "SidebarMenuSubButton: Link", Component: "SidebarMenuSubButton", Fixtures: []string{"SidebarMenuSubButton/Link"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Link"]))
+			}},
+			{Name: "sidebar-menu-sub-button-active", Title: "SidebarMenuSubButton: Active", Component: "SidebarMenuSubButton", Fixtures: []string{"SidebarMenuSubButton/Active"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Active"]))
+			}},
+			{Name: "sidebar-menu-sub-button-small", Title: "SidebarMenuSubButton: Small", Component: "SidebarMenuSubButton", Fixtures: []string{"SidebarMenuSubButton/Small"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Small"]))
+			}},
+			{Name: "sidebar-menu-sub-item-empty", Title: "SidebarMenuSubItem: Empty", Component: "SidebarMenuSubItem", Fixtures: []string{"SidebarMenuSubItem/Empty"}, Node: func() gx.Node {
+				return sidebar.SidebarMenuSubItemWrap(sidebar.SidebarMenuSubItem(sidebar.SidebarMenuSubItemFixtures["Empty"]))
+			}},
+			{Name: "sidebar-separator-default", Title: "SidebarSeparator: Default", Component: "SidebarSeparator", Fixtures: []string{"SidebarSeparator/Default"}, Node: func() gx.Node { return sidebar.SidebarSeparator(sidebar.SidebarSeparatorFixtures["Default"]) }},
+			{Name: "sidebar-trigger-default", Title: "SidebarTrigger: Default", Component: "SidebarTrigger", Fixtures: []string{"SidebarTrigger/Default"}, Node: func() gx.Node { return sidebar.SidebarTrigger(sidebar.SidebarTriggerFixtures["Default"]) }},
 		},
 	},
 	{
@@ -833,9 +963,9 @@ var Items = []Item{
 		Group:       "Components",
 		Description: "An indicator for an unknown wait.",
 		Examples: []Example{
-			{Name: "spinner-small", Title: "Small", Component: "Spinner", Fixtures: []string{"Spinner/Small"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Small"]) }},
-			{Name: "spinner-label", Title: "Label", Component: "Spinner", Fixtures: []string{"Spinner/Label"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Label"]) }},
+			{Name: "spinner-default", Title: "Default", Component: "Spinner", Fixtures: []string{"Spinner/Default"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Default"]) }},
 			{Name: "spinner-large", Title: "Large", Component: "Spinner", Fixtures: []string{"Spinner/Large"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Large"]) }},
+			{Name: "spinner-muted", Title: "Muted", Component: "Spinner", Fixtures: []string{"Spinner/Muted"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Muted"]) }},
 		},
 	},
 	{
@@ -856,6 +986,8 @@ var Items = []Item{
 		Description: "A data table built from composable parts.",
 		Examples: []Example{
 			{Name: "table-simple", Title: "Table: Simple", Component: "Table", Fixtures: []string{"Table/Simple"}, Node: func() gx.Node { return table.Table(table.TableFixtures["Simple"]) }},
+			{Name: "table-footer", Title: "Table: Footer", Component: "Table", Fixtures: []string{"Table/Footer"}, Node: func() gx.Node { return table.Table(table.TableFixtures["Footer"]) }},
+			{Name: "table-selected", Title: "Table: Selected", Component: "Table", Fixtures: []string{"Table/Selected"}, Node: func() gx.Node { return table.Table(table.TableFixtures["Selected"]) }},
 			{Name: "table-body-empty", Title: "TableBody: Empty", Component: "TableBody", Fixtures: []string{"TableBody/Empty"}, Node: func() gx.Node { return table.TableBody(table.TableBodyFixtures["Empty"]) }},
 			{Name: "table-caption-caption", Title: "TableCaption: Caption", Component: "TableCaption", Fixtures: []string{"TableCaption/Caption"}, Node: func() gx.Node { return table.TableCaption(table.TableCaptionFixtures["Caption"]) }},
 			{Name: "table-cell-cell", Title: "TableCell: Cell", Component: "TableCell", Fixtures: []string{"TableCell/Cell"}, Node: func() gx.Node { return table.TableCell(table.TableCellFixtures["Cell"]) }},
@@ -884,6 +1016,8 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "textarea-placeholder", Title: "Placeholder", Component: "Textarea", Fixtures: []string{"Textarea/Placeholder"}, Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Placeholder"]) }},
 			{Name: "textarea-filled", Title: "Filled", Component: "Textarea", Fixtures: []string{"Textarea/Filled"}, Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Filled"]) }},
+			{Name: "textarea-rows", Title: "Rows", Component: "Textarea", Fixtures: []string{"Textarea/Rows"}, Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Rows"]) }},
+			{Name: "textarea-invalid", Title: "Invalid", Component: "Textarea", Fixtures: []string{"Textarea/Invalid"}, Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Invalid"]) }},
 			{Name: "textarea-disabled", Title: "Disabled", Component: "Textarea", Fixtures: []string{"Textarea/Disabled"}, Node: func() gx.Node { return textarea.Textarea(textarea.TextareaFixtures["Disabled"]) }},
 		},
 	},

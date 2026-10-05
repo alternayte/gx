@@ -25,6 +25,8 @@ Run the command in the app module.
 gx add alert
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -35,6 +37,8 @@ The command writes these files.
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -50,29 +54,38 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div role="alert" class={p.class()} {...p.Attrs}>
+<div data-slot="alert" role="alert" class={p.class()} {...p.Attrs}>
   if p.Icon != nil {
-    <span class="[&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"> {p.Icon} </span>
+    {p.Icon}
   }
-  <div class="col-start-2 grid justify-items-start gap-1">
-    if p.Title != "" {
-      <p class="line-clamp-1 min-h-4 font-medium tracking-tight">{p.Title}</p>
-    }
-    if p.Children != nil {
-      <div class={gx.Cx("text-sm text-muted-foreground [&_p]:leading-relaxed", p.descClass())}>{p.Children}</div>
-    }
-  </div>
+  if p.Title != "" {
+    <div data-slot="alert-title" class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight">{p.Title}</div>
+  }
+  if p.Children != nil {
+    <div data-slot="alert-description" class="col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed">{p.Children}</div>
+  }
 </div>
 ```
 
 ```go title="ui/alert/Alert.fixtures.go"
 package alert
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
 
 var AlertFixtures = gx.Fixtures[AlertProps]{
 	"Default":     {Title: "Heads up", Children: gx.Text("You can add components to your app.")},
 	"Destructive": {Variant: Destructive, Title: "Error", Children: gx.Text("Your session expired. Sign in again.")},
+	"Icon":        {Icon: icons.Info(icons.InfoProps{}), Title: "Heads up", Children: gx.Text("You can add components to your app.")},
+	"DestructiveIcon": {
+		Variant:  Destructive,
+		Icon:     icons.TriangleAlert(icons.TriangleAlertProps{}),
+		Title:    "Error",
+		Children: gx.Text("Your session expired. Sign in again."),
+	},
+	"TitleOnly": {Icon: icons.CircleCheck(icons.CircleCheckProps{}), Title: "Your changes are saved."},
 }
 ```
 
@@ -92,44 +105,40 @@ const (
 
 var variantClass = gx.Enum[Variant]{
 	Default:     "bg-card text-card-foreground",
-	Destructive: "bg-card text-destructive [&>svg]:text-current",
+	Destructive: "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
 }
 
-// class returns the classes of one alert.
+// class returns the classes of one alert. The icon column opens when the
+// alert holds an svg as a direct child.
 func (p AlertProps) class() string {
 	const base = "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border border-border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"
-	grid := "grid-cols-[0_1fr]"
-	if p.Icon != nil {
-		grid = "grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3"
-	}
 	variant := p.Variant
 	if variant == "" {
 		variant = Default
 	}
-	return gx.Cx(base, grid, variantClass[variant], p.Class)
-}
-
-// descClass returns the description colour of one variant.
-func (p AlertProps) descClass() string {
-	if p.Variant == Destructive {
-		return "text-destructive/90"
-	}
-	return ""
+	return gx.Cx(base, variantClass[variant], p.Class)
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--card`, `--card-foreground`, `--destructive`, `--border`.
+The theme must define these tokens: `--card`, `--card-foreground`, `--destructive`, `--border`, `--muted-foreground`.
 
 ## Usage
 
 ```gx
 <alert.Alert title="Heads up">
-  <p>You can add components to your app.</p>
+  You can add components to your app.
+</alert.Alert>
+
+<alert.Alert variant={alert.Destructive} title="Error" icon={<icons.TriangleAlert />}>
+  Your session expired. Sign in again.
 </alert.Alert>
 ```
+
+`Icon` takes one svg icon. The alert opens a column for the icon when it has one.
+`Title` shows one line. The children are the description.
 
 ## Examples
 
@@ -153,19 +162,55 @@ The theme must define these tokens: `--card`, `--card-foreground`, `--destructiv
 
 </Example>
 
+### Icon
+
+<Example item="alert" name="alert-icon" label="Alert: Icon">
+
+```gx
+<alert.Alert title="Heads up">
+  <:icon><icons.Info /></:icon>
+  You can add components to your app.
+</alert.Alert>
+```
+
+</Example>
+
+### Destructive icon
+
+<Example item="alert" name="alert-destructive-icon" label="Alert: Destructive icon">
+
+```gx
+<alert.Alert variant={alert.Destructive} title="Error">
+  <:icon><icons.TriangleAlert /></:icon>
+  Your session expired. Sign in again.
+</alert.Alert>
+```
+
+</Example>
+
+### Title only
+
+<Example item="alert" name="alert-title-only" label="Alert: Title only">
+
+```gx
+<alert.Alert title="Your changes are saved."><:icon><icons.CircleCheck /></:icon></alert.Alert>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Put the message in the title and the detail in the body.
-- Use `Destructive` for an error.
+- Put the main fact in `Title`.
+- Use `Destructive` only for an error.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not use an alert for a success message. Use a toast.
-- Do not put more than one action in an alert.
+- Do not use an alert for a transient message. Use a toast.
+- Do not wrap the icon in another element. The alert finds the svg as its direct child.
 
 </docs.Card>
 </docs.CardGrid>

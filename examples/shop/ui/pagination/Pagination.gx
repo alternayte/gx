@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<nav role="navigation" aria-label="pagination" class={gx.Cx("mx-auto flex w-full justify-center", p.Class)} {...p.Attrs}>{p.Children}</nav>
+<nav role="navigation" aria-label="pagination" data-slot="pagination" class={gx.Cx("mx-auto flex w-full justify-center", p.Class)} {...p.Attrs}>{p.Children}</nav>

@@ -25,7 +25,7 @@ Run the command in the app module.
 gx add login
 ```
 
-The command also installs [`button`](/components/button/), [`card`](/components/card/), [`field`](/components/field/), [`input`](/components/input/) and [`label`](/components/label/).
+The command also installs [`button`](/components/button/), [`card`](/components/card/), [`field`](/components/field/) and [`input`](/components/input/).
 
 The command writes these files.
 
@@ -37,7 +37,7 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
-Install [`button`](/components/button/), [`card`](/components/card/), [`field`](/components/field/), [`input`](/components/input/) and [`label`](/components/label/) first.
+Install [`button`](/components/button/), [`card`](/components/card/), [`field`](/components/field/) and [`input`](/components/input/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -49,7 +49,6 @@ import (
 	"github.com/alternayte/gx/registry/card"
 	"github.com/alternayte/gx/registry/field"
 	"github.com/alternayte/gx/registry/input"
-	"github.com/alternayte/gx/registry/label"
 )
 
 props {
@@ -61,20 +60,21 @@ props {
 <div class="grid min-h-screen lg:grid-cols-2">
   <div class="flex items-center justify-center p-6">
     <card.Card title={p.Title} description={p.Description} class="w-full max-w-sm">
-      <form method="post" action={p.Action} class="flex flex-col gap-4">
-        <field.Field>
-          <field.FieldLabel for="email">Email</field.FieldLabel>
-          <input.Input id="email" name="email" type="email" placeholder="you@example.com" />
-        </field.Field>
-        <field.Field>
-          <field.FieldLabel for="password">Password</field.FieldLabel>
-          <input.Input id="password" name="password" type="password" />
-        </field.Field>
-        <button.Button type="submit" class="w-full">Sign in</button.Button>
-        <p class="text-center text-sm text-muted-foreground">
-          <label.Label for="email">Need an account?</label.Label>
-          <a href="/signup" class="underline underline-offset-4">Create one</a>
-        </p>
+      <form method="post" action={p.Action}>
+        <field.FieldGroup>
+          <field.Field>
+            <field.FieldLabel for="email">Email</field.FieldLabel>
+            <input.Input id="email" name="email" type="email" placeholder="you@example.com" />
+          </field.Field>
+          <field.Field>
+            <field.FieldLabel for="password">Password</field.FieldLabel>
+            <input.Input id="password" name="password" type="password" />
+          </field.Field>
+          <div class="flex flex-col gap-3">
+            <button.Button type="submit" class="w-full">Sign in</button.Button>
+            <p class="text-center text-sm text-muted-foreground">Need an account? <a href="/signup" class="underline underline-offset-4 hover:text-primary">Create one</a></p>
+          </div>
+        </field.FieldGroup>
       </form>
     </card.Card>
   </div>

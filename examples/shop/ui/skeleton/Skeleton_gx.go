@@ -14,8 +14,8 @@ type SkeletonProps struct {
 func Skeleton(p SkeletonProps) gx.Node {
 	var _b gx.Builder
 //line Skeleton.gx:8:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("animate-pulse rounded-md bg-muted", p.Class), Kind: gx.AttrText}}, p.Attrs)))
-//line Skeleton.gx:8:85
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("animate-pulse rounded-md bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}}, p.Attrs)))
+//line Skeleton.gx:8:107
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

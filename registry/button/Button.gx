@@ -5,8 +5,8 @@ props {
   Size     Size     = Md
   Type     string   = "button"
   Class    string   = ""
-  Children gx.Node    
+  Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<button type={p.typeAttr()} class={p.class()} {...p.Attrs}>{p.Children}</button>
+<button data-slot="button" data-variant={p.variant()} data-size={p.size()} type={p.typeAttr()} class={Class(p.Variant, p.Size, p.Class)} {...p.Attrs}>{p.Children}</button>

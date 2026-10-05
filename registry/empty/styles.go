@@ -12,15 +12,14 @@ const (
 )
 
 var variantClass = gx.Enum[Variant]{
-	Default: "",
-	Icon:    "flex size-10 items-center justify-center rounded-lg bg-muted text-foreground [&>svg]:size-5",
+	Default: "bg-transparent",
+	Icon:    "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6",
 }
 
-// variantClass returns the classes of one media variant; a zero value is
-// Default.
-func (p EmptyMediaProps) variantClass() string {
+// variant returns the data-variant value; a zero value is Default.
+func (p EmptyMediaProps) variant() string {
 	if p.Variant == "" {
-		return variantClass[Default]
+		return string(Default)
 	}
-	return variantClass[p.Variant]
+	return string(p.Variant)
 }

@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<p class={gx.Cx("text-sm text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</p>
+<div data-slot="empty-description" class={gx.Cx("text-sm leading-relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</div>

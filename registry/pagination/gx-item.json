@@ -65,6 +65,10 @@
       "target": "ui/pagination/PaginationPrevious.fixtures.go"
     }
   ],
+  "registryDependencies": [
+    "button",
+    "icons"
+  ],
   "requiredTokens": [
     "--border",
     "--accent",

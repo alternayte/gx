@@ -15,7 +15,7 @@ type TableProps struct {
 func Table(p TableProps) gx.Node {
 	var _b gx.Builder
 //line Table.gx:9:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "relative w-full overflow-x-auto", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("table", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full caption-bottom text-sm", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children), gx.Text("\n"))))
+	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "relative w-full overflow-x-auto", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "table-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("table", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full caption-bottom text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table", Kind: gx.AttrText}}, p.Attrs), p.Children), gx.Text("\n"))))
 //line Table.gx:11:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

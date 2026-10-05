@@ -1,44 +1,29 @@
 package pagination
 
-import "github.com/alternayte/gx"
-
-// Size is the shape of a pagination link.
-type Size string
-
-// The sizes of pagination.PaginationLink.
-const (
-	Icon Size = "icon"
-	Text Size = "text"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
 )
 
-var sizeClass = gx.Enum[Size]{
-	Icon: "size-9",
-	Text: "h-9 px-3",
-}
-
-// sizeClass returns the classes of one link size; a zero value is Icon.
-func (p PaginationLinkProps) sizeClass() string {
-	if p.Size == "" {
-		return sizeClass[Icon]
-	}
-	return sizeClass[p.Size]
-}
-
-// current returns the aria-current value of one link.
-func (p PaginationLinkProps) current() string {
-	if p.Active {
-		return "page"
-	}
-	return ""
-}
-
-// class returns the classes of one pagination link.
+// class returns the classes of one pagination link: the outline button for
+// the current page, the ghost button for the others. A zero size is Icon.
 func (p PaginationLinkProps) class() string {
-	base := "inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
-	if p.Active {
-		return gx.Cx(base, p.sizeClass(), "border border-border", p.Class)
+	size := p.Size
+	if size == "" {
+		size = button.Icon
 	}
-	return gx.Cx(base, p.sizeClass(), p.Class)
+	if p.Active {
+		return button.Class(button.Outline, size, p.Class)
+	}
+	return button.Class(button.Ghost, size, p.Class)
+}
+
+// attrs returns the state attributes of one link, then the caller's.
+func (p PaginationLinkProps) attrs() gx.Attrs {
+	if !p.Active {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "aria-current", Value: "page"}}, p.Attrs...)
 }
 
 // attrs returns the link attributes of the previous link.

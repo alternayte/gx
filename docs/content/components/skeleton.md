@@ -45,7 +45,7 @@ props {
   Attrs gx.Attrs = nil
 }
 
-<div class={gx.Cx("animate-pulse rounded-md bg-muted", p.Class)} {...p.Attrs}></div>
+<div data-slot="skeleton" class={gx.Cx("animate-pulse rounded-md bg-accent", p.Class)} {...p.Attrs}></div>
 ```
 
 ```go title="ui/skeleton/Skeleton.fixtures.go"
@@ -63,13 +63,15 @@ var SkeletonFixtures = gx.Fixtures[SkeletonProps]{
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--muted`.
+The theme must define these tokens: `--accent`.
 
 ## Usage
 
 ```gx
 <skeleton.Skeleton class="h-4 w-40" />
 ```
+
+The skeleton uses the accent colour and a pulse.
 
 ## Examples
 

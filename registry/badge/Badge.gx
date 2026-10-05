@@ -2,9 +2,14 @@ package badge
 
 props {
   Variant  Variant  = Default
+  Href     gx.URL   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<span class={p.class()} {...p.Attrs}>{p.Children}</span>
+if p.Href != "" {
+  <a href={p.Href} data-slot="badge" data-variant={p.variant()} class={p.class()} {...p.Attrs}>{p.Children}</a>
+} else {
+  <span data-slot="badge" data-variant={p.variant()} class={p.class()} {...p.Attrs}>{p.Children}</span>
+}

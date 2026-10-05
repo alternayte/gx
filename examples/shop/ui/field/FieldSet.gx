@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<fieldset class={gx.Cx("flex flex-col gap-6", p.Class)} {...p.Attrs}>{p.Children}</fieldset>
+<fieldset data-slot="field-set" class={gx.Cx("flex flex-col gap-6 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3", p.Class)} {...p.Attrs}>{p.Children}</fieldset>

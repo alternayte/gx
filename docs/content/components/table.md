@@ -9,28 +9,17 @@ item: "table"
 <Example item="table" name="table-simple" label="Table: Table: Simple">
 
 ```gx
-<table.Table>
-  <table.TableCaption>A list of invoices.</table.TableCaption>
-  <table.TableHeader>
-    <table.TableRow>
-      <table.TableHead>Invoice</table.TableHead>
-      <table.TableHead>Status</table.TableHead>
-      <table.TableHead>Amount</table.TableHead>
-    </table.TableRow>
-  </table.TableHeader>
-  <table.TableBody>
-    <table.TableRow>
-      <table.TableCell>INV-001</table.TableCell>
-      <table.TableCell>Paid</table.TableCell>
-      <table.TableCell>$120.00</table.TableCell>
-    </table.TableRow>
-    <table.TableRow>
-      <table.TableCell>INV-002</table.TableCell>
-      <table.TableCell>Open</table.TableCell>
-      <table.TableCell>$80.00</table.TableCell>
-    </table.TableRow>
-  </table.TableBody>
-</table.Table>
+{table.Table(table.TableFixtures["Simple"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/table/Table.fixtures.go"
+"Simple": {Children: gx.Frag(
+  TableCaption(TableCaptionProps{Children: gx.Text("A list of invoices.")}),
+  invoiceHead(),
+  TableBody(TableBodyProps{Children: invoiceRows()}),
+)}
 ```
 
 </Example>
@@ -81,8 +70,8 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class="relative w-full overflow-x-auto">
-  <table class={gx.Cx("w-full caption-bottom text-sm", p.Class)} {...p.Attrs}>{p.Children}</table>
+<div data-slot="table-container" class="relative w-full overflow-x-auto">
+  <table data-slot="table" class={gx.Cx("w-full caption-bottom text-sm", p.Class)} {...p.Attrs}>{p.Children}</table>
 </div>
 ```
 
@@ -95,7 +84,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<thead class={gx.Cx("[&_tr]:border-b", p.Class)} {...p.Attrs}>{p.Children}</thead>
+<thead data-slot="table-header" class={gx.Cx("[&_tr]:border-b", p.Class)} {...p.Attrs}>{p.Children}</thead>
 ```
 
 ```gx title="ui/table/TableBody.gx"
@@ -107,7 +96,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<tbody class={gx.Cx("[&_tr:last-child]:border-0", p.Class)} {...p.Attrs}>{p.Children}</tbody>
+<tbody data-slot="table-body" class={gx.Cx("[&_tr:last-child]:border-0", p.Class)} {...p.Attrs}>{p.Children}</tbody>
 ```
 
 ```gx title="ui/table/TableFooter.gx"
@@ -119,7 +108,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<tfoot class={gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class)} {...p.Attrs}>{p.Children}</tfoot>
+<tfoot data-slot="table-footer" class={gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class)} {...p.Attrs}>{p.Children}</tfoot>
 ```
 
 ```gx title="ui/table/TableRow.gx"
@@ -131,7 +120,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<tr class={gx.Cx("border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", p.Class)} {...p.Attrs}>{p.Children}</tr>
+<tr data-slot="table-row" class={gx.Cx("border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted", p.Class)} {...p.Attrs}>{p.Children}</tr>
 ```
 
 ```gx title="ui/table/TableHead.gx"
@@ -143,7 +132,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<th class={gx.Cx("h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground", p.Class)} {...p.Attrs}>{p.Children}</th>
+<th data-slot="table-head" class={gx.Cx("h-10 px-2 [text-align:left] align-middle font-medium whitespace-nowrap text-foreground [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class)} {...p.Attrs}>{p.Children}</th>
 ```
 
 ```gx title="ui/table/TableCell.gx"
@@ -155,7 +144,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<td class={gx.Cx("p-2 align-middle whitespace-nowrap", p.Class)} {...p.Attrs}>{p.Children}</td>
+<td data-slot="table-cell" class={gx.Cx("p-2 align-middle whitespace-nowrap [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class)} {...p.Attrs}>{p.Children}</td>
 ```
 
 ```gx title="ui/table/TableCaption.gx"
@@ -167,7 +156,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<caption class={gx.Cx("mt-4 text-sm text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</caption>
+<caption data-slot="table-caption" class={gx.Cx("mt-4 text-sm text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</caption>
 ```
 
 ```go title="ui/table/Table.fixtures.go"
@@ -175,16 +164,49 @@ package table
 
 import "github.com/alternayte/gx"
 
+// invoiceRows are the body rows of the table fixtures.
+func invoiceRows() gx.Node {
+	return gx.Frag(
+		TableRow(TableRowProps{Children: gx.Frag(
+			TableCell(TableCellProps{Children: gx.Text("INV-001")}),
+			TableCell(TableCellProps{Children: gx.Text("Paid")}),
+			TableCell(TableCellProps{Children: gx.Text("$120.00")}),
+		)}),
+		TableRow(TableRowProps{Children: gx.Frag(
+			TableCell(TableCellProps{Children: gx.Text("INV-002")}),
+			TableCell(TableCellProps{Children: gx.Text("Open")}),
+			TableCell(TableCellProps{Children: gx.Text("$80.00")}),
+		)}),
+	)
+}
+
+// invoiceHead is the header row of the table fixtures.
+func invoiceHead() gx.Node {
+	return TableHeader(TableHeaderProps{Children: TableRow(TableRowProps{Children: gx.Frag(
+		TableHead(TableHeadProps{Children: gx.Text("Invoice")}),
+		TableHead(TableHeadProps{Children: gx.Text("Status")}),
+		TableHead(TableHeadProps{Children: gx.Text("Amount")}),
+	)})})
+}
+
 var TableFixtures = gx.Fixtures[TableProps]{
 	"Simple": {Children: gx.Frag(
 		TableCaption(TableCaptionProps{Children: gx.Text("A list of invoices.")}),
-		TableHeader(TableHeaderProps{Children: TableRow(TableRowProps{Children: gx.Frag(
-			TableHead(TableHeadProps{Children: gx.Text("Invoice")}),
-			TableHead(TableHeadProps{Children: gx.Text("Status")}),
-			TableHead(TableHeadProps{Children: gx.Text("Amount")}),
+		invoiceHead(),
+		TableBody(TableBodyProps{Children: invoiceRows()}),
+	)},
+	"Footer": {Children: gx.Frag(
+		invoiceHead(),
+		TableBody(TableBodyProps{Children: invoiceRows()}),
+		TableFooter(TableFooterProps{Children: TableRow(TableRowProps{Children: gx.Frag(
+			TableCell(TableCellProps{Attrs: gx.Attrs{{Key: "colspan", Value: "2"}}, Children: gx.Text("Total")}),
+			TableCell(TableCellProps{Children: gx.Text("$200.00")}),
 		)})}),
+	)},
+	"Selected": {Children: gx.Frag(
+		invoiceHead(),
 		TableBody(TableBodyProps{Children: gx.Frag(
-			TableRow(TableRowProps{Children: gx.Frag(
+			TableRow(TableRowProps{Attrs: gx.Attrs{{Key: "data-state", Value: "selected"}}, Children: gx.Frag(
 				TableCell(TableCellProps{Children: gx.Text("INV-001")}),
 				TableCell(TableCellProps{Children: gx.Text("Paid")}),
 				TableCell(TableCellProps{Children: gx.Text("$120.00")}),
@@ -281,6 +303,10 @@ The theme must define these tokens: `--border`, `--muted`, `--muted-foreground`,
 
 For sorting, filtering and paging over many rows, use the data table component.
 
+`TableFooter` holds the total rows. Set `data-state="selected"` on a `TableRow` to mark it.
+A row that holds an expanded control takes the hover colour.
+Pass `class="text-right"` to a `TableHead` and its cells for a number column.
+
 ## Examples
 
 ### Table: Simple
@@ -288,28 +314,70 @@ For sorting, filtering and paging over many rows, use the data table component.
 <Example item="table" name="table-simple" label="Table: Table: Simple">
 
 ```gx
-<table.Table>
-  <table.TableCaption>A list of invoices.</table.TableCaption>
-  <table.TableHeader>
-    <table.TableRow>
-      <table.TableHead>Invoice</table.TableHead>
-      <table.TableHead>Status</table.TableHead>
-      <table.TableHead>Amount</table.TableHead>
-    </table.TableRow>
-  </table.TableHeader>
-  <table.TableBody>
-    <table.TableRow>
-      <table.TableCell>INV-001</table.TableCell>
-      <table.TableCell>Paid</table.TableCell>
-      <table.TableCell>$120.00</table.TableCell>
-    </table.TableRow>
-    <table.TableRow>
-      <table.TableCell>INV-002</table.TableCell>
-      <table.TableCell>Open</table.TableCell>
-      <table.TableCell>$80.00</table.TableCell>
-    </table.TableRow>
-  </table.TableBody>
-</table.Table>
+{table.Table(table.TableFixtures["Simple"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/table/Table.fixtures.go"
+"Simple": {Children: gx.Frag(
+  TableCaption(TableCaptionProps{Children: gx.Text("A list of invoices.")}),
+  invoiceHead(),
+  TableBody(TableBodyProps{Children: invoiceRows()}),
+)}
+```
+
+</Example>
+
+### Table: Footer
+
+<Example item="table" name="table-footer" label="Table: Table: Footer">
+
+```gx
+{table.Table(table.TableFixtures["Footer"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/table/Table.fixtures.go"
+"Footer": {Children: gx.Frag(
+  invoiceHead(),
+  TableBody(TableBodyProps{Children: invoiceRows()}),
+  TableFooter(TableFooterProps{Children: TableRow(TableRowProps{Children: gx.Frag(
+    TableCell(TableCellProps{Attrs: gx.Attrs{{Key: "colspan", Value: "2"}}, Children: gx.Text("Total")}),
+    TableCell(TableCellProps{Children: gx.Text("$200.00")}),
+  )})}),
+)}
+```
+
+</Example>
+
+### Table: Selected
+
+<Example item="table" name="table-selected" label="Table: Table: Selected">
+
+```gx
+{table.Table(table.TableFixtures["Selected"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/table/Table.fixtures.go"
+"Selected": {Children: gx.Frag(
+  invoiceHead(),
+  TableBody(TableBodyProps{Children: gx.Frag(
+    TableRow(TableRowProps{Attrs: gx.Attrs{{Key: "data-state", Value: "selected"}}, Children: gx.Frag(
+      TableCell(TableCellProps{Children: gx.Text("INV-001")}),
+      TableCell(TableCellProps{Children: gx.Text("Paid")}),
+      TableCell(TableCellProps{Children: gx.Text("$120.00")}),
+    )}),
+    TableRow(TableRowProps{Children: gx.Frag(
+      TableCell(TableCellProps{Children: gx.Text("INV-002")}),
+      TableCell(TableCellProps{Children: gx.Text("Open")}),
+      TableCell(TableCellProps{Children: gx.Text("$80.00")}),
+    )}),
+  )}),
+)}
 ```
 
 </Example>

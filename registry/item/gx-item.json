@@ -67,12 +67,38 @@
     {
       "path": "ItemTitle.fixtures.go",
       "target": "ui/item/ItemTitle.fixtures.go"
+    },
+    {
+      "path": "ItemGroup.gx",
+      "target": "ui/item/ItemGroup.gx"
+    },
+    {
+      "path": "ItemGroup.fixtures.go",
+      "target": "ui/item/ItemGroup.fixtures.go"
+    },
+    {
+      "path": "ItemSeparator.gx",
+      "target": "ui/item/ItemSeparator.gx"
+    },
+    {
+      "path": "ItemSeparator.fixtures.go",
+      "target": "ui/item/ItemSeparator.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/item/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "button",
+    "icons"
   ],
   "requiredTokens": [
     "--border",
-    "--ring",
+    "--muted",
+    "--muted-foreground",
     "--accent",
-    "--muted-foreground"
+    "--ring",
+    "--primary"
   ]
 }

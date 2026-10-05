@@ -9,16 +9,20 @@ item: "sidebar"
 <Example item="sidebar" name="sidebar-full" label="Sidebar: Sidebar: Full">
 
 ```gx
-<sidebar.Sidebar id="demo-sidebar" class="h-72">
-  <sidebar.SidebarHeader>Gx</sidebar.SidebarHeader>
-  <sidebar.SidebarContent>
-    <sidebar.SidebarGroup title="Menu">
-      <sidebar.SidebarItem href={gx.URL("/")} active>Home</sidebar.SidebarItem>
-      <sidebar.SidebarItem href={gx.URL("/docs")}>Docs</sidebar.SidebarItem>
-    </sidebar.SidebarGroup>
-  </sidebar.SidebarContent>
-  <sidebar.SidebarFooter>v0.1.0</sidebar.SidebarFooter>
-</sidebar.Sidebar>
+{sidebar.Sidebar(sidebar.SidebarFixtures["Full"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/Sidebar.fixtures.go"
+"Full": {Id: "demo-sidebar", Class: "h-72", Children: gx.Frag(
+  SidebarHeader(SidebarHeaderProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-sm font-semibold"}}, gx.Text("Gx"))}),
+  SidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Children: gx.Frag(
+    SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Menu")}),
+    SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
+  )})}),
+  SidebarFooter(SidebarFooterProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}),
+)}
 ```
 
 </Example>
@@ -34,6 +38,8 @@ Run the command in the app module.
 gx add sidebar
 ```
 
+The command also installs [`button`](/components/button/), [`icons`](/components/icons/) and [`input`](/components/input/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -42,18 +48,50 @@ The command writes these files.
 | `SidebarHeader.gx` | `ui/sidebar/SidebarHeader.gx` |
 | `SidebarContent.gx` | `ui/sidebar/SidebarContent.gx` |
 | `SidebarFooter.gx` | `ui/sidebar/SidebarFooter.gx` |
+| `SidebarInset.gx` | `ui/sidebar/SidebarInset.gx` |
+| `SidebarSeparator.gx` | `ui/sidebar/SidebarSeparator.gx` |
+| `SidebarInput.gx` | `ui/sidebar/SidebarInput.gx` |
+| `SidebarTrigger.gx` | `ui/sidebar/SidebarTrigger.gx` |
 | `SidebarGroup.gx` | `ui/sidebar/SidebarGroup.gx` |
-| `SidebarItem.gx` | `ui/sidebar/SidebarItem.gx` |
+| `SidebarGroupLabel.gx` | `ui/sidebar/SidebarGroupLabel.gx` |
+| `SidebarGroupAction.gx` | `ui/sidebar/SidebarGroupAction.gx` |
+| `SidebarGroupContent.gx` | `ui/sidebar/SidebarGroupContent.gx` |
+| `SidebarMenu.gx` | `ui/sidebar/SidebarMenu.gx` |
+| `SidebarMenuItem.gx` | `ui/sidebar/SidebarMenuItem.gx` |
+| `SidebarMenuButton.gx` | `ui/sidebar/SidebarMenuButton.gx` |
+| `SidebarMenuAction.gx` | `ui/sidebar/SidebarMenuAction.gx` |
+| `SidebarMenuBadge.gx` | `ui/sidebar/SidebarMenuBadge.gx` |
+| `SidebarMenuSkeleton.gx` | `ui/sidebar/SidebarMenuSkeleton.gx` |
+| `SidebarMenuSub.gx` | `ui/sidebar/SidebarMenuSub.gx` |
+| `SidebarMenuSubItem.gx` | `ui/sidebar/SidebarMenuSubItem.gx` |
+| `SidebarMenuSubButton.gx` | `ui/sidebar/SidebarMenuSubButton.gx` |
 | `Sidebar.fixtures.go` | `ui/sidebar/Sidebar.fixtures.go` |
-| `styles.go` | `ui/sidebar/styles.go` |
+| `SidebarHeader.fixtures.go` | `ui/sidebar/SidebarHeader.fixtures.go` |
 | `SidebarContent.fixtures.go` | `ui/sidebar/SidebarContent.fixtures.go` |
 | `SidebarFooter.fixtures.go` | `ui/sidebar/SidebarFooter.fixtures.go` |
+| `SidebarInset.fixtures.go` | `ui/sidebar/SidebarInset.fixtures.go` |
+| `SidebarSeparator.fixtures.go` | `ui/sidebar/SidebarSeparator.fixtures.go` |
+| `SidebarInput.fixtures.go` | `ui/sidebar/SidebarInput.fixtures.go` |
+| `SidebarTrigger.fixtures.go` | `ui/sidebar/SidebarTrigger.fixtures.go` |
 | `SidebarGroup.fixtures.go` | `ui/sidebar/SidebarGroup.fixtures.go` |
-| `SidebarHeader.fixtures.go` | `ui/sidebar/SidebarHeader.fixtures.go` |
-| `SidebarItem.fixtures.go` | `ui/sidebar/SidebarItem.fixtures.go` |
+| `SidebarGroupLabel.fixtures.go` | `ui/sidebar/SidebarGroupLabel.fixtures.go` |
+| `SidebarGroupAction.fixtures.go` | `ui/sidebar/SidebarGroupAction.fixtures.go` |
+| `SidebarGroupContent.fixtures.go` | `ui/sidebar/SidebarGroupContent.fixtures.go` |
+| `SidebarMenu.fixtures.go` | `ui/sidebar/SidebarMenu.fixtures.go` |
+| `SidebarMenuItem.fixtures.go` | `ui/sidebar/SidebarMenuItem.fixtures.go` |
+| `SidebarMenuButton.fixtures.go` | `ui/sidebar/SidebarMenuButton.fixtures.go` |
+| `SidebarMenuAction.fixtures.go` | `ui/sidebar/SidebarMenuAction.fixtures.go` |
+| `SidebarMenuBadge.fixtures.go` | `ui/sidebar/SidebarMenuBadge.fixtures.go` |
+| `SidebarMenuSkeleton.fixtures.go` | `ui/sidebar/SidebarMenuSkeleton.fixtures.go` |
+| `SidebarMenuSub.fixtures.go` | `ui/sidebar/SidebarMenuSub.fixtures.go` |
+| `SidebarMenuSubItem.fixtures.go` | `ui/sidebar/SidebarMenuSubItem.fixtures.go` |
+| `SidebarMenuSubButton.fixtures.go` | `ui/sidebar/SidebarMenuSubButton.fixtures.go` |
+| `styles.go` | `ui/sidebar/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`button`](/components/button/), [`icons`](/components/icons/) and [`input`](/components/input/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -62,12 +100,13 @@ package sidebar
 
 props {
   Id       string
+  Side     Side     = Left
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<aside id={p.Id} data-gx-sidebar class={gx.Cx("flex w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground", p.Class)} {...p.Attrs}>{p.Children}</aside>
+<aside id={p.Id} data-gx-sidebar data-slot="sidebar" data-side={p.side()} class={gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class)} {...p.Attrs}>{p.Children}</aside>
 ```
 
 ```gx title="ui/sidebar/SidebarHeader.gx"
@@ -79,7 +118,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex items-center gap-2 p-4", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="sidebar-header" data-sidebar="header" class={gx.Cx("flex flex-col gap-2 p-2", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/sidebar/SidebarContent.gx"
@@ -91,7 +130,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex-1 overflow-y-auto p-2", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="sidebar-content" data-sidebar="content" class={gx.Cx("flex min-h-0 flex-1 flex-col gap-2 overflow-auto", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/sidebar/SidebarFooter.gx"
@@ -103,74 +142,288 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("mt-auto p-4", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="sidebar-footer" data-sidebar="footer" class={gx.Cx("flex flex-col gap-2 p-2", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/sidebar/SidebarInset.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<main data-slot="sidebar-inset" class={gx.Cx("relative flex w-full flex-1 flex-col bg-background", p.Class)} {...p.Attrs}>{p.Children}</main>
+```
+
+```gx title="ui/sidebar/SidebarSeparator.gx"
+package sidebar
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div data-slot="sidebar-separator" data-sidebar="separator" role="none" data-orientation="horizontal" class={gx.Cx("h-px w-full shrink-0 bg-border", "mx-2 w-auto bg-sidebar-border", p.Class)} {...p.Attrs}></div>
+```
+
+```gx title="ui/sidebar/SidebarInput.gx"
+package sidebar
+
+import "github.com/alternayte/gx/registry/input"
+
+props {
+  Type        string   = "text"
+  Name        string   = ""
+  Value       string   = ""
+  Placeholder string   = ""
+  Class       string   = ""
+  Attrs       gx.Attrs = nil
+}
+
+<input type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot="sidebar-input" data-sidebar="input" class={gx.Cx(input.Class, "h-8 w-full bg-background shadow-none", p.Class)} {...p.Attrs} />
+```
+
+```gx title="ui/sidebar/SidebarTrigger.gx"
+package sidebar
+
+import (
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
+
+props {
+  Controls string   = "gx-sidebar"
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
+}
+
+<button.Button variant={button.Ghost} size={button.Icon} class={gx.Cx("size-7", p.Class)} attrs={p.attrs()}>
+  <icons.PanelLeft />
+  <span class="sr-only">Toggle Sidebar</span>
+</button.Button>
 ```
 
 ```gx title="ui/sidebar/SidebarGroup.gx"
 package sidebar
 
 props {
-  Title    string   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex flex-col gap-1 py-2", p.Class)} {...p.Attrs}>
-  if p.Title != "" {
-    <p class="px-2 text-xs font-medium text-muted-foreground">{p.Title}</p>
+<div data-slot="sidebar-group" data-sidebar="group" class={gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/sidebar/SidebarGroupLabel.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="sidebar-group-label" data-sidebar="group-label" class={gx.Cx("flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear motion-reduce:transition-none focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/sidebar/SidebarGroupAction.gx"
+package sidebar
+
+props {
+  Label    string
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" aria-label={p.Label} data-slot="sidebar-group-action" data-sidebar="group-action" class={gx.Cx("absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden", p.Class)} {...p.Attrs}>{p.Children}</button>
+```
+
+```gx title="ui/sidebar/SidebarGroupContent.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="sidebar-group-content" data-sidebar="group-content" class={gx.Cx("w-full text-sm", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/sidebar/SidebarMenu.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<ul data-slot="sidebar-menu" data-sidebar="menu" class={gx.Cx("flex w-full min-w-0 flex-col gap-1", p.Class)} {...p.Attrs}>{p.Children}</ul>
+```
+
+```gx title="ui/sidebar/SidebarMenuItem.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<li data-slot="sidebar-menu-item" data-sidebar="menu-item" class={gx.Cx("group/menu-item relative", p.Class)} {...p.Attrs}>{p.Children}</li>
+```
+
+```gx title="ui/sidebar/SidebarMenuButton.gx"
+package sidebar
+
+props {
+  Href     gx.URL   = ""
+  Active   bool     = false
+  Variant  Variant  = Default
+  Size     Size     = Md
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+if p.Href != "" {
+  <a href={p.Href} data-slot="sidebar-menu-button" data-sidebar="menu-button" data-size={p.size()} class={p.class()} {...p.attrs()}>{p.Children}</a>
+} else {
+  <button type="button" data-slot="sidebar-menu-button" data-sidebar="menu-button" data-size={p.size()} class={p.class()} {...p.buttonAttrs()}>{p.Children}</button>
+}
+```
+
+```gx title="ui/sidebar/SidebarMenuAction.gx"
+package sidebar
+
+props {
+  Label       string
+  ShowOnHover bool     = false
+  Class       string   = ""
+  Children    gx.Node
+  Attrs       gx.Attrs = nil
+}
+
+<button type="button" aria-label={p.Label} data-slot="sidebar-menu-action" data-sidebar="menu-action" class={gx.Cx("absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", hoverClass[p.ShowOnHover], p.Class)} {...p.Attrs}>{p.Children}</button>
+```
+
+```gx title="ui/sidebar/SidebarMenuBadge.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="sidebar-menu-badge" data-sidebar="menu-badge" class={gx.Cx("pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/sidebar/SidebarMenuSkeleton.gx"
+package sidebar
+
+props {
+  ShowIcon bool     = false
+  Width    string   = "70%"
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="sidebar-menu-skeleton" data-sidebar="menu-skeleton" class={gx.Cx("flex h-8 items-center gap-2 rounded-md px-2", p.Class)} {...p.Attrs}>
+  if p.ShowIcon {
+    <div data-slot="skeleton" data-sidebar="menu-skeleton-icon" class="size-4 animate-pulse rounded-md bg-accent"></div>
   }
-  {p.Children}
+  <div data-slot="skeleton" data-sidebar="menu-skeleton-text" style={gx.Style("--skeleton-width: " + p.width())} class="h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-accent"></div>
 </div>
 ```
 
-```gx title="ui/sidebar/SidebarItem.gx"
+```gx title="ui/sidebar/SidebarMenuSub.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub" class={gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-l-sidebar-border px-2.5 py-0.5", p.Class)} {...p.Attrs}>{p.Children}</ul>
+```
+
+```gx title="ui/sidebar/SidebarMenuSubItem.gx"
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<li data-slot="sidebar-menu-sub-item" data-sidebar="menu-sub-item" class={gx.Cx("group/menu-sub-item relative", p.Class)} {...p.Attrs}>{p.Children}</li>
+```
+
+```gx title="ui/sidebar/SidebarMenuSubButton.gx"
 package sidebar
 
 props {
   Href     gx.URL
   Active   bool     = false
+  Size     Size     = Md
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<a href={p.Href} aria-current={p.current()} class={gx.Cx("flex items-center gap-2 rounded-md px-2 py-1.5 text-sm no-underline transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground", activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>
+<a href={p.Href} data-slot="sidebar-menu-sub-button" data-sidebar="menu-sub-button" data-size={p.size()} class={gx.Cx("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground", subSizeClass[Size(p.size())], subActiveClass[p.Active], p.Class)} {...p.attrs()}>{p.Children}</a>
 ```
 
 ```go title="ui/sidebar/Sidebar.fixtures.go"
 package sidebar
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
+)
+
+// more is the icon of the action fixtures.
+func more() gx.Node {
+	return icons.Ellipsis(icons.EllipsisProps{})
+}
+
+// demoMenu is the menu of the sidebar fixtures.
+func demoMenu() gx.Node {
+	return SidebarMenu(SidebarMenuProps{Children: gx.Frag(
+		SidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/"), Active: true, Children: gx.El("span", nil, gx.Text("Home"))})}),
+		SidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))})}),
+	)})
+}
 
 var SidebarFixtures = gx.Fixtures[SidebarProps]{
 	"Full": {Id: "demo-sidebar", Class: "h-72", Children: gx.Frag(
-		SidebarHeader(SidebarHeaderProps{Children: gx.Text("Gx")}),
-		SidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Title: "Menu", Children: gx.Frag(
-			SidebarItem(SidebarItemProps{Href: gx.URL("/"), Active: true, Children: gx.Text("Home")}),
-			SidebarItem(SidebarItemProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
+		SidebarHeader(SidebarHeaderProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-sm font-semibold"}}, gx.Text("Gx"))}),
+		SidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Children: gx.Frag(
+			SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Menu")}),
+			SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
 		)})}),
-		SidebarFooter(SidebarFooterProps{Children: gx.Text("v0.1.0")}),
+		SidebarFooter(SidebarFooterProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}),
 	)},
+	"Right": {Id: "demo-sidebar-right", Side: Right, Class: "h-40", Children: SidebarContent(SidebarContentProps{
+		Children: SidebarGroup(SidebarGroupProps{Children: demoMenu()}),
+	})},
 	"Hidden": {Id: "demo-sidebar-hidden", Attrs: gx.Attrs{gx.Bool("hidden", true)}},
 }
 ```
 
-```go title="ui/sidebar/styles.go"
+```go title="ui/sidebar/SidebarHeader.fixtures.go"
 package sidebar
 
-var activeClass = map[bool]string{
-	true:  "bg-sidebar-accent font-medium text-sidebar-accent-foreground",
-	false: "text-sidebar-foreground",
-}
+import "github.com/alternayte/gx"
 
-// current returns the aria-current value of one item.
-func (p SidebarItemProps) current() string {
-	if p.Active {
-		return "page"
-	}
-	return ""
-}
+var SidebarHeaderFixtures = gx.Fixtures[SidebarHeaderProps]{"Empty": {}}
 ```
 
 ```go title="ui/sidebar/SidebarContent.fixtures.go"
@@ -189,49 +442,458 @@ import "github.com/alternayte/gx"
 var SidebarFooterFixtures = gx.Fixtures[SidebarFooterProps]{"Empty": {}}
 ```
 
+```go title="ui/sidebar/SidebarInset.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarInsetFixtures = gx.Fixtures[SidebarInsetProps]{"Page": {Class: "p-4", Children: gx.Text("Page content.")}}
+```
+
+```go title="ui/sidebar/SidebarSeparator.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarSeparatorFixtures = gx.Fixtures[SidebarSeparatorProps]{"Default": {}}
+```
+
+```go title="ui/sidebar/SidebarInput.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarInputFixtures = gx.Fixtures[SidebarInputProps]{"Search": {Placeholder: "Search the docs", Attrs: gx.Attrs{{Key: "aria-label", Value: "Search"}}}}
+```
+
+```go title="ui/sidebar/SidebarTrigger.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarTriggerFixtures = gx.Fixtures[SidebarTriggerProps]{"Default": {Controls: "demo-sidebar"}}
+```
+
 ```go title="ui/sidebar/SidebarGroup.fixtures.go"
 package sidebar
 
 import "github.com/alternayte/gx"
 
-var SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{"Group": {Title: "Menu", Children: gx.Text("Items")}}
+var SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{
+	"Labelled": {Class: "w-64 bg-sidebar text-sidebar-foreground", Children: gx.Frag(
+		SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Projects")}),
+		SidebarGroupAction(SidebarGroupActionProps{Label: "Project options", Children: more()}),
+		SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
+	)},
+}
 ```
 
-```go title="ui/sidebar/SidebarHeader.fixtures.go"
+```go title="ui/sidebar/SidebarGroupLabel.fixtures.go"
 package sidebar
 
 import "github.com/alternayte/gx"
 
-var SidebarHeaderFixtures = gx.Fixtures[SidebarHeaderProps]{"Empty": {}}
+var SidebarGroupLabelFixtures = gx.Fixtures[SidebarGroupLabelProps]{"Label": {Children: gx.Text("Projects")}}
 ```
 
-```go title="ui/sidebar/SidebarItem.fixtures.go"
+```go title="ui/sidebar/SidebarGroupAction.fixtures.go"
 package sidebar
 
 import "github.com/alternayte/gx"
 
-var SidebarItemFixtures = gx.Fixtures[SidebarItemProps]{"Item": {Href: gx.URL("/"), Children: gx.Text("Home")}}
+var SidebarGroupActionFixtures = gx.Fixtures[SidebarGroupActionProps]{"Add": {Label: "Project options", Children: more()}}
+
+// SidebarGroupActionWrap renders the action in a group, which positions
+// it.
+func SidebarGroupActionWrap(n gx.Node) gx.Node {
+	return SidebarGroup(SidebarGroupProps{Class: "w-64", Children: gx.Frag(
+		SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Projects")}),
+		n,
+	)})
+}
+```
+
+```go title="ui/sidebar/SidebarGroupContent.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarGroupContentFixtures = gx.Fixtures[SidebarGroupContentProps]{"Empty": {}}
+```
+
+```go title="ui/sidebar/SidebarMenu.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuFixtures = gx.Fixtures[SidebarMenuProps]{
+	"Nested": {Class: "w-64", Children: gx.Frag(
+		SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(
+			SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))}),
+			SidebarMenuBadge(SidebarMenuBadgeProps{Children: gx.Text("12")}),
+			SidebarMenuSub(SidebarMenuSubProps{Children: gx.Frag(
+				SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/start"), Active: true, Children: gx.El("span", nil, gx.Text("Get started"))})}),
+				SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/forms"), Children: gx.El("span", nil, gx.Text("Forms"))})}),
+			)}),
+		)}),
+		SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(
+			SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/projects"), Children: gx.El("span", nil, gx.Text("Projects"))}),
+			SidebarMenuAction(SidebarMenuActionProps{Label: "Project options", Children: more()}),
+		)}),
+	)},
+	"Loading": {Class: "w-64", Children: gx.Frag(
+		SidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuSkeleton(SidebarMenuSkeletonProps{ShowIcon: true, Width: "80%"})}),
+		SidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuSkeleton(SidebarMenuSkeletonProps{ShowIcon: true, Width: "55%"})}),
+		SidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuSkeleton(SidebarMenuSkeletonProps{ShowIcon: true, Width: "70%"})}),
+	)},
+}
+```
+
+```go title="ui/sidebar/SidebarMenuItem.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuItemFixtures = gx.Fixtures[SidebarMenuItemProps]{"Empty": {}}
+
+// SidebarMenuItemWrap renders the part in a menu, where it belongs.
+func SidebarMenuItemWrap(n gx.Node) gx.Node {
+	return SidebarMenu(SidebarMenuProps{Class: "w-64", Children: n})
+}
+```
+
+```go title="ui/sidebar/SidebarMenuButton.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuButtonFixtures = gx.Fixtures[SidebarMenuButtonProps]{
+	"Link":    {Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))},
+	"Active":  {Href: gx.URL("/"), Active: true, Children: gx.El("span", nil, gx.Text("Home"))},
+	"Button":  {Children: gx.El("span", nil, gx.Text("Sign out"))},
+	"Outline": {Variant: Outline, Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))},
+	"Small":   {Size: Sm, Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))},
+	"Large":   {Size: Lg, Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))},
+}
+
+// SidebarMenuButtonWrap renders the part in a menu, where it belongs.
+func SidebarMenuButtonWrap(n gx.Node) gx.Node {
+	return SidebarMenu(SidebarMenuProps{Class: "w-64", Children: SidebarMenuItem(SidebarMenuItemProps{Children: n})})
+}
+```
+
+```go title="ui/sidebar/SidebarMenuAction.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuActionFixtures = gx.Fixtures[SidebarMenuActionProps]{
+	"Add":   {Label: "Project options", Children: more()},
+	"Hover": {Label: "Project options", ShowOnHover: true, Children: more()},
+}
+
+// SidebarMenuActionWrap renders the part in a menu, where it belongs.
+func SidebarMenuActionWrap(n gx.Node) gx.Node {
+	return SidebarMenu(SidebarMenuProps{Class: "w-64", Children: SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/projects"), Children: gx.El("span", nil, gx.Text("Projects"))}), n)})})
+}
+```
+
+```go title="ui/sidebar/SidebarMenuBadge.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuBadgeFixtures = gx.Fixtures[SidebarMenuBadgeProps]{"Count": {Children: gx.Text("12")}}
+
+// SidebarMenuBadgeWrap renders the part in a menu, where it belongs.
+func SidebarMenuBadgeWrap(n gx.Node) gx.Node {
+	return SidebarMenu(SidebarMenuProps{Class: "w-64", Children: SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/projects"), Children: gx.El("span", nil, gx.Text("Projects"))}), n)})})
+}
+```
+
+```go title="ui/sidebar/SidebarMenuSkeleton.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuSkeletonFixtures = gx.Fixtures[SidebarMenuSkeletonProps]{
+	"Text": {},
+	"Icon": {ShowIcon: true, Width: "55%"},
+}
+
+// SidebarMenuSkeletonWrap renders the part in a menu, where it belongs.
+func SidebarMenuSkeletonWrap(n gx.Node) gx.Node {
+	return SidebarMenu(SidebarMenuProps{Class: "w-64", Children: SidebarMenuItem(SidebarMenuItemProps{Children: n})})
+}
+```
+
+```go title="ui/sidebar/SidebarMenuSub.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuSubFixtures = gx.Fixtures[SidebarMenuSubProps]{
+	"Two": {Children: gx.Frag(
+		SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/start"), Active: true, Children: gx.El("span", nil, gx.Text("Get started"))})}),
+		SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/forms"), Size: Sm, Children: gx.El("span", nil, gx.Text("Forms"))})}),
+	)},
+}
+
+// SidebarMenuSubWrap renders the part in a menu, where it belongs.
+func SidebarMenuSubWrap(n gx.Node) gx.Node {
+	return SidebarMenu(SidebarMenuProps{Class: "w-64", Children: SidebarMenuItem(SidebarMenuItemProps{Children: n})})
+}
+```
+
+```go title="ui/sidebar/SidebarMenuSubItem.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuSubItemFixtures = gx.Fixtures[SidebarMenuSubItemProps]{"Empty": {}}
+
+// SidebarMenuSubItemWrap renders the part in a sub menu, where it belongs.
+func SidebarMenuSubItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "class", Value: "w-64"}}, SidebarMenuSub(SidebarMenuSubProps{Children: n}))
+}
+```
+
+```go title="ui/sidebar/SidebarMenuSubButton.fixtures.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+var SidebarMenuSubButtonFixtures = gx.Fixtures[SidebarMenuSubButtonProps]{
+	"Link":   {Href: gx.URL("/docs/forms"), Children: gx.El("span", nil, gx.Text("Forms"))},
+	"Active": {Href: gx.URL("/docs/start"), Active: true, Children: gx.El("span", nil, gx.Text("Get started"))},
+	"Small":  {Href: gx.URL("/docs/forms"), Size: Sm, Children: gx.El("span", nil, gx.Text("Forms"))},
+}
+
+// SidebarMenuSubButtonWrap renders the part in a sub menu, where it belongs.
+func SidebarMenuSubButtonWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "class", Value: "w-64"}}, SidebarMenuSub(SidebarMenuSubProps{Children: SidebarMenuSubItem(SidebarMenuSubItemProps{Children: n})}))
+}
+```
+
+```go title="ui/sidebar/styles.go"
+package sidebar
+
+import "github.com/alternayte/gx"
+
+// Side is the edge of the page that holds the sidebar.
+type Side string
+
+// The sides of sidebar.Sidebar.
+const (
+	Left  Side = "left"
+	Right Side = "right"
+)
+
+// side returns the data-side value; a zero value is Left. The border of
+// the sidebar follows this attribute.
+func (p SidebarProps) side() string {
+	if p.Side == "" {
+		return string(Left)
+	}
+	return string(p.Side)
+}
+
+// Variant is the surface of a menu button.
+type Variant string
+
+// The variants of sidebar.SidebarMenuButton.
+const (
+	Default Variant = "default"
+	Outline Variant = "outline"
+)
+
+var variantClass = gx.Enum[Variant]{
+	Default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+	Outline: "bg-background shadow-[0_0_0_1px_var(--sidebar-border)] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_var(--sidebar-accent)]",
+}
+
+// Size is the height and the text size of a menu button.
+type Size string
+
+// The sizes of sidebar.SidebarMenuButton. A sub button has Md and Sm.
+const (
+	Md Size = "default"
+	Sm Size = "sm"
+	Lg Size = "lg"
+)
+
+var sizeClass = gx.Enum[Size]{
+	Md: "h-8 text-sm",
+	Sm: "h-7 text-xs",
+	Lg: "h-12 text-sm",
+}
+
+// subSizeClass is the text size of a sub button. Its height is fixed.
+var subSizeClass = gx.Enum[Size]{
+	Md: "text-sm",
+	Sm: "text-xs",
+	Lg: "text-sm",
+}
+
+// hoverClass hides a menu action on a wide screen until its item has the
+// pointer or the focus.
+var hoverClass = map[bool]string{
+	true:  "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground data-[state=open]:opacity-100 md:opacity-0",
+	false: "",
+}
+
+// size returns the data-size value; a zero value is Md. The action and the
+// badge of the item read this attribute.
+func (p SidebarMenuButtonProps) size() string {
+	if p.Size == "" {
+		return string(Md)
+	}
+	return string(p.Size)
+}
+
+// class returns the classes of one menu button.
+func (p SidebarMenuButtonProps) class() string {
+	const base = "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 [text-align:left] text-sm ring-sidebar-ring outline-hidden transition-[width,height,padding] motion-reduce:transition-none group-has-data-[sidebar=menu-action]/menu-item:pr-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
+	variant := p.Variant
+	if variant == "" {
+		variant = Default
+	}
+	return gx.Cx(base, variantClass[variant], sizeClass[Size(p.size())], activeClass[p.Active], p.Class)
+}
+
+// activeClass is the look of a menu button with Active set. A link also
+// takes this look from aria-current and data-active, which the framework
+// keeps current for a typed href.
+var activeClass = map[bool]string{
+	true:  "bg-sidebar-accent font-medium text-sidebar-accent-foreground",
+	false: "",
+}
+
+// subActiveClass is the look of a sub button with Active set.
+var subActiveClass = map[bool]string{
+	true:  "bg-sidebar-accent text-sidebar-accent-foreground",
+	false: "",
+}
+
+// attrs marks the link of the current page, then adds the caller's
+// attributes.
+func (p SidebarMenuButtonProps) attrs() gx.Attrs {
+	if !p.Active {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "aria-current", Value: "page"}}, p.Attrs...)
+}
+
+// buttonAttrs marks an active button, then adds the caller's attributes.
+// The action and the badge of the item read data-active.
+func (p SidebarMenuButtonProps) buttonAttrs() gx.Attrs {
+	if !p.Active {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "data-active", Value: "true"}}, p.Attrs...)
+}
+
+// size returns the data-size value; a zero value is Md.
+func (p SidebarMenuSubButtonProps) size() string {
+	if p.Size == "" {
+		return string(Md)
+	}
+	return string(p.Size)
+}
+
+// attrs marks the link of the current page, then adds the caller's
+// attributes.
+func (p SidebarMenuSubButtonProps) attrs() gx.Attrs {
+	if !p.Active {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "aria-current", Value: "page"}}, p.Attrs...)
+}
+
+// width returns the width of the text bar; a zero value is 70%.
+func (p SidebarMenuSkeletonProps) width() string {
+	if p.Width == "" {
+		return "70%"
+	}
+	return p.Width
+}
+
+// inputType returns the type of the input; a zero value is text.
+func (p SidebarInputProps) inputType() string {
+	if p.Type == "" {
+		return "text"
+	}
+	return p.Type
+}
+
+// controls returns the id of the sidebar; a zero value is gx-sidebar, the
+// id the shell runtime shows and hides.
+func (p SidebarTriggerProps) controls() string {
+	if p.Controls == "" {
+		return "gx-sidebar"
+	}
+	return p.Controls
+}
+
+// attrs returns the attributes of the trigger: the shell runtime reads
+// data-gx-menu and keeps aria-expanded current.
+func (p SidebarTriggerProps) attrs() gx.Attrs {
+	return append(gx.Attrs{
+		{Key: "data-sidebar", Value: "trigger"},
+		gx.Bool("data-gx-menu", true),
+		{Key: "aria-controls", Value: p.controls()},
+		{Key: "aria-expanded", Value: "false"},
+	}, p.Attrs...)
+}
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--sidebar`, `--sidebar-foreground`, `--sidebar-accent`, `--sidebar-accent-foreground`, `--muted-foreground`.
+The theme must define these tokens: `--border`, `--background`, `--accent`, `--sidebar`, `--sidebar-foreground`, `--sidebar-accent`, `--sidebar-accent-foreground`, `--sidebar-border`, `--sidebar-ring`.
 
 ## Usage
 
 ```gx
 <sidebar.Sidebar id="gx-sidebar">
-  <sidebar.SidebarHeader>Gx</sidebar.SidebarHeader>
+  <sidebar.SidebarHeader>
+    <sidebar.SidebarInput name="q" placeholder="Search" />
+  </sidebar.SidebarHeader>
   <sidebar.SidebarContent>
-    <sidebar.SidebarGroup title="Menu">
-      <sidebar.SidebarItem href={gx.URL("/")} active={true}>Home</sidebar.SidebarItem>
+    <sidebar.SidebarGroup>
+      <sidebar.SidebarGroupLabel>Menu</sidebar.SidebarGroupLabel>
+      <sidebar.SidebarGroupContent>
+        <sidebar.SidebarMenu>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={homeRoute} active={true}><span>Home</span></sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={docsRoute}><span>Docs</span></sidebar.SidebarMenuButton>
+            <sidebar.SidebarMenuBadge>12</sidebar.SidebarMenuBadge>
+            <sidebar.SidebarMenuSub>
+              <sidebar.SidebarMenuSubItem>
+                <sidebar.SidebarMenuSubButton href={formsRoute}><span>Forms</span></sidebar.SidebarMenuSubButton>
+              </sidebar.SidebarMenuSubItem>
+            </sidebar.SidebarMenuSub>
+          </sidebar.SidebarMenuItem>
+        </sidebar.SidebarMenu>
+      </sidebar.SidebarGroupContent>
     </sidebar.SidebarGroup>
   </sidebar.SidebarContent>
+  <sidebar.SidebarFooter>v0.1.0</sidebar.SidebarFooter>
 </sidebar.Sidebar>
+<sidebar.SidebarInset>
+  <sidebar.SidebarTrigger class="lg:hidden" />
+</sidebar.SidebarInset>
 ```
 
-Pair the sidebar with a button that carries `data-gx-menu` and `aria-controls` set to the sidebar id.
+`SidebarMenuButton` is a link when it has `Href`, and a button when it has none. Its variants are `Default` and `Outline`. Its sizes are `Md`, `Sm` and `Lg`.
+`SidebarMenuAction` and `SidebarMenuBadge` sit at the right of the button of their item. `SidebarGroupAction` sits at the right of the group label.
+`SidebarMenuSkeleton` is the placeholder of one menu row.
+`SidebarTrigger` shows and hides the sidebar with the id `gx-sidebar` on a narrow screen. The sidebar is always visible on a wide screen.
+Set `side={sidebar.Right}` for a sidebar at the right edge.
+
+The sidebar is static. It has no collapsed icon mode, no rail, no floating or inset variant and no mobile sheet.
 
 ## Examples
 
@@ -240,16 +902,38 @@ Pair the sidebar with a button that carries `data-gx-menu` and `aria-controls` s
 <Example item="sidebar" name="sidebar-full" label="Sidebar: Sidebar: Full">
 
 ```gx
-<sidebar.Sidebar id="demo-sidebar" class="h-72">
-  <sidebar.SidebarHeader>Gx</sidebar.SidebarHeader>
-  <sidebar.SidebarContent>
-    <sidebar.SidebarGroup title="Menu">
-      <sidebar.SidebarItem href={gx.URL("/")} active>Home</sidebar.SidebarItem>
-      <sidebar.SidebarItem href={gx.URL("/docs")}>Docs</sidebar.SidebarItem>
-    </sidebar.SidebarGroup>
-  </sidebar.SidebarContent>
-  <sidebar.SidebarFooter>v0.1.0</sidebar.SidebarFooter>
-</sidebar.Sidebar>
+{sidebar.Sidebar(sidebar.SidebarFixtures["Full"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/Sidebar.fixtures.go"
+"Full": {Id: "demo-sidebar", Class: "h-72", Children: gx.Frag(
+  SidebarHeader(SidebarHeaderProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-sm font-semibold"}}, gx.Text("Gx"))}),
+  SidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Children: gx.Frag(
+    SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Menu")}),
+    SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
+  )})}),
+  SidebarFooter(SidebarFooterProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}),
+)}
+```
+
+</Example>
+
+### Sidebar: Right
+
+<Example item="sidebar" name="sidebar-right" label="Sidebar: Sidebar: Right">
+
+```gx
+{sidebar.Sidebar(sidebar.SidebarFixtures["Right"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/Sidebar.fixtures.go"
+"Right": {Id: "demo-sidebar-right", Side: Right, Class: "h-40", Children: SidebarContent(SidebarContentProps{
+  Children: SidebarGroup(SidebarGroupProps{Children: demoMenu()}),
+})}
 ```
 
 </Example>
@@ -284,12 +968,58 @@ Pair the sidebar with a button that carries `data-gx-menu` and `aria-controls` s
 
 </Example>
 
-### SidebarGroup: Group
+### SidebarGroup: Labelled
 
-<Example item="sidebar" name="sidebar-group-group" label="Sidebar: SidebarGroup: Group">
+<Example item="sidebar" name="sidebar-group-labelled" label="Sidebar: SidebarGroup: Labelled">
 
 ```gx
-<sidebar.SidebarGroup title="Menu">Items</sidebar.SidebarGroup>
+{sidebar.SidebarGroup(sidebar.SidebarGroupFixtures["Labelled"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/SidebarGroup.fixtures.go"
+"Labelled": {Class: "w-64 bg-sidebar text-sidebar-foreground", Children: gx.Frag(
+  SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Projects")}),
+  SidebarGroupAction(SidebarGroupActionProps{Label: "Project options", Children: more()}),
+  SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
+)}
+```
+
+</Example>
+
+### SidebarGroupAction: Add
+
+<Example item="sidebar" name="sidebar-group-action-add" label="Sidebar: SidebarGroupAction: Add">
+
+```gx
+{sidebar.SidebarGroupAction(sidebar.SidebarGroupActionFixtures["Add"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/SidebarGroupAction.fixtures.go"
+"Add": {Label: "Project options", Children: more()}
+```
+
+</Example>
+
+### SidebarGroupContent: Empty
+
+<Example item="sidebar" name="sidebar-group-content-empty" label="Sidebar: SidebarGroupContent: Empty">
+
+```gx
+<sidebar.SidebarGroupContent children={gx.Frag()} />
+```
+
+</Example>
+
+### SidebarGroupLabel: Label
+
+<Example item="sidebar" name="sidebar-group-label-label" label="Sidebar: SidebarGroupLabel: Label">
+
+```gx
+<sidebar.SidebarGroupLabel>Projects</sidebar.SidebarGroupLabel>
 ```
 
 </Example>
@@ -304,12 +1034,290 @@ Pair the sidebar with a button that carries `data-gx-menu` and `aria-controls` s
 
 </Example>
 
-### SidebarItem: Item
+### SidebarInput: Search
 
-<Example item="sidebar" name="sidebar-item-item" label="Sidebar: SidebarItem: Item">
+<Example item="sidebar" name="sidebar-input-search" label="Sidebar: SidebarInput: Search">
 
 ```gx
-<sidebar.SidebarItem href={gx.URL("/")}>Home</sidebar.SidebarItem>
+<sidebar.SidebarInput placeholder="Search the docs" attrs={gx.Attrs{{Key: "aria-label", Value: "Search"}}} />
+```
+
+</Example>
+
+### SidebarInset: Page
+
+<Example item="sidebar" name="sidebar-inset-page" label="Sidebar: SidebarInset: Page">
+
+```gx
+<sidebar.SidebarInset class="p-4">Page content.</sidebar.SidebarInset>
+```
+
+</Example>
+
+### SidebarMenu: Nested
+
+<Example item="sidebar" name="sidebar-menu-nested" label="Sidebar: SidebarMenu: Nested">
+
+```gx
+{sidebar.SidebarMenu(sidebar.SidebarMenuFixtures["Nested"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/SidebarMenu.fixtures.go"
+"Nested": {Class: "w-64", Children: gx.Frag(
+  SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(
+    SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))}),
+    SidebarMenuBadge(SidebarMenuBadgeProps{Children: gx.Text("12")}),
+    SidebarMenuSub(SidebarMenuSubProps{Children: gx.Frag(
+      SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/start"), Active: true, Children: gx.El("span", nil, gx.Text("Get started"))})}),
+      SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/forms"), Children: gx.El("span", nil, gx.Text("Forms"))})}),
+    )}),
+  )}),
+  SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(
+    SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/projects"), Children: gx.El("span", nil, gx.Text("Projects"))}),
+    SidebarMenuAction(SidebarMenuActionProps{Label: "Project options", Children: more()}),
+  )}),
+)}
+```
+
+</Example>
+
+### SidebarMenu: Loading
+
+<Example item="sidebar" name="sidebar-menu-loading" label="Sidebar: SidebarMenu: Loading">
+
+```gx
+<sidebar.SidebarMenu class="w-64">
+  <sidebar.SidebarMenuItem><sidebar.SidebarMenuSkeleton showIcon width="80%" /></sidebar.SidebarMenuItem>
+  <sidebar.SidebarMenuItem><sidebar.SidebarMenuSkeleton showIcon width="55%" /></sidebar.SidebarMenuItem>
+  <sidebar.SidebarMenuItem><sidebar.SidebarMenuSkeleton showIcon width="70%" /></sidebar.SidebarMenuItem>
+</sidebar.SidebarMenu>
+```
+
+</Example>
+
+### SidebarMenuAction: Add
+
+<Example item="sidebar" name="sidebar-menu-action-add" label="Sidebar: SidebarMenuAction: Add">
+
+```gx
+{sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Add"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/SidebarMenuAction.fixtures.go"
+"Add":   {Label: "Project options", Children: more()}
+```
+
+</Example>
+
+### SidebarMenuAction: Hover
+
+<Example item="sidebar" name="sidebar-menu-action-hover" label="Sidebar: SidebarMenuAction: Hover">
+
+```gx
+{sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Hover"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/sidebar/SidebarMenuAction.fixtures.go"
+"Hover": {Label: "Project options", ShowOnHover: true, Children: more()}
+```
+
+</Example>
+
+### SidebarMenuBadge: Count
+
+<Example item="sidebar" name="sidebar-menu-badge-count" label="Sidebar: SidebarMenuBadge: Count">
+
+```gx
+<sidebar.SidebarMenuBadge>12</sidebar.SidebarMenuBadge>
+```
+
+</Example>
+
+### SidebarMenuButton: Link
+
+<Example item="sidebar" name="sidebar-menu-button-link" label="Sidebar: SidebarMenuButton: Link">
+
+```gx
+<sidebar.SidebarMenuButton href={gx.URL("/docs")}>{gx.El("span", nil, gx.Text("Docs"))}</sidebar.SidebarMenuButton>
+```
+
+</Example>
+
+### SidebarMenuButton: Active
+
+<Example item="sidebar" name="sidebar-menu-button-active" label="Sidebar: SidebarMenuButton: Active">
+
+```gx
+<sidebar.SidebarMenuButton href={gx.URL("/")} active>{gx.El("span", nil, gx.Text("Home"))}</sidebar.SidebarMenuButton>
+```
+
+</Example>
+
+### SidebarMenuButton: Button
+
+<Example item="sidebar" name="sidebar-menu-button-button" label="Sidebar: SidebarMenuButton: Button">
+
+```gx
+<sidebar.SidebarMenuButton>{gx.El("span", nil, gx.Text("Sign out"))}</sidebar.SidebarMenuButton>
+```
+
+</Example>
+
+### SidebarMenuButton: Outline
+
+<Example item="sidebar" name="sidebar-menu-button-outline" label="Sidebar: SidebarMenuButton: Outline">
+
+```gx
+<sidebar.SidebarMenuButton variant={sidebar.Outline} href={gx.URL("/docs")}>
+  {gx.El("span", nil, gx.Text("Docs"))}
+</sidebar.SidebarMenuButton>
+```
+
+</Example>
+
+### SidebarMenuButton: Small
+
+<Example item="sidebar" name="sidebar-menu-button-small" label="Sidebar: SidebarMenuButton: Small">
+
+```gx
+<sidebar.SidebarMenuButton size={sidebar.Sm} href={gx.URL("/docs")}>
+  {gx.El("span", nil, gx.Text("Docs"))}
+</sidebar.SidebarMenuButton>
+```
+
+</Example>
+
+### SidebarMenuButton: Large
+
+<Example item="sidebar" name="sidebar-menu-button-large" label="Sidebar: SidebarMenuButton: Large">
+
+```gx
+<sidebar.SidebarMenuButton size={sidebar.Lg} href={gx.URL("/docs")}>
+  {gx.El("span", nil, gx.Text("Docs"))}
+</sidebar.SidebarMenuButton>
+```
+
+</Example>
+
+### SidebarMenuItem: Empty
+
+<Example item="sidebar" name="sidebar-menu-item-empty" label="Sidebar: SidebarMenuItem: Empty">
+
+```gx
+<sidebar.SidebarMenuItem children={gx.Frag()} />
+```
+
+</Example>
+
+### SidebarMenuSkeleton: Text
+
+<Example item="sidebar" name="sidebar-menu-skeleton-text" label="Sidebar: SidebarMenuSkeleton: Text">
+
+```gx
+<sidebar.SidebarMenuSkeleton />
+```
+
+</Example>
+
+### SidebarMenuSkeleton: Icon
+
+<Example item="sidebar" name="sidebar-menu-skeleton-icon" label="Sidebar: SidebarMenuSkeleton: Icon">
+
+```gx
+<sidebar.SidebarMenuSkeleton showIcon width="55%" />
+```
+
+</Example>
+
+### SidebarMenuSub: Two
+
+<Example item="sidebar" name="sidebar-menu-sub-two" label="Sidebar: SidebarMenuSub: Two">
+
+```gx
+<sidebar.SidebarMenuSub>
+  <sidebar.SidebarMenuSubItem>
+    <sidebar.SidebarMenuSubButton href={gx.URL("/docs/start")} active>
+      {gx.El("span", nil, gx.Text("Get started"))}
+    </sidebar.SidebarMenuSubButton>
+  </sidebar.SidebarMenuSubItem>
+  <sidebar.SidebarMenuSubItem>
+    <sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")} size={sidebar.Sm}>
+      {gx.El("span", nil, gx.Text("Forms"))}
+    </sidebar.SidebarMenuSubButton>
+  </sidebar.SidebarMenuSubItem>
+</sidebar.SidebarMenuSub>
+```
+
+</Example>
+
+### SidebarMenuSubButton: Link
+
+<Example item="sidebar" name="sidebar-menu-sub-button-link" label="Sidebar: SidebarMenuSubButton: Link">
+
+```gx
+<sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")}>
+  {gx.El("span", nil, gx.Text("Forms"))}
+</sidebar.SidebarMenuSubButton>
+```
+
+</Example>
+
+### SidebarMenuSubButton: Active
+
+<Example item="sidebar" name="sidebar-menu-sub-button-active" label="Sidebar: SidebarMenuSubButton: Active">
+
+```gx
+<sidebar.SidebarMenuSubButton href={gx.URL("/docs/start")} active>
+  {gx.El("span", nil, gx.Text("Get started"))}
+</sidebar.SidebarMenuSubButton>
+```
+
+</Example>
+
+### SidebarMenuSubButton: Small
+
+<Example item="sidebar" name="sidebar-menu-sub-button-small" label="Sidebar: SidebarMenuSubButton: Small">
+
+```gx
+<sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")} size={sidebar.Sm}>
+  {gx.El("span", nil, gx.Text("Forms"))}
+</sidebar.SidebarMenuSubButton>
+```
+
+</Example>
+
+### SidebarMenuSubItem: Empty
+
+<Example item="sidebar" name="sidebar-menu-sub-item-empty" label="Sidebar: SidebarMenuSubItem: Empty">
+
+```gx
+<sidebar.SidebarMenuSubItem children={gx.Frag()} />
+```
+
+</Example>
+
+### SidebarSeparator: Default
+
+<Example item="sidebar" name="sidebar-separator-default" label="Sidebar: SidebarSeparator: Default">
+
+```gx
+<sidebar.SidebarSeparator />
+```
+
+</Example>
+
+### SidebarTrigger: Default
+
+<Example item="sidebar" name="sidebar-trigger-default" label="Sidebar: SidebarTrigger: Default">
+
+```gx
+<sidebar.SidebarTrigger controls="demo-sidebar" />
 ```
 
 </Example>
@@ -319,8 +1327,9 @@ Pair the sidebar with a button that carries `data-gx-menu` and `aria-controls` s
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Give the sidebar the id `gx-sidebar` when it pairs with the shell menu button.
-- Keep groups short.
+- Give the sidebar the id `gx-sidebar` when it pairs with `SidebarTrigger`.
+- Put the text of a menu button in a `<span>`. A long text is then cut with an ellipsis.
+- Give `SidebarMenuAction` and `SidebarGroupAction` a `Label`.
 
 </docs.Card>
 <docs.Card title="Don't">
@@ -335,5 +1344,6 @@ Pair the sidebar with a button that carries `data-gx-menu` and `aria-controls` s
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves between the items. |
-| Enter | Follows the focused link. |
+| Tab | Moves between the links and the buttons. |
+| Enter | Follows the focused link, or activates the focused button. |
+| Space | Activates the focused button. |

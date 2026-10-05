@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<a href={p.Href} class={gx.Cx("transition-colors hover:text-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
+<a href={p.Href} data-slot="breadcrumb-link" class={gx.Cx("transition-colors hover:text-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>

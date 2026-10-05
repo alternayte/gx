@@ -8,6 +8,7 @@ import (
 
 type SidebarProps struct {
 	Id       string
+	Side     Side
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -15,9 +16,9 @@ type SidebarProps struct {
 
 func Sidebar(p SidebarProps) gx.Node {
 	var _b gx.Builder
-//line Sidebar.gx:10:1
-	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true)}, p.Attrs), p.Children))
-//line Sidebar.gx:10:179
+//line Sidebar.gx:11:1
+	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true), gx.Attr{Key: "data-slot", Value: "sidebar", Kind: gx.AttrText}, gx.Attr{Key: "data-side", Value: p.side(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Sidebar.gx:11:250
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

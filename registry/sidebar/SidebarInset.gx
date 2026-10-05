@@ -1,0 +1,9 @@
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<main data-slot="sidebar-inset" class={gx.Cx("relative flex w-full flex-1 flex-col bg-background", p.Class)} {...p.Attrs}>{p.Children}</main>

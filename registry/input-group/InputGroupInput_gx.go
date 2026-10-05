@@ -4,9 +4,11 @@ package inputgroup
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/input"
 )
 
 type InputGroupInputProps struct {
+	Id          string
 	Type        string
 	Name        string
 	Value       string
@@ -17,9 +19,9 @@ type InputGroupInputProps struct {
 
 func InputGroupInput(p InputGroupInputProps) gx.Node {
 	var _b gx.Builder
-//line InputGroupInput.gx:12:1
-	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex-1 rounded-none border-0 bg-transparent px-3 py-1 text-base shadow-none outline-none placeholder:text-muted-foreground focus-visible:ring-0 md:text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.Type, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}}, p.Attrs)))
-//line InputGroupInput.gx:12:276
+//line InputGroupInput.gx:15:1
+	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Control, "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs())))
+//line InputGroupInput.gx:15:274
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

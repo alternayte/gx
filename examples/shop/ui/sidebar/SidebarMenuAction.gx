@@ -1,0 +1,11 @@
+package sidebar
+
+props {
+  Label       string
+  ShowOnHover bool     = false
+  Class       string   = ""
+  Children    gx.Node
+  Attrs       gx.Attrs = nil
+}
+
+<button type="button" aria-label={p.Label} data-slot="sidebar-menu-action" data-sidebar="menu-action" class={gx.Cx("absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", hoverClass[p.ShowOnHover], p.Class)} {...p.Attrs}>{p.Children}</button>

@@ -16,8 +16,8 @@ type SeparatorProps struct {
 func Separator(p SeparatorProps) gx.Node {
 	var _b gx.Builder
 //line Separator.gx:10:1
-	_b.Add(gx.El("div", p.attrs()))
-//line Separator.gx:10:27
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs())))
+//line Separator.gx:10:177
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

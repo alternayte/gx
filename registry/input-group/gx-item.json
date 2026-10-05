@@ -39,7 +39,29 @@
     {
       "path": "InputGroupText.fixtures.go",
       "target": "ui/input-group/InputGroupText.fixtures.go"
+    },
+    {
+      "path": "InputGroupButton.gx",
+      "target": "ui/input-group/InputGroupButton.gx"
+    },
+    {
+      "path": "InputGroupButton.fixtures.go",
+      "target": "ui/input-group/InputGroupButton.fixtures.go"
+    },
+    {
+      "path": "InputGroupTextarea.gx",
+      "target": "ui/input-group/InputGroupTextarea.gx"
+    },
+    {
+      "path": "InputGroupTextarea.fixtures.go",
+      "target": "ui/input-group/InputGroupTextarea.fixtures.go"
     }
+  ],
+  "registryDependencies": [
+    "button",
+    "icons",
+    "input",
+    "textarea"
   ],
   "requiredTokens": [
     "--input",

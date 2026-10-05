@@ -18,6 +18,9 @@ A trail of links to the current page.
 </breadcrumb.Breadcrumb>
 ```
 
+`BreadcrumbSeparator` shows a chevron. Pass a child to show another icon or a character.
+`BreadcrumbEllipsis` shows the ellipsis icon for a collapsed middle.
+
 ## Do
 
 - End the trail with `BreadcrumbPage`.

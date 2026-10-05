@@ -6,7 +6,7 @@ group: "Components"
 item: "button-group"
 ---
 
-<Example item="button-group" name="button-group-three" label="Button Group: Three">
+<Example item="button-group" name="button-group-three" label="Button Group: ButtonGroup: Three">
 
 ```gx
 <buttongroup.ButtonGroup>
@@ -29,7 +29,7 @@ Run the command in the app module.
 gx add button-group
 ```
 
-The command also installs [`button`](/components/button/).
+The command also installs [`button`](/components/button/) and [`icons`](/components/icons/).
 
 The command writes these files.
 
@@ -37,11 +37,16 @@ The command writes these files.
 | --- | --- |
 | `ButtonGroup.gx` | `ui/button-group/ButtonGroup.gx` |
 | `ButtonGroup.fixtures.go` | `ui/button-group/ButtonGroup.fixtures.go` |
+| `ButtonGroupText.gx` | `ui/button-group/ButtonGroupText.gx` |
+| `ButtonGroupText.fixtures.go` | `ui/button-group/ButtonGroupText.fixtures.go` |
+| `ButtonGroupSeparator.gx` | `ui/button-group/ButtonGroupSeparator.gx` |
+| `ButtonGroupSeparator.fixtures.go` | `ui/button-group/ButtonGroupSeparator.fixtures.go` |
+| `styles.go` | `ui/button-group/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
-Install [`button`](/components/button/) first.
+Install [`button`](/components/button/) and [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -49,12 +54,13 @@ Copy each file to its path in the app. Change each import of a registry package 
 package buttongroup
 
 props {
-  Children gx.Node
-  Class    string   = ""
-  Attrs    gx.Attrs = nil
+  Orientation Orientation = Horizontal
+  Children    gx.Node
+  Class       string      = ""
+  Attrs       gx.Attrs    = nil
 }
 
-<div role="group" class={gx.Cx("inline-flex -space-x-px shadow-xs [&>button]:rounded-none [&>button:first-child]:rounded-l-md [&>button:last-child]:rounded-r-md [&>button:not(:first-child)]:border-l-0", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" data-slot="button-group" data-orientation={p.orientation()} class={gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```go title="ui/button-group/ButtonGroup.fixtures.go"
@@ -63,6 +69,7 @@ package buttongroup
 import (
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
 )
 
 var ButtonGroupFixtures = gx.Fixtures[ButtonGroupProps]{
@@ -71,28 +78,166 @@ var ButtonGroupFixtures = gx.Fixtures[ButtonGroupProps]{
 		button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("Two")}),
 		button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("Three")}),
 	)},
+	"Vertical": {Orientation: Vertical, Children: gx.Frag(
+		button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("One")}),
+		button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("Two")}),
+		button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("Three")}),
+	)},
+	"Separator": {Children: gx.Frag(
+		button.Button(button.ButtonProps{Variant: button.Secondary, Children: gx.Text("Copy")}),
+		ButtonGroupSeparator(ButtonGroupSeparatorProps{}),
+		button.Button(button.ButtonProps{Variant: button.Secondary, Size: button.Icon, Attrs: gx.Attrs{{Key: "aria-label", Value: "More"}}, Children: icons.ChevronDown(icons.ChevronDownProps{})}),
+	)},
+	"Text": {Children: gx.Frag(
+		ButtonGroupText(ButtonGroupTextProps{Children: gx.Text("https://")}),
+		button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("example.com")}),
+	)},
+	"Nested": {Children: gx.Frag(
+		ButtonGroup(ButtonGroupProps{Children: gx.Frag(
+			button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("One")}),
+			button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("Two")}),
+		)}),
+		ButtonGroup(ButtonGroupProps{Children: button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text("Three")})}),
+	)},
+}
+```
+
+```gx title="ui/button-group/ButtonGroupText.gx"
+package buttongroup
+
+props {
+  For      string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+if p.For != "" {
+  <label for={p.For} class={gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>{p.Children}</label>
+} else {
+  <div class={gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>{p.Children}</div>
+}
+```
+
+```go title="ui/button-group/ButtonGroupText.fixtures.go"
+package buttongroup
+
+import "github.com/alternayte/gx"
+
+var ButtonGroupTextFixtures = gx.Fixtures[ButtonGroupTextProps]{"Text": {Children: gx.Text("https://")}}
+```
+
+```gx title="ui/button-group/ButtonGroupSeparator.gx"
+package buttongroup
+
+props {
+  Orientation Orientation = Vertical
+  Class       string      = ""
+  Attrs       gx.Attrs    = nil
+}
+
+<div data-slot="button-group-separator" role="none" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", separatorClass[Orientation(p.orientation())], "relative m-0! self-stretch bg-input", p.Class)} {...p.Attrs}></div>
+```
+
+```go title="ui/button-group/ButtonGroupSeparator.fixtures.go"
+package buttongroup
+
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
+
+var ButtonGroupSeparatorFixtures = gx.Fixtures[ButtonGroupSeparatorProps]{"Default": {}}
+
+// ButtonGroupSeparatorWrap renders the separator between two buttons, as a
+// group uses it.
+func ButtonGroupSeparatorWrap(n gx.Node) gx.Node {
+	return ButtonGroup(ButtonGroupProps{Children: gx.Frag(
+		button.Button(button.ButtonProps{Variant: button.Secondary, Children: gx.Text("One")}),
+		n,
+		button.Button(button.ButtonProps{Variant: button.Secondary, Children: gx.Text("Two")}),
+	)})
+}
+```
+
+```go title="ui/button-group/styles.go"
+package buttongroup
+
+import "github.com/alternayte/gx"
+
+// Orientation is the direction of a button group or of its separator.
+type Orientation string
+
+// The orientations of buttongroup.ButtonGroup and
+// buttongroup.ButtonGroupSeparator.
+const (
+	Horizontal Orientation = "horizontal"
+	Vertical   Orientation = "vertical"
+)
+
+var orientationClass = gx.Enum[Orientation]{
+	Horizontal: "[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none",
+	Vertical:   "flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none",
+}
+
+// separatorClass sizes the separator: a vertical line takes the height of
+// the group, a horizontal line takes its width.
+var separatorClass = gx.Enum[Orientation]{
+	Horizontal: "h-px w-full",
+	Vertical:   "h-auto w-px",
+}
+
+// orientation returns the data-orientation value; a zero value is
+// Horizontal.
+func (p ButtonGroupProps) orientation() string {
+	if p.Orientation == "" {
+		return string(Horizontal)
+	}
+	return string(p.Orientation)
+}
+
+// orientation returns the data-orientation value; a zero value is
+// Vertical, the line between the buttons of a horizontal group.
+func (p ButtonGroupSeparatorProps) orientation() string {
+	if p.Orientation == "" {
+		return string(Vertical)
+	}
+	return string(p.Orientation)
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--ring`.
+The theme must define these tokens: `--ring`, `--border`, `--input`, `--muted`.
 
 ## Usage
+
+A row or a column of related buttons.
 
 ```gx
 <buttongroup.ButtonGroup>
   <button.Button variant={button.Outline}>One</button.Button>
   <button.Button variant={button.Outline}>Two</button.Button>
 </buttongroup.ButtonGroup>
+
+<buttongroup.ButtonGroup>
+  <button.Button variant={button.Secondary}>Copy</button.Button>
+  <buttongroup.ButtonGroupSeparator />
+  <button.Button variant={button.Secondary} size={button.Icon}><icons.ChevronDown /></button.Button>
+</buttongroup.ButtonGroup>
 ```
+
+Set `orientation={buttongroup.Vertical}` for a column.
+`ButtonGroupText` shows text or a label next to a button or an input. Set `For` to make it the label of an input.
+`ButtonGroupSeparator` draws a line between two buttons that have no border.
+A group in a group makes a gap between the inner groups.
 
 ## Examples
 
-### Three
+### ButtonGroup: Three
 
-<Example item="button-group" name="button-group-three" label="Button Group: Three">
+<Example item="button-group" name="button-group-three" label="Button Group: ButtonGroup: Three">
 
 ```gx
 <buttongroup.ButtonGroup>
@@ -104,19 +249,98 @@ The theme must define these tokens: `--ring`.
 
 </Example>
 
+### ButtonGroup: Vertical
+
+<Example item="button-group" name="button-group-vertical" label="Button Group: ButtonGroup: Vertical">
+
+```gx
+<buttongroup.ButtonGroup orientation={buttongroup.Vertical}>
+  <button.Button variant={button.Outline}>One</button.Button>
+  <button.Button variant={button.Outline}>Two</button.Button>
+  <button.Button variant={button.Outline}>Three</button.Button>
+</buttongroup.ButtonGroup>
+```
+
+</Example>
+
+### ButtonGroup: Separator
+
+<Example item="button-group" name="button-group-separator" label="Button Group: ButtonGroup: Separator">
+
+```gx
+<buttongroup.ButtonGroup>
+  <button.Button variant={button.Secondary}>Copy</button.Button>
+  <buttongroup.ButtonGroupSeparator />
+  <button.Button variant={button.Secondary} size={button.Icon} attrs={gx.Attrs{{Key: "aria-label", Value: "More"}}}>
+    <icons.ChevronDown />
+  </button.Button>
+</buttongroup.ButtonGroup>
+```
+
+</Example>
+
+### ButtonGroup: Text
+
+<Example item="button-group" name="button-group-text" label="Button Group: ButtonGroup: Text">
+
+```gx
+<buttongroup.ButtonGroup>
+  <buttongroup.ButtonGroupText>https://</buttongroup.ButtonGroupText>
+  <button.Button variant={button.Outline}>example.com</button.Button>
+</buttongroup.ButtonGroup>
+```
+
+</Example>
+
+### ButtonGroup: Nested
+
+<Example item="button-group" name="button-group-nested" label="Button Group: ButtonGroup: Nested">
+
+```gx
+<buttongroup.ButtonGroup>
+  <buttongroup.ButtonGroup>
+    <button.Button variant={button.Outline}>One</button.Button>
+    <button.Button variant={button.Outline}>Two</button.Button>
+  </buttongroup.ButtonGroup>
+  <buttongroup.ButtonGroup><button.Button variant={button.Outline}>Three</button.Button></buttongroup.ButtonGroup>
+</buttongroup.ButtonGroup>
+```
+
+</Example>
+
+### ButtonGroupSeparator: Default
+
+<Example item="button-group" name="button-group-separator-default" label="Button Group: ButtonGroupSeparator: Default">
+
+```gx
+<buttongroup.ButtonGroupSeparator />
+```
+
+</Example>
+
+### ButtonGroupText: Text
+
+<Example item="button-group" name="button-group-text-text" label="Button Group: ButtonGroupText: Text">
+
+```gx
+<buttongroup.ButtonGroupText>https://</buttongroup.ButtonGroupText>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Group buttons that act on the same object.
-- Give each button a distinct label.
+- Give the group an `aria-label` when its purpose is not clear from the buttons.
+- Use the same variant for every button of a group.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not group unrelated actions.
-- Do not nest a button group inside another button group.
+- Do not mix button sizes in one group.
+- Do not put a separator between outline buttons. Their borders divide them.
 
 </docs.Card>
 </docs.CardGrid>
@@ -125,5 +349,6 @@ The theme must define these tokens: `--ring`.
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves focus between the buttons. |
+| Tab | Moves focus from one button to the next. |
 | Enter | Activates the focused button. |
+| Space | Activates the focused button. |

@@ -6,6 +6,6 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class="relative w-full overflow-x-auto">
-  <table class={gx.Cx("w-full caption-bottom text-sm", p.Class)} {...p.Attrs}>{p.Children}</table>
+<div data-slot="table-container" class="relative w-full overflow-x-auto">
+  <table data-slot="table" class={gx.Cx("w-full caption-bottom text-sm", p.Class)} {...p.Attrs}>{p.Children}</table>
 </div>

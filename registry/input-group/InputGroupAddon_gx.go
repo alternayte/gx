@@ -16,8 +16,8 @@ type InputGroupAddonProps struct {
 func InputGroupAddon(p InputGroupAddonProps) gx.Node {
 	var _b gx.Builder
 //line InputGroupAddon.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none [&>svg]:size-4", alignClass[p.Align], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-align", Value: string(p.Align), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line InputGroupAddon.gx:10:239
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4", alignClass[Align(p.align())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-addon", Kind: gx.AttrText}, gx.Attr{Key: "data-align", Value: p.align(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line InputGroupAddon.gx:10:407
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

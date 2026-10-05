@@ -39,6 +39,8 @@ Run the command in the app module.
 gx add breadcrumb
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -61,6 +63,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`icons`](/components/icons/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/breadcrumb/Breadcrumb.gx"
@@ -72,7 +76,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<nav aria-label="breadcrumb" class={p.Class} {...p.Attrs}>{p.Children}</nav>
+<nav aria-label="breadcrumb" data-slot="breadcrumb" class={p.Class} {...p.Attrs}>{p.Children}</nav>
 ```
 
 ```gx title="ui/breadcrumb/BreadcrumbList.gx"
@@ -84,7 +88,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<ol class={gx.Cx("flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground sm:gap-2.5", p.Class)} {...p.Attrs}>{p.Children}</ol>
+<ol data-slot="breadcrumb-list" class={gx.Cx("flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5", p.Class)} {...p.Attrs}>{p.Children}</ol>
 ```
 
 ```gx title="ui/breadcrumb/BreadcrumbItem.gx"
@@ -96,7 +100,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<li class={gx.Cx("inline-flex items-center gap-1.5", p.Class)} {...p.Attrs}>{p.Children}</li>
+<li data-slot="breadcrumb-item" class={gx.Cx("inline-flex items-center gap-1.5", p.Class)} {...p.Attrs}>{p.Children}</li>
 ```
 
 ```gx title="ui/breadcrumb/BreadcrumbLink.gx"
@@ -109,7 +113,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<a href={p.Href} class={gx.Cx("transition-colors hover:text-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
+<a href={p.Href} data-slot="breadcrumb-link" class={gx.Cx("transition-colors hover:text-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
 ```
 
 ```gx title="ui/breadcrumb/BreadcrumbPage.gx"
@@ -121,11 +125,13 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<span role="link" aria-disabled="true" aria-current="page" class={gx.Cx("font-normal text-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
+<span data-slot="breadcrumb-page" role="link" aria-disabled="true" aria-current="page" class={gx.Cx("font-normal text-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
 ```
 
 ```gx title="ui/breadcrumb/BreadcrumbSeparator.gx"
 package breadcrumb
+
+import "github.com/alternayte/gx/registry/icons"
 
 props {
   Class    string   = ""
@@ -133,11 +139,11 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<li role="presentation" aria-hidden="true" class={gx.Cx("[&>svg]:size-3.5", p.Class)} {...p.Attrs}>
+<li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" class={gx.Cx("[&>svg]:size-3.5", p.Class)} {...p.Attrs}>
   if p.Children != nil {
     {p.Children}
   } else {
-    <span>/</span>
+    <icons.ChevronRight />
   }
 </li>
 ```
@@ -145,13 +151,15 @@ props {
 ```gx title="ui/breadcrumb/BreadcrumbEllipsis.gx"
 package breadcrumb
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<span role="presentation" aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
-  <span aria-hidden="true">…</span>
+<span data-slot="breadcrumb-ellipsis" role="presentation" aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
+  <icons.Ellipsis class="size-4" />
   <span class="sr-only">More</span>
 </span>
 ```
@@ -173,6 +181,13 @@ var BreadcrumbFixtures = gx.Fixtures[BreadcrumbProps]{
 		BreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL("/"), Children: gx.Text("Home")})}),
 		BreadcrumbSeparator(BreadcrumbSeparatorProps{}),
 		BreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbEllipsis(BreadcrumbEllipsisProps{})}),
+		BreadcrumbSeparator(BreadcrumbSeparatorProps{}),
+		BreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text("Breadcrumb")})}),
+	)})},
+	"CustomSeparator": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(
+		BreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL("/"), Children: gx.Text("Home")})}),
+		BreadcrumbSeparator(BreadcrumbSeparatorProps{Children: gx.Text("/")}),
+		BreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text("Breadcrumb")})}),
 	)})},
 }
 ```
@@ -228,6 +243,12 @@ package breadcrumb
 import "github.com/alternayte/gx"
 
 var BreadcrumbSeparatorFixtures = gx.Fixtures[BreadcrumbSeparatorProps]{"Default": {}}
+
+// BreadcrumbSeparatorWrap renders the separator inside a list, as a page
+// uses it.
+func BreadcrumbSeparatorWrap(n gx.Node) gx.Node {
+	return BreadcrumbList(BreadcrumbListProps{Children: n})
+}
 ```
 
 </docs.TabItem>
@@ -250,6 +271,9 @@ The theme must define these tokens: `--foreground`, `--muted-foreground`.
   </breadcrumb.BreadcrumbList>
 </breadcrumb.Breadcrumb>
 ```
+
+`BreadcrumbSeparator` shows a chevron. Pass a child to show another icon or a character.
+`BreadcrumbEllipsis` shows the ellipsis icon for a collapsed middle.
 
 ## Examples
 
@@ -289,6 +313,30 @@ The theme must define these tokens: `--foreground`, `--muted-foreground`.
     </breadcrumb.BreadcrumbItem>
     <breadcrumb.BreadcrumbSeparator />
     <breadcrumb.BreadcrumbItem><breadcrumb.BreadcrumbEllipsis /></breadcrumb.BreadcrumbItem>
+    <breadcrumb.BreadcrumbSeparator />
+    <breadcrumb.BreadcrumbItem>
+      <breadcrumb.BreadcrumbPage>Breadcrumb</breadcrumb.BreadcrumbPage>
+    </breadcrumb.BreadcrumbItem>
+  </breadcrumb.BreadcrumbList>
+</breadcrumb.Breadcrumb>
+```
+
+</Example>
+
+### Breadcrumb: Custom separator
+
+<Example item="breadcrumb" name="breadcrumb-custom-separator" label="Breadcrumb: Breadcrumb: Custom separator">
+
+```gx
+<breadcrumb.Breadcrumb>
+  <breadcrumb.BreadcrumbList>
+    <breadcrumb.BreadcrumbItem>
+      <breadcrumb.BreadcrumbLink href={gx.URL("/")}>Home</breadcrumb.BreadcrumbLink>
+    </breadcrumb.BreadcrumbItem>
+    <breadcrumb.BreadcrumbSeparator>/</breadcrumb.BreadcrumbSeparator>
+    <breadcrumb.BreadcrumbItem>
+      <breadcrumb.BreadcrumbPage>Breadcrumb</breadcrumb.BreadcrumbPage>
+    </breadcrumb.BreadcrumbItem>
   </breadcrumb.BreadcrumbList>
 </breadcrumb.Breadcrumb>
 ```

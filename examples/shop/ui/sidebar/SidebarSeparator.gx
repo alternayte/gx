@@ -1,0 +1,8 @@
+package sidebar
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div data-slot="sidebar-separator" data-sidebar="separator" role="none" data-orientation="horizontal" class={gx.Cx("h-px w-full shrink-0 bg-border", "mx-2 w-auto bg-sidebar-border", p.Class)} {...p.Attrs}></div>

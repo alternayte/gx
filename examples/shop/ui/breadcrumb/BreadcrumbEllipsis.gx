@@ -1,11 +1,13 @@
 package breadcrumb
 
+import "github.com/alternayte/gx/examples/shop/ui/icons"
+
 props {
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<span role="presentation" aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
-  <span aria-hidden="true">…</span>
+<span data-slot="breadcrumb-ellipsis" role="presentation" aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
+  <icons.Ellipsis class="size-4" />
   <span class="sr-only">More</span>
 </span>

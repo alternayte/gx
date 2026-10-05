@@ -28,6 +28,8 @@ Run the command in the app module.
 gx add card
 ```
 
+The command also installs [`button`](/components/button/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -38,6 +40,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`button`](/components/button/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/card/Card.gx"
@@ -46,28 +50,32 @@ package card
 props {
   Title       string   = ""
   Description string   = ""
+  Action      gx.Node  = nil
   Footer      gx.Node  = nil
   Class       string   = ""
   Children    gx.Node  = nil
   Attrs       gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex flex-col gap-6 rounded-xl border border-border bg-card py-6 text-card-foreground shadow-sm", p.Class)} {...p.Attrs}>
-  if p.Title != "" || p.Description != "" {
-    <div class="grid gap-1.5 px-6">
+<div data-slot="card" class={gx.Cx("flex flex-col gap-6 rounded-xl border border-border bg-card py-6 text-card-foreground shadow-sm", p.Class)} {...p.Attrs}>
+  if p.Title != "" || p.Description != "" || p.Action != nil {
+    <div data-slot="card-header" class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6">
       if p.Title != "" {
-        <h3 class="leading-none font-semibold">{p.Title}</h3>
+        <h3 data-slot="card-title" class="leading-none font-semibold">{p.Title}</h3>
       }
       if p.Description != "" {
-        <p class="text-muted-foreground text-sm">{p.Description}</p>
+        <p data-slot="card-description" class="text-sm text-muted-foreground">{p.Description}</p>
+      }
+      if p.Action != nil {
+        <div data-slot="card-action" class="col-start-2 row-span-2 row-start-1 self-start justify-self-end">{p.Action}</div>
       }
     </div>
   }
   if p.Children != nil {
-    <div class="px-6">{p.Children}</div>
+    <div data-slot="card-content" class="px-6">{p.Children}</div>
   }
   if p.Footer != nil {
-    <div class="flex items-center px-6">{p.Footer}</div>
+    <div data-slot="card-footer" class="flex items-center px-6 [.border-t]:pt-6">{p.Footer}</div>
   }
 </div>
 ```
@@ -75,12 +83,22 @@ props {
 ```go title="ui/card/Card.fixtures.go"
 package card
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
 
 var CardFixtures = gx.Fixtures[CardProps]{
 	"Full":      {Title: "Card title", Description: "A short description.", Children: gx.Text("Card body."), Footer: gx.Text("Footer")},
 	"TitleOnly": {Title: "Title only"},
 	"BodyOnly":  {Children: gx.Text("Body only.")},
+	"Action": {
+		Title:       "Sign in",
+		Description: "Enter your email to sign in.",
+		Action:      button.Button(button.ButtonProps{Variant: button.Link, Children: gx.Text("Sign up")}),
+		Children:    gx.Text("Card body."),
+		Footer:      button.Button(button.ButtonProps{Class: "w-full", Children: gx.Text("Continue")}),
+	},
 }
 ```
 
@@ -92,10 +110,14 @@ The theme must define these tokens: `--card`, `--card-foreground`, `--border`, `
 ## Usage
 
 ```gx
-<card.Card title="Revenue" description="Last 30 days">
-  <p>$12,400</p>
+<card.Card title="Team" description="Manage the members." footer={saveButton}>
+  <:action><button.Button variant={button.Link}>Invite</button.Button></:action>
+  <p>Card body.</p>
 </card.Card>
 ```
+
+`Title` and `Description` make the header. `Action` sits at the top right of the header.
+The children are the content. `Footer` is the last row.
 
 ## Examples
 
@@ -132,19 +154,33 @@ The theme must define these tokens: `--card`, `--card-foreground`, `--border`, `
 
 </Example>
 
+### Action
+
+<Example item="card" name="card-action" label="Card: Action">
+
+```gx
+<card.Card title="Sign in" description="Enter your email to sign in.">
+  <:action><button.Button variant={button.Link}>Sign up</button.Button></:action>
+  <:footer><button.Button class="w-full">Continue</button.Button></:footer>
+  Card body.
+</card.Card>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Use one card per unit of content.
-- Use the `Footer` node for a card action.
+- Use one card for one subject.
+- Put the main action of the card in `Footer`.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not nest cards.
-- Do not use a card for the whole page.
+- Do not nest a card in a card.
+- Do not use a card for a page layout. Use CSS.
 
 </docs.Card>
 </docs.CardGrid>

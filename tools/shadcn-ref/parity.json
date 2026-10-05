@@ -53,7 +53,7 @@
   },
   {
     "ref": "spinner",
-    "fixture": "Spinner-Small"
+    "fixture": "Spinner-Default"
   },
   {
     "ref": "progress",
@@ -109,7 +109,10 @@
   },
   {
     "ref": "table",
-    "fixture": "Table-Simple"
+    "fixture": "Table-Simple",
+    "open": {
+      "js": "(()=>{const s=document.querySelector('section[data-fixture=\"Table-Simple\"]');const y=s.querySelector('.fixture-body').getBoundingClientRect().top+scrollY;s.style.position='relative';s.style.top=(Math.round(y)-y)+'px'})()"
+    }
   },
   {
     "ref": "breadcrumb",
@@ -121,11 +124,17 @@
   },
   {
     "ref": "empty",
-    "fixture": "Empty-Full"
+    "fixture": "Empty-Full",
+    "open": {
+      "js": "(()=>{const s=document.querySelector('section[data-fixture=\"Empty-Full\"]');const y=s.querySelector('.fixture-body').getBoundingClientRect().top+scrollY;s.style.position='relative';s.style.top=(Math.round(y)-y)+'px'})()"
+    }
   },
   {
     "ref": "item",
-    "fixture": "Item-Full"
+    "fixture": "Item-Full",
+    "open": {
+      "js": "(()=>{const s=document.querySelector('section[data-fixture=\"Item-Full\"]');const y=s.querySelector('.fixture-body').getBoundingClientRect().top+scrollY;s.style.position='relative';s.style.top=(Math.round(y)-y)+'px'})()"
+    }
   },
   {
     "ref": "input-group",
@@ -137,7 +146,10 @@
   },
   {
     "ref": "field",
-    "fixture": "Field-LabelAndInput"
+    "fixture": "Field-LabelAndInput",
+    "open": {
+      "js": "(()=>{const s=document.querySelector('section[data-fixture=\"Field-LabelAndInput\"]');const y=s.querySelector('.fixture-body').getBoundingClientRect().top+scrollY;s.style.position='relative';s.style.top=(Math.round(y)-y)+'px'})()"
+    }
   },
   {
     "ref": "button-group",

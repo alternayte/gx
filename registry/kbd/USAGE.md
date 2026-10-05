@@ -1,22 +1,30 @@
 # Kbd
 
-A key or key combination.
+A key or a key combination.
 
 ## Usage
 
 ```gx
-<kbd.Kbd>Ctrl</kbd.Kbd> <kbd.Kbd>K</kbd>
+<kbd.Kbd>Esc</kbd.Kbd>
+
+<kbd.KbdGroup>
+  <kbd.Kbd>Ctrl</kbd.Kbd>
+  <span>+</span>
+  <kbd.Kbd>K</kbd.Kbd>
+</kbd.KbdGroup>
 ```
+
+`KbdGroup` keeps the keys of one shortcut on one line.
 
 ## Do
 
-- Write one key per element.
-- Use the same order as the physical keys.
+- Write the key as it is printed on the keyboard.
+- Put one key in one `Kbd`.
 
 ## Don't
 
-- Do not use a kbd for a mouse action.
-- Do not use a kbd for a sentence.
+- Do not use a kbd for a button. It does not take a click.
+- Do not put a sentence in a kbd.
 
 ## Keyboard
 

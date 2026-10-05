@@ -1,9 +1,10 @@
 package buttongroup
 
 props {
-  Children gx.Node
-  Class    string   = ""
-  Attrs    gx.Attrs = nil
+  Orientation Orientation = Horizontal
+  Children    gx.Node
+  Class       string      = ""
+  Attrs       gx.Attrs    = nil
 }
 
-<div role="group" class={gx.Cx("inline-flex -space-x-px shadow-xs [&>button]:rounded-none [&>button:first-child]:rounded-l-md [&>button:last-child]:rounded-r-md [&>button:not(:first-child)]:border-l-0", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" data-slot="button-group" data-orientation={p.orientation()} class={gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class)} {...p.Attrs}>{p.Children}</div>

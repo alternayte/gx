@@ -15,8 +15,8 @@ type EmptyHeaderProps struct {
 func EmptyHeader(p EmptyHeaderProps) gx.Node {
 	var _b gx.Builder
 //line EmptyHeader.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex max-w-sm flex-col items-center gap-2 text-center", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyHeader.gx:9:117
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex max-w-sm flex-col items-center gap-2 text-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-header", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line EmptyHeader.gx:9:142
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

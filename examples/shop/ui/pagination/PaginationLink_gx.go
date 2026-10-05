@@ -4,12 +4,13 @@ package pagination
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/button"
 )
 
 type PaginationLinkProps struct {
 	Href     gx.URL
 	Active   bool
-	Size     Size
+	Size     button.Size
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -17,9 +18,9 @@ type PaginationLinkProps struct {
 
 func PaginationLink(p PaginationLinkProps) gx.Node {
 	var _b gx.Builder
-//line PaginationLink.gx:12:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "aria-current", Value: p.current(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PaginationLink.gx:12:92
+//line PaginationLink.gx:14:1
+	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "pagination-link", Kind: gx.AttrText}}, p.attrs()), p.Children))
+//line PaginationLink.gx:14:95
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

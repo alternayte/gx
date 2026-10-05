@@ -10,6 +10,9 @@ A single-line text control.
 
 For a form with rules and errors, use the generated `gx.FormField` control instead.
 
+Set `aria-invalid="true"` through `Attrs` to show the error border.
+`input.Class` holds the classes of the input for another control that must look the same.
+
 ## Do
 
 - Always pair an input with a label.

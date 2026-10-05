@@ -37,6 +37,8 @@ Run the command in the app module.
 gx add pagination
 ```
 
+The command also installs [`button`](/components/button/) and [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -60,6 +62,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`button`](/components/button/) and [`icons`](/components/icons/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/pagination/Pagination.gx"
@@ -71,7 +75,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<nav role="navigation" aria-label="pagination" class={gx.Cx("mx-auto flex w-full justify-center", p.Class)} {...p.Attrs}>{p.Children}</nav>
+<nav role="navigation" aria-label="pagination" data-slot="pagination" class={gx.Cx("mx-auto flex w-full justify-center", p.Class)} {...p.Attrs}>{p.Children}</nav>
 ```
 
 ```gx title="ui/pagination/PaginationContent.gx"
@@ -83,7 +87,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<ul class={gx.Cx("flex flex-row items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</ul>
+<ul data-slot="pagination-content" class={gx.Cx("flex flex-row items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</ul>
 ```
 
 ```gx title="ui/pagination/PaginationItem.gx"
@@ -95,58 +99,78 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<li class={p.Class} {...p.Attrs}>{p.Children}</li>
+<li data-slot="pagination-item" class={p.Class} {...p.Attrs}>{p.Children}</li>
 ```
 
 ```gx title="ui/pagination/PaginationLink.gx"
 package pagination
 
+import "github.com/alternayte/gx/registry/button"
+
 props {
   Href     gx.URL
-  Active   bool     = false
-  Size     Size     = Icon
-  Class    string   = ""
+  Active   bool        = false
+  Size     button.Size = button.Icon
+  Class    string      = ""
   Children gx.Node
-  Attrs    gx.Attrs = nil
+  Attrs    gx.Attrs    = nil
 }
 
-<a href={p.Href} aria-current={p.current()} class={p.class()} {...p.Attrs}>{p.Children}</a>
+<a href={p.Href} data-slot="pagination-link" class={p.class()} {...p.attrs()}>{p.Children}</a>
 ```
 
 ```gx title="ui/pagination/PaginationPrevious.gx"
 package pagination
 
+import (
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
+
 props {
   Href  gx.URL
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<PaginationLink href={p.Href} size={Text} class={p.Class} attrs={p.attrs()}><span>Previous</span></PaginationLink>
+<PaginationLink href={p.Href} size={button.Md} class={gx.Cx("gap-1 px-2.5 sm:pl-2.5", p.Class)} attrs={p.attrs()}>
+  <icons.ChevronLeft />
+  <span class="hidden sm:block">Previous</span>
+</PaginationLink>
 ```
 
 ```gx title="ui/pagination/PaginationNext.gx"
 package pagination
 
+import (
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
+
 props {
   Href  gx.URL
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<PaginationLink href={p.Href} size={Text} class={p.Class} attrs={p.attrs()}><span>Next</span></PaginationLink>
+<PaginationLink href={p.Href} size={button.Md} class={gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class)} attrs={p.attrs()}>
+  <span class="hidden sm:block">Next</span>
+  <icons.ChevronRight />
+</PaginationLink>
 ```
 
 ```gx title="ui/pagination/PaginationEllipsis.gx"
 package pagination
+
+import "github.com/alternayte/gx/registry/icons"
 
 props {
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<span aria-hidden="true" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
-  <span aria-hidden="true">…</span>
+<span aria-hidden="true" data-slot="pagination-ellipsis" class={gx.Cx("flex size-9 items-center justify-center", p.Class)} {...p.Attrs}>
+  <icons.Ellipsis class="size-4" />
   <span class="sr-only">More pages</span>
 </span>
 ```
@@ -170,45 +194,30 @@ var PaginationFixtures = gx.Fixtures[PaginationProps]{
 ```go title="ui/pagination/styles.go"
 package pagination
 
-import "github.com/alternayte/gx"
-
-// Size is the shape of a pagination link.
-type Size string
-
-// The sizes of pagination.PaginationLink.
-const (
-	Icon Size = "icon"
-	Text Size = "text"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
 )
 
-var sizeClass = gx.Enum[Size]{
-	Icon: "size-9",
-	Text: "h-9 px-3",
-}
-
-// sizeClass returns the classes of one link size; a zero value is Icon.
-func (p PaginationLinkProps) sizeClass() string {
-	if p.Size == "" {
-		return sizeClass[Icon]
-	}
-	return sizeClass[p.Size]
-}
-
-// current returns the aria-current value of one link.
-func (p PaginationLinkProps) current() string {
-	if p.Active {
-		return "page"
-	}
-	return ""
-}
-
-// class returns the classes of one pagination link.
+// class returns the classes of one pagination link: the outline button for
+// the current page, the ghost button for the others. A zero size is Icon.
 func (p PaginationLinkProps) class() string {
-	base := "inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
-	if p.Active {
-		return gx.Cx(base, p.sizeClass(), "border border-border", p.Class)
+	size := p.Size
+	if size == "" {
+		size = button.Icon
 	}
-	return gx.Cx(base, p.sizeClass(), p.Class)
+	if p.Active {
+		return button.Class(button.Outline, size, p.Class)
+	}
+	return button.Class(button.Ghost, size, p.Class)
+}
+
+// attrs returns the state attributes of one link, then the caller's.
+func (p PaginationLinkProps) attrs() gx.Attrs {
+	if !p.Active {
+		return p.Attrs
+	}
+	return append(gx.Attrs{{Key: "aria-current", Value: "page"}}, p.Attrs...)
 }
 
 // attrs returns the link attributes of the previous link.
@@ -300,6 +309,10 @@ The theme must define these tokens: `--border`, `--accent`, `--accent-foreground
   </pagination.PaginationContent>
 </pagination.Pagination>
 ```
+
+A link has the look of a ghost button. The current page has the look of an outline button.
+`PaginationPrevious` and `PaginationNext` show a chevron. They hide their text on a narrow screen.
+`PaginationLink` takes a `button.Size`. The default is `button.Icon`.
 
 ## Examples
 

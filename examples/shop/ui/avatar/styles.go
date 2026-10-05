@@ -1,27 +1,20 @@
 package avatar
 
-import "github.com/alternayte/gx"
-
 // Size is the diameter of an avatar.
 type Size string
 
 // The sizes of avatar.Avatar.
 const (
 	Sm Size = "sm"
-	Md Size = "md"
+	Md Size = "default"
 	Lg Size = "lg"
 )
 
-var sizeClass = gx.Enum[Size]{
-	Sm: "size-6 text-xs",
-	Md: "size-8",
-	Lg: "size-10 text-base",
-}
-
-// sizeClass returns the classes of one avatar size; a zero value is Md.
-func (p AvatarProps) sizeClass() string {
+// size returns the data-size value; a zero value is Md. The size classes
+// of the avatar, its fallback and its badge follow this attribute.
+func (p AvatarProps) size() string {
 	if p.Size == "" {
-		return sizeClass[Md]
+		return string(Md)
 	}
-	return sizeClass[p.Size]
+	return string(p.Size)
 }

@@ -5,7 +5,7 @@
 // The second parameter of each entry, when used, opens overlays so the
 // spec can capture them.
 import { useEffect, useRef, type ReactNode } from "react"
-import { XIcon } from "lucide-react"
+import { Info, XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Accordion,
@@ -69,6 +69,19 @@ import {
 import { Progress } from "@/ui/progress"
 import { RadioGroup, RadioGroupItem } from "@/ui/radio-group"
 import { Separator } from "@/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+} from "@/ui/sidebar"
 import { Skeleton } from "@/ui/skeleton"
 import { Spinner } from "@/ui/spinner"
 import { Switch } from "@/ui/switch"
@@ -307,19 +320,21 @@ export const refs: Record<string, Ref> = {
   label: { body: <Label htmlFor="email">Email</Label> },
   separator: { body: <Separator className="w-40" /> },
   skeleton: { body: <Skeleton className="h-4 w-40" /> },
-  kbd: { body: <Kbd>K</Kbd> },
+  // The Gx kbd and avatar fallback use the foreground colour: the pinned
+  // muted-foreground on muted fails the AA contrast gate (REQ-REG-09).
+  kbd: { body: <Kbd className="text-foreground">K</Kbd> },
   spinner: { body: <Spinner /> },
   progress: { body: <Progress value={50} aria-label="Upload" /> },
   avatar: {
     body: (
       <Avatar>
-        <AvatarFallback>NA</AvatarFallback>
+        <AvatarFallback className="text-foreground">NA</AvatarFallback>
       </Avatar>
     ),
   },
   "aspect-ratio": {
     body: (
-      <AspectRatio ratio={16 / 9} className="rounded-md">
+      <AspectRatio ratio={16 / 9} className="rounded-lg bg-muted">
         16 / 9
       </AspectRatio>
     ),
@@ -434,23 +449,33 @@ export const refs: Record<string, Ref> = {
     body: (
       <Empty>
         <EmptyHeader>
-          <EmptyMedia variant="icon">+</EmptyMedia>
+          <EmptyMedia variant="icon">
+            <Info />
+          </EmptyMedia>
           <EmptyTitle>No projects</EmptyTitle>
           <EmptyDescription>Create your first project to start.</EmptyDescription>
         </EmptyHeader>
-        <EmptyContent>New project</EmptyContent>
+        <EmptyContent>
+          <Button>New project</Button>
+        </EmptyContent>
       </Empty>
     ),
   },
   item: {
     body: (
-      <Item className="p-4">
-        <ItemMedia>*</ItemMedia>
+      <Item variant="outline">
+        <ItemMedia variant="icon">
+          <Info />
+        </ItemMedia>
         <ItemContent>
           <ItemTitle>Item title</ItemTitle>
           <ItemDescription>A short description of the item.</ItemDescription>
         </ItemContent>
-        <ItemActions>Open</ItemActions>
+        <ItemActions>
+          <Button variant="outline" size="sm">
+            Open
+          </Button>
+        </ItemActions>
       </Item>
     ),
   },
@@ -460,14 +485,15 @@ export const refs: Record<string, Ref> = {
         <InputGroupAddon>
           <InputGroupText>$</InputGroupText>
         </InputGroupAddon>
-        <InputGroupInput placeholder="0.00" />
+        <InputGroupInput placeholder="0.00" aria-label="Amount" />
       </InputGroup>
     ),
   },
   field: {
     body: (
       <Field>
-        <FieldLabel htmlFor="email">Email</FieldLabel>
+        <FieldLabel htmlFor="field-email">Email</FieldLabel>
+        <Input id="field-email" type="email" placeholder="you@example.com" />
         <FieldDescription>We never share your email.</FieldDescription>
       </Field>
     ),
@@ -720,24 +746,42 @@ export const refs: Record<string, Ref> = {
     body: <input type="range" min={0} max={100} defaultValue={50} aria-label="Volume" className="h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary" />,
   },
   sidebar: {
-    // The Gx sidebar is a static aside; the pinned shadcn sidebar is an
-    // interactive composition. The reference pins the Gx design.
+    // The Gx sidebar is the static form of the pinned sidebar: the
+    // reference renders it with collapsible="none" and the same parts.
     body: (
-      <aside id="demo-sidebar" className="flex h-72 w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground">
-        <div className="flex items-center gap-2 p-4">Gx</div>
-        <div className="flex-1 overflow-y-auto p-2">
-          <div className="flex flex-col gap-1 py-2">
-            <p className="px-2 text-xs font-medium text-muted-foreground">Menu</p>
-            <a href="/" aria-current="page" className="flex items-center gap-2 rounded-md bg-sidebar-accent px-2 py-1.5 text-sm text-sidebar-accent-foreground no-underline">
-              Home
-            </a>
-            <a href="/docs" className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm no-underline">
-              Docs
-            </a>
-          </div>
-        </div>
-        <div className="mt-auto p-4">v0.1.0</div>
-      </aside>
+      <SidebarProvider className="min-h-0">
+        <Sidebar collapsible="none" className="h-72 border-r">
+          <SidebarHeader>
+            <span className="px-2 text-sm font-semibold">Gx</span>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Menu</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive>
+                      <a href="/" aria-current="page">
+                        <span>Home</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <a href="/docs">
+                        <span>Docs</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter>
+            <span className="px-2 text-xs text-sidebar-foreground/70">v0.1.0</span>
+          </SidebarFooter>
+        </Sidebar>
+      </SidebarProvider>
     ),
   },
   toast: {

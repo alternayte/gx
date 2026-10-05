@@ -45,12 +45,12 @@ props {
   Name        string   = ""
   Value       string   = ""
   Placeholder string   = ""
-  Rows        int      = 4
+  Rows        int      = 0
   Class       string   = ""
   Attrs       gx.Attrs = nil
 }
 
-<textarea name={p.Name} rows={p.rows()} placeholder={p.Placeholder} class={gx.Cx("flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", p.Class)} {...p.Attrs}>{p.Value}</textarea>
+<textarea name={p.Name} placeholder={p.Placeholder} data-slot="textarea" class={gx.Cx(Class, p.Class)} {...p.attrs()}>{p.Value}</textarea>
 ```
 
 ```go title="ui/textarea/Textarea.fixtures.go"
@@ -61,6 +61,8 @@ import "github.com/alternayte/gx"
 var TextareaFixtures = gx.Fixtures[TextareaProps]{
 	"Placeholder": {Placeholder: "Tell us more."},
 	"Filled":      {Value: "A short note.", Attrs: gx.Attrs{{Key: "aria-label", Value: "Note"}}},
+	"Rows":        {Rows: 6, Placeholder: "Six rows in a browser without field-sizing.", Attrs: gx.Attrs{{Key: "aria-label", Value: "Long note"}}},
+	"Invalid":     {Value: "No.", Attrs: gx.Attrs{{Key: "aria-label", Value: "Reason"}, {Key: "aria-invalid", Value: "true"}}},
 	"Disabled":    {Attrs: gx.Attrs{gx.Bool("disabled", true)}, Placeholder: "Disabled"},
 }
 ```
@@ -68,25 +70,46 @@ var TextareaFixtures = gx.Fixtures[TextareaProps]{
 ```go title="ui/textarea/styles.go"
 package textarea
 
-// rows returns the visible rows; a zero value is 4.
-func (p TextareaProps) rows() int {
-	if p.Rows == 0 {
-		return 4
+import (
+	"strconv"
+
+	"github.com/alternayte/gx"
+)
+
+// Control is the classes of a textarea without its focus ring. A group
+// that draws the ring on its own border takes these classes for its
+// control.
+const Control = "flex field-sizing-content min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:ring-destructive/40"
+
+// Class is the classes of a textarea. A control that looks like a textarea
+// takes these classes.
+const Class = Control + " focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+
+// attrs returns the rows attribute when the caller sets one, then the
+// caller's attributes. The textarea grows with its content, so rows only
+// counts in a browser without field-sizing.
+func (p TextareaProps) attrs() gx.Attrs {
+	if p.Rows <= 0 {
+		return p.Attrs
 	}
-	return p.Rows
+	return append(gx.Attrs{{Key: "rows", Value: strconv.Itoa(p.Rows)}}, p.Attrs...)
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`.
+The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `--destructive`.
 
 ## Usage
 
 ```gx
-<textarea.Textarea name="note" rows={6} placeholder="Tell us more." />
+<textarea.Textarea name="note" placeholder="Tell us more." />
 ```
+
+The textarea grows with its content. It starts at two lines.
+`Rows` sets the height only in a browser without `field-sizing`.
+Set `aria-invalid="true"` through `Attrs` to show the error border.
 
 ## Examples
 
@@ -110,6 +133,26 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`.
 
 </Example>
 
+### Rows
+
+<Example item="textarea" name="textarea-rows" label="Textarea: Rows">
+
+```gx
+<textarea.Textarea rows={6} placeholder="Six rows in a browser without field-sizing." attrs={gx.Attrs{{Key: "aria-label", Value: "Long note"}}} />
+```
+
+</Example>
+
+### Invalid
+
+<Example item="textarea" name="textarea-invalid" label="Textarea: Invalid">
+
+```gx
+<textarea.Textarea value="No." attrs={gx.Attrs{{Key: "aria-label", Value: "Reason"}, {Key: "aria-invalid", Value: "true"}}} />
+```
+
+</Example>
+
 ### Disabled
 
 <Example item="textarea" name="textarea-disabled" label="Textarea: Disabled">
@@ -126,7 +169,7 @@ The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`.
 <docs.Card title="Do">
 
 - Use a textarea for a message longer than one line.
-- Set `Rows` to the expected size.
+- Set a `max-h-` class when a long text must scroll.
 
 </docs.Card>
 <docs.Card title="Don't">

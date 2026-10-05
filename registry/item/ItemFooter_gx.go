@@ -15,8 +15,8 @@ type ItemFooterProps struct {
 func ItemFooter(p ItemFooterProps) gx.Node {
 	var _b gx.Builder
 //line ItemFooter.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex basis-full items-center justify-between", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemFooter.gx:9:108
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex basis-full items-center justify-between gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-footer", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ItemFooter.gx:9:138
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }
