@@ -217,8 +217,39 @@ func goTestNames(path string) ([]string, error) {
 	return names, nil
 }
 
+// quietPackages hold timing budgets that are defined on a quiet machine
+// (SDD section 13.1). `just test` runs them first and alone, and so does the
+// evidence run: their result comes from the solo run, not from the full run
+// where every package competes for the processor.
+var quietPackages = []string{"github.com/alternayte/gx/internal/devserver"}
+
 func runGoTests(root string) (map[string]string, error) {
-	cmd := exec.Command("go", "test", "-json", "./...")
+	results := map[string]string{}
+	quiet := map[string]bool{}
+	for _, pkg := range quietPackages {
+		quiet[pkg] = true
+		out, err := goTestJSON(root, pkg)
+		if err != nil {
+			return nil, err
+		}
+		if err := mergeResults(results, out, nil); err != nil {
+			return nil, err
+		}
+	}
+	out, err := goTestJSON(root, "./...")
+	if err != nil {
+		return nil, err
+	}
+	if err := mergeResults(results, out, quiet); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// goTestJSON runs `go test -json` on one pattern. A failing test is a
+// result, not an error.
+func goTestJSON(root, pattern string) ([]byte, error) {
+	cmd := exec.Command("go", "test", "-json", pattern)
 	cmd.Dir = root
 	out, err := cmd.Output()
 	if err != nil {
@@ -227,20 +258,27 @@ func runGoTests(root string) (map[string]string, error) {
 			return nil, fmt.Errorf("run go test: %w", err)
 		}
 	}
-	results := map[string]string{}
-	dec := json.NewDecoder(bytes.NewReader(out))
+	return out, nil
+}
+
+// mergeResults adds the top-level test results of one `go test -json`
+// stream to results. It leaves out the packages in skip. A failure is never
+// replaced by a pass.
+func mergeResults(results map[string]string, stream []byte, skip map[string]bool) error {
+	dec := json.NewDecoder(bytes.NewReader(stream))
 	for {
 		var ev struct {
-			Action string
-			Test   string
+			Action  string
+			Package string
+			Test    string
 		}
 		if err := dec.Decode(&ev); err != nil {
 			if errors.Is(err, io.EOF) {
-				break
+				return nil
 			}
-			return nil, fmt.Errorf("decode go test output: %w", err)
+			return fmt.Errorf("decode go test output: %w", err)
 		}
-		if ev.Test == "" || strings.Contains(ev.Test, "/") {
+		if ev.Test == "" || strings.Contains(ev.Test, "/") || skip[ev.Package] {
 			continue
 		}
 		switch ev.Action {
@@ -250,7 +288,6 @@ func runGoTests(root string) (map[string]string, error) {
 			}
 		}
 	}
-	return results, nil
 }
 
 func writeEvidence(root, dir string) error {
