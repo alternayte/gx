@@ -40,7 +40,7 @@ props {
 ```
 
 - A field is `Name Type`. A field with `= expr` is optional.
-- A default may span lines inside brackets or braces.
+- A default can span lines inside brackets or braces.
 - A `//` comment on the lines above a field is the description of the field.
   The generated props struct carries it as a Go doc comment.
 - A block holds no other comment. A comment after a field on its line, a
@@ -123,7 +123,7 @@ ends at a `}` that is the first non-space character on its line.
 
 `{expr}` in text or an attribute value is a Go expression, type-checked
 against real Go types. Typical expressions are `p.Title`, `len(p.Items)` and
-`$Qty > 0`. Strings and comments inside an expression may contain braces.
+`$Qty > 0`. Strings and comments inside an expression can contain braces.
 
 ## Whitespace, comments and formatting
 

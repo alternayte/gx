@@ -12,7 +12,7 @@ The skeleton uses the accent colour and a pulse.
 
 ## Do
 
-- Match the size of the content that will replace it.
+- Match the size of the content that replaces it.
 - Use two or three skeletons for a list.
 
 ## Don't

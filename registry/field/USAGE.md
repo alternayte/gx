@@ -23,6 +23,7 @@ Layout and labels for one form field.
 ```
 
 `Field` has three orientations: `Vertical`, `Horizontal` and `Responsive`. A responsive field is horizontal when its `FieldGroup` is wide.
+
 `FieldSet` and `FieldLegend` group related fields. `FieldGroup` sets the space between fields.
 `FieldError` shows its children, or the distinct messages of `Errors`. It renders nothing when it has no message.
 

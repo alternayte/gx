@@ -422,6 +422,7 @@ An input or a textarea with text, icons or buttons inside its border.
 
 An addon has four positions: `InlineStart`, `InlineEnd`, `BlockStart` and `BlockEnd`. A block addon makes the group a column.
 `InputGroupButton` is a ghost button with the sizes `Xs`, `Sm`, `IconXs` and `IconSm`.
+
 The group shows the focus ring of its control. It shows the error border when the control has `aria-invalid="true"`.
 A click on an addon does not focus the control. Put the addon text in a `<label for>` when a click must focus it.
 
@@ -680,7 +681,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Class` | `string` | `""` | Class adds classes to the root element. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

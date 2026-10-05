@@ -579,7 +579,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Children` | `gx.Node` | Required | Children is the cells of the row. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

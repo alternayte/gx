@@ -1038,7 +1038,7 @@ The component has no props.
 | --- | --- | --- | --- |
 | `Headings` | `[]Heading` | Required | Headings holds the entries of the table of contents. Empty renders nothing. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

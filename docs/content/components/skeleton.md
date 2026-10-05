@@ -118,12 +118,12 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Class` | `string` | `""` | Class adds classes to the root element. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Match the size of the content that will replace it.
+- Match the size of the content that replaces it.
 - Use two or three skeletons for a list.
 
 </docs.Card>

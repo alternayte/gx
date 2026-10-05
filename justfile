@@ -121,6 +121,11 @@ cx-table:
 cx-cases:
     bash tools/twmerge/cases.sh
 
+# Check the user docs against the rules of ASD-STE100 that a program can
+# decide (NFR-10).
+ste-lint:
+    go run ./internal/stelint/cmd/stelint docs/content README.md
+
 evidence:
     go run ./internal/build/evidence --write
 

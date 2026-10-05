@@ -274,7 +274,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Table` | `gx.Node` | Required | Table is the data table. It renders in a card. |
 | `Pagination` | `gx.Node` | `nil` | Pagination is the paging links shown below the table. A nil value renders no paging. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

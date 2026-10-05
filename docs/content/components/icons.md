@@ -407,7 +407,7 @@ Each icon is an inline SVG that takes the text colour. The paths come from Lucid
 <icons.X class="size-4" label="Close" />
 ```
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

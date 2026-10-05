@@ -96,7 +96,7 @@ func examplesOf(reg *registry, it *item) []*example {
 // lower case. An example heading must differ from each, so every anchor of
 // the page is unique.
 func reservedHeadings(it *item) map[string]bool {
-	out := map[string]bool{"installation": true, "usage": true, "examples": true, "api reference": true, "do and don't": true, "keyboard": true}
+	out := map[string]bool{"installation": true, "usage": true, "examples": true, "api reference": true, "do and do not": true, "keyboard": true}
 	for _, comp := range it.Components {
 		out[strings.ToLower(referenceTitle(it, comp))] = true
 	}

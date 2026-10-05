@@ -168,7 +168,7 @@ The registry has two items for a docs site.
 | Item | Content |
 | --- | --- |
 | `docs` | Aside, Tabs and TabItem, Steps, Card, CardGrid, LinkCard, LinkButton, Badge, FileTree, Code. |
-| `docs-shell` | The header, the sidebar, the table of contents, the previous and next links, the theme select, the search dialog, the splash page and the 404 page. |
+| `docs-shell` | The header, the sidebar, the table of contents, the page links, the theme select, the search dialog, the splash page and the 404 page. |
 
 Tabs with the same `sync` key change together, and the browser remembers the choice.
 

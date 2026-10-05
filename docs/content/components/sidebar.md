@@ -972,8 +972,10 @@ The theme must define these tokens: `--border`, `--background`, `--accent`, `--s
 ```
 
 `SidebarMenuButton` is a link when it has `Href`, and a button when it has none. Its variants are `Default` and `Outline`. Its sizes are `Md`, `Sm` and `Lg`.
+
 `SidebarMenuAction` and `SidebarMenuBadge` sit at the right of the button of their item. `SidebarGroupAction` sits at the right of the group label.
 `SidebarMenuSkeleton` is the placeholder of one menu row.
+
 `SidebarTrigger` shows and hides the sidebar with the id `gx-sidebar` on a narrow screen. The sidebar is always visible on a wide screen.
 Set `side={sidebar.Right}` for a sidebar at the right edge.
 
@@ -1582,7 +1584,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Class` | `string` | `""` | Class adds classes to the root element. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

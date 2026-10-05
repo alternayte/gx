@@ -179,7 +179,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Footer` | `gx.Node` | `nil` | Footer is the content of the sidebar footer. A nil value renders no footer. |
 | `Children` | `gx.Node` | Required | Children is the content of the main area. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

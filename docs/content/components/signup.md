@@ -140,7 +140,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Description` | `string` | `"Start with your email."` | Description is the text below the title. |
 | `Action` | `gx.URL` | `""` | Action is the URL that the form posts to. Empty posts to the current URL. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

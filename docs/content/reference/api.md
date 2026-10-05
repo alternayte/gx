@@ -74,7 +74,7 @@ Collection declares a content collection rooted at dir, relative to the module r
 func Cx(parts ...string) string
 ```
 
-Cx merges class strings with the semantics of tailwind-merge for Tailwind v4. A later class removes an earlier class of the same or a conflicting class group, a modifier scopes the conflict, and the classes that stay keep their order. A class that Tailwind does not know stays.
+Cx merges class strings with the semantics of tailwind-merge for Tailwind v4. A later class removes an earlier class of the same class group or of a group that conflicts with it. A modifier scopes the conflict. The classes that stay keep their order, and a class that Tailwind does not know stays.
 
 ### func DefaultMessage
 

@@ -25,6 +25,7 @@ A row with media, a title, a description and actions.
 
 The variants are `Default`, `Outline` and `Muted`. The sizes are `Md` and `Sm`.
 `ItemMedia` has the variants `MediaDefault`, `MediaIcon` and `MediaImage`. The media aligns with the title when the item has a description.
+
 Set `Href` to make the whole item one link. A link item has a hover state.
 `ItemHeader` and `ItemFooter` take a full row above and below the content.
 

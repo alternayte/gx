@@ -399,7 +399,7 @@ The component is a Go function. Its props are the fields of `DataTableProps`.
 | `Href` | `Href` | Zero value | Href builds the URL of a sort link and of a paging link. |
 | `Empty` | `gx.Node` | Zero value | Empty renders in place of the rows when the page holds none. |
 
-## Do and don't
+## Do and do not
 
 <docs.CardGrid>
 <docs.Card title="Do">

@@ -155,7 +155,7 @@ func pageMarkdown(reg *registry, p *page) (string, error) {
 	}
 
 	if it.Usage.Do != "" || it.Usage.Dont != "" {
-		b.WriteString("## Do and don't\n\n<docs.CardGrid>\n")
+		b.WriteString("## Do and do not\n\n<docs.CardGrid>\n")
 		if it.Usage.Do != "" {
 			b.WriteString("<docs.Card title=\"Do\">\n\n" + escapeTags(it.Usage.Do) + "\n\n</docs.Card>\n")
 		}
