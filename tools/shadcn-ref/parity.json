@@ -76,8 +76,30 @@
     }
   },
   {
+    "ref": "checkbox-checked",
+    "fixture": "Checkbox-Checked",
+    "focus": {
+      "gx": "input[type=checkbox]",
+      "ref": "button[role=checkbox]"
+    }
+  },
+  {
     "ref": "switch",
     "fixture": "Switch-Off",
+    "open": {
+      "js": "document.querySelectorAll('section[data-fixture]').forEach((s) => { if (s.dataset.fixture !== 'Switch-Off') s.style.display = 'none' })"
+    },
+    "focus": {
+      "gx": "input[role=switch]",
+      "ref": "button[role=switch]"
+    }
+  },
+  {
+    "ref": "switch-on",
+    "fixture": "Switch-On",
+    "open": {
+      "js": "document.querySelectorAll('section[data-fixture]').forEach((s) => { if (s.dataset.fixture !== 'Switch-On') s.style.display = 'none' })"
+    },
     "focus": {
       "gx": "input[role=switch]",
       "ref": "button[role=switch]"
@@ -100,8 +122,40 @@
     }
   },
   {
+    "ref": "toggle-on",
+    "fixture": "Toggle-On",
+    "focus": {
+      "gx": "input[type=checkbox]",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "toggle-outline",
+    "fixture": "Toggle-Outline",
+    "focus": {
+      "gx": "input[type=checkbox]",
+      "ref": "button"
+    }
+  },
+  {
     "ref": "toggle-group",
     "fixture": "ToggleGroup-Three",
+    "focus": {
+      "gx": "input[type=radio]",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "toggle-group-outline",
+    "fixture": "ToggleGroup-Outline",
+    "focus": {
+      "gx": "input[type=radio]",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "toggle-group-spaced",
+    "fixture": "ToggleGroup-OutlineSpaced",
     "focus": {
       "gx": "input[type=radio]",
       "ref": "button"
@@ -277,7 +331,27 @@
   },
   {
     "ref": "tabs",
-    "fixture": "Tabs-Two"
+    "fixture": "Tabs-Two",
+    "focus": {
+      "gx": "button[role=tab]",
+      "ref": "button[role=tab]"
+    }
+  },
+  {
+    "ref": "tabs-line",
+    "fixture": "Tabs-Line",
+    "focus": {
+      "gx": "button[role=tab]",
+      "ref": "button[role=tab]"
+    }
+  },
+  {
+    "ref": "tabs-vertical",
+    "fixture": "Tabs-Vertical",
+    "focus": {
+      "gx": "button[role=tab]",
+      "ref": "button[role=tab]"
+    }
   },
   {
     "ref": "scroll-area",
@@ -285,7 +359,11 @@
   },
   {
     "ref": "slider",
-    "fixture": "Slider-Half"
+    "fixture": "Slider-Half",
+    "focus": {
+      "gx": "input[type=range]",
+      "ref": "[role=slider]"
+    }
   },
   {
     "ref": "sidebar",

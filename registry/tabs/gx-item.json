@@ -1,7 +1,7 @@
 {
   "name": "tabs",
   "version": "0.1.0",
-  "description": "Exclusive panels behind a row of tab buttons.",
+  "description": "Exclusive panels behind a list of tab buttons.",
   "kind": "component",
   "files": [
     {
@@ -9,21 +9,44 @@
       "target": "ui/tabs/Tabs.gx"
     },
     {
-      "path": "TabItem.gx",
-      "target": "ui/tabs/TabItem.gx"
+      "path": "TabsList.gx",
+      "target": "ui/tabs/TabsList.gx"
+    },
+    {
+      "path": "TabsTrigger.gx",
+      "target": "ui/tabs/TabsTrigger.gx"
+    },
+    {
+      "path": "TabsContent.gx",
+      "target": "ui/tabs/TabsContent.gx"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/tabs/styles.go"
     },
     {
       "path": "Tabs.fixtures.go",
       "target": "ui/tabs/Tabs.fixtures.go"
     },
     {
-      "path": "TabItem.fixtures.go",
-      "target": "ui/tabs/TabItem.fixtures.go"
+      "path": "TabsList.fixtures.go",
+      "target": "ui/tabs/TabsList.fixtures.go"
+    },
+    {
+      "path": "TabsTrigger.fixtures.go",
+      "target": "ui/tabs/TabsTrigger.fixtures.go"
+    },
+    {
+      "path": "TabsContent.fixtures.go",
+      "target": "ui/tabs/TabsContent.fixtures.go"
     }
   ],
   "requiredTokens": [
+    "--background",
     "--foreground",
+    "--muted",
     "--muted-foreground",
-    "--border"
+    "--input",
+    "--ring"
   ]
 }

@@ -4,10 +4,10 @@
       "accordion": {
         "version": "0.1.0",
         "files": {
-          "ui/accordion/Accordion.fixtures.go": "1e1d60db3e35bdea20ca9afdd12153869391d2a395d4c76f14ab8a1f48371624",
+          "ui/accordion/Accordion.fixtures.go": "e41ce25a444d8cf5d4536801b7770b1da5694cdb1445a5cf449724ed0ad292df",
           "ui/accordion/Accordion.gx": "bb7f5fd82aee98ba7ce4d1d25559b21a6182e1363525ef0189d8e993c758a59e",
-          "ui/accordion/AccordionItem.fixtures.go": "0abe66d724f68da55f322346ac46f9d3e642c92ef7e753c075d3f89104135973",
-          "ui/accordion/AccordionItem.gx": "bb291cd1bbdcaca483997ce3d6bb6ba80fa14db5a97e724c12677eb844d0042c"
+          "ui/accordion/AccordionItem.fixtures.go": "d0d828b7256c098064ef9ff08a00ca5a084244194ccbd1be14e4d70d11941563",
+          "ui/accordion/AccordionItem.gx": "987501ec071b5d28f6542276e2adca586dff1f07a2a4a4994eb37b346741b645"
         }
       },
       "alert": {
@@ -100,15 +100,16 @@
       "checkbox": {
         "version": "0.1.0",
         "files": {
-          "ui/checkbox/Checkbox.fixtures.go": "7fe9a00db1663c00d5b5d52406e565ba9195797aa252c7445c864e55ae414377",
-          "ui/checkbox/Checkbox.gx": "2d9684604ec8855e034533bb2b71bf78b5ff0885664d8c9420b793753dbca76c"
+          "ui/checkbox/Checkbox.fixtures.go": "3fe349acbf82550013afc4ce2d2f99a41cfaa9c78bd777d4e5770071cb7e5087",
+          "ui/checkbox/Checkbox.gx": "b94dd4da43c1498b94a0a6a901e2e4a2efb369dadd20fc07ee087121bb27ff6e",
+          "ui/checkbox/styles.go": "c456a0337593850830f26f90fc74043e9af662cec65f0b308afef8c9ef2002fa"
         }
       },
       "collapsible": {
         "version": "0.1.0",
         "files": {
           "ui/collapsible/Collapsible.fixtures.go": "9c020f8b90e99acf39fc2e062f63c1b0ecc86bcf17e3c6c8c9c1937157e0f1bc",
-          "ui/collapsible/Collapsible.gx": "6ac2415d90c8b3d7ab6eb9b0e55a163e8dba1cc764c86b88a7628fc23d5ba977"
+          "ui/collapsible/Collapsible.gx": "a433605dff9df30ce214655fac3683c8b80b8d71e01cec10aa5fc04b693a8cb2"
         }
       },
       "context-menu": {
@@ -367,25 +368,25 @@
         "version": "0.1.0",
         "files": {
           "ui/progress/Progress.fixtures.go": "3a22ec4936118f3aef9dfb1a318da9bed0bcfd51c39c118a91dadc0fc944dad1",
-          "ui/progress/Progress.gx": "95f780bfb6526ac022f0a856bbdb43d6342447367c2dcccd27f081075c314739",
+          "ui/progress/Progress.gx": "b1f69b269c6532908fc53ec0215f694077ac26af5e957b9728b90a4dbde06e1d",
           "ui/progress/styles.go": "84a18e729042474c10a7ceb78fc91065f6f6569983e3a63e3361e960949e065c"
         }
       },
       "radio-group": {
         "version": "0.1.0",
         "files": {
-          "ui/radio-group/RadioGroup.fixtures.go": "faf942101480a679e997bd7f3dd8bf436f61443e97770df5e2c50e3df1996187",
-          "ui/radio-group/RadioGroup.gx": "5a9fc6c1325e13a374508718e1263bdcf6ef11e5509ee96c982b99c06a22c807",
-          "ui/radio-group/RadioGroupItem.fixtures.go": "6f5f976503d5fa466f7dc040e2b88ac5b692f24ca43b9483f1a483ba9ccb60f2",
-          "ui/radio-group/RadioGroupItem.gx": "6a8749ca1aa53401a4bde2b03ffa379c755c58bc2915ce497fdad443700407ff",
-          "ui/radio-group/styles.go": "fa3b85ae2d59a8411f245bdfe1c1cbf431fd2375b31a68065742860c715379da"
+          "ui/radio-group/RadioGroup.fixtures.go": "8d64d0ce037ae2e8708c89c10786ced3750304cda71c475ec3c73fb58fe056e0",
+          "ui/radio-group/RadioGroup.gx": "60bb969527799715aa8a51ca3b8dcf1742c02a3d18df6f59b7d54472455c5204",
+          "ui/radio-group/RadioGroupItem.fixtures.go": "b4d957dc1d2ec9975ea9d2349d69d1b4d9f02541580f9b356c63a343f1068f44",
+          "ui/radio-group/RadioGroupItem.gx": "51d430e3aff8ff8e34b8d142bdea10175868c18c49a93d0af8d273ed472abf0e",
+          "ui/radio-group/styles.go": "d738bd3dd78db1799f3412aa2db57373e4a33a93dc64768fa1b9f5b0dd9d8260"
         }
       },
       "scroll-area": {
         "version": "0.1.0",
         "files": {
-          "ui/scroll-area/ScrollArea.fixtures.go": "eb3e41415af947e4883fd3a18f9ab26bc53dd5fd5ddbe4b9e5a1e729592b37b5",
-          "ui/scroll-area/ScrollArea.gx": "0b904a0c1edbf5d7a6427f8f5df0b709656789fb6d1ccdfbb6c902f3823be21d"
+          "ui/scroll-area/ScrollArea.fixtures.go": "68f03ec0cfe64b9096870fa5f71766dc16529ee05ad750b387589332bc08cece",
+          "ui/scroll-area/ScrollArea.gx": "a731c73e9827e69c2615f6c4a9edf7b46cb9720eac7054e5d3d983b2a86b083a"
         }
       },
       "select": {
@@ -455,9 +456,9 @@
       "slider": {
         "version": "0.1.0",
         "files": {
-          "ui/slider/Slider.fixtures.go": "6af2a073521beaa2cfd073829c96d5b14ea9d19ea47d4848229a9879f573efb2",
-          "ui/slider/Slider.gx": "95e403d7b1efeb95347d08d978a7a87ccd89849ee042066a8bf60394604ba965",
-          "ui/slider/styles.go": "132cbd22973f945396925124af5c76d163ecafcf0c04941b5c3a086211f88537"
+          "ui/slider/Slider.fixtures.go": "f93740a885e9cbd05a982f0e6bc98be90a2683cede68f85e74a3fdc37571e966",
+          "ui/slider/Slider.gx": "f6fa633ed31f82691d0c8916b4bcfa4e3c414c0b588b01d7b9edc06d0553a028",
+          "ui/slider/styles.go": "486d492dfd0f9cf45d8bd247f36d3dc7a5ffe3740ef32f793fede9432f97b9b5"
         }
       },
       "spinner": {
@@ -471,8 +472,9 @@
       "switch": {
         "version": "0.1.0",
         "files": {
-          "ui/switch/Switch.fixtures.go": "15a93a544267db943cc2bb3f3a060dc1abcf366eb6aa3e943081da57774a51c1",
-          "ui/switch/Switch.gx": "989b955e605515f5908948d428435531b7bdb7ae8f2e5a666947cc983b5d1fc5"
+          "ui/switch/Switch.fixtures.go": "2d375ec355c6aee3d40fa8866cd8dc15dbbb19b065da96e4dcfcf3f7c16e70ef",
+          "ui/switch/Switch.gx": "800db1861441aa5b1d0edd5c33be4b64251377b808673d0423e0982f65224933",
+          "ui/switch/styles.go": "e6269d9f7710ac7eaa08346dcc32aa92982cc28d0fef9df4030a4d6b46a3d3ee"
         }
       },
       "table": {
@@ -499,10 +501,15 @@
       "tabs": {
         "version": "0.1.0",
         "files": {
-          "ui/tabs/TabItem.fixtures.go": "4343c56b671c5cb28a4a019d9d93bc40cd5636a8913e5e38dafecddbd87a89f8",
-          "ui/tabs/TabItem.gx": "dfbb29c5fa7e14344c3b8bfa0833eca856950f89375d0f56409417f0954c19fc",
-          "ui/tabs/Tabs.fixtures.go": "6acecc43844a9b5b6fc304de64aefc4f427220424b1e4804dba7c108163919ce",
-          "ui/tabs/Tabs.gx": "d17abc2514bf2ca6137f58b5ed46670b577574629b8f4a5fa2ea1b3c8561ad14"
+          "ui/tabs/Tabs.fixtures.go": "c0f5a95e53c0de8234e7d4ed7d8417f7031adf629f78958ae5c821430764c4ec",
+          "ui/tabs/Tabs.gx": "4d8474c83b9c0dd2021b1574e6c4dc33c0d01f32db498ed34b14e480bb2853f9",
+          "ui/tabs/TabsContent.fixtures.go": "8185e0df8c3ef4ff4160569e2242b314876cde3526aa88377a6e0037ffda05cd",
+          "ui/tabs/TabsContent.gx": "bd0fb889fa7955f1cf3fd16266b95f48cda8fab709f73c6e466895a35834901c",
+          "ui/tabs/TabsList.fixtures.go": "5f37da22816ba3411ede635aeb91db2ebb0f2cd3af81795e5d2f0c4e40667ca4",
+          "ui/tabs/TabsList.gx": "09f2467c7241b015c7ad41b00f03b5271e9a99badc5c77de82322dec8b375634",
+          "ui/tabs/TabsTrigger.fixtures.go": "51db620f92375082fe854662e5515af9d616096bc2e1a5dd24fd18eb9f102218",
+          "ui/tabs/TabsTrigger.gx": "328daea51497210c3ec93109f401e4eda0e5c3613981d93c69bfc2bc1f36a4cc",
+          "ui/tabs/styles.go": "2733b7b0c9eaa4c861807f7d85813a47298274355a4af2453c2cc46ed966d761"
         }
       },
       "textarea": {
@@ -523,17 +530,19 @@
       "toggle": {
         "version": "0.1.0",
         "files": {
-          "ui/toggle/Toggle.fixtures.go": "3d25aa0f916a13f15d5c2d63a7b75ccdb3009a77aa917b6f2023eb2660723313",
-          "ui/toggle/Toggle.gx": "f1b23cf742b0f6724f7f7c03a6331a3f1edb97b4f67e257f062b857ba2db23a2"
+          "ui/toggle/Toggle.fixtures.go": "247a82bc5721cc439ce2490d91413727a4e584737bdf70c03c1422b32fd3fffe",
+          "ui/toggle/Toggle.gx": "66c9e3ee98a954fc133096e73ce01e3c3f51c76b1cdd934641a01e32027d418a",
+          "ui/toggle/styles.go": "66e91d596dca8319147307a0dbe2afb7f8ec1d5156372564c266f9ce8f76aeb9"
         }
       },
       "toggle-group": {
         "version": "0.1.0",
         "files": {
-          "ui/toggle-group/ToggleGroup.fixtures.go": "9d8b5c7e9ed25971fc416249e451f0a966c97c80a1ed485e64199a946dd914cc",
-          "ui/toggle-group/ToggleGroup.gx": "8339d209a30b94b11f505968fa3d500005d7d9e72bde7fe21d97e77fb4e8800e",
-          "ui/toggle-group/ToggleGroupItem.fixtures.go": "96579e631dfde36a8a7db734f3d3329c3a3c62d119508ad7e8f225c99d703bc0",
-          "ui/toggle-group/ToggleGroupItem.gx": "d2a7b4b5a0b0d48eefa7121c53d79db9aa375b97a1f83a4c5d912018740e09d4"
+          "ui/toggle-group/ToggleGroup.fixtures.go": "7b8391396500d8113eb0f6ee3931a943ba3e083e2398aad68bb8baf814325607",
+          "ui/toggle-group/ToggleGroup.gx": "9f56af15c2ef773ff0afb040c3e2994b902e44fee8ff88285e05858637af29a5",
+          "ui/toggle-group/ToggleGroupItem.fixtures.go": "8c849e8f29ecfc7442370143fdad4738f40a5431b58145a2730dbb64e92a607c",
+          "ui/toggle-group/ToggleGroupItem.gx": "c4cada750e42ae671936dcbb7977a4a34e6ccb2d9170e98487ef0c8092cda972",
+          "ui/toggle-group/styles.go": "c01d7454af0dea89ed783f5d6e28e403540d0736852100e60d8a18c5b6b61ba1"
         }
       },
       "tooltip": {

@@ -1,9 +1,13 @@
 package togglegroup
 
 props {
+  Variant  Variant  = Default
+  Size     Size     = Md
+  Spacing  int      = 0
+  Label    string   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div role="group" class={gx.Cx("flex w-fit items-center rounded-md", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="group" aria-label={p.Label} data-variant={p.variant()} data-size={p.size()} data-spacing={p.spacing()} style={p.gap()} class={gx.Cx("group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] rounded-md", p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -15,8 +15,8 @@ type ScrollAreaProps struct {
 func ScrollArea(p ScrollAreaProps) gx.Node {
 	var _b gx.Builder
 //line ScrollArea.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative overflow-auto", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("scrollbar-width: thin")))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ScrollArea.gx:9:141
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative overflow-auto transition-[color,box-shadow] outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ScrollArea.gx:9:315
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -6,7 +6,11 @@ A single boolean control with a label.
 
 ```gx
 <checkbox.Checkbox name="terms" checked={p.Accepted}>Accept the terms</checkbox.Checkbox>
+<checkbox.Checkbox name="terms" invalid={p.TermsMissing}>Accept the terms</checkbox.Checkbox>
 ```
+
+The checkbox is a native input behind a styled box.
+`Disabled` and `Invalid` set the state of the input.
 
 ## Do
 

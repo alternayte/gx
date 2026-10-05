@@ -8,6 +8,6 @@ props {
   Attrs gx.Attrs = nil
 }
 
-<div role="progressbar" aria-valuemin={0} aria-valuemax={p.max()} aria-valuenow={p.Value} aria-label={p.Label} class={gx.Cx("bg-primary/20 relative h-2 w-full overflow-hidden rounded-full", p.Class)} {...p.Attrs}>
-  <div class="bg-primary h-full w-full flex-1" style={gx.Style("transform: translateX(-" + p.offset() + "%)")}></div>
+<div role="progressbar" aria-valuemin={0} aria-valuemax={p.max()} aria-valuenow={p.Value} aria-label={p.Label} class={gx.Cx("relative h-2 w-full overflow-hidden rounded-full bg-primary/20", p.Class)} {...p.Attrs}>
+  <div class="h-full w-full flex-1 bg-primary transition-all motion-reduce:transition-none" style={gx.Style("transform: translateX(-" + p.offset() + "%)")}></div>
 </div>

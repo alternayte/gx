@@ -6,9 +6,12 @@ A native range control.
 
 ```gx
 <slider.Slider name="volume" value={p.Volume} label="Volume" />
+<slider.Slider name="level" value={p.Level} label="Level" orientation={slider.Vertical} />
 ```
 
 The component is a styled native `<input type="range">`.
+The server paints the range for the first render. The behaviour runtime repaints it on input in Chrome and Safari. Firefox paints the range itself.
+A slider has one thumb.
 
 ## Do
 

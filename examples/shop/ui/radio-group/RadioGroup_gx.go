@@ -9,6 +9,7 @@ import (
 type RadioGroupProps struct {
 	Name        string
 	Orientation Orientation
+	Label       string
 	Class       string
 	Children    gx.Node
 	Attrs       gx.Attrs
@@ -16,9 +17,9 @@ type RadioGroupProps struct {
 
 func RadioGroup(p RadioGroupProps) gx.Node {
 	var _b gx.Builder
-//line RadioGroup.gx:11:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("grid gap-2", orientationClass[p.Orientation], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "radiogroup", Kind: gx.AttrText}, gx.Attr{Key: "aria-orientation", Value: string(p.Orientation), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line RadioGroup.gx:11:158
+//line RadioGroup.gx:12:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("grid gap-3", orientationClass[p.orientation()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "radiogroup", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "aria-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line RadioGroup.gx:12:183
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -3,9 +3,10 @@ package radiogroup
 props {
   Name        string      = ""
   Orientation Orientation = Vertical
+  Label       string      = ""
   Class       string      = ""
   Children    gx.Node
   Attrs       gx.Attrs    = nil
 }
 
-<div role="radiogroup" aria-orientation={p.Orientation} class={gx.Cx("grid gap-2", orientationClass[p.Orientation], p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="radiogroup" aria-label={p.Label} aria-orientation={p.orientation()} class={gx.Cx("grid gap-3", orientationClass[p.orientation()], p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -1,20 +1,24 @@
 package checkbox
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
   Name     string   = ""
   Value    string   = "on"
   Checked  bool     = false
+  Disabled bool     = false
+  Invalid  bool     = false
   Class    string   = ""
   Children gx.Node  = nil
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("flex select-none items-center gap-2 text-sm font-medium leading-none", p.Class)} {...p.Attrs}>
-  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Checked} class="peer sr-only" />
-  <span aria-hidden="true" class="grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs outline-none transition-shadow dark:bg-input/30 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50">
-    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+<label class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class)} {...p.Attrs}>
+  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} aria-invalid={p.invalid()} class="peer sr-only" />
+  <span aria-hidden="true" class="grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs transition-shadow outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 peer-checked:border-primary peer-checked:bg-primary peer-checked:peer-focus-visible:border-primary peer-checked:text-primary-foreground dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 dark:peer-checked:bg-primary motion-reduce:transition-none">
+    <icons.Check class="size-3.5" />
   </span>
   if p.Children != nil {
-    <span>{p.Children}</span>
+    <span class="peer-disabled:cursor-not-allowed peer-disabled:opacity-50">{p.Children}</span>
   }
 </label>

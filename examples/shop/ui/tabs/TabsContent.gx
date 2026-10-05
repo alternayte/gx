@@ -1,0 +1,10 @@
+package tabs
+
+props {
+  Label    string
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="tabpanel" tabindex="0" data-gx-tab-panel={p.Label} class={gx.Cx("flex-1 outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>
