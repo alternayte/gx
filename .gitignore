@@ -11,6 +11,9 @@ docs/specs/
 # Repo-local e2e dependencies
 node_modules/
 
+# Browser test results of the last run, read by `just evidence`
+tests/e2e/.results/
+
 # Dev server and compiler state
 .gx/
 

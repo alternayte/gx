@@ -27,7 +27,7 @@ parity:
     cd tools/shadcn-ref && bun install --frozen-lockfile
     go run ./internal/refcss -in tools/shadcn-ref/src/theme.css -out tools/shadcn-ref/public/ref.css
     cd tests/e2e && bun install --frozen-lockfile
-    cd tests/e2e && bun test --timeout=300000 ./parity.browsers.ts
+    bash tests/e2e/record.sh ./parity.browsers.ts
 
 build:
     rm -rf .gx-build; mkdir -p .gx-build; trap 'rm -rf .gx-build' EXIT; go build -o .gx-build ./...
@@ -107,8 +107,8 @@ evidence-check:
 
 # Registry accessibility: zero serious or critical axe violations (REQ-REG-09).
 a11y:
-    cd tests/e2e && bun test --timeout=300000 a11y.spec.ts
+    bash tests/e2e/record.sh a11y.spec.ts
 
 # The fallback path of partly supported platform features (REQ-REG-13).
 fallback:
-    cd tests/e2e && bun test --timeout=300000 ./fallback.browsers.ts
+    bash tests/e2e/record.sh ./fallback.browsers.ts
