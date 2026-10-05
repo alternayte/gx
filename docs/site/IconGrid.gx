@@ -1,0 +1,14 @@
+package site
+
+props {
+  Item string
+}
+
+<ul class="gx-icon-grid my-6 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 md:grid-cols-4">
+  for _, ex := range iconExamples(p.Item) {
+    <li class="m-0 flex flex-col items-center gap-3 rounded-lg border border-border p-4 text-center">
+      <span class="flex size-10 items-center justify-center [&>svg]:size-6">{ex.Node()}</span>
+      <code class="text-xs text-muted-foreground">{ex.Component}</code>
+    </li>
+  }
+</ul>

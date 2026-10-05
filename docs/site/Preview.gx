@@ -1,0 +1,13 @@
+package site
+
+props {
+  Title    string
+  Block    bool = false
+  Children gx.Node = nil
+}
+
+<gx.Head title={p.Title} />
+{/* The hidden theme marker loads the core runtime, which applies the stored
+    theme and follows the theme select of the page around the frame. */}
+<span hidden data-gx-theme="auto"></span>
+<div class="gx-stage" class:gx-stage-block={p.Block}>{p.Children}</div>

@@ -181,6 +181,11 @@ const syncSidebar = (): void => {
 
 // installShellEvents installs the delegated shell handlers once.
 const installShellEvents = (): void => {
+  // Another document of the origin changed the theme: a second tab, or the
+  // page around a frame. Follow it.
+  window.addEventListener('storage', (e) => {
+    if (e.key === themeKey) applyTheme(e.newValue ?? 'auto')
+  })
   document.addEventListener('click', (e) => {
     const at = e.target as Element | null
     const theme = at?.closest?.('[data-gx-theme]') as HTMLElement | null

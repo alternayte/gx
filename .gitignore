@@ -20,3 +20,6 @@ editors/vscode/.vscode-test/
 
 # Generated reference stylesheet of the parity suite
 tools/shadcn-ref/public/
+
+# Docs site export
+docs/dist/

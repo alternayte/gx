@@ -1,0 +1,20 @@
+package site
+
+import "github.com/alternayte/gx/docs/site/route"
+
+props {
+  Item  string
+  Name  string
+  Label string = ""
+  Block bool = false
+}
+
+{/* The example runs in its own document: a modal dialog, a popover and a
+    fixed element stay inside the frame, and its ids cannot meet the ids of
+    another example on the page. */}
+<div class="gx-frame resize-y overflow-hidden rounded-lg border border-border bg-background" class:gx-frame-block={p.Block}>
+  <iframe src={route.Preview{Item: p.Item, Example: p.Name}} title={p.Label} loading="lazy" class="block size-full"></iframe>
+</div>
+<p class="gx-frame-link mt-2 text-right text-xs" data-pagefind-ignore>
+  <a href={route.Preview{Item: p.Item, Example: p.Name}} target="_blank" rel="noopener">Open the preview in a new tab</a>
+</p>
