@@ -1,0 +1,3566 @@
+{
+ "source": "tailwind-merge 3.7.0, packages/tailwind-merge/tests and the documentation examples (MIT, Copyright (c) 2021 Dany Castillo)",
+ "cases": [
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts correctly",
+   "args": [
+    "[paint-order:markers] [paint-order:normal]"
+   ],
+   "want": "[paint-order:normal]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts correctly",
+   "args": [
+    "[paint-order:markers] [--my-var:2rem] [paint-order:normal] [--my-var:4px]"
+   ],
+   "want": "[paint-order:normal] [--my-var:4px]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts with modifiers correctly",
+   "args": [
+    "[paint-order:markers] hover:[paint-order:normal]"
+   ],
+   "want": "[paint-order:markers] hover:[paint-order:normal]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts with modifiers correctly",
+   "args": [
+    "hover:[paint-order:markers] hover:[paint-order:normal]"
+   ],
+   "want": "hover:[paint-order:normal]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts with modifiers correctly",
+   "args": [
+    "hover:focus:[paint-order:markers] focus:hover:[paint-order:normal]"
+   ],
+   "want": "focus:hover:[paint-order:normal]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts with modifiers correctly",
+   "args": [
+    "[paint-order:markers] [paint-order:normal] [--my-var:2rem] lg:[--my-var:4px]"
+   ],
+   "want": "[paint-order:normal] [--my-var:2rem] lg:[--my-var:4px]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles arbitrary property conflicts with modifiers correctly",
+   "args": [
+    "bg-[#B91C1C] bg-radial-[at_50%_75%] bg-radial-[at_25%_25%]"
+   ],
+   "want": "bg-[#B91C1C] bg-radial-[at_25%_25%]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles complex arbitrary property conflicts correctly",
+   "args": [
+    "[-unknown-prop:::123:::] [-unknown-prop:url(https://hi.com)]"
+   ],
+   "want": "[-unknown-prop:url(https://hi.com)]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles important modifier correctly",
+   "args": [
+    "![some:prop] [some:other]"
+   ],
+   "want": "![some:prop] [some:other]"
+  },
+  {
+   "file": "arbitrary-properties.test.ts",
+   "test": "handles important modifier correctly",
+   "args": [
+    "![some:prop] [some:other] [some:one] ![some:another]"
+   ],
+   "want": "[some:one] ![some:another]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "m-[2px] m-[10px]"
+   ],
+   "want": "m-[10px]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "m-[2px] m-[11svmin] m-[12in] m-[13lvi] m-[14vb] m-[15vmax] m-[16mm] m-[17%] m-[18em] m-[19px] m-[10dvh]"
+   ],
+   "want": "m-[10dvh]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "h-[10px] h-[11cqw] h-[12cqh] h-[13cqi] h-[14cqb] h-[15cqmin] h-[16cqmax]"
+   ],
+   "want": "h-[16cqmax]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "z-20 z-[99]"
+   ],
+   "want": "z-[99]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "my-[2px] m-[10rem]"
+   ],
+   "want": "m-[10rem]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "cursor-pointer cursor-[grab]"
+   ],
+   "want": "cursor-[grab]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "m-[2px] m-[calc(100%-var(--arbitrary))]"
+   ],
+   "want": "m-[calc(100%-var(--arbitrary))]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "m-[2px] m-[length:var(--mystery-var)]"
+   ],
+   "want": "m-[length:var(--mystery-var)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "opacity-10 opacity-[0.025]"
+   ],
+   "want": "opacity-[0.025]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "scale-75 scale-[1.7]"
+   ],
+   "want": "scale-[1.7]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "brightness-90 brightness-[1.75]"
+   ],
+   "want": "brightness-[1.75]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "min-h-[0.5px] min-h-[0]"
+   ],
+   "want": "min-h-[0]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "text-[0.5px] text-[color:0]"
+   ],
+   "want": "text-[0.5px] text-[color:0]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles simple conflicts with arbitrary values correctly",
+   "args": [
+    "text-[0.5px] text-(--my-0)"
+   ],
+   "want": "text-[0.5px] text-(--my-0)"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary length conflicts with labels and modifiers correctly",
+   "args": [
+    "hover:m-[2px] hover:m-[length:var(--c)]"
+   ],
+   "want": "hover:m-[length:var(--c)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary length conflicts with labels and modifiers correctly",
+   "args": [
+    "hover:focus:m-[2px] focus:hover:m-[length:var(--c)]"
+   ],
+   "want": "focus:hover:m-[length:var(--c)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary length conflicts with labels and modifiers correctly",
+   "args": [
+    "border-b border-[color:rgb(var(--color-gray-500-rgb)/50%))]"
+   ],
+   "want": "border-b border-[color:rgb(var(--color-gray-500-rgb)/50%))]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary length conflicts with labels and modifiers correctly",
+   "args": [
+    "border-[color:rgb(var(--color-gray-500-rgb)/50%))] border-b"
+   ],
+   "want": "border-[color:rgb(var(--color-gray-500-rgb)/50%))] border-b"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary length conflicts with labels and modifiers correctly",
+   "args": [
+    "border-b border-[color:rgb(var(--color-gray-500-rgb)/50%))] border-some-coloooor"
+   ],
+   "want": "border-b border-some-coloooor"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles complex arbitrary value conflicts correctly",
+   "args": [
+    "grid-rows-[1fr,auto] grid-rows-2"
+   ],
+   "want": "grid-rows-2"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles complex arbitrary value conflicts correctly",
+   "args": [
+    "grid-rows-[repeat(20,minmax(0,1fr))] grid-rows-3"
+   ],
+   "want": "grid-rows-3"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "mt-2 mt-[calc(theme(fontSize.4xl)/1.125)]"
+   ],
+   "want": "mt-[calc(theme(fontSize.4xl)/1.125)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "p-2 p-[calc(theme(fontSize.4xl)/1.125)_10px]"
+   ],
+   "want": "p-[calc(theme(fontSize.4xl)/1.125)_10px]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "mt-2 mt-[length:theme(someScale.someValue)]"
+   ],
+   "want": "mt-[length:theme(someScale.someValue)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "mt-2 mt-[theme(someScale.someValue)]"
+   ],
+   "want": "mt-[theme(someScale.someValue)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "text-2xl text-[length:theme(someScale.someValue)]"
+   ],
+   "want": "text-[length:theme(someScale.someValue)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "text-2xl text-[calc(theme(fontSize.4xl)/1.125)]"
+   ],
+   "want": "text-[calc(theme(fontSize.4xl)/1.125)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "bg-cover bg-[percentage:30%] bg-[size:200px_100px] bg-[length:200px_100px]"
+   ],
+   "want": "bg-[percentage:30%] bg-[length:200px_100px]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "bg-none bg-[url(.)] bg-[image:.] bg-[url:.] bg-[linear-gradient(.)] bg-linear-to-r"
+   ],
+   "want": "bg-linear-to-r"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "border-[color-mix(in_oklab,var(--background),var(--calendar-color)_30%)] border"
+   ],
+   "want": "border-[color-mix(in_oklab,var(--background),var(--calendar-color)_30%)] border"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "font-[400] font-[600]"
+   ],
+   "want": "font-[600]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "font-[var(--a)] font-[var(--b)]"
+   ],
+   "want": "font-[var(--b)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "font-[weight:var(--a)] font-[var(--b)]"
+   ],
+   "want": "font-[var(--b)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "font-[400] font-[weight:var(--b)]"
+   ],
+   "want": "font-[weight:var(--b)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "font-[weight:var(--a)] font-[weight:var(--b)]"
+   ],
+   "want": "font-[weight:var(--b)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles ambiguous arbitrary values correctly",
+   "args": [
+    "font-[family-name:var(--a)] font-[var(--b)]"
+   ],
+   "want": "font-[family-name:var(--a)] font-[var(--b)]"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary custom properties correctly",
+   "args": [
+    "bg-red bg-(--other-red) bg-bottom bg-(position:-my-pos)"
+   ],
+   "want": "bg-(--other-red) bg-(position:-my-pos)"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary custom properties correctly",
+   "args": [
+    "shadow-xs shadow-(shadow:--something) shadow-red shadow-(--some-other-shadow) shadow-(color:--some-color)"
+   ],
+   "want": "shadow-(--some-other-shadow) shadow-(color:--some-color)"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary custom properties correctly",
+   "args": [
+    "font-(--a) font-(--b)"
+   ],
+   "want": "font-(--b)"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary custom properties correctly",
+   "args": [
+    "font-(weight:--a) font-(--b)"
+   ],
+   "want": "font-(--b)"
+  },
+  {
+   "file": "arbitrary-values.test.ts",
+   "test": "handles arbitrary custom properties correctly",
+   "args": [
+    "font-(family-name:--a) font-(--b)"
+   ],
+   "want": "font-(family-name:--a) font-(--b)"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "basic arbitrary variants",
+   "args": [
+    "[p]:underline [p]:line-through"
+   ],
+   "want": "[p]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "basic arbitrary variants",
+   "args": [
+    "[&>*]:underline [&>*]:line-through"
+   ],
+   "want": "[&>*]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "basic arbitrary variants",
+   "args": [
+    "[&>*]:underline [&>*]:line-through [&_div]:line-through"
+   ],
+   "want": "[&>*]:line-through [&_div]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "basic arbitrary variants",
+   "args": [
+    "supports-[display:grid]:flex supports-[display:grid]:grid"
+   ],
+   "want": "supports-[display:grid]:grid"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with modifiers",
+   "args": [
+    "dark:lg:hover:[&>*]:underline dark:lg:hover:[&>*]:line-through"
+   ],
+   "want": "dark:lg:hover:[&>*]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with modifiers",
+   "args": [
+    "dark:lg:hover:[&>*]:underline dark:hover:lg:[&>*]:line-through"
+   ],
+   "want": "dark:hover:lg:[&>*]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with modifiers",
+   "args": [
+    "hover:[&>*]:underline [&>*]:hover:line-through"
+   ],
+   "want": "hover:[&>*]:underline [&>*]:hover:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with modifiers",
+   "args": [
+    "hover:dark:[&>*]:underline dark:hover:[&>*]:underline dark:[&>*]:hover:line-through"
+   ],
+   "want": "dark:hover:[&>*]:underline dark:[&>*]:hover:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with complex syntax in them",
+   "args": [
+    "[@media_screen{@media(hover:hover)}]:underline [@media_screen{@media(hover:hover)}]:line-through"
+   ],
+   "want": "[@media_screen{@media(hover:hover)}]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with complex syntax in them",
+   "args": [
+    "hover:[@media_screen{@media(hover:hover)}]:underline hover:[@media_screen{@media(hover:hover)}]:line-through"
+   ],
+   "want": "hover:[@media_screen{@media(hover:hover)}]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with attribute selectors",
+   "args": [
+    "[&[data-open]]:underline [&[data-open]]:line-through"
+   ],
+   "want": "[&[data-open]]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with multiple attribute selectors",
+   "args": [
+    "[&[data-foo][data-bar]:not([data-baz])]:underline [&[data-foo][data-bar]:not([data-baz])]:line-through"
+   ],
+   "want": "[&[data-foo][data-bar]:not([data-baz])]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "multiple arbitrary variants",
+   "args": [
+    "[&>*]:[&_div]:underline [&>*]:[&_div]:line-through"
+   ],
+   "want": "[&>*]:[&_div]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "multiple arbitrary variants",
+   "args": [
+    "[&>*]:[&_div]:underline [&_div]:[&>*]:line-through"
+   ],
+   "want": "[&>*]:[&_div]:underline [&_div]:[&>*]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "multiple arbitrary variants",
+   "args": [
+    "hover:dark:[&>*]:focus:disabled:[&_div]:underline dark:hover:[&>*]:disabled:focus:[&_div]:line-through"
+   ],
+   "want": "dark:hover:[&>*]:disabled:focus:[&_div]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "multiple arbitrary variants",
+   "args": [
+    "hover:dark:[&>*]:focus:[&_div]:disabled:underline dark:hover:[&>*]:disabled:focus:[&_div]:line-through"
+   ],
+   "want": "hover:dark:[&>*]:focus:[&_div]:disabled:underline dark:hover:[&>*]:disabled:focus:[&_div]:line-through"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with arbitrary properties",
+   "args": [
+    "[&>*]:[color:red] [&>*]:[color:blue]"
+   ],
+   "want": "[&>*]:[color:blue]"
+  },
+  {
+   "file": "arbitrary-variants.test.ts",
+   "test": "arbitrary variants with arbitrary properties",
+   "args": [
+    "[&[data-foo][data-bar]:not([data-baz])]:nod:noa:[color:red] [&[data-foo][data-bar]:not([data-baz])]:noa:nod:[color:blue]"
+   ],
+   "want": "[&[data-foo][data-bar]:not([data-baz])]:noa:nod:[color:blue]"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "overflow-x-auto overflow-x-hidden"
+   ],
+   "want": "overflow-x-hidden"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "basis-full basis-auto"
+   ],
+   "want": "basis-auto"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "w-full w-fit"
+   ],
+   "want": "w-fit"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "overflow-x-auto overflow-x-hidden overflow-x-scroll"
+   ],
+   "want": "overflow-x-scroll"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "overflow-x-auto hover:overflow-x-hidden overflow-x-scroll"
+   ],
+   "want": "hover:overflow-x-hidden overflow-x-scroll"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "overflow-x-auto hover:overflow-x-hidden hover:overflow-x-auto overflow-x-scroll"
+   ],
+   "want": "hover:overflow-x-auto overflow-x-scroll"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "col-span-1 col-span-full"
+   ],
+   "want": "col-span-full"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "columns-12 columns-auto"
+   ],
+   "want": "columns-auto"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "columns-auto columns-2xl"
+   ],
+   "want": "columns-2xl"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from same group correctly",
+   "args": [
+    "gap-2 gap-px basis-px basis-3"
+   ],
+   "want": "gap-px basis-3"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges none values in sizing groups correctly",
+   "args": [
+    "max-w-lg max-w-none"
+   ],
+   "want": "max-w-none"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges none values in sizing groups correctly",
+   "args": [
+    "max-w-none max-w-lg"
+   ],
+   "want": "max-w-lg"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges none values in sizing groups correctly",
+   "args": [
+    "max-h-96 max-h-none"
+   ],
+   "want": "max-h-none"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges none values in sizing groups correctly",
+   "args": [
+    "max-h-none max-h-96"
+   ],
+   "want": "max-h-96"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges none values in sizing groups correctly",
+   "args": [
+    "max-h-[300px] max-h-none"
+   ],
+   "want": "max-h-none"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges none values in sizing groups correctly",
+   "args": [
+    "max-h-none max-h-screen"
+   ],
+   "want": "max-h-screen"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from Font Variant Numeric section correctly",
+   "args": [
+    "lining-nums tabular-nums diagonal-fractions"
+   ],
+   "want": "lining-nums tabular-nums diagonal-fractions"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from Font Variant Numeric section correctly",
+   "args": [
+    "normal-nums tabular-nums diagonal-fractions"
+   ],
+   "want": "tabular-nums diagonal-fractions"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from Font Variant Numeric section correctly",
+   "args": [
+    "tabular-nums diagonal-fractions normal-nums"
+   ],
+   "want": "normal-nums"
+  },
+  {
+   "file": "class-group-conflicts.test.ts",
+   "test": "merges classes from Font Variant Numeric section correctly",
+   "args": [
+    "tabular-nums proportional-nums"
+   ],
+   "want": "proportional-nums"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color conflicts properly",
+   "args": [
+    "bg-grey-5 bg-hotpink"
+   ],
+   "want": "bg-hotpink"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color conflicts properly",
+   "args": [
+    "hover:bg-grey-5 hover:bg-hotpink"
+   ],
+   "want": "hover:bg-hotpink"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color conflicts properly",
+   "args": [
+    "stroke-[hsl(350_80%_0%)] stroke-[10px]"
+   ],
+   "want": "stroke-[hsl(350_80%_0%)] stroke-[10px]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "text-sm text-[color(display-p3_1_0_0/50%)]"
+   ],
+   "want": "text-sm text-[color(display-p3_1_0_0/50%)]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "text-[color(display-p3_1_0_0/50%)] text-sm"
+   ],
+   "want": "text-[color(display-p3_1_0_0/50%)] text-sm"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "text-red-500 text-[color(display-p3_1_0_0/50%)]"
+   ],
+   "want": "text-[color(display-p3_1_0_0/50%)]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "text-[color(display-p3_1_0_0/50%)] text-red-500"
+   ],
+   "want": "text-red-500"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "border-2 border-[color(display-p3_1_0_0/50%)]"
+   ],
+   "want": "border-2 border-[color(display-p3_1_0_0/50%)]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "border-[color(display-p3_1_0_0/50%)] border-2"
+   ],
+   "want": "border-[color(display-p3_1_0_0/50%)] border-2"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "stroke-2 stroke-[color(display-p3_1_0_0/50%)]"
+   ],
+   "want": "stroke-2 stroke-[color(display-p3_1_0_0/50%)]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles color() functions with percentages correctly",
+   "args": [
+    "stroke-[color(display-p3_1_0_0/50%)] stroke-2"
+   ],
+   "want": "stroke-[color(display-p3_1_0_0/50%)] stroke-2"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "text-sm text-[light-dark(white,rgb(0_0_0/50%))]"
+   ],
+   "want": "text-sm text-[light-dark(white,rgb(0_0_0/50%))]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "text-[light-dark(white,rgb(0_0_0/50%))] text-sm"
+   ],
+   "want": "text-[light-dark(white,rgb(0_0_0/50%))] text-sm"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "text-red-500 text-[light-dark(white,rgb(0_0_0/50%))]"
+   ],
+   "want": "text-[light-dark(white,rgb(0_0_0/50%))]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "text-[light-dark(white,rgb(0_0_0/50%))] text-red-500"
+   ],
+   "want": "text-red-500"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "border-2 border-[light-dark(white,rgb(0_0_0/50%))]"
+   ],
+   "want": "border-2 border-[light-dark(white,rgb(0_0_0/50%))]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "border-[light-dark(white,rgb(0_0_0/50%))] border-2"
+   ],
+   "want": "border-[light-dark(white,rgb(0_0_0/50%))] border-2"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "stroke-2 stroke-[light-dark(white,rgb(0_0_0/50%))]"
+   ],
+   "want": "stroke-2 stroke-[light-dark(white,rgb(0_0_0/50%))]"
+  },
+  {
+   "file": "colors.test.ts",
+   "test": "handles light-dark() functions with percentages correctly",
+   "args": [
+    "stroke-[light-dark(white,rgb(0_0_0/50%))] stroke-2"
+   ],
+   "want": "stroke-[light-dark(white,rgb(0_0_0/50%))] stroke-2"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-1 inset-x-1"
+   ],
+   "want": "inset-1 inset-x-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 inset-1"
+   ],
+   "want": "inset-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 left-1 inset-1"
+   ],
+   "want": "inset-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 inset-1 left-1"
+   ],
+   "want": "inset-1 left-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 right-1 inset-1"
+   ],
+   "want": "inset-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 right-1 inset-x-1"
+   ],
+   "want": "inset-x-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 right-1 inset-y-1"
+   ],
+   "want": "inset-x-1 right-1 inset-y-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "right-1 inset-x-1 inset-y-1"
+   ],
+   "want": "inset-x-1 inset-y-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "handles conflicts across class groups correctly",
+   "args": [
+    "inset-x-1 hover:left-1 inset-1"
+   ],
+   "want": "hover:left-1 inset-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "ps-2 px-4"
+   ],
+   "want": "px-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "pe-2 px-4"
+   ],
+   "want": "px-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "px-4 ps-2"
+   ],
+   "want": "px-4 ps-2"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "pbs-2 py-4"
+   ],
+   "want": "py-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "ms-2 mx-4"
+   ],
+   "want": "mx-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "mbe-2 my-4"
+   ],
+   "want": "my-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "start-2 inset-x-4"
+   ],
+   "want": "inset-x-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "end-2 inset-x-4"
+   ],
+   "want": "inset-x-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "inset-bs-2 inset-y-4"
+   ],
+   "want": "inset-y-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "border-s-2 border-x-4"
+   ],
+   "want": "border-x-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "border-be-2 border-y-4"
+   ],
+   "want": "border-y-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "border-s-red-500 border-x-blue-500"
+   ],
+   "want": "border-x-blue-500"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "border-bs-red-500 border-y-blue-500"
+   ],
+   "want": "border-y-blue-500"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "scroll-ms-2 scroll-mx-4"
+   ],
+   "want": "scroll-mx-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "scroll-mbs-2 scroll-my-4"
+   ],
+   "want": "scroll-my-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "scroll-ps-2 scroll-px-4"
+   ],
+   "want": "scroll-px-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "axis shorthands override logical sides",
+   "args": [
+    "scroll-pbe-2 scroll-py-4"
+   ],
+   "want": "scroll-py-4"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "ring and shadow classes do not create conflict",
+   "args": [
+    "ring shadow"
+   ],
+   "want": "ring shadow"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "ring and shadow classes do not create conflict",
+   "args": [
+    "ring-2 shadow-md"
+   ],
+   "want": "ring-2 shadow-md"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "ring and shadow classes do not create conflict",
+   "args": [
+    "shadow ring"
+   ],
+   "want": "shadow ring"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "ring and shadow classes do not create conflict",
+   "args": [
+    "shadow-md ring-2"
+   ],
+   "want": "shadow-md ring-2"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "touch classes do create conflicts correctly",
+   "args": [
+    "touch-pan-x touch-pan-right"
+   ],
+   "want": "touch-pan-right"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "touch classes do create conflicts correctly",
+   "args": [
+    "touch-none touch-pan-x"
+   ],
+   "want": "touch-pan-x"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "touch classes do create conflicts correctly",
+   "args": [
+    "touch-pan-x touch-none"
+   ],
+   "want": "touch-none"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "touch classes do create conflicts correctly",
+   "args": [
+    "touch-pan-x touch-pan-y touch-pinch-zoom"
+   ],
+   "want": "touch-pan-x touch-pan-y touch-pinch-zoom"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "touch classes do create conflicts correctly",
+   "args": [
+    "touch-manipulation touch-pan-x touch-pan-y touch-pinch-zoom"
+   ],
+   "want": "touch-pan-x touch-pan-y touch-pinch-zoom"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "touch classes do create conflicts correctly",
+   "args": [
+    "touch-pan-x touch-pan-y touch-pinch-zoom touch-auto"
+   ],
+   "want": "touch-auto"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "line-clamp classes do create conflicts correctly",
+   "args": [
+    "overflow-auto inline line-clamp-1"
+   ],
+   "want": "line-clamp-1"
+  },
+  {
+   "file": "conflicts-across-class-groups.test.ts",
+   "test": "line-clamp classes do create conflicts correctly",
+   "args": [
+    "line-clamp-1 overflow-auto inline"
+   ],
+   "want": "line-clamp-1 overflow-auto inline"
+  },
+  {
+   "file": "content-utilities.test.ts",
+   "test": "merges content utilities correctly",
+   "args": [
+    "content-['hello'] content-[attr(data-content)]"
+   ],
+   "want": "content-[attr(data-content)]"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "font-medium! font-bold!"
+   ],
+   "want": "font-bold!"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "font-medium! font-bold! font-thin"
+   ],
+   "want": "font-bold! font-thin"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "right-2! -inset-x-px!"
+   ],
+   "want": "-inset-x-px!"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "focus:inline! focus:block!"
+   ],
+   "want": "focus:block!"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "[--my-var:20px]! [--my-var:30px]!"
+   ],
+   "want": "[--my-var:30px]!"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "font-medium! !font-bold"
+   ],
+   "want": "!font-bold"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "!font-medium !font-bold"
+   ],
+   "want": "!font-bold"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "!font-medium !font-bold font-thin"
+   ],
+   "want": "!font-bold font-thin"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "!right-2 !-inset-x-px"
+   ],
+   "want": "!-inset-x-px"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "focus:!inline focus:!block"
+   ],
+   "want": "focus:!block"
+  },
+  {
+   "file": "important-modifier.test.ts",
+   "test": "merges tailwind classes with important modifier correctly",
+   "args": [
+    "![--my-var:20px] ![--my-var:30px]"
+   ],
+   "want": "![--my-var:30px]"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across prefix modifiers",
+   "args": [
+    "hover:block hover:inline"
+   ],
+   "want": "hover:inline"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across prefix modifiers",
+   "args": [
+    "hover:block hover:focus:inline"
+   ],
+   "want": "hover:block hover:focus:inline"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across prefix modifiers",
+   "args": [
+    "hover:block hover:focus:inline focus:hover:inline"
+   ],
+   "want": "hover:block focus:hover:inline"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across prefix modifiers",
+   "args": [
+    "focus-within:inline focus-within:block"
+   ],
+   "want": "focus-within:block"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across postfix modifiers",
+   "args": [
+    "text-lg/7 text-lg/8"
+   ],
+   "want": "text-lg/8"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across postfix modifiers",
+   "args": [
+    "text-lg/none leading-9"
+   ],
+   "want": "text-lg/none leading-9"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across postfix modifiers",
+   "args": [
+    "leading-9 text-lg/none"
+   ],
+   "want": "text-lg/none"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "conflicts across postfix modifiers",
+   "args": [
+    "w-full w-1/2"
+   ],
+   "want": "w-1/2"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "sorts modifiers correctly",
+   "args": [
+    "c:d:e:block d:c:e:inline"
+   ],
+   "want": "d:c:e:inline"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "sorts modifiers correctly",
+   "args": [
+    "*:before:block *:before:inline"
+   ],
+   "want": "*:before:inline"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "sorts modifiers correctly",
+   "args": [
+    "*:before:block before:*:inline"
+   ],
+   "want": "*:before:block before:*:inline"
+  },
+  {
+   "file": "modifiers.test.ts",
+   "test": "sorts modifiers correctly",
+   "args": [
+    "x:y:*:z:block y:x:*:z:inline"
+   ],
+   "want": "y:x:*:z:inline"
+  },
+  {
+   "file": "negative-values.test.ts",
+   "test": "handles negative value conflicts correctly",
+   "args": [
+    "-m-2 -m-5"
+   ],
+   "want": "-m-5"
+  },
+  {
+   "file": "negative-values.test.ts",
+   "test": "handles negative value conflicts correctly",
+   "args": [
+    "-top-12 -top-2000"
+   ],
+   "want": "-top-2000"
+  },
+  {
+   "file": "negative-values.test.ts",
+   "test": "handles conflicts between positive and negative values correctly",
+   "args": [
+    "-m-2 m-auto"
+   ],
+   "want": "m-auto"
+  },
+  {
+   "file": "negative-values.test.ts",
+   "test": "handles conflicts between positive and negative values correctly",
+   "args": [
+    "top-12 -top-69"
+   ],
+   "want": "-top-69"
+  },
+  {
+   "file": "negative-values.test.ts",
+   "test": "handles conflicts across groups with negative values correctly",
+   "args": [
+    "-right-1 inset-x-1"
+   ],
+   "want": "inset-x-1"
+  },
+  {
+   "file": "negative-values.test.ts",
+   "test": "handles conflicts across groups with negative values correctly",
+   "args": [
+    "hover:focus:-right-1 focus:hover:inset-x-1"
+   ],
+   "want": "focus:hover:inset-x-1"
+  },
+  {
+   "file": "non-conflicting-classes.test.ts",
+   "test": "merges non-conflicting classes correctly",
+   "args": [
+    "border-t border-white/10"
+   ],
+   "want": "border-t border-white/10"
+  },
+  {
+   "file": "non-conflicting-classes.test.ts",
+   "test": "merges non-conflicting classes correctly",
+   "args": [
+    "border-t border-white"
+   ],
+   "want": "border-t border-white"
+  },
+  {
+   "file": "non-conflicting-classes.test.ts",
+   "test": "merges non-conflicting classes correctly",
+   "args": [
+    "text-3.5xl text-black"
+   ],
+   "want": "text-3.5xl text-black"
+  },
+  {
+   "file": "non-tailwind-classes.test.ts",
+   "test": "does not alter non-tailwind classes",
+   "args": [
+    "non-tailwind-class inline block"
+   ],
+   "want": "non-tailwind-class block"
+  },
+  {
+   "file": "non-tailwind-classes.test.ts",
+   "test": "does not alter non-tailwind classes",
+   "args": [
+    "inline block inline-1"
+   ],
+   "want": "block inline-1"
+  },
+  {
+   "file": "non-tailwind-classes.test.ts",
+   "test": "does not alter non-tailwind classes",
+   "args": [
+    "inline block i-inline"
+   ],
+   "want": "block i-inline"
+  },
+  {
+   "file": "non-tailwind-classes.test.ts",
+   "test": "does not alter non-tailwind classes",
+   "args": [
+    "focus:inline focus:block focus:inline-1"
+   ],
+   "want": "focus:block focus:inline-1"
+  },
+  {
+   "file": "per-side-border-colors.test.ts",
+   "test": "merges classes with per-side border colors correctly",
+   "args": [
+    "border-t-some-blue border-t-other-blue"
+   ],
+   "want": "border-t-other-blue"
+  },
+  {
+   "file": "per-side-border-colors.test.ts",
+   "test": "merges classes with per-side border colors correctly",
+   "args": [
+    "border-t-some-blue border-some-blue"
+   ],
+   "want": "border-some-blue"
+  },
+  {
+   "file": "per-side-border-colors.test.ts",
+   "test": "merges classes with per-side border colors correctly",
+   "args": [
+    "border-some-blue border-s-some-blue"
+   ],
+   "want": "border-some-blue border-s-some-blue"
+  },
+  {
+   "file": "per-side-border-colors.test.ts",
+   "test": "merges classes with per-side border colors correctly",
+   "args": [
+    "border-e-some-blue border-some-blue"
+   ],
+   "want": "border-some-blue"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variants conflicts properly",
+   "args": [
+    "empty:p-2 empty:p-3"
+   ],
+   "want": "empty:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variants conflicts properly",
+   "args": [
+    "hover:empty:p-2 hover:empty:p-3"
+   ],
+   "want": "hover:empty:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variants conflicts properly",
+   "args": [
+    "read-only:p-2 read-only:p-3"
+   ],
+   "want": "read-only:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variant group conflicts properly",
+   "args": [
+    "group-empty:p-2 group-empty:p-3"
+   ],
+   "want": "group-empty:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variant group conflicts properly",
+   "args": [
+    "peer-empty:p-2 peer-empty:p-3"
+   ],
+   "want": "peer-empty:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variant group conflicts properly",
+   "args": [
+    "group-empty:p-2 peer-empty:p-3"
+   ],
+   "want": "group-empty:p-2 peer-empty:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variant group conflicts properly",
+   "args": [
+    "hover:group-empty:p-2 hover:group-empty:p-3"
+   ],
+   "want": "hover:group-empty:p-3"
+  },
+  {
+   "file": "pseudo-variants.test.ts",
+   "test": "handles pseudo variant group conflicts properly",
+   "args": [
+    "group-read-only:p-2 group-read-only:p-3"
+   ],
+   "want": "group-read-only:p-3"
+  },
+  {
+   "file": "standalone-classes.test.ts",
+   "test": "merges standalone classes from same group correctly",
+   "args": [
+    "inline block"
+   ],
+   "want": "block"
+  },
+  {
+   "file": "standalone-classes.test.ts",
+   "test": "merges standalone classes from same group correctly",
+   "args": [
+    "hover:block hover:inline"
+   ],
+   "want": "hover:inline"
+  },
+  {
+   "file": "standalone-classes.test.ts",
+   "test": "merges standalone classes from same group correctly",
+   "args": [
+    "hover:block hover:block"
+   ],
+   "want": "hover:block"
+  },
+  {
+   "file": "standalone-classes.test.ts",
+   "test": "merges standalone classes from same group correctly",
+   "args": [
+    "inline hover:inline focus:inline hover:block hover:focus:block"
+   ],
+   "want": "inline focus:inline hover:block hover:focus:block"
+  },
+  {
+   "file": "standalone-classes.test.ts",
+   "test": "merges standalone classes from same group correctly",
+   "args": [
+    "underline line-through"
+   ],
+   "want": "line-through"
+  },
+  {
+   "file": "standalone-classes.test.ts",
+   "test": "merges standalone classes from same group correctly",
+   "args": [
+    "line-through no-underline"
+   ],
+   "want": "no-underline"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "text-red text-lg/7 text-lg/8"
+   ],
+   "want": "text-red text-lg/8"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "start-0 start-1",
+    "end-0 end-1",
+    "ps-0 ps-1 pe-0 pe-1",
+    "ms-0 ms-1 me-0 me-1",
+    "rounded-s-sm rounded-s-md rounded-e-sm rounded-e-md",
+    "rounded-ss-sm rounded-ss-md rounded-ee-sm rounded-ee-md"
+   ],
+   "want": "start-1 end-1 ps-1 pe-1 ms-1 me-1 rounded-s-md rounded-e-md rounded-ss-md rounded-ee-md"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "start-0 end-0 inset-0 ps-0 pe-0 p-0 ms-0 me-0 m-0 rounded-ss rounded-es rounded-s"
+   ],
+   "want": "inset-0 p-0 m-0 rounded-s"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "hyphens-auto hyphens-manual"
+   ],
+   "want": "hyphens-manual"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "from-0% from-10% from-[12.5%] via-0% via-10% via-[12.5%] to-0% to-10% to-[12.5%]"
+   ],
+   "want": "from-[12.5%] via-[12.5%] to-[12.5%]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "from-0% from-red"
+   ],
+   "want": "from-0% from-red"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "list-image-none list-image-[url(./my-image.png)] list-image-[var(--value)]"
+   ],
+   "want": "list-image-[var(--value)]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "caption-top caption-bottom"
+   ],
+   "want": "caption-bottom"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "line-clamp-2 line-clamp-none line-clamp-[10]"
+   ],
+   "want": "line-clamp-[10]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "delay-150 delay-0 duration-150 duration-0"
+   ],
+   "want": "delay-0 duration-0"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "justify-normal justify-center justify-stretch"
+   ],
+   "want": "justify-stretch"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "content-normal content-center content-stretch"
+   ],
+   "want": "content-stretch"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.3 features",
+   "args": [
+    "whitespace-nowrap whitespace-break-spaces"
+   ],
+   "want": "whitespace-break-spaces"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "h-svh h-dvh w-svw w-dvw"
+   ],
+   "want": "h-dvh w-dvw"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "has-[[data-potato]]:p-1 has-[[data-potato]]:p-2 group-has-[:checked]:grid group-has-[:checked]:flex"
+   ],
+   "want": "has-[[data-potato]]:p-2 group-has-[:checked]:flex"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "text-wrap text-pretty"
+   ],
+   "want": "text-pretty"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "w-5 h-3 size-10 w-12"
+   ],
+   "want": "size-10 w-12"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "grid-cols-2 grid-cols-subgrid grid-rows-5 grid-rows-subgrid"
+   ],
+   "want": "grid-cols-subgrid grid-rows-subgrid"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "min-w-0 min-w-50 min-w-px max-w-0 max-w-50 max-w-px"
+   ],
+   "want": "min-w-px max-w-px"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "forced-color-adjust-none forced-color-adjust-auto"
+   ],
+   "want": "forced-color-adjust-auto"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "appearance-none appearance-auto"
+   ],
+   "want": "appearance-auto"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "float-start float-end clear-start clear-end"
+   ],
+   "want": "float-end clear-end"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v3.4 features",
+   "args": [
+    "*:p-10 *:p-20 hover:*:p-10 hover:*:p-20"
+   ],
+   "want": "*:p-20 hover:*:p-20"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "transform-3d transform-flat"
+   ],
+   "want": "transform-flat"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "rotate-12 rotate-x-2 rotate-none rotate-y-3"
+   ],
+   "want": "rotate-x-2 rotate-none rotate-y-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "perspective-dramatic perspective-none perspective-midrange"
+   ],
+   "want": "perspective-midrange"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "perspective-origin-center perspective-origin-top-left"
+   ],
+   "want": "perspective-origin-top-left"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "bg-linear-to-r bg-linear-45"
+   ],
+   "want": "bg-linear-45"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "bg-linear-to-r bg-radial-[something] bg-conic-10"
+   ],
+   "want": "bg-conic-10"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "bg-conic bg-conic-10"
+   ],
+   "want": "bg-conic-10"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "bg-conic-10 bg-conic"
+   ],
+   "want": "bg-conic"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "bg-radial bg-conic/decreasing"
+   ],
+   "want": "bg-conic/decreasing"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "bg-red-500 bg-conic"
+   ],
+   "want": "bg-red-500 bg-conic"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "ring-4 ring-orange inset-ring inset-ring-3 inset-ring-blue"
+   ],
+   "want": "ring-4 ring-orange inset-ring-3 inset-ring-blue"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "field-sizing-content field-sizing-fixed"
+   ],
+   "want": "field-sizing-fixed"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "scheme-normal scheme-dark"
+   ],
+   "want": "scheme-dark"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "font-stretch-expanded font-stretch-[66.66%] font-stretch-50%"
+   ],
+   "want": "font-stretch-50%"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "col-span-full col-2 row-span-3 row-4"
+   ],
+   "want": "col-2 row-4"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "via-red-500 via-(--mobile-header-gradient)"
+   ],
+   "want": "via-(--mobile-header-gradient)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "via-red-500 via-(length:--mobile-header-gradient)"
+   ],
+   "want": "via-red-500 via-(length:--mobile-header-gradient)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "shadow-inner shadow-lg"
+   ],
+   "want": "shadow-lg"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "shadow-lg shadow-inner"
+   ],
+   "want": "shadow-inner"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.0 features",
+   "args": [
+    "shadow-initial shadow-inner"
+   ],
+   "want": "shadow-initial shadow-inner"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "items-baseline items-baseline-last"
+   ],
+   "want": "items-baseline-last"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "self-baseline self-baseline-last"
+   ],
+   "want": "self-baseline-last"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "place-content-center place-content-end-safe place-content-center-safe"
+   ],
+   "want": "place-content-center-safe"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "items-center-safe items-baseline items-end-safe"
+   ],
+   "want": "items-end-safe"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "wrap-break-word wrap-normal wrap-anywhere"
+   ],
+   "want": "wrap-anywhere"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "text-shadow-none text-shadow-2xl"
+   ],
+   "want": "text-shadow-2xl"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "text-shadow-none text-shadow-md text-shadow-red text-shadow-red-500 shadow-red shadow-3xs"
+   ],
+   "want": "text-shadow-md text-shadow-red-500 shadow-red shadow-3xs"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "mask-add mask-subtract"
+   ],
+   "want": "mask-subtract"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "mask-(--foo) mask-[foo] mask-none",
+    "mask-linear-1 mask-linear-2",
+    "mask-linear-from-[position:test] mask-linear-from-3",
+    "mask-linear-to-[position:test] mask-linear-to-3",
+    "mask-linear-from-color-red mask-linear-from-color-3",
+    "mask-linear-to-color-red mask-linear-to-color-3",
+    "mask-t-from-[position:test] mask-t-from-3",
+    "mask-t-to-[position:test] mask-t-to-3",
+    "mask-t-from-color-red mask-t-from-color-3",
+    "mask-radial-(--test) mask-radial-[test]",
+    "mask-radial-from-[position:test] mask-radial-from-3",
+    "mask-radial-to-[position:test] mask-radial-to-3",
+    "mask-radial-from-color-red mask-radial-from-color-3"
+   ],
+   "want": "mask-none mask-linear-2 mask-linear-from-3 mask-linear-to-3 mask-linear-from-color-3 mask-linear-to-color-3 mask-t-from-3 mask-t-to-3 mask-t-from-color-3 mask-radial-[test] mask-radial-from-3 mask-radial-to-3 mask-radial-from-color-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "mask-(--something) mask-[something]",
+    "mask-top-left mask-center mask-(position:--var) mask-[position:1px_1px] mask-position-(--var) mask-position-[1px_1px]"
+   ],
+   "want": "mask-[something] mask-position-[1px_1px]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "mask-(--something) mask-[something]",
+    "mask-auto mask-[size:foo] mask-(size:--foo) mask-size-[foo] mask-size-(--foo) mask-cover mask-contain"
+   ],
+   "want": "mask-[something] mask-contain"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "mask-type-luminance mask-type-alpha"
+   ],
+   "want": "mask-type-alpha"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "shadow-md shadow-lg/25 text-shadow-md text-shadow-lg/25"
+   ],
+   "want": "shadow-lg/25 text-shadow-lg/25"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "drop-shadow-some-color drop-shadow-[#123456] drop-shadow-lg drop-shadow-[10px_0]"
+   ],
+   "want": "drop-shadow-[#123456] drop-shadow-[10px_0]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "drop-shadow-[#123456] drop-shadow-some-color"
+   ],
+   "want": "drop-shadow-some-color"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1 features",
+   "args": [
+    "drop-shadow-2xl drop-shadow-[shadow:foo]"
+   ],
+   "want": "drop-shadow-[shadow:foo]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1.5 features",
+   "args": [
+    "h-12 h-lh"
+   ],
+   "want": "h-lh"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1.5 features",
+   "args": [
+    "min-h-12 min-h-lh"
+   ],
+   "want": "min-h-lh"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.1.5 features",
+   "args": [
+    "max-h-12 max-h-lh"
+   ],
+   "want": "max-h-lh"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-s-1 inset-s-2"
+   ],
+   "want": "inset-s-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-e-1 inset-e-2"
+   ],
+   "want": "inset-e-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-bs-1 inset-bs-2"
+   ],
+   "want": "inset-bs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-be-1 inset-be-2"
+   ],
+   "want": "inset-be-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "start-1 inset-s-2"
+   ],
+   "want": "inset-s-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-s-1 start-2"
+   ],
+   "want": "start-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "end-1 inset-e-2"
+   ],
+   "want": "inset-e-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-e-1 end-2"
+   ],
+   "want": "end-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-s-1 inset-e-2 inset-bs-3 inset-be-4 inset-0"
+   ],
+   "want": "inset-0"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-0 inset-s-1 inset-bs-1"
+   ],
+   "want": "inset-0 inset-s-1 inset-bs-1"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-y-1 inset-bs-2 inset-be-3"
+   ],
+   "want": "inset-y-1 inset-bs-2 inset-be-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "top-1 inset-bs-2 bottom-3 inset-be-4"
+   ],
+   "want": "top-1 inset-bs-2 bottom-3 inset-be-4"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "pbs-1 pbs-2"
+   ],
+   "want": "pbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "pbe-1 pbe-2"
+   ],
+   "want": "pbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "mbs-1 mbs-2"
+   ],
+   "want": "mbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "mbe-1 mbe-2"
+   ],
+   "want": "mbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "pt-1 pbs-2"
+   ],
+   "want": "pt-1 pbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "pb-1 pbe-2"
+   ],
+   "want": "pb-1 pbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "mt-1 mbs-2"
+   ],
+   "want": "mt-1 mbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "mb-1 mbe-2"
+   ],
+   "want": "mb-1 mbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "p-0 pbs-1 pbe-1"
+   ],
+   "want": "p-0 pbs-1 pbe-1"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "pbs-1 pbe-1 p-0"
+   ],
+   "want": "p-0"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "m-0 mbs-1 mbe-1"
+   ],
+   "want": "m-0 mbs-1 mbe-1"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "mbs-1 mbe-1 m-0"
+   ],
+   "want": "m-0"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "py-1 pbs-2 pbe-3"
+   ],
+   "want": "py-1 pbs-2 pbe-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "my-1 mbs-2 mbe-3"
+   ],
+   "want": "my-1 mbs-2 mbe-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-pbs-1 scroll-pbs-2"
+   ],
+   "want": "scroll-pbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-pbe-1 scroll-pbe-2"
+   ],
+   "want": "scroll-pbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-mbs-1 scroll-mbs-2"
+   ],
+   "want": "scroll-mbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-mbe-1 scroll-mbe-2"
+   ],
+   "want": "scroll-mbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-pt-1 scroll-pbs-2"
+   ],
+   "want": "scroll-pt-1 scroll-pbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-pb-1 scroll-pbe-2"
+   ],
+   "want": "scroll-pb-1 scroll-pbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-mt-1 scroll-mbs-2"
+   ],
+   "want": "scroll-mt-1 scroll-mbs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-mb-1 scroll-mbe-2"
+   ],
+   "want": "scroll-mb-1 scroll-mbe-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-p-0 scroll-pbs-1 scroll-pbe-1"
+   ],
+   "want": "scroll-p-0 scroll-pbs-1 scroll-pbe-1"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-pbs-1 scroll-pbe-1 scroll-p-0"
+   ],
+   "want": "scroll-p-0"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-m-0 scroll-mbs-1 scroll-mbe-1"
+   ],
+   "want": "scroll-m-0 scroll-mbs-1 scroll-mbe-1"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-mbs-1 scroll-mbe-1 scroll-m-0"
+   ],
+   "want": "scroll-m-0"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-py-1 scroll-pbs-2 scroll-pbe-3"
+   ],
+   "want": "scroll-py-1 scroll-pbs-2 scroll-pbe-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "scroll-my-1 scroll-mbs-2 scroll-mbe-3"
+   ],
+   "want": "scroll-my-1 scroll-mbs-2 scroll-mbe-3"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-bs-1 border-bs-2"
+   ],
+   "want": "border-bs-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-be-1 border-be-2"
+   ],
+   "want": "border-be-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-bs-red border-bs-blue"
+   ],
+   "want": "border-bs-blue"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-be-red border-be-blue"
+   ],
+   "want": "border-be-blue"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-2 border-bs-4 border-be-6"
+   ],
+   "want": "border-2 border-bs-4 border-be-6"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-bs-4 border-be-6 border-2"
+   ],
+   "want": "border-2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-red border-bs-blue border-be-green"
+   ],
+   "want": "border-red border-bs-blue border-be-green"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-bs-blue border-be-green border-red"
+   ],
+   "want": "border-red"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-y-2 border-bs-4 border-be-6"
+   ],
+   "want": "border-y-2 border-bs-4 border-be-6"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-t-2 border-bs-4 border-b-6 border-be-8"
+   ],
+   "want": "border-t-2 border-bs-4 border-b-6 border-be-8"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "border-y-red border-bs-blue border-be-green"
+   ],
+   "want": "border-y-red border-bs-blue border-be-green"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inline-1/2 inline-3/4"
+   ],
+   "want": "inline-3/4"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "block-1/2 block-3/4"
+   ],
+   "want": "block-3/4"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "min-inline-auto min-inline-full"
+   ],
+   "want": "min-inline-full"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "max-inline-none max-inline-10"
+   ],
+   "want": "max-inline-10"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "min-block-auto min-block-lh min-block-10"
+   ],
+   "want": "min-block-10"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "max-block-none max-block-lh max-block-10"
+   ],
+   "want": "max-block-10"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inline-2xl inline-3xl"
+   ],
+   "want": "inline-3xl"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "min-inline-xs min-inline-1/2"
+   ],
+   "want": "min-inline-1/2"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "max-inline-svw max-inline-xl"
+   ],
+   "want": "max-inline-xl"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "w-10 inline-20"
+   ],
+   "want": "w-10 inline-20"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "h-10 block-20"
+   ],
+   "want": "h-10 block-20"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "size-10 inline-20 block-30"
+   ],
+   "want": "size-10 inline-20 block-30"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "min-w-10 min-inline-20"
+   ],
+   "want": "min-w-10 min-inline-20"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "max-h-10 max-block-20"
+   ],
+   "want": "max-h-10 max-block-20"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "font-features-[\"smcp\"] font-features-[\"onum\"]"
+   ],
+   "want": "font-features-[\"onum\"]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "font-features-[var(--font-features)] font-features-[\"liga\",\"dlig\"]"
+   ],
+   "want": "font-features-[\"liga\",\"dlig\"]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "tabular-nums font-features-[\"smcp\"]"
+   ],
+   "want": "tabular-nums font-features-[\"smcp\"]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "font-features-[\"smcp\"] normal-nums"
+   ],
+   "want": "font-features-[\"smcp\"] normal-nums"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "font-sans font-features-[\"smcp\"]"
+   ],
+   "want": "font-sans font-features-[\"smcp\"]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "aspect-8/11 aspect-8.5/11"
+   ],
+   "want": "aspect-8.5/11"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "w-8/11 w-8.5/11"
+   ],
+   "want": "w-8.5/11"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.2 features",
+   "args": [
+    "inset-1/2 inset-1.25/2.5"
+   ],
+   "want": "inset-1.25/2.5"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-auto scrollbar-thin scrollbar-none"
+   ],
+   "want": "scrollbar-none"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-gutter-auto scrollbar-gutter-stable scrollbar-gutter-both"
+   ],
+   "want": "scrollbar-gutter-both"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-thumb-red-500 scrollbar-thumb-blue-500"
+   ],
+   "want": "scrollbar-thumb-blue-500"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-thumb-red-500 scrollbar-thumb-red-500/50"
+   ],
+   "want": "scrollbar-thumb-red-500/50"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-thumb-[#0088cc] scrollbar-thumb-(--thumb-color)"
+   ],
+   "want": "scrollbar-thumb-(--thumb-color)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-track-red-500 scrollbar-track-blue-500"
+   ],
+   "want": "scrollbar-track-blue-500"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-track-red-500 scrollbar-track-[color:var(--track-color)]"
+   ],
+   "want": "scrollbar-track-[color:var(--track-color)]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 scrollbar features",
+   "args": [
+    "scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-blue-500"
+   ],
+   "want": "scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-blue-500"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container @container-normal @container-size"
+   ],
+   "want": "@container-size"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-[inline-size] @container-(--container-type)"
+   ],
+   "want": "@container-(--container-type)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container @container-size/sidebar"
+   ],
+   "want": "@container-size/sidebar"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-normal @container-size/sidebar"
+   ],
+   "want": "@container-size/sidebar"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-size/sidebar @container"
+   ],
+   "want": "@container-size/sidebar @container"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container/sidebar @container-normal"
+   ],
+   "want": "@container/sidebar @container-normal"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container/sidebar @container-normal/sidebar @container-size/content"
+   ],
+   "want": "@container-size/content"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container/sidebar @container-normal/content @container-size"
+   ],
+   "want": "@container-normal/content @container-size"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-size @container/sidebar"
+   ],
+   "want": "@container/sidebar"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-size/[sidebar] @container-normal/(--container-name)"
+   ],
+   "want": "@container-normal/(--container-name)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "hover:@container hover:@container-size/sidebar"
+   ],
+   "want": "hover:@container-size/sidebar"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "hover:@container-size/sidebar hover:@container"
+   ],
+   "want": "hover:@container-size/sidebar hover:@container"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container! @container-size/sidebar!"
+   ],
+   "want": "@container-size/sidebar!"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-size/sidebar! @container!"
+   ],
+   "want": "@container-size/sidebar! @container!"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 container query container features",
+   "args": [
+    "@container-foo/sidebar @container-size/sidebar"
+   ],
+   "want": "@container-foo/sidebar @container-size/sidebar"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 zoom features",
+   "args": [
+    "zoom-50 zoom-100"
+   ],
+   "want": "zoom-100"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 zoom features",
+   "args": [
+    "zoom-100 zoom-[var(--zoom)]"
+   ],
+   "want": "zoom-[var(--zoom)]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 zoom features",
+   "args": [
+    "zoom-[1.5] zoom-(--zoom)"
+   ],
+   "want": "zoom-(--zoom)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 zoom features",
+   "args": [
+    "zoom-50 scale-125"
+   ],
+   "want": "zoom-50 scale-125"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 tab-size features",
+   "args": [
+    "tab-2 tab-8"
+   ],
+   "want": "tab-8"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 tab-size features",
+   "args": [
+    "tab-8 tab-[12px]"
+   ],
+   "want": "tab-[12px]"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 tab-size features",
+   "args": [
+    "tab-[3] tab-(--tab-size)"
+   ],
+   "want": "tab-(--tab-size)"
+  },
+  {
+   "file": "tailwind-css-versions.test.ts",
+   "test": "supports Tailwind CSS v4.3 tab-size features",
+   "args": [
+    "tab-4 tabular-nums"
+   ],
+   "want": "tab-4 tabular-nums"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "mix-blend-normal mix-blend-multiply"
+   ],
+   "want": "mix-blend-multiply"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "h-10 h-min"
+   ],
+   "want": "h-min"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "stroke-black stroke-1"
+   ],
+   "want": "stroke-black stroke-1"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "stroke-2 stroke-[3]"
+   ],
+   "want": "stroke-[3]"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "outline-black outline-1"
+   ],
+   "want": "outline-black outline-1"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "grayscale-0 grayscale-[50%]"
+   ],
+   "want": "grayscale-[50%]"
+  },
+  {
+   "file": "tw-merge.test.ts",
+   "test": "twMerge",
+   "args": [
+    "grow grow-[2]"
+   ],
+   "want": "grow-[2]"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    " block"
+   ],
+   "want": "block"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "block "
+   ],
+   "want": "block"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    " block "
+   ],
+   "want": "block"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "  block  px-2     py-4  "
+   ],
+   "want": "block px-2 py-4"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "  block  px-2",
+    " ",
+    "     py-4  "
+   ],
+   "want": "block px-2 py-4"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "block\npx-2"
+   ],
+   "want": "block px-2"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "\nblock\npx-2\n"
+   ],
+   "want": "block px-2"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "  block\n        \n        px-2   \n          py-4  "
+   ],
+   "want": "block px-2 py-4"
+  },
+  {
+   "file": "wonky-inputs.test.ts",
+   "test": "handles wonky inputs",
+   "args": [
+    "\r  block\n\r        \n        px-2   \n          py-4  "
+   ],
+   "want": "block px-2 py-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "px-2 py-1 bg-red hover:bg-dark-red",
+    "p-3 bg-[#B91C1C]"
+   ],
+   "want": "hover:bg-dark-red p-3 bg-[#B91C1C]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "px-2 py-1 bg-red hover:bg-dark-red",
+    "p-3 bg-[#B91C1C]"
+   ],
+   "want": "hover:bg-dark-red p-3 bg-[#B91C1C]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "static sticky relative"
+   ],
+   "want": "relative"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "pr-4 px-3"
+   ],
+   "want": "px-3"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "px-3 pr-4"
+   ],
+   "want": "px-3 pr-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "pr-2 px-4"
+   ],
+   "want": "px-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "pt-2 py-4"
+   ],
+   "want": "py-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "px-2 py-2 p-4"
+   ],
+   "want": "p-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "top-0 inset-0"
+   ],
+   "want": "inset-0"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "right-0 inset-x-0"
+   ],
+   "want": "inset-x-0"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "top-0 inset-y-0"
+   ],
+   "want": "inset-y-0"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bg-blue-500 bg-brand-primary"
+   ],
+   "want": "bg-brand-primary"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-brand-primary text-brand-secondary"
+   ],
+   "want": "text-brand-secondary"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "border-custom-color border-brand-primary"
+   ],
+   "want": "border-brand-primary"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-5 p-2 p-4"
+   ],
+   "want": "p-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-3 px-5"
+   ],
+   "want": "p-3 px-5"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "inset-x-4 right-4"
+   ],
+   "want": "inset-x-4 right-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "inset-x-px -inset-1"
+   ],
+   "want": "-inset-1"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bottom-auto inset-y-6"
+   ],
+   "want": "inset-y-6"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "inline block"
+   ],
+   "want": "block"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-2 hover:p-4"
+   ],
+   "want": "p-2 hover:p-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "hover:p-2 hover:p-4"
+   ],
+   "want": "hover:p-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "hover:focus:p-2 focus:hover:p-4"
+   ],
+   "want": "focus:hover:p-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bg-black bg-(--my-color) bg-[color:var(--mystery-var)]"
+   ],
+   "want": "bg-[color:var(--mystery-var)]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "grid-cols-[1fr,auto] grid-cols-2"
+   ],
+   "want": "grid-cols-2"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-[14px] text-[16px]"
+   ],
+   "want": "text-[16px]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-[#ff0000] text-[#00ff00]"
+   ],
+   "want": "text-[#00ff00]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bg-[rgb(255,0,0)] bg-[hsl(0,100%,50%)]"
+   ],
+   "want": "bg-[hsl(0,100%,50%)]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-sm text-[color(srgb_100%_0%_0%)]"
+   ],
+   "want": "text-sm text-[color(srgb_100%_0%_0%)]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "border-2 border-[light-dark(rgb(50%_0%_0%),black)]"
+   ],
+   "want": "border-2 border-[light-dark(rgb(50%_0%_0%),black)]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "[mask-type:luminance] [mask-type:alpha]"
+   ],
+   "want": "[mask-type:alpha]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "[--scroll-offset:56px] lg:[--scroll-offset:44px]"
+   ],
+   "want": "[--scroll-offset:56px] lg:[--scroll-offset:44px]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "[padding:1rem] p-8"
+   ],
+   "want": "[padding:1rem] p-8"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "[&:nth-child(3)]:py-0 [&:nth-child(3)]:py-4"
+   ],
+   "want": "[&:nth-child(3)]:py-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "dark:hover:[&:nth-child(3)]:py-0 hover:dark:[&:nth-child(3)]:py-4"
+   ],
+   "want": "hover:dark:[&:nth-child(3)]:py-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "[&:focus]:ring focus:ring-4"
+   ],
+   "want": "[&:focus]:ring focus:ring-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-3! p-4! p-5"
+   ],
+   "want": "p-4! p-5"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "right-2! -inset-x-1!"
+   ],
+   "want": "-inset-x-1!"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-5 p-2 my-non-tailwind-class p-4"
+   ],
+   "want": "my-non-tailwind-class p-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-red text-secret-sauce"
+   ],
+   "want": "text-secret-sauce"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "some-class",
+    "another-class yet-another-class",
+    "so-many-classes"
+   ],
+   "want": "some-class another-class yet-another-class so-many-classes"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-lg text-10xl"
+   ],
+   "want": "text-10xl"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-sm text-2xs"
+   ],
+   "want": "text-2xs"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-lg typography-custom"
+   ],
+   "want": "text-lg typography-custom"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-sm ui-text-special"
+   ],
+   "want": "text-sm ui-text-special"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "font-(--my-family) font-(--my-weight)"
+   ],
+   "want": "font-(--my-weight)"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "font-(family-name:--my-family) font-(--my-weight)"
+   ],
+   "want": "font-(family-name:--my-family) font-(--my-weight)"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "font-[var(--family)] font-[var(--weight)]"
+   ],
+   "want": "font-[var(--weight)]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "font-[family-name:var(--family)] font-[var(--weight)]"
+   ],
+   "want": "font-[family-name:var(--family)] font-[var(--weight)]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bg-[30%_30%] bg-cover"
+   ],
+   "want": "bg-[30%_30%] bg-cover"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bg-[position:30%_30%] bg-cover"
+   ],
+   "want": "bg-[position:30%_30%] bg-cover"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "bg-[size:30%_30%] bg-cover"
+   ],
+   "want": "bg-cover"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-[12px] text-[16px]"
+   ],
+   "want": "text-[16px]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "text-[#ff0000] text-[#00ff00]"
+   ],
+   "want": "text-[#00ff00]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-4 [padding:1rem]"
+   ],
+   "want": "p-4 [padding:1rem]"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "p-4 p-8"
+   ],
+   "want": "p-8"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "[&:focus]:ring focus:ring-4"
+   ],
+   "want": "[&:focus]:ring focus:ring-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "focus:ring focus:ring-4"
+   ],
+   "want": "focus:ring-4"
+  },
+  {
+   "file": "docs-examples.test.ts",
+   "test": "docs examples",
+   "args": [
+    "my-custom-padding p-4"
+   ],
+   "want": "my-custom-padding p-4"
+  }
+ ]
+}

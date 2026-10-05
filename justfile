@@ -107,6 +107,19 @@ delve-smoke:
 tailwind-smoke:
     "scripts/tailwind-smoke.sh"
 
+# Rebuild the class group table of gx.Cx from the pinned tailwind-merge
+# (REQ-STY-04). Bun reads the tailwind-merge source in tools/shadcn-ref.
+cx-table:
+    cd tools/shadcn-ref && bun install --frozen-lockfile
+    bun run tools/twmerge/gen.ts tools/shadcn-ref/node_modules/tailwind-merge/src cxtable.go
+    gofmt -w cxtable.go
+
+# Rebuild the test cases of gx.Cx from the test suite of the pinned
+# tailwind-merge release (REQ-STY-04). Needs network: the tests are not in
+# the npm package.
+cx-cases:
+    bash tools/twmerge/cases.sh
+
 evidence:
     go run ./internal/build/evidence --write
 

@@ -1,6 +1,8 @@
 package gx_test
 
 import (
+	"encoding/json"
+	"os"
 	"testing"
 
 	"github.com/alternayte/gx"
@@ -68,5 +70,73 @@ func BenchmarkCx10(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_ = gx.Cx(parts...)
+	}
+}
+
+// TestREQ_STY_04_TailwindMergeSuite runs the test suite of tailwind-merge
+// 3.7.0 against gx.Cx: every expectation of the default configuration in
+// its test files and every example of its documentation (REQ-STY-04).
+// tools/twmerge/extract.ts writes the cases from the upstream files.
+func TestREQ_STY_04_TailwindMergeSuite(t *testing.T) {
+	raw, err := os.ReadFile("testdata/tailwind-merge-3.7.0.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var suite struct {
+		Cases []struct {
+			File string   `json:"file"`
+			Test string   `json:"test"`
+			Args []string `json:"args"`
+			Want string   `json:"want"`
+		} `json:"cases"`
+	}
+	if err := json.Unmarshal(raw, &suite); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]int{}
+	wrong := 0
+	for _, c := range suite.Cases {
+		files[c.File]++
+		if got := gx.Cx(c.Args...); got != c.Want {
+			wrong++
+			if wrong <= 20 {
+				t.Errorf("%s: %s\n  Cx(%q)\n   = %q\nwant %q", c.File, c.Test, c.Args, got, c.Want)
+			}
+		}
+	}
+	if wrong > 0 {
+		t.Errorf("%d of %d cases fail", wrong, len(suite.Cases))
+	}
+	// The port covers the whole suite, not a part of it.
+	if len(suite.Cases) < 440 || len(files) < 19 {
+		t.Fatalf("the suite holds %d cases of %d files; the upstream suite gives 442 of 19", len(suite.Cases), len(files))
+	}
+}
+
+// TestREQ_STY_04_AllocationLight covers the allocation side of gx.Cx: a
+// merge of ten classes makes one allocation, the result, and a single
+// class or a merged string with no conflict makes none (REQ-STY-04).
+func TestREQ_STY_04_AllocationLight(t *testing.T) {
+	parts := []string{
+		"flex", "items-center", "gap-4", "p-4", "rounded-lg",
+		"bg-white", "text-sm", "font-medium", "hover:bg-gray-50", "p-2",
+	}
+	if n := testing.AllocsPerRun(200, func() { _ = gx.Cx(parts...) }); n > 1 {
+		t.Fatalf("a merge of ten classes makes %v allocations, want at most 1", n)
+	}
+	for _, one := range []string{"p-4", "flex items-center gap-4 hover:bg-gray-50"} {
+		if n := testing.AllocsPerRun(200, func() { _ = gx.Cx(one) }); n != 0 {
+			t.Fatalf("Cx(%q) makes %v allocations, want 0", one, n)
+		}
+	}
+	// The same input gives the same output.
+	first := gx.Cx(parts...)
+	for i := 0; i < 50; i++ {
+		if got := gx.Cx(parts...); got != first {
+			t.Fatalf("run %d = %q, first = %q", i, got, first)
+		}
+	}
+	if first != "flex items-center gap-4 rounded-lg bg-white text-sm font-medium hover:bg-gray-50 p-2" {
+		t.Fatalf("Cx = %q", first)
 	}
 }
