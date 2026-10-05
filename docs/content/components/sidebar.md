@@ -351,7 +351,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub" class={gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-l-sidebar-border px-2.5 py-0.5", p.Class)} {...p.Attrs}>{p.Children}</ul>
+<ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub" class={gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", p.Class)} {...p.Attrs}>{p.Children}</ul>
 ```
 
 ```gx title="ui/sidebar/SidebarMenuSubItem.gx"
@@ -753,7 +753,7 @@ func (p SidebarMenuButtonProps) size() string {
 
 // class returns the classes of one menu button.
 func (p SidebarMenuButtonProps) class() string {
-	const base = "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 [text-align:left] text-sm ring-sidebar-ring outline-hidden transition-[width,height,padding] motion-reduce:transition-none group-has-data-[sidebar=menu-action]/menu-item:pr-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
+	const base = "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm ring-sidebar-ring outline-hidden transition-[width,height,padding] motion-reduce:transition-none group-has-data-[sidebar=menu-action]/menu-item:pr-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
 	variant := p.Variant
 	if variant == "" {
 		variant = Default

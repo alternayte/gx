@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<th data-slot="table-head" class={gx.Cx("h-10 px-2 [text-align:left] align-middle font-medium whitespace-nowrap text-foreground [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class)} {...p.Attrs}>{p.Children}</th>
+<th data-slot="table-head" class={gx.Cx("h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class)} {...p.Attrs}>{p.Children}</th>

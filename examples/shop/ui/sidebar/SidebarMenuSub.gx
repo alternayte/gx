@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub" class={gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-l-sidebar-border px-2.5 py-0.5", p.Class)} {...p.Attrs}>{p.Children}</ul>
+<ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub" class={gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", p.Class)} {...p.Attrs}>{p.Children}</ul>

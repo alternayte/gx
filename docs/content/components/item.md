@@ -131,7 +131,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<p data-slot="item-description" class={gx.Cx("line-clamp-2 text-sm leading-normal font-normal [text-wrap:balance] text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</p>
+<p data-slot="item-description" class={gx.Cx("line-clamp-2 text-sm leading-normal font-normal text-balance text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</p>
 ```
 
 ```gx title="ui/item/ItemActions.gx"

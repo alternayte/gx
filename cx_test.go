@@ -36,7 +36,20 @@ func TestREQ_STY_04_Cx(t *testing.T) {
 		{"empty", []string{"", "  "}, ""},
 		{"inset child after", []string{"top-2", "inset-0"}, "inset-0"},
 		{"inset parent then child", []string{"inset-0", "top-2"}, "inset-0 top-2"},
-		{"shadow color", []string{"shadow-lg", "shadow-red-500"}, "shadow-red-500"},
+		{"shadow size and color", []string{"shadow-lg", "shadow-red-500"}, "shadow-lg shadow-red-500"},
+		{"shadow size conflict", []string{"shadow-lg", "shadow-xs"}, "shadow-xs"},
+		{"text align and color", []string{"text-left", "text-muted-foreground"}, "text-left text-muted-foreground"},
+		{"text align conflict", []string{"text-left", "text-center"}, "text-center"},
+		{"text wrap and color", []string{"text-balance", "text-foreground"}, "text-balance text-foreground"},
+		{"text size with leading", []string{"text-sm/relaxed", "text-muted-foreground"}, "text-sm/relaxed text-muted-foreground"},
+		{"border side and color", []string{"border-b", "border-border"}, "border-b border-border"},
+		{"border side width conflict", []string{"border-b", "border-b-2"}, "border-b-2"},
+		{"border removes side", []string{"border-b", "border"}, "border"},
+		{"ring arbitrary width", []string{"ring-[3px]", "ring-0"}, "ring-0"},
+		{"ring width and color", []string{"ring-2", "ring-ring/50"}, "ring-2 ring-ring/50"},
+		{"size removes width and height", []string{"h-4 w-4", "size-6"}, "size-6"},
+		{"important keeps plain", []string{"p-4!", "p-2"}, "p-4! p-2"},
+		{"important suffix conflict", []string{"m-0!", "m-2!"}, "m-2!"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if got := gx.Cx(tc.parts...); got != tc.want {

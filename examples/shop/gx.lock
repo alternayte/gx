@@ -212,11 +212,11 @@
         "version": "0.1.0",
         "files": {
           "ui/empty/Empty.fixtures.go": "2f7b786503e9a08dcc9a9769efad97ff7c8a04a250be32ddf71f1c12024570a3",
-          "ui/empty/Empty.gx": "41f8333cba6dba3e2cd523e1ffeae53d0cd7bb8c207495e2139778fe57d6daa3",
+          "ui/empty/Empty.gx": "dc7d382d9d4a587d0f2f7fffe39e7b423312da983cb09cd2b3e8d82f33991b72",
           "ui/empty/EmptyContent.fixtures.go": "16f46679b81fabe08920c746e207fb139adf1b422ea46aa608ddd91b6c1cc703",
           "ui/empty/EmptyContent.gx": "11c7e4867ad2c9b2b8c67124ce2203b515f03673ac28ac3e0e4cbbabf172aad5",
           "ui/empty/EmptyDescription.fixtures.go": "04c747f12293262eeaa07f300f731b5bbc0db18c2e4a1b01ed3c9c71676d567f",
-          "ui/empty/EmptyDescription.gx": "2613dcaf7f9989b1fafd56d741fce2fa5498e7d440f0b8553f8dd9eacfd96003",
+          "ui/empty/EmptyDescription.gx": "b25a4861a7b3b929cfff5d9bc9cb69dbc2f974ae9cbce4d76d083167a3486af0",
           "ui/empty/EmptyHeader.fixtures.go": "29c7f59f1802ff1b94b82b2ac5e6b99a49a375f9b6551024be1073cb8a0317be",
           "ui/empty/EmptyHeader.gx": "f536a0285a375ab337df779551182ece78976ba5d8417628a057af46cd94c6c4",
           "ui/empty/EmptyMedia.fixtures.go": "14178ae51dd8de370f5b995fbf27eb74e5ebc0b98add39738f75f9d01a0fe07a",
@@ -329,7 +329,7 @@
           "ui/item/ItemContent.fixtures.go": "6cc56f50dd7b0bb020db4cc35a616d00f32173c1d7b166ad3cf4c99e11504a75",
           "ui/item/ItemContent.gx": "553b151f8e6c5abac37ce8c76c220755027227ea02890c1dfb4b666bdfc92b3e",
           "ui/item/ItemDescription.fixtures.go": "6e7d9a8e3a243e3521f3c646bfd18350ec61436acf6e43d9a8442cd874ca1e99",
-          "ui/item/ItemDescription.gx": "cf8a01b7a17bcc20b5c23dea7e2d048f1877b4c3979cc67f406903f61cda119a",
+          "ui/item/ItemDescription.gx": "d6aa52ad594b045782a6c248256ffae457fcac8a8602be3919a0de743ea53617",
           "ui/item/ItemFooter.fixtures.go": "f99dbcbb41a062a851749bd0e848fa1f506eb7041065639c459ec86f74c4de9e",
           "ui/item/ItemFooter.gx": "0d130d848e1df755b95e47e1003be086217fa13750b36036240377ac0088b8d0",
           "ui/item/ItemGroup.fixtures.go": "e6e7556e372f5eb7cd963997d1ec7f8d6b07b02716346e397fc3912f2168f6a5",
@@ -547,7 +547,7 @@
           "ui/sidebar/SidebarMenuSkeleton.fixtures.go": "162af8d18d8899edece1080a4d8d7e1cf98b9e769df5c370b4c89005a995f597",
           "ui/sidebar/SidebarMenuSkeleton.gx": "de700189ee00c2e8105ca1ae56f9e7d276c2482c68c2dc7a0042f8cde58b225b",
           "ui/sidebar/SidebarMenuSub.fixtures.go": "361ba94b57a43b7b201760b1fef35821cce54023a351c51d07f6560d2d48e88c",
-          "ui/sidebar/SidebarMenuSub.gx": "118589ef6dbb2fd9ccbf395444508874bc7e99dcfe069cf8ff19d08b9e97db37",
+          "ui/sidebar/SidebarMenuSub.gx": "da7a6aebfc14aa0354ccdca2a9166bd284276f1c2202903a9eabdab4b702fc4b",
           "ui/sidebar/SidebarMenuSubButton.fixtures.go": "7f92170c236f104482d7f78ecbe56afa0686e80d9c8f4878299bd5ec53d9a4eb",
           "ui/sidebar/SidebarMenuSubButton.gx": "311e516dc73593c00a6cf0a54dc1cf8e8ce2bfe414bb6c436468d1bce77cf4fb",
           "ui/sidebar/SidebarMenuSubItem.fixtures.go": "16bcfcc730b2eee0af742ec7d5cae8bcd5b2f3a0248717fcf0d67635d7e64565",
@@ -556,7 +556,7 @@
           "ui/sidebar/SidebarSeparator.gx": "cf5f32ee422df6d2ac1ebda2b306ca3aad27e8bdc10ed6566fd022e27e7a5904",
           "ui/sidebar/SidebarTrigger.fixtures.go": "c3b67e609542be04725f54459046cebeaa6a9668b88217fe28123aecec2f25dc",
           "ui/sidebar/SidebarTrigger.gx": "323886a37ef6c300c289d648ea1925160355af91e88b3430b0bce4eb5f956e77",
-          "ui/sidebar/styles.go": "dc0a34c26ddd98f30706ce36a4763b1186d7bc8a473d12bde9666077ec5d2da2"
+          "ui/sidebar/styles.go": "945deacb6d8021d8581d4a2f507b3575a5ea3f506b13699389687a7bcbe566a1"
         }
       },
       "signup": {
@@ -610,7 +610,7 @@
           "ui/table/TableFooter.fixtures.go": "a397a00ea6ddf9bd9eccc0965d1a014386d1580e2215b6d1da63aa6480ab2403",
           "ui/table/TableFooter.gx": "72c762afaec4780d26ae850f50a7d9e478f6d5e32c03ad113fe96088adccd02a",
           "ui/table/TableHead.fixtures.go": "a9d60477e9e4c9469d09c69c51199b0dd9ee421f531e6fab49609497e2a71083",
-          "ui/table/TableHead.gx": "5e4d88fb0bc1796b7851ad03bba03220640d86f2afb583383e0e50305cb69130",
+          "ui/table/TableHead.gx": "d4dacec9187178302ad70343095f4cdf7bcd0fe9239d07cd0ab78a5f81000f3f",
           "ui/table/TableHeader.fixtures.go": "304ef5096002dccbc7025e2df632a6e7eb45c4a6e2c45e1968dc0a5ef11f541c",
           "ui/table/TableHeader.gx": "8ed94d19e079dac08e3fa243c2a3b4b6121968e1852a80a6a3844f60f40521de",
           "ui/table/TableRow.fixtures.go": "ff6479d3559e93511ca6f3845acad6c0a94276d00b122b54fc2faacfc2edb61d",

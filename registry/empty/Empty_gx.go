@@ -15,8 +15,8 @@ type EmptyProps struct {
 func Empty(p EmptyProps) gx.Node {
 	var _b gx.Builder
 //line Empty.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center [text-wrap:balance] md:p-12", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Empty.gx:9:213
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Empty.gx:9:206
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -68,7 +68,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div data-slot="empty" class={gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center [text-wrap:balance] md:p-12", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty" class={gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyHeader.gx"
@@ -104,7 +104,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div data-slot="empty-description" class={gx.Cx("text-sm leading-relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="empty-description" class={gx.Cx("text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/empty/EmptyContent.gx"

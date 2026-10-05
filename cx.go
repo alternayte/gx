@@ -87,7 +87,12 @@ func parseClass(class string) cxClass {
 		rec.modifiers = base[:last]
 		base = base[last+1:]
 	}
-	base = strings.TrimPrefix(base, "!")
+	// An important class only replaces an important class. Tailwind v4
+	// writes the mark at the end; the v3 prefix still parses.
+	if strings.HasPrefix(base, "!") || strings.HasSuffix(base, "!") {
+		base = strings.TrimSuffix(strings.TrimPrefix(base, "!"), "!")
+		rec.modifiers += "!"
+	}
 	base = strings.TrimPrefix(base, "-")
 	rec.group = classGroup(base)
 	return rec
@@ -130,8 +135,22 @@ func classGroup(class string) string {
 			return "gap-y"
 		}
 		return "gap"
-	case "w", "h", "size", "z", "leading", "tracking", "opacity", "shadow":
+	case "w", "h", "size", "z", "leading", "tracking", "opacity":
 		return head
+	case "shadow":
+		if shadowSizes[rest] || (rest != "" && rest[0] == '[') {
+			return "shadow"
+		}
+		return "shadow-color"
+	case "ring":
+		switch {
+		case rest == "inset":
+			return ""
+		case numberLike(rest) || arbitraryLength(rest):
+			return "ring-w"
+		default:
+			return "ring-color"
+		}
 	case "min", "max":
 		if strings.HasPrefix(rest, "w-") {
 			return head + "-w"
@@ -141,7 +160,18 @@ func classGroup(class string) string {
 		}
 		return ""
 	case "text":
-		if textSizes[rest] || isFontSizeNumber(rest) || (rest != "" && rest[0] == '[') {
+		switch rest {
+		case "left", "center", "right", "justify", "start", "end":
+			return "text-align"
+		case "wrap", "nowrap", "balance", "pretty":
+			return "text-wrap"
+		}
+		// text-sm/relaxed sets the size with a line height.
+		size := rest
+		if j := indexByte(size, '/'); j >= 0 {
+			size = size[:j]
+		}
+		if textSizes[size] || isFontSizeNumber(size) || arbitraryLength(size) {
 			return "text-size"
 		}
 		return "text-color"
@@ -164,19 +194,24 @@ func classGroup(class string) string {
 			return "bg-color"
 		}
 	case "border":
+		switch rest {
+		case "x", "y", "t", "r", "b", "l", "s", "e":
+			// A bare side is a 1px width.
+			return "border-" + rest + "-w"
+		}
 		if len(rest) > 1 && rest[1] == '-' {
 			side := rest[:1]
 			switch side {
 			case "x", "y", "t", "r", "b", "l", "s", "e":
 				value := rest[2:]
-				if numberLike(value) {
+				if numberLike(value) || arbitraryLength(value) {
 					return "border-" + side + "-w"
 				}
 				return "border-" + side + "-color"
 			}
 		}
 		switch {
-		case numberLike(rest):
+		case numberLike(rest) || arbitraryLength(rest):
 			return "border-w"
 		case rest == "solid" || rest == "dashed" || rest == "dotted" || rest == "double" || rest == "none":
 			return "border-style"
@@ -285,6 +320,27 @@ func isFontSizeNumber(value string) bool {
 	return true
 }
 
+// arbitraryLength reports whether a value is an arbitrary length such as
+// [3px] or [0.5rem], and not an arbitrary colour or variable.
+func arbitraryLength(value string) bool {
+	if len(value) < 3 || value[0] != '[' || value[len(value)-1] != ']' {
+		return false
+	}
+	inner := value[1 : len(value)-1]
+	if strings.HasPrefix(inner, "length:") {
+		return true
+	}
+	c := inner[0]
+	return (c >= '0' && c <= '9') || c == '.' || strings.HasPrefix(inner, "calc(")
+}
+
+// shadowSizes are the box shadow sizes of Tailwind v4. Anything else after
+// shadow- is a color.
+var shadowSizes = map[string]bool{
+	"2xs": true, "xs": true, "sm": true, "md": true, "lg": true, "xl": true,
+	"2xl": true, "none": true, "inner": true,
+}
+
 // textSizes are the text sizes of Tailwind v4. Anything else after text- is
 // a color.
 var textSizes = map[string]bool{
@@ -353,6 +409,7 @@ var conflictGroups = map[string][]string{
 	"rounded-b":  {"rounded-bl", "rounded-br"},
 	"rounded-l":  {"rounded-tl", "rounded-bl"},
 	"inset":      {"top", "right", "bottom", "left", "start", "end"},
+	"size":       {"w", "h"},
 	"overflow":   {"overflow-x", "overflow-y"},
 	"overscroll": {"overscroll-x", "overscroll-y"},
 }
