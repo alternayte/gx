@@ -36,3 +36,4 @@ The spec is `docs/SDD.md`; it and the build state in `docs/build/` stay local an
 - island: a TypeScript component mounted on the client.
 - action: a route type plus a handler that answers with typed patches.
 - registry: the component source `gx add` copies into an app.
+- document shell: the doctype, html, head and body that the framework writes around a page. Avoid: document wrapper, page skeleton.
