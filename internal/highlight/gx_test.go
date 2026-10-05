@@ -116,6 +116,10 @@ func TestREQ_CNT_04_GxLexerKeepsSource(t *testing.T) {
 		t.Fatalf("no registry .gx files: %v", err)
 	}
 	for _, file := range files {
+		// A local .gx state directory of the compiler matches the glob.
+		if info, err := os.Stat(file); err == nil && info.IsDir() {
+			continue
+		}
 		src, err := os.ReadFile(file)
 		if err != nil {
 			t.Fatal(err)
