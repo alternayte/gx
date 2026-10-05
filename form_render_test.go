@@ -220,11 +220,12 @@ func attrValueOf(attrs gx.Attrs, key string) string {
 // captureAdapter records the patches of a form or action answer.
 type captureAdapter struct{ patches []gx.Patch }
 
-func (a *captureAdapter) Name() string                         { return "capture" }
-func (a *captureAdapter) Signals() bool                        { return true }
-func (a *captureAdapter) Runtime() gx.Node                     { return nil }
-func (a *captureAdapter) Assets() map[string][]byte            { return nil }
-func (a *captureAdapter) ReadSignals(*http.Request, any) error { return nil }
+func (a *captureAdapter) Name() string                          { return "capture" }
+func (a *captureAdapter) Signals() bool                         { return true }
+func (a *captureAdapter) Runtime() gx.Node                      { return nil }
+func (a *captureAdapter) Assets() map[string][]byte             { return nil }
+func (a *captureAdapter) ReadSignals(*http.Request, any) error  { return nil }
+func (a *captureAdapter) Invoke(string, string, string) gx.Attr { return gx.Attr{} }
 func (a *captureAdapter) Respond(_ http.ResponseWriter, _ *http.Request, res *gx.Response) error {
 	a.patches = append(a.patches, res.Patches...)
 	return nil

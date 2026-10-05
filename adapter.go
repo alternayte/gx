@@ -25,6 +25,12 @@ type Adapter interface {
 	Respond(w http.ResponseWriter, r *http.Request, res *Response) error
 	// ReadSignals decodes the request signals into dst, a pointer.
 	ReadSignals(r *http.Request, dst any) error
+	// Invoke returns the attribute that makes an element invoke the
+	// action at url with the HTTP method on its click (REQ-ACT-02). A
+	// non-empty scope names the invoking component instance
+	// (REQ-ACT-03). It returns the zero Attr for a method the client
+	// cannot invoke.
+	Invoke(method, url, scope string) Attr
 }
 
 var adapterMu sync.RWMutex

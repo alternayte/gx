@@ -45,7 +45,8 @@ func (r *typesResult) collectActions(pkgs []*packages.Package) {
 
 // checkActionInvocations reports an on: attribute that invokes a route type
 // with no registration (GX4001), more than one registration (GX4002) or an
-// unsupported method (GX4009).
+// unsupported method (GX4009). checkToastActions covers the invocations in
+// Go files.
 func (l *loader) checkActionInvocations(res *typesResult, dirs []string) []Diagnostic {
 	var out []Diagnostic
 	for _, dir := range dirs {
@@ -61,42 +62,79 @@ func (l *loader) checkActionInvocations(res *typesResult, dirs []string) []Diagn
 					if key == "" || !res.routeKeys[key] {
 						continue
 					}
-					regs := res.actions[key]
-					switch {
-					case len(regs) == 0:
-						out = append(out, Diagnostic{
-							Code: CodeActionMissing,
-							File: f.File,
-							Line: a.At.Line,
-							Col:  a.At.Col,
-							Msg:  "no action is registered for " + Quoted(typeName(key)),
-							Fix:  "add gx.Action for this route type",
-						})
-					case len(regs) > 1:
-						out = append(out, Diagnostic{
-							Code: CodeActionTwice,
-							File: f.File,
-							Line: a.At.Line,
-							Col:  a.At.Col,
-							Msg:  Quoted(typeName(key)) + " is registered " + itoa(len(regs)) + " times: " + positionList(regs),
-							Fix:  "delete all but one gx.Action registration",
-						})
-					}
-					if clientActionFunc(res.routeMeth[key]) == "" {
-						out = append(out, Diagnostic{
-							Code: CodeActionMethod,
-							File: f.File,
-							Line: a.At.Line,
-							Col:  a.At.Col,
-							Msg:  "method " + res.routeMeth[key] + " of " + Quoted(typeName(key)) + " cannot be invoked from the client",
-						})
-					}
-					if def := res.routeDefs[key]; def != nil && len(regs) > 0 {
+					out = append(out, res.invocationDiags(key, f.File, a.At.Line, a.At.Col)...)
+					if def := res.routeDefs[key]; def != nil && len(res.actions[key]) > 0 {
 						out = append(out, res.checkSignalFields(f, a, def)...)
 					}
 				}
 			})
 		}
+	}
+	return out
+}
+
+// checkToastActions reports a gx.ToastAction call in a Go file that invokes
+// a route type with no registration (GX4001), more than one registration
+// (GX4002) or an unsupported method (GX4009). The position is the call.
+func (r *typesResult) checkToastActions(pkgs []*packages.Package) []Diagnostic {
+	var out []Diagnostic
+	for _, pkg := range pkgs {
+		for _, file := range pkg.Syntax {
+			path := pkg.Fset.Position(file.Pos()).Filename
+			if strings.HasSuffix(path, "_gx.go") || strings.HasSuffix(path, "_test.go") {
+				continue
+			}
+			ast.Inspect(file, func(n ast.Node) bool {
+				call, ok := n.(*ast.CallExpr)
+				if !ok || !isGxFuncExpr(pkg, call.Fun, "ToastAction") || len(call.Args) != 2 {
+					return true
+				}
+				key := namedTypeKey(pkg.TypesInfo.TypeOf(call.Args[1]))
+				if key == "" || !r.routeKeys[key] {
+					return true
+				}
+				pos := pkg.Fset.Position(call.Pos())
+				out = append(out, r.invocationDiags(key, pos.Filename, pos.Line, pos.Column)...)
+				return true
+			})
+		}
+	}
+	return out
+}
+
+// invocationDiags checks one invocation of the route type key against the
+// module index of registered actions (REQ-ACT-02).
+func (r *typesResult) invocationDiags(key, file string, line, col int) []Diagnostic {
+	var out []Diagnostic
+	regs := r.actions[key]
+	switch {
+	case len(regs) == 0:
+		out = append(out, Diagnostic{
+			Code: CodeActionMissing,
+			File: file,
+			Line: line,
+			Col:  col,
+			Msg:  "no action is registered for " + Quoted(typeName(key)),
+			Fix:  "add gx.Action for this route type",
+		})
+	case len(regs) > 1:
+		out = append(out, Diagnostic{
+			Code: CodeActionTwice,
+			File: file,
+			Line: line,
+			Col:  col,
+			Msg:  Quoted(typeName(key)) + " is registered " + itoa(len(regs)) + " times: " + positionList(regs),
+			Fix:  "delete all but one gx.Action registration",
+		})
+	}
+	if !clientInvocable(r.routeMeth[key]) {
+		out = append(out, Diagnostic{
+			Code: CodeActionMethod,
+			File: file,
+			Line: line,
+			Col:  col,
+			Msg:  "method " + r.routeMeth[key] + " of " + Quoted(typeName(key)) + " cannot be invoked from the client",
+		})
 	}
 	return out
 }
@@ -215,22 +253,15 @@ func itoa(n int) string {
 	return string(digits)
 }
 
-// clientActionFunc maps an HTTP method to the adapter client function
-// (REQ-ACT-02). It returns "" for a method the client cannot invoke.
-func clientActionFunc(method string) string {
+// clientInvocable reports whether the client can invoke an action with the
+// HTTP method (REQ-ACT-02). The adapter owns the syntax of the call
+// (REQ-PLG-04).
+func clientInvocable(method string) bool {
 	switch method {
-	case "GET":
-		return "get"
-	case "POST":
-		return "post"
-	case "PUT":
-		return "put"
-	case "PATCH":
-		return "patch"
-	case "DELETE":
-		return "delete"
+	case "GET", "POST", "PUT", "PATCH", "DELETE":
+		return true
 	}
-	return ""
+	return false
 }
 
 // checkSecrets reports gx.Secret values that would cross to the client

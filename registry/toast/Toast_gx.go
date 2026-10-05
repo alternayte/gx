@@ -52,22 +52,32 @@ func Toast(p ToastProps) gx.Node {
 //line Toast.gx:18:9
 	_b1.Add(gx.Text("\n  "))
 //line Toast.gx:19:3
-	if p.Toast.Action.Label != "" {
-//line Toast.gx:19:34
+	if p.Toast.Action.Method != "" {
+//line Toast.gx:19:35
 		_b1.Add(gx.Text("\n    "))
 //line Toast.gx:20:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Toast.Action.URL), Kind: gx.AttrURL, Active: "page"}}, gx.Text(p.Toast.Action.Label)))
-//line Toast.gx:20:262
+		_b1.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, p.invoke()), gx.Text(p.Toast.Action.Label)))
+//line Toast.gx:20:290
 		_b1.Add(gx.Text("\n  "))
+	} else {
+//line Toast.gx:21:10
+		if p.Toast.Action.Label != "" {
+//line Toast.gx:21:41
+			_b1.Add(gx.Text("\n    "))
+//line Toast.gx:22:5
+			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Toast.Action.URL), Kind: gx.AttrURL, Active: "page"}}, gx.Text(p.Toast.Action.Label)))
+//line Toast.gx:22:262
+			_b1.Add(gx.Text("\n  "))
+		}
 	}
-//line Toast.gx:21:4
+//line Toast.gx:23:4
 	_b1.Add(gx.Text("\n  "))
-//line Toast.gx:22:3
+//line Toast.gx:24:3
 	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true), gx.Attr{Key: "aria-label", Value: "Close", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.Icon(iconX, gx.IconProps{Class: "size-4"}), gx.Text("\n  "))))
-//line Toast.gx:24:12
+//line Toast.gx:26:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full items-start gap-2 rounded-lg border border-border bg-popover p-4 text-sm text-popover-foreground shadow-lg transition-[opacity,translate] duration-200 ease-out starting:translate-y-2 starting:opacity-0 data-[closing]:pointer-events-none data-[closing]:translate-x-4 data-[closing]:opacity-0 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.ToastAttrs(p.Toast), p.Attrs), _b1.Node()))
-//line Toast.gx:25:7
+//line Toast.gx:27:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

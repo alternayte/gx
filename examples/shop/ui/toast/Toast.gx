@@ -16,7 +16,9 @@ props {
       <div class="leading-5 text-muted-foreground">{p.Toast.Description}</div>
     }
   </div>
-  if p.Toast.Action.Label != "" {
+  if p.Toast.Action.Method != "" {
+    <button type="button" data-gx-close class="inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50" {...p.invoke()}>{p.Toast.Action.Label}</button>
+  } else if p.Toast.Action.Label != "" {
     <a href={p.Toast.Action.URL} class="inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50">{p.Toast.Action.Label}</a>
   }
   <button type="button" data-gx-close aria-label="Close" class="-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50">

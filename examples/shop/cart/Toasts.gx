@@ -19,6 +19,7 @@ props {
     <button class={demoButton} on:click={route.ToastDemo{Show: "error"}}>Error</button>
     <button class={demoButton} on:click={route.ToastDemo{Show: "description"}}>Description</button>
     <button class={demoButton} on:click={route.ToastDemo{Show: "action"}}>Action</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "undo"}}>Undo</button>
     <button class={demoButton} on:click={route.ToastDemo{Show: "sticky"}}>Sticky</button>
     <button class={demoButton} on:click={route.ToastDemo{Show: "upload-start"}}>Start upload</button>
     <button class={demoButton} on:click={route.ToastDemo{Show: "upload-done"}}>Finish upload</button>

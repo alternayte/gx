@@ -91,6 +91,82 @@ func TestREQ_ACT_02_UnsupportedMethod(t *testing.T) {
 	}
 }
 
+// toastCall invokes Add from a toast, in a Go file. The call is on line 6.
+const toastCall = `package cart
+
+import "github.com/alternayte/gx"
+
+var remove = gx.Action(func(c *gx.Ctx, in Remove) error {
+	return c.Toast("Removed", gx.ToastAction("Undo", Add{ID: in.ID}))
+})
+
+var Routes = gx.Collect(remove)
+`
+
+const removeRoute = `
+type Remove struct {
+	gx.Route ` + "`" + `POST /cart/remove` + "`" + `
+	ID int64
+}
+`
+
+// TestREQ_ACT_02_ToastActionMissingRegistration checks that an invocation in
+// a Go file has the same rule as an on: attribute: GX4001 at the call.
+func TestREQ_ACT_02_ToastActionMissingRegistration(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"cart/routes.go": addRoute + removeRoute,
+		"cart/remove.go": toastCall,
+	})
+	diags := checkDir(t, dir)
+	d := diagWith(t, diags, compiler.CodeActionMissing)
+	if !strings.Contains(d.Msg, `"Add"`) {
+		t.Fatalf("GX4001 message = %q", d.Msg)
+	}
+	if !strings.HasSuffix(d.File, filepath.Join("cart", "remove.go")) || d.Line != 6 {
+		t.Fatalf("GX4001 position = %s:%d, want cart/remove.go:6", d.File, d.Line)
+	}
+}
+
+func TestREQ_ACT_02_ToastActionRegistered(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"cart/routes.go": addRoute + removeRoute,
+		"cart/action.go": addAction,
+		"cart/remove.go": strings.Replace(toastCall, "gx.Collect(remove)", "gx.Collect(remove, add)", 1),
+	})
+	if diags := checkDir(t, dir); len(diags) != 0 {
+		t.Fatalf("registered toast action: unexpected diagnostics %v", diags)
+	}
+}
+
+func TestREQ_ACT_02_ToastActionTwoRegistrations(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"cart/routes.go": addRoute + removeRoute,
+		"cart/one.go":    addAction,
+		"cart/two.go":    strings.Replace(addAction, "var add", "var addTwo", 1),
+		"cart/remove.go": toastCall,
+	})
+	d := diagWith(t, checkDir(t, dir), compiler.CodeActionTwice)
+	if !strings.Contains(d.Msg, "registered 2 times") || !strings.HasSuffix(d.File, "remove.go") || d.Line != 6 {
+		t.Fatalf("GX4002 = %s:%d %q, want remove.go:6", d.File, d.Line, d.Msg)
+	}
+}
+
+func TestREQ_ACT_02_ToastActionUnsupportedMethod(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"cart/routes.go": strings.Replace(addRoute, "POST /cart/add", "OPTIONS /cart/add", 1) + removeRoute,
+		"cart/action.go": addAction,
+		"cart/remove.go": toastCall,
+	})
+	d := diagWith(t, checkDir(t, dir), compiler.CodeActionMethod)
+	if !strings.Contains(d.Msg, "OPTIONS") || !strings.HasSuffix(d.File, "remove.go") || d.Line != 6 {
+		t.Fatalf("GX4009 = %s:%d %q, want remove.go:6", d.File, d.Line, d.Msg)
+	}
+}
+
 func TestREQ_ACT_02_ActionCodegen(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":         moduleWithGx(t),
@@ -100,7 +176,7 @@ func TestREQ_ACT_02_ActionCodegen(t *testing.T) {
 	})
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "cart/Button_gx.go")])
-	want := `gx.Attr{Key: "data-on:click", Value: "@post('" + (Add{ID: 1}).URL() + "')", Kind: gx.AttrText}`
+	want := `gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (Add{ID: 1}).URL(), "").Value, Kind: gx.AttrText}`
 	if !strings.Contains(src, want) {
 		t.Fatalf("Button_gx.go lacks the action attribute:\n%s", src)
 	}
@@ -140,7 +216,7 @@ func TestREQ_ACT_03_SignalBinding(t *testing.T) {
 	}
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "cart/Cart_gx.go")])
-	want := `"@post('" + (Add{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})"`
+	want := `gx.Invoke("POST", (Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value`
 	if !strings.Contains(src, want) {
 		t.Fatalf("Cart_gx.go lacks the scoped action attribute:\n%s", src)
 	}

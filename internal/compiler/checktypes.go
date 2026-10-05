@@ -207,6 +207,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkActionInvocations(res, dirs)...)
+	diags = append(diags, res.checkToastActions(pkgs)...)
 	diags = append(diags, checkSignalRules(routes)...)
 	diags = append(diags, l.checkSignals(dirs)...)
 	diags = append(diags, l.checkSecrets(res, dirs)...)

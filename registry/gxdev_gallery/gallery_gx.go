@@ -471,6 +471,7 @@ func Fixtures() []gx.Fixture {
 		{Component: "Toast", Package: "github.com/alternayte/gx/registry/toast", Name: "Warning", Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["Warning"]) }},
 		{Component: "Toast", Package: "github.com/alternayte/gx/registry/toast", Name: "WithAction", Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["WithAction"]) }},
 		{Component: "Toast", Package: "github.com/alternayte/gx/registry/toast", Name: "WithDescription", Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["WithDescription"]) }},
+		{Component: "Toast", Package: "github.com/alternayte/gx/registry/toast", Name: "WithLink", Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["WithLink"]) }},
 		{Component: "Toaster", Package: "github.com/alternayte/gx/registry/toast", Name: "WithToast", Node: func() gx.Node { return toast.Toaster(toast.ToasterFixtures["WithToast"]) }},
 		{Component: "Toggle", Package: "github.com/alternayte/gx/registry/toggle", Name: "Disabled", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Disabled"]) }},
 		{Component: "Toggle", Package: "github.com/alternayte/gx/registry/toggle", Name: "Invalid", Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Invalid"]) }},

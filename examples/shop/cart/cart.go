@@ -48,6 +48,8 @@ var ToastDemo = gx.Action(func(c *gx.Ctx, in route.ToastDemo) error {
 		return c.Toast("Event created", gx.ToastSuccess, gx.ToastDescription("Monday, 12 January at 09:00"))
 	case "action":
 		return c.Toast("Item added to the cart", gx.ToastDescription("Read how the shop works."), gx.ToastLink("About", shoproute.About{}))
+	case "undo":
+		return c.Toast("Item removed from the cart", gx.ToastAction("Undo", route.Undo{}))
 	case "sticky":
 		return c.Toast("Stays until you close it", gx.ToastSticky)
 	case "upload-start":
@@ -56,6 +58,11 @@ var ToastDemo = gx.Action(func(c *gx.Ctx, in route.ToastDemo) error {
 		return c.Toast("File uploaded", gx.ToastSuccess, gx.ToastID("upload"))
 	}
 	return c.Toast("Event created")
+})
+
+// Undo answers the Undo button of a toast. The answer is the next toast.
+var Undo = gx.Action(func(c *gx.Ctx, in route.Undo) error {
+	return c.Toast("Item restored", gx.ToastSuccess)
 })
 
 // Noop answers 204.
@@ -78,4 +85,4 @@ var Lazy = gx.Action(func(c *gx.Ctx, in route.Lazy) error {
 })
 
 // Routes collects the cart actions.
-var Routes = gx.Collect(Add, Set, Redirect, Toast, ToastDemo, Noop, Transition, Fail, Lazy)
+var Routes = gx.Collect(Add, Set, Redirect, Toast, ToastDemo, Undo, Noop, Transition, Fail, Lazy)

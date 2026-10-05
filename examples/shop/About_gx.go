@@ -25,7 +25,7 @@ func About(p AboutProps) gx.Node {
 //line About.gx:7:59
 	_b.Add(gx.Text("\n"))
 //line About.gx:8:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "data-on-init", Value: "@get('" + (cartroute.Lazy{}).URL() + "')", Kind: gx.AttrText}}))
+	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "data-on-init", Value: gx.Invoke("GET", (cartroute.Lazy{}).URL(), "").Value, Kind: gx.AttrText}}))
 //line About.gx:8:39
 	_b.Add(gx.Text("\n"))
 //line About.gx:9:1
