@@ -83,7 +83,9 @@ props {
       <div class="leading-5 text-muted-foreground">{p.Toast.Description}</div>
     }
   </div>
-  if p.Toast.Action.Label != "" {
+  if p.Toast.Action.Method != "" {
+    <button type="button" data-gx-close class="inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50" {...p.invoke()}>{p.Toast.Action.Label}</button>
+  } else if p.Toast.Action.Label != "" {
     <a href={p.Toast.Action.URL} class="inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50">{p.Toast.Action.Label}</a>
   }
   <button type="button" data-gx-close aria-label="Close" class="-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50">
@@ -135,6 +137,12 @@ func (p ToastProps) iconClass() string {
 	return base
 }
 
+// invoke returns the attribute that invokes the action of the toast. The
+// adapter writes it. data-gx-close on the same button closes the toast.
+func (p ToastProps) invoke() gx.Attrs {
+	return gx.Attrs{gx.Invoke(p.Toast.Action.Method, string(p.Toast.Action.URL), "")}
+}
+
 // Render renders one pushed toast. An app passes it as gx.Config.Toast.
 func Render(p gx.ToastPatch) gx.Node {
 	return Toast(ToastProps{Toast: p})
@@ -173,10 +181,14 @@ var ToastFixtures = gx.Fixtures[ToastProps]{
 		Text:        "Event created",
 		Description: "Monday, 12 January at 09:00",
 	}},
-	"WithAction": {Class: fixtureWidth, Toast: gx.ToastPatch{
+	"WithLink": {Class: fixtureWidth, Toast: gx.ToastPatch{
 		Text:        "Item added to the cart",
 		Description: "Open the cart to check out.",
-		Action:      gx.ToastAction{Label: "View", URL: "/"},
+		Action:      gx.ToastControl{Label: "View", URL: "/"},
+	}},
+	"WithAction": {Class: fixtureWidth, Toast: gx.ToastPatch{
+		Text:   "Item removed from the cart",
+		Action: gx.ToastControl{Label: "Undo", URL: "/", Method: "POST"},
 	}},
 }
 ```
@@ -220,6 +232,14 @@ return c.Toast("Item added to the cart",
 	gx.ToastDuration(8*time.Second),
 	gx.ToastLink("View", route.Cart{}))
 ```
+
+Add a button that invokes an action, for example Undo. Pass the route value of the action. The toast closes when the user presses the button.
+
+```go
+return c.Toast("Item removed", gx.ToastAction("Undo", route.Undo{ID: in.ID}))
+```
+
+A toast holds one control. When an action passes `gx.ToastLink` and `gx.ToastAction`, the later option wins.
 
 A toast leaves after 4 seconds. A loading toast and a `gx.ToastSticky` toast stay until the user closes them.
 
@@ -355,6 +375,26 @@ The code renders the fixture by its name. The fixture sets these props.
 
 </Example>
 
+### Toast: With link
+
+<Example item="toast" name="toast-with-link" label="Toast: Toast: With link">
+
+```gx
+{toast.Toast(toast.ToastFixtures["WithLink"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/toast/Toast.fixtures.go"
+"WithLink": {Class: fixtureWidth, Toast: gx.ToastPatch{
+  Text:        "Item added to the cart",
+  Description: "Open the cart to check out.",
+  Action:      gx.ToastControl{Label: "View", URL: "/"},
+}}
+```
+
+</Example>
+
 ### Toast: With action
 
 <Example item="toast" name="toast-with-action" label="Toast: Toast: With action">
@@ -367,9 +407,8 @@ The code renders the fixture by its name. The fixture sets these props.
 
 ```go title="registry/toast/Toast.fixtures.go"
 "WithAction": {Class: fixtureWidth, Toast: gx.ToastPatch{
-  Text:        "Item added to the cart",
-  Description: "Open the cart to check out.",
-  Action:      gx.ToastAction{Label: "View", URL: "/"},
+  Text:   "Item removed from the cart",
+  Action: gx.ToastControl{Label: "Undo", URL: "/", Method: "POST"},
 }}
 ```
 
@@ -400,7 +439,7 @@ The code renders the fixture by its name. The fixture sets these props.
 
 - Do not render a toaster per page.
 - Do not use a toast for a value the user must not miss. Use an alert.
-- Do not put the only path to a task in a toast link. The toast leaves.
+- Do not put the only path to a task in a toast link or a toast action. The toast leaves.
 - Do not write toast classes in package `gx` code. Change `Toast.gx`.
 
 </docs.Card>
@@ -410,7 +449,7 @@ The code renders the fixture by its name. The fixture sets these props.
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves focus to the link and the close button of a toast. The timers stop while focus is in the toaster. |
-| Enter | Follows the focused link, or closes the toast on the close button. |
-| Space | Closes the toast on the close button. |
+| Tab | Moves focus to the link or the action button, and to the close button of a toast. The timers stop while focus is in the toaster. |
+| Enter | Follows the focused link, or invokes the action and closes the toast on the action button, or closes the toast on the close button. |
+| Space | Invokes the action and closes the toast on the action button, or closes the toast on the close button. |
 | Escape | Closes the toast that holds focus. Focus returns to the element that had it before the toaster. |

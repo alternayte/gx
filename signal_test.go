@@ -13,13 +13,15 @@ type signalAdapter struct {
 	body map[string]any
 }
 
-func (a *signalAdapter) Name() string             { return "signal-test" }
-func (a *signalAdapter) Signals() bool            { return true }
-func (a *signalAdapter) Runtime() gx.Node         { return nil }
+func (a *signalAdapter) Name() string              { return "signal-test" }
+func (a *signalAdapter) Signals() bool             { return true }
+func (a *signalAdapter) Runtime() gx.Node          { return nil }
 func (a *signalAdapter) Assets() map[string][]byte { return nil }
 func (a *signalAdapter) Respond(http.ResponseWriter, *http.Request, *gx.Response) error {
 	return nil
 }
+
+func (a *signalAdapter) Invoke(string, string, string) gx.Attr { return gx.Attr{} }
 
 func (a *signalAdapter) ReadSignals(r *http.Request, dst any) error {
 	if a.body == nil {

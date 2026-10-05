@@ -39,6 +39,12 @@ func (f *fakeAdapter) Respond(w http.ResponseWriter, _ *http.Request, res *gx.Re
 
 func (f *fakeAdapter) ReadSignals(*http.Request, any) error { return nil }
 
+// Invoke writes its arguments in a made-up syntax, so a test can tell the
+// adapter that wrote an invocation.
+func (f *fakeAdapter) Invoke(method, url, scope string) gx.Attr {
+	return gx.Attr{Key: "data-fake-on", Value: "fake(" + method + " " + url + " " + scope + ")"}
+}
+
 // actRoute is a hand-written action input for unit tests. Generated route
 // types provide the same Pattern and Bind methods.
 type actRoute struct{}

@@ -40,6 +40,12 @@ func (p ToastProps) iconClass() string {
 	return base
 }
 
+// invoke returns the attribute that invokes the action of the toast. The
+// adapter writes it. data-gx-close on the same button closes the toast.
+func (p ToastProps) invoke() gx.Attrs {
+	return gx.Attrs{gx.Invoke(p.Toast.Action.Method, string(p.Toast.Action.URL), "")}
+}
+
 // Render renders one pushed toast. An app passes it as gx.Config.Toast.
 func Render(p gx.ToastPatch) gx.Node {
 	return Toast(ToastProps{Toast: p})

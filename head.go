@@ -1,6 +1,9 @@
 package gx
 
-import "strings"
+import (
+	"net/http"
+	"strings"
+)
 
 // Meta is one meta tag in the head (REQ-RTE-11).
 type Meta struct {
@@ -45,6 +48,11 @@ type renderState struct {
 	bodyDepth   int
 	headWritten bool
 	requestURI  string
+	// request selects the adapter that writes the action invocations of
+	// the render (REQ-PLG-04).
+	request    *http.Request
+	adapter    Adapter
+	adapterSet bool
 }
 
 // HeadOf returns the merged head of a node tree (REQ-RTE-11, REQ-RTE-12).

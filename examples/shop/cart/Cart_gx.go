@@ -38,27 +38,27 @@ func Cart(p CartProps) gx.Node {
 //line Cart.gx:20:44
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:21:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", "hover:opacity-90"), Kind: gx.AttrText}, gx.Attr{Key: "data-on:click", Value: "@post('" + (route.Add{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Add")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", "hover:opacity-90"), Kind: gx.AttrText}, gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Add")))
 //line Cart.gx:21:149
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:22:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "ml-2 rounded-md border border-border px-3 py-1.5 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "data-on:click", Value: "@post('" + (route.Set{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Set 2")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "ml-2 rounded-md border border-border px-3 py-1.5 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Set{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Set 2")))
 //line Cart.gx:22:113
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:23:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: "@post('" + (route.Redirect{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Go")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Redirect{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Go")))
 //line Cart.gx:23:50
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:24:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: "@post('" + (route.Toast{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Toast")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Toast{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Toast")))
 //line Cart.gx:24:50
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:25:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: "@post('" + (route.Noop{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Nothing")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Noop{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Nothing")))
 //line Cart.gx:25:51
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:26:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: "@post('" + (route.Error{}).URL() + "', {headers: {'Gx-Scope': '" + gx.ScopeString("cart.Cart", p.GxKey) + "'}})", Kind: gx.AttrText}}, gx.Text("Fail")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Error{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Fail")))
 //line Cart.gx:26:49
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "cart rounded-xl border border-border bg-card p-4 my-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-signals", Value: gx.SignalJSON("cart.Cart", p.GxKey, map[string]any{"qty": 1}), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-instance", Value: gx.ScopeString("cart.Cart", p.GxKey), Kind: gx.AttrText}, gx.Attr{Key: "data-label", Value: p.Label, Kind: gx.AttrText}}, _b1.Node()))

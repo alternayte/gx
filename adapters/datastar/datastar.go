@@ -110,7 +110,7 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 			// of the earlier toast with that id. The pinned Datastar
 			// logs a warning for every selector with no match, so the
 			// adapter does not send a replace that can miss.
-			if err := sse.PatchElements(gx.String(gx.RenderToast(r, t)), sdk.WithSelectorID("gx-toaster"), sdk.WithModeAppend()); err != nil {
+			if err := sse.PatchElements(gx.StringRequest(r, gx.RenderToast(r, t)), sdk.WithSelectorID("gx-toaster"), sdk.WithModeAppend()); err != nil {
 				return err
 			}
 		}
@@ -127,6 +127,31 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 		}
 	}
 	return nil
+}
+
+// Invoke returns the data-on:click attribute that calls the Datastar action
+// of the method. The scope travels in the Gx-Scope header (REQ-ACT-03).
+func (adapter) Invoke(method, url, scope string) gx.Attr {
+	var fn string
+	switch method {
+	case "GET":
+		fn = "@get"
+	case "POST":
+		fn = "@post"
+	case "PUT":
+		fn = "@put"
+	case "PATCH":
+		fn = "@patch"
+	case "DELETE":
+		fn = "@delete"
+	default:
+		return gx.Attr{}
+	}
+	value := fn + "('" + url + "')"
+	if scope != "" {
+		value = fn + "('" + url + "', {headers: {'Gx-Scope': '" + scope + "'}})"
+	}
+	return gx.Attr{Key: "data-on:click", Value: value}
 }
 
 // ReadSignals decodes the request signals, adapter-native, into dst.

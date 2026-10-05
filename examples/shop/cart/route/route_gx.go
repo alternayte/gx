@@ -186,3 +186,21 @@ func (in Transition) URL() string {
 	b.WriteString("transition")
 	return gx.BasePath() + b.String()
 }
+
+// Pattern returns the method and pattern of Undo.
+func (Undo) Pattern() string { return "POST /cart/undo" }
+
+// Bind fills Undo from the request.
+func (in *Undo) Bind(r *http.Request) error {
+	return nil
+}
+
+// URL returns the path of Undo.
+func (in Undo) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("cart")
+	b.WriteString("/")
+	b.WriteString("undo")
+	return gx.BasePath() + b.String()
+}

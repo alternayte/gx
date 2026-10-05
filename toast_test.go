@@ -36,10 +36,61 @@ func TestREQ_REG_11_ToastOptions(t *testing.T) {
 		ID:          "save",
 		Duration:    8 * time.Second,
 		Sticky:      true,
-		Action:      gx.ToastAction{Label: "Open", URL: "/home"},
+		Action:      gx.ToastControl{Label: "Open", URL: "/home"},
 	}
 	if got != want {
 		t.Fatalf("patch = %+v, want %+v", got, want)
+	}
+}
+
+// actionTarget is a hand-written action route. Generated route types provide
+// the same Pattern and URL methods.
+type actionTarget struct{ ID int }
+
+func (actionTarget) Pattern() string { return "POST /undo/{id}" }
+func (actionTarget) URL() string     { return "/undo/7" }
+
+// TestREQ_REG_11_ToastOneControl checks that ToastAction keeps the method
+// and the URL of the route value, and that the later of two controls wins.
+func TestREQ_REG_11_ToastOneControl(t *testing.T) {
+	link := gx.ToastLink("Open", redirectTarget{})
+	action := gx.ToastAction("Undo", actionTarget{ID: 7})
+	cases := []struct {
+		name string
+		opts []gx.ToastOption
+		want gx.ToastControl
+	}{
+		{"action", []gx.ToastOption{action}, gx.ToastControl{Label: "Undo", URL: "/undo/7", Method: "POST"}},
+		{"action wins", []gx.ToastOption{link, action}, gx.ToastControl{Label: "Undo", URL: "/undo/7", Method: "POST"}},
+		{"link wins", []gx.ToastOption{action, link}, gx.ToastControl{Label: "Open", URL: "/home"}},
+	}
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &fakeAdapter{}
+			_ = serveAction(t, a, gx.Action(func(c *gx.Ctx, in actRoute) error { return c.Toast("Removed", tt.opts...) }))
+			got, ok := a.res.Patches[0].(gx.ToastPatch)
+			if !ok || got.Action != tt.want {
+				t.Fatalf("patch = %+v, want the control %+v", a.res.Patches[0], tt.want)
+			}
+		})
+	}
+}
+
+// TestREQ_REG_11_ToastActionMarkup checks the plain toast of an action: one
+// button that the adapter makes invoke the action, and that closes the
+// toast. It holds no link.
+func TestREQ_REG_11_ToastActionMarkup(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	defer gx.SetAdapter(old)
+	gx.SetAdapter(&fakeAdapter{})
+	p := gx.ToastPatch{Text: "Removed", Action: gx.ToastControl{Label: "Undo", URL: "/undo/7", Method: "POST"}}
+	html := gx.String(gx.ToastNode(p))
+	want := `<button type="button" data-gx-close="" data-fake-on="fake(POST /undo/7 )">Undo</button>`
+	if !strings.Contains(html, want) {
+		t.Fatalf("toast lacks %s:\n%s", want, html)
+	}
+	if strings.Contains(html, "<a ") {
+		t.Fatalf("an action toast holds a link:\n%s", html)
 	}
 }
 
@@ -74,7 +125,7 @@ func TestREQ_REG_11_ToastMarkup(t *testing.T) {
 		{"duration", gx.ToastPatch{Text: "Saved", Duration: 1500 * time.Millisecond}, []string{`data-duration="1500"`}, ""},
 		{"loading stays", gx.ToastPatch{Text: "Saving", Kind: gx.ToastLoading, Duration: time.Second}, []string{`data-duration="0"`}, ""},
 		{"sticky stays", gx.ToastPatch{Text: "Saved", Sticky: true}, []string{`data-duration="0"`}, ""},
-		{"action", gx.ToastPatch{Text: "Saved", Action: gx.ToastAction{Label: "Open", URL: "/home"}}, []string{`<a href="/home">Open</a>`}, ""},
+		{"action", gx.ToastPatch{Text: "Saved", Action: gx.ToastControl{Label: "Open", URL: "/home"}}, []string{`<a href="/home">Open</a>`}, ""},
 	}
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {

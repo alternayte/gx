@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -73,15 +74,32 @@ func ToastDuration(d time.Duration) ToastOption {
 // ToastSticky keeps the toast until the user closes it.
 var ToastSticky ToastOption = toastOptionFunc(func(p *ToastPatch) { p.Sticky = true })
 
-// ToastLink adds one action button that navigates to a route value.
+// ToastLink adds one link that navigates to a route value. A toast holds one
+// control: of ToastLink and ToastAction, the later option wins.
 func ToastLink(label string, to interface{ URL() string }) ToastOption {
-	return toastOptionFunc(func(p *ToastPatch) { p.Action = ToastAction{Label: label, URL: URL(to.URL())} })
+	return toastOptionFunc(func(p *ToastPatch) { p.Action = ToastControl{Label: label, URL: URL(to.URL())} })
 }
 
-// ToastAction is the action button of a toast: a link to URL.
-type ToastAction struct {
+// ToastAction adds one button that invokes the action of a route value, for
+// example Undo (REQ-ACT-02). The toast closes when the user presses the
+// button. A toast holds one control: of ToastLink and ToastAction, the later
+// option wins.
+func ToastAction[In interface {
+	Pattern() string
+	URL() string
+}](label string, in In) ToastOption {
+	method, _, _ := strings.Cut(in.Pattern(), " ")
+	control := ToastControl{Label: label, URL: URL(in.URL()), Method: method}
+	return toastOptionFunc(func(p *ToastPatch) { p.Action = control })
+}
+
+// ToastControl is the one control of a toast: a link to URL, or a button
+// that invokes the action at URL.
+type ToastControl struct {
 	Label string
 	URL   URL
+	// Method is the HTTP method of the action. It is empty for a link.
+	Method string
 }
 
 // ToastPatch adds one toast to the toaster region (REQ-REG-11).
@@ -95,8 +113,9 @@ type ToastPatch struct {
 	Duration time.Duration
 	// Sticky keeps the toast until the user closes it.
 	Sticky bool
-	// Action is the action button. The zero value renders none.
-	Action ToastAction
+	// Action is the control: a link or an action button. The zero value
+	// renders none.
+	Action ToastControl
 }
 
 // toastDuration is the default time a toast stays.
@@ -142,7 +161,17 @@ func ToastNode(p ToastPatch) Node {
 	if p.Description != "" {
 		b.Add(El("div", nil, Text(p.Description)))
 	}
-	if p.Action.Label != "" {
+	switch {
+	case p.Action.Label == "":
+	case p.Action.Method != "":
+		// data-gx-close closes the toast on the press; the adapter
+		// attribute invokes the action.
+		b.Add(El("button", Attrs{
+			{Key: "type", Value: "button"},
+			{Key: "data-gx-close", Value: ""},
+			Invoke(p.Action.Method, string(p.Action.URL), ""),
+		}, Text(p.Action.Label)))
+	default:
 		b.Add(El("a", Attrs{{Key: "href", Value: string(p.Action.URL), Kind: AttrURL}}, Text(p.Action.Label)))
 	}
 	b.Add(El("button", Attrs{

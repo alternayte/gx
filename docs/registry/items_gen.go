@@ -1054,6 +1054,7 @@ var Items = []Item{
 			{Name: "toast-error", Title: "Toast: Error", Component: "Toast", Fixtures: []string{"Toast/Error"}, Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["Error"]) }},
 			{Name: "toast-loading", Title: "Toast: Loading", Component: "Toast", Fixtures: []string{"Toast/Loading"}, Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["Loading"]) }},
 			{Name: "toast-with-description", Title: "Toast: With description", Component: "Toast", Fixtures: []string{"Toast/WithDescription"}, Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["WithDescription"]) }},
+			{Name: "toast-with-link", Title: "Toast: With link", Component: "Toast", Fixtures: []string{"Toast/WithLink"}, Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["WithLink"]) }},
 			{Name: "toast-with-action", Title: "Toast: With action", Component: "Toast", Fixtures: []string{"Toast/WithAction"}, Node: func() gx.Node { return toast.Toast(toast.ToastFixtures["WithAction"]) }},
 			{Name: "toaster-with-toast", Title: "Toaster: With toast", Component: "Toaster", Fixtures: []string{"Toaster/WithToast"}, Node: func() gx.Node { return toast.Toaster(toast.ToasterFixtures["WithToast"]) }},
 		},

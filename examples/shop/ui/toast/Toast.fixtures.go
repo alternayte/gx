@@ -17,9 +17,13 @@ var ToastFixtures = gx.Fixtures[ToastProps]{
 		Text:        "Event created",
 		Description: "Monday, 12 January at 09:00",
 	}},
-	"WithAction": {Class: fixtureWidth, Toast: gx.ToastPatch{
+	"WithLink": {Class: fixtureWidth, Toast: gx.ToastPatch{
 		Text:        "Item added to the cart",
 		Description: "Open the cart to check out.",
-		Action:      gx.ToastAction{Label: "View", URL: "/"},
+		Action:      gx.ToastControl{Label: "View", URL: "/"},
+	}},
+	"WithAction": {Class: fixtureWidth, Toast: gx.ToastPatch{
+		Text:   "Item removed from the cart",
+		Action: gx.ToastControl{Label: "Undo", URL: "/", Method: "POST"},
 	}},
 }

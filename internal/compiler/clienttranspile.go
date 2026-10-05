@@ -462,19 +462,19 @@ func (t *transpiler) assignTarget(expr ast.Expr) (string, error) {
 	return t.signalTerm(name), nil
 }
 
-// actionValue returns the Go expression of the adapter action call for a
-// route literal (REQ-ACT-02, REQ-ACT-03).
+// actionValue returns the Go expression of the action call for a route
+// literal (REQ-ACT-02, REQ-ACT-03). The adapter writes the call when the
+// node renders (REQ-PLG-04).
 func (t *transpiler) actionValue(call ast.Expr, key string) (string, error) {
-	fn := clientActionFunc(t.res.routeMeth[key])
-	if fn == "" {
-		return "", fmt.Errorf("method %s cannot be invoked from the client", t.res.routeMeth[key])
+	method := t.res.routeMeth[key]
+	if !clientInvocable(method) {
+		return "", fmt.Errorf("method %s cannot be invoked from the client", method)
 	}
-	expr := printNode(call)
-	end := strconv.Quote("')")
+	scope := strconv.Quote("")
 	if t.scoped {
-		end = strconv.Quote("', {headers: {'Gx-Scope': '") + " + gx.ScopeString(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ") + " + strconv.Quote("'}})")
+		scope = "gx.ScopeString(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ")"
 	}
-	return strconv.Quote("@"+fn+"('") + " + (" + expr + ").URL() + " + end, nil
+	return "gx.Invoke(" + strconv.Quote(method) + ", (" + printNode(call) + ").URL(), " + scope + ").Value", nil
 }
 
 // binary transpiles an operator expression (REQ-ACT-13).

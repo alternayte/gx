@@ -37,6 +37,14 @@ return c.Toast("Item added to the cart",
 	gx.ToastLink("View", route.Cart{}))
 ```
 
+Add a button that invokes an action, for example Undo. Pass the route value of the action. The toast closes when the user presses the button.
+
+```go
+return c.Toast("Item removed", gx.ToastAction("Undo", route.Undo{ID: in.ID}))
+```
+
+A toast holds one control. When an action passes `gx.ToastLink` and `gx.ToastAction`, the later option wins.
+
 A toast leaves after 4 seconds. A loading toast and a `gx.ToastSticky` toast stay until the user closes them.
 
 Give two toasts the same ID. The second toast replaces the first in place.
@@ -64,14 +72,14 @@ The toaster shows at most three toasts. The oldest toast leaves first.
 
 - Do not render a toaster per page.
 - Do not use a toast for a value the user must not miss. Use an alert.
-- Do not put the only path to a task in a toast link. The toast leaves.
+- Do not put the only path to a task in a toast link or a toast action. The toast leaves.
 - Do not write toast classes in package `gx` code. Change `Toast.gx`.
 
 ## Keyboard
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves focus to the link and the close button of a toast. The timers stop while focus is in the toaster. |
-| Enter | Follows the focused link, or closes the toast on the close button. |
-| Space | Closes the toast on the close button. |
+| Tab | Moves focus to the link or the action button, and to the close button of a toast. The timers stop while focus is in the toaster. |
+| Enter | Follows the focused link, or invokes the action and closes the toast on the action button, or closes the toast on the close button. |
+| Space | Invokes the action and closes the toast on the action button, or closes the toast on the close button. |
 | Escape | Closes the toast that holds focus. Focus returns to the element that had it before the toaster. |

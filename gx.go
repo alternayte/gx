@@ -243,7 +243,7 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 	}
 	// The app writes the document shell around this fragment, and the
 	// gx.Head output moves into its head.
-	st := &renderState{requestURI: r.URL.RequestURI(), headWritten: true}
+	st := &renderState{request: r, requestURI: r.URL.RequestURI(), headWritten: true}
 	collectHead(n, st, 1)
 	var head, body strings.Builder
 	renderHead(&head, st)
@@ -259,7 +259,7 @@ func String(n Node) string { return StringRequest(nil, n) }
 // StringRequest returns the HTML of n with the request in scope.
 func StringRequest(r *http.Request, n Node) string {
 	var b strings.Builder
-	st := &renderState{}
+	st := &renderState{request: r}
 	if r != nil && r.URL != nil {
 		st.requestURI = r.URL.RequestURI()
 	}
@@ -295,6 +295,14 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 					b.WriteString(a.Key)
 				}
 				continue
+			}
+			if a.Kind == AttrText && strings.IndexByte(a.Value, 0) >= 0 {
+				// An action invocation: the adapter writes it
+				// (REQ-PLG-04).
+				a.Key, a.Value = st.resolveInvoke(a.Key, a.Value)
+				if a.Key == "" {
+					continue
+				}
 			}
 			b.WriteByte(' ')
 			b.WriteString(a.Key)

@@ -57,6 +57,49 @@ func TestREQ_PLG_04_DatastarWire(t *testing.T) {
 	}
 }
 
+// TestREQ_PLG_04_Invoke pins the client call of an action: the adapter owns
+// the Datastar syntax, and the bytes are the ones the compiler wrote before.
+func TestREQ_PLG_04_Invoke(t *testing.T) {
+	a := datastar.Adapter()
+	cases := []struct {
+		method, scope, want string
+	}{
+		{"POST", "", `@post('/cart/add')`},
+		{"POST", "cart.Cart.alpha", `@post('/cart/add', {headers: {'Gx-Scope': 'cart.Cart.alpha'}})`},
+		{"GET", "", `@get('/cart/add')`},
+		{"PUT", "", `@put('/cart/add')`},
+		{"PATCH", "", `@patch('/cart/add')`},
+		{"DELETE", "", `@delete('/cart/add')`},
+	}
+	for _, tt := range cases {
+		got := a.Invoke(tt.method, "/cart/add", tt.scope)
+		if got.Key != "data-on:click" || got.Value != tt.want {
+			t.Fatalf("Invoke(%s, scope %q) = %s=%q, want data-on:click=%q", tt.method, tt.scope, got.Key, got.Value, tt.want)
+		}
+	}
+	if got := a.Invoke("OPTIONS", "/cart/add", ""); got != (gx.Attr{}) {
+		t.Fatalf("Invoke(OPTIONS) = %+v, want the zero Attr", got)
+	}
+}
+
+// TestREQ_ACT_02_InvokeRendersTheSameBytes checks that an on: attribute
+// built with gx.Invoke renders the bytes of the literal string it replaces.
+func TestREQ_ACT_02_InvokeRendersTheSameBytes(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	defer gx.SetAdapter(old)
+	gx.SetAdapter(datastar.Adapter())
+	scope := gx.ScopeString("cart.Cart", "alpha")
+	button := func(value string) string {
+		return gx.String(gx.El("button", gx.Attrs{{Key: "data-on:click", Value: value}}, gx.Text("Add")))
+	}
+	if got, want := button(gx.Invoke("POST", "/cart/add", scope).Value), button("@post('/cart/add', {headers: {'Gx-Scope': '"+scope+"'}})"); got != want {
+		t.Fatalf("scoped action:\n got %s\nwant %s", got, want)
+	}
+	if got, want := button("$cart.qty = 2; "+gx.Invoke("GET", "/lazy", "").Value), button("$cart.qty = 2; @get('/lazy')"); got != want {
+		t.Fatalf("action in a statement list:\n got %s\nwant %s", got, want)
+	}
+}
+
 // TestREQ_PLG_04_SignalScope checks the invoking scope nests the signals.
 func TestREQ_PLG_04_SignalScope(t *testing.T) {
 	h := gx.Action(func(c *gx.Ctx, in actRoute) error {
