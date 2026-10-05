@@ -5,6 +5,7 @@ package analyze
 
 import (
 	"go/ast"
+	"go/token"
 	"go/types"
 	"strconv"
 	"strings"
@@ -39,7 +40,8 @@ var EnumCoverage = &analysis.Analyzer{
 	Run:  runEnum,
 }
 
-// RuntimeClass reports a gx.Cx argument built at runtime (GX5003,
+// RuntimeClass reports a gx.Cx argument built at runtime with fmt.Sprintf,
+// fmt.Sprint, strings.Join or a non-constant concatenation (GX5003,
 // REQ-STY-11).
 var RuntimeClass = &analysis.Analyzer{
 	Name: "gxclassruntime",
@@ -64,7 +66,7 @@ func runRuntimeClass(pass *analysis.Pass) (any, error) {
 				return true
 			}
 			for _, arg := range call.Args {
-				if tv, ok := pass.TypesInfo.Types[arg]; ok && tv.Value != nil {
+				if !builtAtRuntime(pass.TypesInfo, arg) {
 					continue
 				}
 				pass.Report(analysis.Diagnostic{
@@ -78,6 +80,32 @@ func runRuntimeClass(pass *analysis.Pass) (any, error) {
 		})
 	}
 	return nil, nil
+}
+
+// builtAtRuntime reports whether an expression builds a class string when
+// the program runs: fmt.Sprintf, fmt.Sprint, strings.Join, or a
+// concatenation that is not a constant. A prop, a gx.Enum lookup or a
+// variable is not built here: its text is a static string somewhere, and
+// Tailwind reads that string (REQ-STY-11).
+func builtAtRuntime(info *types.Info, expr ast.Expr) bool {
+	switch e := ast.Unparen(expr).(type) {
+	case *ast.BinaryExpr:
+		if e.Op != token.ADD {
+			return false
+		}
+		tv, ok := info.Types[e]
+		return !ok || tv.Value == nil
+	case *ast.CallExpr:
+		obj := called(info, e.Fun)
+		if obj == nil || obj.Pkg() == nil {
+			return false
+		}
+		switch obj.Pkg().Path() + "." + obj.Name() {
+		case "fmt.Sprintf", "fmt.Sprint", "strings.Join":
+			return true
+		}
+	}
+	return false
 }
 
 func runEnum(pass *analysis.Pass) (any, error) {
