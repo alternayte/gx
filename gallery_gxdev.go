@@ -117,6 +117,55 @@ func galleryPageHTML() Node {
 	)
 }
 
+// galleryFixture finds one fixture by component, name and, when two
+// packages hold the component name, package.
+func galleryFixture(component, name, pkg string) (Fixture, bool) {
+	for _, f := range Gallery() {
+		if f.Missing || f.Component != component || f.Name != name {
+			continue
+		}
+		if pkg != "" && f.Package != pkg {
+			continue
+		}
+		return f, true
+	}
+	return Fixture{}, false
+}
+
+// galleryFixtureHTML is the document of one fixture: the tokens and the
+// stylesheet of the gallery, and the fixture alone in #gx-fixture. The dev
+// MCP server renders and audits it (REQ-AI-04). theme is "light", "dark" or
+// "" for the system preference.
+func galleryFixtureHTML(f Fixture, theme string) Node {
+	var body Node = Frag()
+	if f.Node != nil {
+		body = f.Node()
+	}
+	html := Attrs{{Key: "lang", Value: "en", Kind: AttrText}}
+	if theme == "light" || theme == "dark" {
+		html = append(html, Attr{Key: "class", Value: theme, Kind: AttrText})
+	}
+	return Frag(
+		Raw("<!DOCTYPE html>"),
+		El("html", html,
+			El("head", nil,
+				El("meta", Attrs{{Key: "charset", Value: "utf-8", Kind: AttrText}}),
+				El("meta", Attrs{{Key: "viewport", Value: "width=device-width, initial-scale=1", Kind: AttrText}}),
+				El("title", nil, Text(f.Component+" - "+f.Name)),
+				El("style", nil, Raw(galleryCSS)),
+			),
+			El("body", nil,
+				El("main", Attrs{
+					{Key: "id", Value: "gx-fixture", Kind: AttrText},
+					{Key: "class", Value: "fixture-body", Kind: AttrText},
+					{Key: "data-fixture", Value: f.Component + "-" + f.Name, Kind: AttrText},
+					{Key: "data-package", Value: f.Package, Kind: AttrText},
+				}, body),
+			),
+		),
+	)
+}
+
 // galleryShellCSS is the gallery shell style: token names match shadcn, and
 // dark mode follows a .dark class or the system preference (REQ-STY-03).
 //

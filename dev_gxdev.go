@@ -50,6 +50,16 @@ func (a *App) devRoutes() {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_ = RenderRequest(w, r, galleryPageHTML())
 	}))
+	a.mux.Handle("GET /_gx/gallery/fixture", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		q := r.URL.Query()
+		f, ok := galleryFixture(q.Get("component"), q.Get("name"), q.Get("package"))
+		if !ok {
+			http.Error(w, "gx: no fixture "+q.Get("component")+" - "+q.Get("name"), http.StatusNotFound)
+			return
+		}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_ = RenderRequest(w, r, galleryFixtureHTML(f, q.Get("theme")))
+	}))
 	a.mux.Handle("GET /_gx/export", http.HandlerFunc(a.serveExportList))
 }
 

@@ -19,6 +19,7 @@ import (
 	"syscall"
 
 	"github.com/alternayte/gx/internal/analyze"
+	"github.com/alternayte/gx/internal/appmodel"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/devserver"
 	"github.com/alternayte/gx/internal/execname"
@@ -27,6 +28,7 @@ import (
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/lsp"
+	"github.com/alternayte/gx/internal/mcpserver"
 	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
 	"github.com/alternayte/gx/internal/registry"
 	"github.com/alternayte/gx/internal/scaffold"
@@ -67,6 +69,8 @@ func Main(args []string) int {
 		return runDescribe(args[1:])
 	case "lsp":
 		return runLSP(args[1:])
+	case "mcp":
+		return runMCP(args[1:])
 	case "lint":
 		return runLint(args[1:])
 	case "icons":
@@ -110,6 +114,7 @@ Commands:
   routes    print the routes of a module, with --json for machine output
   describe  print the app model, with --json for machine output
   lsp       run the language server on stdio
+  mcp       run the dev MCP server on stdio, for a coding agent
   lint      run go vet and the Gx analyzers on a module, with --json
   icons pin pin an icon set and generate one .gx component per icon
   vendor    store the pinned downloads in .gx/vendor for offline builds
@@ -395,37 +400,6 @@ func runRoutes(args []string) int {
 	return 0
 }
 
-// describeApp returns the app model of a module: the compiler model plus
-// the icon sets and the registry items of gx.lock (REQ-AI-01).
-func describeApp(dir string) (*compiler.AppModel, []compiler.Diagnostic, error) {
-	model, diags := compiler.Describe(dir)
-	if len(diags) > 0 {
-		return nil, diags, nil
-	}
-	pins, err := icons.Pinned(dir)
-	if err != nil {
-		return nil, nil, err
-	}
-	for set, entry := range pins {
-		model.Icons = append(model.Icons, compiler.IconSetModel{Set: set, Version: entry.Version})
-	}
-	sort.Slice(model.Icons, func(i, j int) bool { return model.Icons[i].Set < model.Icons[j].Set })
-	lock, err := registry.LoadLock(dir)
-	if err != nil {
-		return nil, nil, err
-	}
-	for name, item := range lock.Items {
-		files := make([]string, 0, len(item.Files))
-		for file := range item.Files {
-			files = append(files, file)
-		}
-		sort.Strings(files)
-		model.Registry = append(model.Registry, compiler.RegistryModel{Name: name, Version: item.Version, Files: files})
-	}
-	sort.Slice(model.Registry, func(i, j int) bool { return model.Registry[i].Name < model.Registry[j].Name })
-	return model, nil, nil
-}
-
 // runDescribe prints the app model (REQ-AI-01).
 func runDescribe(args []string) int {
 	fs := flag.NewFlagSet("gx describe", flag.ContinueOnError)
@@ -443,7 +417,7 @@ func runDescribe(args []string) int {
 	if rest := fs.Args(); len(rest) > 0 {
 		dir = rest[0]
 	}
-	model, diags, err := describeApp(dir)
+	model, diags, err := appmodel.Describe(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx describe: %v\n", err)
 		return 1
@@ -620,18 +594,27 @@ func splitRef(ref string) (namespace, name, version string) {
 // command flags (REQ-REG-02, REQ-REG-04). A namespace selects a named
 // registry; --registry overrides every source.
 func registryInstaller(root, source, dir, namespace string) (registry.Installer, int) {
-	cfg, err := gxconfig.Load(root)
+	inst, err := appInstaller(root, source, dir, namespace)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx registry: %v\n", err)
 		return registry.Installer{}, 1
+	}
+	return inst, 0
+}
+
+// appInstaller resolves the registry of an app from gx.toml. The commands
+// and the dev MCP server share it.
+func appInstaller(root, source, dir, namespace string) (registry.Installer, error) {
+	cfg, err := gxconfig.Load(root)
+	if err != nil {
+		return registry.Installer{}, err
 	}
 	src := source
 	var headers []string
 	if src == "" && namespace != "" {
 		named, ok := cfg.Registries[namespace]
 		if !ok {
-			fmt.Fprintf(os.Stderr, "gx registry: unknown registry @%s\n", namespace)
-			return registry.Installer{}, 1
+			return registry.Installer{}, fmt.Errorf("unknown registry @%s", namespace)
 		}
 		src = named.URL
 		headers = named.Headers
@@ -646,14 +629,44 @@ func registryInstaller(root, source, dir, namespace string) (registry.Installer,
 		}
 	}
 	if src == "" {
-		fmt.Fprintln(os.Stderr, "gx registry: no registry; set [registry] url in gx.toml or pass --registry")
-		return registry.Installer{}, 1
+		return registry.Installer{}, errors.New("no registry; set [registry] url in gx.toml or pass --registry")
 	}
 	installDir := dir
 	if installDir == "" {
 		installDir = cfg.Registry.Dir
 	}
-	return registry.Installer{Root: root, Source: src, Dir: installDir, Headers: headers}, 0
+	return registry.Installer{Root: root, Source: src, Dir: installDir, Headers: headers}, nil
+}
+
+// runMCP runs the dev MCP server on stdio (REQ-AI-04). Stdout carries the
+// protocol, so the command prints nothing else there.
+func runMCP(args []string) int {
+	fs := flag.NewFlagSet("gx mcp", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	mainPkg := fs.String("main", "", "app main package")
+	source := fs.String("registry", "", "registry URL or directory (overrides [registry] url)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	err := mcpserver.Run(ctx, mcpserver.Options{
+		Dir:     dir,
+		Main:    *mainPkg,
+		Version: Version,
+		Installer: func() (registry.Installer, error) {
+			return appInstaller(dir, *source, "", "")
+		},
+	}, mcpserver.Stdio())
+	if err != nil && ctx.Err() == nil {
+		fmt.Fprintf(os.Stderr, "gx mcp: %v\n", err)
+		return 1
+	}
+	return 0
 }
 
 // runAdd installs a registry item and its dependencies (REQ-REG-02).

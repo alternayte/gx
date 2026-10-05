@@ -14,22 +14,17 @@ import (
 	"fmt"
 	"html"
 	"io"
-	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/alternayte/gx"
-	"github.com/alternayte/gx/internal/compiler"
-	"github.com/alternayte/gx/internal/execname"
+	"github.com/alternayte/gx/internal/apprun"
 	"github.com/alternayte/gx/internal/gxconfig"
-	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/pagefind"
 )
 
@@ -99,34 +94,12 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	if opt.Main == "" {
-		opt.Main, err = detectMain(dir)
-		if err != nil {
-			return nil, err
-		}
-	}
-	work, err := os.MkdirTemp("", "gx-export-")
+	app, err := apprun.Start(ctx, dir, opt.Main)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("gx export: %w", err)
 	}
-	defer os.RemoveAll(work)
-	bin := execname.Name(filepath.Join(work, "app"))
-	if err := buildApp(ctx, dir, opt.Main, bin, opt.Log); err != nil {
-		return nil, err
-	}
-	port, err := freePort()
-	if err != nil {
-		return nil, err
-	}
-	appCmd, err := startApp(ctx, bin, dir, port)
-	if err != nil {
-		return nil, err
-	}
-	defer stopApp(appCmd)
-	if err := waitReady(ctx, port); err != nil {
-		return nil, err
-	}
-	base := "http://127.0.0.1:" + strconv.Itoa(port)
+	defer app.Stop()
+	base := app.Base
 
 	manifest, err := fetchManifest(ctx, base)
 	if err != nil {
@@ -293,100 +266,6 @@ func writeAssets(ctx context.Context, base, out string, assets []string) (assetN
 		}
 	}
 	return names, nil
-}
-
-// buildApp generates the app code and builds it with the gxdev tag.
-func buildApp(ctx context.Context, dir, mainPkg, bin string, log io.Writer) error {
-	files, diags := compiler.NewSession().Generate(dir)
-	if len(diags) > 0 {
-		return fmt.Errorf("gx export: %s", diags[0].String())
-	}
-	for path, src := range files {
-		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-			return err
-		}
-		if err := os.WriteFile(path, src, 0o644); err != nil {
-			return err
-		}
-	}
-	if _, err := gxstyles.Build(ctx, dir, true); err != nil {
-		return err
-	}
-	cmd := exec.CommandContext(ctx, "go", "build", "-tags", "gxdev", "-o", bin, mainPkg)
-	cmd.Dir = dir
-	// A fresh module may need to record the gx dependency graph.
-	cmd.Env = append(os.Environ(), "GOFLAGS=-mod=mod")
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("gx export: build: %w\n%s", err, out)
-	}
-	return nil
-}
-
-// detectMain finds the app main package.
-func detectMain(dir string) (string, error) {
-	entries, err := os.ReadDir(filepath.Join(dir, "cmd"))
-	if err != nil {
-		return "", fmt.Errorf("gx export: no -main given and no cmd/ directory found")
-	}
-	var found []string
-	for _, e := range entries {
-		// cmd/gx is the project's own Gx command line tool, not the app.
-		if !e.IsDir() || e.Name() == "gx" {
-			continue
-		}
-		if _, err := os.Stat(filepath.Join(dir, "cmd", e.Name(), "main.go")); err == nil {
-			found = append(found, "./cmd/"+e.Name())
-		}
-	}
-	switch len(found) {
-	case 0:
-		return "", fmt.Errorf("gx export: no -main given and no cmd/*/main.go found")
-	case 1:
-		return found[0], nil
-	default:
-		return "", fmt.Errorf("gx export: several mains found (%s); pass -main", strings.Join(found, ", "))
-	}
-}
-
-// startApp runs the built binary with the gxdev tag.
-func startApp(ctx context.Context, bin, dir string, port int) (*exec.Cmd, error) {
-	cmd := exec.CommandContext(ctx, bin)
-	cmd.Dir = dir
-	cmd.Env = append(os.Environ(), "GX_DEV_ADDR=127.0.0.1:"+strconv.Itoa(port), "GX_DEV=1")
-	cmd.Stdout = io.Discard
-	cmd.Stderr = io.Discard
-	if err := cmd.Start(); err != nil {
-		return nil, err
-	}
-	return cmd, nil
-}
-
-// stopApp stops the app process.
-func stopApp(cmd *exec.Cmd) {
-	if cmd == nil || cmd.Process == nil {
-		return
-	}
-	_ = cmd.Process.Kill()
-	_, _ = cmd.Process.Wait()
-}
-
-// waitReady blocks until the app accepts a connection.
-func waitReady(ctx context.Context, port int) error {
-	deadline := time.Now().Add(30 * time.Second)
-	for time.Now().Before(deadline) {
-		conn, err := net.DialTimeout("tcp", "127.0.0.1:"+strconv.Itoa(port), 200*time.Millisecond)
-		if err == nil {
-			_ = conn.Close()
-			return nil
-		}
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-time.After(50 * time.Millisecond):
-		}
-	}
-	return fmt.Errorf("gx export: the app did not start")
 }
 
 // fetchManifest reads the dev-only export listing.
@@ -566,16 +445,6 @@ func writeSiteFiles(out string, site gxconfig.Site, paths []string) error {
 	}
 	robots := "User-agent: *\nAllow: /\n\nSitemap: " + base + "/sitemap.xml\n"
 	return os.WriteFile(filepath.Join(out, "robots.txt"), []byte(robots), 0o644)
-}
-
-// freePort returns a free local port.
-func freePort() (int, error) {
-	l, err := net.Listen("tcp", "127.0.0.1:0")
-	if err != nil {
-		return 0, err
-	}
-	defer l.Close()
-	return l.Addr().(*net.TCPAddr).Port, nil
 }
 
 // writeLLMS writes llms.txt, llms-full.txt, llms-small.txt and a raw .md

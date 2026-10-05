@@ -376,3 +376,17 @@ func SaveLock(root string, lock Lock) error {
 	data = append(data, '\n')
 	return os.WriteFile(path, data, 0o644)
 }
+
+// Index reads the index of the registry: one summary per item
+// (REQ-REG-01).
+func (in *Installer) Index() (Index, error) {
+	data, err := in.read("index.json")
+	if err != nil {
+		return Index{}, fmt.Errorf("registry: cannot read index.json: %w", err)
+	}
+	var index Index
+	if err := json.Unmarshal(data, &index); err != nil {
+		return Index{}, fmt.Errorf("registry: index.json: %w", err)
+	}
+	return index, nil
+}
