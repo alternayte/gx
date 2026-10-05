@@ -1,0 +1,33 @@
+---
+title: Get started
+description: Run the site and write the first page.
+order: 1
+---
+
+## Run the site
+
+```sh title="Terminal"
+go run ./cmd/gx dev
+```
+
+Open the address that the command prints. Edit this file and save. The page
+updates in place.
+
+<docs.Aside kind={docs.Tip}>
+`go run ./cmd/gx check` finds a broken link, a bad frontmatter key and an
+unknown component before you publish.
+</docs.Aside>
+
+## Add a page
+
+Add a Markdown file to `content/docs`. The file path is the address of the
+page: `content/docs/guides/install.md` is `/guides/install/`.
+
+## Publish
+
+```sh title="Terminal"
+go run ./cmd/gx export --out dist
+```
+
+The `dist` directory holds static files. Any static host can serve them.
+Read [the first guide](/guides/write-a-page/) next.

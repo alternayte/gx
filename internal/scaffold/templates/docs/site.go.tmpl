@@ -1,0 +1,192 @@
+// Package site is the docs slice: the content collection, the sidebar and
+// the page view.
+package site
+
+import (
+	"sort"
+	"strings"
+
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/content"
+	"«.Module»/ui/docs"
+	"«.Module»/ui/docs-shell"
+)
+
+// DocMeta is the frontmatter of one page. A key that is not a field here is
+// an error in gx check.
+type DocMeta struct {
+	Title       string `yaml:"title"`
+	Description string `yaml:"description"`
+	// Order sorts the pages of one sidebar group. A page with no order
+	// comes last.
+	Order int    `yaml:"order"`
+	Badge string `yaml:"badge"`
+	// SidebarGroup is the sidebar section of the page.
+	SidebarGroup string `yaml:"sidebarGroup"`
+	Collapsed    bool   `yaml:"collapsed"`
+	Updated      string `yaml:"updated"`
+	// Template is "splash" for a page with no sidebar.
+	Template string `yaml:"template"`
+	// LLMS is "skip" for a page that stays out of llms.txt.
+	LLMS string `yaml:"llms"`
+}
+
+// Docs is the collection. A Markdown page can use only the components that
+// this list names.
+var Docs = gx.Collection[DocMeta]("content/docs").Components(
+	docs.Aside, docs.Tabs, docs.TabItem, docs.Steps, docs.Card, docs.CardGrid,
+	docs.LinkCard, docs.LinkButton, docs.Badge, docs.FileTree, docs.Code, docs.LLMSkip,
+)
+
+// Config is the data of the shell: the title, the version badge and the
+// header links. Set EditBase to show an edit link on each page.
+var Config = shell.Config{
+	Title:   "«.Title»",
+	Version: "v0.1.0",
+}
+
+// groupOrder is the order of the sidebar groups. A group that is not here
+// comes after these, in alphabetical order.
+var groupOrder = []string{"Start", "Guides"}
+
+// Routes serves one page per Markdown file and the data of llms.txt.
+var Routes = gx.Collect(gx.ContentEntries(Docs, View).LLMS(gx.LLMSOptions[DocMeta]{
+	Site:        "«.Title»",
+	Title:       func(m DocMeta) string { return m.Title },
+	Description: func(m DocMeta) string { return m.Description },
+	Skip:        func(m DocMeta) bool { return m.LLMS == "skip" },
+}))
+
+// View renders one page inside the shell.
+func View(e gx.Entry[DocMeta]) gx.Node {
+	body := DocsBody(e)
+	if e.Meta.Template == "splash" {
+		return splash(e, body)
+	}
+	return shell.Shell(shell.ShellProps{
+		Site:     Config,
+		Nav:      Nav(),
+		Page:     pageFor(e),
+		Children: body,
+	})
+}
+
+// splash renders a page with a hero and no sidebar.
+func splash(e gx.Entry[DocMeta], body gx.Node) gx.Node {
+	hero := shell.Splash(shell.SplashProps{
+		Title:   e.Meta.Title,
+		Tagline: e.Meta.Description,
+		Actions: docs.LinkButton(docs.LinkButtonProps{
+			Href:     gx.URL("/start/"),
+			Children: gx.Text("Get started"),
+		}),
+		Children: body,
+	})
+	return gx.Frag(
+		shell.Header(shell.HeaderProps{Site: Config}),
+		gx.El("main", gx.Attrs{{Key: "id", Value: "gx-main", Kind: gx.AttrText}}, hero),
+		shell.SearchDialog(shell.SearchDialogProps{}),
+	)
+}
+
+// groupOf returns the sidebar group of one page.
+func groupOf(e gx.Entry[DocMeta]) string {
+	if e.Meta.SidebarGroup != "" {
+		return e.Meta.SidebarGroup
+	}
+	return "Start"
+}
+
+// entryHref returns the site path of one page.
+func entryHref(slug string) gx.URL {
+	if slug == "index" || slug == "" {
+		return gx.URL("/")
+	}
+	return gx.URL("/" + slug + "/")
+}
+
+// Nav builds the sidebar from the frontmatter of every page.
+func Nav() shell.Nav {
+	groups := map[string][]gx.Entry[DocMeta]{}
+	for _, e := range Docs.Entries() {
+		if e.Meta.Template == "splash" {
+			continue
+		}
+		groups[groupOf(e)] = append(groups[groupOf(e)], e)
+	}
+	labels := make([]string, 0, len(groups))
+	for label := range groups {
+		labels = append(labels, label)
+	}
+	rank := func(label string) int {
+		for i, known := range groupOrder {
+			if known == label {
+				return i
+			}
+		}
+		return len(groupOrder)
+	}
+	sort.Slice(labels, func(i, j int) bool {
+		if rank(labels[i]) != rank(labels[j]) {
+			return rank(labels[i]) < rank(labels[j])
+		}
+		return labels[i] < labels[j]
+	})
+	var out shell.Nav
+	for _, label := range labels {
+		items := groups[label]
+		sort.SliceStable(items, func(i, j int) bool {
+			a, b := items[i], items[j]
+			if a.Meta.Order != b.Meta.Order {
+				if a.Meta.Order == 0 {
+					return false
+				}
+				if b.Meta.Order == 0 {
+					return true
+				}
+				return a.Meta.Order < b.Meta.Order
+			}
+			return a.Slug < b.Slug
+		})
+		group := shell.NavGroup{Label: label}
+		for _, e := range items {
+			if e.Meta.Collapsed {
+				group.Collapsed = true
+			}
+			group.Items = append(group.Items, shell.NavItem{Label: e.Meta.Title, Href: entryHref(e.Slug), Badge: e.Meta.Badge})
+		}
+		out.Groups = append(out.Groups, group)
+	}
+	return out
+}
+
+// pageFor builds the shell data of one page: the table of contents and the
+// previous and next links, in sidebar order.
+func pageFor(e gx.Entry[DocMeta]) shell.Page {
+	p := shell.Page{
+		Title:   e.Meta.Title,
+		Path:    string(entryHref(e.Slug)),
+		Section: groupOf(e),
+		Updated: e.Meta.Updated,
+	}
+	for _, h := range content.Headings(e.Body) {
+		p.TOC = append(p.TOC, shell.Heading{Level: h.Level, Text: h.Text, ID: h.ID})
+	}
+	var order []shell.NavItem
+	for _, group := range Nav().Groups {
+		order = append(order, group.Items...)
+	}
+	for i, item := range order {
+		if strings.Trim(string(item.Href), "/") != strings.Trim(p.Path, "/") {
+			continue
+		}
+		if i > 0 {
+			p.Prev = &order[i-1]
+		}
+		if i+1 < len(order) {
+			p.Next = &order[i+1]
+		}
+		break
+	}
+	return p
+}

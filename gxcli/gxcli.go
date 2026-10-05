@@ -99,7 +99,7 @@ func usage(w io.Writer) {
 	fmt.Fprint(w, `usage: gx <command> [arguments]
 
 Commands:
-  init      write a new app: gx init [--adapter datastar] [--module <path>] [dir]
+  init      write a new app: gx init [--template app|docs] [--module <path>] [dir]
   new       add typed code: gx new page|action|form|component|slice <name>
   agents    refresh the managed section of AGENTS.md with --update
   fmt       format .gx files in place, or stdin when no path is given
@@ -130,6 +130,7 @@ func runInit(args []string) int {
 	module := fs.String("module", "", "Go module path (default: the directory name)")
 	replace := fs.String("replace", "", "use a local checkout of Gx, for work on Gx itself")
 	registrySource := fs.String("registry", "", "component registry URL or directory for gx.toml")
+	tmpl := fs.String("template", "app", "app, or docs for a docs site with the docs shell")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -149,7 +150,7 @@ func runInit(args []string) int {
 		}
 	}
 	files, err := scaffold.Init(scaffold.Options{
-		Dir: dir, Module: *module, Adapter: *adapter, Version: Version, Replace: *replace, Registry: *registrySource,
+		Dir: dir, Module: *module, Adapter: *adapter, Version: Version, Replace: *replace, Registry: *registrySource, Template: *tmpl,
 	})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx init: %v\n", err)

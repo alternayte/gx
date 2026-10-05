@@ -315,3 +315,65 @@ func TestREQ_DEV_10_New(t *testing.T) {
 		t.Fatal("a refused gx new wrote files")
 	}
 }
+
+// TestREQ_CNT_06_InitDocsTemplate covers `gx init --template docs`: the
+// scaffold is a docs site that owns the docs shell and the docs kit, passes
+// gx check, builds, and serves a splash page and a page with the sidebar,
+// the theme select, the search dialog and the table of contents
+// (REQ-CNT-06).
+func TestREQ_CNT_06_InitDocsTemplate(t *testing.T) {
+	dir := initApp(t, "--template", "docs", "--registry", filepath.Join(thisRepo(t), "registry"))
+	for _, rel := range []string{
+		"site/site.go", "cmd/app/main.go", "cmd/gx/main.go", "AGENTS.md", "gx.toml", "gx.lock",
+		"content/docs/index.md", "content/docs/start.md", "content/docs/guides/write-a-page.md",
+		"ui/docs-shell/Shell.gx", "ui/docs/Aside.gx", "site/gxcontent_gx.go",
+	} {
+		if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(rel))); err != nil {
+			t.Fatalf("the docs scaffold lacks %s", rel)
+		}
+	}
+	for _, rel := range []string{"home", "app/Shell.gx"} {
+		if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(rel))); err == nil {
+			t.Fatalf("the docs scaffold holds %s of the app template", rel)
+		}
+	}
+	if out := captureStderr(t, func() {
+		if code := gxcli.Main([]string{"check", dir}); code != 0 {
+			t.Errorf("gx check on the docs scaffold exit = %d", code)
+		}
+	}); t.Failed() {
+		t.Fatal(out)
+	}
+	goIn(t, dir, "build", "./...")
+
+	splash := servePage(t, dir, "/")
+	for _, want := range []string{"<h1", "Acme", "Get started", "Write in Markdown"} {
+		if !strings.Contains(splash, want) {
+			t.Fatalf("the splash page lacks %q:\n%s", want, splash)
+		}
+	}
+	page := servePage(t, dir, "/start/")
+	for _, want := range []string{
+		`id="gx-sidebar"`, "Write a page", "data-gx-theme", "data-gx-search", "data-gx-toc",
+		"Run the site", "gx-aside-tip", `href="/guides/write-a-page/"`,
+	} {
+		if !strings.Contains(page, want) {
+			t.Fatalf("/start/ lacks %q:\n%s", want, page)
+		}
+	}
+	guide := servePage(t, dir, "/guides/write-a-page/")
+	if !strings.Contains(guide, "Add the component to the") || !strings.Contains(guide, `href="/start/"`) {
+		t.Fatalf("/guides/write-a-page/ = %s", guide)
+	}
+
+	stderr := captureStderr(t, func() {
+		if _, code := captureStdout(t, func() int {
+			return gxcli.Main([]string{"init", "--adapter", "datastar", "--template", "blog", filepath.Join(t.TempDir(), "x")})
+		}); code == 0 {
+			t.Error("gx init with an unknown template passed")
+		}
+	})
+	if !strings.Contains(stderr, "app and docs") {
+		t.Fatalf("the refusal = %q", stderr)
+	}
+}

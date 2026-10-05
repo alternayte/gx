@@ -1,0 +1,24 @@
+---
+title: Write a page
+description: Frontmatter, headings and components of one page.
+sidebarGroup: Guides
+order: 1
+---
+
+## Frontmatter
+
+Each page starts with frontmatter. `title` is the page title. `order` sorts
+the page in its sidebar group. `sidebarGroup` names the group.
+
+## Components
+
+<docs.Steps>
+1. Add the component to the `Components` list in `site/site.go`.
+2. Use the tag in a Markdown file.
+3. Run `go run ./cmd/gx check`.
+</docs.Steps>
+
+## Links
+
+A link to another page is a site path: [Get started](/start/). The check
+fails on a link to a page or a heading that does not exist.

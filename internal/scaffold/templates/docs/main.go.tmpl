@@ -1,0 +1,41 @@
+// Command app serves the «.Name» docs site. gx export writes the same site
+// as static files.
+package main
+
+import (
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/adapters/datastar"
+	"github.com/alternayte/gx/content"
+	"«.Module»/gxstyles"
+	"«.Module»/site"
+	"«.Module»/ui/docs-shell"
+)
+
+func main() {
+	setupGallery()
+	content.Install()
+	// The code frames take their colours from the content stylesheet.
+	gx.SetStylesheet(append(gxstyles.CSS(), content.CodeCSS()...))
+	server := gx.New(gx.Config{Adapter: datastar.Adapter()})
+	notFound := func(c *gx.Ctx) gx.Node {
+		return shell.NotFound(shell.NotFoundProps{
+			Title:   "Page not found",
+			Message: "The page does not exist. Check the address or return to the start.",
+			Home:    "/",
+		})
+	}
+	server.Errors(notFound, notFound, notFound)
+	server.Group("/", site.Routes)
+
+	// gx dev sets GX_DEV_ADDR.
+	addr := os.Getenv("GX_DEV_ADDR")
+	if addr == "" {
+		addr = "127.0.0.1:8080"
+	}
+	log.Printf("«.Name» listens on http://%s", addr)
+	log.Fatal(http.ListenAndServe(addr, server))
+}
