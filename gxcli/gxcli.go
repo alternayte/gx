@@ -50,6 +50,8 @@ func Main(args []string) int {
 		return runDev(args[1:])
 	case "routes":
 		return runRoutes(args[1:])
+	case "describe":
+		return runDescribe(args[1:])
 	case "lsp":
 		return runLSP(args[1:])
 	case "lint":
@@ -90,6 +92,7 @@ Commands:
   build     generate the module and build its app binary
   dev       run the app with rebuild, restart, morph and the error overlay
   routes    print the routes of a module, with --json for machine output
+  describe  print the app model, with --json for machine output
   lsp       run the language server on stdio
   lint      run go vet and the Gx analyzers on a module, with --json
   icons pin pin an icon set and generate one .gx component per icon
@@ -262,7 +265,8 @@ func runRoutes(args []string) int {
 		return 0
 	}
 	for _, r := range reports {
-		line := r.Method + " " + r.Pattern + "  " + r.Type
+		// The pattern already starts with the method.
+		line := r.Pattern + "  " + r.Type
 		if r.Page != "" {
 			line += "  page=" + r.Page
 		}
@@ -281,6 +285,112 @@ func runRoutes(args []string) int {
 		fmt.Println(line)
 	}
 	return 0
+}
+
+// describeApp returns the app model of a module: the compiler model plus
+// the icon sets and the registry items of gx.lock (REQ-AI-01).
+func describeApp(dir string) (*compiler.AppModel, []compiler.Diagnostic, error) {
+	model, diags := compiler.Describe(dir)
+	if len(diags) > 0 {
+		return nil, diags, nil
+	}
+	pins, err := icons.Pinned(dir)
+	if err != nil {
+		return nil, nil, err
+	}
+	for set, entry := range pins {
+		model.Icons = append(model.Icons, compiler.IconSetModel{Set: set, Version: entry.Version})
+	}
+	sort.Slice(model.Icons, func(i, j int) bool { return model.Icons[i].Set < model.Icons[j].Set })
+	lock, err := registry.LoadLock(dir)
+	if err != nil {
+		return nil, nil, err
+	}
+	for name, item := range lock.Items {
+		files := make([]string, 0, len(item.Files))
+		for file := range item.Files {
+			files = append(files, file)
+		}
+		sort.Strings(files)
+		model.Registry = append(model.Registry, compiler.RegistryModel{Name: name, Version: item.Version, Files: files})
+	}
+	sort.Slice(model.Registry, func(i, j int) bool { return model.Registry[i].Name < model.Registry[j].Name })
+	return model, nil, nil
+}
+
+// runDescribe prints the app model (REQ-AI-01).
+func runDescribe(args []string) int {
+	fs := flag.NewFlagSet("gx describe", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	asJSON := fs.Bool("json", false, "print machine-readable output")
+	schema := fs.Bool("schema", false, "print the JSON Schema of the machine output")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if *schema {
+		_, _ = os.Stdout.Write(compiler.DescribeSchema)
+		return 0
+	}
+	dir := "."
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
+	}
+	model, diags, err := describeApp(dir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx describe: %v\n", err)
+		return 1
+	}
+	if len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	}
+	if *asJSON {
+		data, err := json.MarshalIndent(model, "", "  ")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "gx describe: %v\n", err)
+			return 1
+		}
+		fmt.Println(string(data))
+		return 0
+	}
+	fmt.Println("module      ", model.Module)
+	fmt.Println("components ", len(model.Components))
+	for _, c := range model.Components {
+		fmt.Printf("  %s.%s  props=%d signals=%d fragments=%d fixtures=%d\n",
+			pathBase(c.Package), c.Name, len(c.Props), len(c.Signals), len(c.Fragments), len(c.Fixtures))
+	}
+	fmt.Println("routes     ", len(model.Routes))
+	for _, r := range model.Routes {
+		line := "  " + r.Pattern + "  " + r.Kind
+		if r.Handler != "" {
+			line += "=" + r.Handler
+		}
+		fmt.Println(line)
+	}
+	fmt.Println("actions    ", len(model.Actions))
+	fmt.Println("forms      ", len(model.Forms))
+	fmt.Println("islands    ", len(model.Islands))
+	fmt.Println("transitions", len(model.Transitions))
+	for _, t := range model.Transitions {
+		fmt.Printf("  %s  %s[%s]\n", t.Name, t.Base, t.Key)
+	}
+	fmt.Println("icons      ", len(model.Icons))
+	for _, i := range model.Icons {
+		fmt.Printf("  %s@%s\n", i.Set, i.Version)
+	}
+	fmt.Println("registry   ", len(model.Registry))
+	for _, r := range model.Registry {
+		fmt.Printf("  %s@%s\n", r.Name, r.Version)
+	}
+	return 0
+}
+
+// pathBase returns the last element of an import path.
+func pathBase(path string) string {
+	if i := strings.LastIndex(path, "/"); i >= 0 {
+		return path[i+1:]
+	}
+	return path
 }
 
 func runBuild(args []string) int {

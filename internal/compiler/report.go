@@ -70,37 +70,62 @@ type mount struct {
 // mountInfo maps route types to the prefix, layouts and middleware of their
 // Group call.
 func mountInfo(res *typesResult) map[string]mount {
-	collectVars := map[types.Object][]types.Object{}
-	for _, pkg := range res.pkgs {
-		for _, file := range pkg.Syntax {
-			for _, decl := range file.Decls {
-				gen, ok := decl.(*ast.GenDecl)
-				if !ok || gen.Tok != token.VAR {
-					continue
-				}
-				for _, spec := range gen.Specs {
-					vs, ok := spec.(*ast.ValueSpec)
-					if !ok {
-						continue
-					}
-					for i, val := range vs.Values {
-						call, ok := val.(*ast.CallExpr)
-						if !ok || !isGxFunc(pkg, call.Fun, "Collect") || i >= len(vs.Names) {
-							continue
-						}
-						obj := pkg.TypesInfo.Defs[vs.Names[i]]
-						if obj == nil {
-							continue
-						}
-						for _, arg := range call.Args {
-							if member := identObject(pkg, arg); member != nil {
-								collectVars[obj] = append(collectVars[obj], member)
-							}
-						}
-					}
+	// A route list is a gx.Collect call, an append of route lists, or the
+	// name of another list. collectExprs holds the value of each
+	// package-level variable; members resolves a list to its handlers.
+	collectExprs := map[types.Object]struct {
+		pkg  *packages.Package
+		expr ast.Expr
+	}{}
+	eachPackageVar(res, func(pkg *packages.Package, name *ast.Ident, value ast.Expr) {
+		if obj := pkg.TypesInfo.Defs[name]; obj != nil {
+			collectExprs[obj] = struct {
+				pkg  *packages.Package
+				expr ast.Expr
+			}{pkg, value}
+		}
+	})
+	memo := map[types.Object][]types.Object{}
+	visiting := map[types.Object]bool{}
+	var members func(obj types.Object) []types.Object
+	var exprMembers func(pkg *packages.Package, expr ast.Expr) []types.Object
+	exprMembers = func(pkg *packages.Package, expr ast.Expr) []types.Object {
+		switch e := expr.(type) {
+		case *ast.ParenExpr:
+			return exprMembers(pkg, e.X)
+		case *ast.CallExpr:
+			var out []types.Object
+			if id, ok := e.Fun.(*ast.Ident); ok && id.Name == "append" || isGxFunc(pkg, e.Fun, "Collect") {
+				for _, arg := range e.Args {
+					out = append(out, exprMembers(pkg, arg)...)
 				}
 			}
+			return out
+		case *ast.Ident, *ast.SelectorExpr:
+			obj := identObject(pkg, expr)
+			if obj == nil {
+				return nil
+			}
+			if _, _, ok := handlerRoute(obj); ok {
+				return []types.Object{obj}
+			}
+			return members(obj)
 		}
+		return nil
+	}
+	members = func(obj types.Object) []types.Object {
+		if got, ok := memo[obj]; ok {
+			return got
+		}
+		src, ok := collectExprs[obj]
+		if !ok || visiting[obj] {
+			return nil
+		}
+		visiting[obj] = true
+		got := exprMembers(src.pkg, src.expr)
+		visiting[obj] = false
+		memo[obj] = got
+		return got
 	}
 
 	out := map[string]mount{}
@@ -132,9 +157,13 @@ func mountInfo(res *typesResult) map[string]mount {
 					if obj == nil {
 						continue
 					}
-					if members, ok := collectVars[obj]; ok {
-						for _, m := range members {
-							if key, ok := res.pageRoutes[m]; ok {
+					if _, key, ok := handlerRoute(obj); ok {
+						out[key] = cur
+						continue
+					}
+					if list := members(obj); len(list) > 0 {
+						for _, m := range list {
+							if _, key, ok := handlerRoute(m); ok {
 								out[key] = cur
 							}
 						}

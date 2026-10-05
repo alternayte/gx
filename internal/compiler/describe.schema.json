@@ -1,0 +1,470 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gx.dev/schema/describe.schema.json",
+  "title": "Gx app model",
+  "description": "The output of `gx describe --json`: every component, route, action, form, island, transition, icon set and registry item of one app.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module",
+    "components",
+    "routes",
+    "actions",
+    "forms",
+    "islands",
+    "transitions",
+    "icons",
+    "registry"
+  ],
+  "properties": {
+    "module": {
+      "type": "string"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/route"
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/action"
+      }
+    },
+    "forms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/form"
+      }
+    },
+    "islands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/island"
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transition"
+      }
+    },
+    "icons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/iconSet"
+      }
+    },
+    "registry": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/registryItem"
+      }
+    }
+  },
+  "$defs": {
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "package",
+        "file",
+        "props",
+        "signals",
+        "fragments",
+        "fixtures"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "package": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "props": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/prop"
+          }
+        },
+        "signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/signal"
+          }
+        },
+        "fragments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fragment"
+          }
+        },
+        "fixtures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type",
+        "required"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "string"
+        },
+        "doc": {
+          "type": "string"
+        }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type",
+        "default"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "default": {
+          "type": "string"
+        },
+        "doc": {
+          "type": "string"
+        }
+      }
+    },
+    "fragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "func",
+        "params",
+        "keyed"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "func": {
+          "type": "string"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/param"
+          }
+        },
+        "keyed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "param": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "method",
+        "pattern",
+        "fields",
+        "kind"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "page",
+            "action",
+            "form",
+            "none"
+          ]
+        },
+        "handler": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "layouts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "middleware": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type",
+        "source",
+        "key"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "path",
+            "query",
+            "signal",
+            "form"
+          ]
+        },
+        "key": {
+          "type": "string"
+        },
+        "default": {
+          "type": "string"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handler",
+        "route",
+        "method",
+        "pattern",
+        "signals",
+        "external"
+      ],
+      "properties": {
+        "handler": {
+          "type": "string"
+        },
+        "route": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "signals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "external": {
+          "type": "boolean"
+        }
+      }
+    },
+    "form": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handler",
+        "route",
+        "method",
+        "pattern",
+        "fields"
+      ],
+      "properties": {
+        "handler": {
+          "type": "string"
+        },
+        "route": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/formField"
+          }
+        }
+      }
+    },
+    "formField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type",
+        "rules"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "island": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "package",
+        "file"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "package": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "base",
+        "key"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "base": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        }
+      }
+    },
+    "iconSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "set",
+        "version"
+      ],
+      "properties": {
+        "set": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "registryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "files"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

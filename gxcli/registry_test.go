@@ -119,16 +119,19 @@ func captureStdout(t *testing.T, fn func() int) (string, int) {
 		t.Fatal(err)
 	}
 	os.Stdout = w
+	// A reader runs beside fn: output larger than the pipe buffer would
+	// block fn for ever.
+	done := make(chan []byte)
+	go func() {
+		data, _ := io.ReadAll(r)
+		done <- data
+	}()
 	code := fn()
+	os.Stdout = old
 	if err := w.Close(); err != nil {
 		t.Fatal(err)
 	}
-	os.Stdout = old
-	data, err := io.ReadAll(r)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return string(data), code
+	return string(<-done), code
 }
 
 // writeFile writes one file under dir.
