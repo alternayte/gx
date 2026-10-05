@@ -1,0 +1,15 @@
+package site
+
+import "github.com/alternayte/gx/registry/docs"
+
+props {
+  Item     string
+  Name     string
+  Label    string = ""
+  Block    bool = false
+  Children gx.Node = nil
+}
+
+<div class="gx-example my-6">
+  {docs.Tabs(docs.TabsProps{Children: gx.Frag(docs.TabItem(docs.TabItemProps{Label: "Preview", Children: Frame(FrameProps{Item: p.Item, Name: p.Name, Label: p.Label, Block: p.Block})}), docs.TabItem(docs.TabItemProps{Label: "Code", Children: gx.El("div", gx.Attrs{{Key: "data-pagefind-ignore", Value: ""}}, p.Children)}))})}
+</div>

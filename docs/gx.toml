@@ -1,0 +1,4 @@
+[site]
+title = "Gx"
+title_template = "%s | Gx"
+description = "Gx is a Go framework for server-rendered web apps on Datastar."

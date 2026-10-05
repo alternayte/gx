@@ -33,6 +33,21 @@ vet:
 
 test:
     go test ./...
+    cd docs && go test ./...
+
+# Write the component pages of the docs site from registry/, then the
+# generated Go and the stylesheet of the docs app (REQ-DOC-02).
+docs-gen:
+    go run ./internal/docsgen
+    tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT; go run ./cmd/gx build -main . -o "$tmp/docs" docs
+
+# Run the docs site with rebuild and reload.
+docs-dev:
+    cd docs && go run ../cmd/gx dev -main .
+
+# Export the docs site to docs/dist.
+docs-export:
+    go run ./cmd/gx export -main . --out docs/dist docs
 
 checks:
     for f in checks/*.sh; do if [ -x "$f" ]; then "$f"; fi; done
