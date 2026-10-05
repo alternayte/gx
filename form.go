@@ -361,6 +361,9 @@ func Form[In any, P any](fn func(*Ctx, In) error, view func(P) Node) *form[In, P
 // Pattern implements Handler.
 func (f *form[In, P]) Pattern() string { return f.pattern }
 
+// exportFeature names the form for the export check (REQ-EXP-02).
+func (f *form[In, P]) exportFeature() (kind string, serverOnly bool) { return "form", true }
+
 // Props returns the view props of the form with the current values and no
 // errors. A page that renders the form calls it (REQ-FRM-02). The page
 // passes a pointer to a zero input:

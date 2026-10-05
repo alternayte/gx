@@ -9,6 +9,9 @@ type action[In any] struct {
 	pattern string
 	bind    func(*http.Request) (In, error)
 	fn      func(*Ctx, In) error
+	// external is the base URL of the server that answers the action,
+	// or "" when this app answers it (REQ-EXP-02).
+	external string
 }
 
 // Action registers a handler for a route type of any method. The handler
@@ -30,6 +33,21 @@ func Action[In any](fn func(*Ctx, In) error) *action[In] {
 
 // Pattern implements Handler.
 func (a *action[In]) Pattern() string { return a.pattern }
+
+// External marks the action as answered by another server at the base URL
+// (REQ-EXP-02). Every invocation of the action then calls that server, so
+// a static export can hold the page. The other server mounts the same
+// action.
+func (a *action[In]) External(base string) *action[In] {
+	a.external = base
+	registerExternal(a.pattern, base)
+	return a
+}
+
+// exportFeature names the action for the export check (REQ-EXP-02).
+func (a *action[In]) exportFeature() (kind string, serverOnly bool) {
+	return "action", a.external == ""
+}
 
 // ServeHTTP binds the input, runs the handler and sends the answer
 // (REQ-ACT-10).

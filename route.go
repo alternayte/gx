@@ -598,6 +598,13 @@ func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.inner.ServeHTTP(w, r)
 		return
 	}
+	if h.morph && exportRequest(r) {
+		// A static host answers no patch: the exported page has no
+		// layout slot, and a link is a full load (REQ-EXP-02).
+		plain := *h
+		plain.morph = false
+		h = &plain
+	}
 	ctx := &Ctx{W: w, R: r}
 	page, props, err := h.loadChain(ctx)
 	if err != nil {

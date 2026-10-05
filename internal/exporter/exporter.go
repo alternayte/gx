@@ -10,6 +10,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html"
 	"io"
@@ -19,6 +20,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -53,6 +55,17 @@ type Manifest struct {
 	Paths  []string         `json:"paths"`
 	Assets []string         `json:"assets"`
 	LLMS   *gx.LLMSManifest `json:"llms"`
+	// ServerOnly lists the mounted routes that need a server
+	// (REQ-EXP-02).
+	ServerOnly []ServerFeature `json:"serverOnly"`
+}
+
+// ServerFeature is one feature a static host cannot run (REQ-EXP-02).
+type ServerFeature struct {
+	// Kind is "action", "form", "form on a page" or "live validation".
+	Kind string `json:"kind"`
+	// Pattern is the route pattern, or the page path for a page marker.
+	Pattern string `json:"pattern"`
 }
 
 // Result carries the exported pages for the follow-up writers
@@ -119,6 +132,25 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Every page renders before anything is written: a page can hold a
+	// feature that needs a server, and a failed export must leave the
+	// last good output alone (REQ-EXP-02).
+	res := &Result{Pages: map[string][]byte{}, Paths: manifest.Paths, Assets: manifest.Assets}
+	features := append([]ServerFeature{}, manifest.ServerOnly...)
+	for _, path := range manifest.Paths {
+		body, status, err := fetchPage(ctx, base, path)
+		if err != nil {
+			return nil, err
+		}
+		if status != http.StatusOK {
+			return nil, fmt.Errorf("gx export: %s: %s", path, http.StatusText(status))
+		}
+		res.Pages[path] = body
+		features = append(features, pageFeatures(path, body)...)
+	}
+	if len(features) > 0 {
+		return nil, serverOnlyError(features)
+	}
 	if err := os.RemoveAll(out); err != nil {
 		return nil, err
 	}
@@ -138,7 +170,6 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 			metas[e.Path] = e
 		}
 	}
-	res := &Result{Pages: map[string][]byte{}, Paths: manifest.Paths, Assets: manifest.Assets}
 	// The assets go first: a page names each Gx asset by its content hash.
 	hashed, err := writeAssets(ctx, base, out, manifest.Assets)
 	if err != nil {
@@ -146,15 +177,7 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 	}
 	iw := &imageWriter{dir: dir, out: out}
 	for _, path := range manifest.Paths {
-		body, status, err := fetchPage(ctx, base, path)
-		if err != nil {
-			return nil, err
-		}
-		if status != http.StatusOK {
-			return nil, fmt.Errorf("gx export: %s: %s", path, http.StatusText(status))
-		}
-		res.Pages[path] = body
-		if err := writePage(out, path, hashed.Replace(iw.rewriteImages(body)), site.Site, metas[path]); err != nil {
+		if err := writePage(out, path, hashed.Replace(iw.rewriteImages(res.Pages[path])), site.Site, metas[path]); err != nil {
 			return nil, err
 		}
 		fmt.Fprintf(opt.Log, "exported %s\n", path)
@@ -185,6 +208,43 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 		return nil, err
 	}
 	return res, nil
+}
+
+// formMarker and validateMarker find a form and a live validation control
+// in a rendered page.
+var (
+	formMarker     = regexp.MustCompile(`<form\b[^>]*\bdata-gx-form\b`)
+	validateMarker = regexp.MustCompile(`\bdata-gx-validate="(blur|input)"`)
+)
+
+// pageFeatures lists what a rendered page holds that needs a server
+// (REQ-EXP-02).
+func pageFeatures(path string, body []byte) []ServerFeature {
+	var out []ServerFeature
+	if formMarker.Match(body) {
+		out = append(out, ServerFeature{Kind: "form on a page", Pattern: path})
+	}
+	if validateMarker.Match(body) {
+		out = append(out, ServerFeature{Kind: "live validation", Pattern: path})
+	}
+	return out
+}
+
+// serverOnlyError is the failure report of an export (REQ-EXP-02).
+func serverOnlyError(features []ServerFeature) error {
+	sort.SliceStable(features, func(i, j int) bool {
+		if features[i].Kind != features[j].Kind {
+			return features[i].Kind < features[j].Kind
+		}
+		return features[i].Pattern < features[j].Pattern
+	})
+	var b strings.Builder
+	b.WriteString("gx export: these features need a server. A static host cannot run them.\n")
+	for _, f := range features {
+		fmt.Fprintf(&b, "  %-15s  %s\n", f.Kind, f.Pattern)
+	}
+	b.WriteString("Mark an action that another server answers with .External(url). Remove the other features from the exported pages.")
+	return errors.New(b.String())
 }
 
 // assetNames maps the URL of each Gx asset to its content-hashed URL.
@@ -365,6 +425,9 @@ func httpGet(ctx context.Context, url string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	// The app renders a page for a static host: no layout slot, so a link
+	// is a full load (REQ-EXP-02).
+	req.Header.Set("Gx-Export", "1")
 	return (&http.Client{Timeout: 60 * time.Second}).Do(req)
 }
 

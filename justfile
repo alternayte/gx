@@ -35,7 +35,10 @@ build:
 vet:
     go vet ./...
 
+# The dev loop budget (NFR-02) is a timing on a quiet machine, so its package
+# runs first and alone; the full run then takes its result from the cache.
 test:
+    go test ./internal/devserver
     go test ./...
     cd docs && go test ./...
 

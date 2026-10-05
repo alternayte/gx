@@ -53,6 +53,19 @@ func (a *App) devRoutes() {
 	a.mux.Handle("GET /_gx/export", http.HandlerFunc(a.serveExportList))
 }
 
+// exportHeader marks a request of `gx export` (REQ-EXP-02).
+const exportHeader = "Gx-Export"
+
+// exportRequest reports whether `gx export` asks for the page. The page
+// then has no layout slot, so a link on a static host is a full load.
+func exportRequest(r *http.Request) bool { return r.Header.Get(exportHeader) != "" }
+
+// exportFeature is one mounted route that needs a server (REQ-EXP-02).
+type exportFeature struct {
+	Kind    string `json:"kind"`
+	Pattern string `json:"pattern"`
+}
+
 // serveExportList answers the dev-only export manifest: every GET page the
 // static export renders, and the /_gx/ assets it copies (REQ-EXP-01).
 func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
@@ -71,6 +84,10 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 			method, pattern = m, p
 		}
 		if method != "GET" && method != "HEAD" {
+			continue
+		}
+		if _, ok := route.handler.(interface{ exportFeature() (string, bool) }); ok {
+			// A GET action answers patches, not a page.
 			continue
 		}
 		// "/{$}" is the exact form of a path that ends with a slash.
@@ -119,11 +136,24 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 		}
 		llms.Entries = append(llms.Entries, m.Entries...)
 	}
+	// An action that this app answers and a form need a server; the
+	// export lists them and fails (REQ-EXP-02).
+	serverOnly := []exportFeature{}
+	for _, route := range a.routes {
+		f, ok := route.handler.(interface{ exportFeature() (string, bool) })
+		if !ok {
+			continue
+		}
+		if kind, needsServer := f.exportFeature(); needsServer {
+			serverOnly = append(serverOnly, exportFeature{Kind: kind, Pattern: route.pattern})
+		}
+	}
 	out := struct {
-		Paths  []string     `json:"paths"`
-		Assets []string     `json:"assets"`
-		LLMS   LLMSManifest `json:"llms"`
-	}{Paths: paths, Assets: assets, LLMS: llms}
+		Paths      []string        `json:"paths"`
+		Assets     []string        `json:"assets"`
+		LLMS       LLMSManifest    `json:"llms"`
+		ServerOnly []exportFeature `json:"serverOnly"`
+	}{Paths: paths, Assets: assets, LLMS: llms, ServerOnly: serverOnly}
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(out)
 }

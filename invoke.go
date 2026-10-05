@@ -74,7 +74,7 @@ func (st *renderState) resolveInvoke(key, value string) (string, string) {
 		}
 		var attr Attr
 		if adapter != nil {
-			attr = adapter.Invoke(fields[0], fields[1], fields[2])
+			attr = adapter.Invoke(fields[0], externalURL(fields[0], fields[1]), fields[2])
 		}
 		if key == invokeKey {
 			key = attr.Key
