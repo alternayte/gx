@@ -73,6 +73,8 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 		if method != "GET" && method != "HEAD" {
 			continue
 		}
+		// "/{$}" is the exact form of a path that ends with a slash.
+		pattern = strings.TrimSuffix(pattern, "{$}")
 		if !strings.Contains(pattern, "{") {
 			rel := strings.TrimPrefix(pattern, "/")
 			base := strings.TrimSuffix(BasePath(), "/")
@@ -95,10 +97,9 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 	}
 	if a.public != nil {
 		// The app's own files export with the Gx assets (NFR-08).
-		base := strings.TrimSuffix(BasePath(), "/")
 		_ = fs.WalkDir(a.public, ".", func(name string, d fs.DirEntry, err error) error {
 			if err == nil && d.Type().IsRegular() {
-				assets = append(assets, base+"/"+name)
+				assets = append(assets, "/"+name)
 			}
 			return nil
 		})

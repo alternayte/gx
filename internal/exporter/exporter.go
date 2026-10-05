@@ -7,6 +7,8 @@ package exporter
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"html"
@@ -137,6 +139,11 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 		}
 	}
 	res := &Result{Pages: map[string][]byte{}, Paths: manifest.Paths, Assets: manifest.Assets}
+	// The assets go first: a page names each Gx asset by its content hash.
+	hashed, err := writeAssets(ctx, base, out, manifest.Assets)
+	if err != nil {
+		return nil, err
+	}
 	iw := &imageWriter{dir: dir, out: out}
 	for _, path := range manifest.Paths {
 		body, status, err := fetchPage(ctx, base, path)
@@ -147,7 +154,7 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 			return nil, fmt.Errorf("gx export: %s: %s", path, http.StatusText(status))
 		}
 		res.Pages[path] = body
-		if err := writePage(out, path, iw.rewriteImages(body), site.Site, metas[path]); err != nil {
+		if err := writePage(out, path, hashed.Replace(iw.rewriteImages(body)), site.Site, metas[path]); err != nil {
 			return nil, err
 		}
 		fmt.Fprintf(opt.Log, "exported %s\n", path)
@@ -159,25 +166,10 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
+	notFound = hashed.Replace(notFound)
 	res.NotFound = notFound
 	if err := os.WriteFile(filepath.Join(out, "404.html"), notFound, 0o644); err != nil {
 		return nil, err
-	}
-	for _, asset := range manifest.Assets {
-		body, status, err := fetchPage(ctx, base, asset)
-		if err != nil {
-			return nil, err
-		}
-		if status != http.StatusOK {
-			continue
-		}
-		full := filepath.Join(out, filepath.FromSlash(strings.TrimPrefix(asset, "/")))
-		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
-			return nil, err
-		}
-		if err := os.WriteFile(full, body, 0o644); err != nil {
-			return nil, err
-		}
 	}
 	if err := writeLLMS(out, manifest.LLMS); err != nil {
 		return nil, err
@@ -193,6 +185,54 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 		return nil, err
 	}
 	return res, nil
+}
+
+// assetNames maps the URL of each Gx asset to its content-hashed URL.
+type assetNames map[string]string
+
+// Replace puts the hashed name in every attribute that names a Gx asset.
+// An attribute value ends with a quote, so "/_gx/gx.js" never matches
+// inside a longer name. A document inside a srcdoc attribute has its quotes
+// escaped.
+func (names assetNames) Replace(page []byte) []byte {
+	for plain, hashed := range names {
+		for _, quote := range []string{`"`, "&#34;", "&quot;"} {
+			page = bytes.ReplaceAll(page, []byte(plain+quote), []byte(hashed+quote))
+		}
+	}
+	return page
+}
+
+// writeAssets copies the assets of the manifest into out (REQ-EXP-01). A
+// Gx asset under /_gx/ gets its content hash in its name, so a host can
+// cache it without end. An app's public file keeps its name: a browser or
+// a crawler asks for favicon.ico and robots.txt by name.
+func writeAssets(ctx context.Context, base, out string, assets []string) (assetNames, error) {
+	names := assetNames{}
+	for _, asset := range assets {
+		body, status, err := fetchPage(ctx, base, asset)
+		if err != nil {
+			return nil, err
+		}
+		if status != http.StatusOK {
+			continue
+		}
+		target := asset
+		if i := strings.LastIndex(asset, "/_gx/"); i >= 0 {
+			sum := sha256.Sum256(body)
+			ext := filepath.Ext(asset)
+			target = strings.TrimSuffix(asset, ext) + "." + hex.EncodeToString(sum[:])[:8] + ext
+			names[asset[i:]] = target[i:]
+		}
+		full := filepath.Join(out, filepath.FromSlash(strings.TrimPrefix(target, "/")))
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			return nil, err
+		}
+		if err := os.WriteFile(full, body, 0o644); err != nil {
+			return nil, err
+		}
+	}
+	return names, nil
 }
 
 // buildApp generates the app code and builds it with the gxdev tag.
