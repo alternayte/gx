@@ -82,3 +82,85 @@ test('REQ-EXP-01 the docs site exports every page, with hashed assets and 404.ht
   expect(requests.filter((r) => r.status !== 200 && r.path !== '/favicon.ico')).toEqual([])
   await page.close()
 })
+
+// errorsOf records the script errors and failed requests of a page.
+function errorsOf(page: Page): string[] {
+  const errors: string[] = []
+  page.on('pageerror', (err) => errors.push(String(err)))
+  page.on('requestfailed', (req) => errors.push(`failed: ${req.url()}`))
+  return errors
+}
+
+test('REQ-EXP-03 a link on the static host is a full load of a working page', async () => {
+  const page = await browser.newPage()
+  const errors = errorsOf(page)
+  await page.goto(url + '/', { waitUntil: 'load' })
+  // The page holds no layout slot, so the runtime leaves the click alone.
+  expect(await page.locator('[data-gx-slot]').count()).toBe(0)
+  await page.evaluate(() => ((window as unknown as { marker?: number }).marker = 1))
+  await page.click('a[href="/components/"]')
+  await page.waitForURL(url + '/components/')
+  await page.waitForLoadState('load')
+  expect(await page.evaluate(() => (window as unknown as { marker?: number }).marker)).toBeUndefined()
+  expect(await page.locator('h1').first().textContent()).toBeTruthy()
+  expect(errors).toEqual([])
+  await page.close()
+})
+
+test('REQ-EXP-03 the theme control and the tabs work with no server', async () => {
+  const page = await browser.newPage()
+  const errors = errorsOf(page)
+  await page.goto(url + '/components/button/', { waitUntil: 'load' })
+  await page.click('[data-gx-theme="dark"]')
+  await page.waitForFunction(() => document.documentElement.classList.contains('dark'))
+  await page.reload({ waitUntil: 'load' })
+  // The stored theme applies again: the hashed theme script runs first.
+  expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true)
+
+  // The Preview and Code tabs of a component example.
+  const tab = page.locator('[data-gx-tab]').nth(1)
+  const panelID = await tab.getAttribute('aria-controls')
+  expect(panelID).toBeTruthy()
+  await tab.click()
+  await page.waitForFunction((id) => document.getElementById(id as string)?.hidden === false, panelID)
+  expect(errors).toEqual([])
+  await page.close()
+})
+
+test('REQ-EXP-03 the search index of the export answers in the browser', async () => {
+  const page = await browser.newPage()
+  const errors = errorsOf(page)
+  await page.goto(url + '/components/', { waitUntil: 'load' })
+  await page.keyboard.press('Control+k')
+  await page.waitForSelector('[data-gx-search-input]')
+  await page.fill('[data-gx-search-input]', 'accordion')
+  await page.waitForSelector('.gx-search-result', { timeout: 60000 })
+  expect(await page.getAttribute('.gx-search-result', 'href')).toContain('/components/')
+  expect(errors).toEqual([])
+  await page.close()
+}, 90000)
+
+test('REQ-EXP-03 the live toast example runs from static files', async () => {
+  const page = await browser.newPage()
+  const errors = errorsOf(page)
+  // The component page shows each example in a frame; the frame document
+  // is an exported page too.
+  await page.goto(url + '/components/toast/', { waitUntil: 'load' })
+  const frame = await page.locator('iframe').first().getAttribute('src')
+  expect(frame).toBe('/preview/toast/toast-default/')
+  await page.goto(url + frame, { waitUntil: 'load' })
+  await page.locator('[data-docs-toast]').first().click()
+  await page.waitForSelector('[data-gx-toaster] [data-gx-toast]')
+  expect(errors).toEqual([])
+  await page.close()
+})
+
+test('REQ-EXP-03 an unknown address answers the exported 404 page', async () => {
+  const page = await browser.newPage()
+  const res = await page.goto(url + '/no/such/page/', { waitUntil: 'load' })
+  expect(res?.status()).toBe(404)
+  expect(await page.textContent('body')).toContain('Page not found')
+  // The 404 page is a full document with the hashed stylesheet.
+  expect(await page.evaluate(() => document.styleSheets.length)).toBeGreaterThan(0)
+  await page.close()
+})
