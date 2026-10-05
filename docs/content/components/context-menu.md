@@ -63,6 +63,9 @@ The command writes these files.
 | `ContextMenuRadioItem.gx` | `ui/context-menu/ContextMenuRadioItem.gx` |
 | `ContextMenuSeparator.gx` | `ui/context-menu/ContextMenuSeparator.gx` |
 | `ContextMenuShortcut.gx` | `ui/context-menu/ContextMenuShortcut.gx` |
+| `ContextMenuSub.gx` | `ui/context-menu/ContextMenuSub.gx` |
+| `ContextMenuSubContent.gx` | `ui/context-menu/ContextMenuSubContent.gx` |
+| `ContextMenuSubTrigger.gx` | `ui/context-menu/ContextMenuSubTrigger.gx` |
 | `ContextMenuTrigger.gx` | `ui/context-menu/ContextMenuTrigger.gx` |
 | `ContextMenu.fixtures.go` | `ui/context-menu/ContextMenu.fixtures.go` |
 | `ContextMenuCheckboxItem.fixtures.go` | `ui/context-menu/ContextMenuCheckboxItem.fixtures.go` |
@@ -74,6 +77,9 @@ The command writes these files.
 | `ContextMenuRadioItem.fixtures.go` | `ui/context-menu/ContextMenuRadioItem.fixtures.go` |
 | `ContextMenuSeparator.fixtures.go` | `ui/context-menu/ContextMenuSeparator.fixtures.go` |
 | `ContextMenuShortcut.fixtures.go` | `ui/context-menu/ContextMenuShortcut.fixtures.go` |
+| `ContextMenuSub.fixtures.go` | `ui/context-menu/ContextMenuSub.fixtures.go` |
+| `ContextMenuSubContent.fixtures.go` | `ui/context-menu/ContextMenuSubContent.fixtures.go` |
+| `ContextMenuSubTrigger.fixtures.go` | `ui/context-menu/ContextMenuSubTrigger.fixtures.go` |
 | `ContextMenuTrigger.fixtures.go` | `ui/context-menu/ContextMenuTrigger.fixtures.go` |
 | `styles.go` | `ui/context-menu/styles.go` |
 
@@ -98,7 +104,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("fixed z-50 m-0 min-w-[8rem] origin-top-left overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 motion-reduce:transition-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" data-gx-place="right start 2" class={gx.Cx("fixed z-50 m-0 min-w-[8rem] origin-top-left overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/context-menu/ContextMenuCheckboxItem.gx"
@@ -277,6 +283,60 @@ props {
 <span class={gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
 ```
 
+```gx title="ui/context-menu/ContextMenuSub.gx"
+package contextmenu
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the sub-menu trigger, followed by the sub-menu content.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div role="none" data-gx-sub class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/context-menu/ContextMenuSubContent.gx"
+package contextmenu
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the list of items of the sub-menu.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div popover="auto" role="menu" data-gx-roving="nowrap" data-gx-place="right start" class={gx.Cx("z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden", subMotionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/context-menu/ContextMenuSubTrigger.gx"
+package contextmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  // Inset adds left padding, so the trigger lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Disabled turns the trigger off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the trigger. A chevron follows it.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" disabled={p.Disabled} class={gx.Cx("flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>
+  {p.Children}
+  <icons.ChevronRight class="ml-auto" />
+</button>
+```
+
 ```gx title="ui/context-menu/ContextMenuTrigger.gx"
 package contextmenu
 
@@ -317,6 +377,20 @@ var ContextMenuFixtures = gx.Fixtures[ContextMenuProps]{
 		ContextMenuSeparator(ContextMenuSeparatorProps{}),
 		ContextMenuLink(ContextMenuLinkProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
 		ContextMenuItem(ContextMenuItemProps{Variant: Destructive, Children: gx.Text("Delete")}),
+	)},
+	"Sub": {Id: "demo-context-sub", Class: "w-52", Children: gx.Frag(
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Back")}),
+		ContextMenuSub(ContextMenuSubProps{Children: gx.Frag(
+			ContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text("More tools")}),
+			ContextMenuSubContent(ContextMenuSubContentProps{Class: "w-48", Children: gx.Frag(
+				ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Save page")}),
+				ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Create shortcut")}),
+				ContextMenuSeparator(ContextMenuSeparatorProps{}),
+				ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Developer tools")}),
+			)}),
+		)}),
+		ContextMenuSeparator(ContextMenuSeparatorProps{}),
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Reload")}),
 	)},
 }
 ```
@@ -448,6 +522,70 @@ import "github.com/alternayte/gx"
 var ContextMenuShortcutFixtures = gx.Fixtures[ContextMenuShortcutProps]{"Default": {Children: gx.Text("⌘K")}}
 ```
 
+```go title="ui/context-menu/ContextMenuSub.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuSubFixtures = gx.Fixtures[ContextMenuSubProps]{
+	"Default": {Children: gx.Frag(
+		ContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text("More tools")}),
+		ContextMenuSubContent(ContextMenuSubContentProps{Children: gx.Frag(
+			ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Save page")}),
+			ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Create shortcut")}),
+		)}),
+	)},
+}
+
+// ContextMenuSubWrap renders the sub-menu inside a menu, as a page uses it.
+func ContextMenuSubWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/context-menu/ContextMenuSubContent.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuSubContentFixtures = gx.Fixtures[ContextMenuSubContentProps]{
+	"Content": {Class: "w-48", Children: gx.Frag(
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Save page")}),
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Create shortcut")}),
+		ContextMenuSeparator(ContextMenuSeparatorProps{}),
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Developer tools")}),
+	)},
+}
+
+// ContextMenuSubContentWrap renders the content behind its trigger inside a menu,
+// as a page uses it.
+func ContextMenuSubContentWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}},
+		ContextMenuSub(ContextMenuSubProps{Children: gx.Frag(
+			ContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text("More tools")}),
+			n,
+		)}),
+	)
+}
+```
+
+```go title="ui/context-menu/ContextMenuSubTrigger.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuSubTriggerFixtures = gx.Fixtures[ContextMenuSubTriggerProps]{
+	"Trigger":  {Children: gx.Text("More tools")},
+	"Inset":    {Inset: true, Children: gx.Text("More tools")},
+	"Disabled": {Disabled: true, Children: gx.Text("More tools")},
+}
+
+// ContextMenuSubTriggerWrap renders the trigger inside a menu, as a page uses it.
+func ContextMenuSubTriggerWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
 ```go title="ui/context-menu/ContextMenuTrigger.fixtures.go"
 package contextmenu
 
@@ -458,6 +596,11 @@ var ContextMenuTriggerFixtures = gx.Fixtures[ContextMenuTriggerProps]{
 		Id:       "demo-context",
 		Class:    "flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm",
 		Children: gx.Text("Right-click here"),
+	},
+	"Sub": {
+		Id:       "demo-context-sub",
+		Class:    "flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm",
+		Children: gx.Text("Right-click for a sub-menu"),
 	},
 }
 ```
@@ -500,6 +643,11 @@ var insetClass = map[bool]string{
 func rovingItem(disabled bool) gx.Attrs {
 	return gx.Attrs{gx.Bool("data-gx-roving-item", !disabled)}
 }
+
+// subMotionClass fades and zooms the content of a sub-menu from 95% and
+// slides it 2 units from its trigger. The overlay module writes data-side:
+// content that flips to the left slides from the right.
+const subMotionClass = "origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
@@ -524,18 +672,25 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
     <contextmenu.ContextMenuRadioItem name="person" value="grace">Grace</contextmenu.ContextMenuRadioItem>
   </contextmenu.ContextMenuRadioGroup>
   <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuSub>
+    <contextmenu.ContextMenuSubTrigger>More tools</contextmenu.ContextMenuSubTrigger>
+    <contextmenu.ContextMenuSubContent>
+      <contextmenu.ContextMenuItem>Save page</contextmenu.ContextMenuItem>
+      <contextmenu.ContextMenuItem>Developer tools</contextmenu.ContextMenuItem>
+    </contextmenu.ContextMenuSubContent>
+  </contextmenu.ContextMenuSub>
   <contextmenu.ContextMenuLink href={gx.URL("/docs")}>Docs</contextmenu.ContextMenuLink>
   <contextmenu.ContextMenuItem variant={contextmenu.Destructive}>Delete</contextmenu.ContextMenuItem>
 </contextmenu.ContextMenu>
 ```
 
-The trigger is an area with no style of its own; `Class` gives it one. The menu opens at the pointer and focus moves to the first item.
+The trigger is an area with no style of its own; `Class` gives it one. The menu opens at the pointer and focus moves to the first item. It opens to the left of the pointer when the right side is too small, and it shifts up to stay 8px inside the viewport. `data-side` on the menu names the side it took.
 
 A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
 
 The menu fades and zooms in and out. A user who asks for reduced motion gets no transition.
 
-The item has no sub-menu part.
+`ContextMenuSub` holds one `ContextMenuSubTrigger` and one `ContextMenuSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.
 
 ## Examples
 
@@ -566,6 +721,32 @@ The item has no sub-menu part.
 </contextmenu.ContextMenu>
 <contextmenu.ContextMenuTrigger id="demo-context" class="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm">
   Right-click here
+</contextmenu.ContextMenuTrigger>
+```
+
+</Example>
+
+### ContextMenu: Sub
+
+<Example item="context-menu" name="context-menu-sub" label="Context Menu: ContextMenu: Sub">
+
+```gx
+<contextmenu.ContextMenu id="demo-context-sub" class="w-52">
+  <contextmenu.ContextMenuItem>Back</contextmenu.ContextMenuItem>
+  <contextmenu.ContextMenuSub>
+    <contextmenu.ContextMenuSubTrigger>More tools</contextmenu.ContextMenuSubTrigger>
+    <contextmenu.ContextMenuSubContent class="w-48">
+      <contextmenu.ContextMenuItem>Save page</contextmenu.ContextMenuItem>
+      <contextmenu.ContextMenuItem>Create shortcut</contextmenu.ContextMenuItem>
+      <contextmenu.ContextMenuSeparator />
+      <contextmenu.ContextMenuItem>Developer tools</contextmenu.ContextMenuItem>
+    </contextmenu.ContextMenuSubContent>
+  </contextmenu.ContextMenuSub>
+  <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuItem>Reload</contextmenu.ContextMenuItem>
+</contextmenu.ContextMenu>
+<contextmenu.ContextMenuTrigger id="demo-context-sub" class="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm">
+  Right-click for a sub-menu
 </contextmenu.ContextMenuTrigger>
 ```
 
@@ -745,6 +926,67 @@ The item has no sub-menu part.
 
 </Example>
 
+### ContextMenuSub: Default
+
+<Example item="context-menu" name="context-menu-sub-default" label="Context Menu: ContextMenuSub: Default">
+
+```gx
+<contextmenu.ContextMenuSub>
+  <contextmenu.ContextMenuSubTrigger>More tools</contextmenu.ContextMenuSubTrigger>
+  <contextmenu.ContextMenuSubContent>
+    <contextmenu.ContextMenuItem>Save page</contextmenu.ContextMenuItem>
+    <contextmenu.ContextMenuItem>Create shortcut</contextmenu.ContextMenuItem>
+  </contextmenu.ContextMenuSubContent>
+</contextmenu.ContextMenuSub>
+```
+
+</Example>
+
+### ContextMenuSubContent: Content
+
+<Example item="context-menu" name="context-menu-sub-content-content" label="Context Menu: ContextMenuSubContent: Content">
+
+```gx
+<contextmenu.ContextMenuSubContent class="w-48">
+  <contextmenu.ContextMenuItem>Save page</contextmenu.ContextMenuItem>
+  <contextmenu.ContextMenuItem>Create shortcut</contextmenu.ContextMenuItem>
+  <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuItem>Developer tools</contextmenu.ContextMenuItem>
+</contextmenu.ContextMenuSubContent>
+```
+
+</Example>
+
+### ContextMenuSubTrigger: Trigger
+
+<Example item="context-menu" name="context-menu-sub-trigger-trigger" label="Context Menu: ContextMenuSubTrigger: Trigger">
+
+```gx
+<contextmenu.ContextMenuSubTrigger>More tools</contextmenu.ContextMenuSubTrigger>
+```
+
+</Example>
+
+### ContextMenuSubTrigger: Inset
+
+<Example item="context-menu" name="context-menu-sub-trigger-inset" label="Context Menu: ContextMenuSubTrigger: Inset">
+
+```gx
+<contextmenu.ContextMenuSubTrigger inset>More tools</contextmenu.ContextMenuSubTrigger>
+```
+
+</Example>
+
+### ContextMenuSubTrigger: Disabled
+
+<Example item="context-menu" name="context-menu-sub-trigger-disabled" label="Context Menu: ContextMenuSubTrigger: Disabled">
+
+```gx
+<contextmenu.ContextMenuSubTrigger disabled>More tools</contextmenu.ContextMenuSubTrigger>
+```
+
+</Example>
+
 ## API reference
 
 A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
@@ -844,6 +1086,32 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Children` | `gx.Node` | Required | Children is the text of the keyboard shortcut. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
+### contextmenu.ContextMenuSub
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the sub-menu trigger, followed by the sub-menu content. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### contextmenu.ContextMenuSubContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the list of items of the sub-menu. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### contextmenu.ContextMenuSubTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Inset` | `bool` | `false` | Inset adds left padding, so the trigger lines up with the checkbox and radio items. |
+| `Disabled` | `bool` | `false` | Disabled turns the trigger off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the trigger. A chevron follows it. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
 ### contextmenu.ContextMenuTrigger
 
 | Prop | Type | Default | Description |
@@ -867,6 +1135,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 
 - Do not hide the only action behind a right click.
 - Do not open a context menu on a whole page.
+- Do not put an element between the trigger and the content of a sub-menu.
 
 </docs.Card>
 </docs.CardGrid>
@@ -881,4 +1150,6 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | A letter | Moves to the next item that starts with the typed text. |
 | Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |
 | Space | Runs the focused item. Toggles a checkbox or radio item. |
+| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |
+| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |
 | Escape | Closes the menu. |

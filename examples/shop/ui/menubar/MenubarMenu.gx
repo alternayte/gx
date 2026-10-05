@@ -14,4 +14,4 @@ props {
 }
 
 <button type="button" role="menuitem" aria-haspopup="menu" popovertarget={p.Id} data-gx-roving-item style={p.triggerStyle()} class="flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground">{p.Label}</button>
-<div id={p.Id} popover="auto" role="menu" aria-label={p.Label} data-gx-dismiss data-gx-roving="nowrap" style={p.contentStyle()} class={gx.Cx("z-50 min-w-[12rem] origin-top-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" aria-label={p.Label} data-gx-dismiss data-gx-roving="nowrap" data-gx-place="bottom start 8 -4" style={p.contentStyle()} class={gx.Cx("z-50 min-w-[12rem] origin-top-left data-[side=top]:origin-bottom-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class)} {...p.Attrs}>{p.Children}</div>

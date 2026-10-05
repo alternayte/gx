@@ -13,4 +13,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" data-gx-dismiss style={p.style()} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" data-gx-dismiss data-gx-place={p.place()} style={p.style()} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>

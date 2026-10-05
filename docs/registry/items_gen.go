@@ -261,6 +261,9 @@ var Items = []Item{
 			{Name: "context-menu-menu", Title: "ContextMenu: Menu", Component: "ContextMenu", Fixtures: []string{"ContextMenu/Menu", "ContextMenuTrigger/Default"}, Node: func() gx.Node {
 				return gx.Frag(contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Menu"]), contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Default"]))
 			}},
+			{Name: "context-menu-sub", Title: "ContextMenu: Sub", Component: "ContextMenu", Fixtures: []string{"ContextMenu/Sub", "ContextMenuTrigger/Sub"}, Node: func() gx.Node {
+				return gx.Frag(contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Sub"]), contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Sub"]))
+			}},
 			{Name: "context-menu-checkbox-item-checked", Title: "ContextMenuCheckboxItem: Checked", Component: "ContextMenuCheckboxItem", Fixtures: []string{"ContextMenuCheckboxItem/Checked"}, Node: func() gx.Node {
 				return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Checked"]))
 			}},
@@ -304,6 +307,21 @@ var Items = []Item{
 			}},
 			{Name: "context-menu-shortcut-default", Title: "ContextMenuShortcut: Default", Component: "ContextMenuShortcut", Fixtures: []string{"ContextMenuShortcut/Default"}, Node: func() gx.Node {
 				return contextmenu.ContextMenuShortcut(contextmenu.ContextMenuShortcutFixtures["Default"])
+			}},
+			{Name: "context-menu-sub-default", Title: "ContextMenuSub: Default", Component: "ContextMenuSub", Fixtures: []string{"ContextMenuSub/Default"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuSubWrap(contextmenu.ContextMenuSub(contextmenu.ContextMenuSubFixtures["Default"]))
+			}},
+			{Name: "context-menu-sub-content-content", Title: "ContextMenuSubContent: Content", Component: "ContextMenuSubContent", Fixtures: []string{"ContextMenuSubContent/Content"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuSubContentWrap(contextmenu.ContextMenuSubContent(contextmenu.ContextMenuSubContentFixtures["Content"]))
+			}},
+			{Name: "context-menu-sub-trigger-trigger", Title: "ContextMenuSubTrigger: Trigger", Component: "ContextMenuSubTrigger", Fixtures: []string{"ContextMenuSubTrigger/Trigger"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Trigger"]))
+			}},
+			{Name: "context-menu-sub-trigger-inset", Title: "ContextMenuSubTrigger: Inset", Component: "ContextMenuSubTrigger", Fixtures: []string{"ContextMenuSubTrigger/Inset"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Inset"]))
+			}},
+			{Name: "context-menu-sub-trigger-disabled", Title: "ContextMenuSubTrigger: Disabled", Component: "ContextMenuSubTrigger", Fixtures: []string{"ContextMenuSubTrigger/Disabled"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Disabled"]))
 			}},
 		},
 	},
@@ -428,6 +446,9 @@ var Items = []Item{
 			{Name: "dropdown-menu-start", Title: "DropdownMenu: Start", Component: "DropdownMenu", Fixtures: []string{"DropdownMenu/Start", "DropdownMenuTrigger/Start"}, Node: func() gx.Node {
 				return gx.Frag(dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Start"]), dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Start"]))
 			}},
+			{Name: "dropdown-menu-sub", Title: "DropdownMenu: Sub", Component: "DropdownMenu", Fixtures: []string{"DropdownMenu/Sub", "DropdownMenuTrigger/Sub"}, Node: func() gx.Node {
+				return gx.Frag(dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Sub"]), dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Sub"]))
+			}},
 			{Name: "dropdown-menu-checkbox-item-checked", Title: "DropdownMenuCheckboxItem: Checked", Component: "DropdownMenuCheckboxItem", Fixtures: []string{"DropdownMenuCheckboxItem/Checked"}, Node: func() gx.Node {
 				return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Checked"]))
 			}},
@@ -471,6 +492,21 @@ var Items = []Item{
 			}},
 			{Name: "dropdown-menu-shortcut-default", Title: "DropdownMenuShortcut: Default", Component: "DropdownMenuShortcut", Fixtures: []string{"DropdownMenuShortcut/Default"}, Node: func() gx.Node {
 				return dropdownmenu.DropdownMenuShortcut(dropdownmenu.DropdownMenuShortcutFixtures["Default"])
+			}},
+			{Name: "dropdown-menu-sub-default", Title: "DropdownMenuSub: Default", Component: "DropdownMenuSub", Fixtures: []string{"DropdownMenuSub/Default"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuSubWrap(dropdownmenu.DropdownMenuSub(dropdownmenu.DropdownMenuSubFixtures["Default"]))
+			}},
+			{Name: "dropdown-menu-sub-content-content", Title: "DropdownMenuSubContent: Content", Component: "DropdownMenuSubContent", Fixtures: []string{"DropdownMenuSubContent/Content"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuSubContentWrap(dropdownmenu.DropdownMenuSubContent(dropdownmenu.DropdownMenuSubContentFixtures["Content"]))
+			}},
+			{Name: "dropdown-menu-sub-trigger-trigger", Title: "DropdownMenuSubTrigger: Trigger", Component: "DropdownMenuSubTrigger", Fixtures: []string{"DropdownMenuSubTrigger/Trigger"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Trigger"]))
+			}},
+			{Name: "dropdown-menu-sub-trigger-inset", Title: "DropdownMenuSubTrigger: Inset", Component: "DropdownMenuSubTrigger", Fixtures: []string{"DropdownMenuSubTrigger/Inset"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Inset"]))
+			}},
+			{Name: "dropdown-menu-sub-trigger-disabled", Title: "DropdownMenuSubTrigger: Disabled", Component: "DropdownMenuSubTrigger", Fixtures: []string{"DropdownMenuSubTrigger/Disabled"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Disabled"]))
 			}},
 		},
 	},
@@ -652,6 +688,7 @@ var Items = []Item{
 		Description: "A horizontal bar of menu actions.",
 		Examples: []Example{
 			{Name: "menubar-default", Title: "Menubar: Default", Component: "Menubar", Fixtures: []string{"Menubar/Default"}, Node: func() gx.Node { return menubar.Menubar(menubar.MenubarFixtures["Default"]) }},
+			{Name: "menubar-sub", Title: "Menubar: Sub", Component: "Menubar", Fixtures: []string{"Menubar/Sub"}, Node: func() gx.Node { return menubar.Menubar(menubar.MenubarFixtures["Sub"]) }},
 			{Name: "menubar-checkbox-item-checked", Title: "MenubarCheckboxItem: Checked", Component: "MenubarCheckboxItem", Fixtures: []string{"MenubarCheckboxItem/Checked"}, Node: func() gx.Node {
 				return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Checked"]))
 			}},
@@ -695,6 +732,21 @@ var Items = []Item{
 			}},
 			{Name: "menubar-separator-default", Title: "MenubarSeparator: Default", Component: "MenubarSeparator", Fixtures: []string{"MenubarSeparator/Default"}, Node: func() gx.Node { return menubar.MenubarSeparator(menubar.MenubarSeparatorFixtures["Default"]) }},
 			{Name: "menubar-shortcut-default", Title: "MenubarShortcut: Default", Component: "MenubarShortcut", Fixtures: []string{"MenubarShortcut/Default"}, Node: func() gx.Node { return menubar.MenubarShortcut(menubar.MenubarShortcutFixtures["Default"]) }},
+			{Name: "menubar-sub-default", Title: "MenubarSub: Default", Component: "MenubarSub", Fixtures: []string{"MenubarSub/Default"}, Node: func() gx.Node {
+				return menubar.MenubarSubWrap(menubar.MenubarSub(menubar.MenubarSubFixtures["Default"]))
+			}},
+			{Name: "menubar-sub-content-content", Title: "MenubarSubContent: Content", Component: "MenubarSubContent", Fixtures: []string{"MenubarSubContent/Content"}, Node: func() gx.Node {
+				return menubar.MenubarSubContentWrap(menubar.MenubarSubContent(menubar.MenubarSubContentFixtures["Content"]))
+			}},
+			{Name: "menubar-sub-trigger-trigger", Title: "MenubarSubTrigger: Trigger", Component: "MenubarSubTrigger", Fixtures: []string{"MenubarSubTrigger/Trigger"}, Node: func() gx.Node {
+				return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Trigger"]))
+			}},
+			{Name: "menubar-sub-trigger-inset", Title: "MenubarSubTrigger: Inset", Component: "MenubarSubTrigger", Fixtures: []string{"MenubarSubTrigger/Inset"}, Node: func() gx.Node {
+				return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Inset"]))
+			}},
+			{Name: "menubar-sub-trigger-disabled", Title: "MenubarSubTrigger: Disabled", Component: "MenubarSubTrigger", Fixtures: []string{"MenubarSubTrigger/Disabled"}, Node: func() gx.Node {
+				return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Disabled"]))
+			}},
 		},
 	},
 	{

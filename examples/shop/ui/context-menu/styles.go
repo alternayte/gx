@@ -35,3 +35,8 @@ var insetClass = map[bool]string{
 func rovingItem(disabled bool) gx.Attrs {
 	return gx.Attrs{gx.Bool("data-gx-roving-item", !disabled)}
 }
+
+// subMotionClass fades and zooms the content of a sub-menu from 95% and
+// slides it 2 units from its trigger. The overlay module writes data-side:
+// content that flips to the left slides from the right.
+const subMotionClass = "origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none"

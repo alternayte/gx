@@ -1,0 +1,21 @@
+package menubar
+
+import "github.com/alternayte/gx/examples/shop/ui/icons"
+
+props {
+  // Inset adds left padding, so the trigger lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Disabled turns the trigger off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the trigger. A chevron follows it.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" disabled={p.Disabled} class={gx.Cx("flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50", insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>
+  {p.Children}
+  <icons.ChevronRight class="ml-auto h-4 w-4" />
+</button>

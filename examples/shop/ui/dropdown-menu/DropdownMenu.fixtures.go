@@ -35,4 +35,18 @@ var DropdownMenuFixtures = gx.Fixtures[DropdownMenuProps]{
 		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Rename")}),
 		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Duplicate")}),
 	)},
+	"Sub": {Id: "demo-dropdown-sub", Class: "w-56", Children: gx.Frag(
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("New tab")}),
+		DropdownMenuSub(DropdownMenuSubProps{Children: gx.Frag(
+			DropdownMenuSubTrigger(DropdownMenuSubTriggerProps{Children: gx.Text("More tools")}),
+			DropdownMenuSubContent(DropdownMenuSubContentProps{Class: "w-48", Children: gx.Frag(
+				DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Save page")}),
+				DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Create shortcut")}),
+				DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+				DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Developer tools")}),
+			)}),
+		)}),
+		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Print")}),
+	)},
 }

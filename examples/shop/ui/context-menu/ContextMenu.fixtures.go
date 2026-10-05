@@ -21,4 +21,18 @@ var ContextMenuFixtures = gx.Fixtures[ContextMenuProps]{
 		ContextMenuLink(ContextMenuLinkProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
 		ContextMenuItem(ContextMenuItemProps{Variant: Destructive, Children: gx.Text("Delete")}),
 	)},
+	"Sub": {Id: "demo-context-sub", Class: "w-52", Children: gx.Frag(
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Back")}),
+		ContextMenuSub(ContextMenuSubProps{Children: gx.Frag(
+			ContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text("More tools")}),
+			ContextMenuSubContent(ContextMenuSubContentProps{Class: "w-48", Children: gx.Frag(
+				ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Save page")}),
+				ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Create shortcut")}),
+				ContextMenuSeparator(ContextMenuSeparatorProps{}),
+				ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Developer tools")}),
+			)}),
+		)}),
+		ContextMenuSeparator(ContextMenuSeparatorProps{}),
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Reload")}),
+	)},
 }

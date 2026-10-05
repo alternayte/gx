@@ -72,7 +72,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" data-gx-dismiss style={p.style()} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" data-gx-dismiss data-gx-place={p.place()} style={p.style()} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/popover/PopoverDescription.gx"
@@ -222,11 +222,12 @@ const (
 	End    Align = "end"
 )
 
-// The popover zooms from the edge that touches the trigger.
+// The popover zooms from the edge that touches the trigger. The overlay
+// module writes data-side: a popover that flips opens above the trigger.
 var alignClass = gx.Enum[Align]{
-	Center: "origin-top",
-	Start:  "origin-top-left",
-	End:    "origin-top-right",
+	Center: "origin-top data-[side=top]:origin-bottom",
+	Start:  "origin-top-left data-[side=top]:origin-bottom-left",
+	End:    "origin-top-right data-[side=top]:origin-bottom-right",
 }
 
 var alignStyle = gx.Enum[Align]{
@@ -243,10 +244,16 @@ func (p PopoverProps) align() Align {
 	return p.Align
 }
 
-// style anchors the popover below its trigger. A browser without anchor
-// positioning keeps the popover at its place in the document flow.
+// style anchors the popover below its trigger for a page whose scripts did
+// not run. The overlay module then writes the measured place.
 func (p PopoverProps) style() gx.Style {
 	return gx.Style("position-anchor: --gx-pop-" + p.Id + "; inset: auto; margin: 0.25rem 0 0; top: anchor(bottom); " + alignStyle[p.align()])
+}
+
+// place tells the overlay module where the popover goes: below the trigger,
+// 4px away, and inside the viewport.
+func (p PopoverProps) place() string {
+	return "bottom " + string(p.align()) + " 4"
 }
 
 // variant returns the button variant of one trigger; a zero value is
@@ -268,11 +275,11 @@ func (p PopoverTriggerProps) attrs() gx.Attrs {
 }
 
 // motionClass fades and zooms the popover from 95% and slides it 2 units from
-// the trigger. Safari 26.0 never ends a display transition on an element
+// the trigger, from below when the popover took the top side. Safari 26.0 never ends a display transition on an element
 // that CSS anchor positioning places, which leaves a closed popover rendered.
 // The @supports test matches every engine but WebKit, so Safari closes the
 // popover at once and still animates the enter.
-const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 data-[side=top]:starting:open:translate-y-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
@@ -294,7 +301,7 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 The element uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`.
 
-`Align` lines the popover up with the trigger: `popover.Center` (default), `popover.Start` or `popover.End`. The popover always opens below the trigger. A browser without anchor positioning shows the popover at its place in the document flow.
+`Align` lines the popover up with the trigger: `popover.Center` (default), `popover.Start` or `popover.End`. The popover opens below the trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the popover names the side it took.
 
 The popover fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
 

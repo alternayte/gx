@@ -18,6 +18,18 @@ var coreRuntimeJS []byte
 //go:embed runtime/js/behavior.js
 var behaviorRuntimeJS []byte
 
+// tabsRuntimeJS, toastRuntimeJS and overlayRuntimeJS are the other built
+// behaviour modules (REQ-REG-07). A page loads each one by its own marker.
+//
+//go:embed runtime/js/tabs.js
+var tabsRuntimeJS []byte
+
+//go:embed runtime/js/toast.js
+var toastRuntimeJS []byte
+
+//go:embed runtime/js/overlay.js
+var overlayRuntimeJS []byte
+
 // themeRuntimeJS is the built theme script. It is a classic script: it runs
 // before the first paint and sets the stored theme class on the html
 // element.
@@ -41,12 +53,12 @@ func coreRuntime() Node {
 	})
 }
 
-// behaviorRuntime returns the script tag of the component behaviour runtime
-// (REQ-REG-07).
-func behaviorRuntime() Node {
+// behaviorRuntime returns the script tag of one behaviour module
+// (REQ-REG-07): behavior, tabs, toast or overlay.
+func behaviorRuntime(module string) Node {
 	return El("script", Attrs{
 		{Key: "type", Value: "module"},
-		{Key: "src", Value: BasePath() + "/_gx/behavior.js", Kind: AttrURL},
+		{Key: "src", Value: BasePath() + "/_gx/" + module + ".js", Kind: AttrURL},
 	})
 }
 
@@ -59,9 +71,16 @@ type runtimeNeeds struct {
 	// core is true when the page uses a form, layout-aware navigation or
 	// a page-shell behaviour.
 	core bool
-	// behavior is true when the page uses a component behaviour
-	// (REQ-REG-07).
+	// behavior is true when the page uses roving tabindex, a focus trap,
+	// dismiss, or open and close (REQ-REG-07).
 	behavior bool
+	// tabs is true when the page has a tab set.
+	tabs bool
+	// toast is true when the page has the toaster region. A toast arrives
+	// by a later patch, so the region decides.
+	toast bool
+	// overlay is true when the page has placed content or a sub-menu.
+	overlay bool
 	// theme is true when the page has a theme control; the stored theme
 	// then applies before the first paint.
 	theme bool
@@ -131,6 +150,12 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 					needs.core = true
 				case componentBehaviorMarker(a.Key):
 					needs.behavior = true
+				case tabsMarker(a.Key):
+					needs.tabs = true
+				case a.Key == "data-gx-toaster":
+					needs.toast = true
+				case overlayMarker(a.Key):
+					needs.overlay = true
 				}
 			}
 			for _, c := range t.children {
@@ -184,13 +209,31 @@ func behaviorMarker(key string) bool {
 }
 
 // componentBehaviorMarker reports whether an attribute activates the
-// component behaviour runtime (REQ-REG-07).
+// behavior module (REQ-REG-07).
 func componentBehaviorMarker(key string) bool {
 	switch key {
 	case "data-gx-behavior", "data-gx-roving", "data-gx-roving-item", "data-gx-trap", "data-gx-dismiss",
-		"data-gx-open", "data-gx-close", "data-gx-contextmenu",
-		"data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel",
-		"data-gx-toaster":
+		"data-gx-open", "data-gx-close":
+		return true
+	}
+	return false
+}
+
+// tabsMarker reports whether an attribute activates the tabs module
+// (REQ-REG-07). The docs kit tabs carry the same markers (REQ-CNT-05).
+func tabsMarker(key string) bool {
+	switch key {
+	case "data-gx-tabs", "data-gx-tab", "data-gx-tab-item", "data-gx-tab-panel":
+		return true
+	}
+	return false
+}
+
+// overlayMarker reports whether an attribute activates the overlay module
+// (REQ-REG-07): placed content, a sub-menu or the area of a context menu.
+func overlayMarker(key string) bool {
+	switch key {
+	case "data-gx-place", "data-gx-sub", "data-gx-contextmenu":
 		return true
 	}
 	return false

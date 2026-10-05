@@ -71,6 +71,9 @@ The command writes these files.
 | `MenubarRadioItem.gx` | `ui/menubar/MenubarRadioItem.gx` |
 | `MenubarSeparator.gx` | `ui/menubar/MenubarSeparator.gx` |
 | `MenubarShortcut.gx` | `ui/menubar/MenubarShortcut.gx` |
+| `MenubarSub.gx` | `ui/menubar/MenubarSub.gx` |
+| `MenubarSubContent.gx` | `ui/menubar/MenubarSubContent.gx` |
+| `MenubarSubTrigger.gx` | `ui/menubar/MenubarSubTrigger.gx` |
 | `Menubar.fixtures.go` | `ui/menubar/Menubar.fixtures.go` |
 | `MenubarCheckboxItem.fixtures.go` | `ui/menubar/MenubarCheckboxItem.fixtures.go` |
 | `MenubarGroup.fixtures.go` | `ui/menubar/MenubarGroup.fixtures.go` |
@@ -82,6 +85,9 @@ The command writes these files.
 | `MenubarRadioItem.fixtures.go` | `ui/menubar/MenubarRadioItem.fixtures.go` |
 | `MenubarSeparator.fixtures.go` | `ui/menubar/MenubarSeparator.fixtures.go` |
 | `MenubarShortcut.fixtures.go` | `ui/menubar/MenubarShortcut.fixtures.go` |
+| `MenubarSub.fixtures.go` | `ui/menubar/MenubarSub.fixtures.go` |
+| `MenubarSubContent.fixtures.go` | `ui/menubar/MenubarSubContent.fixtures.go` |
+| `MenubarSubTrigger.fixtures.go` | `ui/menubar/MenubarSubTrigger.fixtures.go` |
 | `styles.go` | `ui/menubar/styles.go` |
 
 </docs.TabItem>
@@ -224,7 +230,7 @@ props {
 }
 
 <button type="button" role="menuitem" aria-haspopup="menu" popovertarget={p.Id} data-gx-roving-item style={p.triggerStyle()} class="flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground">{p.Label}</button>
-<div id={p.Id} popover="auto" role="menu" aria-label={p.Label} data-gx-dismiss data-gx-roving="nowrap" style={p.contentStyle()} class={gx.Cx("z-50 min-w-[12rem] origin-top-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" aria-label={p.Label} data-gx-dismiss data-gx-roving="nowrap" data-gx-place="bottom start 8 -4" style={p.contentStyle()} class={gx.Cx("z-50 min-w-[12rem] origin-top-left data-[side=top]:origin-bottom-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/menubar/MenubarRadioGroup.gx"
@@ -302,6 +308,60 @@ props {
 <span class={gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
 ```
 
+```gx title="ui/menubar/MenubarSub.gx"
+package menubar
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the sub-menu trigger, followed by the sub-menu content.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div role="none" data-gx-sub class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/menubar/MenubarSubContent.gx"
+package menubar
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the list of items of the sub-menu.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div popover="auto" role="menu" data-gx-roving="nowrap" data-gx-place="right start" class={gx.Cx("z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden", subMotionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/menubar/MenubarSubTrigger.gx"
+package menubar
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  // Inset adds left padding, so the trigger lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Disabled turns the trigger off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the trigger. A chevron follows it.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" disabled={p.Disabled} class={gx.Cx("flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50", insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>
+  {p.Children}
+  <icons.ChevronRight class="ml-auto h-4 w-4" />
+</button>
+```
+
 ```go title="ui/menubar/Menubar.fixtures.go"
 package menubar
 
@@ -336,6 +396,25 @@ var MenubarFixtures = gx.Fixtures[MenubarProps]{
 			)}),
 			MenubarSeparator(MenubarSeparatorProps{}),
 			MenubarItem(MenubarItemProps{Inset: true, Variant: Destructive, Children: gx.Text("Remove profile")}),
+		)}),
+	)},
+	"Sub": {Children: gx.Frag(
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-sub-file", Label: "File", Children: gx.Frag(
+			MenubarItem(MenubarItemProps{Children: gx.Text("New tab")}),
+			MenubarSub(MenubarSubProps{Children: gx.Frag(
+				MenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text("Share")}),
+				MenubarSubContent(MenubarSubContentProps{Children: gx.Frag(
+					MenubarItem(MenubarItemProps{Children: gx.Text("Email link")}),
+					MenubarItem(MenubarItemProps{Children: gx.Text("Messages")}),
+					MenubarItem(MenubarItemProps{Children: gx.Text("Notes")}),
+				)}),
+			)}),
+			MenubarSeparator(MenubarSeparatorProps{}),
+			MenubarItem(MenubarItemProps{Children: gx.Text("Print")}),
+		)}),
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-sub-edit", Label: "Edit", Children: gx.Frag(
+			MenubarItem(MenubarItemProps{Children: gx.Text("Undo")}),
+			MenubarItem(MenubarItemProps{Children: gx.Text("Redo")}),
 		)}),
 	)},
 }
@@ -486,6 +565,70 @@ import "github.com/alternayte/gx"
 var MenubarShortcutFixtures = gx.Fixtures[MenubarShortcutProps]{"Default": {Children: gx.Text("⌘K")}}
 ```
 
+```go title="ui/menubar/MenubarSub.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarSubFixtures = gx.Fixtures[MenubarSubProps]{
+	"Default": {Children: gx.Frag(
+		MenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text("More tools")}),
+		MenubarSubContent(MenubarSubContentProps{Children: gx.Frag(
+			MenubarItem(MenubarItemProps{Children: gx.Text("Save page")}),
+			MenubarItem(MenubarItemProps{Children: gx.Text("Create shortcut")}),
+		)}),
+	)},
+}
+
+// MenubarSubWrap renders the sub-menu inside a menu, as a page uses it.
+func MenubarSubWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/menubar/MenubarSubContent.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarSubContentFixtures = gx.Fixtures[MenubarSubContentProps]{
+	"Content": {Class: "w-48", Children: gx.Frag(
+		MenubarItem(MenubarItemProps{Children: gx.Text("Save page")}),
+		MenubarItem(MenubarItemProps{Children: gx.Text("Create shortcut")}),
+		MenubarSeparator(MenubarSeparatorProps{}),
+		MenubarItem(MenubarItemProps{Children: gx.Text("Developer tools")}),
+	)},
+}
+
+// MenubarSubContentWrap renders the content behind its trigger inside a menu,
+// as a page uses it.
+func MenubarSubContentWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}},
+		MenubarSub(MenubarSubProps{Children: gx.Frag(
+			MenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text("More tools")}),
+			n,
+		)}),
+	)
+}
+```
+
+```go title="ui/menubar/MenubarSubTrigger.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarSubTriggerFixtures = gx.Fixtures[MenubarSubTriggerProps]{
+	"Trigger":  {Children: gx.Text("More tools")},
+	"Inset":    {Inset: true, Children: gx.Text("More tools")},
+	"Disabled": {Disabled: true, Children: gx.Text("More tools")},
+}
+
+// MenubarSubTriggerWrap renders the trigger inside a menu, as a page uses it.
+func MenubarSubTriggerWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
 ```go title="ui/menubar/styles.go"
 package menubar
 
@@ -497,8 +640,9 @@ func (p MenubarMenuProps) triggerStyle() gx.Style {
 }
 
 // contentStyle anchors the content below its trigger, 8px down and 4px to
-// the left as the reference offsets do. A browser without anchor positioning
-// keeps the content at its place in the document flow.
+// the left as the reference offsets do, for a page whose scripts did not
+// run. The overlay module then writes the measured place from the same
+// offsets.
 func (p MenubarMenuProps) contentStyle() gx.Style {
 	return gx.Style("position-anchor: --gx-menubar-" + p.Id + "; inset: auto; margin: 0.5rem 0 0 -0.25rem; top: anchor(bottom); left: anchor(left)")
 }
@@ -538,11 +682,16 @@ func rovingItem(disabled bool) gx.Attrs {
 }
 
 // motionClass fades and zooms the menu from 95% and slides it 2 units from
-// the trigger. Safari 26.0 never ends a display transition on an element
+// the trigger, from below when the menu took the top side. Safari 26.0 never ends a display transition on an element
 // that CSS anchor positioning places, which leaves a closed menu rendered.
 // The @supports test matches every engine but WebKit, so Safari closes the
 // menu at once and still animates the enter.
-const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 data-[side=top]:starting:open:translate-y-2 motion-reduce:transition-none"
+
+// subMotionClass fades and zooms the content of a sub-menu from 95% and
+// slides it 2 units from its trigger. The overlay module writes data-side:
+// content that flips to the left slides from the right.
+const subMotionClass = "origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
@@ -561,6 +710,13 @@ A horizontal bar of menus.
       New tab
       <menubar.MenubarShortcut>⌘T</menubar.MenubarShortcut>
     </menubar.MenubarItem>
+    <menubar.MenubarSub>
+      <menubar.MenubarSubTrigger>Share</menubar.MenubarSubTrigger>
+      <menubar.MenubarSubContent>
+        <menubar.MenubarItem>Email link</menubar.MenubarItem>
+        <menubar.MenubarItem>Messages</menubar.MenubarItem>
+      </menubar.MenubarSubContent>
+    </menubar.MenubarSub>
     <menubar.MenubarSeparator />
     <menubar.MenubarLink href={gx.URL("/docs")}>Documentation</menubar.MenubarLink>
   </menubar.MenubarMenu>
@@ -572,13 +728,17 @@ A horizontal bar of menus.
 </menubar.Menubar>
 ```
 
-`MenubarMenu` renders the trigger in the bar and the menu that opens from it. `Label` is the text of the trigger and `Id` is the id of the menu. The menu uses the native Popover API. A browser without anchor positioning shows the menu at its place in the document flow.
+`MenubarMenu` renders the trigger in the bar and the menu that opens from it. `Label` is the text of the trigger and `Id` is the id of the menu. The menu uses the native Popover API.
+
+A menu opens below its trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the menu names the side it took.
 
 A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
 
 A menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
 
-A click opens a menu. The pointer does not open the next menu when it moves along the bar. The item has no sub-menu part.
+A click opens a menu. With one menu open, the pointer opens the menu of each trigger it moves over.
+
+`MenubarSub` holds one `MenubarSubTrigger` and one `MenubarSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.
 
 ## Examples
 
@@ -615,6 +775,34 @@ A click opens a menu. The pointer does not open the next menu when it moves alon
     </menubar.MenubarRadioGroup>
     <menubar.MenubarSeparator />
     <menubar.MenubarItem inset variant={menubar.Destructive}>Remove profile</menubar.MenubarItem>
+  </menubar.MenubarMenu>
+</menubar.Menubar>
+```
+
+</Example>
+
+### Menubar: Sub
+
+<Example item="menubar" name="menubar-sub" label="Menubar: Menubar: Sub">
+
+```gx
+<menubar.Menubar>
+  <menubar.MenubarMenu id="demo-menubar-sub-file" label="File">
+    <menubar.MenubarItem>New tab</menubar.MenubarItem>
+    <menubar.MenubarSub>
+      <menubar.MenubarSubTrigger>Share</menubar.MenubarSubTrigger>
+      <menubar.MenubarSubContent>
+        <menubar.MenubarItem>Email link</menubar.MenubarItem>
+        <menubar.MenubarItem>Messages</menubar.MenubarItem>
+        <menubar.MenubarItem>Notes</menubar.MenubarItem>
+      </menubar.MenubarSubContent>
+    </menubar.MenubarSub>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarItem>Print</menubar.MenubarItem>
+  </menubar.MenubarMenu>
+  <menubar.MenubarMenu id="demo-menubar-sub-edit" label="Edit">
+    <menubar.MenubarItem>Undo</menubar.MenubarItem>
+    <menubar.MenubarItem>Redo</menubar.MenubarItem>
   </menubar.MenubarMenu>
 </menubar.Menubar>
 ```
@@ -800,6 +988,67 @@ A click opens a menu. The pointer does not open the next menu when it moves alon
 
 </Example>
 
+### MenubarSub: Default
+
+<Example item="menubar" name="menubar-sub-default" label="Menubar: MenubarSub: Default">
+
+```gx
+<menubar.MenubarSub>
+  <menubar.MenubarSubTrigger>More tools</menubar.MenubarSubTrigger>
+  <menubar.MenubarSubContent>
+    <menubar.MenubarItem>Save page</menubar.MenubarItem>
+    <menubar.MenubarItem>Create shortcut</menubar.MenubarItem>
+  </menubar.MenubarSubContent>
+</menubar.MenubarSub>
+```
+
+</Example>
+
+### MenubarSubContent: Content
+
+<Example item="menubar" name="menubar-sub-content-content" label="Menubar: MenubarSubContent: Content">
+
+```gx
+<menubar.MenubarSubContent class="w-48">
+  <menubar.MenubarItem>Save page</menubar.MenubarItem>
+  <menubar.MenubarItem>Create shortcut</menubar.MenubarItem>
+  <menubar.MenubarSeparator />
+  <menubar.MenubarItem>Developer tools</menubar.MenubarItem>
+</menubar.MenubarSubContent>
+```
+
+</Example>
+
+### MenubarSubTrigger: Trigger
+
+<Example item="menubar" name="menubar-sub-trigger-trigger" label="Menubar: MenubarSubTrigger: Trigger">
+
+```gx
+<menubar.MenubarSubTrigger>More tools</menubar.MenubarSubTrigger>
+```
+
+</Example>
+
+### MenubarSubTrigger: Inset
+
+<Example item="menubar" name="menubar-sub-trigger-inset" label="Menubar: MenubarSubTrigger: Inset">
+
+```gx
+<menubar.MenubarSubTrigger inset>More tools</menubar.MenubarSubTrigger>
+```
+
+</Example>
+
+### MenubarSubTrigger: Disabled
+
+<Example item="menubar" name="menubar-sub-trigger-disabled" label="Menubar: MenubarSubTrigger: Disabled">
+
+```gx
+<menubar.MenubarSubTrigger disabled>More tools</menubar.MenubarSubTrigger>
+```
+
+</Example>
+
 ## API reference
 
 A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
@@ -908,6 +1157,32 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | `Children` | `gx.Node` | Required | Children is the text of the keyboard shortcut. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
+### menubar.MenubarSub
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the sub-menu trigger, followed by the sub-menu content. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarSubContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the list of items of the sub-menu. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarSubTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Inset` | `bool` | `false` | Inset adds left padding, so the trigger lines up with the checkbox and radio items. |
+| `Disabled` | `bool` | `false` | Disabled turns the trigger off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the trigger. A chevron follows it. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
 ## Do and don't
 
 <docs.CardGrid>
@@ -922,6 +1197,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 
 - Do not put a link or a button directly in the bar. Put it in a menu.
 - Do not use a menubar for a site header. Use the navigation menu.
+- Do not put an element between the trigger and the content of a sub-menu.
 
 </docs.Card>
 </docs.CardGrid>
@@ -932,6 +1208,8 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | --- | --- |
 | Tab | Enters the bar at one trigger and leaves it again. |
 | Left, Right | On a trigger, moves to the previous or next trigger. In a menu, opens the previous or next menu. |
+| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |
+| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |
 | Home, End | Moves to the first or last trigger, or to the first or last item of a menu. |
 | Enter, Space | Opens the menu of the focused trigger. |
 | Down | Opens the menu and moves to the first item. |

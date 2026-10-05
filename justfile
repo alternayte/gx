@@ -11,6 +11,9 @@ check: verify
 runtime:
     bun build runtime/js/gx.ts --outfile runtime/js/gx.js --target browser --minify
     bun build runtime/js/behavior.ts --outfile runtime/js/behavior.js --target browser --minify
+    bun build runtime/js/tabs.ts --outfile runtime/js/tabs.js --target browser --minify
+    bun build runtime/js/toast.ts --outfile runtime/js/toast.js --target browser --minify
+    bun build runtime/js/overlay.ts --outfile runtime/js/overlay.js --target browser --minify
     bun build runtime/js/theme.ts --outfile runtime/js/theme.js --target browser --minify
     bun build runtime/js/dev.ts --outfile internal/devserver/devclient.js --target browser --minify
 

@@ -23,17 +23,27 @@ A menu of actions behind a trigger.
     <dropdownmenu.DropdownMenuRadioItem name="position" value="bottom">Bottom</dropdownmenu.DropdownMenuRadioItem>
   </dropdownmenu.DropdownMenuRadioGroup>
   <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuSub>
+    <dropdownmenu.DropdownMenuSubTrigger>Invite users</dropdownmenu.DropdownMenuSubTrigger>
+    <dropdownmenu.DropdownMenuSubContent>
+      <dropdownmenu.DropdownMenuItem>Email</dropdownmenu.DropdownMenuItem>
+      <dropdownmenu.DropdownMenuItem>Message</dropdownmenu.DropdownMenuItem>
+    </dropdownmenu.DropdownMenuSubContent>
+  </dropdownmenu.DropdownMenuSub>
+  <dropdownmenu.DropdownMenuSeparator />
   <dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Sign out</dropdownmenu.DropdownMenuItem>
 </dropdownmenu.DropdownMenu>
 ```
 
-The menu uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`. `Align` lines the menu up with the trigger: `dropdownmenu.Center` (default), `dropdownmenu.Start` or `dropdownmenu.End`. A browser without anchor positioning shows the menu at its place in the document flow.
+The menu uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`. `Align` lines the menu up with the trigger: `dropdownmenu.Center` (default), `dropdownmenu.Start` or `dropdownmenu.End`.
+
+The menu opens below the trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the menu names the side it took.
 
 A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
 
 The menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
 
-The item has no sub-menu part.
+`DropdownMenuSub` holds one `DropdownMenuSubTrigger` and one `DropdownMenuSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.
 
 ## Do
 
@@ -45,7 +55,8 @@ The item has no sub-menu part.
 ## Don't
 
 - Do not use a dropdown menu as a select control. Use `select`.
-- Do not nest a dropdown menu in another dropdown menu.
+- Do not put a `DropdownMenu` in another `DropdownMenu`. Use `DropdownMenuSub`.
+- Do not put an element between the trigger and the content of a sub-menu.
 
 ## Keyboard
 
@@ -58,4 +69,6 @@ The item has no sub-menu part.
 | A letter | Moves to the next item that starts with the typed text. |
 | Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |
 | Space | Runs the focused item. Toggles a checkbox or radio item. |
+| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |
+| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |
 | Escape | Closes the menu and returns focus to the trigger. |

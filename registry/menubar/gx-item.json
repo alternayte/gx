@@ -49,6 +49,18 @@
       "target": "ui/menubar/MenubarShortcut.gx"
     },
     {
+      "path": "MenubarSub.gx",
+      "target": "ui/menubar/MenubarSub.gx"
+    },
+    {
+      "path": "MenubarSubContent.gx",
+      "target": "ui/menubar/MenubarSubContent.gx"
+    },
+    {
+      "path": "MenubarSubTrigger.gx",
+      "target": "ui/menubar/MenubarSubTrigger.gx"
+    },
+    {
       "path": "Menubar.fixtures.go",
       "target": "ui/menubar/Menubar.fixtures.go"
     },
@@ -91,6 +103,18 @@
     {
       "path": "MenubarShortcut.fixtures.go",
       "target": "ui/menubar/MenubarShortcut.fixtures.go"
+    },
+    {
+      "path": "MenubarSub.fixtures.go",
+      "target": "ui/menubar/MenubarSub.fixtures.go"
+    },
+    {
+      "path": "MenubarSubContent.fixtures.go",
+      "target": "ui/menubar/MenubarSubContent.fixtures.go"
+    },
+    {
+      "path": "MenubarSubTrigger.fixtures.go",
+      "target": "ui/menubar/MenubarSubTrigger.fixtures.go"
     },
     {
       "path": "styles.go",

@@ -45,6 +45,18 @@
       "target": "ui/dropdown-menu/DropdownMenuShortcut.gx"
     },
     {
+      "path": "DropdownMenuSub.gx",
+      "target": "ui/dropdown-menu/DropdownMenuSub.gx"
+    },
+    {
+      "path": "DropdownMenuSubContent.gx",
+      "target": "ui/dropdown-menu/DropdownMenuSubContent.gx"
+    },
+    {
+      "path": "DropdownMenuSubTrigger.gx",
+      "target": "ui/dropdown-menu/DropdownMenuSubTrigger.gx"
+    },
+    {
       "path": "DropdownMenuTrigger.gx",
       "target": "ui/dropdown-menu/DropdownMenuTrigger.gx"
     },
@@ -87,6 +99,18 @@
     {
       "path": "DropdownMenuShortcut.fixtures.go",
       "target": "ui/dropdown-menu/DropdownMenuShortcut.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuSub.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuSub.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuSubContent.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuSubContent.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuSubTrigger.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuSubTrigger.fixtures.go"
     },
     {
       "path": "DropdownMenuTrigger.fixtures.go",

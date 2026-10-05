@@ -1,0 +1,12 @@
+package dropdownmenu
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the sub-menu trigger, followed by the sub-menu content.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div role="none" data-gx-sub class={p.Class} {...p.Attrs}>{p.Children}</div>

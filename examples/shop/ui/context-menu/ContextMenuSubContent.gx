@@ -1,0 +1,12 @@
+package contextmenu
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the list of items of the sub-menu.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div popover="auto" role="menu" data-gx-roving="nowrap" data-gx-place="right start" class={gx.Cx("z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden", subMotionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
