@@ -1,0 +1,35 @@
+[
+  {
+    "code": "GX2014",
+    "file": "<root>/ui/card/Counter.gx",
+    "line": 4,
+    "column": 3,
+    "message": "signal \"Qty\" needs an initial value",
+    "fix": "write Qty int = \u003cvalue\u003e",
+    "doc": "/errors/GX2014"
+  },
+  {
+    "code": "GX2001",
+    "file": "<root>/ui/card/Page.gx",
+    "line": 4,
+    "column": 3,
+    "message": "missing required prop \"Title\" on \u003cCard\u003e",
+    "doc": "/errors/GX2001"
+  },
+  {
+    "code": "GX2002",
+    "file": "<root>/ui/card/Page.gx",
+    "line": 5,
+    "column": 3,
+    "message": "unknown component \"Crad\"; did you mean \"Card\"?",
+    "doc": "/errors/GX2002"
+  },
+  {
+    "code": "GX2003",
+    "file": "<root>/ui/card/Page.gx",
+    "line": 6,
+    "column": 19,
+    "message": "unknown attribute \"tilte\" on \u003cCard\u003e",
+    "doc": "/errors/GX2003"
+  }
+]

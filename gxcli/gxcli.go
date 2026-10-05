@@ -85,13 +85,13 @@ func usage(w io.Writer) {
 
 Commands:
   fmt       format .gx files in place, or stdin when no path is given
-  check     check a module and fail on stale generated code
+  check     check a module and fail on stale generated code, with --json
   generate  write the generated Go files of a module
   build     generate the module and build its app binary
   dev       run the app with rebuild, restart, morph and the error overlay
   routes    print the routes of a module, with --json for machine output
   lsp       run the language server on stdio
-  lint      run go vet and the Gx analyzers on a module
+  lint      run go vet and the Gx analyzers on a module, with --json
   icons pin pin an icon set and generate one .gx component per icon
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
@@ -226,7 +226,7 @@ func printJSON(diags []compiler.Diagnostic) int {
 	}
 	data, err := json.MarshalIndent(out, "", "  ")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "gx check: %v\n", err)
+		fmt.Fprintf(os.Stderr, "gx: %v\n", err)
 		return 1
 	}
 	fmt.Println(string(data))
@@ -719,6 +719,7 @@ func runIcons(args []string) int {
 func runLint(args []string) int {
 	fs := flag.NewFlagSet("gx lint", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
+	asJSON := fs.Bool("json", false, "print machine-readable output")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -728,11 +729,22 @@ func runLint(args []string) int {
 	}
 	vet := exec.Command("go", "vet", "./...")
 	vet.Dir = dir
-	vet.Stdout, vet.Stderr = os.Stdout, os.Stderr
+	// go vet has no Gx codes; its text stays off stdout so --json is clean.
+	vet.Stdout, vet.Stderr = os.Stderr, os.Stderr
 	vetErr := vet.Run()
 	findings, err := analyze.Lint(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx lint: %v\n", err)
+		return 1
+	}
+	if *asJSON {
+		diags := make([]compiler.Diagnostic, 0, len(findings))
+		for _, f := range findings {
+			diags = append(diags, compiler.Diagnostic{Code: f.Code, File: f.File, Line: f.Line, Col: f.Col, Msg: f.Message})
+		}
+		if code := printJSON(diags); code != 0 || vetErr == nil {
+			return code
+		}
 		return 1
 	}
 	for _, f := range findings {

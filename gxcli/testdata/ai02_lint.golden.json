@@ -1,0 +1,26 @@
+[
+  {
+    "code": "GX7001",
+    "file": "<root>/cart/cart.go",
+    "line": 7,
+    "column": 9,
+    "message": "conversion to gx.SafeHTML needs //gx:trusted \u003creason\u003e",
+    "doc": "/errors/GX7001"
+  },
+  {
+    "code": "GX3005",
+    "file": "<root>/route/route.go",
+    "line": 3,
+    "column": 1,
+    "message": "route package holds a func; only route types are allowed",
+    "doc": "/errors/GX3005"
+  },
+  {
+    "code": "GX5001",
+    "file": "<root>/ui/styles.go",
+    "line": 12,
+    "column": 9,
+    "message": "gx.Enum misses \"B\"; every constant of the type needs an entry",
+    "doc": "/errors/GX5001"
+  }
+]
