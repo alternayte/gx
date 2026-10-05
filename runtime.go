@@ -86,6 +86,8 @@ type runtimeNeeds struct {
 	theme bool
 	// ownDocument is true when the page writes its own html element.
 	ownDocument bool
+	// nonce is the CSP nonce of the response, or "" (SI-11).
+	nonce string
 	// shell holds the head of a fragment page for the document shell.
 	shell *shellParts
 }

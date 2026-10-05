@@ -27,6 +27,8 @@ export type Shop = {
 export type ShopOptions = {
   // gxdev builds the app with the gxdev tag, so the dev gallery exists.
   gxdev?: boolean
+  // csp starts the app with a strict Content-Security-Policy (SI-11).
+  csp?: boolean
 }
 
 // startShop builds the example app and starts it.
@@ -44,7 +46,9 @@ export async function startShop(opts: ShopOptions = {}): Promise<Shop> {
   }
   const port = 18000 + Math.floor(Math.random() * 2000)
   const url = `http://127.0.0.1:${port}`
-  const server = spawn([bin, '-addr', `127.0.0.1:${port}`], {
+  const run = [bin, '-addr', `127.0.0.1:${port}`]
+  if (opts.csp) run.push('-csp')
+  const server = spawn(run, {
     cwd: shopDir,
     stdout: 'ignore',
     stderr: 'ignore',

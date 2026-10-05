@@ -235,6 +235,7 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 		return err
 	}
 	*needs = scanRuntimeNeeds(n)
+	needs.nonce = Nonce(r)
 	if needs.ownDocument {
 		// The node writes its own html element, so the head stays where
 		// the node put it.
@@ -243,7 +244,7 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 	}
 	// The app writes the document shell around this fragment, and the
 	// gx.Head output moves into its head.
-	st := &renderState{request: r, requestURI: r.URL.RequestURI(), headWritten: true}
+	st := &renderState{request: r, requestURI: r.URL.RequestURI(), headWritten: true, nonce: needs.nonce}
 	collectHead(n, st, 1)
 	var head, body strings.Builder
 	renderHead(&head, st)
@@ -259,7 +260,7 @@ func String(n Node) string { return StringRequest(nil, n) }
 // StringRequest returns the HTML of n with the request in scope.
 func StringRequest(r *http.Request, n Node) string {
 	var b strings.Builder
-	st := &renderState{request: r}
+	st := &renderState{request: r, nonce: Nonce(r)}
 	if r != nil && r.URL != nil {
 		st.requestURI = r.URL.RequestURI()
 	}
@@ -330,6 +331,12 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 				}
 			}
 		}
+		if t.name == "script" && st != nil && st.nonce != "" && !hasAttr(t.attrs, "nonce") {
+			// Every script carries the nonce of the policy (SI-11).
+			b.WriteString(` nonce="`)
+			b.WriteString(escapeAttr(st.nonce))
+			b.WriteByte('"')
+		}
 		b.WriteByte('>')
 		if voidElements[t.name] {
 			return
@@ -341,6 +348,16 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 		b.WriteString(t.name)
 		b.WriteByte('>')
 	}
+}
+
+// hasAttr reports whether attrs holds key.
+func hasAttr(attrs Attrs, key string) bool {
+	for _, a := range attrs {
+		if a.Key == key {
+			return true
+		}
+	}
+	return false
 }
 
 // sectionMatch reports whether the current URI is the link path or below it.

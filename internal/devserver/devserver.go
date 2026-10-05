@@ -315,7 +315,12 @@ func (s *server) injectDevClient(res *http.Response) error {
 	if err != nil {
 		return err
 	}
-	const script = `<script type="module" src="/_gx/dev-client.js"></script>`
+	script := `<script type="module" src="/_gx/dev-client.js"></script>`
+	if m := policyNonce.FindStringSubmatch(res.Header.Get("Content-Security-Policy")); m != nil {
+		// The app sent a nonce policy; the dev client must carry the
+		// nonce or the browser blocks it (SI-11).
+		script = `<script type="module" src="/_gx/dev-client.js" nonce="` + m[1] + `"></script>`
+	}
 	marker := []byte("</head>")
 	if i := indexFold(body, marker); i >= 0 {
 		body = append(body[:i], append([]byte(script), body[i:]...)...)
@@ -329,6 +334,9 @@ func (s *server) injectDevClient(res *http.Response) error {
 	res.Header.Set("Content-Length", strconv.Itoa(len(body)))
 	return nil
 }
+
+// policyNonce finds the nonce source of a Content-Security-Policy.
+var policyNonce = regexp.MustCompile(`'nonce-([A-Za-z0-9+/=_-]+)'`)
 
 // indexFold returns the index of the first case-insensitive match of sep.
 func indexFold(b, sep []byte) int {

@@ -53,6 +53,8 @@ type renderState struct {
 	request    *http.Request
 	adapter    Adapter
 	adapterSet bool
+	// nonce is the CSP nonce every script element gets (SI-11).
+	nonce string
 }
 
 // HeadOf returns the merged head of a node tree (REQ-RTE-11, REQ-RTE-12).

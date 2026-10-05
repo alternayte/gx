@@ -163,7 +163,7 @@ func (a *App) document(fragment []byte, needs *runtimeNeeds) []byte {
 	}
 	b.WriteString(`><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">`)
 	if needs.theme {
-		b.WriteString(String(themeRuntime()))
+		b.WriteString(stringNonce(themeRuntime(), needs.nonce))
 	}
 	b.WriteString(needs.shell.head)
 	b.Write(a.headAssets(needs))
@@ -193,24 +193,24 @@ func (a *App) headAssets(needs *runtimeNeeds) []byte {
 		// adapter receives (SI-03). A behaviour needs only the core
 		// runtime, and a plain page needs neither.
 		if needs.adapter || needs.core {
-			b.WriteString(String(coreRuntime()))
+			b.WriteString(stringNonce(coreRuntime(), needs.nonce))
 		}
 		if needs.adapter {
-			b.WriteString(String(a.runtimeScripts()))
+			b.WriteString(stringNonce(a.runtimeScripts(), needs.nonce))
 		}
 		// Each behaviour module joins only the page that carries its
 		// marker (REQ-REG-07).
 		if needs.behavior {
-			b.WriteString(String(behaviorRuntime("behavior")))
+			b.WriteString(stringNonce(behaviorRuntime("behavior"), needs.nonce))
 		}
 		if needs.tabs {
-			b.WriteString(String(behaviorRuntime("tabs")))
+			b.WriteString(stringNonce(behaviorRuntime("tabs"), needs.nonce))
 		}
 		if needs.toast {
-			b.WriteString(String(behaviorRuntime("toast")))
+			b.WriteString(stringNonce(behaviorRuntime("toast"), needs.nonce))
 		}
 		if needs.overlay {
-			b.WriteString(String(behaviorRuntime("overlay")))
+			b.WriteString(stringNonce(behaviorRuntime("overlay"), needs.nonce))
 		}
 	}
 	return b.Bytes()

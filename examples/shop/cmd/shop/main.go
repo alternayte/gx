@@ -24,6 +24,7 @@ func listenAddr() string {
 
 func main() {
 	addr := flag.String("addr", listenAddr(), "listen address")
+	csp := flag.Bool("csp", false, "send a strict Content-Security-Policy with nonces")
 	flag.Parse()
 	setupGallery()
 	gx.SetStylesheet(gxstyles.CSS())
@@ -31,6 +32,12 @@ func main() {
 	// app stylesheet.
 	app := gx.New(gx.Config{Adapter: datastar.Adapter(), Toast: toast.Render})
 	app.Group("/", shop.ShellLayout, gx.Nav(gx.MorphNavigation), shop.Routes)
+	var handler http.Handler = app
+	if *csp {
+		// Datastar evaluates client expressions at runtime, so the
+		// policy needs 'unsafe-eval' (SI-11).
+		handler = gx.CSP(gx.CSPOptions{UnsafeEval: true})(app)
+	}
 	log.Printf("shop listening on http://%s", *addr)
-	log.Fatal(http.ListenAndServe(*addr, app))
+	log.Fatal(http.ListenAndServe(*addr, handler))
 }

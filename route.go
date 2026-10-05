@@ -388,6 +388,11 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 	r, needs := withRuntimeNeeds(r)
 	b := newBufferedWriter()
 	a.mux.ServeHTTP(b, r)
+	if needs.nonce == "" {
+		// A policy around the whole app, or a page that wrote its own
+		// response.
+		needs.nonce = Nonce(r)
+	}
 	a.flush(w, b, needs)
 }
 
