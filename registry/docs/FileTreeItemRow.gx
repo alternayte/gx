@@ -1,6 +1,7 @@
 package docs
 
 props {
+  // Item is the file or directory of the row. Its children show as a nested list.
   Item FileTreeItem
 }
 

@@ -1,12 +1,19 @@
 package field
 
 props {
+  // Orientation sets the direction of the label and the control: Vertical, Horizontal or
+  // Responsive. Responsive is vertical in a narrow field group and horizontal in a wide one.
   Orientation Orientation = Vertical
-  Invalid     bool        = false
-  Disabled    bool        = false
-  Class       string      = ""
+  // Invalid sets data-invalid on the field. The field text takes the destructive colour.
+  Invalid     bool = false
+  // Disabled sets data-disabled on the field. The label and the title fade.
+  Disabled    bool = false
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the content of the field: the label, the control and the description.
   Children    gx.Node
-  Attrs       gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div role="group" data-slot="field" data-orientation={p.orientation()} class={gx.Cx("group/field flex w-full gap-3 data-[invalid=true]:text-destructive", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}>{p.Children}</div>

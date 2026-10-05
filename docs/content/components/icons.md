@@ -61,7 +61,10 @@ Copy each file to its path in the app. Change each import of a registry package 
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -82,7 +85,10 @@ var CheckFixtures = gx.Fixtures[CheckProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -103,7 +109,10 @@ var ChevronDownFixtures = gx.Fixtures[ChevronDownProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -124,7 +133,10 @@ var ChevronLeftFixtures = gx.Fixtures[ChevronLeftProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -145,7 +157,10 @@ var ChevronRightFixtures = gx.Fixtures[ChevronRightProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -166,7 +181,10 @@ var ChevronUpFixtures = gx.Fixtures[ChevronUpProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -187,7 +205,10 @@ var CircleFixtures = gx.Fixtures[CircleProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -208,7 +229,10 @@ var CircleCheckFixtures = gx.Fixtures[CircleCheckProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -229,7 +253,10 @@ var EllipsisFixtures = gx.Fixtures[EllipsisProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -250,7 +277,10 @@ var InfoFixtures = gx.Fixtures[InfoProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -271,7 +301,10 @@ var LoaderCircleFixtures = gx.Fixtures[LoaderCircleProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -292,7 +325,10 @@ var OctagonXFixtures = gx.Fixtures[OctagonXProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -313,7 +349,10 @@ var PanelLeftFixtures = gx.Fixtures[PanelLeftProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -334,7 +373,10 @@ var TriangleAlertFixtures = gx.Fixtures[TriangleAlertProps]{
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 

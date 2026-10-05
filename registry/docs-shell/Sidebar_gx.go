@@ -7,36 +7,39 @@ import (
 )
 
 type SidebarProps struct {
-	Nav  Nav
+	// Nav is the sidebar model: the groups and their items.
+	Nav Nav
+	// Path is the site path of the current page.
+	// A nested item that holds the page starts open.
 	Path string
 }
 
 func Sidebar(p SidebarProps) gx.Node {
 	var _b gx.Builder
-//line Sidebar.gx:8:1
+//line Sidebar.gx:11:1
 	var _b1 gx.Builder
-//line Sidebar.gx:8:96
+//line Sidebar.gx:11:96
 	_b1.Add(gx.Text("\n  "))
-//line Sidebar.gx:9:3
+//line Sidebar.gx:12:3
 	var _b2 gx.Builder
-//line Sidebar.gx:9:99
+//line Sidebar.gx:12:99
 	_b2.Add(gx.Text("\n    "))
-//line Sidebar.gx:10:5
+//line Sidebar.gx:13:5
 	for _, g := range p.Nav.Groups {
-//line Sidebar.gx:10:37
+//line Sidebar.gx:13:37
 		_b2.Add(gx.Text("\n      "))
-//line Sidebar.gx:11:7
+//line Sidebar.gx:14:7
 		_b2.Add(SidebarGroup(SidebarGroupProps{Group: g, Path: p.Path}))
-//line Sidebar.gx:11:47
+//line Sidebar.gx:14:47
 		_b2.Add(gx.Text("\n    "))
 	}
-//line Sidebar.gx:12:6
+//line Sidebar.gx:15:6
 	_b2.Add(gx.Text("\n  "))
 	_b1.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-6 pr-4", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Docs", Kind: gx.AttrText}}, _b2.Node()))
-//line Sidebar.gx:13:9
+//line Sidebar.gx:16:9
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("aside", gx.Attrs{gx.Attr{Key: "class", Value: "gx-sidebar w-64 shrink-0 border-r border-border", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-sidebar", Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true)}, _b1.Node()))
-//line Sidebar.gx:14:9
+//line Sidebar.gx:17:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

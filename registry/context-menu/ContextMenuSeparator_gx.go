@@ -7,15 +7,17 @@ import (
 )
 
 type ContextMenuSeparatorProps struct {
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func ContextMenuSeparator(p ContextMenuSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line ContextMenuSeparator.gx:8:1
+//line ContextMenuSeparator.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("-mx-1 my-1 h-px bg-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}}, p.Attrs)))
-//line ContextMenuSeparator.gx:8:94
+//line ContextMenuSeparator.gx:10:94
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

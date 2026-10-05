@@ -1,8 +1,11 @@
 package toast
 
 props {
+  // Toast is the pushed toast: its text, kind, description, action and timing.
   Toast gx.ToastPatch
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 

@@ -7,19 +7,26 @@ import (
 )
 
 type FieldProps struct {
+	// Orientation sets the direction of the label and the control: Vertical, Horizontal or
+	// Responsive. Responsive is vertical in a narrow field group and horizontal in a wide one.
 	Orientation Orientation
-	Invalid     bool
-	Disabled    bool
-	Class       string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Invalid sets data-invalid on the field. The field text takes the destructive colour.
+	Invalid bool
+	// Disabled sets data-disabled on the field. The label and the title fade.
+	Disabled bool
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the field: the label, the control and the description.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Field(p FieldProps) gx.Node {
 	var _b gx.Builder
-//line Field.gx:12:1
+//line Field.gx:19:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field flex w-full gap-3 data-[invalid=true]:text-destructive", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line Field.gx:12:246
+//line Field.gx:19:246
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -8,15 +8,17 @@ import (
 )
 
 type PaginationEllipsisProps struct {
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func PaginationEllipsis(p PaginationEllipsisProps) gx.Node {
 	var _b gx.Builder
-//line PaginationEllipsis.gx:10:1
+//line PaginationEllipsis.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex size-9 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination-ellipsis", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), icons.Ellipsis(icons.EllipsisProps{Label: "", Class: "size-4"}), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("More pages")), gx.Text("\n"))))
-//line PaginationEllipsis.gx:13:8
+//line PaginationEllipsis.gx:15:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

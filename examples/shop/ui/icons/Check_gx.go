@@ -7,15 +7,18 @@ import (
 )
 
 type CheckProps struct {
+	// Label is the accessible name of the icon.
+	// Empty hides the icon from assistive technology.
 	Label string
+	// Class adds classes to the root element.
 	Class string
 }
 
 func Check(p CheckProps) gx.Node {
 	var _b gx.Builder
-//line Check.gx:8:1
+//line Check.gx:11:1
 	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 6L9 17l-5-5\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line Check.gx:8:197
+//line Check.gx:11:197
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

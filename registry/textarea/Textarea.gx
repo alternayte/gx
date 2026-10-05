@@ -1,11 +1,17 @@
 package textarea
 
 props {
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Rows        int      = 0
-  Class       string   = ""
+  // Name is the form field name.
+  Name        string = ""
+  // Value is the text of the textarea.
+  Value       string = ""
+  // Placeholder is the text that shows while the textarea is empty.
+  Placeholder string = ""
+  // Rows is the rows attribute. A value of zero or less renders no attribute.
+  Rows        int = 0
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

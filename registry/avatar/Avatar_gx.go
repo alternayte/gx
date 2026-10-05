@@ -7,55 +7,62 @@ import (
 )
 
 type AvatarProps struct {
-	Src      gx.URL
-	Alt      string
+	// Src is the URL of the image. An empty value renders the fallback.
+	Src gx.URL
+	// Alt is the alt text of the image.
+	Alt string
+	// Fallback is the text shown when Src is empty, for example the initials of the user.
 	Fallback string
-	Size     Size
-	Badge    gx.Node
-	Class    string
-	Attrs    gx.Attrs
+	// Size sets the diameter: Sm, Md or Lg.
+	Size Size
+	// Badge is an AvatarBadge shown at the bottom right corner. A nil value renders no badge.
+	Badge gx.Node
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Avatar(p AvatarProps) gx.Node {
 	var _b gx.Builder
-//line Avatar.gx:13:1
+//line Avatar.gx:20:1
 	var _b1 gx.Builder
-//line Avatar.gx:13:199
+//line Avatar.gx:20:199
 	_b1.Add(gx.Text("\n  "))
-//line Avatar.gx:14:3
+//line Avatar.gx:21:3
 	if p.Src != "" {
-//line Avatar.gx:14:19
+//line Avatar.gx:21:19
 		_b1.Add(gx.Text("\n    "))
-//line Avatar.gx:15:5
+//line Avatar.gx:22:5
 		_b1.Add(gx.El("img", gx.Attrs{gx.Attr{Key: "class", Value: "aspect-square size-full rounded-full object-cover", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "avatar-image", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: string(p.Src), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "alt", Value: p.Alt, Kind: gx.AttrText}}))
-//line Avatar.gx:15:119
+//line Avatar.gx:22:119
 		_b1.Add(gx.Text("\n  "))
 	} else {
-//line Avatar.gx:16:10
+//line Avatar.gx:23:10
 		if p.Fallback != "" {
-//line Avatar.gx:16:31
+//line Avatar.gx:23:31
 			_b1.Add(gx.Text("\n    "))
-//line Avatar.gx:17:5
+//line Avatar.gx:24:5
 			_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex size-full items-center justify-center rounded-full bg-muted text-sm text-foreground group-data-[size=sm]/avatar:text-xs", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "avatar-fallback", Kind: gx.AttrText}}, gx.Text(p.Fallback)))
-//line Avatar.gx:17:191
+//line Avatar.gx:24:191
 			_b1.Add(gx.Text("\n  "))
 		}
 	}
-//line Avatar.gx:18:4
+//line Avatar.gx:25:4
 	_b1.Add(gx.Text("\n  "))
-//line Avatar.gx:19:3
+//line Avatar.gx:26:3
 	if p.Badge != nil {
-//line Avatar.gx:19:22
+//line Avatar.gx:26:22
 		_b1.Add(gx.Text("\n    "))
-//line Avatar.gx:20:5
+//line Avatar.gx:27:5
 		_b1.Add(p.Badge)
-//line Avatar.gx:20:14
+//line Avatar.gx:27:14
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Avatar.gx:21:4
+//line Avatar.gx:28:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar relative flex size-8 shrink-0 rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Avatar.gx:22:8
+//line Avatar.gx:29:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

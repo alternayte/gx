@@ -7,15 +7,18 @@ import (
 )
 
 type XProps struct {
+	// Label is the accessible name of the icon.
+	// Empty hides the icon from assistive technology.
 	Label string
+	// Class adds classes to the root element.
 	Class string
 }
 
 func X(p XProps) gx.Node {
 	var _b gx.Builder
-//line X.gx:8:1
+//line X.gx:11:1
 	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M18 6L6 18M6 6l12 12\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line X.gx:8:202
+//line X.gx:11:202
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

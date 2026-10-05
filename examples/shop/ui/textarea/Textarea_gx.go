@@ -7,19 +7,25 @@ import (
 )
 
 type TextareaProps struct {
-	Name        string
-	Value       string
+	// Name is the form field name.
+	Name string
+	// Value is the text of the textarea.
+	Value string
+	// Placeholder is the text that shows while the textarea is empty.
 	Placeholder string
-	Rows        int
-	Class       string
-	Attrs       gx.Attrs
+	// Rows is the rows attribute. A value of zero or less renders no attribute.
+	Rows int
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Textarea(p TextareaProps) gx.Node {
 	var _b gx.Builder
-//line Textarea.gx:12:1
+//line Textarea.gx:18:1
 	_b.Add(gx.El("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "textarea", Kind: gx.AttrText}}, p.attrs()), gx.Text(p.Value)))
-//line Textarea.gx:12:139
+//line Textarea.gx:18:139
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

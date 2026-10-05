@@ -1,10 +1,15 @@
 package popover
 
 props {
+  // Id is the id of the root element. The trigger opens the popover by this id.
   Id       string
-  Align    Align    = Center
-  Class    string   = ""
+  // Align sets the edge of the trigger that the popover lines up with: Center, Start or End.
+  Align    Align = Center
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the popover.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

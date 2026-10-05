@@ -61,10 +61,19 @@ func (s *Server) hover(params json.RawMessage) any {
 		return nil
 	}
 	if sym := symbolAt(m, doc.Path, p.Position); sym != nil {
+		value := "```go\n" + sym.Text + " " + sym.Type + "\n```"
+		// A prop shows the description its props block gives it.
+		if name, comp := propAt(m, doc, fileFor(m, doc.Path), p.Position); comp != nil {
+			for _, prop := range comp.Props {
+				if prop.Name == name && prop.Doc != "" {
+					value += "\n\n" + prop.Doc
+				}
+			}
+		}
 		return map[string]any{
 			"contents": map[string]any{
 				"kind":  "markdown",
-				"value": "```go\n" + sym.Text + " " + sym.Type + "\n```",
+				"value": value,
 			},
 			"range": rng{
 				Start: position{Line: sym.Line - 1, Character: sym.Col - 1},

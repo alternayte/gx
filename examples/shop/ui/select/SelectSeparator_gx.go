@@ -7,14 +7,15 @@ import (
 )
 
 type SelectSeparatorProps struct {
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func SelectSeparator(p SelectSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line SelectSeparator.gx:7:1
+//line SelectSeparator.gx:8:1
 	_b.Add(gx.El("hr", p.Attrs))
-//line SelectSeparator.gx:7:20
+//line SelectSeparator.gx:8:20
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

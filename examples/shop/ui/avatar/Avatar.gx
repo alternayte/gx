@@ -1,12 +1,19 @@
 package avatar
 
 props {
+  // Src is the URL of the image. An empty value renders the fallback.
   Src      gx.URL
-  Alt      string   = ""
-  Fallback string   = ""
-  Size     Size     = Md
-  Badge    gx.Node  = nil
-  Class    string   = ""
+  // Alt is the alt text of the image.
+  Alt      string = ""
+  // Fallback is the text shown when Src is empty, for example the initials of the user.
+  Fallback string = ""
+  // Size sets the diameter: Sm, Md or Lg.
+  Size     Size = Md
+  // Badge is an AvatarBadge shown at the bottom right corner. A nil value renders no badge.
+  Badge    gx.Node = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

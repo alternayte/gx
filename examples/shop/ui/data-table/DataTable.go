@@ -37,12 +37,20 @@ type Href func(sort, dir string, page int) gx.URL
 
 // DataTableProps holds one rendered table.
 type DataTableProps[T any] struct {
+	// Columns are the typed columns, in display order.
 	Columns []Column[T]
-	Rows    []T
-	Page    Page
-	Sort    string
-	Dir     string
-	Href    Href
+	// Rows are the rows of the current page.
+	Rows []T
+	// Page is the paging state: the page number, the page size and the
+	// total row count.
+	Page Page
+	// Sort is the Sort value of the column the rows are sorted by. Empty
+	// means no sort.
+	Sort string
+	// Dir is the sort direction: "asc" or "desc".
+	Dir string
+	// Href builds the URL of a sort link and of a paging link.
+	Href Href
 	// Empty renders in place of the rows when the page holds none.
 	Empty gx.Node
 }

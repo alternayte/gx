@@ -3,11 +3,17 @@ package sidebar
 import "github.com/alternayte/gx/registry/input"
 
 props {
-  Type        string   = "text"
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Type is the type attribute of the input. An empty value is text.
+  Type        string = "text"
+  // Name is the form field name.
+  Name        string = ""
+  // Value is the value of the input.
+  Value       string = ""
+  // Placeholder is the text that shows while the input is empty.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

@@ -1,8 +1,12 @@
 package breadcrumb
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item: a BreadcrumbLink, a BreadcrumbPage or a
+  // BreadcrumbEllipsis.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

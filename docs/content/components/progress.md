@@ -42,10 +42,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package progress
 
 props {
-  Value int      = 0
-  Max   int      = 100
-  Label string   = ""
-  Class string   = ""
+  // Value is the current value. The bar clamps it to the range 0 to Max.
+  Value int = 0
+  // Max is the maximum value. A zero value is 100.
+  Max   int = 100
+  // Label is the accessible name of the progress bar.
+  Label string = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -138,6 +143,20 @@ The theme must define these tokens: `--primary`.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### progress.Progress
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Value` | `int` | `0` | Value is the current value. The bar clamps it to the range 0 to Max. |
+| `Max` | `int` | `100` | Max is the maximum value. A zero value is 100. |
+| `Label` | `string` | `""` | Label is the accessible name of the progress bar. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

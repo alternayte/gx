@@ -7,53 +7,54 @@ import (
 )
 
 type TocProps struct {
+	// Headings holds the entries of the table of contents. Empty renders nothing.
 	Headings []Heading
 }
 
 func Toc(p TocProps) gx.Node {
 	var _b gx.Builder
-//line Toc.gx:7:1
+//line Toc.gx:8:1
 	if len(p.Headings) > 0 {
-//line Toc.gx:7:25
+//line Toc.gx:8:25
 		_b.Add(gx.Text("\n  "))
-//line Toc.gx:8:3
+//line Toc.gx:9:3
 		var _b1 gx.Builder
-//line Toc.gx:8:91
+//line Toc.gx:9:91
 		_b1.Add(gx.Text("\n    "))
-//line Toc.gx:9:5
+//line Toc.gx:10:5
 		var _b2 gx.Builder
-//line Toc.gx:9:86
-		_b2.Add(gx.Text("\n      "))
-//line Toc.gx:10:7
-		_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mb-2 font-medium", Kind: gx.AttrText}}, gx.Text("On this page")))
-//line Toc.gx:10:51
+//line Toc.gx:10:86
 		_b2.Add(gx.Text("\n      "))
 //line Toc.gx:11:7
+		_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mb-2 font-medium", Kind: gx.AttrText}}, gx.Text("On this page")))
+//line Toc.gx:11:51
+		_b2.Add(gx.Text("\n      "))
+//line Toc.gx:12:7
 		var _b3 gx.Builder
-//line Toc.gx:11:66
+//line Toc.gx:12:66
 		_b3.Add(gx.Text("\n        "))
-//line Toc.gx:12:9
+//line Toc.gx:13:9
 		for _, h := range p.Headings {
-//line Toc.gx:12:39
+//line Toc.gx:13:39
 			_b3.Add(gx.Text("\n          "))
-//line Toc.gx:13:11
+//line Toc.gx:14:11
 			_b3.Add(gx.El("li", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc-item", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n            "), gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc-link block pl-3 text-muted-foreground hover:text-foreground [&[aria-current=location]]:text-foreground [&[data-level='3']]:pl-6", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("#" + h.ID)), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-gx-toc-target", Value: h.ID, Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}, gx.Text(h.Text)), gx.Text("\n          "))))
-//line Toc.gx:15:16
+//line Toc.gx:16:16
 			_b3.Add(gx.Text("\n        "))
 		}
-//line Toc.gx:16:10
+//line Toc.gx:17:10
 		_b3.Add(gx.Text("\n      "))
 		_b2.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "list-none space-y-1 border-l border-border p-0", Kind: gx.AttrText}}, _b3.Node()))
-//line Toc.gx:17:12
+//line Toc.gx:18:12
 		_b2.Add(gx.Text("\n    "))
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-8 text-sm", Kind: gx.AttrText}}, _b2.Node()))
-//line Toc.gx:18:11
+//line Toc.gx:19:11
 		_b1.Add(gx.Text("\n  "))
 		_b.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc hidden w-56 shrink-0 xl:block", Kind: gx.AttrText}, gx.Bool("data-gx-toc", true), gx.Attr{Key: "aria-label", Value: "On this page", Kind: gx.AttrText}}, _b1.Node()))
-//line Toc.gx:19:9
+//line Toc.gx:20:9
 		_b.Add(gx.Text("\n"))
 	}
-//line Toc.gx:20:2
+//line Toc.gx:21:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -1,13 +1,21 @@
 package switches
 
 props {
-  Size     Size     = Md
-  Name     string   = ""
-  Label    string   = ""
-  Value    string   = "on"
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Size sets the size of the track and the thumb: Md or Sm.
+  Size     Size = Md
+  // Name is the form field name.
+  Name     string = ""
+  // Label is the accessible name of the switch.
+  Label    string = ""
+  // Value is the value the form submits when the switch is on.
+  Value    string = "on"
+  // Checked sets the switch on for the first render.
+  Checked  bool = false
+  // Disabled disables the switch.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

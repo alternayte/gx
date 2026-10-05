@@ -7,17 +7,21 @@ import (
 )
 
 type MenubarRadioGroupProps struct {
-	Label    string
-	Class    string
+	// Label is the accessible name of the group. It is not visible.
+	Label string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the radio items of the group.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func MenubarRadioGroup(p MenubarRadioGroupProps) gx.Node {
 	var _b gx.Builder
-//line MenubarRadioGroup.gx:10:1
+//line MenubarRadioGroup.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line MenubarRadioGroup.gx:10:87
+//line MenubarRadioGroup.gx:14:87
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

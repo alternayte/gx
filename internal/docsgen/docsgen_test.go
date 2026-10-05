@@ -60,7 +60,8 @@ func installRegistry(t *testing.T, reg *registry, dir string) {
 // TestREQ_DOC_04_GeneratedSnippetsCompile installs the official registry in
 // an app, writes the example code of every fixture as a .gx file of that
 // app, checks the files with the real parser and checker, and builds the Go
-// code they generate (REQ-DOC-04).
+// code they generate (REQ-DOC-04). No fixture falls back to an expression
+// that names the fixture.
 func TestREQ_DOC_04_GeneratedSnippetsCompile(t *testing.T) {
 	root := repoRoot(t)
 	reg, err := loadRegistry(root)
@@ -84,6 +85,11 @@ func TestREQ_DOC_04_GeneratedSnippetsCompile(t *testing.T) {
 			for _, part := range ex.Parts {
 				if part.Snippet.Tag {
 					tags++
+				}
+				// Every example shows the code a user writes: the tag,
+				// or the call of a component that is a Go function.
+				if !part.Snippet.Tag && !part.Snippet.Call {
+					t.Errorf("%s %s/%s falls back to its fixture name: %s", p.Item.Name, part.Comp.Name, part.Fixture.Name, part.Snippet.Why)
 				}
 				name := fmt.Sprintf("S%04d.gx", len(names))
 				names[name] = p.Item.Name + " " + part.Comp.Name + "/" + part.Fixture.Name

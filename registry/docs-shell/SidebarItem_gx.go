@@ -7,97 +7,100 @@ import (
 )
 
 type SidebarItemProps struct {
+	// Item is the sidebar link. An item with nested items shows as a collapsible list.
 	Item NavItem
+	// Path is the site path of the current page.
+	// A nested item that holds the page starts open.
 	Path string
 }
 
 func SidebarItem(p SidebarItemProps) gx.Node {
 	var _b gx.Builder
-//line SidebarItem.gx:8:1
+//line SidebarItem.gx:11:1
 	var _b1 gx.Builder
-//line SidebarItem.gx:8:25
+//line SidebarItem.gx:11:25
 	_b1.Add(gx.Text("\n  "))
-//line SidebarItem.gx:9:3
+//line SidebarItem.gx:12:3
 	if len(p.Item.Items) > 0 {
-//line SidebarItem.gx:9:29
+//line SidebarItem.gx:12:29
 		_b1.Add(gx.Text("\n    "))
-//line SidebarItem.gx:10:5
+//line SidebarItem.gx:13:5
 		var _b2 gx.Builder
-//line SidebarItem.gx:10:67
+//line SidebarItem.gx:13:67
 		_b2.Add(gx.Text("\n      "))
-//line SidebarItem.gx:11:7
+//line SidebarItem.gx:14:7
 		var _b3 gx.Builder
-//line SidebarItem.gx:11:91
+//line SidebarItem.gx:14:91
 		_b3.Add(gx.Text("\n        "))
-//line SidebarItem.gx:12:9
+//line SidebarItem.gx:15:9
 		_b3.Add(gx.Text(p.Item.Label))
-//line SidebarItem.gx:12:23
+//line SidebarItem.gx:15:23
 		_b3.Add(gx.Text("\n        "))
-//line SidebarItem.gx:13:9
+//line SidebarItem.gx:16:9
 		if p.Item.Badge != "" {
-//line SidebarItem.gx:13:32
+//line SidebarItem.gx:16:32
 			_b3.Add(gx.Text("\n          "))
-//line SidebarItem.gx:14:11
+//line SidebarItem.gx:17:11
 			_b3.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-badge ml-1 rounded-full border border-border px-1.5 text-[10px]", Kind: gx.AttrText}}, gx.Text(p.Item.Badge)))
-//line SidebarItem.gx:14:117
+//line SidebarItem.gx:17:117
 			_b3.Add(gx.Text("\n        "))
 		}
-//line SidebarItem.gx:15:10
+//line SidebarItem.gx:18:10
 		_b3.Add(gx.Text("\n      "))
 		_b2.Add(gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-sub-label cursor-pointer py-1 text-sm text-muted-foreground", Kind: gx.AttrText}}, _b3.Node()))
-//line SidebarItem.gx:16:17
+//line SidebarItem.gx:19:17
 		_b2.Add(gx.Text("\n      "))
-//line SidebarItem.gx:17:7
+//line SidebarItem.gx:20:7
 		var _b4 gx.Builder
-//line SidebarItem.gx:17:78
+//line SidebarItem.gx:20:78
 		_b4.Add(gx.Text("\n        "))
-//line SidebarItem.gx:18:9
+//line SidebarItem.gx:21:9
 		for _, child := range p.Item.Items {
-//line SidebarItem.gx:18:45
+//line SidebarItem.gx:21:45
 			_b4.Add(gx.Text("\n          "))
-//line SidebarItem.gx:19:11
+//line SidebarItem.gx:22:11
 			_b4.Add(SidebarItem(SidebarItemProps{Item: child, Path: p.Path}))
-//line SidebarItem.gx:19:53
+//line SidebarItem.gx:22:53
 			_b4.Add(gx.Text("\n        "))
 		}
-//line SidebarItem.gx:20:10
+//line SidebarItem.gx:23:10
 		_b4.Add(gx.Text("\n      "))
 		_b2.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 list-none space-y-0.5 border-l border-border p-0 pl-3", Kind: gx.AttrText}}, _b4.Node()))
-//line SidebarItem.gx:21:12
+//line SidebarItem.gx:24:12
 		_b2.Add(gx.Text("\n    "))
 		_b1.Add(gx.El("details", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-sub", Kind: gx.AttrText}, gx.Bool("open", ActiveItem(p.Path, p.Item))}, _b2.Node()))
-//line SidebarItem.gx:22:15
+//line SidebarItem.gx:25:15
 		_b1.Add(gx.Text("\n  "))
 	} else {
-//line SidebarItem.gx:23:11
+//line SidebarItem.gx:26:11
 		_b1.Add(gx.Text("\n    "))
-//line SidebarItem.gx:24:5
+//line SidebarItem.gx:27:5
 		var _b5 gx.Builder
-//line SidebarItem.gx:24:198
+//line SidebarItem.gx:27:198
 		_b5.Add(gx.Text("\n      "))
-//line SidebarItem.gx:25:7
+//line SidebarItem.gx:28:7
 		_b5.Add(gx.Text(p.Item.Label))
-//line SidebarItem.gx:25:21
+//line SidebarItem.gx:28:21
 		_b5.Add(gx.Text("\n      "))
-//line SidebarItem.gx:26:7
+//line SidebarItem.gx:29:7
 		if p.Item.Badge != "" {
-//line SidebarItem.gx:26:30
+//line SidebarItem.gx:29:30
 			_b5.Add(gx.Text("\n        "))
-//line SidebarItem.gx:27:9
+//line SidebarItem.gx:30:9
 			_b5.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-badge ml-1 rounded-full border border-border px-1.5 text-[10px]", Kind: gx.AttrText}}, gx.Text(p.Item.Badge)))
-//line SidebarItem.gx:27:115
+//line SidebarItem.gx:30:115
 			_b5.Add(gx.Text("\n      "))
 		}
-//line SidebarItem.gx:28:8
+//line SidebarItem.gx:31:8
 		_b5.Add(gx.Text("\n    "))
 		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-link block py-1 text-sm text-muted-foreground hover:text-foreground [&[aria-current=page]]:font-medium [&[aria-current=page]]:text-foreground", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Item.Href), Kind: gx.AttrURL, Active: "page"}}, _b5.Node()))
-//line SidebarItem.gx:29:9
+//line SidebarItem.gx:32:9
 		_b1.Add(gx.Text("\n  "))
 	}
-//line SidebarItem.gx:30:4
+//line SidebarItem.gx:33:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("li", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-item", Kind: gx.AttrText}}, _b1.Node()))
-//line SidebarItem.gx:31:6
+//line SidebarItem.gx:34:6
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

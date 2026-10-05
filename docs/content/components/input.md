@@ -42,12 +42,19 @@ Copy each file to its path in the app. Change each import of a registry package 
 package input
 
 props {
-  Id          string   = ""
-  Type        string   = "text"
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Id is the id of the root element. A label points at it.
+  Id          string = ""
+  // Type is the type attribute. Empty means "text".
+  Type        string = "text"
+  // Name is the name attribute. The form sends the value under this name.
+  Name        string = ""
+  // Value is the value attribute: the start value of the input.
+  Value       string = ""
+  // Placeholder is the placeholder attribute: the hint text of an empty control.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -155,6 +162,22 @@ Set `aria-invalid="true"` through `Attrs` to show the error border.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### input.Input
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | `""` | Id is the id of the root element. A label points at it. |
+| `Type` | `string` | `"text"` | Type is the type attribute. Empty means "text". |
+| `Name` | `string` | `""` | Name is the name attribute. The form sends the value under this name. |
+| `Value` | `string` | `""` | Value is the value attribute: the start value of the input. |
+| `Placeholder` | `string` | `""` | Placeholder is the placeholder attribute: the hint text of an empty control. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -46,11 +46,17 @@ Copy each file to its path in the app. Change each import of a registry package 
 package button
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Type     string   = "button"
-  Class    string   = ""
+  // Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.
+  Variant  Variant = Default
+  // Size sets the height and padding: Xs, Sm, Md, Lg, or an Icon size for a square button.
+  Size     Size = Md
+  // Type is the type attribute: "button", "submit" or "reset".
+  Type     string = "button"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -315,13 +321,9 @@ A link that looks like a button takes `button.Class` on its anchor: `<a href={ro
 <Example item="button" name="button-icon" label="Button: Icon">
 
 ```gx
-{button.Button(button.ButtonFixtures["Icon"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/button/Button.fixtures.go"
-"Icon":        {Variant: Outline, Size: Icon, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+<button.Button variant={button.Outline} size={button.Icon} attrs={gx.Attrs{{Key: "aria-label", Value: "Next"}}}>
+  <icons.ChevronRight />
+</button.Button>
 ```
 
 </Example>
@@ -331,13 +333,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="button" name="button-icon-xs" label="Button: Icon xs">
 
 ```gx
-{button.Button(button.ButtonFixtures["IconXs"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/button/Button.fixtures.go"
-"IconXs":      {Variant: Outline, Size: IconXs, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+<button.Button variant={button.Outline} size={button.IconXs} attrs={gx.Attrs{{Key: "aria-label", Value: "Next"}}}>
+  <icons.ChevronRight />
+</button.Button>
 ```
 
 </Example>
@@ -347,13 +345,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="button" name="button-icon-sm" label="Button: Icon sm">
 
 ```gx
-{button.Button(button.ButtonFixtures["IconSm"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/button/Button.fixtures.go"
-"IconSm":      {Variant: Outline, Size: IconSm, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+<button.Button variant={button.Outline} size={button.IconSm} attrs={gx.Attrs{{Key: "aria-label", Value: "Next"}}}>
+  <icons.ChevronRight />
+</button.Button>
 ```
 
 </Example>
@@ -363,13 +357,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="button" name="button-icon-lg" label="Button: Icon lg">
 
 ```gx
-{button.Button(button.ButtonFixtures["IconLg"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/button/Button.fixtures.go"
-"IconLg":      {Variant: Outline, Size: IconLg, Attrs: iconLabel, Children: icons.ChevronRight(icons.ChevronRightProps{})}
+<button.Button variant={button.Outline} size={button.IconLg} attrs={gx.Attrs{{Key: "aria-label", Value: "Next"}}}>
+  <icons.ChevronRight />
+</button.Button>
 ```
 
 </Example>
@@ -383,6 +373,21 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### button.Button
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link. |
+| `Size` | `Size` | `Md` | Size sets the height and padding: Xs, Sm, Md, Lg, or an Icon size for a square button. |
+| `Type` | `string` | `"button"` | Type is the type attribute: "button", "submit" or "reset". |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the button label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

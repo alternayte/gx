@@ -7,16 +7,19 @@ import (
 )
 
 type TableCaptionProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the caption text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TableCaption(p TableCaptionProps) gx.Node {
 	var _b gx.Builder
-//line TableCaption.gx:9:1
+//line TableCaption.gx:12:1
 	_b.Add(gx.El("caption", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mt-4 text-sm text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-caption", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableCaption.gx:9:132
+//line TableCaption.gx:12:132
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

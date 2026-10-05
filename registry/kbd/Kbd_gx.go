@@ -7,16 +7,19 @@ import (
 )
 
 type KbdProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the key text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Kbd(p KbdProps) gx.Node {
 	var _b gx.Builder
-//line Kbd.gx:9:1
+//line Kbd.gx:12:1
 	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-foreground select-none [&_svg:not([class*='size-'])]:size-3 [[data-slot=tooltip-content]_&]:bg-background/20 [[data-slot=tooltip-content]_&]:text-background dark:[[data-slot=tooltip-content]_&]:bg-background/10", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Kbd.gx:9:434
+//line Kbd.gx:12:434
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

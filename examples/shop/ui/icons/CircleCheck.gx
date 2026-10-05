@@ -1,7 +1,10 @@
 package icons
 
 props {
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 

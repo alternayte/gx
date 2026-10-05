@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarGroupContentProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the group, usually a SidebarMenu.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarGroupContent(p SidebarGroupContentProps) gx.Node {
 	var _b gx.Builder
-//line SidebarGroupContent.gx:9:1
+//line SidebarGroupContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarGroupContent.gx:9:141
+//line SidebarGroupContent.gx:12:141
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

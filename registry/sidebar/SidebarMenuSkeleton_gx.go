@@ -7,35 +7,39 @@ import (
 )
 
 type SidebarMenuSkeletonProps struct {
+	// ShowIcon adds an icon placeholder before the text bar.
 	ShowIcon bool
-	Width    string
-	Class    string
-	Attrs    gx.Attrs
+	// Width is the maximum width of the text bar as a CSS length. An empty value is 70%.
+	Width string
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuSkeleton(p SidebarMenuSkeletonProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuSkeleton.gx:10:1
+//line SidebarMenuSkeleton.gx:14:1
 	var _b1 gx.Builder
-//line SidebarMenuSkeleton.gx:10:152
+//line SidebarMenuSkeleton.gx:14:152
 	_b1.Add(gx.Text("\n  "))
-//line SidebarMenuSkeleton.gx:11:3
+//line SidebarMenuSkeleton.gx:15:3
 	if p.ShowIcon {
-//line SidebarMenuSkeleton.gx:11:18
+//line SidebarMenuSkeleton.gx:15:18
 		_b1.Add(gx.Text("\n    "))
-//line SidebarMenuSkeleton.gx:12:5
+//line SidebarMenuSkeleton.gx:16:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "size-4 animate-pulse rounded-md bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton-icon", Kind: gx.AttrText}}))
-//line SidebarMenuSkeleton.gx:12:121
+//line SidebarMenuSkeleton.gx:16:121
 		_b1.Add(gx.Text("\n  "))
 	}
-//line SidebarMenuSkeleton.gx:13:4
+//line SidebarMenuSkeleton.gx:17:4
 	_b1.Add(gx.Text("\n  "))
-//line SidebarMenuSkeleton.gx:14:3
+//line SidebarMenuSkeleton.gx:18:3
 	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("--skeleton-width: " + p.width())))), Kind: gx.AttrStyle}, gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton-text", Kind: gx.AttrText}}))
-//line SidebarMenuSkeleton.gx:14:199
+//line SidebarMenuSkeleton.gx:18:199
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-8 items-center gap-2 rounded-md px-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line SidebarMenuSkeleton.gx:15:7
+//line SidebarMenuSkeleton.gx:19:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

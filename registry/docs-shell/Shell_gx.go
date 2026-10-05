@@ -7,29 +7,34 @@ import (
 )
 
 type ShellProps struct {
-	Site     Config
-	Nav      Nav
-	Page     Page
+	// Site is the site-wide data: the title, the version and the header links.
+	Site Config
+	// Nav is the sidebar model: the groups and their items.
+	Nav Nav
+	// Page is the data of the current page: its path, its headings and its previous and next
+	// items.
+	Page Page
+	// Children is the content of the page.
 	Children gx.Node
 }
 
 func Shell(p ShellProps) gx.Node {
 	var _b gx.Builder
-//line Shell.gx:10:1
+//line Shell.gx:15:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground antialiased"}))
-//line Shell.gx:10:66
+//line Shell.gx:15:66
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:11:1
+//line Shell.gx:16:1
 	_b.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-skip-link sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: "#gx-main", Kind: gx.AttrURL}}, gx.Text("Skip to content")))
-//line Shell.gx:11:223
+//line Shell.gx:16:223
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:12:1
+//line Shell.gx:17:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-shell min-h-screen", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), Header(HeaderProps{Site: p.Site}), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-7xl gap-8 px-4", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), Sidebar(SidebarProps{Nav: p.Nav, Path: p.Page.Path}), gx.Text("\n    "), gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "min-w-0 flex-1 py-8", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-main", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("article", gx.Attrs{gx.Attr{Key: "class", Value: "gx-content", Kind: gx.AttrText}, gx.Bool("data-pagefind-body", true)}, p.Children), gx.Text("\n      "), Pagination(PaginationProps{Prev: p.Page.Prev, Next: p.Page.Next}), gx.Text("\n      "), PageMeta(PageMetaProps{Site: p.Site, Page: p.Page}), gx.Text("\n    "))), gx.Text("\n    "), Toc(TocProps{Headings: p.Page.ShownTOC()}), gx.Text("\n  "))), gx.Text("\n"))))
-//line Shell.gx:23:7
+//line Shell.gx:28:7
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:24:1
+//line Shell.gx:29:1
 	_b.Add(SearchDialog(SearchDialogProps{}))
-//line Shell.gx:24:17
+//line Shell.gx:29:17
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

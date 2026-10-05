@@ -7,17 +7,21 @@ import (
 )
 
 type NavigationMenuProps struct {
-	Label    string
-	Class    string
+	// Label is the accessible name of the nav element. It is not visible.
+	Label string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the items of the bar.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func NavigationMenu(p NavigationMenuProps) gx.Node {
 	var _b gx.Builder
-//line NavigationMenu.gx:10:1
+//line NavigationMenu.gx:14:1
 	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-center justify-center gap-1", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line NavigationMenu.gx:12:7
+//line NavigationMenu.gx:16:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

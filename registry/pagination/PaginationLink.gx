@@ -3,12 +3,19 @@ package pagination
 import "github.com/alternayte/gx/registry/button"
 
 props {
+  // Href is the URL of the page.
   Href     gx.URL
-  Active   bool        = false
+  // Active marks the link of the current page. It sets aria-current and the outline style.
+  Active   bool = false
+  // Size sets the height and padding with a button size. The default is button.Icon, a square
+  // link.
   Size     button.Size = button.Icon
-  Class    string      = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the link label, for example the page number.
   Children gx.Node
-  Attrs    gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <a href={p.Href} data-slot="pagination-link" class={p.class()} {...p.attrs()}>{p.Children}</a>

@@ -1,9 +1,13 @@
 package tabs
 
 props {
+  // Label is the label of the trigger that shows this panel.
   Label    string
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the panel.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -7,17 +7,21 @@ import (
 )
 
 type AccordionProps struct {
-	Name     string
-	Class    string
+	// Name is the name of the accordion. The markup does not render it.
+	Name string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the accordion: the accordion items.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Accordion(p AccordionProps) gx.Node {
 	var _b gx.Builder
-//line Accordion.gx:10:1
+//line Accordion.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Accordion.gx:10:70
+//line Accordion.gx:14:70
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

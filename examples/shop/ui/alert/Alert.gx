@@ -1,11 +1,17 @@
 package alert
 
 props {
-  Variant  Variant  = Default
-  Title    string   = ""
-  Icon     gx.Node  = nil
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Variant sets the tone: Default or Destructive.
+  Variant  Variant = Default
+  // Title is the heading of the alert. An empty value renders no heading.
+  Title    string = ""
+  // Icon is an svg icon shown in the column before the text. A nil value renders no icon column.
+  Icon     gx.Node = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the alert description. A nil value renders no description.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

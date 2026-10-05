@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarHeaderProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the header.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarHeader(p SidebarHeaderProps) gx.Node {
 	var _b gx.Builder
-//line SidebarHeader.gx:9:1
+//line SidebarHeader.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-2 p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-header", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "header", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarHeader.gx:9:136
+//line SidebarHeader.gx:12:136
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

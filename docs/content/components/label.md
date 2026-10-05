@@ -42,9 +42,13 @@ Copy each file to its path in the app. Change each import of a registry package 
 package label
 
 props {
-  For      string   = ""
-  Class    string   = ""
+  // For is the id of the control that the label names. Empty omits the for attribute.
+  For      string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -99,6 +103,19 @@ The label dims when its control is a disabled `peer`, or when a parent `group` h
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### label.Label
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `For` | `string` | `""` | For is the id of the control that the label names. Empty omits the for attribute. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

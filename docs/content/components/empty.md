@@ -63,8 +63,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package empty
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the empty state.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -75,8 +78,11 @@ props {
 package empty
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the header: the media, the title and the description.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -87,8 +93,11 @@ props {
 package empty
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the title text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -99,8 +108,11 @@ props {
 package empty
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the description text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -111,8 +123,11 @@ props {
 package empty
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content below the header, for example the actions.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -123,9 +138,13 @@ props {
 package empty
 
 props {
-  Variant  Variant  = Default
-  Class    string   = ""
+  // Variant sets the look of the media: Default or Icon. Icon draws a muted rounded box.
+  Variant  Variant = Default
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the media, for example an icon.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -349,6 +368,59 @@ The empty state has no visible border. Add `class="border"` for a dashed outline
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### empty.Empty
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the empty state. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### empty.EmptyContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content below the header, for example the actions. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### empty.EmptyDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the description text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### empty.EmptyHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the header: the media, the title and the description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### empty.EmptyMedia
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the look of the media: Default or Icon. Icon draws a muted rounded box. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the media, for example an icon. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### empty.EmptyTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the title text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -7,16 +7,19 @@ import (
 )
 
 type TableBodyProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the rows of the body.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TableBody(p TableBodyProps) gx.Node {
 	var _b gx.Builder
-//line TableBody.gx:9:1
+//line TableBody.gx:12:1
 	_b.Add(gx.El("tbody", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr:last-child]:border-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-body", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableBody.gx:9:117
+//line TableBody.gx:12:117
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

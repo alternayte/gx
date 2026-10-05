@@ -44,10 +44,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package collapsible
 
 props {
+  // Summary is the content of the summary, the part that opens and closes the panel.
   Summary  gx.Node
-  Open     bool     = false
-  Class    string   = ""
+  // Open renders the collapsible open. The default is closed.
+  Open     bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the panel.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -112,6 +117,20 @@ The panel has no spacing of its own. Put the spacing on the content.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### collapsible.Collapsible
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Summary` | `gx.Node` | Required | Summary is the content of the summary, the part that opens and closes the panel. |
+| `Open` | `bool` | `false` | Open renders the collapsible open. The default is closed. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the panel. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

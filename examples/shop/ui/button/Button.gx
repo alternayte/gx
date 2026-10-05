@@ -1,11 +1,17 @@
 package button
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Type     string   = "button"
-  Class    string   = ""
+  // Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.
+  Variant  Variant = Default
+  // Size sets the height and padding: Xs, Sm, Md, Lg, or an Icon size for a square button.
+  Size     Size = Md
+  // Type is the type attribute: "button", "submit" or "reset".
+  Type     string = "button"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

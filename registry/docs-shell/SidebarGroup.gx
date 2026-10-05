@@ -1,7 +1,11 @@
 package shell
 
 props {
+  // Group is the sidebar section: its label, its badge and its items.
+  // A group with Collapsed starts closed.
   Group NavGroup
+  // Path is the site path of the current page.
+  // A nested item that holds the page starts open.
   Path  string
 }
 

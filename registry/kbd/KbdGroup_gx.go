@@ -7,16 +7,19 @@ import (
 )
 
 type KbdGroupProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the keys of the group.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func KbdGroup(p KbdGroupProps) gx.Node {
 	var _b gx.Builder
-//line KbdGroup.gx:9:1
+//line KbdGroup.gx:12:1
 	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line KbdGroup.gx:9:116
+//line KbdGroup.gx:12:116
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

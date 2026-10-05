@@ -1,10 +1,14 @@
 package buttongroup
 
 props {
+  // Orientation sets the direction of the group: Horizontal for a row or Vertical for a column.
   Orientation Orientation = Horizontal
+  // Children is the content of the group: the buttons, inputs, separators and text.
   Children    gx.Node
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div role="group" data-slot="button-group" data-orientation={p.orientation()} class={gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class)} {...p.Attrs}>{p.Children}</div>

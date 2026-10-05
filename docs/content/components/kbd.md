@@ -43,8 +43,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package kbd
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the key text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -66,8 +69,11 @@ var KbdFixtures = gx.Fixtures[KbdProps]{
 package kbd
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the keys of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -138,12 +144,32 @@ A key or a key combination.
 ```gx
 <kbd.KbdGroup>
   <kbd.Kbd>Ctrl</kbd.Kbd>
-  {gx.El("span", nil, gx.Text("+"))}
+  <span>+</span>
   <kbd.Kbd>K</kbd.Kbd>
 </kbd.KbdGroup>
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### kbd.Kbd
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the key text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### kbd.KbdGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the keys of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

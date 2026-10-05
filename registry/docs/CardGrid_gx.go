@@ -7,15 +7,17 @@ import (
 )
 
 type CardGridProps struct {
+	// Children is the cards of the grid.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func CardGrid(p CardGridProps) gx.Node {
 	var _b gx.Builder
-//line CardGrid.gx:8:1
+//line CardGrid.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-grid my-4 grid gap-4 sm:grid-cols-2", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line CardGrid.gx:8:89
+//line CardGrid.gx:10:89
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -1,8 +1,11 @@
 package shell
 
 props {
+  // Title is the heading of the page.
   Title   string = "Page not found"
+  // Message is the text below the title.
   Message string = "The page does not exist. Check the address or return to the start."
+  // Home is the target of the Go home link.
   Home    string = "/"
 }
 

@@ -7,16 +7,19 @@ import (
 )
 
 type ItemGroupProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the items of the group.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ItemGroup(p ItemGroupProps) gx.Node {
 	var _b gx.Builder
-//line ItemGroup.gx:9:1
+//line ItemGroup.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/item-group flex flex-col", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemGroup.gx:9:117
+//line ItemGroup.gx:12:117
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

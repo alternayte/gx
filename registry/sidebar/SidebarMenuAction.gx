@@ -1,10 +1,15 @@
 package sidebar
 
 props {
+  // Label is the accessible name of the button.
   Label       string
-  ShowOnHover bool     = false
-  Class       string   = ""
+  // ShowOnHover hides the action on a wide screen until its item has the pointer or the focus.
+  ShowOnHover bool = false
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the icon of the button.
   Children    gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

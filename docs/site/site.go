@@ -55,7 +55,11 @@ var PreviewPage = gx.Page(
 		if !ok {
 			return PreviewProps{}, gx.NotFound()
 		}
-		return PreviewProps{Title: it.Title + ": " + ex.Title, Block: it.Block, Children: ex.Node()}, nil
+		node := ex.Node()
+		if ex.Toast {
+			node = ToastDemo(ToastDemoProps{Children: node})
+		}
+		return PreviewProps{Title: it.Title + ": " + ex.Title, Block: it.Block, Children: node}, nil
 	},
 	Preview,
 ).Static(func() ([]route.Preview, error) {

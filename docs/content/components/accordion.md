@@ -52,9 +52,13 @@ Copy each file to its path in the app. Change each import of a registry package 
 package accordion
 
 props {
-  Name     string   = ""
-  Class    string   = ""
+  // Name is the name of the accordion. The markup does not render it.
+  Name     string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the accordion: the accordion items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -67,12 +71,20 @@ package accordion
 import "github.com/alternayte/gx/registry/icons"
 
 props {
+  // Name is the name attribute of the details element.
+  // Items with the same name form one accordion, and only one of them is open at a time.
   Name     string
+  // Title is the text of the summary, the part that opens and closes the item.
   Title    string
-  Open     bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Open renders the item open. The default is closed.
+  Open     bool = false
+  // Disabled stops the summary from opening or closing the item.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item panel.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -177,6 +189,31 @@ Set `Disabled` to stop an item from opening.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### accordion.Accordion
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the name of the accordion. The markup does not render it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the accordion: the accordion items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### accordion.AccordionItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | Required | Name is the name attribute of the details element. Items with the same name form one accordion, and only one of them is open at a time. |
+| `Title` | `string` | Required | Title is the text of the summary, the part that opens and closes the item. |
+| `Open` | `bool` | `false` | Open renders the item open. The default is closed. |
+| `Disabled` | `bool` | `false` | Disabled stops the summary from opening or closing the item. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item panel. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

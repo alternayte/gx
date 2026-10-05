@@ -1,9 +1,14 @@
 package docs
 
 props {
+  // Href is the link target.
   Href     gx.URL
+  // Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline or
+  // ButtonGhost.
   Variant  ButtonVariant = ButtonPrimary
+  // Children is the button label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

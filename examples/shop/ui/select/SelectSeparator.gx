@@ -1,6 +1,7 @@
 package selectbox
 
 props {
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 

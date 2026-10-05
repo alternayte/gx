@@ -7,15 +7,17 @@ import (
 )
 
 type SidebarSeparatorProps struct {
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func SidebarSeparator(p SidebarSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line SidebarSeparator.gx:8:1
+//line SidebarSeparator.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-px w-full shrink-0 bg-border", "mx-2 w-auto bg-sidebar-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-separator", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}, p.Attrs)))
-//line SidebarSeparator.gx:8:212
+//line SidebarSeparator.gx:10:212
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

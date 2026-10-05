@@ -7,34 +7,42 @@ import (
 )
 
 type SidebarMenuButtonProps struct {
-	Href     gx.URL
-	Active   bool
-	Variant  Variant
-	Size     Size
-	Class    string
+	// Href is the URL of the link. An empty value renders a button in place of a link.
+	Href gx.URL
+	// Active marks the button of the current page.
+	// A link gets aria-current and a button gets data-active.
+	Active bool
+	// Variant sets the surface: Default or Outline.
+	Variant Variant
+	// Size sets the height and the text size: Md, Sm or Lg.
+	Size Size
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the button: an icon and a span with the text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuButton(p SidebarMenuButtonProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuButton.gx:13:1
+//line SidebarMenuButton.gx:21:1
 	if p.Href != "" {
-//line SidebarMenuButton.gx:13:18
+//line SidebarMenuButton.gx:21:18
 		_b.Add(gx.Text("\n  "))
-//line SidebarMenuButton.gx:14:3
+//line SidebarMenuButton.gx:22:3
 		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line SidebarMenuButton.gx:14:149
+//line SidebarMenuButton.gx:22:149
 		_b.Add(gx.Text("\n"))
 	} else {
-//line SidebarMenuButton.gx:15:9
+//line SidebarMenuButton.gx:23:9
 		_b.Add(gx.Text("\n  "))
-//line SidebarMenuButton.gx:16:3
+//line SidebarMenuButton.gx:24:3
 		_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.buttonAttrs()), p.Children))
-//line SidebarMenuButton.gx:16:165
+//line SidebarMenuButton.gx:24:165
 		_b.Add(gx.Text("\n"))
 	}
-//line SidebarMenuButton.gx:17:2
+//line SidebarMenuButton.gx:25:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

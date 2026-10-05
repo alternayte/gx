@@ -1,9 +1,13 @@
 package item
 
 props {
-  Variant  Media    = MediaDefault
-  Class    string   = ""
+  // Variant sets the look of the media: MediaDefault, MediaIcon or MediaImage.
+  Variant  Media = MediaDefault
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the media, for example an icon or an image.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

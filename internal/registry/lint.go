@@ -10,9 +10,9 @@ import (
 
 // Lint checks every source item of a registry against REQ-REG-06: each item
 // has a USAGE.md with usage examples, a do and don't section and a keyboard
-// spec table, and every component has a fixtures file. It returns one
-// finding per violation.
-func Lint(src string) ([]string, error) {
+// spec table, every component has a fixtures file, and every prop has a
+// description. It returns one finding per violation.
+func Lint(src string, props PropReader) ([]string, error) {
 	entries, err := os.ReadDir(src)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func Lint(src string) ([]string, error) {
 		if _, err := os.Stat(filepath.Join(dir, "gx-item.json")); err != nil {
 			continue
 		}
-		findings, err := lintItem(dir)
+		findings, err := lintItem(dir, props)
 		if err != nil {
 			return out, err
 		}
@@ -35,8 +35,19 @@ func Lint(src string) ([]string, error) {
 	return out, nil
 }
 
+// PropDoc is one prop of a component file with its description.
+type PropDoc struct {
+	Name string
+	Doc  string
+}
+
+// PropReader reads the props block of one .gx file. The caller passes the
+// parser: this package installs items and must not depend on the compiler,
+// which runs commands (SI-09).
+type PropReader func(path string, src []byte) ([]PropDoc, error)
+
 // lintItem checks one item folder.
-func lintItem(dir string) ([]string, error) {
+func lintItem(dir string, props PropReader) ([]string, error) {
 	name := filepath.Base(dir)
 	var out []string
 	fail := func(format string, args ...any) {
@@ -75,6 +86,22 @@ func lintItem(dir string) ([]string, error) {
 		component := strings.TrimSuffix(target.Path, ".gx")
 		if !fixtures[component] {
 			fail("%s has no %s.fixtures.go", target.Path, component)
+		}
+		src, err := os.ReadFile(filepath.Join(dir, filepath.FromSlash(target.Path)))
+		if err != nil {
+			continue
+		}
+		// The docs page prints the description of each prop; a prop
+		// without one leaves an empty cell.
+		list, err := props(target.Path, src)
+		if err != nil {
+			fail("%s does not parse: %v", target.Path, err)
+			continue
+		}
+		for _, prop := range list {
+			if strings.TrimSpace(prop.Doc) == "" {
+				fail("%s: prop %s has no description; write a // comment above it", target.Path, prop.Name)
+			}
 		}
 	}
 	return out, nil

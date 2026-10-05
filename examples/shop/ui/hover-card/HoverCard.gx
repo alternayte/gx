@@ -1,10 +1,15 @@
 package hovercard
 
 props {
+  // Trigger is the element that shows the card on hover or on keyboard focus.
   Trigger  gx.Node
-  Align    Align    = Start
-  Class    string   = ""
+  // Align sets the edge of the trigger that the card lines up with: Start, Center or End.
+  Align    Align = Start
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the card.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

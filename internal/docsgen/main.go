@@ -98,22 +98,25 @@ func staleFiles(root string, files map[string][]byte) ([]string, error) {
 
 // report prints the item, example and converter counts.
 func report(pages []*page, written int, verbose bool) {
-	examples, tags, fallbacks := 0, 0, 0
+	examples, tags, calls, fallbacks := 0, 0, 0, 0
 	for _, p := range pages {
 		examples += len(p.Examples)
 		for _, ex := range p.Examples {
 			for _, part := range ex.Parts {
-				if part.Snippet.Tag {
+				switch {
+				case part.Snippet.Tag:
 					tags++
-					continue
-				}
-				fallbacks++
-				if verbose {
-					fmt.Printf("fallback: %s %s/%s: %s\n", p.Item.Name, part.Comp.Name, part.Fixture.Name, part.Snippet.Why)
+				case part.Snippet.Call:
+					calls++
+				default:
+					fallbacks++
+					if verbose {
+						fmt.Printf("fallback: %s %s/%s: %s\n", p.Item.Name, part.Comp.Name, part.Fixture.Name, part.Snippet.Why)
+					}
 				}
 			}
 		}
 	}
-	fmt.Printf("docsgen: %d items, %d examples, %d fixtures as tags, %d as fallback expressions, %d files written\n",
-		len(pages), examples, tags, fallbacks, written)
+	fmt.Printf("docsgen: %d items, %d examples, %d fixtures as tags, %d as calls of a Go component, %d as fallback expressions, %d files written\n",
+		len(pages), examples, tags, calls, fallbacks, written)
 }

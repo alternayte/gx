@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarGroupLabelProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the label text of the group.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarGroupLabel(p SidebarGroupLabelProps) gx.Node {
 	var _b gx.Builder
-//line SidebarGroupLabel.gx:9:1
+//line SidebarGroupLabel.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear motion-reduce:transition-none focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group-label", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group-label", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarGroupLabel.gx:9:385
+//line SidebarGroupLabel.gx:12:385
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,15 +7,17 @@ import (
 )
 
 type StepsProps struct {
+	// Children is the ordered list of steps.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Steps(p StepsProps) gx.Node {
 	var _b gx.Builder
-//line Steps.gx:8:1
+//line Steps.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-steps my-4 [&>ol]:m-0 [&>ol]:list-none [&>ol]:space-y-4 [&>ol]:p-0 [&>ol>li]:border-l-2 [&>ol>li]:border-border [&>ol>li]:pl-4", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Steps.gx:8:175
+//line Steps.gx:10:175
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

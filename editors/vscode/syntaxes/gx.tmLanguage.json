@@ -51,7 +51,18 @@
           "name": "meta.embedded.block.go",
           "begin": "^\\s*(props|signals)\\s*\\{",
           "end": "^\\s*\\}",
-          "patterns": [{ "include": "source.go" }]
+          "patterns": [
+            {
+              "name": "string.quoted.double.go",
+              "begin": "\"",
+              "end": "\"|$"
+            },
+            {
+              "name": "comment.line.double-slash.gx",
+              "match": "//.*$"
+            },
+            { "include": "source.go" }
+          ]
         }
       ]
     },

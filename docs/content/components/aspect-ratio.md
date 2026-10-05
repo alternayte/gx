@@ -42,9 +42,14 @@ Copy each file to its path in the app. Change each import of a registry package 
 package aspectratio
 
 props {
-  Ratio    string   = "16 / 9"
-  Class    string   = ""
+  // Ratio is the CSS aspect-ratio value, width over height, for example 4 / 3. An empty value is
+  // 16 / 9.
+  Ratio    string = "16 / 9"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the box, for example an image.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -106,6 +111,19 @@ func (p AspectRatioProps) ratio() string {
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### aspectratio.AspectRatio
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Ratio` | `string` | `"16 / 9"` | Ratio is the CSS aspect-ratio value, width over height, for example 4 / 3. An empty value is 16 / 9. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the box, for example an image. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

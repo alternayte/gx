@@ -7,18 +7,24 @@ import (
 )
 
 type SidebarProps struct {
-	Id       string
-	Side     Side
-	Class    string
+	// Id is the id of the root element.
+	// SidebarTrigger shows and hides the sidebar with the id gx-sidebar.
+	Id string
+	// Side sets the edge of the page that holds the sidebar: Left or Right.
+	Side Side
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the sidebar: the header, content and footer.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Sidebar(p SidebarProps) gx.Node {
 	var _b gx.Builder
-//line Sidebar.gx:11:1
+//line Sidebar.gx:17:1
 	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true), gx.Attr{Key: "data-slot", Value: "sidebar", Kind: gx.AttrText}, gx.Attr{Key: "data-side", Value: p.side(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Sidebar.gx:11:250
+//line Sidebar.gx:17:250
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

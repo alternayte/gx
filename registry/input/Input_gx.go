@@ -7,20 +7,27 @@ import (
 )
 
 type InputProps struct {
-	Id          string
-	Type        string
-	Name        string
-	Value       string
+	// Id is the id of the root element. A label points at it.
+	Id string
+	// Type is the type attribute. Empty means "text".
+	Type string
+	// Name is the name attribute. The form sends the value under this name.
+	Name string
+	// Value is the value attribute: the start value of the input.
+	Value string
+	// Placeholder is the placeholder attribute: the hint text of an empty control.
 	Placeholder string
-	Class       string
-	Attrs       gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Input(p InputProps) gx.Node {
 	var _b gx.Builder
-//line Input.gx:13:1
+//line Input.gx:20:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input", Kind: gx.AttrText}}, p.Attrs)))
-//line Input.gx:13:160
+//line Input.gx:20:160
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

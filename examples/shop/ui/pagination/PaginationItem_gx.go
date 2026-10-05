@@ -7,16 +7,19 @@ import (
 )
 
 type PaginationItemProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the item: a link or an ellipsis.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func PaginationItem(p PaginationItemProps) gx.Node {
 	var _b gx.Builder
-//line PaginationItem.gx:9:1
+//line PaginationItem.gx:12:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PaginationItem.gx:9:79
+//line PaginationItem.gx:12:79
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

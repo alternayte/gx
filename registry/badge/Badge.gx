@@ -1,10 +1,15 @@
 package badge
 
 props {
-  Variant  Variant  = Default
-  Href     gx.URL   = ""
-  Class    string   = ""
+  // Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.
+  Variant  Variant = Default
+  // Href is the URL of the link. A non-empty value renders the badge as an a element, not a span.
+  Href     gx.URL = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the badge label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

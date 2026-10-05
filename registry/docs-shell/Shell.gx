@@ -1,9 +1,14 @@
 package shell
 
 props {
+  // Site is the site-wide data: the title, the version and the header links.
   Site     Config
+  // Nav is the sidebar model: the groups and their items.
   Nav      Nav
+  // Page is the data of the current page: its path, its headings and its previous and next
+  // items.
   Page     Page
+  // Children is the content of the page.
   Children gx.Node
 }
 

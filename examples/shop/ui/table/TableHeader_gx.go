@@ -7,16 +7,19 @@ import (
 )
 
 type TableHeaderProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the rows of the header.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TableHeader(p TableHeaderProps) gx.Node {
 	var _b gx.Builder
-//line TableHeader.gx:9:1
+//line TableHeader.gx:12:1
 	_b.Add(gx.El("thead", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr]:border-b", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-header", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableHeader.gx:9:108
+//line TableHeader.gx:12:108
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

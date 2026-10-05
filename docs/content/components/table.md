@@ -9,17 +9,28 @@ item: "table"
 <Example item="table" name="table-simple" label="Table: Table: Simple">
 
 ```gx
-{table.Table(table.TableFixtures["Simple"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/table/Table.fixtures.go"
-"Simple": {Children: gx.Frag(
-  TableCaption(TableCaptionProps{Children: gx.Text("A list of invoices.")}),
-  invoiceHead(),
-  TableBody(TableBodyProps{Children: invoiceRows()}),
-)}
+<table.Table>
+  <table.TableCaption>A list of invoices.</table.TableCaption>
+  <table.TableHeader>
+    <table.TableRow>
+      <table.TableHead>Invoice</table.TableHead>
+      <table.TableHead>Status</table.TableHead>
+      <table.TableHead>Amount</table.TableHead>
+    </table.TableRow>
+  </table.TableHeader>
+  <table.TableBody>
+    <table.TableRow>
+      <table.TableCell>INV-001</table.TableCell>
+      <table.TableCell>Paid</table.TableCell>
+      <table.TableCell>$120.00</table.TableCell>
+    </table.TableRow>
+    <table.TableRow>
+      <table.TableCell>INV-002</table.TableCell>
+      <table.TableCell>Open</table.TableCell>
+      <table.TableCell>$80.00</table.TableCell>
+    </table.TableRow>
+  </table.TableBody>
+</table.Table>
 ```
 
 </Example>
@@ -65,8 +76,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the table element.
+  Class    string = ""
+  // Children is the content of the table: the caption, header, body and footer.
   Children gx.Node
+  // Attrs adds HTML attributes to the table element.
   Attrs    gx.Attrs = nil
 }
 
@@ -79,8 +93,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the rows of the header.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -91,8 +108,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the rows of the body.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -103,8 +123,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the rows of the footer.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -115,8 +138,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the cells of the row.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -127,8 +153,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the header cell.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -139,8 +168,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the cell.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -151,8 +183,11 @@ props {
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the caption text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -314,17 +349,28 @@ Pass `class="text-right"` to a `TableHead` and its cells for a number column.
 <Example item="table" name="table-simple" label="Table: Table: Simple">
 
 ```gx
-{table.Table(table.TableFixtures["Simple"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/table/Table.fixtures.go"
-"Simple": {Children: gx.Frag(
-  TableCaption(TableCaptionProps{Children: gx.Text("A list of invoices.")}),
-  invoiceHead(),
-  TableBody(TableBodyProps{Children: invoiceRows()}),
-)}
+<table.Table>
+  <table.TableCaption>A list of invoices.</table.TableCaption>
+  <table.TableHeader>
+    <table.TableRow>
+      <table.TableHead>Invoice</table.TableHead>
+      <table.TableHead>Status</table.TableHead>
+      <table.TableHead>Amount</table.TableHead>
+    </table.TableRow>
+  </table.TableHeader>
+  <table.TableBody>
+    <table.TableRow>
+      <table.TableCell>INV-001</table.TableCell>
+      <table.TableCell>Paid</table.TableCell>
+      <table.TableCell>$120.00</table.TableCell>
+    </table.TableRow>
+    <table.TableRow>
+      <table.TableCell>INV-002</table.TableCell>
+      <table.TableCell>Open</table.TableCell>
+      <table.TableCell>$80.00</table.TableCell>
+    </table.TableRow>
+  </table.TableBody>
+</table.Table>
 ```
 
 </Example>
@@ -334,20 +380,33 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="table" name="table-footer" label="Table: Table: Footer">
 
 ```gx
-{table.Table(table.TableFixtures["Footer"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/table/Table.fixtures.go"
-"Footer": {Children: gx.Frag(
-  invoiceHead(),
-  TableBody(TableBodyProps{Children: invoiceRows()}),
-  TableFooter(TableFooterProps{Children: TableRow(TableRowProps{Children: gx.Frag(
-    TableCell(TableCellProps{Attrs: gx.Attrs{{Key: "colspan", Value: "2"}}, Children: gx.Text("Total")}),
-    TableCell(TableCellProps{Children: gx.Text("$200.00")}),
-  )})}),
-)}
+<table.Table>
+  <table.TableHeader>
+    <table.TableRow>
+      <table.TableHead>Invoice</table.TableHead>
+      <table.TableHead>Status</table.TableHead>
+      <table.TableHead>Amount</table.TableHead>
+    </table.TableRow>
+  </table.TableHeader>
+  <table.TableBody>
+    <table.TableRow>
+      <table.TableCell>INV-001</table.TableCell>
+      <table.TableCell>Paid</table.TableCell>
+      <table.TableCell>$120.00</table.TableCell>
+    </table.TableRow>
+    <table.TableRow>
+      <table.TableCell>INV-002</table.TableCell>
+      <table.TableCell>Open</table.TableCell>
+      <table.TableCell>$80.00</table.TableCell>
+    </table.TableRow>
+  </table.TableBody>
+  <table.TableFooter>
+    <table.TableRow>
+      <table.TableCell attrs={gx.Attrs{{Key: "colspan", Value: "2"}}}>Total</table.TableCell>
+      <table.TableCell>$200.00</table.TableCell>
+    </table.TableRow>
+  </table.TableFooter>
+</table.Table>
 ```
 
 </Example>
@@ -357,27 +416,27 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="table" name="table-selected" label="Table: Table: Selected">
 
 ```gx
-{table.Table(table.TableFixtures["Selected"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/table/Table.fixtures.go"
-"Selected": {Children: gx.Frag(
-  invoiceHead(),
-  TableBody(TableBodyProps{Children: gx.Frag(
-    TableRow(TableRowProps{Attrs: gx.Attrs{{Key: "data-state", Value: "selected"}}, Children: gx.Frag(
-      TableCell(TableCellProps{Children: gx.Text("INV-001")}),
-      TableCell(TableCellProps{Children: gx.Text("Paid")}),
-      TableCell(TableCellProps{Children: gx.Text("$120.00")}),
-    )}),
-    TableRow(TableRowProps{Children: gx.Frag(
-      TableCell(TableCellProps{Children: gx.Text("INV-002")}),
-      TableCell(TableCellProps{Children: gx.Text("Open")}),
-      TableCell(TableCellProps{Children: gx.Text("$80.00")}),
-    )}),
-  )}),
-)}
+<table.Table>
+  <table.TableHeader>
+    <table.TableRow>
+      <table.TableHead>Invoice</table.TableHead>
+      <table.TableHead>Status</table.TableHead>
+      <table.TableHead>Amount</table.TableHead>
+    </table.TableRow>
+  </table.TableHeader>
+  <table.TableBody>
+    <table.TableRow attrs={gx.Attrs{{Key: "data-state", Value: "selected"}}}>
+      <table.TableCell>INV-001</table.TableCell>
+      <table.TableCell>Paid</table.TableCell>
+      <table.TableCell>$120.00</table.TableCell>
+    </table.TableRow>
+    <table.TableRow>
+      <table.TableCell>INV-002</table.TableCell>
+      <table.TableCell>Open</table.TableCell>
+      <table.TableCell>$80.00</table.TableCell>
+    </table.TableRow>
+  </table.TableBody>
+</table.Table>
 ```
 
 </Example>
@@ -451,6 +510,74 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### table.Table
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the table element. |
+| `Children` | `gx.Node` | Required | Children is the content of the table: the caption, header, body and footer. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the table element. |
+
+### table.TableBody
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the rows of the body. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### table.TableCaption
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the caption text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### table.TableCell
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the cell. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### table.TableFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the rows of the footer. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### table.TableHead
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the header cell. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### table.TableHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the rows of the header. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### table.TableRow
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the cells of the row. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

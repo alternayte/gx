@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarContentProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the scrolling content of the sidebar: the groups.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarContent(p SidebarContentProps) gx.Node {
 	var _b gx.Builder
-//line SidebarContent.gx:9:1
+//line SidebarContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-h-0 flex-1 flex-col gap-2 overflow-auto", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarContent.gx:9:163
+//line SidebarContent.gx:12:163
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

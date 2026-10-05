@@ -7,17 +7,22 @@ import (
 )
 
 type AspectRatioProps struct {
-	Ratio    string
-	Class    string
+	// Ratio is the CSS aspect-ratio value, width over height, for example 4 / 3. An empty value is
+	// 16 / 9.
+	Ratio string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the box, for example an image.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func AspectRatio(p AspectRatioProps) gx.Node {
 	var _b gx.Builder
-//line AspectRatio.gx:10:1
+//line AspectRatio.gx:15:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative w-full overflow-hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("aspect-ratio: " + p.ratio())))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "aspect-ratio", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line AspectRatio.gx:10:167
+//line AspectRatio.gx:15:167
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

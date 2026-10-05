@@ -70,8 +70,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package pagination
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the navigation: a PaginationContent.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -82,8 +85,11 @@ props {
 package pagination
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the pagination items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -94,8 +100,11 @@ props {
 package pagination
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item: a link or an ellipsis.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -108,12 +117,19 @@ package pagination
 import "github.com/alternayte/gx/registry/button"
 
 props {
+  // Href is the URL of the page.
   Href     gx.URL
-  Active   bool        = false
+  // Active marks the link of the current page. It sets aria-current and the outline style.
+  Active   bool = false
+  // Size sets the height and padding with a button size. The default is button.Icon, a square
+  // link.
   Size     button.Size = button.Icon
-  Class    string      = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the link label, for example the page number.
   Children gx.Node
-  Attrs    gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <a href={p.Href} data-slot="pagination-link" class={p.class()} {...p.attrs()}>{p.Children}</a>
@@ -122,14 +138,15 @@ props {
 ```gx title="ui/pagination/PaginationPrevious.gx"
 package pagination
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/icons"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/icons"
 
 props {
+  // Href is the URL of the previous page.
   Href  gx.URL
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -142,14 +159,15 @@ props {
 ```gx title="ui/pagination/PaginationNext.gx"
 package pagination
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/icons"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/icons"
 
 props {
+  // Href is the URL of the next page.
   Href  gx.URL
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -165,7 +183,9 @@ package pagination
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -407,6 +427,68 @@ A link has the look of a ghost button. The current page has the look of an outli
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### pagination.Pagination
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the navigation: a PaginationContent. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### pagination.PaginationContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the pagination items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### pagination.PaginationEllipsis
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### pagination.PaginationItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item: a link or an ellipsis. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### pagination.PaginationLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL of the page. |
+| `Active` | `bool` | `false` | Active marks the link of the current page. It sets aria-current and the outline style. |
+| `Size` | `button.Size` | `button.Icon` | Size sets the height and padding with a button size. The default is button.Icon, a square link. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the link label, for example the page number. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### pagination.PaginationNext
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL of the next page. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### pagination.PaginationPrevious
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL of the previous page. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

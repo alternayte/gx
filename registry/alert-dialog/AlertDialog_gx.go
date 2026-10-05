@@ -8,112 +8,127 @@ import (
 )
 
 type AlertDialogProps struct {
-	Id          string
-	Title       string
+	// Id is the id of the dialog element.
+	// The trigger points at it, so it must be unique on the page.
+	Id string
+	// Title is the heading of the alert dialog. It states the question.
+	Title string
+	// Description is the text below the title. An empty value renders no description.
 	Description string
-	Size        Size
-	Media       gx.Node
-	Trigger     gx.Node
-	Confirm     gx.Node
-	Cancel      string
-	Open        bool
-	Class       string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Size sets the maximum width and the layout: Md or Sm.
+	// Sm centres the text and puts the buttons side by side.
+	Size Size
+	// Media is an icon or image shown in a tile next to the title. A nil value renders no tile.
+	Media gx.Node
+	// Trigger is the control that opens the alert dialog.
+	Trigger gx.Node
+	// Confirm is the control that confirms the action. It renders after the cancel button.
+	Confirm gx.Node
+	// Cancel is the label of the cancel button, which closes the alert dialog.
+	// An empty value is Cancel.
+	Cancel string
+	// Open renders the alert dialog open. The default is closed.
+	Open bool
+	// Class adds classes to the dialog element.
+	Class string
+	// Children is the content of the alert dialog body, between the header and the buttons.
+	Children gx.Node
+	// Attrs adds HTML attributes to the dialog element.
+	Attrs gx.Attrs
 }
 
 func AlertDialog(p AlertDialogProps) gx.Node {
 	var _b gx.Builder
-//line AlertDialog.gx:20:1
+//line AlertDialog.gx:35:1
 	var _b1 gx.Builder
-//line AlertDialog.gx:20:24
+//line AlertDialog.gx:35:24
 	_b1.Add(gx.Text("\n  "))
-//line AlertDialog.gx:21:3
+//line AlertDialog.gx:36:3
 	if p.Trigger != nil {
-//line AlertDialog.gx:21:24
+//line AlertDialog.gx:36:24
 		_b1.Add(gx.Text("\n    "))
-//line AlertDialog.gx:22:5
+//line AlertDialog.gx:37:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-open", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Trigger))
-//line AlertDialog.gx:22:72
+//line AlertDialog.gx:37:72
 		_b1.Add(gx.Text("\n  "))
 	}
-//line AlertDialog.gx:23:4
+//line AlertDialog.gx:38:4
 	_b1.Add(gx.Text("\n  "))
-//line AlertDialog.gx:24:3
+//line AlertDialog.gx:39:3
 	var _b2 gx.Builder
-//line AlertDialog.gx:24:837
+//line AlertDialog.gx:39:837
 	_b2.Add(gx.Text("\n    "))
-//line AlertDialog.gx:25:5
+//line AlertDialog.gx:40:5
 	var _b3 gx.Builder
-//line AlertDialog.gx:25:421
+//line AlertDialog.gx:40:421
 	_b3.Add(gx.Text("\n      "))
-//line AlertDialog.gx:26:7
+//line AlertDialog.gx:41:7
 	if p.Media != nil {
-//line AlertDialog.gx:26:26
+//line AlertDialog.gx:41:26
 		_b3.Add(gx.Text("\n        "))
-//line AlertDialog.gx:27:9
+//line AlertDialog.gx:42:9
 		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mb-2 inline-flex size-16 items-center justify-center rounded-md bg-muted sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-8", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-dialog-media", Kind: gx.AttrText}}, p.Media))
-//line AlertDialog.gx:27:239
+//line AlertDialog.gx:42:239
 		_b3.Add(gx.Text("\n      "))
 	}
-//line AlertDialog.gx:28:8
+//line AlertDialog.gx:43:8
 	_b3.Add(gx.Text("\n      "))
-//line AlertDialog.gx:29:7
+//line AlertDialog.gx:44:7
 	_b3.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg font-semibold sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line AlertDialog.gx:29:179
+//line AlertDialog.gx:44:179
 	_b3.Add(gx.Text("\n      "))
-//line AlertDialog.gx:30:7
+//line AlertDialog.gx:45:7
 	if p.Description != "" {
-//line AlertDialog.gx:30:31
+//line AlertDialog.gx:45:31
 		_b3.Add(gx.Text("\n        "))
-//line AlertDialog.gx:31:9
+//line AlertDialog.gx:46:9
 		_b3.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line AlertDialog.gx:31:69
+//line AlertDialog.gx:46:69
 		_b3.Add(gx.Text("\n      "))
 	}
-//line AlertDialog.gx:32:8
+//line AlertDialog.gx:47:8
 	_b3.Add(gx.Text("\n    "))
 	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-6 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]", Kind: gx.AttrText}}, _b3.Node()))
-//line AlertDialog.gx:33:11
+//line AlertDialog.gx:48:11
 	_b2.Add(gx.Text("\n    "))
-//line AlertDialog.gx:34:5
+//line AlertDialog.gx:49:5
 	if p.Children != nil {
-//line AlertDialog.gx:34:27
+//line AlertDialog.gx:49:27
 		_b2.Add(gx.Text("\n      "))
-//line AlertDialog.gx:35:7
+//line AlertDialog.gx:50:7
 		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm", Kind: gx.AttrText}}, p.Children))
-//line AlertDialog.gx:35:46
+//line AlertDialog.gx:50:46
 		_b2.Add(gx.Text("\n    "))
 	}
-//line AlertDialog.gx:36:6
+//line AlertDialog.gx:51:6
 	_b2.Add(gx.Text("\n    "))
-//line AlertDialog.gx:37:5
+//line AlertDialog.gx:52:5
 	var _b4 gx.Builder
-//line AlertDialog.gx:37:174
+//line AlertDialog.gx:52:174
 	_b4.Add(gx.Text("\n      "))
-//line AlertDialog.gx:38:7
+//line AlertDialog.gx:53:7
 	_b4.Add(button.Button(button.ButtonProps{Variant: button.Outline, Size: button.Md, Type: "button", Class: "", Children: gx.Text(p.cancel()), Attrs: gx.Attrs{gx.Bool("data-gx-close", true)}}))
-//line AlertDialog.gx:38:124
+//line AlertDialog.gx:53:124
 	_b4.Add(gx.Text("\n      "))
-//line AlertDialog.gx:39:7
+//line AlertDialog.gx:54:7
 	if p.Confirm != nil {
-//line AlertDialog.gx:39:28
+//line AlertDialog.gx:54:28
 		_b4.Add(gx.Text("\n        "))
-//line AlertDialog.gx:40:9
+//line AlertDialog.gx:55:9
 		_b4.Add(p.Confirm)
-//line AlertDialog.gx:40:20
+//line AlertDialog.gx:55:20
 		_b4.Add(gx.Text("\n      "))
 	}
-//line AlertDialog.gx:41:8
+//line AlertDialog.gx:56:8
 	_b4.Add(gx.Text("\n    "))
 	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end", Kind: gx.AttrText}}, _b4.Node()))
-//line AlertDialog.gx:42:11
+//line AlertDialog.gx:57:11
 	_b2.Add(gx.Text("\n  "))
 	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/alert-dialog-content fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border border-border bg-background p-6 text-foreground shadow-lg outline-none open:grid data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-lg opacity-0 scale-95 transition-[opacity,scale,overlay,display] transition-discrete duration-200 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Attr{Key: "role", Value: "alertdialog", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-dismiss", Value: "manual", Kind: gx.AttrText}, gx.Bool("data-gx-trap", true), gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), _b2.Node()))
-//line AlertDialog.gx:43:12
+//line AlertDialog.gx:58:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))
-//line AlertDialog.gx:44:8
+//line AlertDialog.gx:59:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

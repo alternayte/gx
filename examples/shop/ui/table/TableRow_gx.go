@@ -7,16 +7,19 @@ import (
 )
 
 type TableRowProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the cells of the row.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TableRow(p TableRowProps) gx.Node {
 	var _b gx.Builder
-//line TableRow.gx:9:1
+//line TableRow.gx:12:1
 	_b.Add(gx.El("tr", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-row", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableRow.gx:9:189
+//line TableRow.gx:12:189
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

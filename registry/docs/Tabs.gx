@@ -1,9 +1,14 @@
 package docs
 
 props {
+  // Sync is the key that links tab groups. Groups with the same key switch together and
+  // remember the chosen tab.
   Sync     string = ""
+  // Default is the label of the tab that starts open. Empty opens the first tab.
   Default  string = ""
+  // Children is the tab items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

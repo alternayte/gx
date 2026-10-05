@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarFooterProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the footer.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarFooter(p SidebarFooterProps) gx.Node {
 	var _b gx.Builder
-//line SidebarFooter.gx:9:1
+//line SidebarFooter.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-2 p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-footer", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "footer", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarFooter.gx:9:136
+//line SidebarFooter.gx:12:136
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

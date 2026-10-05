@@ -7,58 +7,62 @@ import (
 )
 
 type SidebarGroupProps struct {
+	// Group is the sidebar section: its label, its badge and its items.
+	// A group with Collapsed starts closed.
 	Group NavGroup
-	Path  string
+	// Path is the site path of the current page.
+	// A nested item that holds the page starts open.
+	Path string
 }
 
 func SidebarGroup(p SidebarGroupProps) gx.Node {
 	var _b gx.Builder
-//line SidebarGroup.gx:8:1
+//line SidebarGroup.gx:12:1
 	var _b1 gx.Builder
-//line SidebarGroup.gx:8:62
+//line SidebarGroup.gx:12:62
 	_b1.Add(gx.Text("\n  "))
-//line SidebarGroup.gx:9:3
+//line SidebarGroup.gx:13:3
 	var _b2 gx.Builder
-//line SidebarGroup.gx:9:151
+//line SidebarGroup.gx:13:151
 	_b2.Add(gx.Text("\n    "))
-//line SidebarGroup.gx:10:5
+//line SidebarGroup.gx:14:5
 	_b2.Add(gx.Text(p.Group.Label))
-//line SidebarGroup.gx:10:20
+//line SidebarGroup.gx:14:20
 	_b2.Add(gx.Text("\n    "))
-//line SidebarGroup.gx:11:5
+//line SidebarGroup.gx:15:5
 	if p.Group.Badge != "" {
-//line SidebarGroup.gx:11:29
+//line SidebarGroup.gx:15:29
 		_b2.Add(gx.Text("\n      "))
-//line SidebarGroup.gx:12:7
+//line SidebarGroup.gx:16:7
 		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-badge rounded-full border border-border px-1.5 text-[10px]", Kind: gx.AttrText}}, gx.Text(p.Group.Badge)))
-//line SidebarGroup.gx:12:109
+//line SidebarGroup.gx:16:109
 		_b2.Add(gx.Text("\n    "))
 	}
-//line SidebarGroup.gx:13:6
+//line SidebarGroup.gx:17:6
 	_b2.Add(gx.Text("\n  "))
 	_b1.Add(gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-group-label flex cursor-pointer items-center gap-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground", Kind: gx.AttrText}}, _b2.Node()))
-//line SidebarGroup.gx:14:13
+//line SidebarGroup.gx:18:13
 	_b1.Add(gx.Text("\n  "))
-//line SidebarGroup.gx:15:3
+//line SidebarGroup.gx:19:3
 	var _b3 gx.Builder
-//line SidebarGroup.gx:15:46
+//line SidebarGroup.gx:19:46
 	_b3.Add(gx.Text("\n    "))
-//line SidebarGroup.gx:16:5
+//line SidebarGroup.gx:20:5
 	for _, it := range p.Group.Items {
-//line SidebarGroup.gx:16:39
+//line SidebarGroup.gx:20:39
 		_b3.Add(gx.Text("\n      "))
-//line SidebarGroup.gx:17:7
+//line SidebarGroup.gx:21:7
 		_b3.Add(SidebarItem(SidebarItemProps{Item: it, Path: p.Path}))
-//line SidebarGroup.gx:17:46
+//line SidebarGroup.gx:21:46
 		_b3.Add(gx.Text("\n    "))
 	}
-//line SidebarGroup.gx:18:6
+//line SidebarGroup.gx:22:6
 	_b3.Add(gx.Text("\n  "))
 	_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 list-none space-y-0.5 p-0", Kind: gx.AttrText}}, _b3.Node()))
-//line SidebarGroup.gx:19:8
+//line SidebarGroup.gx:23:8
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("details", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-group mb-4", Kind: gx.AttrText}, gx.Bool("open", !p.Group.Collapsed)}, _b1.Node()))
-//line SidebarGroup.gx:20:11
+//line SidebarGroup.gx:24:11
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -3,7 +3,9 @@ package breadcrumb
 import "github.com/alternayte/gx/examples/shop/ui/icons"
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 

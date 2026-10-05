@@ -24,6 +24,7 @@ type Package struct {
 // Prop is one component prop, from the props block.
 type Prop struct {
 	Name       string
+	Doc        string
 	Type       string
 	Default    string
 	HasDefault bool
@@ -46,6 +47,7 @@ func (p *Package) component(name string) (*Component, bool) {
 	for _, fld := range f.Props {
 		c.Props = append(c.Props, Prop{
 			Name:       fld.Name,
+			Doc:        fld.Doc,
 			Type:       fld.Type,
 			Default:    fld.Default,
 			HasDefault: fld.HasDefault,

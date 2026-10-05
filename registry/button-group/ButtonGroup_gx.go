@@ -7,17 +7,21 @@ import (
 )
 
 type ButtonGroupProps struct {
+	// Orientation sets the direction of the group: Horizontal for a row or Vertical for a column.
 	Orientation Orientation
-	Children    gx.Node
-	Class       string
-	Attrs       gx.Attrs
+	// Children is the content of the group: the buttons, inputs, separators and text.
+	Children gx.Node
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ButtonGroup(p ButtonGroupProps) gx.Node {
 	var _b gx.Builder
-//line ButtonGroup.gx:10:1
+//line ButtonGroup.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "button-group", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ButtonGroup.gx:10:374
+//line ButtonGroup.gx:14:374
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

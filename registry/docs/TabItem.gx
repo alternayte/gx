@@ -1,8 +1,11 @@
 package docs
 
 props {
+  // Label is the text of the tab button. It must be unique inside one tab group.
   Label    string
+  // Children is the content of the tab panel.
   Children gx.Node
+  // Attrs holds HTML attributes. The markup does not render them.
   Attrs    gx.Attrs = nil
 }
 

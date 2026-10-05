@@ -91,12 +91,23 @@ func (pr *printer) writeFields(fields []Field) {
 		}
 	}
 	for _, f := range fields {
+		for _, line := range docLines(f.Doc) {
+			pr.write(strings.TrimRight("  // "+line, " ") + "\n")
+		}
 		pr.write("  " + f.Name + strings.Repeat(" ", width-len(f.Name)+1) + formatGoExpr(f.Type))
 		if f.HasDefault {
 			pr.write(" = " + formatGoExpr(f.Default))
 		}
 		pr.write("\n")
 	}
+}
+
+// docLines returns the comment lines of a field description.
+func docLines(doc string) []string {
+	if doc == "" {
+		return nil
+	}
+	return strings.Split(doc, "\n")
 }
 
 // formatImports sorts and dedupes import specs, like gofmt does for imports.

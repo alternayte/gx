@@ -1,9 +1,13 @@
 package contextmenu
 
 props {
+  // Id is the id of the menu that a right click on the trigger opens.
   Id       string
-  Class    string   = ""
+  // Class adds classes to the root element. The trigger has no style of its own.
+  Class    string = ""
+  // Children is the content of the area that takes the right click.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

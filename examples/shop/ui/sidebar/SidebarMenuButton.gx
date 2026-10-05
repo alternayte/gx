@@ -1,12 +1,20 @@
 package sidebar
 
 props {
-  Href     gx.URL   = ""
-  Active   bool     = false
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Class    string   = ""
+  // Href is the URL of the link. An empty value renders a button in place of a link.
+  Href     gx.URL = ""
+  // Active marks the button of the current page.
+  // A link gets aria-current and a button gets data-active.
+  Active   bool = false
+  // Variant sets the surface: Default or Outline.
+  Variant  Variant = Default
+  // Size sets the height and the text size: Md, Sm or Lg.
+  Size     Size = Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the button: an icon and a span with the text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

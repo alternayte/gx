@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarInsetProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the main content of the page.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarInset(p SidebarInsetProps) gx.Node {
 	var _b gx.Builder
-//line SidebarInset.gx:9:1
+//line SidebarInset.gx:12:1
 	_b.Add(gx.El("main", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full flex-1 flex-col bg-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-inset", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarInset.gx:9:142
+//line SidebarInset.gx:12:142
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -41,7 +41,9 @@ Copy each file to its path in the app. Change each import of a registry package 
 package skeleton
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -104,6 +106,17 @@ The skeleton uses the accent colour and a pulse.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### skeleton.Skeleton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

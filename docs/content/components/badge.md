@@ -46,10 +46,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package badge
 
 props {
-  Variant  Variant  = Default
-  Href     gx.URL   = ""
-  Class    string   = ""
+  // Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.
+  Variant  Variant = Default
+  // Href is the URL of the link. A non-empty value renders the badge as an a element, not a span.
+  Href     gx.URL = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the badge label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -223,6 +228,20 @@ Set `Href` to render the badge as a link. A link badge has a hover state.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### badge.Badge
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link. |
+| `Href` | `gx.URL` | `""` | Href is the URL of the link. A non-empty value renders the badge as an a element, not a span. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the badge label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

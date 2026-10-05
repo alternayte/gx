@@ -9,16 +9,20 @@ import (
 )
 
 type SidebarTriggerProps struct {
+	// Controls is the id that aria-controls names. An empty value is gx-sidebar, the id the shell
+	// runtime shows and hides.
 	Controls string
-	Class    string
-	Attrs    gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarTrigger(p SidebarTriggerProps) gx.Node {
 	var _b gx.Builder
-//line SidebarTrigger.gx:14:1
+//line SidebarTrigger.gx:16:1
 	_b.Add(button.Button(button.ButtonProps{Variant: button.Ghost, Size: button.Icon, Type: "button", Class: gx.Cx("size-7", p.Class), Children: gx.Frag(icons.PanelLeft(icons.PanelLeftProps{Label: "", Class: ""}), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("Toggle Sidebar"))), Attrs: p.attrs()}))
-//line SidebarTrigger.gx:17:17
+//line SidebarTrigger.gx:19:17
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

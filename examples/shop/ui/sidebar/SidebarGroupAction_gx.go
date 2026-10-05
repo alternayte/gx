@@ -7,17 +7,21 @@ import (
 )
 
 type SidebarGroupActionProps struct {
-	Label    string
-	Class    string
+	// Label is the accessible name of the button.
+	Label string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the icon of the button.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarGroupAction(p SidebarGroupActionProps) gx.Node {
 	var _b gx.Builder
-//line SidebarGroupAction.gx:10:1
+//line SidebarGroupAction.gx:14:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-group-action", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group-action", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarGroupAction.gx:10:524
+//line SidebarGroupAction.gx:14:524
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

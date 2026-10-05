@@ -7,17 +7,21 @@ import (
 )
 
 type FieldLegendProps struct {
-	Variant  Variant
-	Class    string
+	// Variant sets the text size: Legend or Label. Label is the smaller size.
+	Variant Variant
+	// Class adds classes to the root element.
+	Class string
+	// Children is the legend text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func FieldLegend(p FieldLegendProps) gx.Node {
 	var _b gx.Builder
-//line FieldLegend.gx:10:1
+//line FieldLegend.gx:14:1
 	_b.Add(gx.El("legend", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-3 font-medium data-[variant=legend]:text-base data-[variant=label]:text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-legend", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldLegend.gx:10:199
+//line FieldLegend.gx:14:199
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

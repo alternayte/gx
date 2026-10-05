@@ -18,6 +18,8 @@
 (fragment_attribute (attribute_name) @function)
 (expression) @embedded
 (go_block) @embedded
+(line_comment) @comment
+(go_string) @string
 (comment) @comment
 
 [

@@ -1,11 +1,17 @@
 package menubar
 
 props {
-  Variant  Variant  = Default
-  Inset    bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default or Destructive.
+  Variant  Variant = Default
+  // Inset adds left padding, so the item lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -7,15 +7,17 @@ import (
 )
 
 type SkeletonProps struct {
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func Skeleton(p SkeletonProps) gx.Node {
 	var _b gx.Builder
-//line Skeleton.gx:8:1
+//line Skeleton.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("animate-pulse rounded-md bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}}, p.Attrs)))
-//line Skeleton.gx:8:107
+//line Skeleton.gx:10:107
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

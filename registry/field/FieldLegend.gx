@@ -1,9 +1,13 @@
 package field
 
 props {
-  Variant  Variant  = Legend
-  Class    string   = ""
+  // Variant sets the text size: Legend or Label. Label is the smaller size.
+  Variant  Variant = Legend
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the legend text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

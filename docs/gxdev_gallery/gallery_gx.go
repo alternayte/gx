@@ -17,5 +17,6 @@ func Fixtures() []gx.Fixture {
 		{Component: "IconGrid", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "PageHeader", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "Preview", Package: "github.com/alternayte/gx/docs/site", Missing: true},
+		{Component: "ToastDemo", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 	}
 }

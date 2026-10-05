@@ -7,35 +7,39 @@ import (
 )
 
 type AsideProps struct {
-	Kind     Kind
-	Title    string
+	// Kind sets the tone of the callout: Note, Tip, Caution or Danger.
+	Kind Kind
+	// Title is the heading of the callout. Empty omits it.
+	Title string
+	// Children is the content of the callout.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Aside(p AsideProps) gx.Node {
 	var _b gx.Builder
-//line Aside.gx:10:1
+//line Aside.gx:14:1
 	var _b1 gx.Builder
-//line Aside.gx:10:127
+//line Aside.gx:14:127
 	_b1.Add(gx.Text("\n  "))
-//line Aside.gx:11:3
+//line Aside.gx:15:3
 	if p.Title != "" {
-//line Aside.gx:11:21
+//line Aside.gx:15:21
 		_b1.Add(gx.Text("\n    "))
-//line Aside.gx:12:5
+//line Aside.gx:16:5
 		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-title m-0 mb-1 font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Aside.gx:12:67
+//line Aside.gx:16:67
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Aside.gx:13:4
+//line Aside.gx:17:4
 	_b1.Add(gx.Text("\n  "))
-//line Aside.gx:14:3
+//line Aside.gx:18:3
 	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-body [&>p:first-child]:mt-0 [&>p:last-child]:mb-0", Kind: gx.AttrText}}, p.Children))
-//line Aside.gx:14:93
+//line Aside.gx:18:93
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind]), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Aside.gx:15:9
+//line Aside.gx:19:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -71,8 +71,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package breadcrumb
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the breadcrumb: one BreadcrumbList.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -83,8 +86,11 @@ props {
 package breadcrumb
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the list: the items and the separators between them.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -95,8 +101,12 @@ props {
 package breadcrumb
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item: a BreadcrumbLink, a BreadcrumbPage or a
+  // BreadcrumbEllipsis.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -107,9 +117,13 @@ props {
 package breadcrumb
 
 props {
+  // Href is the URL of the link.
   Href     gx.URL
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the link label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -120,8 +134,11 @@ props {
 package breadcrumb
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the current page.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -134,8 +151,11 @@ package breadcrumb
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the separator. A nil value renders a chevron icon.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -154,7 +174,9 @@ package breadcrumb
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -402,6 +424,66 @@ The theme must define these tokens: `--foreground`, `--muted-foreground`.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### breadcrumb.Breadcrumb
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the breadcrumb: one BreadcrumbList. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### breadcrumb.BreadcrumbEllipsis
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### breadcrumb.BreadcrumbItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item: a BreadcrumbLink, a BreadcrumbPage or a BreadcrumbEllipsis. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### breadcrumb.BreadcrumbLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL of the link. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the link label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### breadcrumb.BreadcrumbList
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the list: the items and the separators between them. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### breadcrumb.BreadcrumbPage
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the current page. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### breadcrumb.BreadcrumbSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the separator. A nil value renders a chevron icon. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

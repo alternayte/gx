@@ -7,16 +7,20 @@ import (
 )
 
 type BadgeProps struct {
-	Label   string
+	// Label is the text of the badge.
+	Label string
+	// Variant sets the visual style: BadgeDefault, BadgeSecondary, BadgeDestructive or
+	// BadgeOutline.
 	Variant BadgeVariant
-	Attrs   gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Badge(p BadgeProps) gx.Node {
 	var _b gx.Builder
-//line Badge.gx:9:1
+//line Badge.gx:13:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium", badgeClass[p.Variant]), Kind: gx.AttrText}}, p.Attrs), gx.Text(p.Label)))
-//line Badge.gx:9:155
+//line Badge.gx:13:155
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

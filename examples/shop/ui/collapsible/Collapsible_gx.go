@@ -7,18 +7,23 @@ import (
 )
 
 type CollapsibleProps struct {
-	Summary  gx.Node
-	Open     bool
-	Class    string
+	// Summary is the content of the summary, the part that opens and closes the panel.
+	Summary gx.Node
+	// Open renders the collapsible open. The default is closed.
+	Open bool
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the panel.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Collapsible(p CollapsibleProps) gx.Node {
 	var _b gx.Builder
-//line Collapsible.gx:11:1
+//line Collapsible.gx:16:1
 	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/collapsible [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}}, p.Summary), gx.Text("\n  "), p.Children, gx.Text("\n"))))
-//line Collapsible.gx:14:11
+//line Collapsible.gx:19:11
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

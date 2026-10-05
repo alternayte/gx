@@ -11,7 +11,6 @@ import (
 	"unicode"
 
 	"github.com/alecthomas/chroma/v2"
-	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/alecthomas/chroma/v2/styles"
 )
 
@@ -170,11 +169,7 @@ func highlightLines(lang, code string, opt Options) string {
 	if !strings.HasSuffix(code, "\n") {
 		code += "\n"
 	}
-	lexer := lexers.Get(lang)
-	if lexer == nil {
-		lexer = lexers.Fallback
-	}
-	lexer = chroma.Coalesce(lexer)
+	lexer := chroma.Coalesce(lexerFor(lang))
 	iterator, err := lexer.Tokenise(nil, code)
 	if err != nil {
 		return `<span class="line">` + html.EscapeString(code) + `</span>`
@@ -267,7 +262,9 @@ func LangForFile(path string) string {
 		return "javascript"
 	case "md", "markdown", "mdx":
 		return "markdown"
-	case "html", "htm", "gx":
+	case "gx":
+		return "gx"
+	case "html", "htm":
 		return "html"
 	case "css":
 		return "css"

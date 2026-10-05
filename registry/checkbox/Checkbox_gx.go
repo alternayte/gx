@@ -8,43 +8,51 @@ import (
 )
 
 type CheckboxProps struct {
-	Name     string
-	Value    string
-	Checked  bool
+	// Name is the name attribute of the input. The form sends the value under this name.
+	Name string
+	// Value is the value the form sends when the checkbox is checked.
+	Value string
+	// Checked renders the checkbox checked.
+	Checked bool
+	// Disabled stops the user from changing the checkbox and dims it.
 	Disabled bool
-	Invalid  bool
-	Class    string
+	// Invalid sets aria-invalid on the input and shows the error style.
+	Invalid bool
+	// Class adds classes to the root element, the label.
+	Class string
+	// Children is the checkbox label. A nil value renders the box alone.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element, the label.
+	Attrs gx.Attrs
 }
 
 func Checkbox(p CheckboxProps) gx.Node {
 	var _b gx.Builder
-//line Checkbox.gx:16:1
+//line Checkbox.gx:24:1
 	var _b1 gx.Builder
-//line Checkbox.gx:16:116
+//line Checkbox.gx:24:116
 	_b1.Add(gx.Text("\n  "))
-//line Checkbox.gx:17:3
+//line Checkbox.gx:25:3
 	_b1.Add(gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}))
-//line Checkbox.gx:17:148
+//line Checkbox.gx:25:148
 	_b1.Add(gx.Text("\n  "))
-//line Checkbox.gx:18:3
+//line Checkbox.gx:26:3
 	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs transition-shadow outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 peer-checked:border-primary peer-checked:bg-primary peer-checked:peer-focus-visible:border-primary peer-checked:text-primary-foreground dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 dark:peer-checked:bg-primary motion-reduce:transition-none", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), icons.Check(icons.CheckProps{Label: "", Class: "size-3.5"}), gx.Text("\n  "))))
-//line Checkbox.gx:20:10
+//line Checkbox.gx:28:10
 	_b1.Add(gx.Text("\n  "))
-//line Checkbox.gx:21:3
+//line Checkbox.gx:29:3
 	if p.Children != nil {
-//line Checkbox.gx:21:25
+//line Checkbox.gx:29:25
 		_b1.Add(gx.Text("\n    "))
-//line Checkbox.gx:22:5
+//line Checkbox.gx:30:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "peer-disabled:cursor-not-allowed peer-disabled:opacity-50", Kind: gx.AttrText}}, p.Children))
-//line Checkbox.gx:22:96
+//line Checkbox.gx:30:96
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Checkbox.gx:23:4
+//line Checkbox.gx:31:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Checkbox.gx:24:9
+//line Checkbox.gx:32:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

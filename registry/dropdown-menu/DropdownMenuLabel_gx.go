@@ -7,17 +7,21 @@ import (
 )
 
 type DropdownMenuLabelProps struct {
-	Inset    bool
-	Class    string
+	// Inset adds left padding, so the label lines up with the checkbox and radio items.
+	Inset bool
+	// Class adds classes to the root element.
+	Class string
+	// Children is the text of the label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func DropdownMenuLabel(p DropdownMenuLabelProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuLabel.gx:10:1
+//line DropdownMenuLabel.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("px-2 py-1.5 text-sm font-medium", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenuLabel.gx:10:136
+//line DropdownMenuLabel.gx:14:136
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

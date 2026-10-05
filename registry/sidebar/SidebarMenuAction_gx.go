@@ -7,18 +7,23 @@ import (
 )
 
 type SidebarMenuActionProps struct {
-	Label       string
+	// Label is the accessible name of the button.
+	Label string
+	// ShowOnHover hides the action on a wide screen until its item has the pointer or the focus.
 	ShowOnHover bool
-	Class       string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Children is the icon of the button.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuAction(p SidebarMenuActionProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuAction.gx:11:1
+//line SidebarMenuAction.gx:16:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", hoverClass[p.ShowOnHover], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-action", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-action", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuAction.gx:11:726
+//line SidebarMenuAction.gx:16:726
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

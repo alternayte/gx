@@ -7,16 +7,19 @@ import (
 )
 
 type NavigationMenuContentProps struct {
-	Class    string
+	// Class adds classes to the panel element.
+	Class string
+	// Children is the content of the panel, usually links.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the panel element.
+	Attrs gx.Attrs
 }
 
 func NavigationMenuContent(p NavigationMenuContentProps) gx.Node {
 	var _b gx.Builder
-//line NavigationMenuContent.gx:9:1
+//line NavigationMenuContent.gx:12:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "invisible absolute top-full left-0 z-50 w-max origin-top-left scale-95 pt-1.5 opacity-0 transition-[opacity,scale,visibility] delay-150 duration-200 motion-reduce:transition-none group-hover/navigation-menu-item:visible group-hover/navigation-menu-item:scale-100 group-hover/navigation-menu-item:opacity-100 group-focus-within/navigation-menu-item:visible group-focus-within/navigation-menu-item:scale-100 group-focus-within/navigation-menu-item:opacity-100", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("overflow-hidden rounded-md border border-border bg-popover p-2 pr-2.5 text-popover-foreground shadow", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children), gx.Text("\n"))))
-//line NavigationMenuContent.gx:11:7
+//line NavigationMenuContent.gx:14:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,19 +7,27 @@ import (
 )
 
 type TabsProps struct {
+	// Orientation sets the layout direction: Horizontal or Vertical. Vertical puts the list beside
+	// the panels.
 	Orientation Orientation
-	Sync        string
-	Default     string
-	Class       string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Sync is a key that tab groups share. Groups with the same key keep one selection and remember
+	// it per viewer.
+	Sync string
+	// Default is the label of the tab that is selected first. An empty value selects the first tab.
+	Default string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the tab list and the panels.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Tabs(p TabsProps) gx.Node {
 	var _b gx.Builder
-//line Tabs.gx:12:1
+//line Tabs.gx:20:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tabs flex gap-2 data-[orientation=horizontal]:flex-col", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}, gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Tabs.gx:12:216
+//line Tabs.gx:20:216
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

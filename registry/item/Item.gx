@@ -1,11 +1,17 @@
 package item
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Href     gx.URL   = ""
-  Class    string   = ""
+  // Variant sets the surface: Default, Outline or Muted.
+  Variant  Variant = Default
+  // Size sets the padding and the gap: Md or Sm.
+  Size     Size = Md
+  // Href is the link target. With a value the root is an a element; empty gives a div.
+  Href     gx.URL = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

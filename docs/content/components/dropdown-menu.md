@@ -92,10 +92,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package dropdownmenu
 
 props {
+  // Id is the id of the root element. The trigger opens the menu by this id.
   Id       string
-  Align    Align    = Center
-  Class    string   = ""
+  // Align sets the edge of the trigger that the menu lines up with: Center, Start or End.
+  Align    Align = Center
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the menu items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -108,12 +113,19 @@ package dropdownmenu
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = "on"
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Name is the name attribute of the checkbox input. A form or a signal reads it.
+  Name     string = ""
+  // Value is the value that the form sends when the item is checked.
+  Value    string = "on"
+  // Checked sets the item as checked on the first render.
+  Checked  bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -128,9 +140,13 @@ props {
 package dropdownmenu
 
 props {
-  Label    string   = ""
-  Class    string   = ""
+  // Label is the accessible name of the group. It is not visible.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the items of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -141,11 +157,17 @@ props {
 package dropdownmenu
 
 props {
-  Variant  Variant  = Default
-  Inset    bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default or Destructive.
+  Variant  Variant = Default
+  // Inset adds left padding, so the item lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -156,9 +178,13 @@ props {
 package dropdownmenu
 
 props {
-  Inset    bool     = false
-  Class    string   = ""
+  // Inset adds left padding, so the label lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -169,9 +195,13 @@ props {
 package dropdownmenu
 
 props {
+  // Href is the URL that the link opens.
   Href     gx.URL
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the link.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -182,9 +212,13 @@ props {
 package dropdownmenu
 
 props {
-  Label    string   = ""
-  Class    string   = ""
+  // Label is the accessible name of the group. It is not visible.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the radio items of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -197,12 +231,20 @@ package dropdownmenu
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = ""
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Name is the name attribute of the radio input. The radio items of one group share
+  // the same name.
+  Name     string = ""
+  // Value is the value that the form sends when the item is checked.
+  Value    string = ""
+  // Checked sets the item as checked on the first render.
+  Checked  bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -217,7 +259,9 @@ props {
 package dropdownmenu
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -228,8 +272,11 @@ props {
 package dropdownmenu
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the keyboard shortcut.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -242,12 +289,20 @@ package dropdownmenu
 import "github.com/alternayte/gx/registry/button"
 
 props {
+  // Id is the id of the menu that the trigger opens.
   Id       string
+  // Variant sets the visual style of the button: button.Default, button.Secondary,
+  // button.Destructive, button.Outline, button.Ghost or button.Link.
   Variant  button.Variant = button.Outline
-  Size     button.Size    = button.Md
-  Class    string         = ""
+  // Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg,
+  // or an Icon size for a square button.
+  Size     button.Size = button.Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
-  Attrs    gx.Attrs       = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <button.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}>{p.Children}</button.Button>
@@ -824,6 +879,117 @@ The item has no sub-menu part.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### dropdownmenu.DropdownMenu
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the root element. The trigger opens the menu by this id. |
+| `Align` | `Align` | `Center` | Align sets the edge of the trigger that the menu lines up with: Center, Start or End. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the menu items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuCheckboxItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the name attribute of the checkbox input. A form or a signal reads it. |
+| `Value` | `string` | `"on"` | Value is the value that the form sends when the item is checked. |
+| `Checked` | `bool` | `false` | Checked sets the item as checked on the first render. |
+| `Disabled` | `bool` | `false` | Disabled turns the item off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | `""` | Label is the accessible name of the group. It is not visible. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the items of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default or Destructive. |
+| `Inset` | `bool` | `false` | Inset adds left padding, so the item lines up with the checkbox and radio items. |
+| `Disabled` | `bool` | `false` | Disabled turns the item off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuLabel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Inset` | `bool` | `false` | Inset adds left padding, so the label lines up with the checkbox and radio items. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the text of the label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL that the link opens. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the link. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuRadioGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | `""` | Label is the accessible name of the group. It is not visible. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the radio items of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuRadioItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the name attribute of the radio input. The radio items of one group share the same name. |
+| `Value` | `string` | `""` | Value is the value that the form sends when the item is checked. |
+| `Checked` | `bool` | `false` | Checked sets the item as checked on the first render. |
+| `Disabled` | `bool` | `false` | Disabled turns the item off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuShortcut
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the text of the keyboard shortcut. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### dropdownmenu.DropdownMenuTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the menu that the trigger opens. |
+| `Variant` | `button.Variant` | `button.Outline` | Variant sets the visual style of the button: button.Default, button.Secondary, button.Destructive, button.Outline, button.Ghost or button.Link. |
+| `Size` | `button.Size` | `button.Md` | Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg, or an Icon size for a square button. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the button label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

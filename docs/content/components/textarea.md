@@ -42,11 +42,17 @@ Copy each file to its path in the app. Change each import of a registry package 
 package textarea
 
 props {
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Rows        int      = 0
-  Class       string   = ""
+  // Name is the form field name.
+  Name        string = ""
+  // Value is the text of the textarea.
+  Value       string = ""
+  // Placeholder is the text that shows while the textarea is empty.
+  Placeholder string = ""
+  // Rows is the rows attribute. A value of zero or less renders no attribute.
+  Rows        int = 0
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -162,6 +168,21 @@ Set `aria-invalid="true"` through `Attrs` to show the error border.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### textarea.Textarea
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the form field name. |
+| `Value` | `string` | `""` | Value is the text of the textarea. |
+| `Placeholder` | `string` | `""` | Placeholder is the text that shows while the textarea is empty. |
+| `Rows` | `int` | `0` | Rows is the rows attribute. A value of zero or less renders no attribute. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

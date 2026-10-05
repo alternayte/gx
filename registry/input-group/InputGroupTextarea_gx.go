@@ -8,19 +8,25 @@ import (
 )
 
 type InputGroupTextareaProps struct {
-	Id          string
-	Name        string
-	Value       string
+	// Id is the id of the root element. A label points at it.
+	Id string
+	// Name is the name attribute. The form sends the value under this name.
+	Name string
+	// Value is the start text of the textarea.
+	Value string
+	// Placeholder is the placeholder attribute: the hint text of an empty control.
 	Placeholder string
-	Class       string
-	Attrs       gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func InputGroupTextarea(p InputGroupTextareaProps) gx.Node {
 	var _b gx.Builder
-//line InputGroupTextarea.gx:14:1
+//line InputGroupTextarea.gx:20:1
 	_b.Add(gx.El("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(textarea.Control, "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs()), gx.Text(p.Value)))
-//line InputGroupTextarea.gx:14:278
+//line InputGroupTextarea.gx:20:278
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

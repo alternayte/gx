@@ -1,7 +1,9 @@
 package docs
 
 props {
+  // Children is the cards of the grid.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

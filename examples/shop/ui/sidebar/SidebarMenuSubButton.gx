@@ -1,11 +1,17 @@
 package sidebar
 
 props {
+  // Href is the URL of the link.
   Href     gx.URL
-  Active   bool     = false
-  Size     Size     = Md
-  Class    string   = ""
+  // Active marks the link of the current page. It sets aria-current and the active style.
+  Active   bool = false
+  // Size sets the text size: Md or Sm.
+  Size     Size = Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the link: an icon and a span with the text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

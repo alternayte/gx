@@ -44,15 +44,14 @@ Copy each file to its path in the app. Change each import of a registry package 
 ```gx title="ui/settings-form/SettingsForm.gx"
 package settingsform
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/card"
-	"github.com/alternayte/gx/registry/field"
-	"github.com/alternayte/gx/registry/input"
-	switches "github.com/alternayte/gx/registry/switch"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/card"
+import "github.com/alternayte/gx/registry/field"
+import "github.com/alternayte/gx/registry/input"
+import switches "github.com/alternayte/gx/registry/switch"
 
 props {
+  // Action is the URL that the form posts to. Empty posts to the current URL.
   Action gx.URL = ""
 }
 
@@ -130,6 +129,16 @@ The block is copied source. Replace the raw form with a typed `gx.Form` when the
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### settingsform.SettingsForm
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Action` | `gx.URL` | `""` | Action is the URL that the form posts to. Empty posts to the current URL. |
 
 ## Do and don't
 

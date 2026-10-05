@@ -51,17 +51,32 @@ package alertdialog
 import "github.com/alternayte/gx/registry/button"
 
 props {
+  // Id is the id of the dialog element.
+  // The trigger points at it, so it must be unique on the page.
   Id          string
+  // Title is the heading of the alert dialog. It states the question.
   Title       string
-  Description string   = ""
-  Size        Size     = Md
-  Media       gx.Node  = nil
-  Trigger     gx.Node  = nil
-  Confirm     gx.Node  = nil
-  Cancel      string   = "Cancel"
-  Open        bool     = false
-  Class       string   = ""
-  Children    gx.Node  = nil
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Size sets the maximum width and the layout: Md or Sm.
+  // Sm centres the text and puts the buttons side by side.
+  Size        Size = Md
+  // Media is an icon or image shown in a tile next to the title. A nil value renders no tile.
+  Media       gx.Node = nil
+  // Trigger is the control that opens the alert dialog.
+  Trigger     gx.Node = nil
+  // Confirm is the control that confirms the action. It renders after the cancel button.
+  Confirm     gx.Node = nil
+  // Cancel is the label of the cancel button, which closes the alert dialog.
+  // An empty value is Cancel.
+  Cancel      string = "Cancel"
+  // Open renders the alert dialog open. The default is closed.
+  Open        bool = false
+  // Class adds classes to the dialog element.
+  Class       string = ""
+  // Children is the content of the alert dialog body, between the header and the buttons.
+  Children    gx.Node = nil
+  // Attrs adds HTML attributes to the dialog element.
   Attrs       gx.Attrs = nil
 }
 
@@ -168,6 +183,27 @@ The theme must define these tokens: `--background`, `--foreground`, `--border`, 
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### alertdialog.AlertDialog
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the dialog element. The trigger points at it, so it must be unique on the page. |
+| `Title` | `string` | Required | Title is the heading of the alert dialog. It states the question. |
+| `Description` | `string` | `""` | Description is the text below the title. An empty value renders no description. |
+| `Size` | `Size` | `Md` | Size sets the maximum width and the layout: Md or Sm. Sm centres the text and puts the buttons side by side. |
+| `Media` | `gx.Node` | `nil` | Media is an icon or image shown in a tile next to the title. A nil value renders no tile. |
+| `Trigger` | `gx.Node` | `nil` | Trigger is the control that opens the alert dialog. |
+| `Confirm` | `gx.Node` | `nil` | Confirm is the control that confirms the action. It renders after the cancel button. |
+| `Cancel` | `string` | `"Cancel"` | Cancel is the label of the cancel button, which closes the alert dialog. An empty value is Cancel. |
+| `Open` | `bool` | `false` | Open renders the alert dialog open. The default is closed. |
+| `Class` | `string` | `""` | Class adds classes to the dialog element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the alert dialog body, between the header and the buttons. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the dialog element. |
 
 ## Do and don't
 

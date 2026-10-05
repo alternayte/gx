@@ -50,15 +50,26 @@ Copy each file to its path in the app. Change each import of a registry package 
 package drawer
 
 props {
+  // Id is the id of the dialog element.
+  // The trigger points at it, so it must be unique on the page.
   Id          string
-  Side        Side     = Bottom
-  Title       string   = ""
-  Description string   = ""
-  Trigger     gx.Node  = nil
-  Footer      gx.Node  = nil
-  Open        bool     = false
-  Class       string   = ""
-  Children    gx.Node  = nil
+  // Side sets the edge the drawer slides from: Bottom, Top, Right or Left.
+  Side        Side = Bottom
+  // Title is the heading of the drawer. An empty value renders no heading.
+  Title       string = ""
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Trigger is the control that opens the drawer.
+  Trigger     gx.Node = nil
+  // Footer is the content of the drawer footer. A nil value renders no footer.
+  Footer      gx.Node = nil
+  // Open renders the drawer open. The default is closed.
+  Open        bool = false
+  // Class adds classes to the dialog element.
+  Class       string = ""
+  // Children is the content of the drawer body.
+  Children    gx.Node = nil
+  // Attrs adds HTML attributes to the dialog element.
   Attrs       gx.Attrs = nil
 }
 
@@ -176,6 +187,25 @@ The theme must define these tokens: `--background`, `--foreground`, `--border`, 
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### drawer.Drawer
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the dialog element. The trigger points at it, so it must be unique on the page. |
+| `Side` | `Side` | `Bottom` | Side sets the edge the drawer slides from: Bottom, Top, Right or Left. |
+| `Title` | `string` | `""` | Title is the heading of the drawer. An empty value renders no heading. |
+| `Description` | `string` | `""` | Description is the text below the title. An empty value renders no description. |
+| `Trigger` | `gx.Node` | `nil` | Trigger is the control that opens the drawer. |
+| `Footer` | `gx.Node` | `nil` | Footer is the content of the drawer footer. A nil value renders no footer. |
+| `Open` | `bool` | `false` | Open renders the drawer open. The default is closed. |
+| `Class` | `string` | `""` | Class adds classes to the dialog element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the drawer body. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the dialog element. |
 
 ## Do and don't
 

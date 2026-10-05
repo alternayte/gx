@@ -7,17 +7,21 @@ import (
 )
 
 type ContextMenuTriggerProps struct {
-	Id       string
-	Class    string
+	// Id is the id of the menu that a right click on the trigger opens.
+	Id string
+	// Class adds classes to the root element. The trigger has no style of its own.
+	Class string
+	// Children is the content of the area that takes the right click.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ContextMenuTrigger(p ContextMenuTriggerProps) gx.Node {
 	var _b gx.Builder
-//line ContextMenuTrigger.gx:10:1
+//line ContextMenuTrigger.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-gx-contextmenu", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ContextMenuTrigger.gx:10:86
+//line ContextMenuTrigger.gx:14:86
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

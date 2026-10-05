@@ -8,19 +8,27 @@ import (
 )
 
 type DropdownMenuTriggerProps struct {
-	Id       string
-	Variant  button.Variant
-	Size     button.Size
-	Class    string
+	// Id is the id of the menu that the trigger opens.
+	Id string
+	// Variant sets the visual style of the button: button.Default, button.Secondary,
+	// button.Destructive, button.Outline, button.Ghost or button.Link.
+	Variant button.Variant
+	// Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg,
+	// or an Icon size for a square button.
+	Size button.Size
+	// Class adds classes to the root element.
+	Class string
+	// Children is the button label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func DropdownMenuTrigger(p DropdownMenuTriggerProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuTrigger.gx:14:1
+//line DropdownMenuTrigger.gx:22:1
 	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: p.Size, Type: "button", Class: p.Class, Children: p.Children, Attrs: p.attrs()}))
-//line DropdownMenuTrigger.gx:14:114
+//line DropdownMenuTrigger.gx:22:114
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

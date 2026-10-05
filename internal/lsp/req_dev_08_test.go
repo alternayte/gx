@@ -11,8 +11,8 @@ import (
 func featureModule(t *testing.T) (dir string, card string) {
 	t.Helper()
 	dir = module(t, map[string]string{
-		"ui/badge/Badge.gx": "package badge\n\nprops {\n  Text string\n}\n\n<span>{p.Text}</span>\n",
-		"ui/card/Card.gx":   "package card\n\nimport \"app/ui/badge\"\n\nprops {\n  Title string\n  Count int\n}\nsignals { Qty int = 1 }\n\n<article class=\"card\">\n  total := 5\n  <badge.Badge text={p.Title} />\n  <span #total>{total}</span>\n  <input bind:value={$Qty} />\n  <button on:click={Reset{}}>Reset</button>\n</article>\n",
+		"ui/badge/Badge.gx": "package badge\n\nprops {\n  // Text is the label of the badge.\n  Text string\n}\n\n<span>{p.Text}</span>\n",
+		"ui/card/Card.gx":   "package card\n\nimport \"app/ui/badge\"\n\nprops {\n  // Title is the heading of the card.\n  Title string\n  Count int\n}\nsignals { Qty int = 1 }\n\n<article class=\"card\">\n  total := 5\n  <badge.Badge text={p.Title} />\n  <span #total>{total}</span>\n  <input bind:value={$Qty} />\n  <button on:click={Reset{}}>Reset</button>\n</article>\n",
 		"ui/card/routes.go": "package card\n\nimport \"github.com/alternayte/gx\"\n\ntype Show struct {\n\tgx.Route `GET /card/{id}`\n\tID int\n}\n\ntype Reset struct {\n\tgx.Route `POST /card/reset`\n}\n\nvar reset = gx.Action(func(c *gx.Ctx, in Reset) error { return nil })\n\nvar showPage = gx.Page(func(c *gx.Ctx, in Show) (CardProps, error) {\n\treturn CardProps{Title: \"x\"}, nil\n}, Card)\n\nvar Routes = gx.Collect(showPage, reset)\n",
 	})
 	return dir, filepath.Join(dir, "ui/card/Card.gx")
@@ -136,6 +136,9 @@ func TestREQ_DEV_08_LSPHover(t *testing.T) {
 	if !strings.Contains(h.Contents.Value, "string") {
 		t.Fatalf("hover on p.Title = %q", h.Contents.Value)
 	}
+	if !strings.Contains(h.Contents.Value, "Title is the heading of the card.") {
+		t.Fatalf("hover on p.Title lacks the prop description: %q", h.Contents.Value)
+	}
 
 	line, col = position(text, "badge.Badge")
 	msg = c.request("textDocument/hover", map[string]any{
@@ -147,6 +150,9 @@ func TestREQ_DEV_08_LSPHover(t *testing.T) {
 	}
 	if !strings.Contains(h.Contents.Value, "Badge") || !strings.Contains(h.Contents.Value, "Text string") {
 		t.Fatalf("hover on a component = %q", h.Contents.Value)
+	}
+	if !strings.Contains(h.Contents.Value, "// Text is the label of the badge.") {
+		t.Fatalf("hover on a component lacks the prop description: %q", h.Contents.Value)
 	}
 }
 

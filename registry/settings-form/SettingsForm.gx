@@ -1,14 +1,13 @@
 package settingsform
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/card"
-	"github.com/alternayte/gx/registry/field"
-	"github.com/alternayte/gx/registry/input"
-	switches "github.com/alternayte/gx/registry/switch"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/card"
+import "github.com/alternayte/gx/registry/field"
+import "github.com/alternayte/gx/registry/input"
+import switches "github.com/alternayte/gx/registry/switch"
 
 props {
+  // Action is the URL that the form posts to. Empty posts to the current URL.
   Action gx.URL = ""
 }
 

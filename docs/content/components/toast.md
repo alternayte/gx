@@ -9,20 +9,22 @@ item: "toast"
 <Example item="toast" name="toast-default" label="Toast: Toast: Default">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Default"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Text: "Event created"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Default": {Class: fixtureWidth, Toast: gx.ToastPatch{Text: "Event created"}}
+```go
+return c.Toast("Event created")
 ```
 
 </Example>
 
-<docs.Aside kind={docs.Note} title="Static preview">
+<docs.Aside kind={docs.Note} title="Live preview">
 
-This page shows static fixtures. The live behaviour needs a server.
+Each toast preview holds its toast in a `template` element. The button copies the toast into the toaster. The behaviour runtime then shows the toast, stacks it and removes it. The copy is for this page only.
+
+An app sends the same markup from an action with `c.Toast`. Gx has no client call that shows a toast.
 
 </docs.Aside>
 
@@ -56,8 +58,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package toast
 
 props {
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the toasts the toaster holds at render. Nil renders an empty toaster.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -68,8 +73,11 @@ props {
 package toast
 
 props {
+  // Toast is the pushed toast: its text, kind, description, action and timing.
   Toast gx.ToastPatch
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -264,13 +272,13 @@ The toaster shows at most three toasts. The oldest toast leaves first.
 <Example item="toast" name="toast-default" label="Toast: Toast: Default">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Default"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Text: "Event created"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Default": {Class: fixtureWidth, Toast: gx.ToastPatch{Text: "Event created"}}
+```go
+return c.Toast("Event created")
 ```
 
 </Example>
@@ -280,13 +288,13 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-success" label="Toast: Toast: Success">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Success"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Kind: gx.ToastSuccess, Text: "Changes saved"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Success": {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastSuccess, Text: "Changes saved"}}
+```go
+return c.Toast("Changes saved", gx.ToastSuccess)
 ```
 
 </Example>
@@ -296,13 +304,13 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-info" label="Toast: Toast: Info">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Info"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Kind: gx.ToastInfo, Text: "A new version is available"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Info":    {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastInfo, Text: "A new version is available"}}
+```go
+return c.Toast("A new version is available", gx.ToastInfo)
 ```
 
 </Example>
@@ -312,13 +320,13 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-warning" label="Toast: Toast: Warning">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Warning"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Kind: gx.ToastWarning, Text: "Your trial ends in 3 days"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Warning": {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastWarning, Text: "Your trial ends in 3 days"}}
+```go
+return c.Toast("Your trial ends in 3 days", gx.ToastWarning)
 ```
 
 </Example>
@@ -328,13 +336,13 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-error" label="Toast: Toast: Error">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Error"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Kind: gx.ToastError, Text: "The upload failed"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Error":   {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastError, Text: "The upload failed"}}
+```go
+return c.Toast("The upload failed", gx.ToastError)
 ```
 
 </Example>
@@ -344,13 +352,13 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-loading" label="Toast: Toast: Loading">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["Loading"])}
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{Kind: gx.ToastLoading, Text: "Uploading the file"}} />
 ```
 
-The code renders the fixture by its name. The fixture sets these props.
+The toast renderer of the app writes this tag. An action sends the toast.
 
-```go title="registry/toast/Toast.fixtures.go"
-"Loading": {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastLoading, Text: "Uploading the file"}}
+```go
+return c.Toast("Uploading the file", gx.ToastLoading)
 ```
 
 </Example>
@@ -360,17 +368,19 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-with-description" label="Toast: Toast: With description">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["WithDescription"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toast/Toast.fixtures.go"
-"WithDescription": {Class: fixtureWidth, Toast: gx.ToastPatch{
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{
   Kind:        gx.ToastSuccess,
   Text:        "Event created",
   Description: "Monday, 12 January at 09:00",
-}}
+}} />
+```
+
+The toast renderer of the app writes this tag. An action sends the toast.
+
+```go
+return c.Toast("Event created",
+	gx.ToastSuccess,
+	gx.ToastDescription("Monday, 12 January at 09:00"))
 ```
 
 </Example>
@@ -380,17 +390,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-with-link" label="Toast: Toast: With link">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["WithLink"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toast/Toast.fixtures.go"
-"WithLink": {Class: fixtureWidth, Toast: gx.ToastPatch{
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{
   Text:        "Item added to the cart",
   Description: "Open the cart to check out.",
   Action:      gx.ToastControl{Label: "View", URL: "/"},
-}}
+}} />
 ```
 
 </Example>
@@ -400,16 +404,10 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toast" name="toast-with-action" label="Toast: Toast: With action">
 
 ```gx
-{toast.Toast(toast.ToastFixtures["WithAction"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toast/Toast.fixtures.go"
-"WithAction": {Class: fixtureWidth, Toast: gx.ToastPatch{
+<toast.Toast class="max-w-[356px]" toast={gx.ToastPatch{
   Text:   "Item removed from the cart",
   Action: gx.ToastControl{Label: "Undo", URL: "/", Method: "POST"},
-}}
+}} />
 ```
 
 </Example>
@@ -423,6 +421,26 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### toast.Toast
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Toast` | `gx.ToastPatch` | Required | Toast is the pushed toast: its text, kind, description, action and timing. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### toast.Toaster
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the toasts the toaster holds at render. Nil renders an empty toaster. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

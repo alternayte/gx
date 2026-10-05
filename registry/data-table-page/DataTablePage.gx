@@ -1,16 +1,19 @@
 package datatablepage
 
-import (
-	"github.com/alternayte/gx/registry/card"
-	"github.com/alternayte/gx/registry/input"
-)
+import "github.com/alternayte/gx/registry/card"
+import "github.com/alternayte/gx/registry/input"
 
 props {
+  // Title is the heading of the page.
   Title       string
-  Description string   = ""
-  Filter      gx.Node  = nil
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Filter is the filter control shown in the header row. A nil value renders no filter.
+  Filter      gx.Node = nil
+  // Table is the data table. It renders in a card.
   Table       gx.Node
-  Pagination  gx.Node  = nil
+  // Pagination is the paging links shown below the table. A nil value renders no paging.
+  Pagination  gx.Node = nil
 }
 
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-6">

@@ -48,13 +48,21 @@ package checkbox
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = "on"
-  Checked  bool     = false
-  Disabled bool     = false
-  Invalid  bool     = false
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Name is the name attribute of the input. The form sends the value under this name.
+  Name     string = ""
+  // Value is the value the form sends when the checkbox is checked.
+  Value    string = "on"
+  // Checked renders the checkbox checked.
+  Checked  bool = false
+  // Disabled stops the user from changing the checkbox and dims it.
+  Disabled bool = false
+  // Invalid sets aria-invalid on the input and shows the error style.
+  Invalid  bool = false
+  // Class adds classes to the root element, the label.
+  Class    string = ""
+  // Children is the checkbox label. A nil value renders the box alone.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element, the label.
   Attrs    gx.Attrs = nil
 }
 
@@ -161,6 +169,23 @@ The checkbox is a native input behind a styled box.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### checkbox.Checkbox
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the name attribute of the input. The form sends the value under this name. |
+| `Value` | `string` | `"on"` | Value is the value the form sends when the checkbox is checked. |
+| `Checked` | `bool` | `false` | Checked renders the checkbox checked. |
+| `Disabled` | `bool` | `false` | Disabled stops the user from changing the checkbox and dims it. |
+| `Invalid` | `bool` | `false` | Invalid sets aria-invalid on the input and shows the error style. |
+| `Class` | `string` | `""` | Class adds classes to the root element, the label. |
+| `Children` | `gx.Node` | `nil` | Children is the checkbox label. A nil value renders the box alone. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element, the label. |
 
 ## Do and don't
 

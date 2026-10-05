@@ -1,9 +1,13 @@
 package dropdownmenu
 
 props {
-  Inset    bool     = false
-  Class    string   = ""
+  // Inset adds left padding, so the label lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -9,13 +9,11 @@ item: "select"
 <Example item="select" name="select-plan" label="Select: Select: Plan">
 
 ```gx
-{selectbox.Select(selectbox.SelectFixtures["Plan"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/select/Select.fixtures.go"
-"Plan":     {Name: "plan", Label: "Plan", Class: "w-48", Children: plans()}
+<selectbox.Select name="plan" label="Plan" class="w-48">
+  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
+  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
+  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
+</selectbox.Select>
 ```
 
 </Example>
@@ -60,12 +58,20 @@ package selectbox
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name        string   = ""
-  Label       string   = ""
-  Size        Size     = Md
-  Placeholder string   = ""
-  Class       string   = ""
+  // Name is the form field name.
+  Name        string = ""
+  // Label is the accessible name of the select.
+  Label       string = ""
+  // Size sets the height: Md or Sm.
+  Size        Size = Md
+  // Placeholder is the text of a disabled first option that shows while no value is selected. An
+  // empty value renders no placeholder option.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the options of the select.
   Children    gx.Node
+  // Attrs adds HTML attributes to the select element.
   Attrs       gx.Attrs = nil
 }
 
@@ -84,8 +90,11 @@ props {
 package selectbox
 
 props {
+  // Label is the visible name of the option group.
   Label    string
+  // Disabled disables every option of the group.
   Disabled bool = false
+  // Children is the options of the group.
   Children gx.Node
 }
 
@@ -96,9 +105,13 @@ props {
 package selectbox
 
 props {
+  // Value is the value the form submits when the option is selected.
   Value    string = ""
-  Selected bool   = false
-  Disabled bool   = false
+  // Selected selects the option for the first render.
+  Selected bool = false
+  // Disabled disables the option.
+  Disabled bool = false
+  // Children is the option label.
   Children gx.Node
 }
 
@@ -109,6 +122,7 @@ props {
 package selectbox
 
 props {
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -253,13 +267,11 @@ The component is a styled native `<select>`, so the keyboard, the option list an
 <Example item="select" name="select-plan" label="Select: Select: Plan">
 
 ```gx
-{selectbox.Select(selectbox.SelectFixtures["Plan"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/select/Select.fixtures.go"
-"Plan":     {Name: "plan", Label: "Plan", Class: "w-48", Children: plans()}
+<selectbox.Select name="plan" label="Plan" class="w-48">
+  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
+  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
+  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
+</selectbox.Select>
 ```
 
 </Example>
@@ -269,13 +281,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="select" name="select-small" label="Select: Select: Small">
 
 ```gx
-{selectbox.Select(selectbox.SelectFixtures["Small"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/select/Select.fixtures.go"
-"Small":    {Name: "plan", Label: "Plan", Size: Sm, Class: "w-48", Children: plans()}
+<selectbox.Select name="plan" label="Plan" size={selectbox.Sm} class="w-48">
+  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
+  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
+  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
+</selectbox.Select>
 ```
 
 </Example>
@@ -285,13 +295,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="select" name="select-fit" label="Select: Select: Fit">
 
 ```gx
-{selectbox.Select(selectbox.SelectFixtures["Fit"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/select/Select.fixtures.go"
-"Fit":      {Name: "plan", Label: "Plan", Children: plans()}
+<selectbox.Select name="plan" label="Plan">
+  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
+  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
+  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
+</selectbox.Select>
 ```
 
 </Example>
@@ -313,13 +321,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="select" name="select-invalid" label="Select: Select: Invalid">
 
 ```gx
-{selectbox.Select(selectbox.SelectFixtures["Invalid"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/select/Select.fixtures.go"
-"Invalid":  {Name: "plan", Label: "Plan", Class: "w-48", Attrs: gx.Attrs{{Key: "aria-invalid", Value: "true"}}, Children: plans()}
+<selectbox.Select name="plan" label="Plan" class="w-48" attrs={gx.Attrs{{Key: "aria-invalid", Value: "true"}}}>
+  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
+  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
+  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
+</selectbox.Select>
 ```
 
 </Example>
@@ -376,6 +382,45 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### selectbox.Select
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the form field name. |
+| `Label` | `string` | `""` | Label is the accessible name of the select. |
+| `Size` | `Size` | `Md` | Size sets the height: Md or Sm. |
+| `Placeholder` | `string` | `""` | Placeholder is the text of a disabled first option that shows while no value is selected. An empty value renders no placeholder option. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the options of the select. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the select element. |
+
+### selectbox.SelectGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the visible name of the option group. |
+| `Disabled` | `bool` | `false` | Disabled disables every option of the group. |
+| `Children` | `gx.Node` | Required | Children is the options of the group. |
+
+### selectbox.SelectOption
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Value` | `string` | `""` | Value is the value the form submits when the option is selected. |
+| `Selected` | `bool` | `false` | Selected selects the option for the first render. |
+| `Disabled` | `bool` | `false` | Disabled disables the option. |
+| `Children` | `gx.Node` | Required | Children is the option label. |
+
+### selectbox.SelectSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

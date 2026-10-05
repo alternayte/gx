@@ -88,8 +88,8 @@ func frontmatter(b *strings.Builder, title, description, group, itemName string)
 }
 
 // pageMarkdown returns the content page of one item, in the order of a
-// component page: example, installation, usage, examples, do and don't,
-// keyboard (REQ-DOC-02).
+// component page: example, installation, usage, examples, API reference,
+// do and don't, keyboard (REQ-DOC-02).
 func pageMarkdown(reg *registry, p *page) (string, error) {
 	it := p.Item
 	var b strings.Builder
@@ -103,7 +103,13 @@ func pageMarkdown(reg *registry, p *page) (string, error) {
 			return "", err
 		}
 	}
-	if it.Server {
+	if pushesToasts(p) {
+		b.WriteString("<docs.Aside kind={docs.Note} title=\"Live preview\">\n\n")
+		b.WriteString("Each toast preview holds its toast in a `template` element. The button copies the toast into the toaster. ")
+		b.WriteString("The behaviour runtime then shows the toast, stacks it and removes it. The copy is for this page only.\n\n")
+		b.WriteString("An app sends the same markup from an action with `c.Toast`. Gx has no client call that shows a toast.\n\n")
+		b.WriteString("</docs.Aside>\n\n")
+	} else if it.Server {
 		b.WriteString("<docs.Aside kind={docs.Note} title=\"Static preview\">\n\n")
 		b.WriteString("This page shows static fixtures. The live behaviour needs a server.\n\n")
 		b.WriteString("</docs.Aside>\n\n")
@@ -139,6 +145,10 @@ func pageMarkdown(reg *registry, p *page) (string, error) {
 		}
 	}
 
+	if err := writeReference(&b, it); err != nil {
+		return "", err
+	}
+
 	if it.Usage.Do != "" || it.Usage.Dont != "" {
 		b.WriteString("## Do and don't\n\n<docs.CardGrid>\n")
 		if it.Usage.Do != "" {
@@ -153,6 +163,67 @@ func pageMarkdown(reg *registry, p *page) (string, error) {
 		b.WriteString("## Keyboard\n\n" + escapeTags(it.Usage.Keyboard) + "\n\n")
 	}
 	return strings.TrimRight(b.String(), "\n") + "\n", nil
+}
+
+// writeReference writes the API reference: one table per component, with
+// the name, type, default and description of each prop. The rows come from
+// the props block, so the section cannot go stale.
+func writeReference(b *strings.Builder, it *item) error {
+	if it.IconSet || len(it.Components) == 0 {
+		return nil
+	}
+	b.WriteString("## API reference\n\n")
+	for _, comp := range it.Components {
+		if comp.Gx != nil {
+			b.WriteString("A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.\n\n")
+			break
+		}
+	}
+	for _, comp := range it.Components {
+		b.WriteString("### " + referenceTitle(it, comp) + "\n\n")
+		props := it.props(comp)
+		if comp.Gx == nil {
+			fmt.Fprintf(b, "The component is a Go function. Its props are the fields of `%sProps`.\n\n", comp.Name)
+		}
+		if len(props) == 0 {
+			b.WriteString("The component has no props.\n\n")
+			continue
+		}
+		b.WriteString("| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n")
+		for _, p := range props {
+			def := "Required"
+			switch {
+			case comp.Gx == nil:
+				// A Go struct has no defaults: an unset field is its
+				// zero value.
+				def = "Zero value"
+			case !p.Required:
+				def = codeCell(p.Default)
+			}
+			doc := strings.ReplaceAll(escapeLineTags(strings.Join(strings.Fields(p.Doc), " ")), "|", `\|`)
+			if doc == "" {
+				return fmt.Errorf("docsgen: %s: the prop %s of %s has no description", it.Name, p.Name, comp.Name)
+			}
+			fmt.Fprintf(b, "| %s | %s | %s | %s |\n", codeCell(p.Name), codeCell(p.Type), def, doc)
+		}
+		b.WriteString("\n")
+	}
+	return nil
+}
+
+// referenceTitle returns the heading of one API reference table: the name
+// of the component as a tag writes it.
+func referenceTitle(it *item, comp *component) string {
+	return it.PkgName + "." + comp.Name
+}
+
+// codeCell returns s as inline code inside a table cell.
+func codeCell(s string) string {
+	s = strings.ReplaceAll(strings.Join(strings.Fields(s), " "), "|", `\|`)
+	if strings.Contains(s, "`") {
+		return "`` " + s + " ``"
+	}
+	return "`" + s + "`"
 }
 
 // writeExample writes one live example: the preview frame and the code of
@@ -171,7 +242,13 @@ func writeExample(b *strings.Builder, reg *registry, it *item, ex *example) erro
 		return err
 	}
 	for _, part := range ex.Parts {
-		if part.Snippet.Tag {
+		if part.Snippet.Action != "" {
+			b.WriteString("The toast renderer of the app writes this tag. An action sends the toast.\n\n")
+			if err := writeFence(b, "go", "", part.Snippet.Action); err != nil {
+				return err
+			}
+		}
+		if part.Snippet.Tag || part.Snippet.Call {
 			continue
 		}
 		b.WriteString("The code renders the fixture by its name. The fixture sets these props.\n\n")
@@ -185,6 +262,17 @@ func writeExample(b *strings.Builder, reg *registry, it *item, ex *example) erro
 	}
 	b.WriteString("</Example>\n\n")
 	return nil
+}
+
+// pushesToasts reports whether a page has an example that is one pushed
+// toast.
+func pushesToasts(p *page) bool {
+	for _, ex := range p.Examples {
+		if ex.toast() {
+			return true
+		}
+	}
+	return false
 }
 
 // writeFence writes one fenced code block with an info string. The fence is a tilde fence when
@@ -470,8 +558,12 @@ func itemsSource(pages []*page) ([]byte, error) {
 				if len(calls) > 1 {
 					node = "gx.Frag(" + strings.Join(calls, ", ") + ")"
 				}
-				fmt.Fprintf(&b, "\t\t\t{Name: %q, Title: %q, Component: %q, Fixtures: []string{%s}, Node: func() gx.Node { return %s }},\n",
-					ex.Slug, ex.Title, ex.Parts[0].Comp.Name, strings.Join(fixtures, ", "), node)
+				toast := ""
+				if ex.toast() {
+					toast = " Toast: true,"
+				}
+				fmt.Fprintf(&b, "\t\t\t{Name: %q, Title: %q, Component: %q, Fixtures: []string{%s},%s Node: func() gx.Node { return %s }},\n",
+					ex.Slug, ex.Title, ex.Parts[0].Comp.Name, strings.Join(fixtures, ", "), toast, node)
 			}
 			b.WriteString("\t\t},\n")
 		}

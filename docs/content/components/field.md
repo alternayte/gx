@@ -68,12 +68,19 @@ Copy each file to its path in the app. Change each import of a registry package 
 package field
 
 props {
+  // Orientation sets the direction of the label and the control: Vertical, Horizontal or
+  // Responsive. Responsive is vertical in a narrow field group and horizontal in a wide one.
   Orientation Orientation = Vertical
-  Invalid     bool        = false
-  Disabled    bool        = false
-  Class       string      = ""
+  // Invalid sets data-invalid on the field. The field text takes the destructive colour.
+  Invalid     bool = false
+  // Disabled sets data-disabled on the field. The label and the title fade.
+  Disabled    bool = false
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the content of the field: the label, the control and the description.
   Children    gx.Node
-  Attrs       gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div role="group" data-slot="field" data-orientation={p.orientation()} class={gx.Cx("group/field flex w-full gap-3 data-[invalid=true]:text-destructive", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}>{p.Children}</div>
@@ -83,9 +90,13 @@ props {
 package field
 
 props {
-  For      string   = ""
-  Class    string   = ""
+  // For is the id of the control that the label names. Empty omits the for attribute.
+  For      string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -96,8 +107,11 @@ props {
 package field
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the description text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -108,9 +122,14 @@ props {
 package field
 
 props {
+  // Errors holds the error messages. Empty and repeated messages do not show; two or more
+  // show as a list.
   Errors   []string = nil
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the error. It replaces Errors.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -135,8 +154,11 @@ if p.Children != nil || len(p.messages()) > 0 {
 package field
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the group: the fields, the field sets and the separators.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -147,8 +169,11 @@ props {
 package field
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the field set.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -159,9 +184,13 @@ props {
 package field
 
 props {
-  Variant  Variant  = Legend
-  Class    string   = ""
+  // Variant sets the text size: Legend or Label. Label is the smaller size.
+  Variant  Variant = Legend
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the legend text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -398,8 +427,11 @@ var FieldSetFixtures = gx.Fixtures[FieldSetProps]{
 package field
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the column: the title and the description.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -423,8 +455,11 @@ var FieldContentFixtures = gx.Fixtures[FieldContentProps]{
 package field
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the title text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -443,8 +478,11 @@ var FieldTitleFixtures = gx.Fixtures[FieldTitleProps]{"Title": {Children: gx.Tex
 package field
 
 props {
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text on the line. Nil shows the line only.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -551,11 +589,7 @@ For a generated form field with rules and errors, use the `gx.FormField` control
     <field.FieldTitle>Product news</field.FieldTitle>
     <field.FieldDescription>One message each month.</field.FieldDescription>
   </field.FieldContent>
-  {gx.El("input", gx.Attrs{
-    {Key: "type", Value: "checkbox"},
-    {Key: "aria-label", Value: "Product news"},
-    {Key: "class", Value: "size-4 accent-primary"},
-  })}
+  <input type="checkbox" aria-label="Product news" class="size-4 accent-primary" />
 </field.Field>
 ```
 
@@ -729,6 +763,96 @@ For a generated form field with rules and errors, use the `gx.FormField` control
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### field.Field
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Orientation` | `Orientation` | `Vertical` | Orientation sets the direction of the label and the control: Vertical, Horizontal or Responsive. Responsive is vertical in a narrow field group and horizontal in a wide one. |
+| `Invalid` | `bool` | `false` | Invalid sets data-invalid on the field. The field text takes the destructive colour. |
+| `Disabled` | `bool` | `false` | Disabled sets data-disabled on the field. The label and the title fade. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the field: the label, the control and the description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the column: the title and the description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the description text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldError
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Errors` | `[]string` | `nil` | Errors holds the error messages. Empty and repeated messages do not show; two or more show as a list. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the error. It replaces Errors. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the group: the fields, the field sets and the separators. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldLabel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `For` | `string` | `""` | For is the id of the control that the label names. Empty omits the for attribute. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldLegend
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Legend` | Variant sets the text size: Legend or Label. Label is the smaller size. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the legend text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the text on the line. Nil shows the line only. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldSet
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the field set. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### field.FieldTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the title text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

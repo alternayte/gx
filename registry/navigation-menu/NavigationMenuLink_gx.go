@@ -7,19 +7,26 @@ import (
 )
 
 type NavigationMenuLinkProps struct {
-	Href     gx.URL
-	Variant  Variant
-	Active   bool
-	Class    string
+	// Href is the URL that the link opens.
+	Href gx.URL
+	// Variant sets the visual style: Default for a link in the content of a menu, or Trigger
+	// for a link in the bar.
+	Variant Variant
+	// Active marks the link as the current page. It sets aria-current and the active style.
+	Active bool
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the link.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func NavigationMenuLink(p NavigationMenuLinkProps) gx.Node {
 	var _b gx.Builder
-//line NavigationMenuLink.gx:12:1
+//line NavigationMenuLink.gx:19:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-1 rounded-sm p-2 text-sm no-underline transition-all outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], activeClass[p.Active], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "aria-current", Value: p.current(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line NavigationMenuLink.gx:12:489
+//line NavigationMenuLink.gx:19:489
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

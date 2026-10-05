@@ -7,32 +7,37 @@ import (
 )
 
 type BadgeProps struct {
-	Variant  Variant
-	Href     gx.URL
-	Class    string
+	// Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.
+	Variant Variant
+	// Href is the URL of the link. A non-empty value renders the badge as an a element, not a span.
+	Href gx.URL
+	// Class adds classes to the root element.
+	Class string
+	// Children is the badge label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Badge(p BadgeProps) gx.Node {
 	var _b gx.Builder
-//line Badge.gx:11:1
+//line Badge.gx:16:1
 	if p.Href != "" {
-//line Badge.gx:11:18
+//line Badge.gx:16:18
 		_b.Add(gx.Text("\n  "))
-//line Badge.gx:12:3
+//line Badge.gx:17:3
 		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "badge", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Badge.gx:12:112
+//line Badge.gx:17:112
 		_b.Add(gx.Text("\n"))
 	} else {
-//line Badge.gx:13:9
+//line Badge.gx:18:9
 		_b.Add(gx.Text("\n  "))
-//line Badge.gx:14:3
+//line Badge.gx:19:3
 		_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "badge", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Badge.gx:14:104
+//line Badge.gx:19:104
 		_b.Add(gx.Text("\n"))
 	}
-//line Badge.gx:15:2
+//line Badge.gx:20:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

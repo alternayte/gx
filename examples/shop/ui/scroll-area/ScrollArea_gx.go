@@ -7,16 +7,19 @@ import (
 )
 
 type ScrollAreaProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content that scrolls.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ScrollArea(p ScrollAreaProps) gx.Node {
 	var _b gx.Builder
-//line ScrollArea.gx:9:1
+//line ScrollArea.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative overflow-auto transition-[color,box-shadow] outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ScrollArea.gx:9:315
+//line ScrollArea.gx:12:315
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

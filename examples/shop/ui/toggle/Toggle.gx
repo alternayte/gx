@@ -1,15 +1,25 @@
 package toggle
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Name     string   = ""
-  Value    string   = "on"
-  Pressed  bool     = false
-  Disabled bool     = false
-  Invalid  bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default or Outline.
+  Variant  Variant = Default
+  // Size sets the height and padding: Sm, Md or Lg.
+  Size     Size = Md
+  // Name is the form field name.
+  Name     string = ""
+  // Value is the value the form submits when the toggle is pressed.
+  Value    string = "on"
+  // Pressed sets the toggle to pressed for the first render.
+  Pressed  bool = false
+  // Disabled disables the toggle.
+  Disabled bool = false
+  // Invalid sets aria-invalid on the input and shows the error style.
+  Invalid  bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the toggle label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -7,18 +7,23 @@ import (
 )
 
 type TabsListProps struct {
-	Variant  Variant
-	Label    string
-	Class    string
+	// Variant sets the visual style: Default, a muted pill, or Line, an underline.
+	Variant Variant
+	// Label is the accessible name of the tab list.
+	Label string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the tab triggers.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TabsList(p TabsListProps) gx.Node {
 	var _b gx.Builder
-//line TabsList.gx:11:1
+//line TabsList.gx:16:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-9 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col", variantClass[p.variant()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "tablist", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: string(p.variant()), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TabsList.gx:11:394
+//line TabsList.gx:16:394
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

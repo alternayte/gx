@@ -1,10 +1,15 @@
 package docs
 
 props {
+  // Title is the heading of the hero.
   Title    string
+  // Tagline is the text below the title. Empty omits it.
   Tagline  string = ""
+  // Actions is the row of links or buttons below the tagline. Nil omits it.
   Actions  gx.Node = nil
+  // Children is the content below the actions. Nil omits it.
   Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

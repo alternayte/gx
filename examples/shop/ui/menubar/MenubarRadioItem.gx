@@ -3,12 +3,20 @@ package menubar
 import "github.com/alternayte/gx/examples/shop/ui/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = ""
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Name is the name attribute of the radio input. The radio items of one group share
+  // the same name.
+  Name     string = ""
+  // Value is the value that the form sends when the item is checked.
+  Value    string = ""
+  // Checked sets the item as checked on the first render.
+  Checked  bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -1,0 +1,17 @@
+package site
+
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/toast"
+
+props {
+  Children gx.Node
+}
+
+{/* The live preview of one toast. An app pushes a toast from an action; a
+    static page has no action. The template holds the toast markup, the
+    button copies it into the toaster, and the behaviour runtime of the toast
+    item does the rest: the timer, the stack of three and the close button. */}
+{button.Button(button.ButtonProps{Variant: button.Outline, Attrs: gx.Attrs{{Key: "data-docs-toast", Value: ""}}, Children: gx.Text("Show the toast")})}
+<template data-docs-toast-source>{p.Children}</template>
+{toast.Toaster(toast.ToasterProps{})}
+{toastScript()}

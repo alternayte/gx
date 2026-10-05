@@ -7,17 +7,21 @@ import (
 )
 
 type TabsContentProps struct {
-	Label    string
-	Class    string
+	// Label is the label of the trigger that shows this panel.
+	Label string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the panel.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TabsContent(p TabsContentProps) gx.Node {
 	var _b gx.Builder
-//line TabsContent.gx:10:1
+//line TabsContent.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex-1 outline-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "tabpanel", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab-panel", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TabsContent.gx:10:140
+//line TabsContent.gx:14:140
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

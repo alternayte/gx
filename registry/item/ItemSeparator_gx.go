@@ -7,15 +7,17 @@ import (
 )
 
 type ItemSeparatorProps struct {
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func ItemSeparator(p ItemSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line ItemSeparator.gx:8:1
+//line ItemSeparator.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-px w-full shrink-0 bg-border my-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}, p.Attrs)))
-//line ItemSeparator.gx:8:156
+//line ItemSeparator.gx:10:156
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

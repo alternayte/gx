@@ -7,16 +7,19 @@ import (
 )
 
 type ItemHeaderProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the header.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ItemHeader(p ItemHeaderProps) gx.Node {
 	var _b gx.Builder
-//line ItemHeader.gx:9:1
+//line ItemHeader.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex basis-full items-center justify-between gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-header", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemHeader.gx:9:138
+//line ItemHeader.gx:12:138
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,16 +7,19 @@ import (
 )
 
 type SpinnerProps struct {
+	// Label is the accessible name of the spinner. An empty value is Loading.
 	Label string
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func Spinner(p SpinnerProps) gx.Node {
 	var _b gx.Builder
-//line Spinner.gx:9:1
+//line Spinner.gx:12:1
 	_b.Add(gx.El("svg", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("size-4 animate-spin", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "status", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}, gx.Attr{Key: "xmlns", Value: "http://www.w3.org/2000/svg", Kind: gx.AttrText}, gx.Attr{Key: "viewBox", Value: "0 0 24 24", Kind: gx.AttrText}, gx.Attr{Key: "fill", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "stroke", Value: "currentColor", Kind: gx.AttrText}, gx.Attr{Key: "stroke-width", Value: "2", Kind: gx.AttrText}, gx.Attr{Key: "stroke-linecap", Value: "round", Kind: gx.AttrText}, gx.Attr{Key: "stroke-linejoin", Value: "round", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("path", gx.Attrs{gx.Attr{Key: "d", Value: "M21 12a9 9 0 1 1-6.219-8.56", Kind: gx.AttrText}}), gx.Text("\n"))))
-//line Spinner.gx:11:7
+//line Spinner.gx:14:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

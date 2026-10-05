@@ -27,6 +27,7 @@ An import is a Go import line or block: `import "path"` or `import ( ... )`.
 
 ```text
 props {
+  // Title is the heading text.
   Title   string
   Variant Variant = Default
   Attrs   gx.Attrs = nil
@@ -35,6 +36,10 @@ props {
 
 - A field is `Name Type`. A field with `= expr` is optional.
 - A default may span lines inside brackets or braces.
+- A `//` comment on the lines above a field is the description of the field.
+  The generated props struct carries it as a Go doc comment.
+- A block holds no other comment. A comment after a field on its line, a
+  comment with no field below it and a `/* ... */` comment give `GX1000`.
 - Inside markup, `p` is the props value.
 - `$Name` reads a signal. It is valid only in client expressions.
 
@@ -123,6 +128,8 @@ against real Go types. Typical expressions are `p.Title`, `len(p.Items)` and
 - one attribute line, unless the source used one attribute per line
 - one blank line between top-level sections
 - Go expressions have single spaces between tokens
+- a field description is `// text` on the lines directly above its field; a
+  comment with no text is removed
 - a whitespace-only gap between nodes stays a single space when the source gap
   had no newline, and becomes a newline plus indentation otherwise
 

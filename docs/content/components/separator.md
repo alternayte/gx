@@ -42,10 +42,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package separator
 
 props {
+  // Orientation sets the direction: Horizontal or Vertical.
   Orientation Orientation = Horizontal
-  Decorative  bool        = true
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Decorative hides the separator from assistive technology. Set it to false for the separator
+  // role.
+  Decorative  bool = true
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div data-slot="separator" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}></div>
@@ -151,6 +156,19 @@ A decorative separator has the role `none`. A separator with `decorative={false}
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### separator.Separator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Orientation` | `Orientation` | `Horizontal` | Orientation sets the direction: Horizontal or Vertical. |
+| `Decorative` | `bool` | `true` | Decorative hides the separator from assistive technology. Set it to false for the separator role. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

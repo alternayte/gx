@@ -8,42 +8,46 @@ import (
 )
 
 type AppShellProps struct {
-	Title    string
-	Nav      gx.Node
-	Footer   gx.Node
+	// Title is the app name. It shows in the sidebar header and in the page header.
+	Title string
+	// Nav is the primary navigation. It renders in the sidebar content.
+	Nav gx.Node
+	// Footer is the content of the sidebar footer. A nil value renders no footer.
+	Footer gx.Node
+	// Children is the content of the main area.
 	Children gx.Node
 }
 
 func AppShell(p AppShellProps) gx.Node {
 	var _b gx.Builder
-//line AppShell.gx:12:1
+//line AppShell.gx:16:1
 	var _b1 gx.Builder
-//line AppShell.gx:12:32
+//line AppShell.gx:16:32
 	_b1.Add(gx.Text("\n  "))
-//line AppShell.gx:13:3
+//line AppShell.gx:17:3
 	var _b2 gx.Builder
-//line AppShell.gx:14:5
+//line AppShell.gx:18:5
 	_b2.Add(sidebar.SidebarHeader(sidebar.SidebarHeaderProps{Class: "", Children: gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "px-2 py-1 text-sm font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)), Attrs: nil}))
-//line AppShell.gx:17:5
+//line AppShell.gx:21:5
 	_b2.Add(sidebar.SidebarContent(sidebar.SidebarContentProps{Class: "", Children: p.Nav, Attrs: nil}))
-//line AppShell.gx:20:5
+//line AppShell.gx:24:5
 	if p.Footer != nil {
-//line AppShell.gx:20:25
+//line AppShell.gx:24:25
 		_b2.Add(gx.Text("\n      "))
-//line AppShell.gx:21:7
+//line AppShell.gx:25:7
 		_b2.Add(sidebar.SidebarFooter(sidebar.SidebarFooterProps{Class: "", Children: p.Footer, Attrs: nil}))
-//line AppShell.gx:21:64
+//line AppShell.gx:25:64
 		_b2.Add(gx.Text("\n    "))
 	}
 	_b1.Add(sidebar.Sidebar(sidebar.SidebarProps{Id: "gx-sidebar", Side: sidebar.Left, Class: "", Children: _b2.Node(), Attrs: nil}))
-//line AppShell.gx:23:21
+//line AppShell.gx:27:21
 	_b1.Add(gx.Text("\n  "))
-//line AppShell.gx:24:3
+//line AppShell.gx:28:3
 	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex min-w-0 flex-1 flex-col", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "flex h-14 items-center gap-2 border-b border-border px-4", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), sidebar.SidebarTrigger(sidebar.SidebarTriggerProps{Controls: "gx-sidebar", Class: "-ml-1 lg:hidden", Attrs: nil}), gx.Text("\n      "), gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)), gx.Text("\n    "))), gx.Text("\n    "), gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "flex-1 p-6", Kind: gx.AttrText}}, p.Children), gx.Text("\n  "))))
-//line AppShell.gx:30:9
+//line AppShell.gx:34:9
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex min-h-screen", Kind: gx.AttrText}}, _b1.Node()))
-//line AppShell.gx:31:7
+//line AppShell.gx:35:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

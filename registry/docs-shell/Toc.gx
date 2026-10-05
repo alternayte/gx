@@ -1,6 +1,7 @@
 package shell
 
 props {
+  // Headings holds the entries of the table of contents. Empty renders nothing.
   Headings []Heading
 }
 

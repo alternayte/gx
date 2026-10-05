@@ -1,12 +1,18 @@
 package radiogroup
 
 props {
-  Name        string      = ""
+  // Name is the form field name of the group. The group does not render it; set Name on each item.
+  Name        string = ""
+  // Orientation sets the layout direction: Vertical or Horizontal.
   Orientation Orientation = Vertical
-  Label       string      = ""
-  Class       string      = ""
+  // Label is the accessible name of the group.
+  Label       string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the radio items.
   Children    gx.Node
-  Attrs       gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div role="radiogroup" aria-label={p.Label} aria-orientation={p.orientation()} class={gx.Cx("grid gap-3", orientationClass[p.orientation()], p.Class)} {...p.Attrs}>{p.Children}</div>

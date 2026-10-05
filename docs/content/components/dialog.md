@@ -51,14 +51,25 @@ package dialog
 import "github.com/alternayte/gx/registry/icons"
 
 props {
+  // Id is the id of the dialog element.
+  // The trigger points at it, so it must be unique on the page.
   Id          string
-  Title       string   = ""
-  Description string   = ""
-  Trigger     gx.Node  = nil
-  Footer      gx.Node  = nil
-  Open        bool     = false
-  Class       string   = ""
-  Children    gx.Node  = nil
+  // Title is the heading of the dialog. An empty value renders no heading.
+  Title       string = ""
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Trigger is the control that opens the dialog.
+  Trigger     gx.Node = nil
+  // Footer is the content of the dialog footer, for example the main action. A nil value renders
+  // no footer.
+  Footer      gx.Node = nil
+  // Open renders the dialog open. The default is closed.
+  Open        bool = false
+  // Class adds classes to the dialog element.
+  Class       string = ""
+  // Children is the content of the dialog body.
+  Children    gx.Node = nil
+  // Attrs adds HTML attributes to the dialog element.
   Attrs       gx.Attrs = nil
 }
 
@@ -140,6 +151,24 @@ The theme must define these tokens: `--background`, `--foreground`, `--border`, 
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### dialog.Dialog
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the dialog element. The trigger points at it, so it must be unique on the page. |
+| `Title` | `string` | `""` | Title is the heading of the dialog. An empty value renders no heading. |
+| `Description` | `string` | `""` | Description is the text below the title. An empty value renders no description. |
+| `Trigger` | `gx.Node` | `nil` | Trigger is the control that opens the dialog. |
+| `Footer` | `gx.Node` | `nil` | Footer is the content of the dialog footer, for example the main action. A nil value renders no footer. |
+| `Open` | `bool` | `false` | Open renders the dialog open. The default is closed. |
+| `Class` | `string` | `""` | Class adds classes to the dialog element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the dialog body. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the dialog element. |
 
 ## Do and don't
 

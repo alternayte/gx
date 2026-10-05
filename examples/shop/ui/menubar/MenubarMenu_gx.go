@@ -7,22 +7,27 @@ import (
 )
 
 type MenubarMenuProps struct {
-	Id       string
-	Label    string
-	Class    string
+	// Id is the id of the menu element. The trigger in the bar opens the menu by this id.
+	Id string
+	// Label is the text of the trigger in the bar. It is also the accessible name of the menu.
+	Label string
+	// Class adds classes to the menu element.
+	Class string
+	// Children is the menu items.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the menu element.
+	Attrs gx.Attrs
 }
 
 func MenubarMenu(p MenubarMenuProps) gx.Node {
 	var _b gx.Builder
-//line MenubarMenu.gx:11:1
+//line MenubarMenu.gx:16:1
 	_b.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.triggerStyle()))), Kind: gx.AttrStyle}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "popovertarget", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-roving-item", true)}, gx.Text(p.Label)))
-//line MenubarMenu.gx:11:403
+//line MenubarMenu.gx:16:403
 	_b.Add(gx.Text("\n"))
-//line MenubarMenu.gx:12:1
+//line MenubarMenu.gx:17:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[12rem] origin-top-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.contentStyle()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line MenubarMenu.gx:12:346
+//line MenubarMenu.gx:17:346
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,16 +7,19 @@ import (
 )
 
 type PopoverDescriptionProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the text of the description.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func PopoverDescription(p PopoverDescriptionProps) gx.Node {
 	var _b gx.Builder
-//line PopoverDescription.gx:9:1
+//line PopoverDescription.gx:12:1
 	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PopoverDescription.gx:9:81
+//line PopoverDescription.gx:12:81
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,16 +7,19 @@ import (
 )
 
 type NavigationMenuItemProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is one link, or one trigger with its content.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func NavigationMenuItem(p NavigationMenuItemProps) gx.Node {
 	var _b gx.Builder
-//line NavigationMenuItem.gx:9:1
+//line NavigationMenuItem.gx:12:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/navigation-menu-item relative", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line NavigationMenuItem.gx:9:97
+//line NavigationMenuItem.gx:12:97
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

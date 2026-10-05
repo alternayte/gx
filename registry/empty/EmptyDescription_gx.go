@@ -7,16 +7,19 @@ import (
 )
 
 type EmptyDescriptionProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the description text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func EmptyDescription(p EmptyDescriptionProps) gx.Node {
 	var _b gx.Builder
-//line EmptyDescription.gx:9:1
+//line EmptyDescription.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-description", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyDescription.gx:9:197
+//line EmptyDescription.gx:12:197
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

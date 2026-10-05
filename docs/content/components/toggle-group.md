@@ -9,13 +9,11 @@ item: "toggle-group"
 <Example item="toggle-group" name="toggle-group-three" label="Toggle Group: ToggleGroup: Three">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Three"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"Three":         {Label: "Alignment", Children: align("align")}
+<togglegroup.ToggleGroup label="Alignment">
+  <togglegroup.ToggleGroupItem name="align" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -50,12 +48,19 @@ Copy each file to its path in the app. Change each import of a registry package 
 package togglegroup
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Spacing  int      = 0
-  Label    string   = ""
-  Class    string   = ""
+  // Variant sets the visual style of every item: Default or Outline.
+  Variant  Variant = Default
+  // Size sets the height of every item: Sm, Md or Lg.
+  Size     Size = Md
+  // Spacing is the gap between the items in spacing units. Zero joins the items.
+  Spacing  int = 0
+  // Label is the accessible name of the group.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the toggle items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -66,13 +71,21 @@ props {
 package togglegroup
 
 props {
+  // Name is the form field name. Every item of an exclusive group has the same name.
   Name     string
+  // Value is the value the form submits when the item is checked.
   Value    string
-  Checked  bool     = false
-  Multiple bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Checked selects the item for the first render.
+  Checked  bool = false
+  // Multiple renders a checkbox in place of a radio, so the item toggles on its own.
+  Multiple bool = false
+  // Disabled disables the item.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the item label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -223,13 +236,11 @@ Set `Multiple` on every item to make each item an independent checkbox.
 <Example item="toggle-group" name="toggle-group-three" label="Toggle Group: ToggleGroup: Three">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Three"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"Three":         {Label: "Alignment", Children: align("align")}
+<togglegroup.ToggleGroup label="Alignment">
+  <togglegroup.ToggleGroupItem name="align" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -239,13 +250,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toggle-group" name="toggle-group-outline" label="Toggle Group: ToggleGroup: Outline">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Outline"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"Outline":       {Label: "Alignment", Variant: Outline, Children: align("align-outline")}
+<togglegroup.ToggleGroup label="Alignment" variant={togglegroup.Outline}>
+  <togglegroup.ToggleGroupItem name="align-outline" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-outline" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-outline" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -255,13 +264,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toggle-group" name="toggle-group-spaced" label="Toggle Group: ToggleGroup: Spaced">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Spaced"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"Spaced":        {Label: "Alignment", Spacing: 2, Children: align("align-spaced")}
+<togglegroup.ToggleGroup label="Alignment" spacing={2}>
+  <togglegroup.ToggleGroupItem name="align-spaced" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-spaced" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-spaced" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -271,13 +278,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toggle-group" name="toggle-group-outline-spaced" label="Toggle Group: ToggleGroup: Outline spaced">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["OutlineSpaced"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"OutlineSpaced": {Label: "Alignment", Variant: Outline, Spacing: 2, Children: align("align-outline-spaced")}
+<togglegroup.ToggleGroup label="Alignment" variant={togglegroup.Outline} spacing={2}>
+  <togglegroup.ToggleGroupItem name="align-outline-spaced" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-outline-spaced" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-outline-spaced" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -287,13 +292,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toggle-group" name="toggle-group-small" label="Toggle Group: ToggleGroup: Small">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Small"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"Small":         {Label: "Alignment", Variant: Outline, Size: Sm, Children: align("align-small")}
+<togglegroup.ToggleGroup label="Alignment" variant={togglegroup.Outline} size={togglegroup.Sm}>
+  <togglegroup.ToggleGroupItem name="align-small" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-small" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-small" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -303,13 +306,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="toggle-group" name="toggle-group-large" label="Toggle Group: ToggleGroup: Large">
 
 ```gx
-{togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Large"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/toggle-group/ToggleGroup.fixtures.go"
-"Large":         {Label: "Alignment", Variant: Outline, Size: Lg, Children: align("align-large")}
+<togglegroup.ToggleGroup label="Alignment" variant={togglegroup.Outline} size={togglegroup.Lg}>
+  <togglegroup.ToggleGroupItem name="align-large" value="left" checked>Left</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-large" value="center">Center</togglegroup.ToggleGroupItem>
+  <togglegroup.ToggleGroupItem name="align-large" value="right">Right</togglegroup.ToggleGroupItem>
+</togglegroup.ToggleGroup>
 ```
 
 </Example>
@@ -347,6 +348,35 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### togglegroup.ToggleGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style of every item: Default or Outline. |
+| `Size` | `Size` | `Md` | Size sets the height of every item: Sm, Md or Lg. |
+| `Spacing` | `int` | `0` | Spacing is the gap between the items in spacing units. Zero joins the items. |
+| `Label` | `string` | `""` | Label is the accessible name of the group. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the toggle items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### togglegroup.ToggleGroupItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | Required | Name is the form field name. Every item of an exclusive group has the same name. |
+| `Value` | `string` | Required | Value is the value the form submits when the item is checked. |
+| `Checked` | `bool` | `false` | Checked selects the item for the first render. |
+| `Multiple` | `bool` | `false` | Multiple renders a checkbox in place of a radio, so the item toggles on its own. |
+| `Disabled` | `bool` | `false` | Disabled disables the item. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the item label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

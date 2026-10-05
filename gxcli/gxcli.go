@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -574,14 +575,27 @@ func runRegistryBuild(args []string) int {
 	return 0
 }
 
-// runRegistryLint fails an item that lacks fixtures, usage sections or a
-// keyboard spec (REQ-REG-06).
+// propDocs reads the props of one .gx source for the registry lint.
+func propDocs(path string, src []byte) ([]registry.PropDoc, error) {
+	file, diags := compiler.ParseFile(path, src)
+	if len(diags) > 0 {
+		return nil, errors.New(diags[0].Msg)
+	}
+	out := make([]registry.PropDoc, 0, len(file.Props))
+	for _, prop := range file.Props {
+		out = append(out, registry.PropDoc{Name: prop.Name, Doc: prop.Doc})
+	}
+	return out, nil
+}
+
+// runRegistryLint fails an item that lacks fixtures, usage sections, a
+// keyboard spec or a prop description (REQ-REG-06).
 func runRegistryLint(args []string) int {
 	if len(args) == 0 {
 		fmt.Fprintln(os.Stderr, "usage: gx registry lint <src>")
 		return 2
 	}
-	findings, err := registry.Lint(args[0])
+	findings, err := registry.Lint(args[0], propDocs)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx registry lint: %v\n", err)
 		return 1

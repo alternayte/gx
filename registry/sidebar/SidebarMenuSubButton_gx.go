@@ -7,19 +7,25 @@ import (
 )
 
 type SidebarMenuSubButtonProps struct {
-	Href     gx.URL
-	Active   bool
-	Size     Size
-	Class    string
+	// Href is the URL of the link.
+	Href gx.URL
+	// Active marks the link of the current page. It sets aria-current and the active style.
+	Active bool
+	// Size sets the text size: Md or Sm.
+	Size Size
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the link: an icon and a span with the text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuSubButton(p SidebarMenuSubButtonProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuSubButton.gx:12:1
+//line SidebarMenuSubButton.gx:18:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground", subSizeClass[Size(p.size())], subActiveClass[p.Active], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-sub-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-sub-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line SidebarMenuSubButton.gx:12:875
+//line SidebarMenuSubButton.gx:18:875
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

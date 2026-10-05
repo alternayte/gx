@@ -1,7 +1,9 @@
 package docs
 
 props {
+  // Children is the ordered list of steps.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

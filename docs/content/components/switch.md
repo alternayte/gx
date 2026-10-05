@@ -42,13 +42,21 @@ Copy each file to its path in the app. Change each import of a registry package 
 package switches
 
 props {
-  Size     Size     = Md
-  Name     string   = ""
-  Label    string   = ""
-  Value    string   = "on"
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Size sets the size of the track and the thumb: Md or Sm.
+  Size     Size = Md
+  // Name is the form field name.
+  Name     string = ""
+  // Label is the accessible name of the switch.
+  Label    string = ""
+  // Value is the value the form submits when the switch is on.
+  Value    string = "on"
+  // Checked sets the switch on for the first render.
+  Checked  bool = false
+  // Disabled disables the switch.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -172,6 +180,23 @@ The sizes are `switches.Md` and `switches.Sm`.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### switches.Switch
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Size` | `Size` | `Md` | Size sets the size of the track and the thumb: Md or Sm. |
+| `Name` | `string` | `""` | Name is the form field name. |
+| `Label` | `string` | `""` | Label is the accessible name of the switch. |
+| `Value` | `string` | `"on"` | Value is the value the form submits when the switch is on. |
+| `Checked` | `bool` | `false` | Checked sets the switch on for the first render. |
+| `Disabled` | `bool` | `false` | Disabled disables the switch. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

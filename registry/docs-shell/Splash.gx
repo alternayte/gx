@@ -1,9 +1,13 @@
 package shell
 
 props {
+  // Title is the heading of the splash.
   Title    string
+  // Tagline is the text below the title. Empty omits it.
   Tagline  string = ""
+  // Actions is the row of links or buttons below the tagline. Nil omits it.
   Actions  gx.Node = nil
+  // Children is the content below the actions. Nil omits it.
   Children gx.Node = nil
 }
 

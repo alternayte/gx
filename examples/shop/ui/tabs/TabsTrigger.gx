@@ -1,10 +1,16 @@
 package tabs
 
 props {
+  // Label is the key that pairs the trigger with its panel. It is also the text when Children is
+  // nil.
   Label    string
-  Disabled bool     = false
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Disabled disables the trigger.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the trigger. It replaces the label text.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

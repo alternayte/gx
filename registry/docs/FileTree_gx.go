@@ -7,29 +7,31 @@ import (
 )
 
 type FileTreeProps struct {
+	// Items holds the top-level files and directories of the tree.
 	Items []FileTreeItem
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func FileTree(p FileTreeProps) gx.Node {
 	var _b gx.Builder
-//line FileTree.gx:8:1
+//line FileTree.gx:10:1
 	var _b1 gx.Builder
-//line FileTree.gx:8:76
+//line FileTree.gx:10:76
 	_b1.Add(gx.Text("\n  "))
-//line FileTree.gx:9:3
+//line FileTree.gx:11:3
 	for _, it := range p.Items {
-//line FileTree.gx:9:31
+//line FileTree.gx:11:31
 		_b1.Add(gx.Text("\n    "))
-//line FileTree.gx:10:5
+//line FileTree.gx:12:5
 		_b1.Add(FileTreeItemRow(FileTreeItemRowProps{Item: it}))
-//line FileTree.gx:10:34
+//line FileTree.gx:12:34
 		_b1.Add(gx.Text("\n  "))
 	}
-//line FileTree.gx:11:4
+//line FileTree.gx:13:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-file-tree my-4 list-none space-y-1 p-0 text-sm", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line FileTree.gx:12:6
+//line FileTree.gx:14:6
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

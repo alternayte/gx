@@ -7,16 +7,19 @@ import (
 )
 
 type SelectGroupProps struct {
-	Label    string
+	// Label is the visible name of the option group.
+	Label string
+	// Disabled disables every option of the group.
 	Disabled bool
+	// Children is the options of the group.
 	Children gx.Node
 }
 
 func SelectGroup(p SelectGroupProps) gx.Node {
 	var _b gx.Builder
-//line SelectGroup.gx:9:1
+//line SelectGroup.gx:12:1
 	_b.Add(gx.El("optgroup", gx.Attrs{gx.Attr{Key: "label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Children))
-//line SelectGroup.gx:9:72
+//line SelectGroup.gx:12:72
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

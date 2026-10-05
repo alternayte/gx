@@ -1,7 +1,10 @@
 package shell
 
 props {
+  // Item is the sidebar link. An item with nested items shows as a collapsible list.
   Item NavItem
+  // Path is the site path of the current page.
+  // A nested item that holds the page starts open.
   Path string
 }
 

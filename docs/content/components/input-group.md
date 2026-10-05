@@ -9,16 +9,10 @@ item: "input-group"
 <Example item="input-group" name="input-group-leading-text" label="Input Group: InputGroup: Leading text">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["LeadingText"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"LeadingText": {Children: gx.Frag(
-  InputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text("$")})}),
-  InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupAddon><inputgroup.InputGroupText>$</inputgroup.InputGroupText></inputgroup.InputGroupAddon>
+  <inputgroup.InputGroupInput placeholder="0.00" attrs={gx.Attrs{{Key: "aria-label", Value: "Amount"}}} />
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -65,8 +59,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package inputgroup
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the group: one control and its addons.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -77,9 +74,13 @@ props {
 package inputgroup
 
 props {
-  Align    Align    = InlineStart
-  Class    string   = ""
+  // Align sets the position of the addon: InlineStart, InlineEnd, BlockStart or BlockEnd.
+  Align    Align = InlineStart
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the addon, for example an icon, text or a button.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -92,12 +93,19 @@ package inputgroup
 import "github.com/alternayte/gx/registry/input"
 
 props {
-  Id          string   = ""
-  Type        string   = "text"
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Id is the id of the root element. A label points at it.
+  Id          string = ""
+  // Type is the type attribute. Empty means "text".
+  Type        string = "text"
+  // Name is the name attribute. The form sends the value under this name.
+  Name        string = ""
+  // Value is the value attribute: the start value of the input.
+  Value       string = ""
+  // Placeholder is the placeholder attribute: the hint text of an empty control.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -108,8 +116,11 @@ props {
 package inputgroup
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the text, with or without an icon.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -310,12 +321,19 @@ package inputgroup
 import "github.com/alternayte/gx/registry/button"
 
 props {
+  // Variant sets the visual style. It takes a button.Variant: Default, Secondary, Destructive,
+  // Outline, Ghost or Link.
   Variant  button.Variant = button.Ghost
-  Size     Size           = Xs
-  Type     string         = "button"
-  Class    string         = ""
+  // Size sets the height and padding: Xs, Sm, or IconXs or IconSm for a square button.
+  Size     Size = Xs
+  // Type is the type attribute: "button", "submit" or "reset".
+  Type     string = "button"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
-  Attrs    gx.Attrs       = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <button.Button type={p.Type} variant={p.variant()} size={buttonSize[p.size()]} class={gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class)} attrs={p.Attrs}>{p.Children}</button.Button>
@@ -343,11 +361,17 @@ package inputgroup
 import "github.com/alternayte/gx/registry/textarea"
 
 props {
-  Id          string   = ""
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Id is the id of the root element. A label points at it.
+  Id          string = ""
+  // Name is the name attribute. The form sends the value under this name.
+  Name        string = ""
+  // Value is the start text of the textarea.
+  Value       string = ""
+  // Placeholder is the placeholder attribute: the hint text of an empty control.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -408,16 +432,10 @@ A click on an addon does not focus the control. Put the addon text in a `<label 
 <Example item="input-group" name="input-group-leading-text" label="Input Group: InputGroup: Leading text">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["LeadingText"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"LeadingText": {Children: gx.Frag(
-  InputGroupAddon(InputGroupAddonProps{Children: InputGroupText(InputGroupTextProps{Children: gx.Text("$")})}),
-  InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupAddon><inputgroup.InputGroupText>$</inputgroup.InputGroupText></inputgroup.InputGroupAddon>
+  <inputgroup.InputGroupInput placeholder="0.00" attrs={gx.Attrs{{Key: "aria-label", Value: "Amount"}}} />
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -427,16 +445,12 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-trailing-text" label="Input Group: InputGroup: Trailing text">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["TrailingText"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"TrailingText": {Children: gx.Frag(
-  InputGroupInput(InputGroupInputProps{Placeholder: "example", Attrs: name("Domain")}),
-  InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupText(InputGroupTextProps{Children: gx.Text(".com")})}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupInput placeholder="example" attrs={gx.Attrs{{Key: "aria-label", Value: "Domain"}}} />
+  <inputgroup.InputGroupAddon align={inputgroup.InlineEnd}>
+    <inputgroup.InputGroupText>.com</inputgroup.InputGroupText>
+  </inputgroup.InputGroupAddon>
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -446,16 +460,12 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-button" label="Input Group: InputGroup: Button">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["Button"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"Button": {Children: gx.Frag(
-  InputGroupInput(InputGroupInputProps{Placeholder: "Search", Attrs: name("Search")}),
-  InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupButton(InputGroupButtonProps{Children: gx.Text("Search")})}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupInput placeholder="Search" attrs={gx.Attrs{{Key: "aria-label", Value: "Search"}}} />
+  <inputgroup.InputGroupAddon align={inputgroup.InlineEnd}>
+    <inputgroup.InputGroupButton>Search</inputgroup.InputGroupButton>
+  </inputgroup.InputGroupAddon>
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -465,20 +475,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-icon-button" label="Input Group: InputGroup: Icon button">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["IconButton"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"IconButton": {Children: gx.Frag(
-  InputGroupInput(InputGroupInputProps{Value: "ada@example.com", Attrs: name("Email")}),
-  InputGroupAddon(InputGroupAddonProps{Align: InlineEnd, Children: InputGroupButton(InputGroupButtonProps{
-    Size:     IconXs,
-    Attrs:    name("Clear"),
-    Children: icons.X(icons.XProps{}),
-  })}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupInput value="ada@example.com" attrs={gx.Attrs{{Key: "aria-label", Value: "Email"}}} />
+  <inputgroup.InputGroupAddon align={inputgroup.InlineEnd}>
+    <inputgroup.InputGroupButton size={inputgroup.IconXs} attrs={gx.Attrs{{Key: "aria-label", Value: "Clear"}}}>
+      <icons.X />
+    </inputgroup.InputGroupButton>
+  </inputgroup.InputGroupAddon>
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -501,19 +505,15 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-textarea" label="Input Group: InputGroup: Textarea">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["Textarea"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"Textarea": {Children: gx.Frag(
-  InputGroupTextarea(InputGroupTextareaProps{Placeholder: "Ask a question.", Attrs: name("Question")}),
-  InputGroupAddon(InputGroupAddonProps{Align: BlockEnd, Children: gx.Frag(
-    InputGroupText(InputGroupTextProps{Children: gx.Text("120 characters left")}),
-    InputGroupButton(InputGroupButtonProps{Variant: button.Default, Size: Sm, Class: "ml-auto", Children: gx.Text("Send")}),
-  )}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupTextarea placeholder="Ask a question." attrs={gx.Attrs{{Key: "aria-label", Value: "Question"}}} />
+  <inputgroup.InputGroupAddon align={inputgroup.BlockEnd}>
+    <inputgroup.InputGroupText>120 characters left</inputgroup.InputGroupText>
+    <inputgroup.InputGroupButton variant={button.Default} size={inputgroup.Sm} class="ml-auto">
+      Send
+    </inputgroup.InputGroupButton>
+  </inputgroup.InputGroupAddon>
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -523,16 +523,12 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-block-start" label="Input Group: InputGroup: Block start">
 
 ```gx
-{inputgroup.InputGroup(inputgroup.InputGroupFixtures["BlockStart"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroup.fixtures.go"
-"BlockStart": {Children: gx.Frag(
-  InputGroupAddon(InputGroupAddonProps{Align: BlockStart, Children: InputGroupText(InputGroupTextProps{Children: gx.Text("Amount")})}),
-  InputGroupInput(InputGroupInputProps{Placeholder: "0.00", Attrs: name("Amount")}),
-)}
+<inputgroup.InputGroup>
+  <inputgroup.InputGroupAddon align={inputgroup.BlockStart}>
+    <inputgroup.InputGroupText>Amount</inputgroup.InputGroupText>
+  </inputgroup.InputGroupAddon>
+  <inputgroup.InputGroupInput placeholder="0.00" attrs={gx.Attrs{{Key: "aria-label", Value: "Amount"}}} />
+</inputgroup.InputGroup>
 ```
 
 </Example>
@@ -572,13 +568,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-button-icon-xs" label="Input Group: InputGroupButton: Icon xs">
 
 ```gx
-{inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconXs"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroupButton.fixtures.go"
-"IconXs":     {Size: IconXs, Attrs: name("Clear"), Children: icons.X(icons.XProps{})}
+<inputgroup.InputGroupButton size={inputgroup.IconXs} attrs={gx.Attrs{{Key: "aria-label", Value: "Clear"}}}>
+  <icons.X />
+</inputgroup.InputGroupButton>
 ```
 
 </Example>
@@ -588,13 +580,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-button-icon-sm" label="Input Group: InputGroupButton: Icon sm">
 
 ```gx
-{inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconSm"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroupButton.fixtures.go"
-"IconSm":     {Size: IconSm, Attrs: name("Clear"), Children: icons.X(icons.XProps{})}
+<inputgroup.InputGroupButton size={inputgroup.IconSm} attrs={gx.Attrs{{Key: "aria-label", Value: "Clear"}}}>
+  <icons.X />
+</inputgroup.InputGroupButton>
 ```
 
 </Example>
@@ -604,13 +592,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-input-placeholder" label="Input Group: InputGroupInput: Placeholder">
 
 ```gx
-{inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroupInput.fixtures.go"
-"Placeholder": {Placeholder: "Value", Attrs: name("Value")}
+<inputgroup.InputGroupInput placeholder="Value" attrs={gx.Attrs{{Key: "aria-label", Value: "Value"}}} />
 ```
 
 </Example>
@@ -630,16 +612,73 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="input-group" name="input-group-textarea-placeholder" label="Input Group: InputGroupTextarea: Placeholder">
 
 ```gx
-{inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/input-group/InputGroupTextarea.fixtures.go"
-"Placeholder": {Placeholder: "Ask a question.", Attrs: name("Question")}
+<inputgroup.InputGroupTextarea placeholder="Ask a question." attrs={gx.Attrs{{Key: "aria-label", Value: "Question"}}} />
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### inputgroup.InputGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the group: one control and its addons. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### inputgroup.InputGroupAddon
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Align` | `Align` | `InlineStart` | Align sets the position of the addon: InlineStart, InlineEnd, BlockStart or BlockEnd. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the addon, for example an icon, text or a button. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### inputgroup.InputGroupButton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `button.Variant` | `button.Ghost` | Variant sets the visual style. It takes a button.Variant: Default, Secondary, Destructive, Outline, Ghost or Link. |
+| `Size` | `Size` | `Xs` | Size sets the height and padding: Xs, Sm, or IconXs or IconSm for a square button. |
+| `Type` | `string` | `"button"` | Type is the type attribute: "button", "submit" or "reset". |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the button label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### inputgroup.InputGroupInput
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | `""` | Id is the id of the root element. A label points at it. |
+| `Type` | `string` | `"text"` | Type is the type attribute. Empty means "text". |
+| `Name` | `string` | `""` | Name is the name attribute. The form sends the value under this name. |
+| `Value` | `string` | `""` | Value is the value attribute: the start value of the input. |
+| `Placeholder` | `string` | `""` | Placeholder is the placeholder attribute: the hint text of an empty control. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### inputgroup.InputGroupText
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the text, with or without an icon. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### inputgroup.InputGroupTextarea
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | `""` | Id is the id of the root element. A label points at it. |
+| `Name` | `string` | `""` | Name is the name attribute. The form sends the value under this name. |
+| `Value` | `string` | `""` | Value is the start text of the textarea. |
+| `Placeholder` | `string` | `""` | Placeholder is the placeholder attribute: the hint text of an empty control. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

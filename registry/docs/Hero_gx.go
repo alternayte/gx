@@ -7,58 +7,63 @@ import (
 )
 
 type HeroProps struct {
-	Title    string
-	Tagline  string
-	Actions  gx.Node
+	// Title is the heading of the hero.
+	Title string
+	// Tagline is the text below the title. Empty omits it.
+	Tagline string
+	// Actions is the row of links or buttons below the tagline. Nil omits it.
+	Actions gx.Node
+	// Children is the content below the actions. Nil omits it.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Hero(p HeroProps) gx.Node {
 	var _b gx.Builder
-//line Hero.gx:11:1
+//line Hero.gx:16:1
 	var _b1 gx.Builder
-//line Hero.gx:11:55
+//line Hero.gx:16:55
 	_b1.Add(gx.Text("\n  "))
-//line Hero.gx:12:3
+//line Hero.gx:17:3
 	_b1.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-4xl font-bold tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Hero.gx:12:67
+//line Hero.gx:17:67
 	_b1.Add(gx.Text("\n  "))
-//line Hero.gx:13:3
+//line Hero.gx:18:3
 	if p.Tagline != "" {
-//line Hero.gx:13:23
+//line Hero.gx:18:23
 		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:14:5
+//line Hero.gx:19:5
 		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto mt-3 max-w-2xl text-lg text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Tagline)))
-//line Hero.gx:14:84
+//line Hero.gx:19:84
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Hero.gx:15:4
+//line Hero.gx:20:4
 	_b1.Add(gx.Text("\n  "))
-//line Hero.gx:16:3
+//line Hero.gx:21:3
 	if p.Actions != nil {
-//line Hero.gx:16:24
+//line Hero.gx:21:24
 		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:17:5
+//line Hero.gx:22:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 flex flex-wrap items-center justify-center gap-3", Kind: gx.AttrText}}, p.Actions))
-//line Hero.gx:17:89
+//line Hero.gx:22:89
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Hero.gx:18:4
+//line Hero.gx:23:4
 	_b1.Add(gx.Text("\n  "))
-//line Hero.gx:19:3
+//line Hero.gx:24:3
 	if p.Children != nil {
-//line Hero.gx:19:25
+//line Hero.gx:24:25
 		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:20:5
+//line Hero.gx:25:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-hero-body mt-8", Kind: gx.AttrText}}, p.Children))
-//line Hero.gx:20:54
+//line Hero.gx:25:54
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Hero.gx:21:4
+//line Hero.gx:26:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("header", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-hero my-8 text-center", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Hero.gx:22:10
+//line Hero.gx:27:10
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }
