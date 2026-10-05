@@ -1,15 +1,19 @@
 package toggle
 
 props {
+  Variant  Variant  = Default
+  Size     Size     = Md
   Name     string   = ""
   Value    string   = "on"
   Pressed  bool     = false
+  Disabled bool     = false
+  Invalid  bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50", p.Class)} {...p.Attrs}>
-  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Pressed} class="peer sr-only" />
+<label class={p.class()} {...p.Attrs}>
+  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Pressed} disabled={p.Disabled} aria-invalid={p.invalid()} class="peer sr-only" />
   {p.Children}
 </label>

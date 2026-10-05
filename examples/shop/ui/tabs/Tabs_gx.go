@@ -7,18 +7,19 @@ import (
 )
 
 type TabsProps struct {
-	Sync     string
-	Default  string
-	Class    string
-	Children gx.Node
-	Attrs    gx.Attrs
+	Orientation Orientation
+	Sync        string
+	Default     string
+	Class       string
+	Children    gx.Node
+	Attrs       gx.Attrs
 }
 
 func Tabs(p TabsProps) gx.Node {
 	var _b gx.Builder
-//line Tabs.gx:11:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Tabs.gx:11:127
+//line Tabs.gx:12:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tabs flex gap-2 data-[orientation=horizontal]:flex-col", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}, gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line Tabs.gx:12:216
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

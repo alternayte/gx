@@ -68,6 +68,7 @@ import {
 } from "@/ui/pagination"
 import { Progress } from "@/ui/progress"
 import { RadioGroup, RadioGroupItem } from "@/ui/radio-group"
+import { ScrollArea } from "@/ui/scroll-area"
 import { Separator } from "@/ui/separator"
 import {
   Sidebar,
@@ -83,6 +84,7 @@ import {
   SidebarProvider,
 } from "@/ui/sidebar"
 import { Skeleton } from "@/ui/skeleton"
+import { Slider } from "@/ui/slider"
 import { Spinner } from "@/ui/spinner"
 import { Switch } from "@/ui/switch"
 import {
@@ -94,6 +96,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs"
 import { Textarea } from "@/ui/textarea"
 import { Toggle } from "@/ui/toggle"
 import { ToggleGroup, ToggleGroupItem } from "@/ui/toggle-group"
@@ -348,7 +351,17 @@ export const refs: Record<string, Ref> = {
     ),
     focus: "button[role=checkbox]",
   },
+  "checkbox-checked": {
+    body: (
+      <div className="flex items-center gap-2">
+        <Checkbox id="terms" name="terms" defaultChecked />
+        <Label htmlFor="terms">Accept the terms</Label>
+      </div>
+    ),
+    focus: "button[role=checkbox]",
+  },
   switch: { body: <Switch name="wifi" aria-label="Wifi" />, focus: "button[role=switch]" },
+  "switch-on": { body: <Switch name="wifi" aria-label="Wifi" defaultChecked />, focus: "button[role=switch]" },
   "radio-group": {
     body: (
       <RadioGroup defaultValue="free">
@@ -365,9 +378,31 @@ export const refs: Record<string, Ref> = {
     focus: "button[role=radio]",
   },
   toggle: { body: <Toggle name="bold">Bold</Toggle>, focus: "button" },
+  "toggle-on": { body: <Toggle name="bold" defaultPressed>Bold</Toggle>, focus: "button" },
+  "toggle-outline": { body: <Toggle name="bold" variant="outline">Bold</Toggle>, focus: "button" },
   "toggle-group": {
     body: (
       <ToggleGroup type="single" defaultValue="left">
+        <ToggleGroupItem value="left">Left</ToggleGroupItem>
+        <ToggleGroupItem value="center">Center</ToggleGroupItem>
+        <ToggleGroupItem value="right">Right</ToggleGroupItem>
+      </ToggleGroup>
+    ),
+    focus: "button",
+  },
+  "toggle-group-outline": {
+    body: (
+      <ToggleGroup type="single" variant="outline" defaultValue="left">
+        <ToggleGroupItem value="left">Left</ToggleGroupItem>
+        <ToggleGroupItem value="center">Center</ToggleGroupItem>
+        <ToggleGroupItem value="right">Right</ToggleGroupItem>
+      </ToggleGroup>
+    ),
+    focus: "button",
+  },
+  "toggle-group-spaced": {
+    body: (
+      <ToggleGroup type="single" variant="outline" spacing={2} defaultValue="left">
         <ToggleGroupItem value="left">Left</ToggleGroupItem>
         <ToggleGroupItem value="center">Center</ToggleGroupItem>
         <ToggleGroupItem value="right">Right</ToggleGroupItem>
@@ -528,7 +563,7 @@ export const refs: Record<string, Ref> = {
         </AccordionItem>
         <AccordionItem value="faq2">
           <AccordionTrigger>Is it animated?</AccordionTrigger>
-          <AccordionContent>No. The panel opens at once.</AccordionContent>
+          <AccordionContent>Yes. The panel height animates.</AccordionContent>
         </AccordionItem>
       </Accordion>
     ),
@@ -704,47 +739,59 @@ export const refs: Record<string, Ref> = {
     ),
   },
   tabs: {
-    // The Gx tabs are underline tabs on native buttons; the pinned shadcn
-    // tabs are pill tabs. The reference pins the Gx design.
     body: (
-      <div className="w-full" data-gx-tabs>
-        <div>
-          <button
-            type="button"
-            data-selected="true"
-            className="-mb-px border-b-2 border-foreground px-3 py-1.5 text-sm font-medium text-foreground"
-          >
-            Account
-          </button>
-          <button
-            type="button"
-            className="-mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground"
-          >
-            Password
-          </button>
-        </div>
-        <div className="pt-4" data-gx-tab-panel>
-          Account settings.
-        </div>
-      </div>
+      <Tabs defaultValue="Account">
+        <TabsList aria-label="Settings">
+          <TabsTrigger value="Account">Account</TabsTrigger>
+          <TabsTrigger value="Password">Password</TabsTrigger>
+        </TabsList>
+        <TabsContent value="Account">Account settings.</TabsContent>
+        <TabsContent value="Password">Password settings.</TabsContent>
+      </Tabs>
     ),
+    focus: "button[role=tab]",
+  },
+  "tabs-line": {
+    body: (
+      <Tabs defaultValue="Account">
+        <TabsList aria-label="Settings" variant="line">
+          <TabsTrigger value="Account">Account</TabsTrigger>
+          <TabsTrigger value="Password">Password</TabsTrigger>
+        </TabsList>
+        <TabsContent value="Account">Account settings.</TabsContent>
+        <TabsContent value="Password">Password settings.</TabsContent>
+      </Tabs>
+    ),
+    focus: "button[role=tab]",
+  },
+  "tabs-vertical": {
+    body: (
+      <Tabs defaultValue="Account" orientation="vertical">
+        <TabsList aria-label="Settings">
+          <TabsTrigger value="Account">Account</TabsTrigger>
+          <TabsTrigger value="Password">Password</TabsTrigger>
+        </TabsList>
+        <TabsContent value="Account">Account settings.</TabsContent>
+        <TabsContent value="Password">Password settings.</TabsContent>
+      </Tabs>
+    ),
+    focus: "button[role=tab]",
   },
   "scroll-area": {
-    // The Gx scroll area is a native scroller with a thin scrollbar.
+    // The Radix scrollbar shows on hover. The Gx scroll area is a native
+    // scroller; the capture browser draws its scrollbar as an overlay, so
+    // both are bare at rest.
     body: (
-      <div
-        className="relative h-24 w-48 overflow-auto rounded-md border border-border p-2"
-        tabIndex={0}
-        style={{ scrollbarWidth: "thin" }}
-      >
-        Line one. Line two. Line three. Line four. Line five. Line six. Line seven. Line eight.
-      </div>
+      <ScrollArea aria-label="Lines" className="h-24 w-48 rounded-md border">
+        <div className="p-2 text-sm">
+          {["one", "two", "three", "four", "five", "six", "seven", "eight"].map((n) => (
+            <p key={n}>Line {n}.</p>
+          ))}
+        </div>
+      </ScrollArea>
     ),
   },
-  slider: {
-    // The Gx slider is a native range input with the shadcn tokens.
-    body: <input type="range" min={0} max={100} defaultValue={50} aria-label="Volume" className="h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary" />,
-  },
+  slider: { body: <Slider defaultValue={[50]} aria-label="Volume" />, focus: "[role=slider]" },
   sidebar: {
     // The Gx sidebar is the static form of the pinned sidebar: the
     // reference renders it with collapsible="none" and the same parts.

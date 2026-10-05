@@ -13,10 +13,13 @@ A stack of panels that open one at a time.
 ```
 
 The accordion uses `<details name>`, so the browser gives the open and close behaviour.
+The panel height animates in a browser that supports `interpolate-size`. Other browsers open the panel at once.
+Set `Disabled` to stop an item from opening.
 
 ## Do
 
-- Give every item the same `Name`.
+- Give every item of one accordion the same `Name`.
+- Give each accordion on a page its own `Name`.
 - Put a question in `Title` and the answer in the body.
 
 ## Don't

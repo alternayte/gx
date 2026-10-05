@@ -21,8 +21,12 @@
       "target": "ui/accordion/AccordionItem.fixtures.go"
     }
   ],
+  "registryDependencies": [
+    "icons"
+  ],
   "requiredTokens": [
     "--border",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--ring"
   ]
 }

@@ -122,11 +122,19 @@ const tabsRemember = (key: string, label: string): void => {
 
 type Tab = { button: HTMLElement; panel: HTMLElement; label: string }
 
+// A docs tab holds its panel in its [data-gx-tab-item]. A registry tab sits
+// in a tab list and names its panel: [data-gx-tab-panel] carries the label.
 const tabsOf = (wrapper: Element): Tab[] => {
   const tabs: Tab[] = []
   wrapper.querySelectorAll<HTMLElement>('[data-gx-tab]').forEach((button) => {
-    const panel = button.closest('[data-gx-tab-item]')?.querySelector<HTMLElement>('[data-gx-tab-panel]')
-    if (panel) tabs.push({ button, panel, label: button.getAttribute('data-gx-tab') ?? '' })
+    if (button.closest('[data-gx-tabs]') !== wrapper) return
+    const label = button.getAttribute('data-gx-tab') ?? ''
+    const panel =
+      button.closest('[data-gx-tab-item]')?.querySelector<HTMLElement>('[data-gx-tab-panel]') ??
+      [...wrapper.querySelectorAll<HTMLElement>('[data-gx-tab-panel]')].find(
+        (el) => el.getAttribute('data-gx-tab-panel') === label && el.closest('[data-gx-tabs]') === wrapper,
+      )
+    if (panel) tabs.push({ button, panel, label })
   })
   return tabs
 }
@@ -137,7 +145,10 @@ const applyTab = (wrapper: Element, label: string): void => {
   const chosen = tabs.find((tab) => tab.label === label) ?? tabs[0]
   for (const tab of tabs) {
     const selected = tab === chosen
-    tab.button.setAttribute('aria-expanded', selected ? 'true' : 'false')
+    // A button with the tab role states aria-selected; a plain button
+    // states aria-expanded.
+    const state = tab.button.getAttribute('role') === 'tab' ? 'aria-selected' : 'aria-expanded'
+    tab.button.setAttribute(state, selected ? 'true' : 'false')
     tab.button.setAttribute('tabindex', selected ? '0' : '-1')
     if (selected) tab.button.setAttribute('data-selected', 'true')
     else tab.button.removeAttribute('data-selected')
@@ -174,6 +185,8 @@ const installTabs = (): void => {
       tab.panel.setAttribute('role', 'tabpanel')
       tab.panel.setAttribute('aria-labelledby', tab.button.id)
     })
+    const orientation = wrapper.getAttribute('data-orientation')
+    if (orientation) wrapper.querySelector('[role=tablist]')?.setAttribute('aria-orientation', orientation)
     const sync = wrapper.getAttribute('data-sync') ?? ''
     const stored = sync !== '' ? tabsStorage('gx-tabs:' + sync) : ''
     const initial = stored !== '' ? stored : wrapper.getAttribute('data-default') ?? ''
@@ -326,18 +339,27 @@ const onKeydown = (e: KeyboardEvent): void => {
     if (enterMenu(at)) e.preventDefault()
     return
   }
+  // A tab list follows the arrow keys of its orientation, Home and End, and
+  // skips a disabled tab.
   const tab = at?.closest?.('[data-gx-tab]') as HTMLElement | null
-  if (tab && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
-    const wrapper = tab.closest('[data-gx-tabs]')
-    if (wrapper) {
+  const wrapper = tab?.closest('[data-gx-tabs]')
+  if (tab && wrapper) {
+    const vertical = wrapper.getAttribute('data-orientation') === 'vertical'
+    const tabs = tabsOf(wrapper).filter((entry) => !entry.button.hasAttribute('disabled'))
+    const i = tabs.findIndex((entry) => entry.button === tab)
+    const next =
+      e.key === (vertical ? 'ArrowDown' : 'ArrowRight') ? i + 1
+      : e.key === (vertical ? 'ArrowUp' : 'ArrowLeft') ? i - 1
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? -1
+      : NaN
+    if (!isNaN(next)) {
       e.preventDefault()
-      const tabs = tabsOf(wrapper)
-      const i = tabs.findIndex((entry) => entry.button === tab)
-      const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length
-      tabs[next].button.focus()
-      selectTab(wrapper, tabs[next].label, true)
+      const to = tabs[(next + tabs.length) % tabs.length]
+      to.button.focus()
+      selectTab(wrapper, to.label, true)
+      return
     }
-    return
   }
   const box = at?.closest?.('[data-gx-roving]') as HTMLElement | null
   if (!box) return
@@ -481,6 +503,13 @@ if (typeof document !== 'undefined') {
     if (!wrapper) return
     e.preventDefault()
     selectTab(wrapper, button.getAttribute('data-gx-tab') ?? '', true)
+  })
+  // A range input with data-gx-behavior paints its range up to --gx-fill.
+  document.addEventListener('input', (e) => {
+    const el = e.target as HTMLInputElement | null
+    if (!el?.matches?.('input[type=range][data-gx-behavior]')) return
+    const min = +el.min
+    el.style.setProperty('--gx-fill', `${((+el.value - min) / (+el.max - min || 1)) * 100}%`)
   })
   document.addEventListener('keydown', onKeydown, true)
   document.addEventListener('pointerdown', onPointerdown, true)

@@ -5,8 +5,13 @@ A control for an immediate on or off setting.
 ## Usage
 
 ```gx
-<switch.Switch name="wifi" checked={p.Wifi} />
+<switches.Switch name="wifi" label="Wifi" checked={p.Wifi} />
+<switches.Switch name="sync" label="Sync" size={switches.Sm} />
 ```
+
+The switch is a styled checkbox with the `switch` role.
+The sizes are `switches.Md` and `switches.Sm`.
+`Disabled` disables the checkbox.
 
 ## Do
 

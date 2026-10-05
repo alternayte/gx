@@ -1,7 +1,7 @@
 {
   "name": "toggle-group",
   "version": "0.1.0",
-  "description": "A segmented control of exclusive choices.",
+  "description": "A segmented control of toggle items.",
   "kind": "component",
   "files": [
     {
@@ -13,6 +13,10 @@
       "target": "ui/toggle-group/ToggleGroupItem.gx"
     },
     {
+      "path": "styles.go",
+      "target": "ui/toggle-group/styles.go"
+    },
+    {
       "path": "ToggleGroup.fixtures.go",
       "target": "ui/toggle-group/ToggleGroup.fixtures.go"
     },
@@ -22,10 +26,11 @@
     }
   ],
   "requiredTokens": [
-    "--border",
+    "--input",
     "--muted",
+    "--muted-foreground",
     "--accent",
     "--accent-foreground",
-    "--foreground"
+    "--ring"
   ]
 }

@@ -25,37 +25,46 @@ Run the command in the app module.
 gx add checkbox
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `Checkbox.gx` | `ui/checkbox/Checkbox.gx` |
 | `Checkbox.fixtures.go` | `ui/checkbox/Checkbox.fixtures.go` |
+| `styles.go` | `ui/checkbox/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/checkbox/Checkbox.gx"
 package checkbox
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
   Name     string   = ""
   Value    string   = "on"
   Checked  bool     = false
+  Disabled bool     = false
+  Invalid  bool     = false
   Class    string   = ""
   Children gx.Node  = nil
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("flex select-none items-center gap-2 text-sm font-medium leading-none", p.Class)} {...p.Attrs}>
-  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Checked} class="peer sr-only" />
-  <span aria-hidden="true" class="grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs outline-none transition-shadow dark:bg-input/30 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50">
-    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+<label class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class)} {...p.Attrs}>
+  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} aria-invalid={p.invalid()} class="peer sr-only" />
+  <span aria-hidden="true" class="grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs transition-shadow outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 peer-checked:border-primary peer-checked:bg-primary peer-checked:peer-focus-visible:border-primary peer-checked:text-primary-foreground dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 dark:peer-checked:bg-primary motion-reduce:transition-none">
+    <icons.Check class="size-3.5" />
   </span>
   if p.Children != nil {
-    <span>{p.Children}</span>
+    <span class="peer-disabled:cursor-not-allowed peer-disabled:opacity-50">{p.Children}</span>
   }
 </label>
 ```
@@ -66,22 +75,40 @@ package checkbox
 import "github.com/alternayte/gx"
 
 var CheckboxFixtures = gx.Fixtures[CheckboxProps]{
-	"Unchecked": {Name: "terms", Children: gx.Text("Accept the terms")},
-	"Checked":   {Name: "terms", Checked: true, Children: gx.Text("Accept the terms")},
-	"Disabled":  {Name: "terms", Attrs: gx.Attrs{gx.Bool("disabled", true)}, Children: gx.Text("Disabled")},
+	"Unchecked":       {Name: "terms", Children: gx.Text("Accept the terms")},
+	"Checked":         {Name: "terms", Checked: true, Children: gx.Text("Accept the terms")},
+	"Disabled":        {Name: "terms", Disabled: true, Children: gx.Text("Disabled")},
+	"DisabledChecked": {Name: "terms", Checked: true, Disabled: true, Children: gx.Text("Disabled")},
+	"Invalid":         {Name: "terms", Invalid: true, Children: gx.Text("Accept the terms")},
+}
+```
+
+```go title="ui/checkbox/styles.go"
+package checkbox
+
+// invalid returns the aria-invalid value of the input.
+func (p CheckboxProps) invalid() string {
+	if p.Invalid {
+		return "true"
+	}
+	return "false"
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--input`, `--primary`.
+The theme must define these tokens: `--input`, `--primary`, `--primary-foreground`, `--ring`, `--destructive`.
 
 ## Usage
 
 ```gx
 <checkbox.Checkbox name="terms" checked={p.Accepted}>Accept the terms</checkbox.Checkbox>
+<checkbox.Checkbox name="terms" invalid={p.TermsMissing}>Accept the terms</checkbox.Checkbox>
 ```
+
+The checkbox is a native input behind a styled box.
+`Disabled` and `Invalid` set the state of the input.
 
 ## Examples
 
@@ -110,7 +137,27 @@ The theme must define these tokens: `--input`, `--primary`.
 <Example item="checkbox" name="checkbox-disabled" label="Checkbox: Disabled">
 
 ```gx
-<checkbox.Checkbox name="terms" attrs={gx.Attrs{gx.Bool("disabled", true)}}>Disabled</checkbox.Checkbox>
+<checkbox.Checkbox name="terms" disabled>Disabled</checkbox.Checkbox>
+```
+
+</Example>
+
+### Disabled checked
+
+<Example item="checkbox" name="checkbox-disabled-checked" label="Checkbox: Disabled checked">
+
+```gx
+<checkbox.Checkbox name="terms" checked disabled>Disabled</checkbox.Checkbox>
+```
+
+</Example>
+
+### Invalid
+
+<Example item="checkbox" name="checkbox-invalid" label="Checkbox: Invalid">
+
+```gx
+<checkbox.Checkbox name="terms" invalid>Accept the terms</checkbox.Checkbox>
 ```
 
 </Example>

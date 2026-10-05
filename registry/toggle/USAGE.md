@@ -6,9 +6,12 @@ A two-state button.
 
 ```gx
 <toggle.Toggle name="bold" pressed={p.Bold}>Bold</toggle.Toggle>
+<toggle.Toggle name="italic" variant={toggle.Outline} size={toggle.Sm}>Italic</toggle.Toggle>
 ```
 
 The toggle is a styled checkbox, so it works without JavaScript.
+The variants are `toggle.Default` and `toggle.Outline`. The sizes are `toggle.Sm`, `toggle.Md` and `toggle.Lg`.
+`Disabled` and `Invalid` set the state of the checkbox.
 
 ## Do
 

@@ -9,7 +9,7 @@ item: "radio-group"
 <Example item="radio-group" name="radio-group-vertical" label="Radio Group: RadioGroup: Vertical">
 
 ```gx
-<radiogroup.RadioGroup name="plan">
+<radiogroup.RadioGroup name="plan" label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>
@@ -28,6 +28,8 @@ Run the command in the app module.
 gx add radio-group
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -41,6 +43,8 @@ The command writes these files.
 </docs.TabItem>
 <docs.TabItem label="Manual">
 
+Install [`icons`](/components/icons/) first.
+
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/radio-group/RadioGroup.gx"
@@ -49,34 +53,42 @@ package radiogroup
 props {
   Name        string      = ""
   Orientation Orientation = Vertical
+  Label       string      = ""
   Class       string      = ""
   Children    gx.Node
   Attrs       gx.Attrs    = nil
 }
 
-<div role="radiogroup" aria-orientation={p.Orientation} class={gx.Cx("grid gap-2", orientationClass[p.Orientation], p.Class)} {...p.Attrs}>{p.Children}</div>
+<div role="radiogroup" aria-label={p.Label} aria-orientation={p.orientation()} class={gx.Cx("grid gap-3", orientationClass[p.orientation()], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/radio-group/RadioGroupItem.gx"
 package radiogroup
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
   Name     string   = ""
   Value    string   = ""
   Checked  bool     = false
+  Disabled bool     = false
+  Invalid  bool     = false
   Label    string   = ""
   Class    string   = ""
   Children gx.Node  = nil
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("flex items-center gap-2 text-sm", p.Class)} {...p.Attrs}>
-  <input type="radio" name={p.Name} value={p.Value} checked={p.Checked} class="size-4 accent-primary" />
+<label class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class)} {...p.Attrs}>
+  <input type="radio" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} aria-invalid={p.invalid()} class="peer sr-only" />
+  <span aria-hidden="true" class="relative aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 motion-reduce:transition-none [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100">
+    <icons.Circle class="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 [&>circle]:fill-primary" />
+  </span>
   if p.Label != "" {
-    <span>{p.Label}</span>
+    <span class="peer-disabled:cursor-not-allowed peer-disabled:opacity-50">{p.Label}</span>
   }
   if p.Children != nil {
-    <span>{p.Children}</span>
+    <span class="peer-disabled:cursor-not-allowed peer-disabled:opacity-50">{p.Children}</span>
   }
 </label>
 ```
@@ -86,9 +98,12 @@ package radiogroup
 
 import "github.com/alternayte/gx"
 
+// Each fixture has its own name: radios that share a name form one group
+// across the whole gallery page, and only one of them stays checked.
 var RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{
 	"Vertical": {
-		Name: "plan",
+		Name:  "plan",
+		Label: "Plan",
 		Children: gx.Frag(
 			RadioGroupItem(RadioGroupItemProps{Name: "plan", Value: "free", Checked: true, Label: "Free"}),
 			RadioGroupItem(RadioGroupItemProps{Name: "plan", Value: "pro", Label: "Pro"}),
@@ -96,6 +111,7 @@ var RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{
 	},
 	"Horizontal": {
 		Name:        "size",
+		Label:       "Size",
 		Orientation: Horizontal,
 		Children: gx.Frag(
 			RadioGroupItem(RadioGroupItemProps{Name: "size", Value: "s", Checked: true, Label: "Small"}),
@@ -123,6 +139,23 @@ var orientationClass = gx.Enum[Orientation]{
 	Vertical:   "grid-cols-1",
 	Horizontal: "grid-flow-col auto-cols-max gap-4",
 }
+
+// orientation returns the orientation of one group; a zero value is
+// Vertical.
+func (p RadioGroupProps) orientation() Orientation {
+	if p.Orientation == "" {
+		return Vertical
+	}
+	return p.Orientation
+}
+
+// invalid returns the aria-invalid value of the input.
+func (p RadioGroupItemProps) invalid() string {
+	if p.Invalid {
+		return "true"
+	}
+	return "false"
+}
 ```
 
 ```go title="ui/radio-group/RadioGroupItem.fixtures.go"
@@ -131,24 +164,29 @@ package radiogroup
 import "github.com/alternayte/gx"
 
 var RadioGroupItemFixtures = gx.Fixtures[RadioGroupItemProps]{
-	"Unchecked": {Name: "plan", Value: "free", Label: "Free"},
-	"Checked":   {Name: "plan", Value: "pro", Checked: true, Label: "Pro"},
+	"Unchecked": {Name: "item-unchecked", Value: "free", Label: "Free"},
+	"Checked":   {Name: "item-checked", Value: "pro", Checked: true, Label: "Pro"},
+	"Disabled":  {Name: "item-disabled", Value: "pro", Checked: true, Disabled: true, Label: "Pro"},
+	"Invalid":   {Name: "item-invalid", Value: "pro", Invalid: true, Label: "Pro"},
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--primary`.
+The theme must define these tokens: `--primary`, `--input`, `--ring`, `--destructive`.
 
 ## Usage
 
 ```gx
-<radiogroup.RadioGroup name="plan">
+<radiogroup.RadioGroup name="plan" label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked={true} label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>
 ```
+
+Each item is a native radio input behind a styled circle.
+`Disabled` and `Invalid` set the state of the input.
 
 ## Examples
 
@@ -157,7 +195,7 @@ The theme must define these tokens: `--primary`.
 <Example item="radio-group" name="radio-group-vertical" label="Radio Group: RadioGroup: Vertical">
 
 ```gx
-<radiogroup.RadioGroup name="plan">
+<radiogroup.RadioGroup name="plan" label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>
@@ -170,7 +208,7 @@ The theme must define these tokens: `--primary`.
 <Example item="radio-group" name="radio-group-horizontal" label="Radio Group: RadioGroup: Horizontal">
 
 ```gx
-<radiogroup.RadioGroup name="size" orientation={radiogroup.Horizontal}>
+<radiogroup.RadioGroup name="size" label="Size" orientation={radiogroup.Horizontal}>
   <radiogroup.RadioGroupItem name="size" value="s" checked label="Small" />
   <radiogroup.RadioGroupItem name="size" value="m" label="Medium" />
 </radiogroup.RadioGroup>
@@ -183,7 +221,7 @@ The theme must define these tokens: `--primary`.
 <Example item="radio-group" name="radio-group-item-unchecked" label="Radio Group: RadioGroupItem: Unchecked">
 
 ```gx
-<radiogroup.RadioGroupItem name="plan" value="free" label="Free" />
+<radiogroup.RadioGroupItem name="item-unchecked" value="free" label="Free" />
 ```
 
 </Example>
@@ -193,7 +231,27 @@ The theme must define these tokens: `--primary`.
 <Example item="radio-group" name="radio-group-item-checked" label="Radio Group: RadioGroupItem: Checked">
 
 ```gx
-<radiogroup.RadioGroupItem name="plan" value="pro" checked label="Pro" />
+<radiogroup.RadioGroupItem name="item-checked" value="pro" checked label="Pro" />
+```
+
+</Example>
+
+### RadioGroupItem: Disabled
+
+<Example item="radio-group" name="radio-group-item-disabled" label="Radio Group: RadioGroupItem: Disabled">
+
+```gx
+<radiogroup.RadioGroupItem name="item-disabled" value="pro" checked disabled label="Pro" />
+```
+
+</Example>
+
+### RadioGroupItem: Invalid
+
+<Example item="radio-group" name="radio-group-item-invalid" label="Radio Group: RadioGroupItem: Invalid">
+
+```gx
+<radiogroup.RadioGroupItem name="item-invalid" value="pro" invalid label="Pro" />
 ```
 
 </Example>
@@ -205,6 +263,7 @@ The theme must define these tokens: `--primary`.
 
 - Give every item the same `Name`.
 - Set `Checked` on exactly one item.
+- Give the group a `Label`.
 
 </docs.Card>
 <docs.Card title="Don't">

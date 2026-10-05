@@ -9,9 +9,13 @@ item: "scroll-area"
 <Example item="scroll-area" name="scroll-area-vertical" label="Scroll Area: Vertical">
 
 ```gx
-<scrollarea.ScrollArea class="h-24 w-48 rounded-md border border-border p-2">
-  Line one. Line two. Line three. Line four. Line five. Line six. Line seven. Line eight.
-</scrollarea.ScrollArea>
+{scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/scroll-area/ScrollArea.fixtures.go"
+"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: lines("Line one.", "Line two.", "Line three.", "Line four.", "Line five.", "Line six.", "Line seven.", "Line eight.")}
 ```
 
 </Example>
@@ -48,7 +52,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("relative overflow-auto", p.Class)} tabindex="0" style={gx.Style("scrollbar-width: thin")} {...p.Attrs}>{p.Children}</div>
+<div class={gx.Cx("relative overflow-auto transition-[color,box-shadow] outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 motion-reduce:transition-none", p.Class)} tabindex="0" {...p.Attrs}>{p.Children}</div>
 ```
 
 ```go title="ui/scroll-area/ScrollArea.fixtures.go"
@@ -56,23 +60,37 @@ package scrollarea
 
 import "github.com/alternayte/gx"
 
+// lines returns one paragraph per line, so the text does not wrap at the
+// scrollbar.
+func lines(text ...string) gx.Node {
+	nodes := make([]gx.Node, 0, len(text))
+	for _, line := range text {
+		nodes = append(nodes, gx.El("p", nil, gx.Text(line)))
+	}
+	return gx.El("div", gx.Attrs{{Key: "class", Value: "p-2 text-sm", Kind: gx.AttrText}}, nodes...)
+}
+
 var ScrollAreaFixtures = gx.Fixtures[ScrollAreaProps]{
-	"Vertical": {Class: "h-24 w-48 rounded-md border border-border p-2", Children: gx.Text("Line one. Line two. Line three. Line four. Line five. Line six. Line seven. Line eight.")},
+	"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: lines("Line one.", "Line two.", "Line three.", "Line four.", "Line five.", "Line six.", "Line seven.", "Line eight.")},
+	"Horizontal": {Class: "w-48 rounded-md border border-border whitespace-nowrap", Attrs: gx.Attrs{{Key: "aria-label", Value: "One long line", Kind: gx.AttrText}}, Children: lines("One long line that does not wrap and scrolls sideways.")},
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`.
+The theme must define these tokens: `--border`, `--ring`.
 
 ## Usage
 
 ```gx
-<scrollarea.ScrollArea class="h-64">
-  <p>Long content.</p>
+<scrollarea.ScrollArea class="h-64 rounded-md border">
+  <div class="p-4">Long content.</div>
 </scrollarea.ScrollArea>
 ```
+
+The area is a native scroller with a thin scrollbar in the border colour.
+It scrolls on both axes. The browser draws the scrollbar.
 
 ## Examples
 
@@ -81,9 +99,29 @@ The theme must define these tokens: `--border`.
 <Example item="scroll-area" name="scroll-area-vertical" label="Scroll Area: Vertical">
 
 ```gx
-<scrollarea.ScrollArea class="h-24 w-48 rounded-md border border-border p-2">
-  Line one. Line two. Line three. Line four. Line five. Line six. Line seven. Line eight.
-</scrollarea.ScrollArea>
+{scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/scroll-area/ScrollArea.fixtures.go"
+"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: lines("Line one.", "Line two.", "Line three.", "Line four.", "Line five.", "Line six.", "Line seven.", "Line eight.")}
+```
+
+</Example>
+
+### Horizontal
+
+<Example item="scroll-area" name="scroll-area-horizontal" label="Scroll Area: Horizontal">
+
+```gx
+{scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Horizontal"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/scroll-area/ScrollArea.fixtures.go"
+"Horizontal": {Class: "w-48 rounded-md border border-border whitespace-nowrap", Attrs: gx.Attrs{{Key: "aria-label", Value: "One long line", Kind: gx.AttrText}}, Children: lines("One long line that does not wrap and scrolls sideways.")}
 ```
 
 </Example>
@@ -94,6 +132,7 @@ The theme must define these tokens: `--border`.
 <docs.Card title="Do">
 
 - Set a height on the area.
+- Put the padding on the content, not on the area.
 - Keep the scroll on one axis.
 
 </docs.Card>
@@ -109,4 +148,5 @@ The theme must define these tokens: `--border`.
 
 | Key | Action |
 | --- | --- |
-| Page keys | Scroll the area when it holds focus. |
+| Tab | Moves focus to the area. |
+| Arrow keys, Page keys | Scroll the area when it holds focus. |

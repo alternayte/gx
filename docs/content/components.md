@@ -50,11 +50,11 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Spinner" description="An indicator for an unknown wait." href="/components/spinner/" />
 <docs.LinkCard title="Switch" description="A control for an immediate on or off setting." href="/components/switch/" />
 <docs.LinkCard title="Table" description="A data table built from composable parts." href="/components/table/" />
-<docs.LinkCard title="Tabs" description="Exclusive panels behind a row of tab buttons." href="/components/tabs/" />
+<docs.LinkCard title="Tabs" description="Exclusive panels behind a list of tab buttons." href="/components/tabs/" />
 <docs.LinkCard title="Textarea" description="A multi-line text control." href="/components/textarea/" />
 <docs.LinkCard title="Toast" description="Server-pushed toasts: the toaster region and the toast." href="/components/toast/" />
 <docs.LinkCard title="Toggle" description="A two-state button." href="/components/toggle/" />
-<docs.LinkCard title="Toggle Group" description="A segmented control of exclusive choices." href="/components/toggle-group/" />
+<docs.LinkCard title="Toggle Group" description="A segmented control of toggle items." href="/components/toggle-group/" />
 <docs.LinkCard title="Tooltip" description="A short hint on hover or focus." href="/components/tooltip/" />
 </docs.CardGrid>
 

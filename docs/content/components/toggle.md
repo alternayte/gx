@@ -31,6 +31,7 @@ The command writes these files.
 | --- | --- |
 | `Toggle.gx` | `ui/toggle/Toggle.gx` |
 | `Toggle.fixtures.go` | `ui/toggle/Toggle.fixtures.go` |
+| `styles.go` | `ui/toggle/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -41,16 +42,20 @@ Copy each file to its path in the app. Change each import of a registry package 
 package toggle
 
 props {
+  Variant  Variant  = Default
+  Size     Size     = Md
   Name     string   = ""
   Value    string   = "on"
   Pressed  bool     = false
+  Disabled bool     = false
+  Invalid  bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50", p.Class)} {...p.Attrs}>
-  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Pressed} class="peer sr-only" />
+<label class={p.class()} {...p.Attrs}>
+  <input type="checkbox" name={p.Name} value={p.Value} checked={p.Pressed} disabled={p.Disabled} aria-invalid={p.invalid()} class="peer sr-only" />
   {p.Children}
 </label>
 ```
@@ -61,24 +66,91 @@ package toggle
 import "github.com/alternayte/gx"
 
 var ToggleFixtures = gx.Fixtures[ToggleProps]{
-	"Off":      {Name: "bold", Children: gx.Text("Bold")},
-	"On":       {Name: "bold", Pressed: true, Children: gx.Text("Bold")},
-	"Disabled": {Name: "bold", Attrs: gx.Attrs{gx.Bool("disabled", true)}, Children: gx.Text("Bold")},
+	"Off":       {Name: "bold", Children: gx.Text("Bold")},
+	"On":        {Name: "bold", Pressed: true, Children: gx.Text("Bold")},
+	"Disabled":  {Name: "bold", Disabled: true, Children: gx.Text("Bold")},
+	"Outline":   {Name: "bold", Variant: Outline, Children: gx.Text("Bold")},
+	"OutlineOn": {Name: "bold", Variant: Outline, Pressed: true, Children: gx.Text("Bold")},
+	"Invalid":   {Name: "bold", Variant: Outline, Invalid: true, Children: gx.Text("Bold")},
+	"Small":     {Name: "bold", Variant: Outline, Size: Sm, Children: gx.Text("Bold")},
+	"Large":     {Name: "bold", Variant: Outline, Size: Lg, Children: gx.Text("Bold")},
+}
+```
+
+```go title="ui/toggle/styles.go"
+package toggle
+
+import "github.com/alternayte/gx"
+
+// Variant is the visual style of a toggle.
+type Variant string
+
+// The variants of toggle.Toggle.
+const (
+	Default Variant = "default"
+	Outline Variant = "outline"
+)
+
+var variantClass = gx.Enum[Variant]{
+	Default: "bg-transparent",
+	Outline: "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground",
+}
+
+// Size is the height and padding of a toggle.
+type Size string
+
+// The sizes of toggle.Toggle.
+const (
+	Sm Size = "sm"
+	Md Size = "md"
+	Lg Size = "lg"
+)
+
+var sizeClass = gx.Enum[Size]{
+	Sm: "h-8 min-w-8 px-1.5",
+	Md: "h-9 min-w-9 px-2",
+	Lg: "h-10 min-w-10 px-2.5",
+}
+
+// class returns the classes of one toggle. The label carries the recipe and
+// reads the state of the checkbox inside it.
+func (p ToggleProps) class() string {
+	const base = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-destructive/20 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground dark:has-[[aria-invalid=true]]:ring-destructive/40 motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+	variant := p.Variant
+	if variant == "" {
+		variant = Default
+	}
+	size := p.Size
+	if size == "" {
+		size = Md
+	}
+	return gx.Cx(base, variantClass[variant], sizeClass[size], p.Class)
+}
+
+// invalid returns the aria-invalid value of the input.
+func (p ToggleProps) invalid() string {
+	if p.Invalid {
+		return "true"
+	}
+	return "false"
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--muted`, `--accent`, `--accent-foreground`, `--ring`, `--foreground`.
+The theme must define these tokens: `--muted`, `--muted-foreground`, `--accent`, `--accent-foreground`, `--input`, `--ring`, `--destructive`.
 
 ## Usage
 
 ```gx
 <toggle.Toggle name="bold" pressed={p.Bold}>Bold</toggle.Toggle>
+<toggle.Toggle name="italic" variant={toggle.Outline} size={toggle.Sm}>Italic</toggle.Toggle>
 ```
 
 The toggle is a styled checkbox, so it works without JavaScript.
+The variants are `toggle.Default` and `toggle.Outline`. The sizes are `toggle.Sm`, `toggle.Md` and `toggle.Lg`.
+`Disabled` and `Invalid` set the state of the checkbox.
 
 ## Examples
 
@@ -107,7 +179,57 @@ The toggle is a styled checkbox, so it works without JavaScript.
 <Example item="toggle" name="toggle-disabled" label="Toggle: Disabled">
 
 ```gx
-<toggle.Toggle name="bold" attrs={gx.Attrs{gx.Bool("disabled", true)}}>Bold</toggle.Toggle>
+<toggle.Toggle name="bold" disabled>Bold</toggle.Toggle>
+```
+
+</Example>
+
+### Outline
+
+<Example item="toggle" name="toggle-outline" label="Toggle: Outline">
+
+```gx
+<toggle.Toggle name="bold" variant={toggle.Outline}>Bold</toggle.Toggle>
+```
+
+</Example>
+
+### Outline on
+
+<Example item="toggle" name="toggle-outline-on" label="Toggle: Outline on">
+
+```gx
+<toggle.Toggle name="bold" variant={toggle.Outline} pressed>Bold</toggle.Toggle>
+```
+
+</Example>
+
+### Invalid
+
+<Example item="toggle" name="toggle-invalid" label="Toggle: Invalid">
+
+```gx
+<toggle.Toggle name="bold" variant={toggle.Outline} invalid>Bold</toggle.Toggle>
+```
+
+</Example>
+
+### Small
+
+<Example item="toggle" name="toggle-small" label="Toggle: Small">
+
+```gx
+<toggle.Toggle name="bold" variant={toggle.Outline} size={toggle.Sm}>Bold</toggle.Toggle>
+```
+
+</Example>
+
+### Large
+
+<Example item="toggle" name="toggle-large" label="Toggle: Large">
+
+```gx
+<toggle.Toggle name="bold" variant={toggle.Outline} size={toggle.Lg}>Bold</toggle.Toggle>
 ```
 
 </Example>

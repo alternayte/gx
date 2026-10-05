@@ -1,11 +1,12 @@
 package tabs
 
 props {
-  Sync     string   = ""
-  Default  string   = ""
-  Class    string   = ""
-  Children gx.Node
-  Attrs    gx.Attrs = nil
+  Orientation Orientation = Horizontal
+  Sync        string      = ""
+  Default     string      = ""
+  Class       string      = ""
+  Children    gx.Node
+  Attrs       gx.Attrs    = nil
 }
 
-<div class={gx.Cx("w-full", p.Class)} data-gx-tabs data-sync={p.Sync} data-default={p.Default} {...p.Attrs}>{p.Children}</div>
+<div class={gx.Cx("group/tabs flex gap-2 data-[orientation=horizontal]:flex-col", p.Class)} data-gx-tabs data-orientation={p.orientation()} data-sync={p.Sync} data-default={p.Default} {...p.Attrs}>{p.Children}</div>

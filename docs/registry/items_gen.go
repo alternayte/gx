@@ -76,6 +76,7 @@ var Items = []Item{
 			{Name: "accordion-two", Title: "Accordion: Two", Component: "Accordion", Fixtures: []string{"Accordion/Two"}, Node: func() gx.Node { return accordion.Accordion(accordion.AccordionFixtures["Two"]) }},
 			{Name: "accordion-item-closed", Title: "AccordionItem: Closed", Component: "AccordionItem", Fixtures: []string{"AccordionItem/Closed"}, Node: func() gx.Node { return accordion.AccordionItem(accordion.AccordionItemFixtures["Closed"]) }},
 			{Name: "accordion-item-open", Title: "AccordionItem: Open", Component: "AccordionItem", Fixtures: []string{"AccordionItem/Open"}, Node: func() gx.Node { return accordion.AccordionItem(accordion.AccordionItemFixtures["Open"]) }},
+			{Name: "accordion-item-disabled", Title: "AccordionItem: Disabled", Component: "AccordionItem", Fixtures: []string{"AccordionItem/Disabled"}, Node: func() gx.Node { return accordion.AccordionItem(accordion.AccordionItemFixtures["Disabled"]) }},
 		},
 	},
 	{
@@ -237,6 +238,8 @@ var Items = []Item{
 			{Name: "checkbox-unchecked", Title: "Unchecked", Component: "Checkbox", Fixtures: []string{"Checkbox/Unchecked"}, Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Unchecked"]) }},
 			{Name: "checkbox-checked", Title: "Checked", Component: "Checkbox", Fixtures: []string{"Checkbox/Checked"}, Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Checked"]) }},
 			{Name: "checkbox-disabled", Title: "Disabled", Component: "Checkbox", Fixtures: []string{"Checkbox/Disabled"}, Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Disabled"]) }},
+			{Name: "checkbox-disabled-checked", Title: "Disabled checked", Component: "Checkbox", Fixtures: []string{"Checkbox/DisabledChecked"}, Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["DisabledChecked"]) }},
+			{Name: "checkbox-invalid", Title: "Invalid", Component: "Checkbox", Fixtures: []string{"Checkbox/Invalid"}, Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Invalid"]) }},
 		},
 	},
 	{
@@ -783,6 +786,8 @@ var Items = []Item{
 			{Name: "radio-group-horizontal", Title: "RadioGroup: Horizontal", Component: "RadioGroup", Fixtures: []string{"RadioGroup/Horizontal"}, Node: func() gx.Node { return radiogroup.RadioGroup(radiogroup.RadioGroupFixtures["Horizontal"]) }},
 			{Name: "radio-group-item-unchecked", Title: "RadioGroupItem: Unchecked", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Unchecked"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Unchecked"]) }},
 			{Name: "radio-group-item-checked", Title: "RadioGroupItem: Checked", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Checked"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Checked"]) }},
+			{Name: "radio-group-item-disabled", Title: "RadioGroupItem: Disabled", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Disabled"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Disabled"]) }},
+			{Name: "radio-group-item-invalid", Title: "RadioGroupItem: Invalid", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Invalid"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Invalid"]) }},
 		},
 	},
 	{
@@ -792,6 +797,7 @@ var Items = []Item{
 		Description: "A box with a styled scrollbar.",
 		Examples: []Example{
 			{Name: "scroll-area-vertical", Title: "Vertical", Component: "ScrollArea", Fixtures: []string{"ScrollArea/Vertical"}, Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"]) }},
+			{Name: "scroll-area-horizontal", Title: "Horizontal", Component: "ScrollArea", Fixtures: []string{"ScrollArea/Horizontal"}, Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Horizontal"]) }},
 		},
 	},
 	{
@@ -954,7 +960,10 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "slider-half", Title: "Half", Component: "Slider", Fixtures: []string{"Slider/Half"}, Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Half"]) }},
 			{Name: "slider-full", Title: "Full", Component: "Slider", Fixtures: []string{"Slider/Full"}, Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Full"]) }},
+			{Name: "slider-empty", Title: "Empty", Component: "Slider", Fixtures: []string{"Slider/Empty"}, Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Empty"]) }},
 			{Name: "slider-range", Title: "Range", Component: "Slider", Fixtures: []string{"Slider/Range"}, Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Range"]) }},
+			{Name: "slider-disabled", Title: "Disabled", Component: "Slider", Fixtures: []string{"Slider/Disabled"}, Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Disabled"]) }},
+			{Name: "slider-vertical", Title: "Vertical", Component: "Slider", Fixtures: []string{"Slider/Vertical"}, Node: func() gx.Node { return slider.Slider(slider.SliderFixtures["Vertical"]) }},
 		},
 	},
 	{
@@ -977,6 +986,8 @@ var Items = []Item{
 			{Name: "switch-off", Title: "Off", Component: "Switch", Fixtures: []string{"Switch/Off"}, Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["Off"]) }},
 			{Name: "switch-on", Title: "On", Component: "Switch", Fixtures: []string{"Switch/On"}, Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["On"]) }},
 			{Name: "switch-disabled", Title: "Disabled", Component: "Switch", Fixtures: []string{"Switch/Disabled"}, Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["Disabled"]) }},
+			{Name: "switch-small", Title: "Small", Component: "Switch", Fixtures: []string{"Switch/Small"}, Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["Small"]) }},
+			{Name: "switch-small-on", Title: "Small on", Component: "Switch", Fixtures: []string{"Switch/SmallOn"}, Node: func() gx.Node { return switches.Switch(switches.SwitchFixtures["SmallOn"]) }},
 		},
 	},
 	{
@@ -1001,11 +1012,20 @@ var Items = []Item{
 		Name:        "tabs",
 		Title:       "Tabs",
 		Group:       "Components",
-		Description: "Exclusive panels behind a row of tab buttons.",
+		Description: "Exclusive panels behind a list of tab buttons.",
 		Examples: []Example{
 			{Name: "tabs-two", Title: "Tabs: Two", Component: "Tabs", Fixtures: []string{"Tabs/Two"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Two"]) }},
+			{Name: "tabs-line", Title: "Tabs: Line", Component: "Tabs", Fixtures: []string{"Tabs/Line"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Line"]) }},
+			{Name: "tabs-vertical", Title: "Tabs: Vertical", Component: "Tabs", Fixtures: []string{"Tabs/Vertical"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Vertical"]) }},
+			{Name: "tabs-vertical-line", Title: "Tabs: Vertical line", Component: "Tabs", Fixtures: []string{"Tabs/VerticalLine"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["VerticalLine"]) }},
+			{Name: "tabs-default", Title: "Tabs: Default", Component: "Tabs", Fixtures: []string{"Tabs/Default"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Default"]) }},
 			{Name: "tabs-synced", Title: "Tabs: Synced", Component: "Tabs", Fixtures: []string{"Tabs/Synced"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Synced"]) }},
-			{Name: "tab-item-item", Title: "TabItem: Item", Component: "TabItem", Fixtures: []string{"TabItem/Item"}, Node: func() gx.Node { return tabs.TabItemWrap(tabs.TabItem(tabs.TabItemFixtures["Item"])) }},
+			{Name: "tabs-disabled", Title: "Tabs: Disabled", Component: "Tabs", Fixtures: []string{"Tabs/Disabled"}, Node: func() gx.Node { return tabs.Tabs(tabs.TabsFixtures["Disabled"]) }},
+			{Name: "tabs-content-panel", Title: "TabsContent: Panel", Component: "TabsContent", Fixtures: []string{"TabsContent/Panel"}, Node: func() gx.Node { return tabs.TabsContentWrap(tabs.TabsContent(tabs.TabsContentFixtures["Panel"])) }},
+			{Name: "tabs-list-default", Title: "TabsList: Default", Component: "TabsList", Fixtures: []string{"TabsList/Default"}, Node: func() gx.Node { return tabs.TabsListWrap(tabs.TabsList(tabs.TabsListFixtures["Default"])) }},
+			{Name: "tabs-list-line", Title: "TabsList: Line", Component: "TabsList", Fixtures: []string{"TabsList/Line"}, Node: func() gx.Node { return tabs.TabsListWrap(tabs.TabsList(tabs.TabsListFixtures["Line"])) }},
+			{Name: "tabs-trigger-trigger", Title: "TabsTrigger: Trigger", Component: "TabsTrigger", Fixtures: []string{"TabsTrigger/Trigger"}, Node: func() gx.Node { return tabs.TabsTriggerWrap(tabs.TabsTrigger(tabs.TabsTriggerFixtures["Trigger"])) }},
+			{Name: "tabs-trigger-disabled", Title: "TabsTrigger: Disabled", Component: "TabsTrigger", Fixtures: []string{"TabsTrigger/Disabled"}, Node: func() gx.Node { return tabs.TabsTriggerWrap(tabs.TabsTrigger(tabs.TabsTriggerFixtures["Disabled"])) }},
 		},
 	},
 	{
@@ -1047,16 +1067,32 @@ var Items = []Item{
 			{Name: "toggle-off", Title: "Off", Component: "Toggle", Fixtures: []string{"Toggle/Off"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Off"]) }},
 			{Name: "toggle-on", Title: "On", Component: "Toggle", Fixtures: []string{"Toggle/On"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["On"]) }},
 			{Name: "toggle-disabled", Title: "Disabled", Component: "Toggle", Fixtures: []string{"Toggle/Disabled"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Disabled"]) }},
+			{Name: "toggle-outline", Title: "Outline", Component: "Toggle", Fixtures: []string{"Toggle/Outline"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Outline"]) }},
+			{Name: "toggle-outline-on", Title: "Outline on", Component: "Toggle", Fixtures: []string{"Toggle/OutlineOn"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["OutlineOn"]) }},
+			{Name: "toggle-invalid", Title: "Invalid", Component: "Toggle", Fixtures: []string{"Toggle/Invalid"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Invalid"]) }},
+			{Name: "toggle-small", Title: "Small", Component: "Toggle", Fixtures: []string{"Toggle/Small"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Small"]) }},
+			{Name: "toggle-large", Title: "Large", Component: "Toggle", Fixtures: []string{"Toggle/Large"}, Node: func() gx.Node { return toggle.Toggle(toggle.ToggleFixtures["Large"]) }},
 		},
 	},
 	{
 		Name:        "toggle-group",
 		Title:       "Toggle Group",
 		Group:       "Components",
-		Description: "A segmented control of exclusive choices.",
+		Description: "A segmented control of toggle items.",
 		Examples: []Example{
 			{Name: "toggle-group-three", Title: "ToggleGroup: Three", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/Three"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Three"]) }},
-			{Name: "toggle-group-item-checked", Title: "ToggleGroupItem: Checked", Component: "ToggleGroupItem", Fixtures: []string{"ToggleGroupItem/Checked"}, Node: func() gx.Node { return togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Checked"]) }},
+			{Name: "toggle-group-outline", Title: "ToggleGroup: Outline", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/Outline"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Outline"]) }},
+			{Name: "toggle-group-spaced", Title: "ToggleGroup: Spaced", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/Spaced"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Spaced"]) }},
+			{Name: "toggle-group-outline-spaced", Title: "ToggleGroup: Outline spaced", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/OutlineSpaced"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["OutlineSpaced"]) }},
+			{Name: "toggle-group-small", Title: "ToggleGroup: Small", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/Small"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Small"]) }},
+			{Name: "toggle-group-large", Title: "ToggleGroup: Large", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/Large"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Large"]) }},
+			{Name: "toggle-group-multiple", Title: "ToggleGroup: Multiple", Component: "ToggleGroup", Fixtures: []string{"ToggleGroup/Multiple"}, Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Multiple"]) }},
+			{Name: "toggle-group-item-checked", Title: "ToggleGroupItem: Checked", Component: "ToggleGroupItem", Fixtures: []string{"ToggleGroupItem/Checked"}, Node: func() gx.Node {
+				return togglegroup.ToggleGroupItemWrap(togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Checked"]))
+			}},
+			{Name: "toggle-group-item-disabled", Title: "ToggleGroupItem: Disabled", Component: "ToggleGroupItem", Fixtures: []string{"ToggleGroupItem/Disabled"}, Node: func() gx.Node {
+				return togglegroup.ToggleGroupItemWrap(togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Disabled"]))
+			}},
 		},
 	},
 	{

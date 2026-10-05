@@ -1,15 +1,17 @@
 package switches
 
 props {
-  Name    string   = ""
-  Label   string   = ""
-  Value   string   = "on"
-  Checked bool     = false
-  Class   string   = ""
-  Attrs   gx.Attrs = nil
+  Size     Size     = Md
+  Name     string   = ""
+  Label    string   = ""
+  Value    string   = "on"
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary", p.Class)} {...p.Attrs}>
-  <input type="checkbox" role="switch" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} class="peer sr-only" />
-  <span class="pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4"></span>
+<label data-size={p.size()} class={gx.Cx("inline-flex shrink-0 items-center rounded-full border border-transparent bg-input shadow-xs transition-all outline-none has-[:checked]:bg-primary has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 dark:bg-input/80 dark:has-[:checked]:bg-primary motion-reduce:transition-none", trackClass[p.size()], p.Class)} {...p.Attrs}>
+  <input type="checkbox" role="switch" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" />
+  <span class={gx.Cx("pointer-events-none block translate-x-0 rounded-full bg-background ring-0 transition-transform peer-checked:translate-x-[calc(100%-2px)] dark:bg-foreground dark:peer-checked:bg-primary-foreground motion-reduce:transition-none", thumbClass[p.size()])}></span>
 </label>

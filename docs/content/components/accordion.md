@@ -13,7 +13,7 @@ item: "accordion"
   <accordion.AccordionItem name="faq" title="Is it accessible?" open>
     Yes. It uses the native details element.
   </accordion.AccordionItem>
-  <accordion.AccordionItem name="faq" title="Is it animated?">No. The panel opens at once.</accordion.AccordionItem>
+  <accordion.AccordionItem name="faq" title="Is it animated?">Yes. The panel height animates.</accordion.AccordionItem>
 </accordion.Accordion>
 ```
 
@@ -30,6 +30,8 @@ Run the command in the app module.
 gx add accordion
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
@@ -41,6 +43,8 @@ The command writes these files.
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -60,21 +64,24 @@ props {
 ```gx title="ui/accordion/AccordionItem.gx"
 package accordion
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
   Name     string
   Title    string
   Open     bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<details name={p.Name} open={p.Open} class={gx.Cx("group border-b border-border", p.Class)} {...p.Attrs}>
-  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-md py-4 text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden">
+<details name={p.Name} open={p.Open} class={gx.Cx("group/accordion-item border-border border-b last:border-b-0 [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class)} {...p.Attrs}>
+  <summary inert={p.Disabled} class="flex flex-1 list-none items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 inert:pointer-events-none inert:opacity-50 [&::-webkit-details-marker]:hidden">
     {p.Title}
-    <span class="text-muted-foreground transition-transform group-open:rotate-45">+</span>
+    <icons.ChevronDown class="pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-open/accordion-item:rotate-180 motion-reduce:transition-none" />
   </summary>
-  <div class="pb-4 text-sm">{p.Children}</div>
+  <div class="pt-0 pb-4 text-sm">{p.Children}</div>
 </details>
 ```
 
@@ -86,7 +93,7 @@ import "github.com/alternayte/gx"
 var AccordionFixtures = gx.Fixtures[AccordionProps]{
 	"Two": {Name: "faq", Children: gx.Frag(
 		AccordionItem(AccordionItemProps{Name: "faq", Title: "Is it accessible?", Open: true, Children: gx.Text("Yes. It uses the native details element.")}),
-		AccordionItem(AccordionItemProps{Name: "faq", Title: "Is it animated?", Children: gx.Text("No. The panel opens at once.")}),
+		AccordionItem(AccordionItemProps{Name: "faq", Title: "Is it animated?", Children: gx.Text("Yes. The panel height animates.")}),
 	)},
 }
 ```
@@ -96,16 +103,19 @@ package accordion
 
 import "github.com/alternayte/gx"
 
+// Each fixture has its own name: details elements that share a name form one
+// exclusive group across the whole gallery page.
 var AccordionItemFixtures = gx.Fixtures[AccordionItemProps]{
-	"Closed": {Name: "faq", Title: "A question", Children: gx.Text("An answer.")},
-	"Open":   {Name: "faq", Title: "A question", Open: true, Children: gx.Text("An answer.")},
+	"Closed":   {Name: "item-closed", Title: "A question", Children: gx.Text("An answer.")},
+	"Open":     {Name: "item-open", Title: "A question", Open: true, Children: gx.Text("An answer.")},
+	"Disabled": {Name: "item-disabled", Title: "A question", Disabled: true, Children: gx.Text("An answer.")},
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--muted-foreground`.
+The theme must define these tokens: `--border`, `--muted-foreground`, `--ring`.
 
 ## Usage
 
@@ -118,6 +128,8 @@ The theme must define these tokens: `--border`, `--muted-foreground`.
 ```
 
 The accordion uses `<details name>`, so the browser gives the open and close behaviour.
+The panel height animates in a browser that supports `interpolate-size`. Other browsers open the panel at once.
+Set `Disabled` to stop an item from opening.
 
 ## Examples
 
@@ -130,7 +142,7 @@ The accordion uses `<details name>`, so the browser gives the open and close beh
   <accordion.AccordionItem name="faq" title="Is it accessible?" open>
     Yes. It uses the native details element.
   </accordion.AccordionItem>
-  <accordion.AccordionItem name="faq" title="Is it animated?">No. The panel opens at once.</accordion.AccordionItem>
+  <accordion.AccordionItem name="faq" title="Is it animated?">Yes. The panel height animates.</accordion.AccordionItem>
 </accordion.Accordion>
 ```
 
@@ -141,7 +153,7 @@ The accordion uses `<details name>`, so the browser gives the open and close beh
 <Example item="accordion" name="accordion-item-closed" label="Accordion: AccordionItem: Closed">
 
 ```gx
-<accordion.AccordionItem name="faq" title="A question">An answer.</accordion.AccordionItem>
+<accordion.AccordionItem name="item-closed" title="A question">An answer.</accordion.AccordionItem>
 ```
 
 </Example>
@@ -151,7 +163,17 @@ The accordion uses `<details name>`, so the browser gives the open and close beh
 <Example item="accordion" name="accordion-item-open" label="Accordion: AccordionItem: Open">
 
 ```gx
-<accordion.AccordionItem name="faq" title="A question" open>An answer.</accordion.AccordionItem>
+<accordion.AccordionItem name="item-open" title="A question" open>An answer.</accordion.AccordionItem>
+```
+
+</Example>
+
+### AccordionItem: Disabled
+
+<Example item="accordion" name="accordion-item-disabled" label="Accordion: AccordionItem: Disabled">
+
+```gx
+<accordion.AccordionItem name="item-disabled" title="A question" disabled>An answer.</accordion.AccordionItem>
 ```
 
 </Example>
@@ -161,7 +183,8 @@ The accordion uses `<details name>`, so the browser gives the open and close beh
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Give every item the same `Name`.
+- Give every item of one accordion the same `Name`.
+- Give each accordion on a page its own `Name`.
 - Put a question in `Title` and the answer in the body.
 
 </docs.Card>

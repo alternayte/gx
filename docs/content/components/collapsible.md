@@ -51,9 +51,9 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<details open={p.Open} class={gx.Cx("group", p.Class)} {...p.Attrs}>
+<details open={p.Open} class={gx.Cx("group/collapsible [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class)} {...p.Attrs}>
   <summary class="inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden">{p.Summary}</summary>
-  <div class="pt-2">{p.Children}</div>
+  {p.Children}
 </details>
 ```
 
@@ -71,6 +71,8 @@ var CollapsibleFixtures = gx.Fixtures[CollapsibleProps]{
 </docs.TabItem>
 </docs.Tabs>
 
+The theme must define these tokens: `--ring`.
+
 ## Usage
 
 ```gx
@@ -80,6 +82,8 @@ var CollapsibleFixtures = gx.Fixtures[CollapsibleProps]{
 ```
 
 The panel uses the native `<details>` element.
+The panel height animates in a browser that supports `interpolate-size`. Other browsers open the panel at once.
+The panel has no spacing of its own. Put the spacing on the content.
 
 ## Examples
 

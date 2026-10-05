@@ -278,13 +278,43 @@ test('REQ-REG-07 collapsible toggles with Space', async () => {
 })
 
 test('REQ-REG-07 tabs switch with the arrow keys', async () => {
-  const account = fixture('Tabs-Two').getByRole('button', { name: 'Account' })
+  const account = fixture('Tabs-Two').getByRole('tab', { name: 'Account' })
   await account.focus()
   await page.keyboard.press('ArrowRight')
+  // The triggers sit in one tab list; the selected tab shows its panel and
+  // hides the other one.
   await page.waitForFunction(() => {
-    const tab = document.querySelector('[data-fixture="Tabs-Two"] [data-gx-tab="Password"]')
-    return tab?.getAttribute('aria-expanded') === 'true'
+    const root = document.querySelector('[data-fixture="Tabs-Two"]')
+    const tab = root?.querySelector('[role="tablist"] [data-gx-tab="Password"]')
+    const shown = [...(root?.querySelectorAll<HTMLElement>('[role="tabpanel"]') ?? [])].filter((panel) => !panel.hidden)
+    return (
+      tab?.getAttribute('aria-selected') === 'true' &&
+      document.activeElement === tab &&
+      shown.length === 1 &&
+      shown[0].getAttribute('aria-labelledby') === tab.id
+    )
   })
+})
+
+test('REQ-REG-07 vertical tabs follow the vertical arrow keys and skip a disabled tab', async () => {
+  const selected = (name: string, label: string) =>
+    page.waitForFunction(
+      ([f, l]) => document.querySelector(`[data-fixture="${f}"] [data-gx-tab="${l}"]`)?.getAttribute('aria-selected') === 'true',
+      [name, label],
+    )
+  await fixture('Tabs-Vertical').getByRole('tab', { name: 'Account' }).focus()
+  // ArrowRight belongs to a horizontal list: it must not move a vertical one.
+  await page.keyboard.press('ArrowRight')
+  await page.keyboard.press('ArrowDown')
+  await selected('Tabs-Vertical', 'Password')
+  await page.keyboard.press('ArrowUp')
+  await selected('Tabs-Vertical', 'Account')
+
+  await fixture('Tabs-Disabled').getByRole('tab', { name: 'Account' }).focus()
+  await page.keyboard.press('ArrowRight')
+  await selected('Tabs-Disabled', 'Password')
+  await page.keyboard.press('Home')
+  await selected('Tabs-Disabled', 'Account')
 })
 
 test('REQ-REG-07 toggle switches with Space', async () => {

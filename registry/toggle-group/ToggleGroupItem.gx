@@ -4,12 +4,14 @@ props {
   Name     string
   Value    string
   Checked  bool     = false
+  Multiple bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("inline-flex h-9 min-w-9 items-center justify-center gap-2 rounded-none px-2 text-sm font-medium transition-colors outline-none first:rounded-l-md last:rounded-r-md hover:bg-muted hover:text-muted-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:z-10 has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50", p.Class)} {...p.Attrs}>
-  <input type="radio" name={p.Name} value={p.Value} checked={p.Checked} class="peer sr-only" />
+<label class={gx.Cx("inline-flex h-9 w-auto min-w-0 shrink-0 items-center justify-center gap-2 rounded-md bg-transparent px-3 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground has-[:focus-visible]:z-10 has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[size=sm]/toggle-group:h-8 group-data-[size=lg]/toggle-group:h-10 group-data-[variant=outline]/toggle-group:border group-data-[variant=outline]/toggle-group:border-input group-data-[variant=outline]/toggle-group:shadow-xs group-data-[variant=outline]/toggle-group:hover:bg-accent group-data-[variant=outline]/toggle-group:hover:text-accent-foreground group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:first:rounded-l-md group-data-[spacing=0]/toggle-group:last:rounded-r-md group-data-[spacing=0]/toggle-group:group-data-[variant=outline]/toggle-group:border-l-0 group-data-[spacing=0]/toggle-group:group-data-[variant=outline]/toggle-group:shadow-none group-data-[spacing=0]/toggle-group:group-data-[variant=outline]/toggle-group:first:border-l", p.Class)} {...p.Attrs}>
+  <input type={p.inputType()} name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" />
   {p.Children}
 </label>

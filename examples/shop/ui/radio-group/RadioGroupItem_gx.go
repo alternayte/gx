@@ -4,12 +4,15 @@ package radiogroup
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/icons"
 )
 
 type RadioGroupItemProps struct {
 	Name     string
 	Value    string
 	Checked  bool
+	Disabled bool
+	Invalid  bool
 	Label    string
 	Class    string
 	Children gx.Node
@@ -18,38 +21,42 @@ type RadioGroupItemProps struct {
 
 func RadioGroupItem(p RadioGroupItemProps) gx.Node {
 	var _b gx.Builder
-//line RadioGroupItem.gx:13:1
+//line RadioGroupItem.gx:17:1
 	var _b1 gx.Builder
-//line RadioGroupItem.gx:13:79
-	_b1.Add(gx.Text("\n  "))
-//line RadioGroupItem.gx:14:3
-	_b1.Add(gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "size-4 accent-primary", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "radio", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked)}))
-//line RadioGroupItem.gx:14:105
-	_b1.Add(gx.Text("\n  "))
-//line RadioGroupItem.gx:15:3
-	if p.Label != "" {
-//line RadioGroupItem.gx:15:21
-		_b1.Add(gx.Text("\n    "))
-//line RadioGroupItem.gx:16:5
-		_b1.Add(gx.El("span", nil, gx.Text(p.Label)))
-//line RadioGroupItem.gx:16:27
-		_b1.Add(gx.Text("\n  "))
-	}
-//line RadioGroupItem.gx:17:4
+//line RadioGroupItem.gx:17:116
 	_b1.Add(gx.Text("\n  "))
 //line RadioGroupItem.gx:18:3
-	if p.Children != nil {
-//line RadioGroupItem.gx:18:25
+	_b1.Add(gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "radio", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}))
+//line RadioGroupItem.gx:18:145
+	_b1.Add(gx.Text("\n  "))
+//line RadioGroupItem.gx:19:3
+	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "relative aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 motion-reduce:transition-none [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), icons.Circle(icons.CircleProps{Label: "", Class: "absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 [&>circle]:fill-primary"}), gx.Text("\n  "))))
+//line RadioGroupItem.gx:21:10
+	_b1.Add(gx.Text("\n  "))
+//line RadioGroupItem.gx:22:3
+	if p.Label != "" {
+//line RadioGroupItem.gx:22:21
 		_b1.Add(gx.Text("\n    "))
-//line RadioGroupItem.gx:19:5
-		_b1.Add(gx.El("span", nil, p.Children))
-//line RadioGroupItem.gx:19:30
+//line RadioGroupItem.gx:23:5
+		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "peer-disabled:cursor-not-allowed peer-disabled:opacity-50", Kind: gx.AttrText}}, gx.Text(p.Label)))
+//line RadioGroupItem.gx:23:93
 		_b1.Add(gx.Text("\n  "))
 	}
-//line RadioGroupItem.gx:20:4
+//line RadioGroupItem.gx:24:4
+	_b1.Add(gx.Text("\n  "))
+//line RadioGroupItem.gx:25:3
+	if p.Children != nil {
+//line RadioGroupItem.gx:25:25
+		_b1.Add(gx.Text("\n    "))
+//line RadioGroupItem.gx:26:5
+		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "peer-disabled:cursor-not-allowed peer-disabled:opacity-50", Kind: gx.AttrText}}, p.Children))
+//line RadioGroupItem.gx:26:96
+		_b1.Add(gx.Text("\n  "))
+	}
+//line RadioGroupItem.gx:27:4
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line RadioGroupItem.gx:21:9
+	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line RadioGroupItem.gx:28:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

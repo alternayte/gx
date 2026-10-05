@@ -19,6 +19,7 @@
   ],
   "requiredTokens": [
     "--muted",
-    "--primary"
+    "--primary",
+    "--ring"
   ]
 }

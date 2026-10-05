@@ -31,6 +31,7 @@ The command writes these files.
 | --- | --- |
 | `Switch.gx` | `ui/switch/Switch.gx` |
 | `Switch.fixtures.go` | `ui/switch/Switch.fixtures.go` |
+| `styles.go` | `ui/switch/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -41,17 +42,19 @@ Copy each file to its path in the app. Change each import of a registry package 
 package switches
 
 props {
-  Name    string   = ""
-  Label   string   = ""
-  Value   string   = "on"
-  Checked bool     = false
-  Class   string   = ""
-  Attrs   gx.Attrs = nil
+  Size     Size     = Md
+  Name     string   = ""
+  Label    string   = ""
+  Value    string   = "on"
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
 }
 
-<label class={gx.Cx("inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary", p.Class)} {...p.Attrs}>
-  <input type="checkbox" role="switch" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} class="peer sr-only" />
-  <span class="pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4"></span>
+<label data-size={p.size()} class={gx.Cx("inline-flex shrink-0 items-center rounded-full border border-transparent bg-input shadow-xs transition-all outline-none has-[:checked]:bg-primary has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 dark:bg-input/80 dark:has-[:checked]:bg-primary motion-reduce:transition-none", trackClass[p.size()], p.Class)} {...p.Attrs}>
+  <input type="checkbox" role="switch" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" />
+  <span class={gx.Cx("pointer-events-none block translate-x-0 rounded-full bg-background ring-0 transition-transform peer-checked:translate-x-[calc(100%-2px)] dark:bg-foreground dark:peer-checked:bg-primary-foreground motion-reduce:transition-none", thumbClass[p.size()])}></span>
 </label>
 ```
 
@@ -63,20 +66,60 @@ import "github.com/alternayte/gx"
 var SwitchFixtures = gx.Fixtures[SwitchProps]{
 	"Off":      {Name: "wifi", Label: "Wifi"},
 	"On":       {Name: "wifi", Label: "Wifi", Checked: true},
-	"Disabled": {Name: "wifi", Label: "Wifi", Attrs: gx.Attrs{gx.Bool("disabled", true)}},
+	"Disabled": {Name: "wifi", Label: "Wifi", Disabled: true},
+	"Small":    {Name: "wifi", Label: "Wifi", Size: Sm},
+	"SmallOn":  {Name: "wifi", Label: "Wifi", Size: Sm, Checked: true},
+}
+```
+
+```go title="ui/switch/styles.go"
+package switches
+
+import "github.com/alternayte/gx"
+
+// Size is the size of a switch.
+type Size string
+
+// The sizes of switches.Switch.
+const (
+	Md Size = "default"
+	Sm Size = "sm"
+)
+
+var trackClass = gx.Enum[Size]{
+	Md: "h-[1.15rem] w-8",
+	Sm: "h-3.5 w-6",
+}
+
+var thumbClass = gx.Enum[Size]{
+	Md: "size-4",
+	Sm: "size-3",
+}
+
+// size returns the size of one switch; a zero value is Md.
+func (p SwitchProps) size() Size {
+	if p.Size == "" {
+		return Md
+	}
+	return p.Size
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--input`, `--primary`, `--background`.
+The theme must define these tokens: `--input`, `--primary`, `--primary-foreground`, `--background`, `--foreground`, `--ring`.
 
 ## Usage
 
 ```gx
-<switch.Switch name="wifi" checked={p.Wifi} />
+<switches.Switch name="wifi" label="Wifi" checked={p.Wifi} />
+<switches.Switch name="sync" label="Sync" size={switches.Sm} />
 ```
+
+The switch is a styled checkbox with the `switch` role.
+The sizes are `switches.Md` and `switches.Sm`.
+`Disabled` disables the checkbox.
 
 ## Examples
 
@@ -105,7 +148,27 @@ The theme must define these tokens: `--input`, `--primary`, `--background`.
 <Example item="switch" name="switch-disabled" label="Switch: Disabled">
 
 ```gx
-<switches.Switch name="wifi" label="Wifi" attrs={gx.Attrs{gx.Bool("disabled", true)}} />
+<switches.Switch name="wifi" label="Wifi" disabled />
+```
+
+</Example>
+
+### Small
+
+<Example item="switch" name="switch-small" label="Switch: Small">
+
+```gx
+<switches.Switch name="wifi" label="Wifi" size={switches.Sm} />
+```
+
+</Example>
+
+### Small on
+
+<Example item="switch" name="switch-small-on" label="Switch: Small on">
+
+```gx
+<switches.Switch name="wifi" label="Wifi" size={switches.Sm} checked />
 ```
 
 </Example>

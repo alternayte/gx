@@ -11,6 +11,8 @@ One panel that opens on demand.
 ```
 
 The panel uses the native `<details>` element.
+The panel height animates in a browser that supports `interpolate-size`. Other browsers open the panel at once.
+The panel has no spacing of its own. Put the spacing on the content.
 
 ## Do
 
