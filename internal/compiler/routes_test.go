@@ -116,8 +116,7 @@ func TestREQ_RTE_03_QueryDecode(t *testing.T) {
 	for _, want := range []string{
 		`func (Search) Pattern() string { return "GET /search" }`,
 		`in.Page = int64(x)`,
-		`if in.Page == 0 {`,
-		`in.Page = 1`,
+		"} else {\n\t\tin.Page = 1\n\t}",
 	} {
 		if !strings.Contains(src, want) {
 			t.Fatalf("routes_gx.go lacks %q:\n%s", want, src)

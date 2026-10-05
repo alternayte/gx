@@ -113,11 +113,45 @@ func TextValue(v any) string {
 // compiler must not inline it.
 func JSON(v any) string {
 	checkSecret(v)
+	if devMode.Load() {
+		checkSafeInt(v)
+	}
 	data, err := json.Marshal(v)
 	if err != nil {
 		panic("gx: cannot inline a value into a client expression: " + err.Error())
 	}
 	return string(data)
+}
+
+// maxSafeInt is the largest integer a JavaScript number holds exactly.
+const maxSafeInt = 1<<53 - 1
+
+// checkSafeInt panics in dev when an integer is outside the 53-bit safe
+// range: the browser rounds it, so the client expression differs from Go
+// (REQ-ACT-13).
+func checkSafeInt(v any) {
+	var n int64
+	switch x := v.(type) {
+	case int:
+		n = int64(x)
+	case int64:
+		n = x
+	case uint:
+		if uint64(x) <= maxSafeInt {
+			return
+		}
+		n = maxSafeInt + 1
+	case uint64:
+		if x <= maxSafeInt {
+			return
+		}
+		n = maxSafeInt + 1
+	default:
+		return
+	}
+	if n > maxSafeInt || n < -maxSafeInt {
+		panic("gx: an integer in a client expression is outside the 53-bit safe range of JavaScript: " + TextValue(v))
+	}
 }
 
 // JoinAttrs concatenates attribute lists in order (REQ-AUT-09).
@@ -244,7 +278,7 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 	}
 	// The app writes the document shell around this fragment, and the
 	// gx.Head output moves into its head.
-	st := &renderState{request: r, requestURI: r.URL.RequestURI(), headWritten: true, nonce: needs.nonce, keepSignals: devKeepSignals(r)}
+	st := &renderState{request: r, requestURI: activeURI(r), headWritten: true, nonce: needs.nonce, keepSignals: devKeepSignals(r)}
 	collectHead(n, st, 1)
 	var head, body strings.Builder
 	renderHead(&head, st)
@@ -262,7 +296,7 @@ func StringRequest(r *http.Request, n Node) string {
 	var b strings.Builder
 	st := &renderState{request: r, nonce: Nonce(r), keepSignals: devKeepSignals(r)}
 	if r != nil && r.URL != nil {
-		st.requestURI = r.URL.RequestURI()
+		st.requestURI = activeURI(r)
 	}
 	collectHead(n, st, 1)
 	renderNode(&b, n, st)
@@ -403,7 +437,47 @@ func escapeAttr(s string) string { return attrEscaper.Replace(s) }
 func escapeStyle(s string) string { return attrEscaper.Replace(s) }
 
 // escapeURL filters a URL and then escapes it for an attribute (REQ-AUT-12).
-func escapeURL(s string) string { return attrEscaper.Replace(urlFilter(s)) }
+// A URL with a script scheme renders as "#" (SI-02).
+func escapeURL(s string) string {
+	if scriptScheme(s) {
+		return "#"
+	}
+	return attrEscaper.Replace(urlFilter(s))
+}
+
+// activeURI returns the address that a typed link has for the current
+// request. A mounted app sees the path without its prefix, and a typed
+// link holds the prefix (REQ-RTE-13, REQ-RTE-18).
+func activeURI(r *http.Request) string {
+	return BasePath() + r.URL.RequestURI()
+}
+
+// scriptScheme reports whether a browser reads the URL as javascript: or
+// vbscript:. A browser drops leading spaces and control characters, and
+// every tab and newline, before it reads the scheme.
+func scriptScheme(s string) bool {
+	const longest = len("javascript:")
+	var scheme [longest]byte
+	n := 0
+	lead := true
+	for i := 0; i < len(s) && n < longest; i++ {
+		c := s[i]
+		if c == '\t' || c == '\n' || c == '\r' || (lead && c <= ' ') {
+			continue
+		}
+		lead = false
+		if c >= 'A' && c <= 'Z' {
+			c += 'a' - 'A'
+		}
+		scheme[n] = c
+		n++
+		if c == ':' {
+			break
+		}
+	}
+	got := string(scheme[:n])
+	return got == "javascript:" || got == "vbscript:"
+}
 
 // urlFilter percent-encodes bytes that are not safe in a URL.
 func urlFilter(s string) string {

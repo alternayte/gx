@@ -7,8 +7,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	"golang.org/x/tools/imports"
 )
 
 // contentBodyFile is the generated body renderer of one package.
@@ -71,7 +69,7 @@ func renderContentFile(colls []contentCollection) ([]byte, error) {
 	b.WriteString(")\n\n")
 	b.Write(w.buf.Bytes())
 	b.WriteString("\n// gxContentMarkdown renders one prose chunk of a content body.\nfunc gxContentMarkdown(s string) gx.Node {\n\tnode, err := content.Body([]byte(s))\n\tif err != nil {\n\t\treturn gx.Text(\"\")\n\t}\n\treturn node\n}\n")
-	src, err := imports.Process(contentBodyFile, b.Bytes(), nil)
+	src, err := fixImports(contentBodyFile, b.Bytes())
 	if err != nil {
 		return nil, err
 	}

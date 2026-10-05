@@ -34,6 +34,8 @@ type Index struct {
 
 A query value of the wrong type, such as `?page=two`, answers 400. The loader does not run.
 
+A default applies when the request has no value for the field. A value in the request stays, also when it is the zero value: `?page=0` binds 0.
+
 `GET /` matches each path that no other pattern matches. Write `GET /{$}` for the root path only, as the home page of a new app does.
 
 ## Pages

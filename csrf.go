@@ -1,6 +1,7 @@
 package gx
 
 import (
+	"context"
 	"crypto/rand"
 	"crypto/subtle"
 	"encoding/hex"
@@ -14,14 +15,21 @@ const (
 	csrfField  = "gx_csrf"
 )
 
+// csrfCheckedKey marks a request that passed the check.
+type csrfCheckedKey struct{}
+
 var crossOrigin = http.NewCrossOriginProtection()
 
 // CSRF protects non-GET requests with Go's cross-origin protection, plus a
 // token for browser-shaped requests that carry no Fetch Metadata (SI-03).
-// gx.App applies it to every route; mount it around any other router that
-// serves Gx actions or forms.
+// gx.App applies it to every route. An action or a form on another router
+// applies the cross-origin protection to itself, so no adoption level needs
+// middleware for it (REQ-RTE-19). The token needs the cookie that this
+// middleware sets, so mount it around another router to protect browsers
+// without Fetch Metadata.
 func CSRF(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r = r.WithContext(context.WithValue(r.Context(), csrfCheckedKey{}, true))
 		ensureCSRFToken(w, r)
 		crossOrigin.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// A browser without Fetch Metadata sends no Sec-Fetch-*
@@ -45,6 +53,19 @@ func browserShaped(r *http.Request) bool {
 	}
 	ct := r.Header.Get("Content-Type")
 	return strings.HasPrefix(ct, "application/x-www-form-urlencoded") || strings.HasPrefix(ct, "multipart/form-data")
+}
+
+// sameOrigin applies the cross-origin protection to a handler that no CSRF
+// middleware wraps (SI-03, REQ-RTE-19).
+func sameOrigin(w http.ResponseWriter, r *http.Request) bool {
+	if r.Context().Value(csrfCheckedKey{}) != nil {
+		return true
+	}
+	if err := crossOrigin.Check(r); err != nil {
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+		return false
+	}
+	return true
 }
 
 // csrfTokenOK compares the token in the request with the cookie.

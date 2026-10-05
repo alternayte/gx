@@ -50,7 +50,7 @@ CSP is middleware that sets a strict Content-Security-Policy with one fresh nonc
 func CSRF(next http.Handler) http.Handler
 ```
 
-CSRF protects non-GET requests with Go's cross-origin protection, plus a token for browser-shaped requests that carry no Fetch Metadata. gx.App applies it to every route; mount it around any other router that serves Gx actions or forms.
+CSRF protects non-GET requests with Go's cross-origin protection, plus a token for browser-shaped requests that carry no Fetch Metadata. gx.App applies it to every route. An action or a form on another router applies the cross-origin protection to itself, so no adoption level needs middleware for it. The token needs the cookie that this middleware sets, so mount it around another router to protect browsers without Fetch Metadata.
 
 ### func Classes
 
@@ -2239,6 +2239,14 @@ var IsURL = Rule{
 ```
 
 IsURL rejects a non-empty string that is not an http or https URL. It is named IsURL because gx.URL is the typed link value.
+
+### MaxFormRows
+
+```go
+const MaxFormRows = 1000
+```
+
+MaxFormRows is the number of rows one repeated form field can hold. A row with a larger index is ignored.
 
 ### Required
 

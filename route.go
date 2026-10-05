@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"io/fs"
 	"net/http"
 	"path"
@@ -180,11 +181,17 @@ func Layout[P any](load func(*Ctx) (P, error), view func(P, Node) Node) layout[P
 // layoutID names a layout by its Layout call site. The id is stable for one
 // binary, so the client can send back the layouts it holds (REQ-RTE-12).
 func layoutID(skip int) string {
-	_, file, line, ok := runtime.Caller(skip + 1)
+	pc, file, line, ok := runtime.Caller(skip + 1)
 	if !ok {
 		return "layout"
 	}
-	return filepath.Base(file) + ":" + strconv.Itoa(line)
+	// The function name holds the package path. It keeps two layouts apart
+	// when their files have the same name and line.
+	sum := fnv.New32a()
+	if fn := runtime.FuncForPC(pc); fn != nil {
+		sum.Write([]byte(fn.Name()))
+	}
+	return filepath.Base(file) + ":" + strconv.Itoa(line) + "-" + strconv.FormatUint(uint64(sum.Sum32()), 36)
 }
 
 func (l layout[P]) gxID() string { return l.id }
@@ -421,15 +428,18 @@ func (a *App) Group(prefix string, parts ...any) *App {
 	var layouts []layoutDef
 	nav := FullNavigation
 	add := func(h Handler) {
-		handler := http.Handler(h)
-		for i := len(mw) - 1; i >= 0; i-- {
-			handler = mw[i](handler)
-		}
+		route := h
 		if len(layouts) > 0 {
-			handler = &layoutHandler{inner: h, layouts: layouts, morph: nav == MorphNavigation}
+			route = &layoutHandler{inner: h, layouts: layouts, morph: nav == MorphNavigation}
 		}
 		if nav == MorphNavigation {
-			handler = &navHandler{inner: handler.(Handler)}
+			route = &navHandler{inner: route}
+		}
+		// Middleware wraps the layout and the navigation, so it runs
+		// before any loader of the page (REQ-RTE-09).
+		handler := http.Handler(route)
+		for i := len(mw) - 1; i >= 0; i-- {
+			handler = mw[i](handler)
 		}
 		handler = a.withErrorViews(handler)
 		handler = a.withAdapter(handler)
@@ -635,9 +645,20 @@ func (h *layoutHandler) loadChain(ctx *Ctx) (Node, []any, error) {
 	var wg sync.WaitGroup
 	var page Node
 	var pageErr error
+	// A panic in a loader goroutine stops the process. The goroutine
+	// keeps the panic value, and the request goroutine panics with it,
+	// where net/http and the dev overlay recover it (REQ-DEV-06).
+	var panicOnce sync.Once
+	var panicked any
+	keepPanic := func() {
+		if v := recover(); v != nil {
+			panicOnce.Do(func() { panicked = v })
+		}
+	}
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
+		defer keepPanic()
 		page, pageErr = nh.LoadNode(ctx)
 	}()
 	props := make([]any, len(h.layouts))
@@ -646,10 +667,14 @@ func (h *layoutHandler) loadChain(ctx *Ctx) (Node, []any, error) {
 		wg.Add(1)
 		go func(i int, l layoutDef) {
 			defer wg.Done()
+			defer keepPanic()
 			props[i], errs[i] = l.gxLoad(ctx)
 		}(i, l)
 	}
 	wg.Wait()
+	if panicked != nil {
+		panic(panicked)
+	}
 	if pageErr != nil {
 		return nil, nil, pageErr
 	}

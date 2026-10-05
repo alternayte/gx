@@ -72,6 +72,19 @@ func Format(f *File) []byte {
 
 type printer struct {
 	b strings.Builder
+	// keep counts the open elements that show white space as written,
+	// such as pre. The printer does not indent inside them: the indent
+	// is text in the rendered page (REQ-AUT-17).
+	keep int
+}
+
+// keepsWhitespace reports whether an element shows its white space.
+func keepsWhitespace(name string) bool {
+	switch strings.ToLower(name) {
+	case "pre", "textarea":
+		return true
+	}
+	return false
 }
 
 func (pr *printer) write(s string) { pr.b.WriteString(s) }
@@ -223,6 +236,8 @@ func (pr *printer) writeNodes(ns []Node, depth int) {
 	for i, n := range ns {
 		if t, ok := n.(*Text); ok && strings.TrimSpace(t.Data) == "" {
 			switch {
+			case pr.keep > 0:
+				pr.write(t.Data)
 			case i == len(ns)-1 && strings.Contains(t.Data, "\n"):
 				pr.write("\n" + indent(depth-1))
 			case strings.Contains(t.Data, "\n"):
@@ -394,6 +409,10 @@ func (pr *printer) writeElement(el *Element, depth int) {
 	if el.HasRaw {
 		pr.write(el.RawText)
 	} else {
+		if keepsWhitespace(el.Name) {
+			pr.keep++
+			defer func() { pr.keep-- }()
+		}
 		pr.writeNodes(el.Children, depth+1)
 	}
 	pr.write("</" + el.Name + ">")

@@ -53,7 +53,7 @@ func TestREQ_AUT_12_EscapingMatrix(t *testing.T) {
 		{"url colon", gx.El("a", gx.Attrs{{Key: "href", Value: "mailto:a@b", Kind: gx.AttrURL}}), `<a href="mailto:a@b"></a>`},
 		{"url fragment", gx.El("a", gx.Attrs{{Key: "href", Value: "#top", Kind: gx.AttrURL}}), `<a href="#top"></a>`},
 		{"url crlf", gx.El("a", gx.Attrs{{Key: "href", Value: "a\r\nb", Kind: gx.AttrURL}}), `<a href="a%0D%0Ab"></a>`},
-		{"url script", gx.El("a", gx.Attrs{{Key: "href", Value: "javascript:alert(1)", Kind: gx.AttrURL}}), `<a href="javascript:alert%281%29"></a>`},
+		{"url script", gx.El("a", gx.Attrs{{Key: "href", Value: "javascript:alert(1)", Kind: gx.AttrURL}}), `<a href="#"></a>`},
 		{"style semicolon", gx.El("div", gx.Attrs{{Key: "style", Value: "color:red;background:blue", Kind: gx.AttrStyle}}), `<div style="color:red;background:blue"></div>`},
 		{"style tag", gx.El("div", gx.Attrs{{Key: "style", Value: "</style><script>", Kind: gx.AttrStyle}}), `<div style="&lt;/style&gt;&lt;script&gt;"></div>`},
 	}

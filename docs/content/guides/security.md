@@ -36,7 +36,7 @@ Markdown content compiles from the files of the repository only. Package `gx` ha
 
 ## URLs
 
-`href`, `src`, `action` and `formaction` take a static string, a route value or a `gx.URL` value. A string from data is the diagnostic [GX2011](/errors/GX2011/). Gx cannot write a `javascript:` address.
+`href`, `src`, `action` and `formaction` take a static string, a route value or a `gx.URL` value. A string from data is the diagnostic [GX2011](/errors/GX2011/). Gx cannot write a `javascript:` address: a `gx.URL` value with that scheme renders as `#`. The `attr:` directive cannot set these attributes or an event attribute.
 
 An HTML event attribute such as `onclick` cannot take an expression. That is [GX2007](/errors/GX2007/).
 
@@ -44,7 +44,7 @@ An HTML event attribute such as `onclick` cannot take an expression. That is [GX
 
 Each request that is not a `GET` passes the cross-origin check of Go `net/http`. A browser that sends no Fetch Metadata needs a token. The Gx runtime adds the token to each request.
 
-`gx.App` applies the check to each route. For a different router, `gx.CSRF` is the same check as middleware.
+`gx.App` applies the check to each route. An action or a form on a different router applies the cross-origin check to itself. The token needs a cookie, so put `gx.CSRF` around that router as middleware to protect a browser that sends no Fetch Metadata.
 
 ## Input
 

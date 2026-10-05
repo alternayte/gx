@@ -297,6 +297,14 @@ func (r *typesResult) checkClientSite(site *clientSite) []Diagnostic {
 				report(t, CodeClientCall, "gxc."+name+" has no client equivalent")
 			}
 		case *ast.BinaryExpr:
+			if !clientBinaryOps[t.Op] {
+				report(t, CodeClientType, "operator "+t.Op.String()+" has no equal result in JavaScript")
+			}
+			for _, operand := range []ast.Expr{t.X, t.Y} {
+				if name := unsafeNumber(r.exprTypes[operand]); name != "" {
+					report(t, CodeClientType, "a client expression allows int and float64 numbers, not "+name)
+				}
+			}
 			switch t.Op {
 			case token.EQL, token.NEQ:
 				l, rt := r.exprTypes[t.X], r.exprTypes[t.Y]
@@ -304,10 +312,44 @@ func (r *typesResult) checkClientSite(site *clientSite) []Diagnostic {
 					report(t, CodeClientType, "== and != allow bool, string and number operands only")
 				}
 			}
+		case *ast.UnaryExpr:
+			if t.Op != token.NOT && t.Op != token.SUB && t.Op != token.ADD {
+				report(t, CodeClientType, "operator "+t.Op.String()+" has no equal result in JavaScript")
+			}
+			if name := unsafeNumber(r.exprTypes[t.X]); name != "" {
+				report(t, CodeClientType, "a client expression allows int and float64 numbers, not "+name)
+			}
 		}
 		return true
 	})
 	return out
+}
+
+// clientBinaryOps are the operators that give the same result in Go and in
+// JavaScript (DR-05, REQ-ACT-13).
+var clientBinaryOps = map[token.Token]bool{
+	token.ADD: true, token.SUB: true, token.MUL: true, token.QUO: true, token.REM: true,
+	token.LSS: true, token.LEQ: true, token.GTR: true, token.GEQ: true,
+	token.EQL: true, token.NEQ: true, token.LAND: true, token.LOR: true,
+}
+
+// unsafeNumber returns the name of a number type that JavaScript does not
+// compute as Go does: an unsigned or sized integer wraps, and a float32
+// rounds. It returns "" for int, float64 and every type that is not a
+// number (REQ-ACT-13).
+func unsafeNumber(t types.Type) string {
+	if t == nil {
+		return ""
+	}
+	b, ok := t.Underlying().(*types.Basic)
+	if !ok || !isNumeric(b.Info()) {
+		return ""
+	}
+	switch b.Kind() {
+	case types.Int, types.Float64, types.UntypedInt, types.UntypedFloat, types.UntypedRune:
+		return ""
+	}
+	return b.Name()
 }
 
 // clientComparable reports whether a type has the same equality semantics in

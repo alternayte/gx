@@ -382,6 +382,9 @@ func (f *form[In, P]) props(in FormInput, errs map[string]string) P {
 
 // ServeHTTP binds the input, runs the rules, then the handler (REQ-FRM-02).
 func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !sameOrigin(w, r) {
+		return
+	}
 	in := f.newIn()
 	if mu, ok := in.(interface{ GxMaxUpload() int64 }); ok {
 		if n := mu.GxMaxUpload(); n > 0 {
@@ -597,6 +600,10 @@ func parseRequestForm(r *http.Request) {
 	_ = r.ParseForm()
 }
 
+// MaxFormRows is the number of rows one repeated form field can hold. A
+// row with a larger index is ignored (REQ-FRM-08).
+const MaxFormRows = 1000
+
 // FormIndexes returns the sorted row indexes present for an indexed form
 // name, for example 0 and 2 for addresses[0].street and addresses[2].city
 // (REQ-FRM-08).
@@ -614,7 +621,9 @@ func FormIndexes(r *http.Request, prefix string) []int {
 			continue
 		}
 		n, err := strconv.Atoi(rest[:end])
-		if err != nil || n < 0 {
+		if err != nil || n < 0 || n >= MaxFormRows {
+			// The index sets the size of the slice. A request must not
+			// pick a size the server cannot hold.
 			continue
 		}
 		seen[n] = true

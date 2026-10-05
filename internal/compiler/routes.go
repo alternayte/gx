@@ -938,11 +938,13 @@ func renderBindFunc(b *bytes.Buffer, d *routeDef) {
 			}
 			b.WriteString("\tif v := " + source + "; v != \"\" {\n")
 			renderBindField(b, f)
-			b.WriteString("\t}\n")
 			if f.query != "" && f.def != "" {
-				b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
-				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+				// The default is for a request with no value. A zero
+				// value in the request stays (REQ-RTE-03).
+				b.WriteString("\t} else {\n")
+				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n")
 			}
+			b.WriteString("\t}\n")
 		default:
 			renderBindTree(b, d, f, "in."+f.name, strconv.Quote(f.bind), false, 0, &n, "")
 		}
@@ -975,11 +977,11 @@ func renderFormBind(b *bytes.Buffer, d *routeDef) {
 			}
 			b.WriteString("\tif v := " + source + "; v != \"\" {\n")
 			renderBindFieldForm(b, f)
-			b.WriteString("\t}\n")
 			if f.query != "" && f.def != "" {
-				b.WriteString("\tif in." + f.name + " == " + zeroLiteral(f) + " {\n")
-				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n\t}\n")
+				b.WriteString("\t} else {\n")
+				b.WriteString("\t\tin." + f.name + " = " + defaultLiteral(f) + "\n")
 			}
+			b.WriteString("\t}\n")
 		default:
 			renderBindTree(b, d, f, "in."+f.name, strconv.Quote(f.bind), true, 0, &n, "")
 		}
@@ -1042,6 +1044,9 @@ func renderBindTree(b *bytes.Buffer, d *routeDef, f routeField, target, nameExpr
 			b.WriteString(ind + "}\n")
 		}
 		b.WriteString(ind + "for _, " + iVar + " := range " + idxVar + " {\n")
+		if f.arrayLen > 0 {
+			b.WriteString(ind + "\tif " + iVar + " >= " + strconv.FormatInt(f.arrayLen, 10) + " {\n" + ind + "\t\tbreak\n" + ind + "\t}\n")
+		}
 		child := f.sub[0]
 		renderBindTree(b, d, child, target+"["+iVar+"]", bindIndexExpr(nameExpr, iVar), form, depth+1, n, joinPath(cpath, f.name))
 		b.WriteString(ind + "}\n")
@@ -1570,19 +1575,6 @@ func unsignedKind(k types.BasicKind) bool {
 		return true
 	}
 	return false
-}
-
-func zeroLiteral(f routeField) string {
-	if f.kind == types.String {
-		return `""`
-	}
-	if f.kind == types.Bool {
-		return "false"
-	}
-	if floatBits(f.kind) > 0 {
-		return "0"
-	}
-	return "0"
 }
 
 func defaultLiteral(f routeField) string {

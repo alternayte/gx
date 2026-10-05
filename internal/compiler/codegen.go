@@ -13,8 +13,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	"golang.org/x/tools/imports"
 )
 
 // Generate generates Go source for every .gx file under root. The result maps
@@ -239,7 +237,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		g.write("")
 		g.fragmentFunc(el)
 	}
-	src, err := imports.Process(name+"_gx.go", g.withExtraImports(), nil)
+	src, err := fixImports(name+"_gx.go", g.withExtraImports())
 	if err != nil {
 		return nil, append(g.diags, Diagnostic{
 			Code: CodeParse,
@@ -465,6 +463,10 @@ func (g *gen) exprValue(n any, raw string) string {
 		return expr
 	case t.String() == "github.com/alternayte/gx.SafeHTML":
 		return "gx.Raw(" + expr + ")"
+	case isSecretType(t):
+		// A conversion gives the secret in clear. String gives the
+		// redacted form (SI-04).
+		return "gx.Text((" + expr + ").String())"
 	case isNamedUnderlying(t, types.String):
 		return "gx.Text(string(" + expr + "))"
 	case g.res.renderable(t):
@@ -846,6 +848,8 @@ func (g *gen) attrValueExpr(n any, raw string) (string, bool) {
 		return "", false
 	case t.String() == "string":
 		return expr, true
+	case isSecretType(t):
+		return "(" + expr + ").String()", true
 	case isNamedUnderlying(t, types.String):
 		return "string(" + expr + ")", true
 	case g.res.renderable(t):
@@ -1345,9 +1349,10 @@ func declaresKey(params string) bool {
 	return len(parts) > 0 && firstIdent(parts[0]) == "key"
 }
 
-// isURLAttr reports whether an attribute holds a URL.
+// isURLAttr reports whether an attribute holds a URL. A browser reads the
+// name in any letter case.
 func isURLAttr(name string) bool {
-	switch name {
+	switch strings.ToLower(name) {
 	case "href", "src", "action", "formaction":
 		return true
 	}

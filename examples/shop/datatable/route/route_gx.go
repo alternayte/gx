@@ -21,14 +21,12 @@ func (in *List) Bind(r *http.Request) error {
 	}
 	if v := r.URL.Query().Get("sort"); v != "" {
 		in.Sort = string(v)
-	}
-	if in.Sort == "" {
+	} else {
 		in.Sort = "name"
 	}
 	if v := r.URL.Query().Get("dir"); v != "" {
 		in.Dir = string(v)
-	}
-	if in.Dir == "" {
+	} else {
 		in.Dir = "asc"
 	}
 	if v := r.URL.Query().Get("page"); v != "" {
@@ -37,8 +35,7 @@ func (in *List) Bind(r *http.Request) error {
 			return fmt.Errorf("gx: Page: %w", err)
 		}
 		in.Page = int(x)
-	}
-	if in.Page == 0 {
+	} else {
 		in.Page = 1
 	}
 	return nil

@@ -543,10 +543,35 @@ func (l *loader) checkAttributes(res *typesResult, dirs []string) []Diagnostic {
 						}
 						continue
 					}
+					// A browser reads an attribute name in any letter case.
+					name := strings.ToLower(a.Name)
+					if target, ok := strings.CutPrefix(name, "attr:"); ok {
+						// attr: sets the attribute in the browser from a
+						// client value, which no server check sees.
+						switch {
+						case strings.HasPrefix(target, "on"):
+							out = append(out, Diagnostic{
+								Code: CodeEventAttr,
+								File: f.File,
+								Line: a.At.Line,
+								Col:  a.At.Col,
+								Msg:  "directive " + Quoted(a.Name) + " cannot set an event attribute",
+							})
+						case isURLAttr(target):
+							out = append(out, Diagnostic{
+								Code: CodeURLAttr,
+								File: f.File,
+								Line: a.At.Line,
+								Col:  a.At.Col,
+								Msg:  "directive " + Quoted(a.Name) + " cannot set a URL attribute; use " + Quoted(target) + " with a typed route or gx.URL",
+							})
+						}
+						continue
+					}
 					if isDirective(a.Name) {
 						continue
 					}
-					if strings.HasPrefix(a.Name, "on") {
+					if strings.HasPrefix(name, "on") {
 						out = append(out, Diagnostic{
 							Code: CodeEventAttr,
 							File: f.File,
@@ -568,7 +593,7 @@ func (l *loader) checkAttributes(res *typesResult, dirs []string) []Diagnostic {
 						}
 						continue
 					}
-					if a.Name == "style" {
+					if name == "style" {
 						if t := res.types[a]; t == nil || t.String() != "github.com/alternayte/gx.Style" {
 							out = append(out, Diagnostic{
 								Code: CodeType,

@@ -52,6 +52,9 @@ func (a *action[In]) exportFeature() (kind string, serverOnly bool) {
 // ServeHTTP binds the input, runs the handler and sends the answer
 // (REQ-ACT-10).
 func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !sameOrigin(w, r) {
+		return
+	}
 	in, err := a.bind(r)
 	if err != nil {
 		renderError(w, r, &BindError{Err: err})
