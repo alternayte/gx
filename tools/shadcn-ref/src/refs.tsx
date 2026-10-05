@@ -399,7 +399,7 @@ export const refs: Record<string, Ref> = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className={cn(buttonVariants({ variant: "destructive" }))}>Delete</AlertDialogAction>
+            <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -413,7 +413,7 @@ export const refs: Record<string, Ref> = {
             <SheetTitle>Filters</SheetTitle>
             <SheetDescription>Narrow the result set.</SheetDescription>
           </SheetHeader>
-          Sheet body.
+          <div className="flex-1 overflow-y-auto px-4 text-sm">Sheet body.</div>
         </SheetContent>
       </Sheet>
     ),

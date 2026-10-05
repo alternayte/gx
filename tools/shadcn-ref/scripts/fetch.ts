@@ -4,9 +4,9 @@
 //
 //   cd tools/shadcn-ref && bun run scripts/fetch.ts
 //
-// The pin is the commit before shadcn changed the badge to a full pill; the
-// Gx ports follow the new-york-v4 recipes of that snapshot.
-const PIN = "6292464d90b7f8c46848a107cd5c593398d3833d"
+// The pin is upstream main of 2026-10-02 (D-146); the Gx ports follow the
+// new-york-v4 recipes of that snapshot.
+const PIN = "295a1f114a138f23b5dfee0e0c6812394dfeb90c"
 const BASE = `https://raw.githubusercontent.com/shadcn-ui/ui/${PIN}/apps/v4/registry/new-york-v4`
 
 const components = [

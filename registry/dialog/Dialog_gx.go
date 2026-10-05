@@ -4,6 +4,7 @@ package dialog
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/icons"
 )
 
 type DialogProps struct {
@@ -20,99 +21,92 @@ type DialogProps struct {
 
 func Dialog(p DialogProps) gx.Node {
 	var _b gx.Builder
-//line Dialog.gx:15:1
+//line Dialog.gx:17:1
 	var _b1 gx.Builder
-//line Dialog.gx:15:24
+//line Dialog.gx:17:24
 	_b1.Add(gx.Text("\n  "))
-//line Dialog.gx:16:3
+//line Dialog.gx:18:3
 	if p.Trigger != nil {
-//line Dialog.gx:16:24
+//line Dialog.gx:18:24
 		_b1.Add(gx.Text("\n    "))
-//line Dialog.gx:17:5
+//line Dialog.gx:19:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-open", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Trigger))
-//line Dialog.gx:17:72
+//line Dialog.gx:19:72
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Dialog.gx:18:4
+//line Dialog.gx:20:4
 	_b1.Add(gx.Text("\n  "))
-//line Dialog.gx:19:3
+//line Dialog.gx:21:3
 	var _b2 gx.Builder
-//line Dialog.gx:19:235
+//line Dialog.gx:21:717
 	_b2.Add(gx.Text("\n    "))
-//line Dialog.gx:20:5
-	var _b3 gx.Builder
-//line Dialog.gx:20:38
-	_b3.Add(gx.Text("\n      "))
-//line Dialog.gx:21:7
-	var _b4 gx.Builder
-//line Dialog.gx:21:59
-	_b4.Add(gx.Text("\n        "))
-//line Dialog.gx:22:9
-	var _b5 gx.Builder
-//line Dialog.gx:22:42
-	_b5.Add(gx.Text("\n          "))
-//line Dialog.gx:23:11
-	if p.Title != "" {
-//line Dialog.gx:23:29
-		_b5.Add(gx.Text("\n            "))
-//line Dialog.gx:24:13
-		_b5.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg leading-none font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Dialog.gx:24:74
-		_b5.Add(gx.Text("\n          "))
+//line Dialog.gx:22:5
+	if p.Title != "" || p.Description != "" {
+//line Dialog.gx:22:46
+		_b2.Add(gx.Text("\n      "))
+//line Dialog.gx:23:7
+		var _b3 gx.Builder
+//line Dialog.gx:23:65
+		_b3.Add(gx.Text("\n        "))
+//line Dialog.gx:24:9
+		if p.Title != "" {
+//line Dialog.gx:24:27
+			_b3.Add(gx.Text("\n          "))
+//line Dialog.gx:25:11
+			_b3.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg leading-none font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Dialog.gx:25:72
+			_b3.Add(gx.Text("\n        "))
+		}
+//line Dialog.gx:26:10
+		_b3.Add(gx.Text("\n        "))
+//line Dialog.gx:27:9
+		if p.Description != "" {
+//line Dialog.gx:27:33
+			_b3.Add(gx.Text("\n          "))
+//line Dialog.gx:28:11
+			_b3.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
+//line Dialog.gx:28:71
+			_b3.Add(gx.Text("\n        "))
+		}
+//line Dialog.gx:29:10
+		_b3.Add(gx.Text("\n      "))
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-2 text-center sm:text-left", Kind: gx.AttrText}}, _b3.Node()))
+//line Dialog.gx:30:13
+		_b2.Add(gx.Text("\n    "))
 	}
-//line Dialog.gx:25:12
-	_b5.Add(gx.Text("\n          "))
-//line Dialog.gx:26:11
-	if p.Description != "" {
-//line Dialog.gx:26:35
-		_b5.Add(gx.Text("\n            "))
-//line Dialog.gx:27:13
-		_b5.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Dialog.gx:27:73
-		_b5.Add(gx.Text("\n          "))
-	}
-//line Dialog.gx:28:12
-	_b5.Add(gx.Text("\n        "))
-	_b4.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-2", Kind: gx.AttrText}}, _b5.Node()))
-//line Dialog.gx:29:15
-	_b4.Add(gx.Text("\n        "))
-//line Dialog.gx:30:9
-	_b4.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true), gx.Attr{Key: "aria-label", Value: "Close", Kind: gx.AttrText}}, gx.Text("×")))
-//line Dialog.gx:30:165
-	_b4.Add(gx.Text("\n      "))
-	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-start justify-between gap-4", Kind: gx.AttrText}}, _b4.Node()))
-//line Dialog.gx:31:13
-	_b3.Add(gx.Text("\n      "))
-//line Dialog.gx:32:7
+//line Dialog.gx:31:6
+	_b2.Add(gx.Text("\n    "))
+//line Dialog.gx:32:5
 	if p.Children != nil {
-//line Dialog.gx:32:29
-		_b3.Add(gx.Text("\n        "))
-//line Dialog.gx:33:9
-		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm", Kind: gx.AttrText}}, p.Children))
-//line Dialog.gx:33:48
-		_b3.Add(gx.Text("\n      "))
+//line Dialog.gx:32:27
+		_b2.Add(gx.Text("\n      "))
+//line Dialog.gx:33:7
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm", Kind: gx.AttrText}}, p.Children))
+//line Dialog.gx:33:46
+		_b2.Add(gx.Text("\n    "))
 	}
-//line Dialog.gx:34:8
-	_b3.Add(gx.Text("\n      "))
-//line Dialog.gx:35:7
+//line Dialog.gx:34:6
+	_b2.Add(gx.Text("\n    "))
+//line Dialog.gx:35:5
 	if p.Footer != nil {
-//line Dialog.gx:35:27
-		_b3.Add(gx.Text("\n        "))
-//line Dialog.gx:36:9
-		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", Kind: gx.AttrText}}, p.Footer))
-//line Dialog.gx:36:93
-		_b3.Add(gx.Text("\n      "))
+//line Dialog.gx:35:25
+		_b2.Add(gx.Text("\n      "))
+//line Dialog.gx:36:7
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", Kind: gx.AttrText}}, p.Footer))
+//line Dialog.gx:36:91
+		_b2.Add(gx.Text("\n    "))
 	}
-//line Dialog.gx:37:8
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-4", Kind: gx.AttrText}}, _b3.Node()))
-//line Dialog.gx:38:11
+//line Dialog.gx:37:6
+	_b2.Add(gx.Text("\n    "))
+//line Dialog.gx:38:5
+	_b2.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Frag(gx.Text("\n      "), icons.X(icons.XProps{Label: "", Class: "size-4"}), gx.Text("\n      "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("Close")), gx.Text("\n    "))))
+//line Dialog.gx:41:14
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-lg rounded-lg border border-border bg-background p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
-//line Dialog.gx:39:12
+	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border border-border bg-background p-6 text-foreground shadow-lg outline-none open:grid sm:max-w-lg opacity-0 scale-95 transition-[opacity,scale,overlay,display] transition-discrete duration-200 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true), gx.Bool("data-gx-trap", true)}, p.Attrs), _b2.Node()))
+//line Dialog.gx:42:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))
-//line Dialog.gx:40:8
+//line Dialog.gx:43:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

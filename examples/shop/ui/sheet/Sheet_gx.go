@@ -4,6 +4,7 @@ package sheet
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/icons"
 )
 
 type SheetProps struct {
@@ -21,106 +22,92 @@ type SheetProps struct {
 
 func Sheet(p SheetProps) gx.Node {
 	var _b gx.Builder
-//line Sheet.gx:16:1
+//line Sheet.gx:18:1
 	var _b1 gx.Builder
-//line Sheet.gx:16:24
+//line Sheet.gx:18:24
 	_b1.Add(gx.Text("\n  "))
-//line Sheet.gx:17:3
+//line Sheet.gx:19:3
 	if p.Trigger != nil {
-//line Sheet.gx:17:24
+//line Sheet.gx:19:24
 		_b1.Add(gx.Text("\n    "))
-//line Sheet.gx:18:5
+//line Sheet.gx:20:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-open", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Trigger))
-//line Sheet.gx:18:72
+//line Sheet.gx:20:72
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Sheet.gx:19:4
+//line Sheet.gx:21:4
 	_b1.Add(gx.Text("\n  "))
-//line Sheet.gx:20:3
+//line Sheet.gx:22:3
 	var _b2 gx.Builder
-//line Sheet.gx:20:202
+//line Sheet.gx:22:609
 	_b2.Add(gx.Text("\n    "))
-//line Sheet.gx:21:5
-	var _b3 gx.Builder
-//line Sheet.gx:21:38
-	_b3.Add(gx.Text("\n      "))
-//line Sheet.gx:22:7
-	var _b4 gx.Builder
-//line Sheet.gx:22:46
-	_b4.Add(gx.Text("\n        "))
-//line Sheet.gx:23:9
-	var _b5 gx.Builder
-//line Sheet.gx:23:61
-	_b5.Add(gx.Text("\n          "))
-//line Sheet.gx:24:11
-	var _b6 gx.Builder
+//line Sheet.gx:23:5
+	if p.Title != "" || p.Description != "" {
+//line Sheet.gx:23:46
+		_b2.Add(gx.Text("\n      "))
+//line Sheet.gx:24:7
+		var _b3 gx.Builder
 //line Sheet.gx:24:46
-	_b6.Add(gx.Text("\n            "))
-//line Sheet.gx:25:13
-	if p.Title != "" {
-//line Sheet.gx:25:31
-		_b6.Add(gx.Text("\n              "))
-//line Sheet.gx:26:15
-		_b6.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg leading-none font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Sheet.gx:26:76
-		_b6.Add(gx.Text("\n            "))
+		_b3.Add(gx.Text("\n        "))
+//line Sheet.gx:25:9
+		if p.Title != "" {
+//line Sheet.gx:25:27
+			_b3.Add(gx.Text("\n          "))
+//line Sheet.gx:26:11
+			_b3.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "font-semibold text-foreground", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Sheet.gx:26:67
+			_b3.Add(gx.Text("\n        "))
+		}
+//line Sheet.gx:27:10
+		_b3.Add(gx.Text("\n        "))
+//line Sheet.gx:28:9
+		if p.Description != "" {
+//line Sheet.gx:28:33
+			_b3.Add(gx.Text("\n          "))
+//line Sheet.gx:29:11
+			_b3.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
+//line Sheet.gx:29:71
+			_b3.Add(gx.Text("\n        "))
+		}
+//line Sheet.gx:30:10
+		_b3.Add(gx.Text("\n      "))
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1.5 p-4", Kind: gx.AttrText}}, _b3.Node()))
+//line Sheet.gx:31:13
+		_b2.Add(gx.Text("\n    "))
 	}
-//line Sheet.gx:27:14
-	_b6.Add(gx.Text("\n            "))
-//line Sheet.gx:28:13
-	if p.Description != "" {
-//line Sheet.gx:28:37
-		_b6.Add(gx.Text("\n              "))
-//line Sheet.gx:29:15
-		_b6.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Sheet.gx:29:75
-		_b6.Add(gx.Text("\n            "))
-	}
-//line Sheet.gx:30:14
-	_b6.Add(gx.Text("\n          "))
-	_b5.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1.5", Kind: gx.AttrText}}, _b6.Node()))
-//line Sheet.gx:31:17
-	_b5.Add(gx.Text("\n          "))
-//line Sheet.gx:32:11
-	_b5.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true), gx.Attr{Key: "aria-label", Value: "Close", Kind: gx.AttrText}}, gx.Text("×")))
-//line Sheet.gx:32:167
-	_b5.Add(gx.Text("\n        "))
-	_b4.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-start justify-between gap-4", Kind: gx.AttrText}}, _b5.Node()))
-//line Sheet.gx:33:15
-	_b4.Add(gx.Text("\n      "))
-	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1.5 p-4", Kind: gx.AttrText}}, _b4.Node()))
-//line Sheet.gx:34:13
-	_b3.Add(gx.Text("\n      "))
-//line Sheet.gx:35:7
+//line Sheet.gx:32:6
+	_b2.Add(gx.Text("\n    "))
+//line Sheet.gx:33:5
 	if p.Children != nil {
-//line Sheet.gx:35:29
-		_b3.Add(gx.Text("\n        "))
-//line Sheet.gx:36:9
-		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex-1 p-4 pt-0 text-sm", Kind: gx.AttrText}}, p.Children))
-//line Sheet.gx:36:64
-		_b3.Add(gx.Text("\n      "))
+//line Sheet.gx:33:27
+		_b2.Add(gx.Text("\n      "))
+//line Sheet.gx:34:7
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex-1 overflow-y-auto px-4 text-sm", Kind: gx.AttrText}}, p.Children))
+//line Sheet.gx:34:74
+		_b2.Add(gx.Text("\n    "))
 	}
-//line Sheet.gx:37:8
-	_b3.Add(gx.Text("\n      "))
-//line Sheet.gx:38:7
+//line Sheet.gx:35:6
+	_b2.Add(gx.Text("\n    "))
+//line Sheet.gx:36:5
 	if p.Footer != nil {
-//line Sheet.gx:38:27
-		_b3.Add(gx.Text("\n        "))
-//line Sheet.gx:39:9
-		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col-reverse gap-2 p-4 pt-0 sm:flex-row sm:justify-end", Kind: gx.AttrText}}, p.Footer))
-//line Sheet.gx:39:102
-		_b3.Add(gx.Text("\n      "))
+//line Sheet.gx:36:25
+		_b2.Add(gx.Text("\n      "))
+//line Sheet.gx:37:7
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-auto flex flex-col gap-2 p-4", Kind: gx.AttrText}}, p.Footer))
+//line Sheet.gx:37:68
+		_b2.Add(gx.Text("\n    "))
 	}
-//line Sheet.gx:40:8
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-4", Kind: gx.AttrText}}, _b3.Node()))
-//line Sheet.gx:41:11
+//line Sheet.gx:38:6
+	_b2.Add(gx.Text("\n    "))
+//line Sheet.gx:39:5
+	_b2.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Frag(gx.Text("\n      "), icons.X(icons.XProps{Label: "", Class: "size-4"}), gx.Text("\n      "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("Close")), gx.Text("\n    "))))
+//line Sheet.gx:42:14
 	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed m-0 border border-border bg-background text-card-foreground shadow-lg backdrop:bg-black/50", p.sideClass(), p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true)}, p.Attrs), _b2.Node()))
-//line Sheet.gx:42:12
+	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed m-0 max-h-none max-w-none flex-col gap-4 border-border bg-background text-foreground shadow-lg outline-none open:flex transition-[translate,overlay,display] transition-discrete duration-300 ease-in-out open:duration-500 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.sideClass(), p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true), gx.Bool("data-gx-trap", true)}, p.Attrs), _b2.Node()))
+//line Sheet.gx:43:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))
-//line Sheet.gx:43:8
+//line Sheet.gx:44:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

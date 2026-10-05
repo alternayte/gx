@@ -1,9 +1,13 @@
 package alertdialog
 
+import "github.com/alternayte/gx/registry/button"
+
 props {
   Id          string
   Title       string
   Description string   = ""
+  Size        Size     = Md
+  Media       gx.Node  = nil
   Trigger     gx.Node  = nil
   Confirm     gx.Node  = nil
   Cancel      string   = "Cancel"
@@ -17,23 +21,24 @@ props {
   if p.Trigger != nil {
     <span data-gx-open={"#" + p.Id} class="contents">{p.Trigger}</span>
   }
-  <dialog id={p.Id} open={p.Open} data-gx-dismiss="manual" class={gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] sm:max-w-lg rounded-lg border border-border bg-background p-6 text-card-foreground shadow-lg backdrop:bg-black/50", p.Class)} {...p.Attrs}>
-    <div class="flex flex-col gap-4">
-      <div class="flex flex-col gap-2">
-        <h2 class="text-lg font-semibold">{p.Title}</h2>
-        if p.Description != "" {
-          <p class="text-sm text-muted-foreground">{p.Description}</p>
-        }
-      </div>
-      if p.Children != nil {
-        <div class="text-sm">{p.Children}</div>
+  <dialog id={p.Id} open={p.Open} role="alertdialog" data-gx-dismiss="manual" data-gx-trap data-size={p.size()} class={gx.Cx("group/alert-dialog-content fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border border-border bg-background p-6 text-foreground shadow-lg outline-none open:grid data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-lg opacity-0 scale-95 transition-[opacity,scale,overlay,display] transition-discrete duration-200 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.Class)} {...p.Attrs}>
+    <div class="grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-6 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]">
+      if p.Media != nil {
+        <div data-slot="alert-dialog-media" class="mb-2 inline-flex size-16 items-center justify-center rounded-md bg-muted sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-8">{p.Media}</div>
       }
-      <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <button type="button" data-gx-close class="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium whitespace-nowrap shadow-xs outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input/30 dark:border-input dark:hover:bg-input/50">{p.cancel()}</button>
-        if p.Confirm != nil {
-          {p.Confirm}
-        }
-      </div>
+      <h2 class="text-lg font-semibold sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2">{p.Title}</h2>
+      if p.Description != "" {
+        <p class="text-sm text-muted-foreground">{p.Description}</p>
+      }
+    </div>
+    if p.Children != nil {
+      <div class="text-sm">{p.Children}</div>
+    }
+    <div class="flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end">
+      <button.Button variant={button.Outline} attrs={gx.Attrs{gx.Bool("data-gx-close", true)}}>{p.cancel()}</button.Button>
+      if p.Confirm != nil {
+        {p.Confirm}
+      }
     </div>
   </dialog>
 </span>

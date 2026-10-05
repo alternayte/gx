@@ -1,0 +1,8 @@
+package icons
+
+props {
+  Label string = ""
+  Class string = ""
+}
+
+{gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 6L9 17l-5-5\"/>", gx.IconProps{Label: p.Label, Class: p.Class})}

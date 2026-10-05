@@ -4,7 +4,7 @@
 // Each entry of tools/shadcn-ref/parity.json names a gallery fixture and a
 // reference rendering. The spec captures the fixture body and the reference
 // body in the light, dark and focus states and fails when more than 2% of the
-// pixels differ.
+// pixels of the content box differ.
 import { afterAll, beforeAll, expect, test } from "bun:test"
 import { readFileSync } from "node:fs"
 import { chromium, type Browser, type Page } from "playwright-core"
@@ -103,7 +103,34 @@ function pad(img: PNG, width: number, height: number): PNG {
   return out
 }
 
-// ratio returns the fraction of pixels that differ between two PNGs.
+// contentBox returns the bounding box of the pixels that differ from the
+// corner colour in either image. The corner is the section background.
+function contentBox(a: PNG, b: PNG): { x: number; y: number; width: number; height: number } {
+  let left = a.width
+  let top = a.height
+  let right = -1
+  let bottom = -1
+  for (const img of [a, b]) {
+    const [r, g, bl, al] = [img.data[0], img.data[1], img.data[2], img.data[3]]
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        const i = (y * img.width + x) * 4
+        if (img.data[i] === r && img.data[i + 1] === g && img.data[i + 2] === bl && img.data[i + 3] === al) continue
+        if (x < left) left = x
+        if (x > right) right = x
+        if (y < top) top = y
+        if (y > bottom) bottom = y
+      }
+    }
+  }
+  if (right < 0) return { x: 0, y: 0, width: a.width, height: a.height }
+  return { x: left, y: top, width: right - left + 1, height: bottom - top + 1 }
+}
+
+// ratio returns the fraction of pixels that differ between two PNGs. The
+// denominator is the content box, not the capture: a fixture body is as wide
+// as the gallery, and its empty area must not dilute a real difference
+// (D-150).
 function ratio(a: Buffer, b: Buffer, threshold = 0.1): { ratio: number; diff: Buffer } {
   const left = PNG.sync.read(a)
   const right = PNG.sync.read(b)
@@ -113,7 +140,8 @@ function ratio(a: Buffer, b: Buffer, threshold = 0.1): { ratio: number; diff: Bu
   const rb = pad(right, width, height)
   const diff = new PNG({ width, height })
   const n = pixelmatch(la.data, rb.data, diff.data, width, height, { threshold })
-  return { ratio: n / (width * height), diff: PNG.sync.write(diff) }
+  const box = contentBox(la, rb)
+  return { ratio: n / (box.width * box.height), diff: PNG.sync.write(diff) }
 }
 
 // freeze disables transitions and animations so a captured state is the
@@ -193,6 +221,14 @@ async function compare(entry: Entry, state: "light" | "dark" | "focus"): Promise
       await Bun.write(`${dir}/${entry.ref}-${state}-gx.png`, gxShot)
       await Bun.write(`${dir}/${entry.ref}-${state}-ref.png`, refShot)
       await Bun.write(`${dir}/${entry.ref}-${state}-diff.png`, r.diff)
+    }
+    // GX_PARITY_REPORT=<dir> prints every ratio and keeps every capture, to
+    // rank the ports that pass the budget but still differ.
+    const report = process.env.GX_PARITY_REPORT
+    if (report) {
+      console.log(`parity ${entry.ref} ${state} ${(r.ratio * 100).toFixed(2)}`)
+      await Bun.write(`${report}/${entry.ref}-${state}-gx.png`, gxShot)
+      await Bun.write(`${report}/${entry.ref}-${state}-ref.png`, refShot)
     }
     return { ratio: r.ratio, detail: `${(r.ratio * 100).toFixed(1)}% changed` }
   } finally {

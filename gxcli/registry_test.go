@@ -197,6 +197,28 @@ func TestREQ_REG_02_Add(t *testing.T) {
 	}
 }
 
+// TestREQ_REG_02_AddKeepsLock covers a second gx add: the lock entries of an
+// earlier install stay (REQ-REG-02).
+func TestREQ_REG_02_AddKeepsLock(t *testing.T) {
+	f := registryFixture(t)
+	app := appWithRegistry(t, f.out)
+	// dialog pulls button; the second add then names button alone.
+	for _, item := range []string{"dialog", "button"} {
+		if code := gxcli.Main([]string{"add", item, app}); code != 0 {
+			t.Fatalf("add %s exit = %d", item, code)
+		}
+	}
+	raw, err := os.ReadFile(filepath.Join(app, "gx.lock"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, item := range []string{"button", "dialog"} {
+		if !strings.Contains(string(raw), `"`+item+`": {`) {
+			t.Errorf("gx.lock lost %s after the second add:\n%s", item, raw)
+		}
+	}
+}
+
 // TestREQ_REG_03_DiffUpdate covers gx diff and gx update: a local edit and a
 // different upstream edit merge cleanly, the lock and the base snapshot move
 // to the new version, and the old snapshot goes (REQ-REG-03).

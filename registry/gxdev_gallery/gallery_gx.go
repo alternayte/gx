@@ -29,6 +29,7 @@ import (
 	empty "github.com/alternayte/gx/registry/empty"
 	field "github.com/alternayte/gx/registry/field"
 	hovercard "github.com/alternayte/gx/registry/hover-card"
+	icons "github.com/alternayte/gx/registry/icons"
 	input "github.com/alternayte/gx/registry/input"
 	inputgroup "github.com/alternayte/gx/registry/input-group"
 	item "github.com/alternayte/gx/registry/item"
@@ -187,6 +188,20 @@ func Fixtures() []gx.Fixture {
 		{Component: "FieldLegend", Package: "github.com/alternayte/gx/registry/field", Name: "Legend", Node: func() gx.Node { return field.FieldLegend(field.FieldLegendFixtures["Legend"]) }},
 		{Component: "FieldSet", Package: "github.com/alternayte/gx/registry/field", Name: "Empty", Node: func() gx.Node { return field.FieldSet(field.FieldSetFixtures["Empty"]) }},
 		{Component: "HoverCard", Package: "github.com/alternayte/gx/registry/hover-card", Name: "User", Node: func() gx.Node { return hovercard.HoverCard(hovercard.HoverCardFixtures["User"]) }},
+		{Component: "Check", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.Check(icons.CheckFixtures["Default"]) }},
+		{Component: "ChevronDown", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.ChevronDown(icons.ChevronDownFixtures["Default"]) }},
+		{Component: "ChevronLeft", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.ChevronLeft(icons.ChevronLeftFixtures["Default"]) }},
+		{Component: "ChevronRight", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.ChevronRight(icons.ChevronRightFixtures["Default"]) }},
+		{Component: "ChevronUp", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.ChevronUp(icons.ChevronUpFixtures["Default"]) }},
+		{Component: "Circle", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.Circle(icons.CircleFixtures["Default"]) }},
+		{Component: "CircleCheck", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.CircleCheck(icons.CircleCheckFixtures["Default"]) }},
+		{Component: "Ellipsis", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.Ellipsis(icons.EllipsisFixtures["Default"]) }},
+		{Component: "Info", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.Info(icons.InfoFixtures["Default"]) }},
+		{Component: "LoaderCircle", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.LoaderCircle(icons.LoaderCircleFixtures["Default"]) }},
+		{Component: "OctagonX", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.OctagonX(icons.OctagonXFixtures["Default"]) }},
+		{Component: "PanelLeft", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.PanelLeft(icons.PanelLeftFixtures["Default"]) }},
+		{Component: "TriangleAlert", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.TriangleAlert(icons.TriangleAlertFixtures["Default"]) }},
+		{Component: "X", Package: "github.com/alternayte/gx/registry/icons", Name: "Default", Node: func() gx.Node { return icons.X(icons.XFixtures["Default"]) }},
 		{Component: "Input", Package: "github.com/alternayte/gx/registry/input", Name: "Disabled", Node: func() gx.Node { return input.Input(input.InputFixtures["Disabled"]) }},
 		{Component: "Input", Package: "github.com/alternayte/gx/registry/input", Name: "File", Node: func() gx.Node { return input.Input(input.InputFixtures["File"]) }},
 		{Component: "Input", Package: "github.com/alternayte/gx/registry/input", Name: "Filled", Node: func() gx.Node { return input.Input(input.InputFixtures["Filled"]) }},

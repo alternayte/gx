@@ -325,6 +325,10 @@ func runBuild(args []string) int {
 	if bin == "" {
 		bin = filepath.Join(dir, "app")
 	}
+	// go build runs in dir, so a relative output path must not resolve there.
+	if abs, err := filepath.Abs(bin); err == nil {
+		bin = abs
+	}
 	cmd := exec.Command("go", "build", "-o", bin, *main)
 	cmd.Dir = dir
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr

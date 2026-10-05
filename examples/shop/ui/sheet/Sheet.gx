@@ -1,5 +1,7 @@
 package sheet
 
+import "github.com/alternayte/gx/examples/shop/ui/icons"
+
 props {
   Id          string
   Side        Side     = Right
@@ -17,27 +19,26 @@ props {
   if p.Trigger != nil {
     <span data-gx-open={"#" + p.Id} class="contents">{p.Trigger}</span>
   }
-  <dialog id={p.Id} open={p.Open} data-gx-dismiss class={gx.Cx("fixed m-0 border border-border bg-background text-card-foreground shadow-lg backdrop:bg-black/50", p.sideClass(), p.Class)} {...p.Attrs}>
-    <div class="flex flex-col gap-4">
+  <dialog id={p.Id} open={p.Open} data-gx-dismiss data-gx-trap class={gx.Cx("fixed m-0 max-h-none max-w-none flex-col gap-4 border-border bg-background text-foreground shadow-lg outline-none open:flex transition-[translate,overlay,display] transition-discrete duration-300 ease-in-out open:duration-500 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.sideClass(), p.Class)} {...p.Attrs}>
+    if p.Title != "" || p.Description != "" {
       <div class="flex flex-col gap-1.5 p-4">
-        <div class="flex items-start justify-between gap-4">
-          <div class="flex flex-col gap-1.5">
-            if p.Title != "" {
-              <h2 class="text-lg leading-none font-semibold">{p.Title}</h2>
-            }
-            if p.Description != "" {
-              <p class="text-sm text-muted-foreground">{p.Description}</p>
-            }
-          </div>
-          <button type="button" data-gx-close aria-label="Close" class="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground">×</button>
-        </div>
+        if p.Title != "" {
+          <h2 class="font-semibold text-foreground">{p.Title}</h2>
+        }
+        if p.Description != "" {
+          <p class="text-sm text-muted-foreground">{p.Description}</p>
+        }
       </div>
-      if p.Children != nil {
-        <div class="flex-1 p-4 pt-0 text-sm">{p.Children}</div>
-      }
-      if p.Footer != nil {
-        <div class="flex flex-col-reverse gap-2 p-4 pt-0 sm:flex-row sm:justify-end">{p.Footer}</div>
-      }
-    </div>
+    }
+    if p.Children != nil {
+      <div class="flex-1 overflow-y-auto px-4 text-sm">{p.Children}</div>
+    }
+    if p.Footer != nil {
+      <div class="mt-auto flex flex-col gap-2 p-4">{p.Footer}</div>
+    }
+    <button type="button" data-gx-close class="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
+      <icons.X class="size-4" />
+      <span class="sr-only">Close</span>
+    </button>
   </dialog>
 </span>

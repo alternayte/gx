@@ -120,7 +120,11 @@ func (in *Installer) Add(name, version string) ([]Item, error) {
 		}
 		plans = append(plans, planned{item: item, files: files})
 	}
-	lock := Lock{Items: map[string]LockItem{}}
+	// Earlier installs keep their lock entries.
+	lock, err := LoadLock(in.Root)
+	if err != nil {
+		return nil, err
+	}
 	for _, plan := range plans {
 		for target, content := range plan.files {
 			if err := writeFile(filepath.Join(in.Root, filepath.FromSlash(target)), content); err != nil {
