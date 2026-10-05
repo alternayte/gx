@@ -1,5 +1,5 @@
-; Injections for Gx (REQ-TLS-06): Go for expressions and the props and
-; signals blocks, TypeScript for `lang="ts"` scripts, JavaScript and CSS for
+; Injections for Gx (REQ-TLS-06): Go for expressions, control headers,
+; statements and the props and signals blocks, TypeScript for `lang="ts"` scripts, JavaScript and CSS for
 ; the rest.
 
 ((script_element
@@ -20,7 +20,10 @@
   (raw_text) @injection.content)
  (#set! injection.language "css"))
 
-((expression) @injection.content
+((go_code) @injection.content
+ (#set! injection.language "go"))
+
+((statement) @injection.content
  (#set! injection.language "go"))
 
 ((go_block) @injection.content
