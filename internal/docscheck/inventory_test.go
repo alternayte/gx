@@ -197,3 +197,67 @@ func TestREQ_DOC_02_APIReference(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_DOC_06_HonestComparisons covers the shape of the comparisons
+// page: it states what Gx does not have, and for each alternative it names
+// at least three things that the alternative does better, what Gx does
+// better, and when to choose the alternative (REQ-DOC-06). A person judges
+// the content at gate G4.
+func TestREQ_DOC_06_HonestComparisons(t *testing.T) {
+	repo := repoRoot(t)
+	raw, err := os.ReadFile(filepath.Join(docscheck.ContentDir(repo), "compare", "comparisons.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	page := string(raw)
+	section := func(heading string) string {
+		at := strings.Index(page, "\n## "+heading+"\n")
+		if at < 0 {
+			t.Fatalf("the page has no section %q", heading)
+		}
+		rest := page[at+len(heading)+5:]
+		if next := strings.Index(rest, "\n## "); next >= 0 {
+			rest = rest[:next]
+		}
+		return rest
+	}
+	bullets := func(text, after string) int {
+		at := strings.Index(text, after)
+		if at < 0 {
+			return 0
+		}
+		count := 0
+		for _, line := range strings.Split(strings.TrimLeft(text[at+len(after):], "\n"), "\n") {
+			if !strings.HasPrefix(line, "- ") {
+				break
+			}
+			count++
+		}
+		return count
+	}
+	if n := strings.Count(section("What Gx does not have"), "\n- "); n < 4 {
+		t.Errorf("the page names %d limits of Gx; a reader needs them before the comparisons", n)
+	}
+	for _, name := range []string{"templ", "gomponents", "Next.js", "Rails with Hotwire"} {
+		text := section(name)
+		short := strings.Fields(name)[0]
+		if n := bullets(text, "**What "+short+" does better**"); n < 3 {
+			t.Errorf("%s: %d points that it does better; want at least 3", name, n)
+		}
+		if n := bullets(text, "**What Gx does better**"); n < 2 {
+			t.Errorf("%s: %d points that Gx does better; want at least 2", name, n)
+		}
+		if !strings.Contains(text, "**Choose "+short+" when**") {
+			t.Errorf("%s: no advice on when to choose it", name)
+		}
+		// The section does not sell: no word of praise for Gx.
+		for _, word := range []string{"best", "superior", "blazing", "revolution", "effortless"} {
+			if strings.Contains(strings.ToLower(text), word) {
+				t.Errorf("%s: the word %q is praise, not a fact", name, word)
+			}
+		}
+	}
+	if !strings.Contains(page, "\n## Which one\n") {
+		t.Error("the page has no summary table")
+	}
+}
