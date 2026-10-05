@@ -779,7 +779,8 @@ func runDev(args []string) int {
 	if rest := fs.Args(); len(rest) > 0 {
 		dir = rest[0]
 	}
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	// A closed terminal sends SIGHUP; without it the app outlives gx dev.
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
 	defer cancel()
 	if err := devserver.Run(ctx, devserver.Options{Dir: dir, Main: *main, Addr: *addr, Log: os.Stdout}); err != nil {
 		fmt.Fprintf(os.Stderr, "gx dev: %v\n", err)

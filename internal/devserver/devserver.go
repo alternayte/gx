@@ -20,6 +20,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -117,6 +118,9 @@ type server struct {
 
 	appPort int
 	appCmd  *exec.Cmd
+	// appParent is the write end of the pipe that tells the app that gx
+	// dev is alive.
+	appParent *os.File
 
 	mu      sync.Mutex
 	clients map[chan []byte]bool
@@ -201,6 +205,10 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 	return true, nil
 }
 
+// parentPipeEnv names the file descriptor of the parent pipe in the app. The
+// gxdev build of package gx reads the same name.
+const parentPipeEnv = "GX_DEV_PARENT_FD"
+
 // startApp runs the built binary. It reads GX_DEV_ADDR for its listen
 // address (REQ-DEV-01).
 func (s *server) startApp(ctx context.Context, bin string) error {
@@ -215,10 +223,29 @@ func (s *server) startApp(ctx context.Context, bin string) error {
 		return err
 	}
 	cmd.Stdout = s.opt.Log
+	// The app holds the read end of a pipe and gx dev holds the write end.
+	// When gx dev ends for any reason, also a kill it cannot catch, the
+	// write end closes and the app exits (dev_gxdev.go in package gx). Windows has no
+	// ExtraFiles; there the signal path is the only one.
+	var parent *os.File
+	if runtime.GOOS != "windows" {
+		r, w, err := os.Pipe()
+		if err != nil {
+			return err
+		}
+		defer r.Close()
+		parent = w
+		cmd.ExtraFiles = []*os.File{r}
+		cmd.Env = append(cmd.Env, parentPipeEnv+"=3")
+	}
 	if err := cmd.Start(); err != nil {
+		if parent != nil {
+			_ = parent.Close()
+		}
 		return err
 	}
 	s.appCmd = cmd
+	s.appParent = parent
 	go s.captureErrors(stderr)
 	return nil
 }
@@ -253,6 +280,10 @@ func (s *server) stopApp() {
 		_ = s.appCmd.Process.Kill()
 		_, _ = s.appCmd.Process.Wait()
 		s.appCmd = nil
+	}
+	if s.appParent != nil {
+		_ = s.appParent.Close()
+		s.appParent = nil
 	}
 }
 

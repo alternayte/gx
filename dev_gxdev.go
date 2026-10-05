@@ -4,13 +4,43 @@ package gx
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
+	"sync"
 )
+
+// parentPipeEnv names the file descriptor that gx dev passes to the app. gx
+// dev holds the other end of the pipe (internal/devserver).
+const parentPipeEnv = "GX_DEV_PARENT_FD"
+
+var watchParentOnce sync.Once
+
+// watchParent ends the app when gx dev ends. A read on the pipe returns when
+// gx dev closes its end, and the system closes that end when gx dev dies,
+// also on a kill it cannot catch. An app started by hand has no pipe and
+// runs on.
+func watchParent() {
+	fd, err := strconv.Atoi(os.Getenv(parentPipeEnv))
+	if err != nil || fd < 3 {
+		return
+	}
+	pipe := os.NewFile(uintptr(fd), "gx-dev-parent")
+	if pipe == nil {
+		return
+	}
+	go func() {
+		_, _ = io.Copy(io.Discard, pipe)
+		os.Exit(0)
+	}()
+}
 
 // devRoutes registers the routes that exist only in a dev build
 // (REQ-DEV-07).
 func (a *App) devRoutes() {
+	watchParentOnce.Do(watchParent)
 	a.mux.Handle("GET /_gx/dev/info", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"dev":true}`))
