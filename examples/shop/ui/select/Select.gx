@@ -1,11 +1,23 @@
 package selectbox
 
+import "github.com/alternayte/gx/examples/shop/ui/icons"
+
 props {
-  Name     string   = ""
-  Label    string   = ""
-  Class    string   = ""
-  Children gx.Node
-  Attrs    gx.Attrs = nil
+  Name        string   = ""
+  Label       string   = ""
+  Size        Size     = Md
+  Placeholder string   = ""
+  Class       string   = ""
+  Children    gx.Node
+  Attrs       gx.Attrs = nil
 }
 
-<select name={p.Name} aria-label={p.Label} class={gx.Cx("h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</select>
+<span class={gx.Cx("relative inline-flex w-fit", p.Class)}>
+  <select name={p.Name} aria-label={p.Label} class={gx.Cx("w-full min-w-0 appearance-none rounded-md border border-input bg-transparent py-0 pr-9 pl-3 text-sm whitespace-nowrap shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 has-[option[value='']:checked]:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:ring-destructive/40", sizeClass[p.size()])} {...p.Attrs}>
+    if p.Placeholder != "" {
+      <option value="" disabled selected hidden>{p.Placeholder}</option>
+    }
+    {p.Children}
+  </select>
+  <icons.ChevronDown class="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground opacity-50" />
+</span>

@@ -3,7 +3,8 @@ package selectbox
 props {
   Value    string = ""
   Selected bool   = false
+  Disabled bool   = false
   Children gx.Node
 }
 
-<option value={p.Value} selected={p.Selected}>{p.Children}</option>
+<option value={p.Value} selected={p.Selected} disabled={p.Disabled}>{p.Children}</option>

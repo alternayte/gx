@@ -228,14 +228,49 @@ var Items = []Item{
 			{Name: "context-menu-menu", Title: "ContextMenu: Menu", Component: "ContextMenu", Fixtures: []string{"ContextMenu/Menu", "ContextMenuTrigger/Default"}, Node: func() gx.Node {
 				return gx.Frag(contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Menu"]), contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Default"]))
 			}},
+			{Name: "context-menu-checkbox-item-checked", Title: "ContextMenuCheckboxItem: Checked", Component: "ContextMenuCheckboxItem", Fixtures: []string{"ContextMenuCheckboxItem/Checked"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Checked"]))
+			}},
+			{Name: "context-menu-checkbox-item-unchecked", Title: "ContextMenuCheckboxItem: Unchecked", Component: "ContextMenuCheckboxItem", Fixtures: []string{"ContextMenuCheckboxItem/Unchecked"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Unchecked"]))
+			}},
+			{Name: "context-menu-checkbox-item-disabled", Title: "ContextMenuCheckboxItem: Disabled", Component: "ContextMenuCheckboxItem", Fixtures: []string{"ContextMenuCheckboxItem/Disabled"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Disabled"]))
+			}},
+			{Name: "context-menu-group-default", Title: "ContextMenuGroup: Default", Component: "ContextMenuGroup", Fixtures: []string{"ContextMenuGroup/Default"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuGroupWrap(contextmenu.ContextMenuGroup(contextmenu.ContextMenuGroupFixtures["Default"]))
+			}},
 			{Name: "context-menu-item-item", Title: "ContextMenuItem: Item", Component: "ContextMenuItem", Fixtures: []string{"ContextMenuItem/Item"}, Node: func() gx.Node {
 				return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Item"]))
 			}},
+			{Name: "context-menu-item-inset", Title: "ContextMenuItem: Inset", Component: "ContextMenuItem", Fixtures: []string{"ContextMenuItem/Inset"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Inset"]))
+			}},
+			{Name: "context-menu-item-destructive", Title: "ContextMenuItem: Destructive", Component: "ContextMenuItem", Fixtures: []string{"ContextMenuItem/Destructive"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Destructive"]))
+			}},
+			{Name: "context-menu-item-disabled", Title: "ContextMenuItem: Disabled", Component: "ContextMenuItem", Fixtures: []string{"ContextMenuItem/Disabled"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Disabled"]))
+			}},
+			{Name: "context-menu-label-label", Title: "ContextMenuLabel: Label", Component: "ContextMenuLabel", Fixtures: []string{"ContextMenuLabel/Label"}, Node: func() gx.Node { return contextmenu.ContextMenuLabel(contextmenu.ContextMenuLabelFixtures["Label"]) }},
+			{Name: "context-menu-label-inset", Title: "ContextMenuLabel: Inset", Component: "ContextMenuLabel", Fixtures: []string{"ContextMenuLabel/Inset"}, Node: func() gx.Node { return contextmenu.ContextMenuLabel(contextmenu.ContextMenuLabelFixtures["Inset"]) }},
 			{Name: "context-menu-link-link", Title: "ContextMenuLink: Link", Component: "ContextMenuLink", Fixtures: []string{"ContextMenuLink/Link"}, Node: func() gx.Node {
 				return contextmenu.ContextMenuLinkWrap(contextmenu.ContextMenuLink(contextmenu.ContextMenuLinkFixtures["Link"]))
 			}},
+			{Name: "context-menu-radio-group-default", Title: "ContextMenuRadioGroup: Default", Component: "ContextMenuRadioGroup", Fixtures: []string{"ContextMenuRadioGroup/Default"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuRadioGroupWrap(contextmenu.ContextMenuRadioGroup(contextmenu.ContextMenuRadioGroupFixtures["Default"]))
+			}},
+			{Name: "context-menu-radio-item-checked", Title: "ContextMenuRadioItem: Checked", Component: "ContextMenuRadioItem", Fixtures: []string{"ContextMenuRadioItem/Checked"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuRadioItemWrap(contextmenu.ContextMenuRadioItem(contextmenu.ContextMenuRadioItemFixtures["Checked"]))
+			}},
+			{Name: "context-menu-radio-item-unchecked", Title: "ContextMenuRadioItem: Unchecked", Component: "ContextMenuRadioItem", Fixtures: []string{"ContextMenuRadioItem/Unchecked"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuRadioItemWrap(contextmenu.ContextMenuRadioItem(contextmenu.ContextMenuRadioItemFixtures["Unchecked"]))
+			}},
 			{Name: "context-menu-separator-default", Title: "ContextMenuSeparator: Default", Component: "ContextMenuSeparator", Fixtures: []string{"ContextMenuSeparator/Default"}, Node: func() gx.Node {
 				return contextmenu.ContextMenuSeparator(contextmenu.ContextMenuSeparatorFixtures["Default"])
+			}},
+			{Name: "context-menu-shortcut-default", Title: "ContextMenuShortcut: Default", Component: "ContextMenuShortcut", Fixtures: []string{"ContextMenuShortcut/Default"}, Node: func() gx.Node {
+				return contextmenu.ContextMenuShortcut(contextmenu.ContextMenuShortcutFixtures["Default"])
 			}},
 		},
 	},
@@ -354,15 +389,55 @@ var Items = []Item{
 			{Name: "dropdown-menu-menu", Title: "DropdownMenu: Menu", Component: "DropdownMenu", Fixtures: []string{"DropdownMenu/Menu", "DropdownMenuTrigger/Default"}, Node: func() gx.Node {
 				return gx.Frag(dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Menu"]), dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Default"]))
 			}},
+			{Name: "dropdown-menu-end", Title: "DropdownMenu: End", Component: "DropdownMenu", Fixtures: []string{"DropdownMenu/End", "DropdownMenuTrigger/Ghost"}, Node: func() gx.Node {
+				return gx.Frag(dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["End"]), dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Ghost"]))
+			}},
+			{Name: "dropdown-menu-start", Title: "DropdownMenu: Start", Component: "DropdownMenu", Fixtures: []string{"DropdownMenu/Start", "DropdownMenuTrigger/Start"}, Node: func() gx.Node {
+				return gx.Frag(dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Start"]), dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Start"]))
+			}},
+			{Name: "dropdown-menu-checkbox-item-checked", Title: "DropdownMenuCheckboxItem: Checked", Component: "DropdownMenuCheckboxItem", Fixtures: []string{"DropdownMenuCheckboxItem/Checked"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Checked"]))
+			}},
+			{Name: "dropdown-menu-checkbox-item-unchecked", Title: "DropdownMenuCheckboxItem: Unchecked", Component: "DropdownMenuCheckboxItem", Fixtures: []string{"DropdownMenuCheckboxItem/Unchecked"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Unchecked"]))
+			}},
+			{Name: "dropdown-menu-checkbox-item-disabled", Title: "DropdownMenuCheckboxItem: Disabled", Component: "DropdownMenuCheckboxItem", Fixtures: []string{"DropdownMenuCheckboxItem/Disabled"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Disabled"]))
+			}},
+			{Name: "dropdown-menu-group-default", Title: "DropdownMenuGroup: Default", Component: "DropdownMenuGroup", Fixtures: []string{"DropdownMenuGroup/Default"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuGroupWrap(dropdownmenu.DropdownMenuGroup(dropdownmenu.DropdownMenuGroupFixtures["Default"]))
+			}},
 			{Name: "dropdown-menu-item-item", Title: "DropdownMenuItem: Item", Component: "DropdownMenuItem", Fixtures: []string{"DropdownMenuItem/Item"}, Node: func() gx.Node {
 				return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Item"]))
 			}},
+			{Name: "dropdown-menu-item-inset", Title: "DropdownMenuItem: Inset", Component: "DropdownMenuItem", Fixtures: []string{"DropdownMenuItem/Inset"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Inset"]))
+			}},
+			{Name: "dropdown-menu-item-destructive", Title: "DropdownMenuItem: Destructive", Component: "DropdownMenuItem", Fixtures: []string{"DropdownMenuItem/Destructive"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Destructive"]))
+			}},
+			{Name: "dropdown-menu-item-disabled", Title: "DropdownMenuItem: Disabled", Component: "DropdownMenuItem", Fixtures: []string{"DropdownMenuItem/Disabled"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Disabled"]))
+			}},
 			{Name: "dropdown-menu-label-label", Title: "DropdownMenuLabel: Label", Component: "DropdownMenuLabel", Fixtures: []string{"DropdownMenuLabel/Label"}, Node: func() gx.Node { return dropdownmenu.DropdownMenuLabel(dropdownmenu.DropdownMenuLabelFixtures["Label"]) }},
+			{Name: "dropdown-menu-label-inset", Title: "DropdownMenuLabel: Inset", Component: "DropdownMenuLabel", Fixtures: []string{"DropdownMenuLabel/Inset"}, Node: func() gx.Node { return dropdownmenu.DropdownMenuLabel(dropdownmenu.DropdownMenuLabelFixtures["Inset"]) }},
 			{Name: "dropdown-menu-link-link", Title: "DropdownMenuLink: Link", Component: "DropdownMenuLink", Fixtures: []string{"DropdownMenuLink/Link"}, Node: func() gx.Node {
 				return dropdownmenu.DropdownMenuLinkWrap(dropdownmenu.DropdownMenuLink(dropdownmenu.DropdownMenuLinkFixtures["Link"]))
 			}},
+			{Name: "dropdown-menu-radio-group-default", Title: "DropdownMenuRadioGroup: Default", Component: "DropdownMenuRadioGroup", Fixtures: []string{"DropdownMenuRadioGroup/Default"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuRadioGroupWrap(dropdownmenu.DropdownMenuRadioGroup(dropdownmenu.DropdownMenuRadioGroupFixtures["Default"]))
+			}},
+			{Name: "dropdown-menu-radio-item-checked", Title: "DropdownMenuRadioItem: Checked", Component: "DropdownMenuRadioItem", Fixtures: []string{"DropdownMenuRadioItem/Checked"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuRadioItemWrap(dropdownmenu.DropdownMenuRadioItem(dropdownmenu.DropdownMenuRadioItemFixtures["Checked"]))
+			}},
+			{Name: "dropdown-menu-radio-item-unchecked", Title: "DropdownMenuRadioItem: Unchecked", Component: "DropdownMenuRadioItem", Fixtures: []string{"DropdownMenuRadioItem/Unchecked"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuRadioItemWrap(dropdownmenu.DropdownMenuRadioItem(dropdownmenu.DropdownMenuRadioItemFixtures["Unchecked"]))
+			}},
 			{Name: "dropdown-menu-separator-default", Title: "DropdownMenuSeparator: Default", Component: "DropdownMenuSeparator", Fixtures: []string{"DropdownMenuSeparator/Default"}, Node: func() gx.Node {
 				return dropdownmenu.DropdownMenuSeparator(dropdownmenu.DropdownMenuSeparatorFixtures["Default"])
+			}},
+			{Name: "dropdown-menu-shortcut-default", Title: "DropdownMenuShortcut: Default", Component: "DropdownMenuShortcut", Fixtures: []string{"DropdownMenuShortcut/Default"}, Node: func() gx.Node {
+				return dropdownmenu.DropdownMenuShortcut(dropdownmenu.DropdownMenuShortcutFixtures["Default"])
 			}},
 		},
 	},
@@ -403,6 +478,8 @@ var Items = []Item{
 		Description: "A richer preview on hover or focus.",
 		Examples: []Example{
 			{Name: "hover-card-user", Title: "User", Component: "HoverCard", Fixtures: []string{"HoverCard/User"}, Node: func() gx.Node { return hovercard.HoverCard(hovercard.HoverCardFixtures["User"]) }},
+			{Name: "hover-card-center", Title: "Center", Component: "HoverCard", Fixtures: []string{"HoverCard/Center"}, Node: func() gx.Node { return hovercard.HoverCard(hovercard.HoverCardFixtures["Center"]) }},
+			{Name: "hover-card-end", Title: "End", Component: "HoverCard", Fixtures: []string{"HoverCard/End"}, Node: func() gx.Node { return hovercard.HoverCard(hovercard.HoverCardFixtures["End"]) }},
 		},
 	},
 	{
@@ -505,9 +582,49 @@ var Items = []Item{
 		Description: "A horizontal bar of menu actions.",
 		Examples: []Example{
 			{Name: "menubar-default", Title: "Menubar: Default", Component: "Menubar", Fixtures: []string{"Menubar/Default"}, Node: func() gx.Node { return menubar.Menubar(menubar.MenubarFixtures["Default"]) }},
+			{Name: "menubar-checkbox-item-checked", Title: "MenubarCheckboxItem: Checked", Component: "MenubarCheckboxItem", Fixtures: []string{"MenubarCheckboxItem/Checked"}, Node: func() gx.Node {
+				return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Checked"]))
+			}},
+			{Name: "menubar-checkbox-item-unchecked", Title: "MenubarCheckboxItem: Unchecked", Component: "MenubarCheckboxItem", Fixtures: []string{"MenubarCheckboxItem/Unchecked"}, Node: func() gx.Node {
+				return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Unchecked"]))
+			}},
+			{Name: "menubar-checkbox-item-disabled", Title: "MenubarCheckboxItem: Disabled", Component: "MenubarCheckboxItem", Fixtures: []string{"MenubarCheckboxItem/Disabled"}, Node: func() gx.Node {
+				return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Disabled"]))
+			}},
+			{Name: "menubar-group-default", Title: "MenubarGroup: Default", Component: "MenubarGroup", Fixtures: []string{"MenubarGroup/Default"}, Node: func() gx.Node {
+				return menubar.MenubarGroupWrap(menubar.MenubarGroup(menubar.MenubarGroupFixtures["Default"]))
+			}},
 			{Name: "menubar-item-item", Title: "MenubarItem: Item", Component: "MenubarItem", Fixtures: []string{"MenubarItem/Item"}, Node: func() gx.Node {
 				return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Item"]))
 			}},
+			{Name: "menubar-item-inset", Title: "MenubarItem: Inset", Component: "MenubarItem", Fixtures: []string{"MenubarItem/Inset"}, Node: func() gx.Node {
+				return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Inset"]))
+			}},
+			{Name: "menubar-item-destructive", Title: "MenubarItem: Destructive", Component: "MenubarItem", Fixtures: []string{"MenubarItem/Destructive"}, Node: func() gx.Node {
+				return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Destructive"]))
+			}},
+			{Name: "menubar-item-disabled", Title: "MenubarItem: Disabled", Component: "MenubarItem", Fixtures: []string{"MenubarItem/Disabled"}, Node: func() gx.Node {
+				return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Disabled"]))
+			}},
+			{Name: "menubar-label-label", Title: "MenubarLabel: Label", Component: "MenubarLabel", Fixtures: []string{"MenubarLabel/Label"}, Node: func() gx.Node { return menubar.MenubarLabel(menubar.MenubarLabelFixtures["Label"]) }},
+			{Name: "menubar-label-inset", Title: "MenubarLabel: Inset", Component: "MenubarLabel", Fixtures: []string{"MenubarLabel/Inset"}, Node: func() gx.Node { return menubar.MenubarLabel(menubar.MenubarLabelFixtures["Inset"]) }},
+			{Name: "menubar-link-link", Title: "MenubarLink: Link", Component: "MenubarLink", Fixtures: []string{"MenubarLink/Link"}, Node: func() gx.Node {
+				return menubar.MenubarLinkWrap(menubar.MenubarLink(menubar.MenubarLinkFixtures["Link"]))
+			}},
+			{Name: "menubar-menu-menu", Title: "MenubarMenu: Menu", Component: "MenubarMenu", Fixtures: []string{"MenubarMenu/Menu"}, Node: func() gx.Node {
+				return menubar.MenubarMenuWrap(menubar.MenubarMenu(menubar.MenubarMenuFixtures["Menu"]))
+			}},
+			{Name: "menubar-radio-group-default", Title: "MenubarRadioGroup: Default", Component: "MenubarRadioGroup", Fixtures: []string{"MenubarRadioGroup/Default"}, Node: func() gx.Node {
+				return menubar.MenubarRadioGroupWrap(menubar.MenubarRadioGroup(menubar.MenubarRadioGroupFixtures["Default"]))
+			}},
+			{Name: "menubar-radio-item-checked", Title: "MenubarRadioItem: Checked", Component: "MenubarRadioItem", Fixtures: []string{"MenubarRadioItem/Checked"}, Node: func() gx.Node {
+				return menubar.MenubarRadioItemWrap(menubar.MenubarRadioItem(menubar.MenubarRadioItemFixtures["Checked"]))
+			}},
+			{Name: "menubar-radio-item-unchecked", Title: "MenubarRadioItem: Unchecked", Component: "MenubarRadioItem", Fixtures: []string{"MenubarRadioItem/Unchecked"}, Node: func() gx.Node {
+				return menubar.MenubarRadioItemWrap(menubar.MenubarRadioItem(menubar.MenubarRadioItemFixtures["Unchecked"]))
+			}},
+			{Name: "menubar-separator-default", Title: "MenubarSeparator: Default", Component: "MenubarSeparator", Fixtures: []string{"MenubarSeparator/Default"}, Node: func() gx.Node { return menubar.MenubarSeparator(menubar.MenubarSeparatorFixtures["Default"]) }},
+			{Name: "menubar-shortcut-default", Title: "MenubarShortcut: Default", Component: "MenubarShortcut", Fixtures: []string{"MenubarShortcut/Default"}, Node: func() gx.Node { return menubar.MenubarShortcut(menubar.MenubarShortcutFixtures["Default"]) }},
 		},
 	},
 	{
@@ -517,11 +634,26 @@ var Items = []Item{
 		Description: "A row of primary links.",
 		Examples: []Example{
 			{Name: "navigation-menu-default", Title: "NavigationMenu: Default", Component: "NavigationMenu", Fixtures: []string{"NavigationMenu/Default"}, Node: func() gx.Node { return navigationmenu.NavigationMenu(navigationmenu.NavigationMenuFixtures["Default"]) }},
-			{Name: "navigation-menu-item-item", Title: "NavigationMenuItem: Item", Component: "NavigationMenuItem", Fixtures: []string{"NavigationMenuItem/Item"}, Node: func() gx.Node {
-				return navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Item"])
+			{Name: "navigation-menu-content-default", Title: "NavigationMenuContent: Default", Component: "NavigationMenuContent", Fixtures: []string{"NavigationMenuContent/Default"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuContentWrap(navigationmenu.NavigationMenuContent(navigationmenu.NavigationMenuContentFixtures["Default"]))
 			}},
-			{Name: "navigation-menu-item-active", Title: "NavigationMenuItem: Active", Component: "NavigationMenuItem", Fixtures: []string{"NavigationMenuItem/Active"}, Node: func() gx.Node {
-				return navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Active"])
+			{Name: "navigation-menu-item-link", Title: "NavigationMenuItem: Link", Component: "NavigationMenuItem", Fixtures: []string{"NavigationMenuItem/Link"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuItemWrap(navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Link"]))
+			}},
+			{Name: "navigation-menu-link-link", Title: "NavigationMenuLink: Link", Component: "NavigationMenuLink", Fixtures: []string{"NavigationMenuLink/Link"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Link"])
+			}},
+			{Name: "navigation-menu-link-active", Title: "NavigationMenuLink: Active", Component: "NavigationMenuLink", Fixtures: []string{"NavigationMenuLink/Active"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Active"])
+			}},
+			{Name: "navigation-menu-link-trigger", Title: "NavigationMenuLink: Trigger", Component: "NavigationMenuLink", Fixtures: []string{"NavigationMenuLink/Trigger"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Trigger"])
+			}},
+			{Name: "navigation-menu-link-trigger-active", Title: "NavigationMenuLink: Trigger active", Component: "NavigationMenuLink", Fixtures: []string{"NavigationMenuLink/TriggerActive"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["TriggerActive"])
+			}},
+			{Name: "navigation-menu-trigger-default", Title: "NavigationMenuTrigger: Default", Component: "NavigationMenuTrigger", Fixtures: []string{"NavigationMenuTrigger/Default"}, Node: func() gx.Node {
+				return navigationmenu.NavigationMenuTrigger(navigationmenu.NavigationMenuTriggerFixtures["Default"])
 			}},
 		},
 	},
@@ -552,6 +684,15 @@ var Items = []Item{
 			{Name: "popover-content", Title: "Popover: Content", Component: "Popover", Fixtures: []string{"Popover/Content", "PopoverTrigger/Default"}, Node: func() gx.Node {
 				return gx.Frag(popover.Popover(popover.PopoverFixtures["Content"]), popover.PopoverTrigger(popover.PopoverTriggerFixtures["Default"]))
 			}},
+			{Name: "popover-start", Title: "Popover: Start", Component: "Popover", Fixtures: []string{"Popover/Start", "PopoverTrigger/Start"}, Node: func() gx.Node {
+				return gx.Frag(popover.Popover(popover.PopoverFixtures["Start"]), popover.PopoverTrigger(popover.PopoverTriggerFixtures["Start"]))
+			}},
+			{Name: "popover-end", Title: "Popover: End", Component: "Popover", Fixtures: []string{"Popover/End", "PopoverTrigger/End"}, Node: func() gx.Node {
+				return gx.Frag(popover.Popover(popover.PopoverFixtures["End"]), popover.PopoverTrigger(popover.PopoverTriggerFixtures["End"]))
+			}},
+			{Name: "popover-description-default", Title: "PopoverDescription: Default", Component: "PopoverDescription", Fixtures: []string{"PopoverDescription/Default"}, Node: func() gx.Node { return popover.PopoverDescription(popover.PopoverDescriptionFixtures["Default"]) }},
+			{Name: "popover-header-default", Title: "PopoverHeader: Default", Component: "PopoverHeader", Fixtures: []string{"PopoverHeader/Default"}, Node: func() gx.Node { return popover.PopoverHeader(popover.PopoverHeaderFixtures["Default"]) }},
+			{Name: "popover-title-default", Title: "PopoverTitle: Default", Component: "PopoverTitle", Fixtures: []string{"PopoverTitle/Default"}, Node: func() gx.Node { return popover.PopoverTitle(popover.PopoverTitleFixtures["Default"]) }},
 		},
 	},
 	{
@@ -593,8 +734,20 @@ var Items = []Item{
 		Description: "A native list of exclusive choices.",
 		Examples: []Example{
 			{Name: "select-plan", Title: "Select: Plan", Component: "Select", Fixtures: []string{"Select/Plan"}, Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Plan"]) }},
+			{Name: "select-small", Title: "Select: Small", Component: "Select", Fixtures: []string{"Select/Small"}, Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Small"]) }},
+			{Name: "select-fit", Title: "Select: Fit", Component: "Select", Fixtures: []string{"Select/Fit"}, Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Fit"]) }},
 			{Name: "select-disabled", Title: "Select: Disabled", Component: "Select", Fixtures: []string{"Select/Disabled"}, Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Disabled"]) }},
-			{Name: "select-option-option", Title: "SelectOption: Option", Component: "SelectOption", Fixtures: []string{"SelectOption/Option"}, Node: func() gx.Node { return selectbox.SelectOption(selectbox.SelectOptionFixtures["Option"]) }},
+			{Name: "select-invalid", Title: "Select: Invalid", Component: "Select", Fixtures: []string{"Select/Invalid"}, Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Invalid"]) }},
+			{Name: "select-placeholder", Title: "Select: Placeholder", Component: "Select", Fixtures: []string{"Select/Placeholder"}, Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Placeholder"]) }},
+			{Name: "select-group-group", Title: "SelectGroup: Group", Component: "SelectGroup", Fixtures: []string{"SelectGroup/Group"}, Node: func() gx.Node {
+				return selectbox.SelectGroupWrap(selectbox.SelectGroup(selectbox.SelectGroupFixtures["Group"]))
+			}},
+			{Name: "select-option-option", Title: "SelectOption: Option", Component: "SelectOption", Fixtures: []string{"SelectOption/Option"}, Node: func() gx.Node {
+				return selectbox.SelectOptionWrap(selectbox.SelectOption(selectbox.SelectOptionFixtures["Option"]))
+			}},
+			{Name: "select-separator-default", Title: "SelectSeparator: Default", Component: "SelectSeparator", Fixtures: []string{"SelectSeparator/Default"}, Node: func() gx.Node {
+				return selectbox.SelectSeparatorWrap(selectbox.SelectSeparator(selectbox.SelectSeparatorFixtures["Default"]))
+			}},
 		},
 	},
 	{

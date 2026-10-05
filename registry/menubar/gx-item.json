@@ -9,27 +9,105 @@
       "target": "ui/menubar/Menubar.gx"
     },
     {
+      "path": "MenubarCheckboxItem.gx",
+      "target": "ui/menubar/MenubarCheckboxItem.gx"
+    },
+    {
+      "path": "MenubarGroup.gx",
+      "target": "ui/menubar/MenubarGroup.gx"
+    },
+    {
       "path": "MenubarItem.gx",
       "target": "ui/menubar/MenubarItem.gx"
+    },
+    {
+      "path": "MenubarLabel.gx",
+      "target": "ui/menubar/MenubarLabel.gx"
+    },
+    {
+      "path": "MenubarLink.gx",
+      "target": "ui/menubar/MenubarLink.gx"
+    },
+    {
+      "path": "MenubarMenu.gx",
+      "target": "ui/menubar/MenubarMenu.gx"
+    },
+    {
+      "path": "MenubarRadioGroup.gx",
+      "target": "ui/menubar/MenubarRadioGroup.gx"
+    },
+    {
+      "path": "MenubarRadioItem.gx",
+      "target": "ui/menubar/MenubarRadioItem.gx"
+    },
+    {
+      "path": "MenubarSeparator.gx",
+      "target": "ui/menubar/MenubarSeparator.gx"
+    },
+    {
+      "path": "MenubarShortcut.gx",
+      "target": "ui/menubar/MenubarShortcut.gx"
     },
     {
       "path": "Menubar.fixtures.go",
       "target": "ui/menubar/Menubar.fixtures.go"
     },
     {
-      "path": "styles.go",
-      "target": "ui/menubar/styles.go"
+      "path": "MenubarCheckboxItem.fixtures.go",
+      "target": "ui/menubar/MenubarCheckboxItem.fixtures.go"
+    },
+    {
+      "path": "MenubarGroup.fixtures.go",
+      "target": "ui/menubar/MenubarGroup.fixtures.go"
     },
     {
       "path": "MenubarItem.fixtures.go",
       "target": "ui/menubar/MenubarItem.fixtures.go"
+    },
+    {
+      "path": "MenubarLabel.fixtures.go",
+      "target": "ui/menubar/MenubarLabel.fixtures.go"
+    },
+    {
+      "path": "MenubarLink.fixtures.go",
+      "target": "ui/menubar/MenubarLink.fixtures.go"
+    },
+    {
+      "path": "MenubarMenu.fixtures.go",
+      "target": "ui/menubar/MenubarMenu.fixtures.go"
+    },
+    {
+      "path": "MenubarRadioGroup.fixtures.go",
+      "target": "ui/menubar/MenubarRadioGroup.fixtures.go"
+    },
+    {
+      "path": "MenubarRadioItem.fixtures.go",
+      "target": "ui/menubar/MenubarRadioItem.fixtures.go"
+    },
+    {
+      "path": "MenubarSeparator.fixtures.go",
+      "target": "ui/menubar/MenubarSeparator.fixtures.go"
+    },
+    {
+      "path": "MenubarShortcut.fixtures.go",
+      "target": "ui/menubar/MenubarShortcut.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/menubar/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--border",
     "--background",
+    "--popover",
+    "--popover-foreground",
     "--accent",
     "--accent-foreground",
-    "--foreground"
+    "--muted-foreground",
+    "--destructive"
   ]
 }

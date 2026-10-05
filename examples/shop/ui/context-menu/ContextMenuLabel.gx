@@ -1,0 +1,10 @@
+package contextmenu
+
+props {
+  Inset    bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="presentation" class={gx.Cx("px-2 py-1.5 text-sm font-medium text-foreground", insetClass[p.Inset], p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -32,15 +32,16 @@ const focusable = (root: HTMLElement): HTMLElement[] =>
 const isOpen = (el: HTMLElement): boolean =>
   el.matches(':popover-open') || (el instanceof HTMLDialogElement && el.open) || el.hasAttribute('data-gx-open')
 
-// open opens a dialog, a popover or a custom overlay.
-const open = (el: HTMLElement): void => {
+// open opens a dialog, a popover or a custom overlay. A popover keeps its
+// invoker as the source, so a click on the invoker closes it again.
+const open = (el: HTMLElement, source?: HTMLElement): void => {
   if (el instanceof HTMLDialogElement) {
     el.showModal()
     return
   }
-  const popover = el as HTMLElement & { showPopover?: () => void }
+  const popover = el as HTMLElement & { showPopover?: (options?: { source?: HTMLElement }) => void }
   if (typeof popover.showPopover === 'function' && el.hasAttribute('popover')) {
-    popover.showPopover()
+    popover.showPopover({ source })
     return
   }
   el.setAttribute('data-gx-open', '')
@@ -62,8 +63,12 @@ const close = (el: HTMLElement): void => {
   el.dispatchEvent(new CustomEvent('gx:dismiss', { bubbles: true }))
 }
 
+// rovingItems leaves out the items of a nested container, such as a menu
+// inside a menubar.
 const rovingItems = (box: HTMLElement): HTMLElement[] =>
-  [...box.querySelectorAll<HTMLElement>('[data-gx-roving-item]')]
+  [...box.querySelectorAll<HTMLElement>('[data-gx-roving-item]')].filter(
+    (item) => item.closest('[data-gx-roving]') === box,
+  )
 
 const rovingAt = (items: HTMLElement[]): number => {
   const index = items.findIndex(
@@ -259,8 +264,24 @@ const typeahead = (box: HTMLElement, items: HTMLElement[], key: string): void =>
   state.text += key.toLowerCase()
   state.timer = window.setTimeout(() => typed.delete(box), 500)
   typed.set(box, state)
-  const at = items.findIndex((item) => (item.textContent ?? '').trim().toLowerCase().startsWith(state.text))
+  // A checkbox or radio item takes its text from its label.
+  const at = items.findIndex((item) =>
+    ((item.closest('label') ?? item).textContent ?? '').trim().toLowerCase().startsWith(state.text),
+  )
   if (at >= 0) setCurrent(items, at, false)
+}
+
+const menuOf = (trigger: HTMLElement): HTMLElement | null =>
+  document.getElementById(trigger.getAttribute('popovertarget') ?? '')
+
+// enterMenu opens the menu of a trigger and focuses its first item.
+const enterMenu = (trigger: HTMLElement): boolean => {
+  const menu = menuOf(trigger)
+  if (!menu) return false
+  if (!isOpen(menu)) open(menu, trigger)
+  const items = rovingItems(menu)
+  if (items.length > 0) setCurrent(items, 0, false)
+  return true
 }
 
 const onKeydown = (e: KeyboardEvent): void => {
@@ -302,13 +323,7 @@ const onKeydown = (e: KeyboardEvent): void => {
   }
   // ArrowDown on a menu trigger opens the menu and enters the item list.
   if (e.key === 'ArrowDown' && at?.hasAttribute?.('popovertarget')) {
-    const menu = document.getElementById(at.getAttribute('popovertarget') ?? '')
-    if (menu) {
-      e.preventDefault()
-      if (!isOpen(menu)) open(menu)
-      const items = rovingItems(menu)
-      if (items.length > 0) setCurrent(items, 0, false)
-    }
+    if (enterMenu(at)) e.preventDefault()
     return
   }
   const tab = at?.closest?.('[data-gx-tab]') as HTMLElement | null
@@ -330,23 +345,48 @@ const onKeydown = (e: KeyboardEvent): void => {
   if (items.length === 0) return
   const wrap = box.getAttribute('data-gx-roving') !== 'nowrap'
   const current = Math.max(0, items.indexOf(at as HTMLElement))
+  // ArrowLeft and ArrowRight in a menu of a menubar move to the next menu.
+  const side = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+  const owner = side !== 0 && box.id ? document.querySelector<HTMLElement>(`[role=menubar] [popovertarget="${box.id}"]`) : null
+  const bar = owner?.closest('[data-gx-roving]') as HTMLElement | null
+  if (owner && bar) {
+    e.preventDefault()
+    const triggers = rovingItems(bar)
+    const next = triggers[(triggers.indexOf(owner) + side + triggers.length) % triggers.length]
+    close(box)
+    setCurrent(triggers, triggers.indexOf(next), false)
+    enterMenu(next)
+    return
+  }
   switch (e.key) {
     case 'ArrowDown':
     case 'ArrowRight':
       e.preventDefault()
       setCurrent(items, current + 1, wrap)
+      break
     case 'ArrowUp':
     case 'ArrowLeft':
       e.preventDefault()
       setCurrent(items, current - 1, wrap)
+      break
     case 'Home':
       e.preventDefault()
       setCurrent(items, 0, false)
+      break
     case 'End':
       e.preventDefault()
       setCurrent(items, items.length - 1, false)
+      break
+    case 'Enter':
+      // Enter does not toggle a native checkbox or radio item.
+      if (at instanceof HTMLInputElement) {
+        e.preventDefault()
+        at.click()
+      }
+      break
     default:
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      // Space stays with the item: it activates a button or toggles an input.
+      if (e.key.length === 1 && e.key !== ' ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault()
         typeahead(box, items, e.key)
       }
@@ -354,9 +394,12 @@ const onKeydown = (e: KeyboardEvent): void => {
 }
 
 const onPointerdown = (e: Event): void => {
-  const target = e.target as Node | null
+  const target = e.target as Element | null
   document.querySelectorAll<HTMLElement>('[data-gx-dismiss]').forEach((el) => {
     if (!isOpen(el) || manual(el) || el.contains(target)) return
+    // The click on the invoker of a popover toggles it; closing it here
+    // would let that click open it again.
+    if (el.id && target?.closest?.(`[popovertarget="${el.id}"]`)) return
     close(el)
   })
 }
@@ -373,6 +416,9 @@ const onContextMenu = (e: Event): void => {
   target.style.left = `${point.clientX}px`
   target.style.top = `${point.clientY}px`
   open(target)
+  // The menu has no trigger to return to, so the keyboard starts inside it.
+  const items = rovingItems(target)
+  if (items.length > 0) setCurrent(items, 0, false)
 }
 
 // onOpenClick wires the generic overlay contract: data-gx-open points at

@@ -9,9 +9,26 @@ item: "navigation-menu"
 <Example item="navigation-menu" name="navigation-menu-default" label="Navigation Menu: NavigationMenu: Default">
 
 ```gx
-<navigationmenu.NavigationMenu>
-  <navigationmenu.NavigationMenuItem href={gx.URL("/")} active>Home</navigationmenu.NavigationMenuItem>
-  <navigationmenu.NavigationMenuItem href={gx.URL("/docs")}>Docs</navigationmenu.NavigationMenuItem>
+<navigationmenu.NavigationMenu label="Main">
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuTrigger>Products</navigationmenu.NavigationMenuTrigger>
+    <navigationmenu.NavigationMenuContent>
+      {gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
+        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
+        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
+      )}
+    </navigationmenu.NavigationMenuContent>
+  </navigationmenu.NavigationMenuItem>
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuLink href={gx.URL("/")} variant={navigationmenu.Trigger} active>
+      Home
+    </navigationmenu.NavigationMenuLink>
+  </navigationmenu.NavigationMenuItem>
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuLink href={gx.URL("/docs")} variant={navigationmenu.Trigger}>
+      Docs
+    </navigationmenu.NavigationMenuLink>
+  </navigationmenu.NavigationMenuItem>
 </navigationmenu.NavigationMenu>
 ```
 
@@ -28,18 +45,28 @@ Run the command in the app module.
 gx add navigation-menu
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `NavigationMenu.gx` | `ui/navigation-menu/NavigationMenu.gx` |
+| `NavigationMenuContent.gx` | `ui/navigation-menu/NavigationMenuContent.gx` |
 | `NavigationMenuItem.gx` | `ui/navigation-menu/NavigationMenuItem.gx` |
+| `NavigationMenuLink.gx` | `ui/navigation-menu/NavigationMenuLink.gx` |
+| `NavigationMenuTrigger.gx` | `ui/navigation-menu/NavigationMenuTrigger.gx` |
 | `NavigationMenu.fixtures.go` | `ui/navigation-menu/NavigationMenu.fixtures.go` |
-| `styles.go` | `ui/navigation-menu/styles.go` |
+| `NavigationMenuContent.fixtures.go` | `ui/navigation-menu/NavigationMenuContent.fixtures.go` |
 | `NavigationMenuItem.fixtures.go` | `ui/navigation-menu/NavigationMenuItem.fixtures.go` |
+| `NavigationMenuLink.fixtures.go` | `ui/navigation-menu/NavigationMenuLink.fixtures.go` |
+| `NavigationMenuTrigger.fixtures.go` | `ui/navigation-menu/NavigationMenuTrigger.fixtures.go` |
+| `styles.go` | `ui/navigation-menu/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -47,26 +74,73 @@ Copy each file to its path in the app. Change each import of a registry package 
 package navigationmenu
 
 props {
+  Label    string   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<nav class={gx.Cx("relative flex items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</nav>
+<nav aria-label={p.Label} class={gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class)} {...p.Attrs}>
+  <ul class="flex flex-1 list-none items-center justify-center gap-1">{p.Children}</ul>
+</nav>
+```
+
+```gx title="ui/navigation-menu/NavigationMenuContent.gx"
+package navigationmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="invisible absolute top-full left-0 z-50 w-max origin-top-left scale-95 pt-1.5 opacity-0 transition-[opacity,scale,visibility] delay-150 duration-200 motion-reduce:transition-none group-hover/navigation-menu-item:visible group-hover/navigation-menu-item:scale-100 group-hover/navigation-menu-item:opacity-100 group-focus-within/navigation-menu-item:visible group-focus-within/navigation-menu-item:scale-100 group-focus-within/navigation-menu-item:opacity-100">
+  <div class={gx.Cx("overflow-hidden rounded-md border border-border bg-popover p-2 pr-2.5 text-popover-foreground shadow", p.Class)} {...p.Attrs}>{p.Children}</div>
+</div>
 ```
 
 ```gx title="ui/navigation-menu/NavigationMenuItem.gx"
 package navigationmenu
 
 props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<li class={gx.Cx("group/navigation-menu-item relative", p.Class)} {...p.Attrs}>{p.Children}</li>
+```
+
+```gx title="ui/navigation-menu/NavigationMenuLink.gx"
+package navigationmenu
+
+props {
   Href     gx.URL
+  Variant  Variant  = Default
   Active   bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<a href={p.Href} aria-current={p.current()} class={gx.Cx("inline-flex h-9 items-center rounded-md px-4 text-sm font-medium no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>
+<a href={p.Href} aria-current={p.current()} class={gx.Cx("flex flex-col gap-1 rounded-sm p-2 text-sm no-underline transition-all outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>
+```
+
+```gx title="ui/navigation-menu/NavigationMenuTrigger.gx"
+package navigationmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" aria-haspopup="true" class={gx.Cx(triggerClass, "group-hover/navigation-menu-item:bg-accent/50 group-hover/navigation-menu-item:text-accent-foreground group-hover/navigation-menu-item:hover:bg-accent group-hover/navigation-menu-item:focus:bg-accent group-focus-within/navigation-menu-item:bg-accent/50 group-focus-within/navigation-menu-item:text-accent-foreground group-focus-within/navigation-menu-item:hover:bg-accent group-focus-within/navigation-menu-item:focus:bg-accent", p.Class)} {...p.Attrs}>
+  {p.Children}
+  <icons.ChevronDown class="relative top-[1px] ml-1 size-3 transition duration-300 group-hover/navigation-menu-item:rotate-180 group-focus-within/navigation-menu-item:rotate-180 motion-reduce:transition-none" />
+</button>
 ```
 
 ```go title="ui/navigation-menu/NavigationMenu.fixtures.go"
@@ -75,27 +149,39 @@ package navigationmenu
 import "github.com/alternayte/gx"
 
 var NavigationMenuFixtures = gx.Fixtures[NavigationMenuProps]{
-	"Default": {Children: gx.Frag(
-		NavigationMenuItem(NavigationMenuItemProps{Href: gx.URL("/"), Active: true, Children: gx.Text("Home")}),
-		NavigationMenuItem(NavigationMenuItemProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
+	"Default": {Label: "Main", Children: gx.Frag(
+		NavigationMenuItem(NavigationMenuItemProps{Children: gx.Frag(
+			NavigationMenuTrigger(NavigationMenuTriggerProps{Children: gx.Text("Products")}),
+			NavigationMenuContent(NavigationMenuContentProps{Children: gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
+				gx.El("li", nil, NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
+				gx.El("li", nil, NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
+			)}),
+		)}),
+		NavigationMenuItem(NavigationMenuItemProps{Children: NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/"), Variant: Trigger, Active: true, Children: gx.Text("Home")})}),
+		NavigationMenuItem(NavigationMenuItemProps{Children: NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/docs"), Variant: Trigger, Children: gx.Text("Docs")})}),
 	)},
 }
 ```
 
-```go title="ui/navigation-menu/styles.go"
+```go title="ui/navigation-menu/NavigationMenuContent.fixtures.go"
 package navigationmenu
 
-var activeClass = map[bool]string{
-	true:  "bg-accent/50 text-accent-foreground",
-	false: "text-foreground",
+import "github.com/alternayte/gx"
+
+var NavigationMenuContentFixtures = gx.Fixtures[NavigationMenuContentProps]{
+	"Default": {Children: gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
+		gx.El("li", nil, NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
+		gx.El("li", nil, NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
+	)},
 }
 
-// current returns the aria-current value of one item.
-func (p NavigationMenuItemProps) current() string {
-	if p.Active {
-		return "page"
-	}
-	return ""
+// NavigationMenuContentWrap renders the content under a trigger, as a page
+// uses it. Hover or focus the trigger to show the content.
+func NavigationMenuContentWrap(n gx.Node) gx.Node {
+	return NavigationMenu(NavigationMenuProps{Label: "Content", Children: NavigationMenuItem(NavigationMenuItemProps{Children: gx.Frag(
+		NavigationMenuTrigger(NavigationMenuTriggerProps{Children: gx.Text("Products")}),
+		n,
+	)})})
 }
 ```
 
@@ -105,24 +191,111 @@ package navigationmenu
 import "github.com/alternayte/gx"
 
 var NavigationMenuItemFixtures = gx.Fixtures[NavigationMenuItemProps]{
-	"Item":   {Href: gx.URL("/docs"), Children: gx.Text("Docs")},
-	"Active": {Href: gx.URL("/"), Active: true, Children: gx.Text("Home")},
+	"Link": {Children: NavigationMenuLink(NavigationMenuLinkProps{Href: gx.URL("/docs"), Variant: Trigger, Children: gx.Text("Docs")})},
+}
+
+// NavigationMenuItemWrap renders the item inside a menu, as a page uses it.
+func NavigationMenuItemWrap(n gx.Node) gx.Node {
+	return NavigationMenu(NavigationMenuProps{Label: "Item", Children: n})
+}
+```
+
+```go title="ui/navigation-menu/NavigationMenuLink.fixtures.go"
+package navigationmenu
+
+import "github.com/alternayte/gx"
+
+var NavigationMenuLinkFixtures = gx.Fixtures[NavigationMenuLinkProps]{
+	"Link":          {Href: gx.URL("/docs"), Children: gx.Text("Docs")},
+	"Active":        {Href: gx.URL("/"), Active: true, Children: gx.Text("Home")},
+	"Trigger":       {Href: gx.URL("/docs"), Variant: Trigger, Children: gx.Text("Docs")},
+	"TriggerActive": {Href: gx.URL("/"), Variant: Trigger, Active: true, Children: gx.Text("Home")},
+}
+```
+
+```go title="ui/navigation-menu/NavigationMenuTrigger.fixtures.go"
+package navigationmenu
+
+import "github.com/alternayte/gx"
+
+var NavigationMenuTriggerFixtures = gx.Fixtures[NavigationMenuTriggerProps]{"Default": {Children: gx.Text("Products")}}
+```
+
+```go title="ui/navigation-menu/styles.go"
+package navigationmenu
+
+import "github.com/alternayte/gx"
+
+// Variant is the visual style of a navigation link.
+type Variant string
+
+// The variants of navigationmenu.NavigationMenuLink. Default is a link
+// inside the content of a menu. Trigger is a link in the bar; it takes the
+// style of a trigger.
+const (
+	Default Variant = "default"
+	Trigger Variant = "trigger"
+)
+
+// triggerClass is the style of a trigger and of a link in the bar.
+const triggerClass = "inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium no-underline transition-[color,box-shadow] outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50"
+
+var variantClass = gx.Enum[Variant]{
+	Default: "",
+	Trigger: triggerClass,
+}
+
+var activeClass = map[bool]string{
+	true:  "bg-accent/50 text-accent-foreground hover:bg-accent focus:bg-accent",
+	false: "",
+}
+
+// variant returns the variant of one link; a zero value is Default.
+func (p NavigationMenuLinkProps) variant() Variant {
+	if p.Variant == "" {
+		return Default
+	}
+	return p.Variant
+}
+
+// current returns the aria-current value of one link.
+func (p NavigationMenuLinkProps) current() string {
+	if p.Active {
+		return "page"
+	}
+	return ""
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--foreground`, `--accent`, `--accent-foreground`, `--ring`.
+The theme must define these tokens: `--border`, `--background`, `--popover`, `--popover-foreground`, `--accent`, `--accent-foreground`, `--ring`.
 
 ## Usage
 
+A row of primary links and menus of links.
+
 ```gx
-<navigationmenu.NavigationMenu>
-  <navigationmenu.NavigationMenuItem href={gx.URL("/")} active={true}>Home</navigationmenu.NavigationMenuItem>
-  <navigationmenu.NavigationMenuItem href={gx.URL("/docs")}>Docs</navigationmenu.NavigationMenuItem>
+<navigationmenu.NavigationMenu label="Main">
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuTrigger>Products</navigationmenu.NavigationMenuTrigger>
+    <navigationmenu.NavigationMenuContent>
+      <ul class="grid w-48 gap-1">
+        <li><navigationmenu.NavigationMenuLink href={gx.URL("/products")}>All products</navigationmenu.NavigationMenuLink></li>
+        <li><navigationmenu.NavigationMenuLink href={gx.URL("/products/new")}>New arrivals</navigationmenu.NavigationMenuLink></li>
+      </ul>
+    </navigationmenu.NavigationMenuContent>
+  </navigationmenu.NavigationMenuItem>
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuLink href={gx.URL("/docs")} variant={navigationmenu.Trigger} active={true}>Docs</navigationmenu.NavigationMenuLink>
+  </navigationmenu.NavigationMenuItem>
 </navigationmenu.NavigationMenu>
 ```
+
+`NavigationMenu` renders the `nav` and its list. Each `NavigationMenuItem` holds one link, or one trigger with its content. A link in the bar takes `variant={navigationmenu.Trigger}`, the style of a trigger.
+
+The content is CSS only. It shows when the pointer is on the item and when focus is in the item, below its own item. It has no shared viewport and no indicator.
 
 ## Examples
 
@@ -131,30 +304,110 @@ The theme must define these tokens: `--foreground`, `--accent`, `--accent-foregr
 <Example item="navigation-menu" name="navigation-menu-default" label="Navigation Menu: NavigationMenu: Default">
 
 ```gx
-<navigationmenu.NavigationMenu>
-  <navigationmenu.NavigationMenuItem href={gx.URL("/")} active>Home</navigationmenu.NavigationMenuItem>
-  <navigationmenu.NavigationMenuItem href={gx.URL("/docs")}>Docs</navigationmenu.NavigationMenuItem>
+<navigationmenu.NavigationMenu label="Main">
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuTrigger>Products</navigationmenu.NavigationMenuTrigger>
+    <navigationmenu.NavigationMenuContent>
+      {gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
+        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
+        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
+      )}
+    </navigationmenu.NavigationMenuContent>
+  </navigationmenu.NavigationMenuItem>
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuLink href={gx.URL("/")} variant={navigationmenu.Trigger} active>
+      Home
+    </navigationmenu.NavigationMenuLink>
+  </navigationmenu.NavigationMenuItem>
+  <navigationmenu.NavigationMenuItem>
+    <navigationmenu.NavigationMenuLink href={gx.URL("/docs")} variant={navigationmenu.Trigger}>
+      Docs
+    </navigationmenu.NavigationMenuLink>
+  </navigationmenu.NavigationMenuItem>
 </navigationmenu.NavigationMenu>
 ```
 
 </Example>
 
-### NavigationMenuItem: Item
+### NavigationMenuContent: Default
 
-<Example item="navigation-menu" name="navigation-menu-item-item" label="Navigation Menu: NavigationMenuItem: Item">
+<Example item="navigation-menu" name="navigation-menu-content-default" label="Navigation Menu: NavigationMenuContent: Default">
 
 ```gx
-<navigationmenu.NavigationMenuItem href={gx.URL("/docs")}>Docs</navigationmenu.NavigationMenuItem>
+<navigationmenu.NavigationMenuContent>
+  {gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
+    gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
+    gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
+  )}
+</navigationmenu.NavigationMenuContent>
 ```
 
 </Example>
 
-### NavigationMenuItem: Active
+### NavigationMenuItem: Link
 
-<Example item="navigation-menu" name="navigation-menu-item-active" label="Navigation Menu: NavigationMenuItem: Active">
+<Example item="navigation-menu" name="navigation-menu-item-link" label="Navigation Menu: NavigationMenuItem: Link">
 
 ```gx
-<navigationmenu.NavigationMenuItem href={gx.URL("/")} active>Home</navigationmenu.NavigationMenuItem>
+<navigationmenu.NavigationMenuItem>
+  <navigationmenu.NavigationMenuLink href={gx.URL("/docs")} variant={navigationmenu.Trigger}>
+    Docs
+  </navigationmenu.NavigationMenuLink>
+</navigationmenu.NavigationMenuItem>
+```
+
+</Example>
+
+### NavigationMenuLink: Link
+
+<Example item="navigation-menu" name="navigation-menu-link-link" label="Navigation Menu: NavigationMenuLink: Link">
+
+```gx
+<navigationmenu.NavigationMenuLink href={gx.URL("/docs")}>Docs</navigationmenu.NavigationMenuLink>
+```
+
+</Example>
+
+### NavigationMenuLink: Active
+
+<Example item="navigation-menu" name="navigation-menu-link-active" label="Navigation Menu: NavigationMenuLink: Active">
+
+```gx
+<navigationmenu.NavigationMenuLink href={gx.URL("/")} active>Home</navigationmenu.NavigationMenuLink>
+```
+
+</Example>
+
+### NavigationMenuLink: Trigger
+
+<Example item="navigation-menu" name="navigation-menu-link-trigger" label="Navigation Menu: NavigationMenuLink: Trigger">
+
+```gx
+<navigationmenu.NavigationMenuLink href={gx.URL("/docs")} variant={navigationmenu.Trigger}>
+  Docs
+</navigationmenu.NavigationMenuLink>
+```
+
+</Example>
+
+### NavigationMenuLink: Trigger active
+
+<Example item="navigation-menu" name="navigation-menu-link-trigger-active" label="Navigation Menu: NavigationMenuLink: Trigger active">
+
+```gx
+<navigationmenu.NavigationMenuLink href={gx.URL("/")} variant={navigationmenu.Trigger} active>
+  Home
+</navigationmenu.NavigationMenuLink>
+```
+
+</Example>
+
+### NavigationMenuTrigger: Default
+
+<Example item="navigation-menu" name="navigation-menu-trigger-default" label="Navigation Menu: NavigationMenuTrigger: Default">
+
+```gx
+<navigationmenu.NavigationMenuTrigger>Products</navigationmenu.NavigationMenuTrigger>
 ```
 
 </Example>
@@ -166,12 +419,13 @@ The theme must define these tokens: `--foreground`, `--accent`, `--accent-foregr
 
 - Pass a typed route to `Href`.
 - Mark the current page with `Active`.
+- Give the menu a `Label` when a page has more than one `nav`.
 
 </docs.Card>
 <docs.Card title="Don't">
 
 - Do not use it for a footer row of links.
-- Do not mix it with a menubar on one row.
+- Do not put an action in the content. Use a dropdown menu.
 
 </docs.Card>
 </docs.CardGrid>
@@ -180,5 +434,6 @@ The theme must define these tokens: `--foreground`, `--accent`, `--accent-foregr
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves between the links. |
+| Tab | Moves between the links and triggers. The content of a focused trigger shows. |
+| Tab | From a trigger, moves into its content. The content closes when focus leaves the item. |
 | Enter | Follows the focused link. |

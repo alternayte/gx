@@ -62,6 +62,27 @@ func TestREQ_AUT_02_CrossPackageDefaultQualified(t *testing.T) {
 	}
 }
 
+// TestREQ_AUT_02_CrossPackageDefaultFromThirdPackage covers a default that
+// names a third package: the call site keeps the qualifier and imports it.
+func TestREQ_AUT_02_CrossPackageDefaultFromThirdPackage(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":            moduleWithGx(t),
+		"ui/tone/tone.go":   "package tone\n\ntype Tone string\n\nconst Soft Tone = \"soft\"\n",
+		"ui/badge/Badge.gx": "package badge\n\nimport \"app/ui/tone\"\n\nprops {\n  Label string\n  Tone  tone.Tone = tone.Soft\n}\n\n<span>{p.Label}</span>\n",
+		"pages/Home.gx":     "package pages\n\nimport \"app/ui/badge\"\n\n<badge.Badge label=\"New\" />\n",
+	})
+	files := generateFiles(t, dir)
+	home := string(files[filepath.Join(dir, "pages/Home_gx.go")])
+	if strings.Contains(home, "badge.tone") {
+		t.Fatalf("Home_gx.go qualifies the import name of the default:\n%s", home)
+	}
+	for _, want := range []string{"Tone: tone.Soft", `tone "app/ui/tone"`} {
+		if !strings.Contains(home, want) {
+			t.Fatalf("Home_gx.go lacks %q:\n%s", want, home)
+		}
+	}
+}
+
 func TestREQ_AUT_02_GeneratedCodeRenders(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":          moduleWithGx(t),

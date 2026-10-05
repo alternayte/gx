@@ -1,0 +1,7 @@
+package selectbox
+
+props {
+  Attrs gx.Attrs = nil
+}
+
+<hr {...p.Attrs} />

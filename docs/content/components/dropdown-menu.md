@@ -9,13 +9,31 @@ item: "dropdown-menu"
 <Example item="dropdown-menu" name="dropdown-menu-menu" label="Dropdown Menu: DropdownMenu: Menu">
 
 ```gx
-<dropdownmenu.DropdownMenu id="demo-dropdown">
+<dropdownmenu.DropdownMenu id="demo-dropdown" class="w-56">
   <dropdownmenu.DropdownMenuLabel>My account</dropdownmenu.DropdownMenuLabel>
   <dropdownmenu.DropdownMenuSeparator />
-  <dropdownmenu.DropdownMenuItem>Profile</dropdownmenu.DropdownMenuItem>
-  <dropdownmenu.DropdownMenuLink href={gx.URL("/docs")}>Documentation</dropdownmenu.DropdownMenuLink>
+  <dropdownmenu.DropdownMenuGroup label="Account">
+    <dropdownmenu.DropdownMenuItem>Profile</dropdownmenu.DropdownMenuItem>
+    <dropdownmenu.DropdownMenuItem>
+      Settings
+      <dropdownmenu.DropdownMenuShortcut>⌘S</dropdownmenu.DropdownMenuShortcut>
+    </dropdownmenu.DropdownMenuItem>
+    <dropdownmenu.DropdownMenuLink href={gx.URL("/docs")}>Documentation</dropdownmenu.DropdownMenuLink>
+  </dropdownmenu.DropdownMenuGroup>
   <dropdownmenu.DropdownMenuSeparator />
-  <dropdownmenu.DropdownMenuItem>Sign out</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuCheckboxItem name="status-bar" checked>Status bar</dropdownmenu.DropdownMenuCheckboxItem>
+  <dropdownmenu.DropdownMenuCheckboxItem name="panel">Panel</dropdownmenu.DropdownMenuCheckboxItem>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuRadioGroup label="Position">
+    <dropdownmenu.DropdownMenuRadioItem name="demo-dropdown-position" value="top" checked>
+      Top
+    </dropdownmenu.DropdownMenuRadioItem>
+    <dropdownmenu.DropdownMenuRadioItem name="demo-dropdown-position" value="bottom">
+      Bottom
+    </dropdownmenu.DropdownMenuRadioItem>
+  </dropdownmenu.DropdownMenuRadioGroup>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Sign out</dropdownmenu.DropdownMenuItem>
 </dropdownmenu.DropdownMenu>
 <dropdownmenu.DropdownMenuTrigger id="demo-dropdown">Open menu</dropdownmenu.DropdownMenuTrigger>
 ```
@@ -33,25 +51,40 @@ Run the command in the app module.
 gx add dropdown-menu
 ```
 
+The command also installs [`button`](/components/button/) and [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `DropdownMenu.gx` | `ui/dropdown-menu/DropdownMenu.gx` |
-| `DropdownMenuTrigger.gx` | `ui/dropdown-menu/DropdownMenuTrigger.gx` |
+| `DropdownMenuCheckboxItem.gx` | `ui/dropdown-menu/DropdownMenuCheckboxItem.gx` |
+| `DropdownMenuGroup.gx` | `ui/dropdown-menu/DropdownMenuGroup.gx` |
 | `DropdownMenuItem.gx` | `ui/dropdown-menu/DropdownMenuItem.gx` |
-| `DropdownMenuLink.gx` | `ui/dropdown-menu/DropdownMenuLink.gx` |
-| `DropdownMenuSeparator.gx` | `ui/dropdown-menu/DropdownMenuSeparator.gx` |
 | `DropdownMenuLabel.gx` | `ui/dropdown-menu/DropdownMenuLabel.gx` |
+| `DropdownMenuLink.gx` | `ui/dropdown-menu/DropdownMenuLink.gx` |
+| `DropdownMenuRadioGroup.gx` | `ui/dropdown-menu/DropdownMenuRadioGroup.gx` |
+| `DropdownMenuRadioItem.gx` | `ui/dropdown-menu/DropdownMenuRadioItem.gx` |
+| `DropdownMenuSeparator.gx` | `ui/dropdown-menu/DropdownMenuSeparator.gx` |
+| `DropdownMenuShortcut.gx` | `ui/dropdown-menu/DropdownMenuShortcut.gx` |
+| `DropdownMenuTrigger.gx` | `ui/dropdown-menu/DropdownMenuTrigger.gx` |
 | `DropdownMenu.fixtures.go` | `ui/dropdown-menu/DropdownMenu.fixtures.go` |
+| `DropdownMenuCheckboxItem.fixtures.go` | `ui/dropdown-menu/DropdownMenuCheckboxItem.fixtures.go` |
+| `DropdownMenuGroup.fixtures.go` | `ui/dropdown-menu/DropdownMenuGroup.fixtures.go` |
 | `DropdownMenuItem.fixtures.go` | `ui/dropdown-menu/DropdownMenuItem.fixtures.go` |
 | `DropdownMenuLabel.fixtures.go` | `ui/dropdown-menu/DropdownMenuLabel.fixtures.go` |
 | `DropdownMenuLink.fixtures.go` | `ui/dropdown-menu/DropdownMenuLink.fixtures.go` |
+| `DropdownMenuRadioGroup.fixtures.go` | `ui/dropdown-menu/DropdownMenuRadioGroup.fixtures.go` |
+| `DropdownMenuRadioItem.fixtures.go` | `ui/dropdown-menu/DropdownMenuRadioItem.fixtures.go` |
 | `DropdownMenuSeparator.fixtures.go` | `ui/dropdown-menu/DropdownMenuSeparator.fixtures.go` |
+| `DropdownMenuShortcut.fixtures.go` | `ui/dropdown-menu/DropdownMenuShortcut.fixtures.go` |
 | `DropdownMenuTrigger.fixtures.go` | `ui/dropdown-menu/DropdownMenuTrigger.fixtures.go` |
+| `styles.go` | `ui/dropdown-menu/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`button`](/components/button/) and [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -60,37 +93,76 @@ package dropdownmenu
 
 props {
   Id       string
+  Align    Align    = Center
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" style={p.style()} class={gx.Cx("z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
-```gx title="ui/dropdown-menu/DropdownMenuTrigger.gx"
+```gx title="ui/dropdown-menu/DropdownMenuCheckboxItem.gx"
+package dropdownmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Name     string   = ""
+  Value    string   = "on"
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="checkbox" role="menuitemcheckbox" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Check class="size-4" /></span>
+  {p.Children}
+</label>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuGroup.gx"
 package dropdownmenu
 
 props {
-  Id       string
+  Label    string   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<button type="button" popovertarget={p.Id} aria-haspopup="menu" class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/dropdown-menu/DropdownMenuItem.gx"
 package dropdownmenu
 
 props {
+  Variant  Variant  = Default
+  Inset    bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<button type="button" role="menuitem" tabindex="-1" data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button type="button" role="menuitem" tabindex="-1" disabled={p.Disabled} data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>{p.Children}</button>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuLabel.gx"
+package dropdownmenu
+
+props {
+  Inset    bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="presentation" class={gx.Cx("px-2 py-1.5 text-sm font-medium", insetClass[p.Inset], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/dropdown-menu/DropdownMenuLink.gx"
@@ -103,7 +175,42 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
+<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuRadioGroup.gx"
+package dropdownmenu
+
+props {
+  Label    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuRadioItem.gx"
+package dropdownmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Name     string   = ""
+  Value    string   = ""
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="radio" role="menuitemradio" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Circle class="size-2 *:fill-current" /></span>
+  {p.Children}
+</label>
 ```
 
 ```gx title="ui/dropdown-menu/DropdownMenuSeparator.gx"
@@ -117,7 +224,7 @@ props {
 <div role="separator" class={gx.Cx("-mx-1 my-1 h-px bg-border", p.Class)} {...p.Attrs}></div>
 ```
 
-```gx title="ui/dropdown-menu/DropdownMenuLabel.gx"
+```gx title="ui/dropdown-menu/DropdownMenuShortcut.gx"
 package dropdownmenu
 
 props {
@@ -126,7 +233,24 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div role="presentation" class={gx.Cx("px-2 py-1.5 text-sm font-medium", p.Class)} {...p.Attrs}>{p.Children}</div>
+<span class={gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuTrigger.gx"
+package dropdownmenu
+
+import "github.com/alternayte/gx/registry/button"
+
+props {
+  Id       string
+  Variant  button.Variant = button.Outline
+  Size     button.Size    = button.Md
+  Class    string         = ""
+  Children gx.Node
+  Attrs    gx.Attrs       = nil
+}
+
+<button.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}>{p.Children}</button.Button>
 ```
 
 ```go title="ui/dropdown-menu/DropdownMenu.fixtures.go"
@@ -135,14 +259,73 @@ package dropdownmenu
 import "github.com/alternayte/gx"
 
 var DropdownMenuFixtures = gx.Fixtures[DropdownMenuProps]{
-	"Menu": {Id: "demo-dropdown", Children: gx.Frag(
+	"Menu": {Id: "demo-dropdown", Class: "w-56", Children: gx.Frag(
 		DropdownMenuLabel(DropdownMenuLabelProps{Children: gx.Text("My account")}),
 		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
-		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Profile")}),
-		DropdownMenuLink(DropdownMenuLinkProps{Href: gx.URL("/docs"), Children: gx.Text("Documentation")}),
+		DropdownMenuGroup(DropdownMenuGroupProps{Label: "Account", Children: gx.Frag(
+			DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Profile")}),
+			DropdownMenuItem(DropdownMenuItemProps{Children: gx.Frag(
+				gx.Text("Settings"),
+				DropdownMenuShortcut(DropdownMenuShortcutProps{Children: gx.Text("⌘S")}),
+			)}),
+			DropdownMenuLink(DropdownMenuLinkProps{Href: gx.URL("/docs"), Children: gx.Text("Documentation")}),
+		)}),
 		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
-		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Sign out")}),
+		DropdownMenuCheckboxItem(DropdownMenuCheckboxItemProps{Name: "status-bar", Checked: true, Children: gx.Text("Status bar")}),
+		DropdownMenuCheckboxItem(DropdownMenuCheckboxItemProps{Name: "panel", Children: gx.Text("Panel")}),
+		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+		DropdownMenuRadioGroup(DropdownMenuRadioGroupProps{Label: "Position", Children: gx.Frag(
+			DropdownMenuRadioItem(DropdownMenuRadioItemProps{Name: "demo-dropdown-position", Value: "top", Checked: true, Children: gx.Text("Top")}),
+			DropdownMenuRadioItem(DropdownMenuRadioItemProps{Name: "demo-dropdown-position", Value: "bottom", Children: gx.Text("Bottom")}),
+		)}),
+		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+		DropdownMenuItem(DropdownMenuItemProps{Variant: Destructive, Children: gx.Text("Sign out")}),
 	)},
+	"End": {Id: "demo-dropdown-end", Align: End, Children: gx.Frag(
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Rename")}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Duplicate")}),
+		DropdownMenuItem(DropdownMenuItemProps{Disabled: true, Children: gx.Text("Archive")}),
+		DropdownMenuItem(DropdownMenuItemProps{Variant: Destructive, Children: gx.Text("Delete")}),
+	)},
+	"Start": {Id: "demo-dropdown-start", Align: Start, Children: gx.Frag(
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Rename")}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Duplicate")}),
+	)},
+}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuCheckboxItem.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuCheckboxItemFixtures = gx.Fixtures[DropdownMenuCheckboxItemProps]{
+	"Checked":   {Name: "status-bar", Checked: true, Children: gx.Text("Status bar")},
+	"Unchecked": {Name: "panel", Children: gx.Text("Panel")},
+	"Disabled":  {Name: "activity", Disabled: true, Children: gx.Text("Activity bar")},
+}
+
+// DropdownMenuCheckboxItemWrap renders the item inside a menu, as a page uses it.
+func DropdownMenuCheckboxItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuGroup.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuGroupFixtures = gx.Fixtures[DropdownMenuGroupProps]{
+	"Default": {Label: "Account", Children: gx.Frag(
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Profile")}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Billing")}),
+	)},
+}
+
+// DropdownMenuGroupWrap renders the group inside a menu, as a page uses it.
+func DropdownMenuGroupWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
 }
 ```
 
@@ -151,11 +334,16 @@ package dropdownmenu
 
 import "github.com/alternayte/gx"
 
-var DropdownMenuItemFixtures = gx.Fixtures[DropdownMenuItemProps]{"Item": {Children: gx.Text("Profile")}}
+var DropdownMenuItemFixtures = gx.Fixtures[DropdownMenuItemProps]{
+	"Item":        {Children: gx.Text("Profile")},
+	"Inset":       {Inset: true, Children: gx.Text("Profile")},
+	"Destructive": {Variant: Destructive, Children: gx.Text("Delete")},
+	"Disabled":    {Disabled: true, Children: gx.Text("Profile")},
+}
 
 // DropdownMenuItemWrap renders the item inside a menu, as a page uses it.
 func DropdownMenuItemWrap(n gx.Node) gx.Node {
-	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}}, n)
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
 }
 ```
 
@@ -164,7 +352,10 @@ package dropdownmenu
 
 import "github.com/alternayte/gx"
 
-var DropdownMenuLabelFixtures = gx.Fixtures[DropdownMenuLabelProps]{"Label": {Children: gx.Text("Label")}}
+var DropdownMenuLabelFixtures = gx.Fixtures[DropdownMenuLabelProps]{
+	"Label": {Children: gx.Text("My account")},
+	"Inset": {Inset: true, Children: gx.Text("My account")},
+}
 ```
 
 ```go title="ui/dropdown-menu/DropdownMenuLink.fixtures.go"
@@ -176,7 +367,41 @@ var DropdownMenuLinkFixtures = gx.Fixtures[DropdownMenuLinkProps]{"Link": {Href:
 
 // DropdownMenuLinkWrap renders the item inside a menu, as a page uses it.
 func DropdownMenuLinkWrap(n gx.Node) gx.Node {
-	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}}, n)
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuRadioGroup.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuRadioGroupFixtures = gx.Fixtures[DropdownMenuRadioGroupProps]{
+	"Default": {Label: "Position", Children: gx.Frag(
+		DropdownMenuRadioItem(DropdownMenuRadioItemProps{Name: "dropdown-menu-group-position", Value: "top", Checked: true, Children: gx.Text("Top")}),
+		DropdownMenuRadioItem(DropdownMenuRadioItemProps{Name: "dropdown-menu-group-position", Value: "bottom", Children: gx.Text("Bottom")}),
+	)},
+}
+
+// DropdownMenuRadioGroupWrap renders the group inside a menu, as a page uses it.
+func DropdownMenuRadioGroupWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuRadioItem.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuRadioItemFixtures = gx.Fixtures[DropdownMenuRadioItemProps]{
+	"Checked":   {Name: "dropdown-menu-item-checked", Value: "top", Checked: true, Children: gx.Text("Top")},
+	"Unchecked": {Name: "dropdown-menu-item-unchecked", Value: "bottom", Children: gx.Text("Bottom")},
+}
+
+// DropdownMenuRadioItemWrap renders the item inside a menu, as a page uses it.
+func DropdownMenuRadioItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
 }
 ```
 
@@ -188,30 +413,171 @@ import "github.com/alternayte/gx"
 var DropdownMenuSeparatorFixtures = gx.Fixtures[DropdownMenuSeparatorProps]{"Default": {}}
 ```
 
-```go title="ui/dropdown-menu/DropdownMenuTrigger.fixtures.go"
+```go title="ui/dropdown-menu/DropdownMenuShortcut.fixtures.go"
 package dropdownmenu
 
 import "github.com/alternayte/gx"
 
-var DropdownMenuTriggerFixtures = gx.Fixtures[DropdownMenuTriggerProps]{"Default": {Id: "demo-dropdown", Children: gx.Text("Open menu")}}
+var DropdownMenuShortcutFixtures = gx.Fixtures[DropdownMenuShortcutProps]{"Default": {Children: gx.Text("⌘K")}}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuTrigger.fixtures.go"
+package dropdownmenu
+
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
+
+var DropdownMenuTriggerFixtures = gx.Fixtures[DropdownMenuTriggerProps]{
+	"Default": {Id: "demo-dropdown", Children: gx.Text("Open menu")},
+	"Ghost":   {Id: "demo-dropdown-end", Variant: button.Ghost, Size: button.Sm, Class: "ml-32", Children: gx.Text("Open at the end")},
+	"Start":   {Id: "demo-dropdown-start", Variant: button.Secondary, Children: gx.Text("Open at the start")},
+}
+```
+
+```go title="ui/dropdown-menu/styles.go"
+package dropdownmenu
+
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
+
+// Align is the edge of the trigger that the menu lines up with.
+type Align string
+
+// The alignments of dropdownmenu.DropdownMenu.
+const (
+	Center Align = "center"
+	Start  Align = "start"
+	End    Align = "end"
+)
+
+// The menu zooms from the edge that touches the trigger.
+var alignClass = gx.Enum[Align]{
+	Center: "origin-top",
+	Start:  "origin-top-left",
+	End:    "origin-top-right",
+}
+
+var alignStyle = gx.Enum[Align]{
+	Center: "justify-self: anchor-center",
+	Start:  "left: anchor(left)",
+	End:    "right: anchor(right)",
+}
+
+// align returns the alignment of one menu; a zero value is Center.
+func (p DropdownMenuProps) align() Align {
+	if p.Align == "" {
+		return Center
+	}
+	return p.Align
+}
+
+// style anchors the menu below its trigger. A browser without anchor
+// positioning keeps the menu at its place in the document flow.
+func (p DropdownMenuProps) style() gx.Style {
+	return gx.Style("position-anchor: --gx-menu-" + p.Id + "; inset: auto; margin: 0.25rem 0 0; top: anchor(bottom); " + alignStyle[p.align()])
+}
+
+// variant returns the button variant of one trigger; a zero value is
+// button.Outline.
+func (p DropdownMenuTriggerProps) variant() button.Variant {
+	if p.Variant == "" {
+		return button.Outline
+	}
+	return p.Variant
+}
+
+// attrs wires the trigger to its menu and names it as the anchor.
+func (p DropdownMenuTriggerProps) attrs() gx.Attrs {
+	return gx.JoinAttrs(gx.Attrs{
+		{Key: "popovertarget", Value: p.Id},
+		{Key: "aria-haspopup", Value: "menu"},
+		{Key: "style", Value: "anchor-name: --gx-menu-" + p.Id, Kind: gx.AttrStyle},
+	}, p.Attrs)
+}
+
+// Variant is the visual style of a menu item.
+type Variant string
+
+// The variants of dropdownmenu.DropdownMenuItem.
+const (
+	Default     Variant = "default"
+	Destructive Variant = "destructive"
+)
+
+var variantClass = gx.Enum[Variant]{
+	Default:     "",
+	Destructive: "text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive!",
+}
+
+// variant returns the variant of one item; a zero value is Default.
+func (p DropdownMenuItemProps) variant() Variant {
+	if p.Variant == "" {
+		return Default
+	}
+	return p.Variant
+}
+
+// insetClass lines an item or a label up with the checkbox and radio items.
+var insetClass = map[bool]string{
+	true:  "pl-8",
+	false: "",
+}
+
+// rovingItem marks an item for the roving tabindex of its menu. A disabled
+// item is not marked, so the arrow keys pass it.
+func rovingItem(disabled bool) gx.Attrs {
+	return gx.Attrs{gx.Bool("data-gx-roving-item", !disabled)}
+}
+
+// motionClass fades and zooms the menu from 95% and slides it 2 units from
+// the trigger. Safari 26.0 never ends a display transition on an element
+// that CSS anchor positioning places, which leaves a closed menu rendered.
+// The @supports test matches every engine but WebKit, so Safari closes the
+// menu at once and still animates the enter.
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--accent`, `--accent-foreground`, `--muted-foreground`.
+The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--accent`, `--accent-foreground`, `--muted-foreground`, `--destructive`.
 
 ## Usage
 
 ```gx
 <dropdownmenu.DropdownMenuTrigger id="account">Account</dropdownmenu.DropdownMenuTrigger>
-<dropdownmenu.DropdownMenu id="account">
+<dropdownmenu.DropdownMenu id="account" class="w-56">
   <dropdownmenu.DropdownMenuLabel>My account</dropdownmenu.DropdownMenuLabel>
   <dropdownmenu.DropdownMenuSeparator />
-  <dropdownmenu.DropdownMenuLink href={gx.URL("/profile")}>Profile</dropdownmenu.DropdownMenuLink>
-  <dropdownmenu.DropdownMenuItem>Sign out</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuGroup label="Account">
+    <dropdownmenu.DropdownMenuLink href={gx.URL("/profile")}>Profile</dropdownmenu.DropdownMenuLink>
+    <dropdownmenu.DropdownMenuItem>
+      Settings
+      <dropdownmenu.DropdownMenuShortcut>⌘S</dropdownmenu.DropdownMenuShortcut>
+    </dropdownmenu.DropdownMenuItem>
+  </dropdownmenu.DropdownMenuGroup>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuCheckboxItem name="status-bar" checked={true}>Status bar</dropdownmenu.DropdownMenuCheckboxItem>
+  <dropdownmenu.DropdownMenuRadioGroup label="Position">
+    <dropdownmenu.DropdownMenuRadioItem name="position" value="top" checked={true}>Top</dropdownmenu.DropdownMenuRadioItem>
+    <dropdownmenu.DropdownMenuRadioItem name="position" value="bottom">Bottom</dropdownmenu.DropdownMenuRadioItem>
+  </dropdownmenu.DropdownMenuRadioGroup>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Sign out</dropdownmenu.DropdownMenuItem>
 </dropdownmenu.DropdownMenu>
 ```
+
+The menu uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`. `Align` lines the menu up with the trigger: `dropdownmenu.Center` (default), `dropdownmenu.Start` or `dropdownmenu.End`. A browser without anchor positioning shows the menu at its place in the document flow.
+
+A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
+
+The menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
+
+The item has no sub-menu part.
 
 ## Examples
 
@@ -220,15 +586,110 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 <Example item="dropdown-menu" name="dropdown-menu-menu" label="Dropdown Menu: DropdownMenu: Menu">
 
 ```gx
-<dropdownmenu.DropdownMenu id="demo-dropdown">
+<dropdownmenu.DropdownMenu id="demo-dropdown" class="w-56">
   <dropdownmenu.DropdownMenuLabel>My account</dropdownmenu.DropdownMenuLabel>
   <dropdownmenu.DropdownMenuSeparator />
-  <dropdownmenu.DropdownMenuItem>Profile</dropdownmenu.DropdownMenuItem>
-  <dropdownmenu.DropdownMenuLink href={gx.URL("/docs")}>Documentation</dropdownmenu.DropdownMenuLink>
+  <dropdownmenu.DropdownMenuGroup label="Account">
+    <dropdownmenu.DropdownMenuItem>Profile</dropdownmenu.DropdownMenuItem>
+    <dropdownmenu.DropdownMenuItem>
+      Settings
+      <dropdownmenu.DropdownMenuShortcut>⌘S</dropdownmenu.DropdownMenuShortcut>
+    </dropdownmenu.DropdownMenuItem>
+    <dropdownmenu.DropdownMenuLink href={gx.URL("/docs")}>Documentation</dropdownmenu.DropdownMenuLink>
+  </dropdownmenu.DropdownMenuGroup>
   <dropdownmenu.DropdownMenuSeparator />
-  <dropdownmenu.DropdownMenuItem>Sign out</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuCheckboxItem name="status-bar" checked>Status bar</dropdownmenu.DropdownMenuCheckboxItem>
+  <dropdownmenu.DropdownMenuCheckboxItem name="panel">Panel</dropdownmenu.DropdownMenuCheckboxItem>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuRadioGroup label="Position">
+    <dropdownmenu.DropdownMenuRadioItem name="demo-dropdown-position" value="top" checked>
+      Top
+    </dropdownmenu.DropdownMenuRadioItem>
+    <dropdownmenu.DropdownMenuRadioItem name="demo-dropdown-position" value="bottom">
+      Bottom
+    </dropdownmenu.DropdownMenuRadioItem>
+  </dropdownmenu.DropdownMenuRadioGroup>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Sign out</dropdownmenu.DropdownMenuItem>
 </dropdownmenu.DropdownMenu>
 <dropdownmenu.DropdownMenuTrigger id="demo-dropdown">Open menu</dropdownmenu.DropdownMenuTrigger>
+```
+
+</Example>
+
+### DropdownMenu: End
+
+<Example item="dropdown-menu" name="dropdown-menu-end" label="Dropdown Menu: DropdownMenu: End">
+
+```gx
+<dropdownmenu.DropdownMenu id="demo-dropdown-end" align={dropdownmenu.End}>
+  <dropdownmenu.DropdownMenuItem>Rename</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuItem>Duplicate</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuItem disabled>Archive</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Delete</dropdownmenu.DropdownMenuItem>
+</dropdownmenu.DropdownMenu>
+<dropdownmenu.DropdownMenuTrigger id="demo-dropdown-end" variant={button.Ghost} size={button.Sm} class="ml-32">
+  Open at the end
+</dropdownmenu.DropdownMenuTrigger>
+```
+
+</Example>
+
+### DropdownMenu: Start
+
+<Example item="dropdown-menu" name="dropdown-menu-start" label="Dropdown Menu: DropdownMenu: Start">
+
+```gx
+<dropdownmenu.DropdownMenu id="demo-dropdown-start" align={dropdownmenu.Start}>
+  <dropdownmenu.DropdownMenuItem>Rename</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuItem>Duplicate</dropdownmenu.DropdownMenuItem>
+</dropdownmenu.DropdownMenu>
+<dropdownmenu.DropdownMenuTrigger id="demo-dropdown-start" variant={button.Secondary}>
+  Open at the start
+</dropdownmenu.DropdownMenuTrigger>
+```
+
+</Example>
+
+### DropdownMenuCheckboxItem: Checked
+
+<Example item="dropdown-menu" name="dropdown-menu-checkbox-item-checked" label="Dropdown Menu: DropdownMenuCheckboxItem: Checked">
+
+```gx
+<dropdownmenu.DropdownMenuCheckboxItem name="status-bar" checked>Status bar</dropdownmenu.DropdownMenuCheckboxItem>
+```
+
+</Example>
+
+### DropdownMenuCheckboxItem: Unchecked
+
+<Example item="dropdown-menu" name="dropdown-menu-checkbox-item-unchecked" label="Dropdown Menu: DropdownMenuCheckboxItem: Unchecked">
+
+```gx
+<dropdownmenu.DropdownMenuCheckboxItem name="panel">Panel</dropdownmenu.DropdownMenuCheckboxItem>
+```
+
+</Example>
+
+### DropdownMenuCheckboxItem: Disabled
+
+<Example item="dropdown-menu" name="dropdown-menu-checkbox-item-disabled" label="Dropdown Menu: DropdownMenuCheckboxItem: Disabled">
+
+```gx
+<dropdownmenu.DropdownMenuCheckboxItem name="activity" disabled>Activity bar</dropdownmenu.DropdownMenuCheckboxItem>
+```
+
+</Example>
+
+### DropdownMenuGroup: Default
+
+<Example item="dropdown-menu" name="dropdown-menu-group-default" label="Dropdown Menu: DropdownMenuGroup: Default">
+
+```gx
+<dropdownmenu.DropdownMenuGroup label="Account">
+  <dropdownmenu.DropdownMenuItem>Profile</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuItem>Billing</dropdownmenu.DropdownMenuItem>
+</dropdownmenu.DropdownMenuGroup>
 ```
 
 </Example>
@@ -243,12 +704,52 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 </Example>
 
+### DropdownMenuItem: Inset
+
+<Example item="dropdown-menu" name="dropdown-menu-item-inset" label="Dropdown Menu: DropdownMenuItem: Inset">
+
+```gx
+<dropdownmenu.DropdownMenuItem inset>Profile</dropdownmenu.DropdownMenuItem>
+```
+
+</Example>
+
+### DropdownMenuItem: Destructive
+
+<Example item="dropdown-menu" name="dropdown-menu-item-destructive" label="Dropdown Menu: DropdownMenuItem: Destructive">
+
+```gx
+<dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Delete</dropdownmenu.DropdownMenuItem>
+```
+
+</Example>
+
+### DropdownMenuItem: Disabled
+
+<Example item="dropdown-menu" name="dropdown-menu-item-disabled" label="Dropdown Menu: DropdownMenuItem: Disabled">
+
+```gx
+<dropdownmenu.DropdownMenuItem disabled>Profile</dropdownmenu.DropdownMenuItem>
+```
+
+</Example>
+
 ### DropdownMenuLabel: Label
 
 <Example item="dropdown-menu" name="dropdown-menu-label-label" label="Dropdown Menu: DropdownMenuLabel: Label">
 
 ```gx
-<dropdownmenu.DropdownMenuLabel>Label</dropdownmenu.DropdownMenuLabel>
+<dropdownmenu.DropdownMenuLabel>My account</dropdownmenu.DropdownMenuLabel>
+```
+
+</Example>
+
+### DropdownMenuLabel: Inset
+
+<Example item="dropdown-menu" name="dropdown-menu-label-inset" label="Dropdown Menu: DropdownMenuLabel: Inset">
+
+```gx
+<dropdownmenu.DropdownMenuLabel inset>My account</dropdownmenu.DropdownMenuLabel>
 ```
 
 </Example>
@@ -263,6 +764,47 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 </Example>
 
+### DropdownMenuRadioGroup: Default
+
+<Example item="dropdown-menu" name="dropdown-menu-radio-group-default" label="Dropdown Menu: DropdownMenuRadioGroup: Default">
+
+```gx
+<dropdownmenu.DropdownMenuRadioGroup label="Position">
+  <dropdownmenu.DropdownMenuRadioItem name="dropdown-menu-group-position" value="top" checked>
+    Top
+  </dropdownmenu.DropdownMenuRadioItem>
+  <dropdownmenu.DropdownMenuRadioItem name="dropdown-menu-group-position" value="bottom">
+    Bottom
+  </dropdownmenu.DropdownMenuRadioItem>
+</dropdownmenu.DropdownMenuRadioGroup>
+```
+
+</Example>
+
+### DropdownMenuRadioItem: Checked
+
+<Example item="dropdown-menu" name="dropdown-menu-radio-item-checked" label="Dropdown Menu: DropdownMenuRadioItem: Checked">
+
+```gx
+<dropdownmenu.DropdownMenuRadioItem name="dropdown-menu-item-checked" value="top" checked>
+  Top
+</dropdownmenu.DropdownMenuRadioItem>
+```
+
+</Example>
+
+### DropdownMenuRadioItem: Unchecked
+
+<Example item="dropdown-menu" name="dropdown-menu-radio-item-unchecked" label="Dropdown Menu: DropdownMenuRadioItem: Unchecked">
+
+```gx
+<dropdownmenu.DropdownMenuRadioItem name="dropdown-menu-item-unchecked" value="bottom">
+  Bottom
+</dropdownmenu.DropdownMenuRadioItem>
+```
+
+</Example>
+
 ### DropdownMenuSeparator: Default
 
 <Example item="dropdown-menu" name="dropdown-menu-separator-default" label="Dropdown Menu: DropdownMenuSeparator: Default">
@@ -273,12 +815,24 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 </Example>
 
+### DropdownMenuShortcut: Default
+
+<Example item="dropdown-menu" name="dropdown-menu-shortcut-default" label="Dropdown Menu: DropdownMenuShortcut: Default">
+
+```gx
+<dropdownmenu.DropdownMenuShortcut>⌘K</dropdownmenu.DropdownMenuShortcut>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Keep one word or one short phrase per item.
+- Give the menu and the trigger the same `Id`.
+- Put the menu directly after its trigger in the markup.
+- Give the radio items of one group the same `Name`.
 - Put destructive actions last, after a separator.
 
 </docs.Card>
@@ -294,7 +848,11 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 | Key | Action |
 | --- | --- |
-| Enter, Space | Opens the menu. |
-| Arrow keys | Moves through the items. |
-| Enter | Runs the focused item. |
-| Escape | Closes the menu. |
+| Enter, Space | Opens the menu from the trigger. |
+| Down | Opens the menu from the trigger and moves to the first item. |
+| Up, Down | Moves through the items. A disabled item is passed. |
+| Home, End | Moves to the first or last item. |
+| A letter | Moves to the next item that starts with the typed text. |
+| Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |
+| Space | Runs the focused item. Toggles a checkbox or radio item. |
+| Escape | Closes the menu and returns focus to the trigger. |

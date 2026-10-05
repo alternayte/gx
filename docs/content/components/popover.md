@@ -9,7 +9,12 @@ item: "popover"
 <Example item="popover" name="popover-content" label="Popover: Popover: Content">
 
 ```gx
-<popover.Popover id="demo-popover">Place content for the popover here.</popover.Popover>
+<popover.Popover id="demo-popover">
+  <popover.PopoverHeader>
+    <popover.PopoverTitle>Dimensions</popover.PopoverTitle>
+    <popover.PopoverDescription>Set the dimensions for the layer.</popover.PopoverDescription>
+  </popover.PopoverHeader>
+</popover.Popover>
 <popover.PopoverTrigger id="demo-popover">Open popover</popover.PopoverTrigger>
 ```
 
@@ -26,17 +31,28 @@ Run the command in the app module.
 gx add popover
 ```
 
+The command also installs [`button`](/components/button/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `Popover.gx` | `ui/popover/Popover.gx` |
+| `PopoverDescription.gx` | `ui/popover/PopoverDescription.gx` |
+| `PopoverHeader.gx` | `ui/popover/PopoverHeader.gx` |
+| `PopoverTitle.gx` | `ui/popover/PopoverTitle.gx` |
 | `PopoverTrigger.gx` | `ui/popover/PopoverTrigger.gx` |
 | `Popover.fixtures.go` | `ui/popover/Popover.fixtures.go` |
+| `PopoverDescription.fixtures.go` | `ui/popover/PopoverDescription.fixtures.go` |
+| `PopoverHeader.fixtures.go` | `ui/popover/PopoverHeader.fixtures.go` |
+| `PopoverTitle.fixtures.go` | `ui/popover/PopoverTitle.fixtures.go` |
 | `PopoverTrigger.fixtures.go` | `ui/popover/PopoverTrigger.fixtures.go` |
+| `styles.go` | `ui/popover/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`button`](/components/button/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -45,25 +61,66 @@ package popover
 
 props {
   Id       string
+  Align    Align    = Center
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" data-gx-dismiss style={gx.Style("position-anchor: --gx-pop-" + p.Id + "; inset: auto; top: anchor(bottom); left: anchor(left); margin-top: 0.5rem")} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" data-gx-dismiss style={p.style()} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/popover/PopoverDescription.gx"
+package popover
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<p class={gx.Cx("text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</p>
+```
+
+```gx title="ui/popover/PopoverHeader.gx"
+package popover
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("flex flex-col gap-1 text-sm", p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/popover/PopoverTitle.gx"
+package popover
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("font-medium", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/popover/PopoverTrigger.gx"
 package popover
 
+import "github.com/alternayte/gx/registry/button"
+
 props {
   Id       string
-  Class    string   = ""
+  Variant  button.Variant = button.Outline
+  Size     button.Size    = button.Md
+  Class    string         = ""
   Children gx.Node
-  Attrs    gx.Attrs = nil
+  Attrs    gx.Attrs       = nil
 }
 
-<button type="button" popovertarget={p.Id} popovertargetaction="toggle" style={gx.Style("anchor-name: --gx-pop-" + p.Id)} class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}>{p.Children}</button.Button>
 ```
 
 ```go title="ui/popover/Popover.fixtures.go"
@@ -72,35 +129,152 @@ package popover
 import "github.com/alternayte/gx"
 
 var PopoverFixtures = gx.Fixtures[PopoverProps]{
-	"Content": {Id: "demo-popover", Children: gx.Text("Place content for the popover here.")},
+	"Content": {Id: "demo-popover", Children: PopoverHeader(PopoverHeaderProps{Children: gx.Frag(
+		PopoverTitle(PopoverTitleProps{Children: gx.Text("Dimensions")}),
+		PopoverDescription(PopoverDescriptionProps{Children: gx.Text("Set the dimensions for the layer.")}),
+	)})},
+	"Start": {Id: "demo-popover-start", Align: Start, Children: gx.Text("Place content for the popover here.")},
+	"End":   {Id: "demo-popover-end", Align: End, Children: gx.Text("Place content for the popover here.")},
 }
+```
+
+```go title="ui/popover/PopoverDescription.fixtures.go"
+package popover
+
+import "github.com/alternayte/gx"
+
+var PopoverDescriptionFixtures = gx.Fixtures[PopoverDescriptionProps]{"Default": {Children: gx.Text("Set the dimensions for the layer.")}}
+```
+
+```go title="ui/popover/PopoverHeader.fixtures.go"
+package popover
+
+import "github.com/alternayte/gx"
+
+var PopoverHeaderFixtures = gx.Fixtures[PopoverHeaderProps]{
+	"Default": {Children: gx.Frag(
+		PopoverTitle(PopoverTitleProps{Children: gx.Text("Dimensions")}),
+		PopoverDescription(PopoverDescriptionProps{Children: gx.Text("Set the dimensions for the layer.")}),
+	)},
+}
+```
+
+```go title="ui/popover/PopoverTitle.fixtures.go"
+package popover
+
+import "github.com/alternayte/gx"
+
+var PopoverTitleFixtures = gx.Fixtures[PopoverTitleProps]{"Default": {Children: gx.Text("Dimensions")}}
 ```
 
 ```go title="ui/popover/PopoverTrigger.fixtures.go"
 package popover
 
-import "github.com/alternayte/gx"
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
 
 var PopoverTriggerFixtures = gx.Fixtures[PopoverTriggerProps]{
 	"Default": {Id: "demo-popover", Children: gx.Text("Open popover")},
+	"Start":   {Id: "demo-popover-start", Children: gx.Text("Open at the start")},
+	"End":     {Id: "demo-popover-end", Variant: button.Secondary, Class: "ml-64", Children: gx.Text("Open at the end")},
 }
+```
+
+```go title="ui/popover/styles.go"
+package popover
+
+import (
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
+)
+
+// Align is the edge of the trigger that the popover lines up with.
+type Align string
+
+// The alignments of popover.Popover.
+const (
+	Center Align = "center"
+	Start  Align = "start"
+	End    Align = "end"
+)
+
+// The popover zooms from the edge that touches the trigger.
+var alignClass = gx.Enum[Align]{
+	Center: "origin-top",
+	Start:  "origin-top-left",
+	End:    "origin-top-right",
+}
+
+var alignStyle = gx.Enum[Align]{
+	Center: "justify-self: anchor-center",
+	Start:  "left: anchor(left)",
+	End:    "right: anchor(right)",
+}
+
+// align returns the alignment of one popover; a zero value is Center.
+func (p PopoverProps) align() Align {
+	if p.Align == "" {
+		return Center
+	}
+	return p.Align
+}
+
+// style anchors the popover below its trigger. A browser without anchor
+// positioning keeps the popover at its place in the document flow.
+func (p PopoverProps) style() gx.Style {
+	return gx.Style("position-anchor: --gx-pop-" + p.Id + "; inset: auto; margin: 0.25rem 0 0; top: anchor(bottom); " + alignStyle[p.align()])
+}
+
+// variant returns the button variant of one trigger; a zero value is
+// button.Outline.
+func (p PopoverTriggerProps) variant() button.Variant {
+	if p.Variant == "" {
+		return button.Outline
+	}
+	return p.Variant
+}
+
+// attrs wires the trigger to its popover and names it as the anchor.
+func (p PopoverTriggerProps) attrs() gx.Attrs {
+	return gx.JoinAttrs(gx.Attrs{
+		{Key: "popovertarget", Value: p.Id},
+		{Key: "popovertargetaction", Value: "toggle"},
+		{Key: "style", Value: "anchor-name: --gx-pop-" + p.Id, Kind: gx.AttrStyle},
+	}, p.Attrs)
+}
+
+// motionClass fades and zooms the popover from 95% and slides it 2 units from
+// the trigger. Safari 26.0 never ends a display transition on an element
+// that CSS anchor positioning places, which leaves a closed popover rendered.
+// The @supports test matches every engine but WebKit, so Safari closes the
+// popover at once and still animates the enter.
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--accent`, `--ring`.
+The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--muted-foreground`.
 
 ## Usage
 
 ```gx
-<popover.PopoverTrigger id="menu">Open</popover.PopoverTrigger>
-<popover.Popover id="menu">
-  <p>Place content for the popover here.</p>
+<popover.PopoverTrigger id="dimensions">Open</popover.PopoverTrigger>
+<popover.Popover id="dimensions">
+  <popover.PopoverHeader>
+    <popover.PopoverTitle>Dimensions</popover.PopoverTitle>
+    <popover.PopoverDescription>Set the dimensions for the layer.</popover.PopoverDescription>
+  </popover.PopoverHeader>
 </popover.Popover>
 ```
 
-The element uses the native Popover API. A browser without anchor positioning centers the panel instead of anchoring it.
+The element uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`.
+
+`Align` lines the popover up with the trigger: `popover.Center` (default), `popover.Start` or `popover.End`. The popover always opens below the trigger. A browser without anchor positioning shows the popover at its place in the document flow.
+
+The popover fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
 
 ## Examples
 
@@ -109,8 +283,70 @@ The element uses the native Popover API. A browser without anchor positioning ce
 <Example item="popover" name="popover-content" label="Popover: Popover: Content">
 
 ```gx
-<popover.Popover id="demo-popover">Place content for the popover here.</popover.Popover>
+<popover.Popover id="demo-popover">
+  <popover.PopoverHeader>
+    <popover.PopoverTitle>Dimensions</popover.PopoverTitle>
+    <popover.PopoverDescription>Set the dimensions for the layer.</popover.PopoverDescription>
+  </popover.PopoverHeader>
+</popover.Popover>
 <popover.PopoverTrigger id="demo-popover">Open popover</popover.PopoverTrigger>
+```
+
+</Example>
+
+### Popover: Start
+
+<Example item="popover" name="popover-start" label="Popover: Popover: Start">
+
+```gx
+<popover.Popover id="demo-popover-start" align={popover.Start}>Place content for the popover here.</popover.Popover>
+<popover.PopoverTrigger id="demo-popover-start">Open at the start</popover.PopoverTrigger>
+```
+
+</Example>
+
+### Popover: End
+
+<Example item="popover" name="popover-end" label="Popover: Popover: End">
+
+```gx
+<popover.Popover id="demo-popover-end" align={popover.End}>Place content for the popover here.</popover.Popover>
+<popover.PopoverTrigger id="demo-popover-end" variant={button.Secondary} class="ml-64">
+  Open at the end
+</popover.PopoverTrigger>
+```
+
+</Example>
+
+### PopoverDescription: Default
+
+<Example item="popover" name="popover-description-default" label="Popover: PopoverDescription: Default">
+
+```gx
+<popover.PopoverDescription>Set the dimensions for the layer.</popover.PopoverDescription>
+```
+
+</Example>
+
+### PopoverHeader: Default
+
+<Example item="popover" name="popover-header-default" label="Popover: PopoverHeader: Default">
+
+```gx
+<popover.PopoverHeader>
+  <popover.PopoverTitle>Dimensions</popover.PopoverTitle>
+  <popover.PopoverDescription>Set the dimensions for the layer.</popover.PopoverDescription>
+</popover.PopoverHeader>
+```
+
+</Example>
+
+### PopoverTitle: Default
+
+<Example item="popover" name="popover-title-default" label="Popover: PopoverTitle: Default">
+
+```gx
+<popover.PopoverTitle>Dimensions</popover.PopoverTitle>
 ```
 
 </Example>
@@ -121,6 +357,7 @@ The element uses the native Popover API. A browser without anchor positioning ce
 <docs.Card title="Do">
 
 - Give the popover and the trigger the same `Id`.
+- Put the popover directly after its trigger in the markup.
 - Keep the content short.
 
 </docs.Card>

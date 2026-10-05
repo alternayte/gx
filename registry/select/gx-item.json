@@ -9,20 +9,45 @@
       "target": "ui/select/Select.gx"
     },
     {
+      "path": "SelectGroup.gx",
+      "target": "ui/select/SelectGroup.gx"
+    },
+    {
       "path": "SelectOption.gx",
       "target": "ui/select/SelectOption.gx"
+    },
+    {
+      "path": "SelectSeparator.gx",
+      "target": "ui/select/SelectSeparator.gx"
     },
     {
       "path": "Select.fixtures.go",
       "target": "ui/select/Select.fixtures.go"
     },
     {
+      "path": "SelectGroup.fixtures.go",
+      "target": "ui/select/SelectGroup.fixtures.go"
+    },
+    {
       "path": "SelectOption.fixtures.go",
       "target": "ui/select/SelectOption.fixtures.go"
+    },
+    {
+      "path": "SelectSeparator.fixtures.go",
+      "target": "ui/select/SelectSeparator.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/select/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--input",
-    "--ring"
+    "--ring",
+    "--muted-foreground",
+    "--destructive"
   ]
 }

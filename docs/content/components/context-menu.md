@@ -9,13 +9,29 @@ item: "context-menu"
 <Example item="context-menu" name="context-menu-menu" label="Context Menu: ContextMenu: Menu">
 
 ```gx
-<contextmenu.ContextMenu id="demo-context">
-  <contextmenu.ContextMenuItem>Copy</contextmenu.ContextMenuItem>
+<contextmenu.ContextMenu id="demo-context" class="w-52">
+  <contextmenu.ContextMenuItem>
+    Copy
+    <contextmenu.ContextMenuShortcut>⌘C</contextmenu.ContextMenuShortcut>
+  </contextmenu.ContextMenuItem>
   <contextmenu.ContextMenuItem>Cut</contextmenu.ContextMenuItem>
   <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuCheckboxItem name="bookmarks" checked>Show bookmarks</contextmenu.ContextMenuCheckboxItem>
+  <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuRadioGroup label="People">
+    <contextmenu.ContextMenuLabel inset>People</contextmenu.ContextMenuLabel>
+    <contextmenu.ContextMenuRadioItem name="demo-context-person" value="ada" checked>
+      Ada
+    </contextmenu.ContextMenuRadioItem>
+    <contextmenu.ContextMenuRadioItem name="demo-context-person" value="grace">Grace</contextmenu.ContextMenuRadioItem>
+  </contextmenu.ContextMenuRadioGroup>
+  <contextmenu.ContextMenuSeparator />
   <contextmenu.ContextMenuLink href={gx.URL("/docs")}>Docs</contextmenu.ContextMenuLink>
+  <contextmenu.ContextMenuItem variant={contextmenu.Destructive}>Delete</contextmenu.ContextMenuItem>
 </contextmenu.ContextMenu>
-<contextmenu.ContextMenuTrigger id="demo-context">Right-click here</contextmenu.ContextMenuTrigger>
+<contextmenu.ContextMenuTrigger id="demo-context" class="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm">
+  Right-click here
+</contextmenu.ContextMenuTrigger>
 ```
 
 </Example>
@@ -31,23 +47,40 @@ Run the command in the app module.
 gx add context-menu
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `ContextMenu.gx` | `ui/context-menu/ContextMenu.gx` |
-| `ContextMenuTrigger.gx` | `ui/context-menu/ContextMenuTrigger.gx` |
+| `ContextMenuCheckboxItem.gx` | `ui/context-menu/ContextMenuCheckboxItem.gx` |
+| `ContextMenuGroup.gx` | `ui/context-menu/ContextMenuGroup.gx` |
 | `ContextMenuItem.gx` | `ui/context-menu/ContextMenuItem.gx` |
+| `ContextMenuLabel.gx` | `ui/context-menu/ContextMenuLabel.gx` |
 | `ContextMenuLink.gx` | `ui/context-menu/ContextMenuLink.gx` |
+| `ContextMenuRadioGroup.gx` | `ui/context-menu/ContextMenuRadioGroup.gx` |
+| `ContextMenuRadioItem.gx` | `ui/context-menu/ContextMenuRadioItem.gx` |
 | `ContextMenuSeparator.gx` | `ui/context-menu/ContextMenuSeparator.gx` |
+| `ContextMenuShortcut.gx` | `ui/context-menu/ContextMenuShortcut.gx` |
+| `ContextMenuTrigger.gx` | `ui/context-menu/ContextMenuTrigger.gx` |
 | `ContextMenu.fixtures.go` | `ui/context-menu/ContextMenu.fixtures.go` |
+| `ContextMenuCheckboxItem.fixtures.go` | `ui/context-menu/ContextMenuCheckboxItem.fixtures.go` |
+| `ContextMenuGroup.fixtures.go` | `ui/context-menu/ContextMenuGroup.fixtures.go` |
 | `ContextMenuItem.fixtures.go` | `ui/context-menu/ContextMenuItem.fixtures.go` |
+| `ContextMenuLabel.fixtures.go` | `ui/context-menu/ContextMenuLabel.fixtures.go` |
 | `ContextMenuLink.fixtures.go` | `ui/context-menu/ContextMenuLink.fixtures.go` |
+| `ContextMenuRadioGroup.fixtures.go` | `ui/context-menu/ContextMenuRadioGroup.fixtures.go` |
+| `ContextMenuRadioItem.fixtures.go` | `ui/context-menu/ContextMenuRadioItem.fixtures.go` |
 | `ContextMenuSeparator.fixtures.go` | `ui/context-menu/ContextMenuSeparator.fixtures.go` |
+| `ContextMenuShortcut.fixtures.go` | `ui/context-menu/ContextMenuShortcut.fixtures.go` |
 | `ContextMenuTrigger.fixtures.go` | `ui/context-menu/ContextMenuTrigger.fixtures.go` |
+| `styles.go` | `ui/context-menu/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -61,32 +94,70 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("fixed m-0 z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" class={gx.Cx("fixed z-50 m-0 min-w-[8rem] origin-top-left overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 motion-reduce:transition-none", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
-```gx title="ui/context-menu/ContextMenuTrigger.gx"
+```gx title="ui/context-menu/ContextMenuCheckboxItem.gx"
 package contextmenu
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
-  Id       string
+  Name     string   = ""
+  Value    string   = "on"
+  Checked  bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div data-gx-contextmenu={"#" + p.Id} class={gx.Cx("flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground select-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="checkbox" role="menuitemcheckbox" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Check class="size-4" /></span>
+  {p.Children}
+</label>
+```
+
+```gx title="ui/context-menu/ContextMenuGroup.gx"
+package contextmenu
+
+props {
+  Label    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/context-menu/ContextMenuItem.gx"
 package contextmenu
 
 props {
+  Variant  Variant  = Default
+  Inset    bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<button type="button" role="menuitem" tabindex="-1" data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button type="button" role="menuitem" tabindex="-1" disabled={p.Disabled} data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>{p.Children}</button>
+```
+
+```gx title="ui/context-menu/ContextMenuLabel.gx"
+package contextmenu
+
+props {
+  Inset    bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="presentation" class={gx.Cx("px-2 py-1.5 text-sm font-medium text-foreground", insetClass[p.Inset], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/context-menu/ContextMenuLink.gx"
@@ -99,7 +170,42 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent", p.Class)} {...p.Attrs}>{p.Children}</a>
+<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
+```
+
+```gx title="ui/context-menu/ContextMenuRadioGroup.gx"
+package contextmenu
+
+props {
+  Label    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/context-menu/ContextMenuRadioItem.gx"
+package contextmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Name     string   = ""
+  Value    string   = ""
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="radio" role="menuitemradio" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Circle class="size-2 *:fill-current" /></span>
+  {p.Children}
+</label>
 ```
 
 ```gx title="ui/context-menu/ContextMenuSeparator.gx"
@@ -113,18 +219,90 @@ props {
 <div role="separator" class={gx.Cx("-mx-1 my-1 h-px bg-border", p.Class)} {...p.Attrs}></div>
 ```
 
+```gx title="ui/context-menu/ContextMenuShortcut.gx"
+package contextmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<span class={gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
+```
+
+```gx title="ui/context-menu/ContextMenuTrigger.gx"
+package contextmenu
+
+props {
+  Id       string
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-gx-contextmenu={"#" + p.Id} class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
 ```go title="ui/context-menu/ContextMenu.fixtures.go"
 package contextmenu
 
 import "github.com/alternayte/gx"
 
 var ContextMenuFixtures = gx.Fixtures[ContextMenuProps]{
-	"Menu": {Id: "demo-context", Children: gx.Frag(
-		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Copy")}),
+	"Menu": {Id: "demo-context", Class: "w-52", Children: gx.Frag(
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Frag(
+			gx.Text("Copy"),
+			ContextMenuShortcut(ContextMenuShortcutProps{Children: gx.Text("⌘C")}),
+		)}),
 		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Cut")}),
 		ContextMenuSeparator(ContextMenuSeparatorProps{}),
+		ContextMenuCheckboxItem(ContextMenuCheckboxItemProps{Name: "bookmarks", Checked: true, Children: gx.Text("Show bookmarks")}),
+		ContextMenuSeparator(ContextMenuSeparatorProps{}),
+		ContextMenuRadioGroup(ContextMenuRadioGroupProps{Label: "People", Children: gx.Frag(
+			ContextMenuLabel(ContextMenuLabelProps{Inset: true, Children: gx.Text("People")}),
+			ContextMenuRadioItem(ContextMenuRadioItemProps{Name: "demo-context-person", Value: "ada", Checked: true, Children: gx.Text("Ada")}),
+			ContextMenuRadioItem(ContextMenuRadioItemProps{Name: "demo-context-person", Value: "grace", Children: gx.Text("Grace")}),
+		)}),
+		ContextMenuSeparator(ContextMenuSeparatorProps{}),
 		ContextMenuLink(ContextMenuLinkProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
+		ContextMenuItem(ContextMenuItemProps{Variant: Destructive, Children: gx.Text("Delete")}),
 	)},
+}
+```
+
+```go title="ui/context-menu/ContextMenuCheckboxItem.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuCheckboxItemFixtures = gx.Fixtures[ContextMenuCheckboxItemProps]{
+	"Checked":   {Name: "status-bar", Checked: true, Children: gx.Text("Status bar")},
+	"Unchecked": {Name: "panel", Children: gx.Text("Panel")},
+	"Disabled":  {Name: "activity", Disabled: true, Children: gx.Text("Activity bar")},
+}
+
+// ContextMenuCheckboxItemWrap renders the item inside a menu, as a page uses it.
+func ContextMenuCheckboxItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/context-menu/ContextMenuGroup.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuGroupFixtures = gx.Fixtures[ContextMenuGroupProps]{
+	"Default": {Label: "Account", Children: gx.Frag(
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Profile")}),
+		ContextMenuItem(ContextMenuItemProps{Children: gx.Text("Billing")}),
+	)},
+}
+
+// ContextMenuGroupWrap renders the group inside a menu, as a page uses it.
+func ContextMenuGroupWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
 }
 ```
 
@@ -133,11 +311,27 @@ package contextmenu
 
 import "github.com/alternayte/gx"
 
-var ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{"Item": {Children: gx.Text("Copy")}}
+var ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{
+	"Item":        {Children: gx.Text("Profile")},
+	"Inset":       {Inset: true, Children: gx.Text("Profile")},
+	"Destructive": {Variant: Destructive, Children: gx.Text("Delete")},
+	"Disabled":    {Disabled: true, Children: gx.Text("Profile")},
+}
 
 // ContextMenuItemWrap renders the item inside a menu, as a page uses it.
 func ContextMenuItemWrap(n gx.Node) gx.Node {
-	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}}, n)
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/context-menu/ContextMenuLabel.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuLabelFixtures = gx.Fixtures[ContextMenuLabelProps]{
+	"Label": {Children: gx.Text("My account")},
+	"Inset": {Inset: true, Children: gx.Text("My account")},
 }
 ```
 
@@ -146,11 +340,45 @@ package contextmenu
 
 import "github.com/alternayte/gx"
 
-var ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{"Link": {Href: gx.URL("/docs"), Children: gx.Text("Docs")}}
+var ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{"Link": {Href: gx.URL("/docs"), Children: gx.Text("Documentation")}}
 
 // ContextMenuLinkWrap renders the item inside a menu, as a page uses it.
 func ContextMenuLinkWrap(n gx.Node) gx.Node {
-	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}}, n)
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/context-menu/ContextMenuRadioGroup.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuRadioGroupFixtures = gx.Fixtures[ContextMenuRadioGroupProps]{
+	"Default": {Label: "Position", Children: gx.Frag(
+		ContextMenuRadioItem(ContextMenuRadioItemProps{Name: "context-menu-group-position", Value: "top", Checked: true, Children: gx.Text("Top")}),
+		ContextMenuRadioItem(ContextMenuRadioItemProps{Name: "context-menu-group-position", Value: "bottom", Children: gx.Text("Bottom")}),
+	)},
+}
+
+// ContextMenuRadioGroupWrap renders the group inside a menu, as a page uses it.
+func ContextMenuRadioGroupWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/context-menu/ContextMenuRadioItem.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuRadioItemFixtures = gx.Fixtures[ContextMenuRadioItemProps]{
+	"Checked":   {Name: "context-menu-item-checked", Value: "top", Checked: true, Children: gx.Text("Top")},
+	"Unchecked": {Name: "context-menu-item-unchecked", Value: "bottom", Children: gx.Text("Bottom")},
+}
+
+// ContextMenuRadioItemWrap renders the item inside a menu, as a page uses it.
+func ContextMenuRadioItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
 }
 ```
 
@@ -162,29 +390,102 @@ import "github.com/alternayte/gx"
 var ContextMenuSeparatorFixtures = gx.Fixtures[ContextMenuSeparatorProps]{"Default": {}}
 ```
 
+```go title="ui/context-menu/ContextMenuShortcut.fixtures.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+var ContextMenuShortcutFixtures = gx.Fixtures[ContextMenuShortcutProps]{"Default": {Children: gx.Text("⌘K")}}
+```
+
 ```go title="ui/context-menu/ContextMenuTrigger.fixtures.go"
 package contextmenu
 
 import "github.com/alternayte/gx"
 
-var ContextMenuTriggerFixtures = gx.Fixtures[ContextMenuTriggerProps]{"Default": {Id: "demo-context", Children: gx.Text("Right-click here")}}
+var ContextMenuTriggerFixtures = gx.Fixtures[ContextMenuTriggerProps]{
+	"Default": {
+		Id:       "demo-context",
+		Class:    "flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm",
+		Children: gx.Text("Right-click here"),
+	},
+}
+```
+
+```go title="ui/context-menu/styles.go"
+package contextmenu
+
+import "github.com/alternayte/gx"
+
+// Variant is the visual style of a menu item.
+type Variant string
+
+// The variants of contextmenu.ContextMenuItem.
+const (
+	Default     Variant = "default"
+	Destructive Variant = "destructive"
+)
+
+var variantClass = gx.Enum[Variant]{
+	Default:     "",
+	Destructive: "text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive!",
+}
+
+// variant returns the variant of one item; a zero value is Default.
+func (p ContextMenuItemProps) variant() Variant {
+	if p.Variant == "" {
+		return Default
+	}
+	return p.Variant
+}
+
+// insetClass lines an item or a label up with the checkbox and radio items.
+var insetClass = map[bool]string{
+	true:  "pl-8",
+	false: "",
+}
+
+// rovingItem marks an item for the roving tabindex of its menu. A disabled
+// item is not marked, so the arrow keys pass it.
+func rovingItem(disabled bool) gx.Attrs {
+	return gx.Attrs{gx.Bool("data-gx-roving-item", !disabled)}
+}
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--accent`, `--accent-foreground`, `--muted-foreground`.
+The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--foreground`, `--accent`, `--accent-foreground`, `--muted-foreground`, `--destructive`.
 
 ## Usage
 
 ```gx
-<contextmenu.ContextMenuTrigger id="row-menu">Right-click here</contextmenu.ContextMenuTrigger>
-<contextmenu.ContextMenu id="row-menu">
-  <contextmenu.ContextMenuItem>Copy</contextmenu.ContextMenuItem>
+<contextmenu.ContextMenuTrigger id="row-menu" class="rounded-md border border-dashed p-8">Right-click here</contextmenu.ContextMenuTrigger>
+<contextmenu.ContextMenu id="row-menu" class="w-52">
+  <contextmenu.ContextMenuItem>
+    Copy
+    <contextmenu.ContextMenuShortcut>⌘C</contextmenu.ContextMenuShortcut>
+  </contextmenu.ContextMenuItem>
+  <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuCheckboxItem name="bookmarks" checked={true}>Show bookmarks</contextmenu.ContextMenuCheckboxItem>
+  <contextmenu.ContextMenuRadioGroup label="People">
+    <contextmenu.ContextMenuLabel inset={true}>People</contextmenu.ContextMenuLabel>
+    <contextmenu.ContextMenuRadioItem name="person" value="ada" checked={true}>Ada</contextmenu.ContextMenuRadioItem>
+    <contextmenu.ContextMenuRadioItem name="person" value="grace">Grace</contextmenu.ContextMenuRadioItem>
+  </contextmenu.ContextMenuRadioGroup>
   <contextmenu.ContextMenuSeparator />
   <contextmenu.ContextMenuLink href={gx.URL("/docs")}>Docs</contextmenu.ContextMenuLink>
+  <contextmenu.ContextMenuItem variant={contextmenu.Destructive}>Delete</contextmenu.ContextMenuItem>
 </contextmenu.ContextMenu>
 ```
+
+The trigger is an area with no style of its own; `Class` gives it one. The menu opens at the pointer and focus moves to the first item.
+
+A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
+
+The menu fades and zooms in and out. A user who asks for reduced motion gets no transition.
+
+The item has no sub-menu part.
 
 ## Examples
 
@@ -193,13 +494,72 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 <Example item="context-menu" name="context-menu-menu" label="Context Menu: ContextMenu: Menu">
 
 ```gx
-<contextmenu.ContextMenu id="demo-context">
-  <contextmenu.ContextMenuItem>Copy</contextmenu.ContextMenuItem>
+<contextmenu.ContextMenu id="demo-context" class="w-52">
+  <contextmenu.ContextMenuItem>
+    Copy
+    <contextmenu.ContextMenuShortcut>⌘C</contextmenu.ContextMenuShortcut>
+  </contextmenu.ContextMenuItem>
   <contextmenu.ContextMenuItem>Cut</contextmenu.ContextMenuItem>
   <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuCheckboxItem name="bookmarks" checked>Show bookmarks</contextmenu.ContextMenuCheckboxItem>
+  <contextmenu.ContextMenuSeparator />
+  <contextmenu.ContextMenuRadioGroup label="People">
+    <contextmenu.ContextMenuLabel inset>People</contextmenu.ContextMenuLabel>
+    <contextmenu.ContextMenuRadioItem name="demo-context-person" value="ada" checked>
+      Ada
+    </contextmenu.ContextMenuRadioItem>
+    <contextmenu.ContextMenuRadioItem name="demo-context-person" value="grace">Grace</contextmenu.ContextMenuRadioItem>
+  </contextmenu.ContextMenuRadioGroup>
+  <contextmenu.ContextMenuSeparator />
   <contextmenu.ContextMenuLink href={gx.URL("/docs")}>Docs</contextmenu.ContextMenuLink>
+  <contextmenu.ContextMenuItem variant={contextmenu.Destructive}>Delete</contextmenu.ContextMenuItem>
 </contextmenu.ContextMenu>
-<contextmenu.ContextMenuTrigger id="demo-context">Right-click here</contextmenu.ContextMenuTrigger>
+<contextmenu.ContextMenuTrigger id="demo-context" class="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm">
+  Right-click here
+</contextmenu.ContextMenuTrigger>
+```
+
+</Example>
+
+### ContextMenuCheckboxItem: Checked
+
+<Example item="context-menu" name="context-menu-checkbox-item-checked" label="Context Menu: ContextMenuCheckboxItem: Checked">
+
+```gx
+<contextmenu.ContextMenuCheckboxItem name="status-bar" checked>Status bar</contextmenu.ContextMenuCheckboxItem>
+```
+
+</Example>
+
+### ContextMenuCheckboxItem: Unchecked
+
+<Example item="context-menu" name="context-menu-checkbox-item-unchecked" label="Context Menu: ContextMenuCheckboxItem: Unchecked">
+
+```gx
+<contextmenu.ContextMenuCheckboxItem name="panel">Panel</contextmenu.ContextMenuCheckboxItem>
+```
+
+</Example>
+
+### ContextMenuCheckboxItem: Disabled
+
+<Example item="context-menu" name="context-menu-checkbox-item-disabled" label="Context Menu: ContextMenuCheckboxItem: Disabled">
+
+```gx
+<contextmenu.ContextMenuCheckboxItem name="activity" disabled>Activity bar</contextmenu.ContextMenuCheckboxItem>
+```
+
+</Example>
+
+### ContextMenuGroup: Default
+
+<Example item="context-menu" name="context-menu-group-default" label="Context Menu: ContextMenuGroup: Default">
+
+```gx
+<contextmenu.ContextMenuGroup label="Account">
+  <contextmenu.ContextMenuItem>Profile</contextmenu.ContextMenuItem>
+  <contextmenu.ContextMenuItem>Billing</contextmenu.ContextMenuItem>
+</contextmenu.ContextMenuGroup>
 ```
 
 </Example>
@@ -209,7 +569,57 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 <Example item="context-menu" name="context-menu-item-item" label="Context Menu: ContextMenuItem: Item">
 
 ```gx
-<contextmenu.ContextMenuItem>Copy</contextmenu.ContextMenuItem>
+<contextmenu.ContextMenuItem>Profile</contextmenu.ContextMenuItem>
+```
+
+</Example>
+
+### ContextMenuItem: Inset
+
+<Example item="context-menu" name="context-menu-item-inset" label="Context Menu: ContextMenuItem: Inset">
+
+```gx
+<contextmenu.ContextMenuItem inset>Profile</contextmenu.ContextMenuItem>
+```
+
+</Example>
+
+### ContextMenuItem: Destructive
+
+<Example item="context-menu" name="context-menu-item-destructive" label="Context Menu: ContextMenuItem: Destructive">
+
+```gx
+<contextmenu.ContextMenuItem variant={contextmenu.Destructive}>Delete</contextmenu.ContextMenuItem>
+```
+
+</Example>
+
+### ContextMenuItem: Disabled
+
+<Example item="context-menu" name="context-menu-item-disabled" label="Context Menu: ContextMenuItem: Disabled">
+
+```gx
+<contextmenu.ContextMenuItem disabled>Profile</contextmenu.ContextMenuItem>
+```
+
+</Example>
+
+### ContextMenuLabel: Label
+
+<Example item="context-menu" name="context-menu-label-label" label="Context Menu: ContextMenuLabel: Label">
+
+```gx
+<contextmenu.ContextMenuLabel>My account</contextmenu.ContextMenuLabel>
+```
+
+</Example>
+
+### ContextMenuLabel: Inset
+
+<Example item="context-menu" name="context-menu-label-inset" label="Context Menu: ContextMenuLabel: Inset">
+
+```gx
+<contextmenu.ContextMenuLabel inset>My account</contextmenu.ContextMenuLabel>
 ```
 
 </Example>
@@ -219,7 +629,48 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 <Example item="context-menu" name="context-menu-link-link" label="Context Menu: ContextMenuLink: Link">
 
 ```gx
-<contextmenu.ContextMenuLink href={gx.URL("/docs")}>Docs</contextmenu.ContextMenuLink>
+<contextmenu.ContextMenuLink href={gx.URL("/docs")}>Documentation</contextmenu.ContextMenuLink>
+```
+
+</Example>
+
+### ContextMenuRadioGroup: Default
+
+<Example item="context-menu" name="context-menu-radio-group-default" label="Context Menu: ContextMenuRadioGroup: Default">
+
+```gx
+<contextmenu.ContextMenuRadioGroup label="Position">
+  <contextmenu.ContextMenuRadioItem name="context-menu-group-position" value="top" checked>
+    Top
+  </contextmenu.ContextMenuRadioItem>
+  <contextmenu.ContextMenuRadioItem name="context-menu-group-position" value="bottom">
+    Bottom
+  </contextmenu.ContextMenuRadioItem>
+</contextmenu.ContextMenuRadioGroup>
+```
+
+</Example>
+
+### ContextMenuRadioItem: Checked
+
+<Example item="context-menu" name="context-menu-radio-item-checked" label="Context Menu: ContextMenuRadioItem: Checked">
+
+```gx
+<contextmenu.ContextMenuRadioItem name="context-menu-item-checked" value="top" checked>
+  Top
+</contextmenu.ContextMenuRadioItem>
+```
+
+</Example>
+
+### ContextMenuRadioItem: Unchecked
+
+<Example item="context-menu" name="context-menu-radio-item-unchecked" label="Context Menu: ContextMenuRadioItem: Unchecked">
+
+```gx
+<contextmenu.ContextMenuRadioItem name="context-menu-item-unchecked" value="bottom">
+  Bottom
+</contextmenu.ContextMenuRadioItem>
 ```
 
 </Example>
@@ -234,6 +685,16 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 </Example>
 
+### ContextMenuShortcut: Default
+
+<Example item="context-menu" name="context-menu-shortcut-default" label="Context Menu: ContextMenuShortcut: Default">
+
+```gx
+<contextmenu.ContextMenuShortcut>⌘K</contextmenu.ContextMenuShortcut>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
@@ -241,6 +702,7 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 - Attach the menu to the object it acts on.
 - Keep the same items as the visible row menu.
+- Give the radio items of one group the same `Name`.
 
 </docs.Card>
 <docs.Card title="Don't">
@@ -255,6 +717,10 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
 
 | Key | Action |
 | --- | --- |
-| Context menu key | Opens the menu at the focused item. |
-| Arrow keys | Moves through the items. |
+| Context menu key, Shift+F10 | Opens the menu at the focused element of the area. |
+| Up, Down | Moves through the items. A disabled item is passed. |
+| Home, End | Moves to the first or last item. |
+| A letter | Moves to the next item that starts with the typed text. |
+| Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |
+| Space | Runs the focused item. Toggles a checkbox or radio item. |
 | Escape | Closes the menu. |

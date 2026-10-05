@@ -15,8 +15,12 @@ import (
 
 // typesResult holds the Go types of .gx expressions from one analysis pass.
 type typesResult struct {
-	types      map[any]types.Type
-	quals      map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
+	types map[any]types.Type
+	quals map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
+	// qualPkgs maps the package qualifiers of a default expression to
+	// their import paths, so a call site in another package can import
+	// them.
+	qualPkgs   map[*File]map[int]map[string]string
 	nodeIface  *types.Interface
 	formIface  *types.Interface
 	errIface   *types.Interface
@@ -44,7 +48,7 @@ type typesResult struct {
 	symbols     map[string][]Symbol // typed identifiers per .gx file (REQ-DEV-08)
 	goFset      *token.FileSet      // the shared file set of the loaded Go packages
 	collections []contentCollection // gx.Collection declarations (REQ-CNT-03)
-	codeFiles   map[any]string       // resolved gx.CodeFile literals (REQ-CNT-05)
+	codeFiles   map[any]string      // resolved gx.CodeFile literals (REQ-CNT-05)
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -71,6 +75,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	res := &typesResult{
 		types:      map[any]types.Type{},
 		quals:      map[*File]map[int]map[string]bool{},
+		qualPkgs:   map[*File]map[int]map[string]string{},
 		routeFiles: map[string][]byte{},
 		urlRoutes:  map[string]bool{},
 		routePages: map[string]string{},
@@ -660,13 +665,26 @@ func (l *loader) collectTypes(res *typesResult, info *types.Info, fset *token.Fi
 	}
 	for idx, name := range pr.defs {
 		names := map[string]bool{}
+		pkgs := map[string]string{}
 		for ident, obj := range info.Uses {
 			if filepath.Base(fset.Position(ident.Pos()).Filename) != name {
+				continue
+			}
+			// An import qualifier belongs to the file, not to the
+			// package: it keeps its name at the call site.
+			if pn, ok := obj.(*types.PkgName); ok {
+				pkgs[pn.Name()] = pn.Imported().Path()
 				continue
 			}
 			if obj.Pkg() != nil && obj.Pkg() == tpkg {
 				names[obj.Name()] = true
 			}
+		}
+		if len(pkgs) > 0 {
+			if res.qualPkgs[pr.file] == nil {
+				res.qualPkgs[pr.file] = map[int]map[string]string{}
+			}
+			res.qualPkgs[pr.file][idx] = pkgs
 		}
 		if len(names) == 0 {
 			continue

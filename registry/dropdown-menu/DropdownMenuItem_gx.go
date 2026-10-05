@@ -7,6 +7,9 @@ import (
 )
 
 type DropdownMenuItemProps struct {
+	Variant  Variant
+	Inset    bool
+	Disabled bool
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -14,9 +17,9 @@ type DropdownMenuItemProps struct {
 
 func DropdownMenuItem(p DropdownMenuItemProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuItem.gx:9:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Bool("data-gx-roving-item", true), gx.Bool("data-gx-close", true)}, p.Attrs), p.Children))
-//line DropdownMenuItem.gx:9:397
+//line DropdownMenuItem.gx:12:1
+	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-close", true)}, rovingItem(p.Disabled), p.Attrs), p.Children))
+//line DropdownMenuItem.gx:12:621
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

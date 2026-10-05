@@ -324,6 +324,7 @@ func (s *Session) dropFile(f *File) {
 	}
 	delete(s.res.sigTypes, f)
 	delete(s.res.quals, f)
+	delete(s.res.qualPkgs, f)
 	delete(s.res.symbols, f.File)
 }
 

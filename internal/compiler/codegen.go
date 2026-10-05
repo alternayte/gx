@@ -112,6 +112,10 @@ type gen struct {
 	nest  int
 	diags []Diagnostic
 
+	// extra holds the imports that a prop default of another package
+	// needs at a call site: qualifier to import path.
+	extra map[string]string
+
 	// scoped reports whether this component carries a signal instance
 	// key (REQ-ACT-06).
 	scoped bool
@@ -171,6 +175,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		}
 		g.write("%s", im.Raw)
 	}
+	g.write("%s", extraImportsMark)
 	g.ind--
 	g.write(")")
 	g.write("")
@@ -212,7 +217,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		g.write("")
 		g.fragmentFunc(el)
 	}
-	src, err := imports.Process(name+"_gx.go", g.b.Bytes(), nil)
+	src, err := imports.Process(name+"_gx.go", g.withExtraImports(), nil)
 	if err != nil {
 		return nil, append(g.diags, Diagnostic{
 			Code: CodeParse,
@@ -975,6 +980,12 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 			if names := g.res.quals[comp.File][idx]; len(names) > 0 {
 				def = qualifyDefault(def, names, alias)
 			}
+			for qual, path := range g.res.qualPkgs[comp.File][idx] {
+				if g.extra == nil {
+					g.extra = map[string]string{}
+				}
+				g.extra[qual] = path
+			}
 		}
 		fields = append(fields, prop.Name+": "+def)
 	}
@@ -987,6 +998,32 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 	}
 	props := sel + comp.Name + "Props{" + strings.Join(fields, ", ") + "}"
 	return sel + comp.Name + "(" + props + ")"
+}
+
+// extraImportsMark holds the place of the imports that a call site adds
+// after the import block is written.
+const extraImportsMark = "//gx:extra-imports"
+
+// withExtraImports returns the generated source with the imports of the
+// prop defaults of other packages. An import the file already has is not
+// added twice.
+func (g *gen) withExtraImports() []byte {
+	have := map[string]bool{"github.com/alternayte/gx": true}
+	for _, im := range g.file.Imports {
+		have[importPath(im.Raw)] = true
+	}
+	quals := make([]string, 0, len(g.extra))
+	for qual, path := range g.extra {
+		if !have[path] {
+			quals = append(quals, qual)
+		}
+	}
+	sort.Strings(quals)
+	var lines []string
+	for _, qual := range quals {
+		lines = append(lines, qual+" "+strconv.Quote(g.extra[qual]))
+	}
+	return bytes.Replace(g.b.Bytes(), []byte(extraImportsMark), []byte(strings.Join(lines, "\n")), 1)
 }
 
 func (g *gen) resolveComponent(qual, name string) (*Component, *Package, string) {

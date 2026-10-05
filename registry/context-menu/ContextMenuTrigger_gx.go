@@ -16,8 +16,8 @@ type ContextMenuTriggerProps struct {
 func ContextMenuTrigger(p ContextMenuTriggerProps) gx.Node {
 	var _b gx.Builder
 //line ContextMenuTrigger.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground select-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-gx-contextmenu", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ContextMenuTrigger.gx:10:227
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-gx-contextmenu", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ContextMenuTrigger.gx:10:86
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

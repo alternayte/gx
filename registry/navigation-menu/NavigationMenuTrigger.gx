@@ -1,0 +1,14 @@
+package navigationmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" aria-haspopup="true" class={gx.Cx(triggerClass, "group-hover/navigation-menu-item:bg-accent/50 group-hover/navigation-menu-item:text-accent-foreground group-hover/navigation-menu-item:hover:bg-accent group-hover/navigation-menu-item:focus:bg-accent group-focus-within/navigation-menu-item:bg-accent/50 group-focus-within/navigation-menu-item:text-accent-foreground group-focus-within/navigation-menu-item:hover:bg-accent group-focus-within/navigation-menu-item:focus:bg-accent", p.Class)} {...p.Attrs}>
+  {p.Children}
+  <icons.ChevronDown class="relative top-[1px] ml-1 size-3 transition duration-300 group-hover/navigation-menu-item:rotate-180 group-focus-within/navigation-menu-item:rotate-180 motion-reduce:transition-none" />
+</button>

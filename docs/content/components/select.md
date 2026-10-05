@@ -9,11 +9,13 @@ item: "select"
 <Example item="select" name="select-plan" label="Select: Select: Plan">
 
 ```gx
-<selectbox.Select name="plan" label="Plan" class="w-48">
-  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
-  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
-  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
-</selectbox.Select>
+{selectbox.Select(selectbox.SelectFixtures["Plan"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/select/Select.fixtures.go"
+"Plan":     {Name: "plan", Label: "Plan", Class: "w-48", Children: plans()}
 ```
 
 </Example>
@@ -29,32 +31,65 @@ Run the command in the app module.
 gx add select
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `Select.gx` | `ui/select/Select.gx` |
+| `SelectGroup.gx` | `ui/select/SelectGroup.gx` |
 | `SelectOption.gx` | `ui/select/SelectOption.gx` |
+| `SelectSeparator.gx` | `ui/select/SelectSeparator.gx` |
 | `Select.fixtures.go` | `ui/select/Select.fixtures.go` |
+| `SelectGroup.fixtures.go` | `ui/select/SelectGroup.fixtures.go` |
 | `SelectOption.fixtures.go` | `ui/select/SelectOption.fixtures.go` |
+| `SelectSeparator.fixtures.go` | `ui/select/SelectSeparator.fixtures.go` |
+| `styles.go` | `ui/select/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
 ```gx title="ui/select/Select.gx"
 package selectbox
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
-  Name     string   = ""
-  Label    string   = ""
-  Class    string   = ""
-  Children gx.Node
-  Attrs    gx.Attrs = nil
+  Name        string   = ""
+  Label       string   = ""
+  Size        Size     = Md
+  Placeholder string   = ""
+  Class       string   = ""
+  Children    gx.Node
+  Attrs       gx.Attrs = nil
 }
 
-<select name={p.Name} aria-label={p.Label} class={gx.Cx("h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</select>
+<span class={gx.Cx("relative inline-flex w-fit", p.Class)}>
+  <select name={p.Name} aria-label={p.Label} class={gx.Cx("w-full min-w-0 appearance-none rounded-md border border-input bg-transparent py-0 pr-9 pl-3 text-sm whitespace-nowrap shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 has-[option[value='']:checked]:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:ring-destructive/40", sizeClass[p.size()])} {...p.Attrs}>
+    if p.Placeholder != "" {
+      <option value="" disabled selected hidden>{p.Placeholder}</option>
+    }
+    {p.Children}
+  </select>
+  <icons.ChevronDown class="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground opacity-50" />
+</span>
+```
+
+```gx title="ui/select/SelectGroup.gx"
+package selectbox
+
+props {
+  Label    string
+  Disabled bool = false
+  Children gx.Node
+}
+
+<optgroup label={p.Label} disabled={p.Disabled}>{p.Children}</optgroup>
 ```
 
 ```gx title="ui/select/SelectOption.gx"
@@ -63,10 +98,21 @@ package selectbox
 props {
   Value    string = ""
   Selected bool   = false
+  Disabled bool   = false
   Children gx.Node
 }
 
-<option value={p.Value} selected={p.Selected}>{p.Children}</option>
+<option value={p.Value} selected={p.Selected} disabled={p.Disabled}>{p.Children}</option>
+```
+
+```gx title="ui/select/SelectSeparator.gx"
+package selectbox
+
+props {
+  Attrs gx.Attrs = nil
+}
+
+<hr {...p.Attrs} />
 ```
 
 ```go title="ui/select/Select.fixtures.go"
@@ -74,13 +120,49 @@ package selectbox
 
 import "github.com/alternayte/gx"
 
-var SelectFixtures = gx.Fixtures[SelectProps]{
-	"Plan": {Name: "plan", Label: "Plan", Class: "w-48", Children: gx.Frag(
+func plans() gx.Node {
+	return gx.Frag(
 		SelectOption(SelectOptionProps{Value: "free", Selected: true, Children: gx.Text("Free")}),
 		SelectOption(SelectOptionProps{Value: "pro", Children: gx.Text("Pro")}),
 		SelectOption(SelectOptionProps{Value: "team", Children: gx.Text("Team")}),
-	)},
+	)
+}
+
+var SelectFixtures = gx.Fixtures[SelectProps]{
+	"Plan":     {Name: "plan", Label: "Plan", Class: "w-48", Children: plans()},
+	"Small":    {Name: "plan", Label: "Plan", Size: Sm, Class: "w-48", Children: plans()},
+	"Fit":      {Name: "plan", Label: "Plan", Children: plans()},
 	"Disabled": {Name: "plan", Label: "Plan", Class: "w-48", Attrs: gx.Attrs{gx.Bool("disabled", true)}, Children: SelectOption(SelectOptionProps{Value: "free", Children: gx.Text("Free")})},
+	"Invalid":  {Name: "plan", Label: "Plan", Class: "w-48", Attrs: gx.Attrs{{Key: "aria-invalid", Value: "true"}}, Children: plans()},
+	"Placeholder": {Name: "fruit", Label: "Fruit", Placeholder: "Select a fruit", Class: "w-48", Children: gx.Frag(
+		SelectGroup(SelectGroupProps{Label: "Fruits", Children: gx.Frag(
+			SelectOption(SelectOptionProps{Value: "apple", Children: gx.Text("Apple")}),
+			SelectOption(SelectOptionProps{Value: "banana", Children: gx.Text("Banana")}),
+		)}),
+		SelectSeparator(SelectSeparatorProps{}),
+		SelectGroup(SelectGroupProps{Label: "Vegetables", Children: gx.Frag(
+			SelectOption(SelectOptionProps{Value: "carrot", Children: gx.Text("Carrot")}),
+			SelectOption(SelectOptionProps{Value: "leek", Disabled: true, Children: gx.Text("Leek")}),
+		)}),
+	)},
+}
+```
+
+```go title="ui/select/SelectGroup.fixtures.go"
+package selectbox
+
+import "github.com/alternayte/gx"
+
+var SelectGroupFixtures = gx.Fixtures[SelectGroupProps]{
+	"Group": {Label: "Fruits", Children: gx.Frag(
+		SelectOption(SelectOptionProps{Value: "apple", Children: gx.Text("Apple")}),
+		SelectOption(SelectOptionProps{Value: "banana", Children: gx.Text("Banana")}),
+	)},
+}
+
+// SelectGroupWrap renders the group inside a select, as a page uses it.
+func SelectGroupWrap(n gx.Node) gx.Node {
+	return Select(SelectProps{Label: "Fruit", Children: n})
 }
 ```
 
@@ -90,23 +172,79 @@ package selectbox
 import "github.com/alternayte/gx"
 
 var SelectOptionFixtures = gx.Fixtures[SelectOptionProps]{"Option": {Value: "free", Children: gx.Text("Free")}}
+
+// SelectOptionWrap renders the option inside a select, as a page uses it.
+func SelectOptionWrap(n gx.Node) gx.Node {
+	return Select(SelectProps{Label: "Plan", Children: n})
+}
+```
+
+```go title="ui/select/SelectSeparator.fixtures.go"
+package selectbox
+
+import "github.com/alternayte/gx"
+
+var SelectSeparatorFixtures = gx.Fixtures[SelectSeparatorProps]{"Default": {}}
+
+// SelectSeparatorWrap renders the separator between two options of a select.
+func SelectSeparatorWrap(n gx.Node) gx.Node {
+	return Select(SelectProps{Label: "Plan", Children: gx.Frag(
+		SelectOption(SelectOptionProps{Value: "free", Children: gx.Text("Free")}),
+		n,
+		SelectOption(SelectOptionProps{Value: "pro", Children: gx.Text("Pro")}),
+	)})
+}
+```
+
+```go title="ui/select/styles.go"
+package selectbox
+
+import "github.com/alternayte/gx"
+
+// Size is the height of a select.
+type Size string
+
+// The sizes of selectbox.Select.
+const (
+	Md Size = "default"
+	Sm Size = "sm"
+)
+
+var sizeClass = gx.Enum[Size]{
+	Md: "h-9",
+	Sm: "h-8",
+}
+
+// size returns the size of one select; a zero value is Md.
+func (p SelectProps) size() Size {
+	if p.Size == "" {
+		return Md
+	}
+	return p.Size
+}
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--input`, `--ring`.
+The theme must define these tokens: `--input`, `--ring`, `--muted-foreground`, `--destructive`.
 
 ## Usage
 
 ```gx
-<select.Select name="plan">
-  <select.SelectOption value="free" selected={true}>Free</select.SelectOption>
-  <select.SelectOption value="pro">Pro</select.SelectOption>
-</select.Select>
+<selectbox.Select name="fruit" label="Fruit" placeholder="Select a fruit" class="w-48">
+  <selectbox.SelectGroup label="Fruits">
+    <selectbox.SelectOption value="apple">Apple</selectbox.SelectOption>
+    <selectbox.SelectOption value="banana">Banana</selectbox.SelectOption>
+  </selectbox.SelectGroup>
+  <selectbox.SelectSeparator />
+  <selectbox.SelectOption value="carrot" selected={true}>Carrot</selectbox.SelectOption>
+</selectbox.Select>
 ```
 
-The component is a styled native `<select>`, so the keyboard and the mobile picker come from the browser.
+The component is a styled native `<select>`, so the keyboard, the option list and the mobile picker come from the browser. `Size` is `selectbox.Md` (default) or `selectbox.Sm`. `Class` sets the width of the control; without it the control is as wide as its longest option. `Attrs` go on the `<select>`.
+
+`Placeholder` shows muted text until the user selects an option. `SelectGroup` is an `<optgroup>` and `SelectSeparator` is an `<hr>` between options.
 
 ## Examples
 
@@ -115,11 +253,45 @@ The component is a styled native `<select>`, so the keyboard and the mobile pick
 <Example item="select" name="select-plan" label="Select: Select: Plan">
 
 ```gx
-<selectbox.Select name="plan" label="Plan" class="w-48">
-  <selectbox.SelectOption value="free" selected>Free</selectbox.SelectOption>
-  <selectbox.SelectOption value="pro">Pro</selectbox.SelectOption>
-  <selectbox.SelectOption value="team">Team</selectbox.SelectOption>
-</selectbox.Select>
+{selectbox.Select(selectbox.SelectFixtures["Plan"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/select/Select.fixtures.go"
+"Plan":     {Name: "plan", Label: "Plan", Class: "w-48", Children: plans()}
+```
+
+</Example>
+
+### Select: Small
+
+<Example item="select" name="select-small" label="Select: Select: Small">
+
+```gx
+{selectbox.Select(selectbox.SelectFixtures["Small"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/select/Select.fixtures.go"
+"Small":    {Name: "plan", Label: "Plan", Size: Sm, Class: "w-48", Children: plans()}
+```
+
+</Example>
+
+### Select: Fit
+
+<Example item="select" name="select-fit" label="Select: Select: Fit">
+
+```gx
+{selectbox.Select(selectbox.SelectFixtures["Fit"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/select/Select.fixtures.go"
+"Fit":      {Name: "plan", Label: "Plan", Children: plans()}
 ```
 
 </Example>
@@ -136,6 +308,55 @@ The component is a styled native `<select>`, so the keyboard and the mobile pick
 
 </Example>
 
+### Select: Invalid
+
+<Example item="select" name="select-invalid" label="Select: Select: Invalid">
+
+```gx
+{selectbox.Select(selectbox.SelectFixtures["Invalid"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/select/Select.fixtures.go"
+"Invalid":  {Name: "plan", Label: "Plan", Class: "w-48", Attrs: gx.Attrs{{Key: "aria-invalid", Value: "true"}}, Children: plans()}
+```
+
+</Example>
+
+### Select: Placeholder
+
+<Example item="select" name="select-placeholder" label="Select: Select: Placeholder">
+
+```gx
+<selectbox.Select name="fruit" label="Fruit" placeholder="Select a fruit" class="w-48">
+  <selectbox.SelectGroup label="Fruits">
+    <selectbox.SelectOption value="apple">Apple</selectbox.SelectOption>
+    <selectbox.SelectOption value="banana">Banana</selectbox.SelectOption>
+  </selectbox.SelectGroup>
+  <selectbox.SelectSeparator />
+  <selectbox.SelectGroup label="Vegetables">
+    <selectbox.SelectOption value="carrot">Carrot</selectbox.SelectOption>
+    <selectbox.SelectOption value="leek" disabled>Leek</selectbox.SelectOption>
+  </selectbox.SelectGroup>
+</selectbox.Select>
+```
+
+</Example>
+
+### SelectGroup: Group
+
+<Example item="select" name="select-group-group" label="Select: SelectGroup: Group">
+
+```gx
+<selectbox.SelectGroup label="Fruits">
+  <selectbox.SelectOption value="apple">Apple</selectbox.SelectOption>
+  <selectbox.SelectOption value="banana">Banana</selectbox.SelectOption>
+</selectbox.SelectGroup>
+```
+
+</Example>
+
 ### SelectOption: Option
 
 <Example item="select" name="select-option-option" label="Select: SelectOption: Option">
@@ -146,13 +367,24 @@ The component is a styled native `<select>`, so the keyboard and the mobile pick
 
 </Example>
 
+### SelectSeparator: Default
+
+<Example item="select" name="select-separator-default" label="Select: SelectSeparator: Default">
+
+```gx
+<selectbox.SelectSeparator />
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
 <docs.Card title="Do">
 
-- Mark one option with `Selected`.
-- Pair the select with a label.
+- Mark one option with `Selected`, or set a `Placeholder`.
+- Pair the select with a label, or set `Label`.
+- Set `aria-invalid` through `Attrs` when the value fails validation.
 
 </docs.Card>
 <docs.Card title="Don't">
@@ -169,4 +401,5 @@ The component is a styled native `<select>`, so the keyboard and the mobile pick
 | --- | --- |
 | Tab | Moves focus to the select. |
 | Arrow keys | Moves through the options. |
+| A letter | Selects the next option that starts with the typed text. |
 | Enter, Space | Opens or commits the choice. |

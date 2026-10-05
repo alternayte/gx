@@ -8,9 +8,12 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<span class={gx.Cx("group relative inline-flex", p.Class)} {...p.Attrs}>
+<span class={gx.Cx("group/tooltip relative inline-flex", p.Class)} {...p.Attrs}>
   {p.Children}
   if p.Content != "" {
-    <span role="tooltip" class={gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md group-hover:block group-focus-within:block", p.sideClass())}>{p.Content}</span>
+    <span role="tooltip" class={gx.Cx("pointer-events-none invisible absolute z-50 w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background opacity-0 scale-95 transition-[opacity,scale,translate,visibility] duration-150 motion-reduce:transition-none group-hover/tooltip:visible group-hover/tooltip:opacity-100 group-hover/tooltip:scale-100 group-has-[:focus-visible]/tooltip:visible group-has-[:focus-visible]/tooltip:opacity-100 group-has-[:focus-visible]/tooltip:scale-100", sideClass[p.side()])}>
+      {p.Content}
+      <span aria-hidden="true" class={gx.Cx("absolute size-2.5 rotate-45 rounded-[2px] bg-foreground", arrowClass[p.side()])}></span>
+    </span>
   }
 </span>

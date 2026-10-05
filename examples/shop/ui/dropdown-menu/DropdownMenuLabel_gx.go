@@ -7,6 +7,7 @@ import (
 )
 
 type DropdownMenuLabelProps struct {
+	Inset    bool
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -14,9 +15,9 @@ type DropdownMenuLabelProps struct {
 
 func DropdownMenuLabel(p DropdownMenuLabelProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuLabel.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("px-2 py-1.5 text-sm font-medium", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenuLabel.gx:9:115
+//line DropdownMenuLabel.gx:10:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("px-2 py-1.5 text-sm font-medium", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line DropdownMenuLabel.gx:10:136
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

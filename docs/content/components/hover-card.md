@@ -9,11 +9,17 @@ item: "hover-card"
 <Example item="hover-card" name="hover-card-user" label="Hover Card: User">
 
 ```gx
-<hovercard.HoverCard>
-  <:trigger>{gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada"))}</:trigger>
-  {gx.El("p", gx.Attrs{{Key: "class", Value: "font-medium"}}, gx.Text("Ada Lovelace"))}
-  {gx.El("p", gx.Attrs{{Key: "class", Value: "text-muted-foreground"}}, gx.Text("First programmer."))}
-</hovercard.HoverCard>
+{hovercard.HoverCard(hovercard.HoverCardFixtures["User"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/hover-card/HoverCard.fixtures.go"
+"User": {
+  Class:    "text-sm",
+  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada")),
+  Children: demoCard(),
+}
 ```
 
 </Example>
@@ -35,6 +41,7 @@ The command writes these files.
 | --- | --- |
 | `HoverCard.gx` | `ui/hover-card/HoverCard.gx` |
 | `HoverCard.fixtures.go` | `ui/hover-card/HoverCard.fixtures.go` |
+| `styles.go` | `ui/hover-card/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
@@ -46,14 +53,15 @@ package hovercard
 
 props {
   Trigger  gx.Node
+  Align    Align    = Start
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<span class={gx.Cx("group relative inline-flex", p.Class)} {...p.Attrs}>
+<span class={gx.Cx("group/hover-card relative inline-flex", p.Class)} {...p.Attrs}>
   {p.Trigger}
-  <span class="pointer-events-none absolute top-full left-0 z-50 mt-2 hidden w-64 rounded-md border border-border bg-popover p-4 text-sm text-popover-foreground shadow-md group-hover:block group-focus-within:block">{p.Children}</span>
+  <span class={gx.Cx("invisible absolute top-full z-50 mt-1 w-64 -translate-y-2 scale-95 rounded-md border border-border bg-popover p-4 text-popover-foreground opacity-0 shadow-md outline-hidden transition-[opacity,scale,translate,visibility] delay-300 duration-150 motion-reduce:transition-none group-hover/hover-card:visible group-hover/hover-card:translate-y-0 group-hover/hover-card:scale-100 group-hover/hover-card:opacity-100 group-hover/hover-card:delay-700 group-has-[:focus-visible]/hover-card:visible group-has-[:focus-visible]/hover-card:translate-y-0 group-has-[:focus-visible]/hover-card:scale-100 group-has-[:focus-visible]/hover-card:opacity-100 group-has-[:focus-visible]/hover-card:delay-700", alignClass[p.align()])}>{p.Children}</span>
 </span>
 ```
 
@@ -62,32 +70,85 @@ package hovercard
 
 import "github.com/alternayte/gx"
 
+func demoCard() gx.Node {
+	return gx.Frag(
+		gx.El("p", gx.Attrs{{Key: "class", Value: "font-medium"}}, gx.Text("Ada Lovelace")),
+		gx.El("p", gx.Attrs{{Key: "class", Value: "text-muted-foreground"}}, gx.Text("First programmer.")),
+	)
+}
+
 var HoverCardFixtures = gx.Fixtures[HoverCardProps]{
 	"User": {
-		Trigger: gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada")),
-		Children: gx.Frag(
-			gx.El("p", gx.Attrs{{Key: "class", Value: "font-medium"}}, gx.Text("Ada Lovelace")),
-			gx.El("p", gx.Attrs{{Key: "class", Value: "text-muted-foreground"}}, gx.Text("First programmer.")),
-		),
+		Class:    "text-sm",
+		Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada")),
+		Children: demoCard(),
 	},
+	"Center": {
+		Class:    "ml-32 text-sm",
+		Align:    Center,
+		Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada, centered")),
+		Children: demoCard(),
+	},
+	"End": {
+		Class:    "ml-64 text-sm",
+		Align:    End,
+		Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada, at the end")),
+		Children: demoCard(),
+	},
+}
+```
+
+```go title="ui/hover-card/styles.go"
+package hovercard
+
+import "github.com/alternayte/gx"
+
+// Align is the edge of the trigger that the card lines up with.
+type Align string
+
+// The alignments of hovercard.HoverCard. The card has no collision handling,
+// so the default keeps it inside the page next to a trigger at the left
+// edge.
+const (
+	Start  Align = "start"
+	Center Align = "center"
+	End    Align = "end"
+)
+
+var alignClass = gx.Enum[Align]{
+	Start:  "left-0 origin-top-left",
+	Center: "left-[round(50%,1px)] origin-top -translate-x-[round(50%,1px)]",
+	End:    "right-0 origin-top-right",
+}
+
+// align returns the alignment of one card; a zero value is Start.
+func (p HoverCardProps) align() Align {
+	if p.Align == "" {
+		return Start
+	}
+	return p.Align
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`, `--muted-foreground`.
+The theme must define these tokens: `--border`, `--popover`, `--popover-foreground`.
 
 ## Usage
 
 ```gx
-<hovercard.HoverCard trigger={gx.Text("@ada")}>
-  <p>Ada Lovelace</p>
-  <p>First programmer.</p>
+<hovercard.HoverCard trigger={gx.Text("@ada")} class="text-sm">
+  <p class="font-medium">Ada Lovelace</p>
+  <p class="text-muted-foreground">First programmer.</p>
 </hovercard.HoverCard>
 ```
 
-The card is CSS only. It shows on hover and on keyboard focus.
+The card is CSS only. It shows on hover and on keyboard focus. It opens after 700 ms and closes after 300 ms, so the pointer can move from the trigger into the card.
+
+`Align` lines the card up with the trigger: `hovercard.Start` (default), `hovercard.Center` or `hovercard.End`. The card does not move to stay inside the page, so select the alignment that fits the place of the trigger.
+
+The card fades, zooms and slides in. A user who asks for reduced motion gets no transition.
 
 ## Examples
 
@@ -96,11 +157,59 @@ The card is CSS only. It shows on hover and on keyboard focus.
 <Example item="hover-card" name="hover-card-user" label="Hover Card: User">
 
 ```gx
-<hovercard.HoverCard>
-  <:trigger>{gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada"))}</:trigger>
-  {gx.El("p", gx.Attrs{{Key: "class", Value: "font-medium"}}, gx.Text("Ada Lovelace"))}
-  {gx.El("p", gx.Attrs{{Key: "class", Value: "text-muted-foreground"}}, gx.Text("First programmer."))}
-</hovercard.HoverCard>
+{hovercard.HoverCard(hovercard.HoverCardFixtures["User"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/hover-card/HoverCard.fixtures.go"
+"User": {
+  Class:    "text-sm",
+  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada")),
+  Children: demoCard(),
+}
+```
+
+</Example>
+
+### Center
+
+<Example item="hover-card" name="hover-card-center" label="Hover Card: Center">
+
+```gx
+{hovercard.HoverCard(hovercard.HoverCardFixtures["Center"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/hover-card/HoverCard.fixtures.go"
+"Center": {
+  Class:    "ml-32 text-sm",
+  Align:    Center,
+  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada, centered")),
+  Children: demoCard(),
+}
+```
+
+</Example>
+
+### End
+
+<Example item="hover-card" name="hover-card-end" label="Hover Card: End">
+
+```gx
+{hovercard.HoverCard(hovercard.HoverCardFixtures["End"])}
+```
+
+The code renders the fixture by its name. The fixture sets these props.
+
+```go title="registry/hover-card/HoverCard.fixtures.go"
+"End": {
+  Class:    "ml-64 text-sm",
+  Align:    End,
+  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada, at the end")),
+  Children: demoCard(),
+}
 ```
 
 </Example>
@@ -126,4 +235,4 @@ The card is CSS only. It shows on hover and on keyboard focus.
 
 | Key | Action |
 | --- | --- |
-| (none) | The card appears when the trigger takes keyboard focus. |
+| Tab | The card appears when the trigger takes keyboard focus. |

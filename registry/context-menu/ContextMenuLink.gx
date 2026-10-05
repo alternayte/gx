@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent", p.Class)} {...p.Attrs}>{p.Children}</a>
+<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>

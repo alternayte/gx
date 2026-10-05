@@ -51,10 +51,13 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<span class={gx.Cx("group relative inline-flex", p.Class)} {...p.Attrs}>
+<span class={gx.Cx("group/tooltip relative inline-flex", p.Class)} {...p.Attrs}>
   {p.Children}
   if p.Content != "" {
-    <span role="tooltip" class={gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md group-hover:block group-focus-within:block", p.sideClass())}>{p.Content}</span>
+    <span role="tooltip" class={gx.Cx("pointer-events-none invisible absolute z-50 w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background opacity-0 scale-95 transition-[opacity,scale,translate,visibility] duration-150 motion-reduce:transition-none group-hover/tooltip:visible group-hover/tooltip:opacity-100 group-hover/tooltip:scale-100 group-has-[:focus-visible]/tooltip:visible group-has-[:focus-visible]/tooltip:opacity-100 group-has-[:focus-visible]/tooltip:scale-100", sideClass[p.side()])}>
+      {p.Content}
+      <span aria-hidden="true" class={gx.Cx("absolute size-2.5 rotate-45 rounded-[2px] bg-foreground", arrowClass[p.side()])}></span>
+    </span>
   }
 </span>
 ```
@@ -88,26 +91,38 @@ const (
 	Right  Side = "right"
 )
 
+// The content sits 5px off the trigger, the height of the arrow. It zooms
+// from the arrow and slides 2 units from the trigger side. round() keeps the
+// centred content on whole pixels, so its text stays sharp.
 var sideClass = gx.Enum[Side]{
-	Top:    "bottom-full left-1/2 mb-1.5 -translate-x-1/2",
-	Bottom: "top-full left-1/2 mt-1.5 -translate-x-1/2",
-	Left:   "right-full top-1/2 mr-1.5 -translate-y-1/2",
-	Right:  "left-full top-1/2 ml-1.5 -translate-y-1/2",
+	Top:    "bottom-full left-[round(50%,1px)] mb-[5px] origin-bottom -translate-x-[round(50%,1px)] translate-y-2 group-hover/tooltip:translate-y-0 group-has-[:focus-visible]/tooltip:translate-y-0",
+	Bottom: "top-full left-[round(50%,1px)] mt-[5px] origin-top -translate-x-[round(50%,1px)] -translate-y-2 group-hover/tooltip:translate-y-0 group-has-[:focus-visible]/tooltip:translate-y-0",
+	Left:   "right-full top-[round(50%,1px)] mr-[5px] origin-right -translate-y-[round(50%,1px)] translate-x-2 group-hover/tooltip:translate-x-0 group-has-[:focus-visible]/tooltip:translate-x-0",
+	Right:  "left-full top-[round(50%,1px)] ml-[5px] origin-left -translate-y-[round(50%,1px)] -translate-x-2 group-hover/tooltip:translate-x-0 group-has-[:focus-visible]/tooltip:translate-x-0",
 }
 
-// sideClass returns the classes of one tooltip side; a zero value is Top.
-func (p TooltipProps) sideClass() string {
+// The arrow is a rotated square whose centre lies 2px inside the edge of
+// the content, as the reference draws it.
+var arrowClass = gx.Enum[Side]{
+	Top:    "top-full left-[round(50%,1px)] -translate-x-1/2 -translate-y-[calc(50%+2px)]",
+	Bottom: "bottom-full left-[round(50%,1px)] -translate-x-1/2 translate-y-[calc(50%+2px)]",
+	Left:   "left-full top-[round(50%,1px)] -translate-x-[calc(50%+2px)] -translate-y-1/2",
+	Right:  "right-full top-[round(50%,1px)] translate-x-[calc(50%+2px)] -translate-y-1/2",
+}
+
+// side returns the side of one tooltip; a zero value is Top.
+func (p TooltipProps) side() Side {
 	if p.Side == "" {
-		return sideClass[Top]
+		return Top
 	}
-	return sideClass[p.Side]
+	return p.Side
 }
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--primary`, `--primary-foreground`.
+The theme must define these tokens: `--foreground`, `--background`.
 
 ## Usage
 
@@ -117,7 +132,9 @@ The theme must define these tokens: `--primary`, `--primary-foreground`.
 </tooltip.Tooltip>
 ```
 
-The tooltip is CSS only. It shows on hover and on keyboard focus.
+The tooltip is CSS only. It shows on hover and on keyboard focus, with an arrow that points at the control. `Side` selects the edge: `tooltip.Top` (default), `tooltip.Bottom`, `tooltip.Left` or `tooltip.Right`.
+
+The tooltip fades, zooms and slides in from the control. A user who asks for reduced motion gets no transition.
 
 ## Examples
 
@@ -190,4 +207,4 @@ The tooltip is CSS only. It shows on hover and on keyboard focus.
 
 | Key | Action |
 | --- | --- |
-| (none) | The tooltip appears when the control takes keyboard focus. |
+| Tab | The tooltip appears when the control takes keyboard focus. |

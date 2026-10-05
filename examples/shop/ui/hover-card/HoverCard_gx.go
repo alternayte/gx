@@ -8,6 +8,7 @@ import (
 
 type HoverCardProps struct {
 	Trigger  gx.Node
+	Align    Align
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -15,9 +16,9 @@ type HoverCardProps struct {
 
 func HoverCard(p HoverCardProps) gx.Node {
 	var _b gx.Builder
-//line HoverCard.gx:10:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), p.Trigger, gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "pointer-events-none absolute top-full left-0 z-50 mt-2 hidden w-64 rounded-md border border-border bg-popover p-4 text-sm text-popover-foreground shadow-md group-hover:block group-focus-within:block", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line HoverCard.gx:13:8
+//line HoverCard.gx:11:1
+	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/hover-card relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), p.Trigger, gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("invisible absolute top-full z-50 mt-1 w-64 -translate-y-2 scale-95 rounded-md border border-border bg-popover p-4 text-popover-foreground opacity-0 shadow-md outline-hidden transition-[opacity,scale,translate,visibility] delay-300 duration-150 motion-reduce:transition-none group-hover/hover-card:visible group-hover/hover-card:translate-y-0 group-hover/hover-card:scale-100 group-hover/hover-card:opacity-100 group-hover/hover-card:delay-700 group-has-[:focus-visible]/hover-card:visible group-has-[:focus-visible]/hover-card:translate-y-0 group-has-[:focus-visible]/hover-card:scale-100 group-has-[:focus-visible]/hover-card:opacity-100 group-has-[:focus-visible]/hover-card:delay-700", alignClass[p.align()]), Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
+//line HoverCard.gx:14:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

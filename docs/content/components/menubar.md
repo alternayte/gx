@@ -10,8 +10,34 @@ item: "menubar"
 
 ```gx
 <menubar.Menubar>
-  <menubar.MenubarItem href={gx.URL("/")} active>Home</menubar.MenubarItem>
-  <menubar.MenubarItem href={gx.URL("/docs")}>Docs</menubar.MenubarItem>
+  <menubar.MenubarMenu id="demo-menubar-file" label="File">
+    <menubar.MenubarItem>
+      New tab
+      <menubar.MenubarShortcut>⌘T</menubar.MenubarShortcut>
+    </menubar.MenubarItem>
+    <menubar.MenubarItem>New window</menubar.MenubarItem>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarLink href={gx.URL("/docs")}>Documentation</menubar.MenubarLink>
+  </menubar.MenubarMenu>
+  <menubar.MenubarMenu id="demo-menubar-view" label="View">
+    <menubar.MenubarCheckboxItem name="bookmarks">Always show bookmarks bar</menubar.MenubarCheckboxItem>
+    <menubar.MenubarCheckboxItem name="urls" checked>Always show full URLs</menubar.MenubarCheckboxItem>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarItem inset>
+      Reload
+      <menubar.MenubarShortcut>⌘R</menubar.MenubarShortcut>
+    </menubar.MenubarItem>
+    <menubar.MenubarItem inset disabled>Force reload</menubar.MenubarItem>
+  </menubar.MenubarMenu>
+  <menubar.MenubarMenu id="demo-menubar-profiles" label="Profiles">
+    <menubar.MenubarRadioGroup label="Profile">
+      <menubar.MenubarLabel inset>Profile</menubar.MenubarLabel>
+      <menubar.MenubarRadioItem name="demo-menubar-profile" value="ada">Ada</menubar.MenubarRadioItem>
+      <menubar.MenubarRadioItem name="demo-menubar-profile" value="grace" checked>Grace</menubar.MenubarRadioItem>
+    </menubar.MenubarRadioGroup>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarItem inset variant={menubar.Destructive}>Remove profile</menubar.MenubarItem>
+  </menubar.MenubarMenu>
 </menubar.Menubar>
 ```
 
@@ -28,18 +54,40 @@ Run the command in the app module.
 gx add menubar
 ```
 
+The command also installs [`icons`](/components/icons/).
+
 The command writes these files.
 
 | File | Path in the app |
 | --- | --- |
 | `Menubar.gx` | `ui/menubar/Menubar.gx` |
+| `MenubarCheckboxItem.gx` | `ui/menubar/MenubarCheckboxItem.gx` |
+| `MenubarGroup.gx` | `ui/menubar/MenubarGroup.gx` |
 | `MenubarItem.gx` | `ui/menubar/MenubarItem.gx` |
+| `MenubarLabel.gx` | `ui/menubar/MenubarLabel.gx` |
+| `MenubarLink.gx` | `ui/menubar/MenubarLink.gx` |
+| `MenubarMenu.gx` | `ui/menubar/MenubarMenu.gx` |
+| `MenubarRadioGroup.gx` | `ui/menubar/MenubarRadioGroup.gx` |
+| `MenubarRadioItem.gx` | `ui/menubar/MenubarRadioItem.gx` |
+| `MenubarSeparator.gx` | `ui/menubar/MenubarSeparator.gx` |
+| `MenubarShortcut.gx` | `ui/menubar/MenubarShortcut.gx` |
 | `Menubar.fixtures.go` | `ui/menubar/Menubar.fixtures.go` |
-| `styles.go` | `ui/menubar/styles.go` |
+| `MenubarCheckboxItem.fixtures.go` | `ui/menubar/MenubarCheckboxItem.fixtures.go` |
+| `MenubarGroup.fixtures.go` | `ui/menubar/MenubarGroup.fixtures.go` |
 | `MenubarItem.fixtures.go` | `ui/menubar/MenubarItem.fixtures.go` |
+| `MenubarLabel.fixtures.go` | `ui/menubar/MenubarLabel.fixtures.go` |
+| `MenubarLink.fixtures.go` | `ui/menubar/MenubarLink.fixtures.go` |
+| `MenubarMenu.fixtures.go` | `ui/menubar/MenubarMenu.fixtures.go` |
+| `MenubarRadioGroup.fixtures.go` | `ui/menubar/MenubarRadioGroup.fixtures.go` |
+| `MenubarRadioItem.fixtures.go` | `ui/menubar/MenubarRadioItem.fixtures.go` |
+| `MenubarSeparator.fixtures.go` | `ui/menubar/MenubarSeparator.fixtures.go` |
+| `MenubarShortcut.fixtures.go` | `ui/menubar/MenubarShortcut.fixtures.go` |
+| `styles.go` | `ui/menubar/styles.go` |
 
 </docs.TabItem>
 <docs.TabItem label="Manual">
+
+Install [`icons`](/components/icons/) first.
 
 Copy each file to its path in the app. Change each import of a registry package to the path of that package in the app.
 
@@ -55,18 +103,153 @@ props {
 <div role="menubar" data-gx-roving="nowrap" class={gx.Cx("flex h-9 items-center gap-1 rounded-md border border-border bg-background p-1 shadow-xs", p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
-```gx title="ui/menubar/MenubarItem.gx"
+```gx title="ui/menubar/MenubarCheckboxItem.gx"
 package menubar
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
-  Href     gx.URL
-  Active   bool     = false
+  Name     string   = ""
+  Value    string   = "on"
+  Checked  bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item aria-current={p.current()} class={gx.Cx("inline-flex items-center rounded-sm px-2 py-1 text-sm font-medium no-underline outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", activeClass[p.Active], p.Class)} {...p.Attrs}>{p.Children}</a>
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-xs py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="checkbox" role="menuitemcheckbox" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Check class="size-4" /></span>
+  {p.Children}
+</label>
+```
+
+```gx title="ui/menubar/MenubarGroup.gx"
+package menubar
+
+props {
+  Label    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/menubar/MenubarItem.gx"
+package menubar
+
+props {
+  Variant  Variant  = Default
+  Inset    bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" tabindex="-1" disabled={p.Disabled} data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>{p.Children}</button>
+```
+
+```gx title="ui/menubar/MenubarLabel.gx"
+package menubar
+
+props {
+  Inset    bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="presentation" class={gx.Cx("px-2 py-1.5 text-sm font-medium", insetClass[p.Inset], p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/menubar/MenubarLink.gx"
+package menubar
+
+props {
+  Href     gx.URL
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a role="menuitem" tabindex="-1" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</a>
+```
+
+```gx title="ui/menubar/MenubarMenu.gx"
+package menubar
+
+props {
+  Id       string
+  Label    string
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" aria-haspopup="menu" popovertarget={p.Id} data-gx-roving-item style={p.triggerStyle()} class="flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground">{p.Label}</button>
+<div id={p.Id} popover="auto" role="menu" aria-label={p.Label} data-gx-dismiss data-gx-roving="nowrap" style={p.contentStyle()} class={gx.Cx("z-50 min-w-[12rem] origin-top-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/menubar/MenubarRadioGroup.gx"
+package menubar
+
+props {
+  Label    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/menubar/MenubarRadioItem.gx"
+package menubar
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Name     string   = ""
+  Value    string   = ""
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-xs py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="radio" role="menuitemradio" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Circle class="size-2 *:fill-current" /></span>
+  {p.Children}
+</label>
+```
+
+```gx title="ui/menubar/MenubarSeparator.gx"
+package menubar
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div role="separator" class={gx.Cx("-mx-1 my-1 h-px bg-border", p.Class)} {...p.Attrs}></div>
+```
+
+```gx title="ui/menubar/MenubarShortcut.gx"
+package menubar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<span class={gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
 ```
 
 ```go title="ui/menubar/Menubar.fixtures.go"
@@ -76,26 +259,70 @@ import "github.com/alternayte/gx"
 
 var MenubarFixtures = gx.Fixtures[MenubarProps]{
 	"Default": {Children: gx.Frag(
-		MenubarItem(MenubarItemProps{Href: gx.URL("/"), Active: true, Children: gx.Text("Home")}),
-		MenubarItem(MenubarItemProps{Href: gx.URL("/docs"), Children: gx.Text("Docs")}),
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-file", Label: "File", Children: gx.Frag(
+			MenubarItem(MenubarItemProps{Children: gx.Frag(
+				gx.Text("New tab"),
+				MenubarShortcut(MenubarShortcutProps{Children: gx.Text("⌘T")}),
+			)}),
+			MenubarItem(MenubarItemProps{Children: gx.Text("New window")}),
+			MenubarSeparator(MenubarSeparatorProps{}),
+			MenubarLink(MenubarLinkProps{Href: gx.URL("/docs"), Children: gx.Text("Documentation")}),
+		)}),
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-view", Label: "View", Children: gx.Frag(
+			MenubarCheckboxItem(MenubarCheckboxItemProps{Name: "bookmarks", Children: gx.Text("Always show bookmarks bar")}),
+			MenubarCheckboxItem(MenubarCheckboxItemProps{Name: "urls", Checked: true, Children: gx.Text("Always show full URLs")}),
+			MenubarSeparator(MenubarSeparatorProps{}),
+			MenubarItem(MenubarItemProps{Inset: true, Children: gx.Frag(
+				gx.Text("Reload"),
+				MenubarShortcut(MenubarShortcutProps{Children: gx.Text("⌘R")}),
+			)}),
+			MenubarItem(MenubarItemProps{Inset: true, Disabled: true, Children: gx.Text("Force reload")}),
+		)}),
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-profiles", Label: "Profiles", Children: gx.Frag(
+			MenubarRadioGroup(MenubarRadioGroupProps{Label: "Profile", Children: gx.Frag(
+				MenubarLabel(MenubarLabelProps{Inset: true, Children: gx.Text("Profile")}),
+				MenubarRadioItem(MenubarRadioItemProps{Name: "demo-menubar-profile", Value: "ada", Children: gx.Text("Ada")}),
+				MenubarRadioItem(MenubarRadioItemProps{Name: "demo-menubar-profile", Value: "grace", Checked: true, Children: gx.Text("Grace")}),
+			)}),
+			MenubarSeparator(MenubarSeparatorProps{}),
+			MenubarItem(MenubarItemProps{Inset: true, Variant: Destructive, Children: gx.Text("Remove profile")}),
+		)}),
 	)},
 }
 ```
 
-```go title="ui/menubar/styles.go"
+```go title="ui/menubar/MenubarCheckboxItem.fixtures.go"
 package menubar
 
-var activeClass = map[bool]string{
-	true:  "bg-accent text-accent-foreground",
-	false: "text-foreground",
+import "github.com/alternayte/gx"
+
+var MenubarCheckboxItemFixtures = gx.Fixtures[MenubarCheckboxItemProps]{
+	"Checked":   {Name: "status-bar", Checked: true, Children: gx.Text("Status bar")},
+	"Unchecked": {Name: "panel", Children: gx.Text("Panel")},
+	"Disabled":  {Name: "activity", Disabled: true, Children: gx.Text("Activity bar")},
 }
 
-// current returns the aria-current value of one item.
-func (p MenubarItemProps) current() string {
-	if p.Active {
-		return "page"
-	}
-	return ""
+// MenubarCheckboxItemWrap renders the item inside a menu, as a page uses it.
+func MenubarCheckboxItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/menubar/MenubarGroup.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarGroupFixtures = gx.Fixtures[MenubarGroupProps]{
+	"Default": {Label: "Account", Children: gx.Frag(
+		MenubarItem(MenubarItemProps{Children: gx.Text("Profile")}),
+		MenubarItem(MenubarItemProps{Children: gx.Text("Billing")}),
+	)},
+}
+
+// MenubarGroupWrap renders the group inside a menu, as a page uses it.
+func MenubarGroupWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
 }
 ```
 
@@ -104,27 +331,204 @@ package menubar
 
 import "github.com/alternayte/gx"
 
-var MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{"Item": {Href: gx.URL("/docs"), Children: gx.Text("Docs")}}
+var MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{
+	"Item":        {Children: gx.Text("Profile")},
+	"Inset":       {Inset: true, Children: gx.Text("Profile")},
+	"Destructive": {Variant: Destructive, Children: gx.Text("Delete")},
+	"Disabled":    {Disabled: true, Children: gx.Text("Profile")},
+}
 
-// MenubarItemWrap renders the item inside a bar, as a page uses it.
+// MenubarItemWrap renders the item inside a menu, as a page uses it.
 func MenubarItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/menubar/MenubarLabel.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarLabelFixtures = gx.Fixtures[MenubarLabelProps]{
+	"Label": {Children: gx.Text("My account")},
+	"Inset": {Inset: true, Children: gx.Text("My account")},
+}
+```
+
+```go title="ui/menubar/MenubarLink.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarLinkFixtures = gx.Fixtures[MenubarLinkProps]{"Link": {Href: gx.URL("/docs"), Children: gx.Text("Documentation")}}
+
+// MenubarLinkWrap renders the item inside a menu, as a page uses it.
+func MenubarLinkWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/menubar/MenubarMenu.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarMenuFixtures = gx.Fixtures[MenubarMenuProps]{
+	"Menu": {Id: "demo-menubar-menu", Label: "Edit", Children: gx.Frag(
+		MenubarItem(MenubarItemProps{Children: gx.Text("Undo")}),
+		MenubarItem(MenubarItemProps{Children: gx.Text("Redo")}),
+	)},
+}
+
+// MenubarMenuWrap renders the menu inside a bar, as a page uses it.
+func MenubarMenuWrap(n gx.Node) gx.Node {
 	return Menubar(MenubarProps{Children: n})
 }
+```
+
+```go title="ui/menubar/MenubarRadioGroup.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarRadioGroupFixtures = gx.Fixtures[MenubarRadioGroupProps]{
+	"Default": {Label: "Position", Children: gx.Frag(
+		MenubarRadioItem(MenubarRadioItemProps{Name: "menubar-group-position", Value: "top", Checked: true, Children: gx.Text("Top")}),
+		MenubarRadioItem(MenubarRadioItemProps{Name: "menubar-group-position", Value: "bottom", Children: gx.Text("Bottom")}),
+	)},
+}
+
+// MenubarRadioGroupWrap renders the group inside a menu, as a page uses it.
+func MenubarRadioGroupWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/menubar/MenubarRadioItem.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarRadioItemFixtures = gx.Fixtures[MenubarRadioItemProps]{
+	"Checked":   {Name: "menubar-item-checked", Value: "top", Checked: true, Children: gx.Text("Top")},
+	"Unchecked": {Name: "menubar-item-unchecked", Value: "bottom", Children: gx.Text("Bottom")},
+}
+
+// MenubarRadioItemWrap renders the item inside a menu, as a page uses it.
+func MenubarRadioItemWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/menubar/MenubarSeparator.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarSeparatorFixtures = gx.Fixtures[MenubarSeparatorProps]{"Default": {}}
+```
+
+```go title="ui/menubar/MenubarShortcut.fixtures.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+var MenubarShortcutFixtures = gx.Fixtures[MenubarShortcutProps]{"Default": {Children: gx.Text("⌘K")}}
+```
+
+```go title="ui/menubar/styles.go"
+package menubar
+
+import "github.com/alternayte/gx"
+
+// triggerStyle names the trigger of one menu as the anchor of its content.
+func (p MenubarMenuProps) triggerStyle() gx.Style {
+	return gx.Style("anchor-name: --gx-menubar-" + p.Id)
+}
+
+// contentStyle anchors the content below its trigger, 8px down and 4px to
+// the left as the reference offsets do. A browser without anchor positioning
+// keeps the content at its place in the document flow.
+func (p MenubarMenuProps) contentStyle() gx.Style {
+	return gx.Style("position-anchor: --gx-menubar-" + p.Id + "; inset: auto; margin: 0.5rem 0 0 -0.25rem; top: anchor(bottom); left: anchor(left)")
+}
+
+// Variant is the visual style of a menu item.
+type Variant string
+
+// The variants of menubar.MenubarItem.
+const (
+	Default     Variant = "default"
+	Destructive Variant = "destructive"
+)
+
+var variantClass = gx.Enum[Variant]{
+	Default:     "",
+	Destructive: "text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive!",
+}
+
+// variant returns the variant of one item; a zero value is Default.
+func (p MenubarItemProps) variant() Variant {
+	if p.Variant == "" {
+		return Default
+	}
+	return p.Variant
+}
+
+// insetClass lines an item or a label up with the checkbox and radio items.
+var insetClass = map[bool]string{
+	true:  "pl-8",
+	false: "",
+}
+
+// rovingItem marks an item for the roving tabindex of its menu. A disabled
+// item is not marked, so the arrow keys pass it.
+func rovingItem(disabled bool) gx.Attrs {
+	return gx.Attrs{gx.Bool("data-gx-roving-item", !disabled)}
+}
+
+// motionClass fades and zooms the menu from 95% and slides it 2 units from
+// the trigger. Safari 26.0 never ends a display transition on an element
+// that CSS anchor positioning places, which leaves a closed menu rendered.
+// The @supports test matches every engine but WebKit, so Safari closes the
+// menu at once and still animates the enter.
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
 </docs.Tabs>
 
-The theme must define these tokens: `--border`, `--background`, `--accent`, `--accent-foreground`, `--foreground`.
+The theme must define these tokens: `--border`, `--background`, `--popover`, `--popover-foreground`, `--accent`, `--accent-foreground`, `--muted-foreground`, `--destructive`.
 
 ## Usage
 
+A horizontal bar of menus.
+
 ```gx
 <menubar.Menubar>
-  <menubar.MenubarItem href={gx.URL("/")} active={true}>Home</menubar.MenubarItem>
-  <menubar.MenubarItem href={gx.URL("/docs")}>Docs</menubar.MenubarItem>
+  <menubar.MenubarMenu id="file-menu" label="File">
+    <menubar.MenubarItem>
+      New tab
+      <menubar.MenubarShortcut>⌘T</menubar.MenubarShortcut>
+    </menubar.MenubarItem>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarLink href={gx.URL("/docs")}>Documentation</menubar.MenubarLink>
+  </menubar.MenubarMenu>
+  <menubar.MenubarMenu id="view-menu" label="View">
+    <menubar.MenubarCheckboxItem name="urls" checked={true}>Always show full URLs</menubar.MenubarCheckboxItem>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarItem inset={true}>Reload</menubar.MenubarItem>
+  </menubar.MenubarMenu>
 </menubar.Menubar>
 ```
+
+`MenubarMenu` renders the trigger in the bar and the menu that opens from it. `Label` is the text of the trigger and `Id` is the id of the menu. The menu uses the native Popover API. A browser without anchor positioning shows the menu at its place in the document flow.
+
+A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
+
+A menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
+
+A click opens a menu. The pointer does not open the next menu when it moves along the bar. The item has no sub-menu part.
 
 ## Examples
 
@@ -134,9 +538,78 @@ The theme must define these tokens: `--border`, `--background`, `--accent`, `--a
 
 ```gx
 <menubar.Menubar>
-  <menubar.MenubarItem href={gx.URL("/")} active>Home</menubar.MenubarItem>
-  <menubar.MenubarItem href={gx.URL("/docs")}>Docs</menubar.MenubarItem>
+  <menubar.MenubarMenu id="demo-menubar-file" label="File">
+    <menubar.MenubarItem>
+      New tab
+      <menubar.MenubarShortcut>⌘T</menubar.MenubarShortcut>
+    </menubar.MenubarItem>
+    <menubar.MenubarItem>New window</menubar.MenubarItem>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarLink href={gx.URL("/docs")}>Documentation</menubar.MenubarLink>
+  </menubar.MenubarMenu>
+  <menubar.MenubarMenu id="demo-menubar-view" label="View">
+    <menubar.MenubarCheckboxItem name="bookmarks">Always show bookmarks bar</menubar.MenubarCheckboxItem>
+    <menubar.MenubarCheckboxItem name="urls" checked>Always show full URLs</menubar.MenubarCheckboxItem>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarItem inset>
+      Reload
+      <menubar.MenubarShortcut>⌘R</menubar.MenubarShortcut>
+    </menubar.MenubarItem>
+    <menubar.MenubarItem inset disabled>Force reload</menubar.MenubarItem>
+  </menubar.MenubarMenu>
+  <menubar.MenubarMenu id="demo-menubar-profiles" label="Profiles">
+    <menubar.MenubarRadioGroup label="Profile">
+      <menubar.MenubarLabel inset>Profile</menubar.MenubarLabel>
+      <menubar.MenubarRadioItem name="demo-menubar-profile" value="ada">Ada</menubar.MenubarRadioItem>
+      <menubar.MenubarRadioItem name="demo-menubar-profile" value="grace" checked>Grace</menubar.MenubarRadioItem>
+    </menubar.MenubarRadioGroup>
+    <menubar.MenubarSeparator />
+    <menubar.MenubarItem inset variant={menubar.Destructive}>Remove profile</menubar.MenubarItem>
+  </menubar.MenubarMenu>
 </menubar.Menubar>
+```
+
+</Example>
+
+### MenubarCheckboxItem: Checked
+
+<Example item="menubar" name="menubar-checkbox-item-checked" label="Menubar: MenubarCheckboxItem: Checked">
+
+```gx
+<menubar.MenubarCheckboxItem name="status-bar" checked>Status bar</menubar.MenubarCheckboxItem>
+```
+
+</Example>
+
+### MenubarCheckboxItem: Unchecked
+
+<Example item="menubar" name="menubar-checkbox-item-unchecked" label="Menubar: MenubarCheckboxItem: Unchecked">
+
+```gx
+<menubar.MenubarCheckboxItem name="panel">Panel</menubar.MenubarCheckboxItem>
+```
+
+</Example>
+
+### MenubarCheckboxItem: Disabled
+
+<Example item="menubar" name="menubar-checkbox-item-disabled" label="Menubar: MenubarCheckboxItem: Disabled">
+
+```gx
+<menubar.MenubarCheckboxItem name="activity" disabled>Activity bar</menubar.MenubarCheckboxItem>
+```
+
+</Example>
+
+### MenubarGroup: Default
+
+<Example item="menubar" name="menubar-group-default" label="Menubar: MenubarGroup: Default">
+
+```gx
+<menubar.MenubarGroup label="Account">
+  <menubar.MenubarItem>Profile</menubar.MenubarItem>
+  <menubar.MenubarItem>Billing</menubar.MenubarItem>
+</menubar.MenubarGroup>
 ```
 
 </Example>
@@ -146,7 +619,133 @@ The theme must define these tokens: `--border`, `--background`, `--accent`, `--a
 <Example item="menubar" name="menubar-item-item" label="Menubar: MenubarItem: Item">
 
 ```gx
-<menubar.MenubarItem href={gx.URL("/docs")}>Docs</menubar.MenubarItem>
+<menubar.MenubarItem>Profile</menubar.MenubarItem>
+```
+
+</Example>
+
+### MenubarItem: Inset
+
+<Example item="menubar" name="menubar-item-inset" label="Menubar: MenubarItem: Inset">
+
+```gx
+<menubar.MenubarItem inset>Profile</menubar.MenubarItem>
+```
+
+</Example>
+
+### MenubarItem: Destructive
+
+<Example item="menubar" name="menubar-item-destructive" label="Menubar: MenubarItem: Destructive">
+
+```gx
+<menubar.MenubarItem variant={menubar.Destructive}>Delete</menubar.MenubarItem>
+```
+
+</Example>
+
+### MenubarItem: Disabled
+
+<Example item="menubar" name="menubar-item-disabled" label="Menubar: MenubarItem: Disabled">
+
+```gx
+<menubar.MenubarItem disabled>Profile</menubar.MenubarItem>
+```
+
+</Example>
+
+### MenubarLabel: Label
+
+<Example item="menubar" name="menubar-label-label" label="Menubar: MenubarLabel: Label">
+
+```gx
+<menubar.MenubarLabel>My account</menubar.MenubarLabel>
+```
+
+</Example>
+
+### MenubarLabel: Inset
+
+<Example item="menubar" name="menubar-label-inset" label="Menubar: MenubarLabel: Inset">
+
+```gx
+<menubar.MenubarLabel inset>My account</menubar.MenubarLabel>
+```
+
+</Example>
+
+### MenubarLink: Link
+
+<Example item="menubar" name="menubar-link-link" label="Menubar: MenubarLink: Link">
+
+```gx
+<menubar.MenubarLink href={gx.URL("/docs")}>Documentation</menubar.MenubarLink>
+```
+
+</Example>
+
+### MenubarMenu: Menu
+
+<Example item="menubar" name="menubar-menu-menu" label="Menubar: MenubarMenu: Menu">
+
+```gx
+<menubar.MenubarMenu id="demo-menubar-menu" label="Edit">
+  <menubar.MenubarItem>Undo</menubar.MenubarItem>
+  <menubar.MenubarItem>Redo</menubar.MenubarItem>
+</menubar.MenubarMenu>
+```
+
+</Example>
+
+### MenubarRadioGroup: Default
+
+<Example item="menubar" name="menubar-radio-group-default" label="Menubar: MenubarRadioGroup: Default">
+
+```gx
+<menubar.MenubarRadioGroup label="Position">
+  <menubar.MenubarRadioItem name="menubar-group-position" value="top" checked>Top</menubar.MenubarRadioItem>
+  <menubar.MenubarRadioItem name="menubar-group-position" value="bottom">Bottom</menubar.MenubarRadioItem>
+</menubar.MenubarRadioGroup>
+```
+
+</Example>
+
+### MenubarRadioItem: Checked
+
+<Example item="menubar" name="menubar-radio-item-checked" label="Menubar: MenubarRadioItem: Checked">
+
+```gx
+<menubar.MenubarRadioItem name="menubar-item-checked" value="top" checked>Top</menubar.MenubarRadioItem>
+```
+
+</Example>
+
+### MenubarRadioItem: Unchecked
+
+<Example item="menubar" name="menubar-radio-item-unchecked" label="Menubar: MenubarRadioItem: Unchecked">
+
+```gx
+<menubar.MenubarRadioItem name="menubar-item-unchecked" value="bottom">Bottom</menubar.MenubarRadioItem>
+```
+
+</Example>
+
+### MenubarSeparator: Default
+
+<Example item="menubar" name="menubar-separator-default" label="Menubar: MenubarSeparator: Default">
+
+```gx
+<menubar.MenubarSeparator />
+```
+
+</Example>
+
+### MenubarShortcut: Default
+
+<Example item="menubar" name="menubar-shortcut-default" label="Menubar: MenubarShortcut: Default">
+
+```gx
+<menubar.MenubarShortcut>⌘K</menubar.MenubarShortcut>
 ```
 
 </Example>
@@ -156,13 +755,14 @@ The theme must define these tokens: `--border`, `--background`, `--accent`, `--a
 <docs.CardGrid>
 <docs.Card title="Do">
 
+- Give each menu a unique `Id`.
 - Keep the bar to one row.
-- Mark the current page with `Active`.
+- Give the radio items of one group the same `Name`.
 
 </docs.Card>
 <docs.Card title="Don't">
 
-- Do not mix unrelated destinations in one menubar.
+- Do not put a link or a button directly in the bar. Put it in a menu.
 - Do not use a menubar for a site header. Use the navigation menu.
 
 </docs.Card>
@@ -172,7 +772,12 @@ The theme must define these tokens: `--border`, `--background`, `--accent`, `--a
 
 | Key | Action |
 | --- | --- |
-| Tab | Enters the bar at the first item. |
-| Left, Right | Moves focus between items. |
-| Home, End | Moves to the first or last item. |
-| Enter | Follows the focused link. |
+| Tab | Enters the bar at one trigger and leaves it again. |
+| Left, Right | On a trigger, moves to the previous or next trigger. In a menu, opens the previous or next menu. |
+| Home, End | Moves to the first or last trigger, or to the first or last item of a menu. |
+| Enter, Space | Opens the menu of the focused trigger. |
+| Down | Opens the menu and moves to the first item. |
+| Up, Down | Moves through the items. A disabled item is passed. |
+| A letter | Moves to the next item that starts with the typed text. |
+| Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |
+| Escape | Closes the menu and returns focus to its trigger. |
