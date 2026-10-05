@@ -5,6 +5,7 @@ package route
 import (
 	gx "github.com/alternayte/gx"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -136,6 +137,35 @@ func (in Toast) URL() string {
 	b.WriteString("cart")
 	b.WriteString("/")
 	b.WriteString("toast")
+	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of ToastDemo.
+func (ToastDemo) Pattern() string { return "POST /cart/toast-demo" }
+
+// Bind fills ToastDemo from the request.
+func (in *ToastDemo) Bind(r *http.Request) error {
+	if v := r.URL.Query().Get("show"); v != "" {
+		in.Show = string(v)
+	}
+	return nil
+}
+
+// URL returns the path of ToastDemo.
+func (in ToastDemo) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("cart")
+	b.WriteString("/")
+	b.WriteString("toast-demo")
+	q := url.Values{}
+	if in.Show != "" {
+		q.Set("show", in.Show)
+	}
+	if s := q.Encode(); s != "" {
+		b.WriteString("?")
+		b.WriteString(s)
+	}
 	return gx.BasePath() + b.String()
 }
 

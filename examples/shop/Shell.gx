@@ -3,6 +3,7 @@ package shop
 import (
   "github.com/alternayte/gx/examples/shop/route"
   signuproute "github.com/alternayte/gx/examples/shop/signup/route"
+  "github.com/alternayte/gx/examples/shop/ui/toast"
 )
 
 props {
@@ -18,4 +19,4 @@ props {
   </nav>
 </header>
 <main class="mx-auto max-w-3xl p-4">{p.Children}</main>
-<div id="gx-toaster" aria-live="polite" aria-atomic="true"></div>
+<toast.Toaster />

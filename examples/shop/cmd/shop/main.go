@@ -11,6 +11,7 @@ import (
 	"github.com/alternayte/gx/adapters/datastar"
 	"github.com/alternayte/gx/examples/shop"
 	"github.com/alternayte/gx/examples/shop/gxstyles"
+	"github.com/alternayte/gx/examples/shop/ui/toast"
 )
 
 // listenAddr is the dev server address when gx dev runs the app.
@@ -26,7 +27,9 @@ func main() {
 	flag.Parse()
 	setupGallery()
 	gx.SetStylesheet(gxstyles.CSS())
-	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
+	// The toast item renders every pushed toast, so its classes are in the
+	// app stylesheet.
+	app := gx.New(gx.Config{Adapter: datastar.Adapter(), Toast: toast.Render})
 	app.Group("/", shop.ShellLayout, gx.Nav(gx.MorphNavigation), shop.Routes)
 	log.Printf("shop listening on http://%s", *addr)
 	log.Fatal(http.ListenAndServe(*addr, app))

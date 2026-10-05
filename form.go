@@ -423,7 +423,7 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					errs[name] = fe.key
 				} else {
 					ctx.res.Err = err
-					ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: err.Error()})
+					ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: err.Error(), Kind: ToastError})
 				}
 			} else {
 				var re *redirectError
@@ -432,7 +432,7 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				ctx.res.Err = err
-				ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: err.Error()})
+				ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: err.Error(), Kind: ToastError})
 			}
 		}
 	}

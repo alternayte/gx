@@ -112,6 +112,43 @@ func TestREQ_ACT_04_DatastarModes(t *testing.T) {
 	}
 }
 
+// TestREQ_REG_11_DatastarToast checks the wire form of a toast: one append
+// into the toaster region, rendered by Config.Toast of the app, or as the
+// plain toast when the app sets none.
+func TestREQ_REG_11_DatastarToast(t *testing.T) {
+	h := gx.Action(func(c *gx.Ctx, in actRoute) error {
+		return c.Toast("File uploaded", gx.ToastSuccess, gx.ToastID("upload"))
+	})
+	rec := serve(t, h, httptest.NewRequest("POST", "/act", nil))
+	body := rec.Body.String()
+	for _, want := range []string{
+		"event: datastar-patch-elements",
+		"selector #gx-toaster",
+		"mode append",
+		`<div id="gx-toast-upload" role="status" data-gx-toast="" data-kind="success" data-duration="4000">`,
+		"File uploaded",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("SSE body lacks %q:\n%s", want, body)
+		}
+	}
+	if n := strings.Count(body, "event: datastar-patch-elements"); n != 1 {
+		t.Fatalf("toast sends %d element events, want 1:\n%s", n, body)
+	}
+
+	app := gx.New(gx.Config{Adapter: datastar.Adapter(), Toast: func(p gx.ToastPatch) gx.Node {
+		return gx.El("output", gx.ToastAttrs(p), gx.Text("app: "+p.Text))
+	}})
+	app.Group("/", gx.Collect(h))
+	req := httptest.NewRequest("POST", "/act", nil)
+	req.Header.Set("Datastar-Request", "true")
+	wired := httptest.NewRecorder()
+	app.ServeHTTP(wired, req)
+	if got := wired.Body.String(); !strings.Contains(got, `<output id="gx-toast-upload"`) || !strings.Contains(got, "app: File uploaded") {
+		t.Fatalf("SSE body lacks the toast of Config.Toast:\n%s", got)
+	}
+}
+
 // TestREQ_PLG_04_Assets checks the pinned runtime is served and matches its
 // recorded hash (SI-10 groundwork).
 func TestREQ_PLG_04_Assets(t *testing.T) {

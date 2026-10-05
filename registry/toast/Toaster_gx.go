@@ -15,22 +15,8 @@ type ToasterProps struct {
 func Toaster(p ToasterProps) gx.Node {
 	var _b gx.Builder
 //line Toaster.gx:9:1
-	var _b1 gx.Builder
-//line Toaster.gx:9:152
-	_b1.Add(gx.Text("\n  "))
-//line Toaster.gx:10:3
-	if p.Children != nil {
-//line Toaster.gx:10:25
-		_b1.Add(gx.Text("\n    "))
-//line Toaster.gx:11:5
-		_b1.Add(p.Children)
-//line Toaster.gx:11:17
-		_b1.Add(gx.Text("\n  "))
-	}
-//line Toaster.gx:12:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed right-4 bottom-4 z-50 flex w-72 flex-col gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: "gx-toaster", Kind: gx.AttrText}, gx.Attr{Key: "aria-live", Value: "polite", Kind: gx.AttrText}, gx.Attr{Key: "aria-atomic", Value: "true", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Toaster.gx:13:7
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed right-4 bottom-4 z-50 flex w-[356px] max-w-[calc(100vw-2rem)] flex-col gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: "gx-toaster", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "region", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Notifications", Kind: gx.AttrText}, gx.Attr{Key: "aria-live", Value: "polite", Kind: gx.AttrText}, gx.Bool("data-gx-toaster", true)}, p.Attrs), p.Children))
+//line Toaster.gx:9:238
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

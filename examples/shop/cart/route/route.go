@@ -25,6 +25,13 @@ type Toast struct {
 	gx.Route `POST /cart/toast`
 }
 
+// ToastDemo shows one toast of the demo row: a kind, a description, an
+// action, or one step of a replace by ID.
+type ToastDemo struct {
+	gx.Route `POST /cart/toast-demo`
+	Show     string `query:"show"`
+}
+
 // Noop answers 204.
 type Noop struct {
 	gx.Route `POST /cart/noop`

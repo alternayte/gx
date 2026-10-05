@@ -133,6 +133,49 @@ test('REQ-ACT-10 handler error shows a toast', async () => {
   await waitForText('#gx-toaster', 'demo action failed')
 })
 
+// clickDemo clicks one button of the toast demo row.
+async function clickDemo(button: string): Promise<void> {
+  await page.click(`[data-toast-demo] button:text-is("${button}")`)
+}
+
+// toastKinds returns the kind of every toast in the toaster, in DOM order.
+function toastKinds(): Promise<(string | null)[]> {
+  return page.locator('#gx-toaster [data-gx-toast]').evaluateAll((els) => els.map((el) => el.getAttribute('data-kind')))
+}
+
+test('REQ-REG-11 a failed action shows an alert toast of the error kind', async () => {
+  await clickCart('Alpha', 'Fail')
+  await waitForText('#gx-toaster', 'demo action failed')
+  const toast = page.locator('#gx-toaster [data-gx-toast]')
+  expect(await toast.getAttribute('role')).toBe('alert')
+  expect(await toast.getAttribute('data-kind')).toBe('error')
+})
+
+test('REQ-REG-11 a toast with the ID of an earlier toast replaces it in place', async () => {
+  await clickDemo('Start upload')
+  await waitForText('#gx-toaster', 'Uploading the file')
+  await clickDemo('Default')
+  await waitForText('#gx-toaster', 'Event created')
+  expect(await toastKinds()).toEqual(['loading', 'default'])
+  await clickDemo('Finish upload')
+  await waitForText('#gx-toaster', 'File uploaded')
+  expect(await toastKinds()).toEqual(['success', 'default'])
+  expect(await page.textContent('#gx-toaster')).not.toContain('Uploading the file')
+})
+
+test('REQ-REG-11 a toast leaves after its duration and waits while the pointer is over it', async () => {
+  await clickDemo('Success')
+  const toast = page.locator('#gx-toaster [data-gx-toast]')
+  await toast.waitFor()
+  await toast.hover()
+  // The duration is 4 s. The toast stays past it under the pointer.
+  await Bun.sleep(4600)
+  expect(await toast.count()).toBe(1)
+  expect(await toast.getAttribute('data-closing')).toBeNull()
+  await page.mouse.move(5, 5)
+  await toast.waitFor({ state: 'detached', timeout: 6000 })
+}, 20000)
+
 test('REQ-ACT-11 a visible action fills the lazy slot', async () => {
   await page.evaluate(() => {
     document.querySelector('#lazy-slot')?.scrollIntoView({ block: 'center' })

@@ -52,7 +52,7 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// the page (REQ-ACT-10, REQ-DEV-06). The status stays 200 so
 		// the adapter stream reaches the browser; res.Err carries the
 		// error for the dev overlay.
-		ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: handlerErr.Error()})
+		ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: handlerErr.Error(), Kind: ToastError})
 		ctx.res.Err = handlerErr
 	}
 	if len(ctx.res.Patches) == 0 {

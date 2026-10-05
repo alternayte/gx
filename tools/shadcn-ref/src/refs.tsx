@@ -5,6 +5,7 @@
 // The second parameter of each entry, when used, opens overlays so the
 // spec can capture them.
 import type { ReactNode } from "react"
+import { XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Accordion,
@@ -611,10 +612,16 @@ export const refs: Record<string, Ref> = {
   },
   toast: {
     // The toaster is the server-pushed toast region (Gx-native, REQ-REG-11).
+    // The toast has the look of the shadcn sonner toast on the same tokens.
     body: (
-      <div id="gx-toaster" aria-live="polite" aria-atomic="true" className="fixed right-4 bottom-4 z-50 flex w-72 flex-col gap-2">
-        <div role="status" data-gx-toast>
-          Saved
+      <div id="gx-toaster" role="region" aria-label="Notifications" aria-live="polite" className="static right-4 bottom-4 z-50 flex w-[356px] max-w-[calc(100vw-2rem)] flex-col gap-3">
+        <div role="status" data-gx-toast className="flex w-full items-start gap-2 rounded-lg border border-border bg-popover p-4 text-sm text-popover-foreground shadow-lg">
+          <div className="grid min-w-0 flex-1 gap-0.5">
+            <div className="leading-5 font-medium">Saved</div>
+          </div>
+          <button type="button" aria-label="Close" className="-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50">
+            <XIcon className="size-4" />
+          </button>
         </div>
       </div>
     ),

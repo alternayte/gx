@@ -7,6 +7,16 @@
           "ui/scroll-area/ScrollArea.fixtures.go": "eb3e41415af947e4883fd3a18f9ab26bc53dd5fd5ddbe4b9e5a1e729592b37b5",
           "ui/scroll-area/ScrollArea.gx": "0b904a0c1edbf5d7a6427f8f5df0b709656789fb6d1ccdfbb6c902f3823be21d"
         }
+      },
+      "toast": {
+        "version": "0.2.0",
+        "files": {
+          "ui/toast/Toast.fixtures.go": "21466bebdc37275f92e89e2f950bfd6d6415314fb13eec7b5865152f2fd6716e",
+          "ui/toast/Toast.gx": "d488f2b9c25857d5b1f14a92d5ced58eff1136285543155462075df8d6a66678",
+          "ui/toast/Toaster.fixtures.go": "3c257115c921375a584cbcad76069c5cffeabb841825423954a21cb491f901ed",
+          "ui/toast/Toaster.gx": "84e5f65fab706bb26afa849801061302142432388e4f07bb0e0f783e01f57cc2",
+          "ui/toast/icons.go": "3ac130d48f40f7d37566493acafa062214bf71f9c29c5e6fb7eca6558cf09083"
+        }
       }
     }
   }

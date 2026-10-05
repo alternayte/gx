@@ -1,0 +1,26 @@
+package cart
+
+import (
+  "github.com/alternayte/gx"
+  "github.com/alternayte/gx/examples/shop/cart/route"
+)
+
+props {
+  Class string = ""
+}
+
+<section class={gx.Cx("my-4 rounded-xl border border-border bg-card p-4 text-card-foreground", p.Class)} data-toast-demo>
+  <h2 class="text-sm font-medium">Toasts</h2>
+  <div class="mt-3 flex flex-wrap gap-2">
+    <button class={demoButton} on:click={route.ToastDemo{Show: "default"}}>Default</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "success"}}>Success</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "info"}}>Info</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "warning"}}>Warning</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "error"}}>Error</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "description"}}>Description</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "action"}}>Action</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "sticky"}}>Sticky</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "upload-start"}}>Start upload</button>
+    <button class={demoButton} on:click={route.ToastDemo{Show: "upload-done"}}>Finish upload</button>
+  </div>
+</section>

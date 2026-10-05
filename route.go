@@ -224,6 +224,11 @@ func Collect(hs ...Handler) []Handler { return hs }
 type Config struct {
 	BasePath string
 	Adapter  Adapter
+	// Toast renders one toast (REQ-REG-11). An app sets it to the Render
+	// function of its installed toast item, so the toast markup and its
+	// classes stay in app-owned source. Without it a toast is the plain
+	// ToastNode.
+	Toast func(ToastPatch) Node
 }
 
 // App is an http.Handler that owns a ServeMux (REQ-RTE-18).
@@ -232,6 +237,7 @@ type App struct {
 	patterns   map[string]bool
 	errorViews map[int]func(*Ctx) Node
 	adapter    Adapter
+	toast      func(ToastPatch) Node
 	// routes records every mounted route for the static export
 	// (REQ-EXP-01). It is read only by the dev-only export listing.
 	routes []appRoute
@@ -248,7 +254,7 @@ type appRoute struct {
 // New returns an empty app.
 func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
-	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter}
+	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast}
 	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
 	a.devRoutes()
 	if cfg.Adapter != nil {
@@ -383,6 +389,7 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		}
 		handler = a.withErrorViews(handler)
 		handler = a.withAdapter(handler)
+		handler = a.withToast(handler)
 		pattern := joinPattern(prefix, h.Pattern())
 		if a.patterns[pattern] {
 			panic("gx: duplicate route " + pattern)

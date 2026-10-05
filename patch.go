@@ -51,9 +51,6 @@ type RedirectPatch struct{ URL string }
 
 func (RedirectPatch) patch() {}
 
-// ToastPatch adds one toast to the toaster region (REQ-REG-11).
-type ToastPatch struct{ Text string }
-
 func (ToastPatch) patch() {}
 
 // Response is the ordered answer of an action, a form or a navigation.
@@ -151,12 +148,17 @@ func (c *Ctx) Redirect(to interface{ URL() string }) error {
 	return nil
 }
 
-// Toast adds a toast to the toaster region (REQ-ACT-01).
-func (c *Ctx) Toast(text string) error {
+// Toast adds a toast to the toaster region (REQ-ACT-01). A kind is an
+// option: c.Toast("Saved", gx.ToastSuccess).
+func (c *Ctx) Toast(text string, opts ...ToastOption) error {
 	if c.res == nil {
 		return errors.New("gx: Toast is only valid in an action or a form")
 	}
-	c.res.Patches = append(c.res.Patches, ToastPatch{Text: text})
+	p := ToastPatch{Text: text}
+	for _, opt := range opts {
+		opt.toastOption(&p)
+	}
+	c.res.Patches = append(c.res.Patches, p)
 	return nil
 }
 
@@ -200,14 +202,4 @@ func attrValue(el *elNode, name string) string {
 		}
 	}
 	return ""
-}
-
-// Toaster renders the region that Toast patches into (REQ-REG-11).
-func Toaster() Node {
-	return El("div", Attrs{{Key: "id", Value: "gx-toaster"}, {Key: "aria-live", Value: "polite"}, {Key: "aria-atomic", Value: "true"}})
-}
-
-// ToastNode is the markup of one toast.
-func ToastNode(text string) Node {
-	return El("div", Attrs{{Key: "role", Value: "status"}, {Key: "data-gx-toast", Value: ""}}, Text(text))
 }

@@ -1,0 +1,25 @@
+package toast
+
+props {
+  Toast gx.ToastPatch
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div class={gx.Cx("flex w-full items-start gap-2 rounded-lg border border-border bg-popover p-4 text-sm text-popover-foreground shadow-lg transition-[opacity,translate] duration-200 ease-out starting:translate-y-2 starting:opacity-0 data-[closing]:pointer-events-none data-[closing]:translate-x-4 data-[closing]:opacity-0 motion-reduce:transition-none", p.Class)} {...gx.ToastAttrs(p.Toast)} {...p.Attrs}>
+  if p.icon() != "" {
+    {gx.Icon(p.icon(), gx.IconProps{Class: p.iconClass()})}
+  }
+  <div class="grid min-w-0 flex-1 gap-0.5">
+    <div class="leading-5 font-medium">{p.Toast.Text}</div>
+    if p.Toast.Description != "" {
+      <div class="leading-5 text-muted-foreground">{p.Toast.Description}</div>
+    }
+  </div>
+  if p.Toast.Action.Label != "" {
+    <a href={p.Toast.Action.URL} class="inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50">{p.Toast.Action.Label}</a>
+  }
+  <button type="button" data-gx-close aria-label="Close" class="-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50">
+    {gx.Icon(iconX, gx.IconProps{Class: "size-4"})}
+  </button>
+</div>

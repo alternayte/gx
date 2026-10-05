@@ -6,8 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id="gx-toaster" aria-live="polite" aria-atomic="true" class={gx.Cx("fixed right-4 bottom-4 z-50 flex w-72 flex-col gap-2", p.Class)} {...p.Attrs}>
-  if p.Children != nil {
-    {p.Children}
-  }
-</div>
+<div id="gx-toaster" role="region" aria-label="Notifications" aria-live="polite" data-gx-toaster class={gx.Cx("fixed right-4 bottom-4 z-50 flex w-[356px] max-w-[calc(100vw-2rem)] flex-col gap-3", p.Class)} {...p.Attrs}>{p.Children}</div>
