@@ -1,0 +1,38 @@
+name: docs
+
+# REQ-DOC-01: the docs site is a Gx app. This job exports it to static files
+# and deploys them to the Cloudflare Pages project gx-docs
+# (https://gx-docs.pages.dev). It needs two repository secrets:
+# CLOUDFLARE_API_TOKEN (a token with the Pages edit permission) and
+# CLOUDFLARE_ACCOUNT_ID.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      # The export needs no node: gx downloads the pinned Tailwind and
+      # Pagefind binaries.
+      - name: Export the docs site
+        run: go run ./cmd/gx export -main . --out docs/dist docs
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy docs/dist --project-name=gx-docs --branch=main

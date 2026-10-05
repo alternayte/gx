@@ -207,3 +207,23 @@ test('REQ-AI-10 the docs site publishes llms.txt and a Markdown version of every
   expect(await res.text()).toBe(index)
   expect((await fetch(url + '/start/quick-start.md')).status).toBe(200)
 })
+
+test('REQ-DOC-01 the export of the docs site is ready for its host', async () => {
+  const { readFileSync } = await import('node:fs')
+  const read = (name: string) => readFileSync(join(dist, name), 'utf8')
+  // The address of the Cloudflare Pages project, from docs/gx.toml.
+  const site = 'https://gx-docs.pages.dev'
+  const page = read('start/quick-start/index.html')
+  expect(page).toContain(`<link rel="canonical" href="${site}/start/quick-start/">`)
+  expect(page).toContain(`<meta property="og:url" content="${site}/start/quick-start/">`)
+  expect(page).toContain('<title>Quick start | Gx</title>')
+  const sitemap = read('sitemap.xml')
+  for (const path of ['/', '/start/quick-start/', '/tutorial/a-page/', '/guides/forms/', '/reference/cli/', '/errors/GX2001/', '/components/button/']) {
+    expect(sitemap).toContain(`<loc>${site}${path}</loc>`)
+  }
+  expect(read('robots.txt')).toContain(`Sitemap: ${site}/sitemap.xml`)
+  // A static host needs these files at the root.
+  for (const file of ['index.html', '404.html', 'llms.txt', 'pagefind/pagefind.js']) {
+    expect(existsSync(join(dist, file))).toBe(true)
+  }
+})

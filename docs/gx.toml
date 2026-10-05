@@ -1,4 +1,7 @@
 [site]
+# The Cloudflare Pages project gx-docs serves the exported site
+# (.github/workflows/docs.yml).
+url = "https://gx-docs.pages.dev"
 title = "Gx"
 title_template = "%s | Gx"
 description = "Gx is a Go framework for server-rendered web apps on Datastar."
