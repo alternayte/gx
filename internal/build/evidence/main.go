@@ -1,8 +1,10 @@
 // Command evidence writes and checks docs/build/evidence.json.
 //
-// --write runs the Go tests once and records each covering test result.
-// --check fails when the file is not for HEAD or a PASS id lacks a passing
-// test.
+// --write runs the Go tests once and records each covering test result. The
+// browser suites are not run again: their results come from the reports that
+// tests/e2e/record.sh left, and only from a run on a clean tree at HEAD.
+// --check fails when the file is not for HEAD, or a PASS id lacks a passing
+// test or has a failed one.
 package main
 
 import (
@@ -60,6 +62,7 @@ type evidence struct {
 func main() {
 	write := flag.Bool("write", false, "write docs/build/evidence.json")
 	check := flag.Bool("check", false, "check docs/build/evidence.json")
+	dir := flag.String("dir", filepath.Join("docs", "build"), "directory of ledger.md and evidence.json")
 	flag.Parse()
 	if *write == *check {
 		fatal("exactly one of --write or --check is required")
@@ -69,12 +72,12 @@ func main() {
 		fatal(err.Error())
 	}
 	if *write {
-		if err := writeEvidence(root); err != nil {
+		if err := writeEvidence(root, *dir); err != nil {
 			fatal(err.Error())
 		}
 		return
 	}
-	if err := checkEvidence(root); err != nil {
+	if err := checkEvidence(root, *dir); err != nil {
 		fatal(err.Error())
 	}
 }
@@ -102,8 +105,8 @@ func headCommit(root string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-func readLedger(root string) ([]ledgerRow, error) {
-	data, err := os.ReadFile(filepath.Join(root, "docs", "build", "ledger.md"))
+func readLedger(dir string) ([]ledgerRow, error) {
+	data, err := os.ReadFile(filepath.Join(dir, "ledger.md"))
 	if err != nil {
 		return nil, fmt.Errorf("read ledger: %w", err)
 	}
@@ -250,8 +253,8 @@ func runGoTests(root string) (map[string]string, error) {
 	return results, nil
 }
 
-func writeEvidence(root string) error {
-	rows, err := readLedger(root)
+func writeEvidence(root, dir string) error {
+	rows, err := readLedger(dir)
 	if err != nil {
 		return err
 	}
@@ -266,6 +269,13 @@ func writeEvidence(root string) error {
 	head, err := headCommit(root)
 	if err != nil {
 		return err
+	}
+	browser, ignored, err := readBrowserResults(filepath.Join(root, browserResultsDir), head)
+	if err != nil {
+		return err
+	}
+	for _, msg := range ignored {
+		fmt.Fprintln(os.Stderr, "evidence: ignored browser results of "+msg)
 	}
 
 	ev := evidence{
@@ -291,6 +301,9 @@ func writeEvidence(root string) error {
 		for _, n := range sorted {
 			res := results[n]
 			if res == "" {
+				res = browserResult(n, browser)
+			}
+			if res == "" {
 				res = "not_run"
 			}
 			ie.Tests = append(ie.Tests, testResult{Name: n, Result: res})
@@ -303,7 +316,7 @@ func writeEvidence(root string) error {
 		return err
 	}
 	data = append(data, '\n')
-	path := filepath.Join(root, "docs", "build", "evidence.json")
+	path := filepath.Join(dir, "evidence.json")
 	if err := os.WriteFile(path, data, 0o644); err != nil {
 		return err
 	}
@@ -311,8 +324,8 @@ func writeEvidence(root string) error {
 	return nil
 }
 
-func checkEvidence(root string) error {
-	data, err := os.ReadFile(filepath.Join(root, "docs", "build", "evidence.json"))
+func checkEvidence(root, dir string) error {
+	data, err := os.ReadFile(filepath.Join(dir, "evidence.json"))
 	if err != nil {
 		return fmt.Errorf("read evidence: %w", err)
 	}
@@ -327,10 +340,21 @@ func checkEvidence(root string) error {
 	if ev.Commit != head {
 		return fmt.Errorf("evidence is for %s but HEAD is %s; run just evidence", short(ev.Commit), short(head))
 	}
-	rows, err := readLedger(root)
+	rows, err := readLedger(dir)
 	if err != nil {
 		return err
 	}
+	pass, err := checkRows(ev, rows)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("evidence-check: %d PASS ids covered, evidence is for %s\n", pass, short(head))
+	return nil
+}
+
+// checkRows returns the count of PASS ids. It fails when a PASS id has no
+// passing covering test or has a failed one.
+func checkRows(ev evidence, rows []ledgerRow) (int, error) {
 	byID := map[string]idEvidence{}
 	for _, ie := range ev.IDs {
 		byID[ie.ID] = ie
@@ -345,26 +369,27 @@ func checkEvidence(root string) error {
 		pass++
 		ie, ok := byID[row.ID]
 		if !ok {
-			return fmt.Errorf("%s is PASS but missing from evidence", row.ID)
+			return 0, fmt.Errorf("%s is PASS but missing from evidence", row.ID)
 		}
 		covered := false
 		for _, t := range ie.Tests {
-			if t.Result == "pass" {
+			switch t.Result {
+			case "pass":
 				covered = true
-				break
+			case "fail":
+				return 0, fmt.Errorf("%s is PASS but its covering test %q failed", row.ID, t.Name)
 			}
 		}
 		if !covered {
-			return fmt.Errorf("%s is PASS with no passing covering test in evidence", row.ID)
+			return 0, fmt.Errorf("%s is PASS with no passing covering test in evidence", row.ID)
 		}
 	}
 	for id := range byID {
 		if !ledgerIDs[id] {
-			return fmt.Errorf("evidence names %s, which is not in the ledger", id)
+			return 0, fmt.Errorf("evidence names %s, which is not in the ledger", id)
 		}
 	}
-	fmt.Printf("evidence-check: %d PASS ids covered, evidence is for %s\n", pass, short(head))
-	return nil
+	return pass, nil
 }
 
 func short(commit string) string {
