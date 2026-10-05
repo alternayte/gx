@@ -9,14 +9,15 @@ import (
 type SelectOptionProps struct {
 	Value    string
 	Selected bool
+	Disabled bool
 	Children gx.Node
 }
 
 func SelectOption(p SelectOptionProps) gx.Node {
 	var _b gx.Builder
-//line SelectOption.gx:9:1
-	_b.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("selected", p.Selected)}, p.Children))
-//line SelectOption.gx:9:68
+//line SelectOption.gx:10:1
+	_b.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("selected", p.Selected), gx.Bool("disabled", p.Disabled)}, p.Children))
+//line SelectOption.gx:10:90
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

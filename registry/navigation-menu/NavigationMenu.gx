@@ -1,9 +1,12 @@
 package navigationmenu
 
 props {
+  Label    string   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<nav class={gx.Cx("relative flex items-center gap-1", p.Class)} {...p.Attrs}>{p.Children}</nav>
+<nav aria-label={p.Label} class={gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class)} {...p.Attrs}>
+  <ul class="flex flex-1 list-none items-center justify-center gap-1">{p.Children}</ul>
+</nav>

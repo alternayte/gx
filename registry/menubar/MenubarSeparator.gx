@@ -1,0 +1,8 @@
+package menubar
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div role="separator" class={gx.Cx("-mx-1 my-1 h-px bg-border", p.Class)} {...p.Attrs}></div>

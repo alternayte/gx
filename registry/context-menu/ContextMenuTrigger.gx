@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div data-gx-contextmenu={"#" + p.Id} class={gx.Cx("flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground select-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-gx-contextmenu={"#" + p.Id} class={p.Class} {...p.Attrs}>{p.Children}</div>

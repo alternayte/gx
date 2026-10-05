@@ -1,10 +1,14 @@
 package dropdownmenu
 
+import "github.com/alternayte/gx/registry/button"
+
 props {
   Id       string
-  Class    string   = ""
+  Variant  button.Variant = button.Outline
+  Size     button.Size    = button.Md
+  Class    string         = ""
   Children gx.Node
-  Attrs    gx.Attrs = nil
+  Attrs    gx.Attrs       = nil
 }
 
-<button type="button" popovertarget={p.Id} aria-haspopup="menu" class={gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}>{p.Children}</button.Button>

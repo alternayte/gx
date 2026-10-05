@@ -7,8 +7,6 @@ import (
 )
 
 type NavigationMenuItemProps struct {
-	Href     gx.URL
-	Active   bool
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -16,9 +14,9 @@ type NavigationMenuItemProps struct {
 
 func NavigationMenuItem(p NavigationMenuItemProps) gx.Node {
 	var _b gx.Builder
-//line NavigationMenuItem.gx:11:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-9 items-center rounded-md px-4 text-sm font-medium no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", activeClass[p.Active], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "aria-current", Value: p.current(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line NavigationMenuItem.gx:11:316
+//line NavigationMenuItem.gx:9:1
+	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/navigation-menu-item relative", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line NavigationMenuItem.gx:9:97
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

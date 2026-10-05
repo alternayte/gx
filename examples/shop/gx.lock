@@ -114,16 +114,29 @@
       "context-menu": {
         "version": "0.1.0",
         "files": {
-          "ui/context-menu/ContextMenu.fixtures.go": "b7fe8f7bfdf627d6c9fe48dc7c4e11edd3989c44384762d733ba0301524b2ddd",
-          "ui/context-menu/ContextMenu.gx": "cc74f795bb5cd847c62d37b211c5cfc5a15cd369f19472d76de4e4f250d6cf2c",
-          "ui/context-menu/ContextMenuItem.fixtures.go": "817819c691be5ef4cf634a886b7de450e022904aacb0e704835391499eccb654",
-          "ui/context-menu/ContextMenuItem.gx": "dcdcdab79a22b41b05d991dc6a411558bd8b9027b5d316888ffcc84bb089f2d9",
-          "ui/context-menu/ContextMenuLink.fixtures.go": "736774d50b804048a068f0a1d170f32cbc6dbb487bba812c6b7aab776eb2a351",
-          "ui/context-menu/ContextMenuLink.gx": "7d0191271781c35fdc3571184789d94c7fe1cbecb9b2fccd51a6c4202b470f54",
+          "ui/context-menu/ContextMenu.fixtures.go": "b26256d16c180dea4e105891011104d30a8412ffd939ac2ca29ba9ac0720e848",
+          "ui/context-menu/ContextMenu.gx": "fbb04a33b614afab3631227edda5e3aa14e0b6cbe8eb5f276fd313c11a407319",
+          "ui/context-menu/ContextMenuCheckboxItem.fixtures.go": "8ffb28e548c6ca24f54d92e6803e6eba2b3cc1a60a346a12116c8ae39bbfd931",
+          "ui/context-menu/ContextMenuCheckboxItem.gx": "39ab2975938cc9eaa7b4c2816c17593b8f4c2ad76847c2485ed5ec7f91873515",
+          "ui/context-menu/ContextMenuGroup.fixtures.go": "fde2e982b9a0ecf28e97e3f720346d7f748f28d6e25a93d1b2c87d1ce4785b1b",
+          "ui/context-menu/ContextMenuGroup.gx": "dac796fb7dfd576bdc73d9355a04634f64f6eef4b4d5ecfd6aef46e904b29ae6",
+          "ui/context-menu/ContextMenuItem.fixtures.go": "8a62091722fc87ea424277ca7062af7c2abe401fe03e32498a416b46af4f203a",
+          "ui/context-menu/ContextMenuItem.gx": "c71fc3347fe7e8b25e9af2c8f364a6864586699b2dd454f095876b93a09c0994",
+          "ui/context-menu/ContextMenuLabel.fixtures.go": "f592f7e52c7ac7f80c673cb195268c201dd3603d7161c994f3ecf259506438f1",
+          "ui/context-menu/ContextMenuLabel.gx": "263358968f017e474103626ffcd3bf288cb28d76e1ce2d740b4660a6ae414246",
+          "ui/context-menu/ContextMenuLink.fixtures.go": "4885c1bfed5f5c0437f66a2bcf8a901e25f934c869375b787d29b8839f3df4f4",
+          "ui/context-menu/ContextMenuLink.gx": "59d4690239565e9207e4aebcd9b30c3c73bb11883d5d59b9bc4accfebbc1747e",
+          "ui/context-menu/ContextMenuRadioGroup.fixtures.go": "e18f87436e99ea512fc1a6ce23f7063cd809da9c44dbf781d8cdfb1653ceaf22",
+          "ui/context-menu/ContextMenuRadioGroup.gx": "dac796fb7dfd576bdc73d9355a04634f64f6eef4b4d5ecfd6aef46e904b29ae6",
+          "ui/context-menu/ContextMenuRadioItem.fixtures.go": "5596581c824f667f55a6fdf82ca6650df14c51e296f8a1de90dc0382a2293876",
+          "ui/context-menu/ContextMenuRadioItem.gx": "971a3a2f4fbe35450b4defd3f1d0dbe0e45e0b9d9fb4b547719ad9a19ae80590",
           "ui/context-menu/ContextMenuSeparator.fixtures.go": "d762c5ddc74f826f5e01aa2793df1dfa8083c526e2e29b1d9293321ed2f20079",
           "ui/context-menu/ContextMenuSeparator.gx": "87dd3fd8e74864e6cc7c0803e9fa837adefb82a0a0b816d1f45c121b4bf8db6e",
-          "ui/context-menu/ContextMenuTrigger.fixtures.go": "ef749fdbed04380938dc7ac336a2244e313c5bf79d07ccb49e001e28df6df9d2",
-          "ui/context-menu/ContextMenuTrigger.gx": "e2d5fbb8f642aed3385e7f80b57ebb2b8f6cbdcb0b23d7e826e761b633ce7f1d"
+          "ui/context-menu/ContextMenuShortcut.fixtures.go": "f73f5a449447bbfedc45af2389cbfa1583ccc16b239261578f58957db710ac74",
+          "ui/context-menu/ContextMenuShortcut.gx": "5f20e5ee54505ec3e8996bcadfb80ae67da112a66ac9534fe96db23ff73adb78",
+          "ui/context-menu/ContextMenuTrigger.fixtures.go": "9383b11cdfee9130d49eef959cfb66af06d1a85e166e2b724d03afed07ac533e",
+          "ui/context-menu/ContextMenuTrigger.gx": "0c8aee2fbd7f4bd2e55d4022be0d6723c42a5edbcc3fee225160d1c0159496d0",
+          "ui/context-menu/styles.go": "d6ed15ce049fbeb915a8a07c287ac865c679a059e7ba50a77f3fbce379044f18"
         }
       },
       "data-table": {
@@ -158,18 +171,29 @@
       "dropdown-menu": {
         "version": "0.1.0",
         "files": {
-          "ui/dropdown-menu/DropdownMenu.fixtures.go": "9a306706b5d3a09b54ee4b64d575ae66d1f83f88ee18e156adcb4f785cf0206a",
-          "ui/dropdown-menu/DropdownMenu.gx": "fd36b8eb1deed3e4b64416dffb802fc45c0fe69e34e38286cfe89333c10ac1ff",
-          "ui/dropdown-menu/DropdownMenuItem.fixtures.go": "d94632fae2f3b2a10b101bf1a15b7d35a3e3e41dc465cd958df3aa29fe749181",
-          "ui/dropdown-menu/DropdownMenuItem.gx": "a3a61ff4c61d6bd7e190b93d67579841151916abb44f325e8a00d24a9102a71f",
-          "ui/dropdown-menu/DropdownMenuLabel.fixtures.go": "2ba9ecdbd9847d8b5482754cd547b3936dede7530550752ebe65675afe72087f",
-          "ui/dropdown-menu/DropdownMenuLabel.gx": "c269787ad82523985bb5d5ead5aa9b7aa3dd8eb5d9ab80880bfee90a98a0f56a",
-          "ui/dropdown-menu/DropdownMenuLink.fixtures.go": "8aec81acd844129ba66a326cd2bdeb41dc24d808623d628c83edec89c307f62b",
-          "ui/dropdown-menu/DropdownMenuLink.gx": "921d16544536e6ae4975f9959852da83a717ff4984a52d855c4b89c5a8ac418c",
+          "ui/dropdown-menu/DropdownMenu.fixtures.go": "da794b04eaf5ab01433fc2e89076f01880026a5ec99b209ae818b889f0cc698b",
+          "ui/dropdown-menu/DropdownMenu.gx": "5e47e8d787409e51608796a11a07e1ca9e1c35bbae4eb683abb35a6b76401546",
+          "ui/dropdown-menu/DropdownMenuCheckboxItem.fixtures.go": "127a8187aea65a12fa4694c1957e04c230d849117853f70dac6bdca2d4cca566",
+          "ui/dropdown-menu/DropdownMenuCheckboxItem.gx": "c5c86cdb7bfedb01b3868daa6f1ed94f0fc1b9a7f559d44b6926b92e1faeab20",
+          "ui/dropdown-menu/DropdownMenuGroup.fixtures.go": "133a5dc1ea144dd158327cc7158516f576a5f4b3231e5c6277749a7426fde48f",
+          "ui/dropdown-menu/DropdownMenuGroup.gx": "17e6f58bbeb942300f758005d67ad82a045a4b855b50fd5d598e420e2a0d82f3",
+          "ui/dropdown-menu/DropdownMenuItem.fixtures.go": "00b2b3762cd5146626f157f62edfbc046ccca83129df0c0b3fddb36e99790e41",
+          "ui/dropdown-menu/DropdownMenuItem.gx": "ed9c268f7abffed79f1bff2834f14e455e2606b37fc56ba38fbb26a57a9a5055",
+          "ui/dropdown-menu/DropdownMenuLabel.fixtures.go": "73c285c97dcef391557a04fe8260f3a52efb2178ff6ea8d134eab8836750d763",
+          "ui/dropdown-menu/DropdownMenuLabel.gx": "086b08c96502676f8b345ad51f10ecd679330e226c464a33528c9c0c2c4c3cb3",
+          "ui/dropdown-menu/DropdownMenuLink.fixtures.go": "d9d84c6aa20bfffa52252131abf65e2c859ebde5f8fd6b172543a90a7dd9fd90",
+          "ui/dropdown-menu/DropdownMenuLink.gx": "65f53e7c770e188d11fb0447c7729b00fee30a555a4ab209badb680492272dff",
+          "ui/dropdown-menu/DropdownMenuRadioGroup.fixtures.go": "118b36a9acfac745df721ac0cd00a380c003a931464a98f9a1ecc82e0146c53a",
+          "ui/dropdown-menu/DropdownMenuRadioGroup.gx": "17e6f58bbeb942300f758005d67ad82a045a4b855b50fd5d598e420e2a0d82f3",
+          "ui/dropdown-menu/DropdownMenuRadioItem.fixtures.go": "b8413f59241cba2bb013cb08e548efe77b7b002a65d53c2147f2b0579017ccec",
+          "ui/dropdown-menu/DropdownMenuRadioItem.gx": "af8d5ad1377e0941538122ab1f68ff3b1e9736c5260e27b7e159ae59282880ca",
           "ui/dropdown-menu/DropdownMenuSeparator.fixtures.go": "37638f767f9c0ef1750daee0859a2511a249a94497599bafda84180ce55ed5ec",
           "ui/dropdown-menu/DropdownMenuSeparator.gx": "8853201d228a7da00dd55d1b28db66439a3023b9a04a6d1312555b948cc9d3b2",
-          "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go": "602e7ca65c5b93ab549e291e1cf52389b45175ef3a0e1186d49f560f6947ea2c",
-          "ui/dropdown-menu/DropdownMenuTrigger.gx": "8f598caa778acc0a3c1a90239e043f63d4c00299ca7dd7ac7415d606f33de641"
+          "ui/dropdown-menu/DropdownMenuShortcut.fixtures.go": "19fec5a72be635903b88a901e6e4ea43f48d30c1813934b91cc7cb518aec61bc",
+          "ui/dropdown-menu/DropdownMenuShortcut.gx": "b57aaa1e5b43824a9ce562333974152befdea2e309115dae365aca8f1b66318f",
+          "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go": "ba7a3b297c184fc20652e4bac07734d35351c0c00cb3b0096fc9abf53f7790fa",
+          "ui/dropdown-menu/DropdownMenuTrigger.gx": "a5733a3ef7fd6808922caca7ad071b7e490f90536db34f2dc4c84a9ed943e059",
+          "ui/dropdown-menu/styles.go": "c0278ddb6d9326f62afb8c5da796576c48f9369a4b6e3fe442714da89d91af1b"
         }
       },
       "empty": {
@@ -213,8 +237,9 @@
       "hover-card": {
         "version": "0.1.0",
         "files": {
-          "ui/hover-card/HoverCard.fixtures.go": "965c99c495401dbbdc8b4216755a5e788cca1466cdc7cfea4453e48879b86f74",
-          "ui/hover-card/HoverCard.gx": "ca1459672c41508a46ccd77460bfb78683b7b27c675e80f2551bed172c5dcf95"
+          "ui/hover-card/HoverCard.fixtures.go": "df7d52fb97f6466c1f76abcbcf311b4e8142f62d0e63c309998fb7831e7a1b34",
+          "ui/hover-card/HoverCard.gx": "91539156a631ecf328ad4daf4ed460e4b17fd60d1568fe8ad303d1167c4e3836",
+          "ui/hover-card/styles.go": "7ea2a37345124f7065982cd837dece24df72ea1ce333bc9cd926aeddedcb1ae1"
         }
       },
       "icons": {
@@ -317,21 +342,45 @@
       "menubar": {
         "version": "0.1.0",
         "files": {
-          "ui/menubar/Menubar.fixtures.go": "c7edae52445b52fcfe94b825145fbdc519b77b5ab7a0630fc59e475a367d0a6e",
+          "ui/menubar/Menubar.fixtures.go": "b759651e8731c74bd42fbb4734df101b3f35530712d7427f83fb8b11eae3243f",
           "ui/menubar/Menubar.gx": "ff94109c4fb1dca2fb0487b54e2ec31a1347a7ce98a8ffd7678dbd12b89f6c6e",
-          "ui/menubar/MenubarItem.fixtures.go": "aeef0c6edd2ae0159dc89ed66bc350257f7005c901184e84a170d8a610809702",
-          "ui/menubar/MenubarItem.gx": "4947e2854aff76210fefcbc79d585d1ccf19f02ce36ebcf539e2e1353bbbf172",
-          "ui/menubar/styles.go": "0892ed2772c48ed346987b3eac6aaea0f2f3d8426855168d40672f8099bc021e"
+          "ui/menubar/MenubarCheckboxItem.fixtures.go": "0e99996f8b7cbad6f8543ce9fc96cab90a4786307800ba0c34cc757372831bdd",
+          "ui/menubar/MenubarCheckboxItem.gx": "eeb0018a5fd802a910eb9b6a7098490047499fdce701e5280b7dd2e16d59465d",
+          "ui/menubar/MenubarGroup.fixtures.go": "a11f68adba593d11562fb33961f715c51109634efe2a60c9e17c0d038669871a",
+          "ui/menubar/MenubarGroup.gx": "e960c553dca097d6abfc70e24c033475714c08ff8f15d034ed475a4a3db8635d",
+          "ui/menubar/MenubarItem.fixtures.go": "3e779981fd8f1293e2426bde2c9d95dab0cab155204ad8a26cde2eca595d39c5",
+          "ui/menubar/MenubarItem.gx": "e0c020d73756a3f5b7ff504b8ccb1e4bddc281e05643d7fbb748a724db5dea03",
+          "ui/menubar/MenubarLabel.fixtures.go": "c7b40d6baf02036a15d2d9807c516360356aba391f934ab2bed6071b427dfcc6",
+          "ui/menubar/MenubarLabel.gx": "6b1d025786a69b18b3a10497dee5cb423343e8549eb5b5593387ac160c8c5788",
+          "ui/menubar/MenubarLink.fixtures.go": "d67178d236ca0d8da159c397633f65045b5867ed1124dd0dc6629168febfa84a",
+          "ui/menubar/MenubarLink.gx": "ff88de8ff147a8998a533c1feed62d8c4dc661398eb13ccf766b5a769328ae88",
+          "ui/menubar/MenubarMenu.fixtures.go": "38127c680b021dc823694b7de195688427e093cdc908fc732fee69e1f1b571e3",
+          "ui/menubar/MenubarMenu.gx": "b736efc16a9c11ca7be9ca2d34bbf1f0a1bca5aca1870cae35ce209a1ee7de82",
+          "ui/menubar/MenubarRadioGroup.fixtures.go": "b8bbb47795f35b6cc51d3afc402298539bdd690140bf633bc21c43fa0c5388b4",
+          "ui/menubar/MenubarRadioGroup.gx": "e960c553dca097d6abfc70e24c033475714c08ff8f15d034ed475a4a3db8635d",
+          "ui/menubar/MenubarRadioItem.fixtures.go": "b9402691a20d767bfc74efbf256182e559ff6978c5aee59327226a4f1e95913e",
+          "ui/menubar/MenubarRadioItem.gx": "c5659f419046f6bfc789b5ddbb610f8d28905dedec6df4d96f07f53043b2f498",
+          "ui/menubar/MenubarSeparator.fixtures.go": "203fa04533ddf214d48f1a375ce71a71609af0baef213a5607211567ab63d484",
+          "ui/menubar/MenubarSeparator.gx": "ab73971c7550de903f267ecac4396757c6f7de59f3f0ba63c71b8a019dc99ac7",
+          "ui/menubar/MenubarShortcut.fixtures.go": "0191c66130b68a4742051c664a4f221d064e06c6c42bedefecf847a689f64684",
+          "ui/menubar/MenubarShortcut.gx": "436d22f328e5dc45317c659aa84d3de4aeb987d33d374b168d8a80fb9a387281",
+          "ui/menubar/styles.go": "49991c34913bf61cea3ac58192b55710f61aeae40fed8163fe70875c5f8cb976"
         }
       },
       "navigation-menu": {
         "version": "0.1.0",
         "files": {
-          "ui/navigation-menu/NavigationMenu.fixtures.go": "a52a64b7ae3656185b9a1113b2641ad1cca47d31b7dd94ad086417f66c13ae5b",
-          "ui/navigation-menu/NavigationMenu.gx": "2d873fc8f1f96113f70b608d96f8f2d3a93895f04c8fb2c480dae1380ec845e1",
-          "ui/navigation-menu/NavigationMenuItem.fixtures.go": "1e6e30b2f9944ead1f73592f1e6495abe34c9456b0c7f5e71656cbffe8fa05f1",
-          "ui/navigation-menu/NavigationMenuItem.gx": "79813b9d791f2dc5fc769baff005b857d560bbbd0f0105ad4f8cbcd692189965",
-          "ui/navigation-menu/styles.go": "23c960ec8811816317c00863713484a701c457c4c81f5fb27d60efc11b333c3a"
+          "ui/navigation-menu/NavigationMenu.fixtures.go": "7c7fd108b88aa7f808dcf68157fc649cf12dba7a808346e1ae59fe0ffa522b60",
+          "ui/navigation-menu/NavigationMenu.gx": "456f44d6a746d8406fdd324c394e0ce2aebe2d27672121cce69bc95e6f640d56",
+          "ui/navigation-menu/NavigationMenuContent.fixtures.go": "9ad3aff22d2585472c514fce2d6318ac24a34757a3b79e6e735217f2fd9b772c",
+          "ui/navigation-menu/NavigationMenuContent.gx": "925df0f389dd8c5e782d445a21ef2c433049fa60368b40f0adb4d94017a210d1",
+          "ui/navigation-menu/NavigationMenuItem.fixtures.go": "d0e14c2f5ddb0895ee92afe5c54beb74580e6dbed90deac31d977e00b1ad0910",
+          "ui/navigation-menu/NavigationMenuItem.gx": "22c4350319dd3ccff99423349f19c96e9aa45e0b909ddb821da4cdadef347b59",
+          "ui/navigation-menu/NavigationMenuLink.fixtures.go": "43bfa54dca8d00e928bc5f3d86b0d556ca590c2481c6a64a9faec5ec00791876",
+          "ui/navigation-menu/NavigationMenuLink.gx": "897d277fc8bbac6fa2c37660f929c04405d89fcc686b1efa0ce0a7bf99eee3ac",
+          "ui/navigation-menu/NavigationMenuTrigger.fixtures.go": "bfb3f2ce493728bb65d3e86203ab34cff0c4d23eeed128bed0e62d26a1343c74",
+          "ui/navigation-menu/NavigationMenuTrigger.gx": "9ceeb1caf40f0b4d7895376736ea04e6acad20d4c8f94a5080ad84791f78a2e2",
+          "ui/navigation-menu/styles.go": "a2d36cbeba4c5cafb8e77f503205db53375681a4c42c1dfa7fd3ec072d33ffff"
         }
       },
       "pagination": {
@@ -357,10 +406,17 @@
       "popover": {
         "version": "0.1.0",
         "files": {
-          "ui/popover/Popover.fixtures.go": "0b48c027ec2454c2b22c35a4ab29d55203eef97067686a26c1aa8b779d24e654",
-          "ui/popover/Popover.gx": "97b1f24d71867527a9d5ebcc64254286a4780ee66045b64763f8bcf08cbe0e33",
-          "ui/popover/PopoverTrigger.fixtures.go": "7c956b09ec2c38b62b0db7f47fe07afd16b48241d3f6d507b5bd1d9464d94325",
-          "ui/popover/PopoverTrigger.gx": "3d7164a130523444fa6b38ea446c3caf1a8352786e7dc4ebf020215028a1a6f1"
+          "ui/popover/Popover.fixtures.go": "1e5ee77e267741f435b0d47f141d13c228556de57a878f078e315c725af2e4f2",
+          "ui/popover/Popover.gx": "ebd224afdc0b4958dbeb3f02af821933a69ae164b9d90edd14297452d037b258",
+          "ui/popover/PopoverDescription.fixtures.go": "1888e69dfc14c6057839231ffb2d3a239d7cec27b19f98998500aee093e364ff",
+          "ui/popover/PopoverDescription.gx": "b29b1608e733d2310129ad4ddcf20890f1528f88a85ca74f907edee3849b7d54",
+          "ui/popover/PopoverHeader.fixtures.go": "2441dad4574a07c14a6403b0c5102a5aab6845a1b5b0fa0c1523a49bc17cf211",
+          "ui/popover/PopoverHeader.gx": "6f6d9a3a61274a142a5b25a55cbe29c2b9371a4e9e95a881765322600a08670a",
+          "ui/popover/PopoverTitle.fixtures.go": "8e60af512b70f25e45693cb01afc2747af0468c0bc1ba5c518f8cf7c1c34738e",
+          "ui/popover/PopoverTitle.gx": "58621765770b7e1d6dd93471494b513405ecfc9754a6073e16e5fb47d09308e3",
+          "ui/popover/PopoverTrigger.fixtures.go": "d97dfbddbc13c6f36fabe4db1b1288f5d022a6c2f346f11ea3665d42252df64c",
+          "ui/popover/PopoverTrigger.gx": "570bbba16dc9bee0857c3a136342d7fbcec17b2504fbfdafcc17da3d0a5d7462",
+          "ui/popover/styles.go": "99129d9ed35629159fa7238a6dfd58cff2fdfb4d9fc2fc2679a875232e8481dd"
         }
       },
       "progress": {
@@ -391,10 +447,15 @@
       "select": {
         "version": "0.1.0",
         "files": {
-          "ui/select/Select.fixtures.go": "6546334b5eed514232f6c1bf63d7837a6c75aef5d6d5d85a9604946588712b8b",
-          "ui/select/Select.gx": "d42e261edf96a72761521966dbb4118ce24a5469cfe5d4d105eec648bdd0e600",
-          "ui/select/SelectOption.fixtures.go": "b56f51952e9c85e1ac390e68ae68cdf90f238b7b89fe19cb8f254dd6afe81d54",
-          "ui/select/SelectOption.gx": "1aa31f87bfd568a90bac9d0063d8ff101c1804aaa81903c3fc9b648b5bd3a1ec"
+          "ui/select/Select.fixtures.go": "b17a2a0df4bbeeb538564b4313b1810b9faa1853af4e006ca00821098281a74f",
+          "ui/select/Select.gx": "ebbedcfba7249ac5f937a7c8e6dacef47f4943ff10b611ac76d28ec3506eee4b",
+          "ui/select/SelectGroup.fixtures.go": "151b320585cbd4b46e6be52ccfd00f5f83c1a556286482cc2504a7fcc188e426",
+          "ui/select/SelectGroup.gx": "5663839cdee08cc6c2f35ca550de24123a680dc4ea35f237dda465fb2a5c7a8a",
+          "ui/select/SelectOption.fixtures.go": "e42391eb604d569ea921e2418fa89efa7d0008a009fd6cf965cab3a3aa6aad12",
+          "ui/select/SelectOption.gx": "70c26b7ca006e4eba70600aa69d843023c697b95203bf6c0abf754292476b70e",
+          "ui/select/SelectSeparator.fixtures.go": "1ff2d3dedbbf850472fc13bc3ad883bfa1e08939beffd1e497608164adc590f9",
+          "ui/select/SelectSeparator.gx": "3ecd82b1ced34da193ea4513418388d14d5b2679ad83efc7afa5f142fcb7c907",
+          "ui/select/styles.go": "fae0b4833126655972b3ca95237312f5accef5c1b5777410891c66f25b133fed"
         }
       },
       "separator": {
@@ -540,8 +601,8 @@
         "version": "0.1.0",
         "files": {
           "ui/tooltip/Tooltip.fixtures.go": "fee88b3b7d6d8bd856bda3d7a13951d734082ad85694618d5b4af2e21c071ba9",
-          "ui/tooltip/Tooltip.gx": "022a5618ac62b1cf6cf436da8cef440af00661bb84b941c6c08d9327278e0116",
-          "ui/tooltip/styles.go": "7feb8942ab87a8412df07daf3858b47effd8f81300e2b869c7ceb8e444867c18"
+          "ui/tooltip/Tooltip.gx": "27d2d0746e85ad42f41ab81d2c0880dd33a6948d517a254a02608a1f5394eb22",
+          "ui/tooltip/styles.go": "386a069a6798a1cb1005941cd186a765a768a1b6bc6a32ece5e7d106b877ae42"
         }
       }
     }

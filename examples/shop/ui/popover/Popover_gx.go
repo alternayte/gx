@@ -8,6 +8,7 @@ import (
 
 type PopoverProps struct {
 	Id       string
+	Align    Align
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -15,9 +16,9 @@ type PopoverProps struct {
 
 func Popover(p PopoverProps) gx.Node {
 	var _b gx.Builder
-//line Popover.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("position-anchor: --gx-pop-" + p.Id + "; inset: auto; top: anchor(bottom); left: anchor(left); margin-top: 0.5rem")))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true)}, p.Attrs), p.Children))
-//line Popover.gx:10:341
+//line Popover.gx:11:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true)}, p.Attrs), p.Children))
+//line Popover.gx:11:264
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

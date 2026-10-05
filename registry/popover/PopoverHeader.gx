@@ -1,0 +1,9 @@
+package popover
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class={gx.Cx("flex flex-col gap-1 text-sm", p.Class)} {...p.Attrs}>{p.Children}</div>

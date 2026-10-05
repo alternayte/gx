@@ -9,6 +9,18 @@
       "target": "ui/popover/Popover.gx"
     },
     {
+      "path": "PopoverDescription.gx",
+      "target": "ui/popover/PopoverDescription.gx"
+    },
+    {
+      "path": "PopoverHeader.gx",
+      "target": "ui/popover/PopoverHeader.gx"
+    },
+    {
+      "path": "PopoverTitle.gx",
+      "target": "ui/popover/PopoverTitle.gx"
+    },
+    {
       "path": "PopoverTrigger.gx",
       "target": "ui/popover/PopoverTrigger.gx"
     },
@@ -17,15 +29,33 @@
       "target": "ui/popover/Popover.fixtures.go"
     },
     {
+      "path": "PopoverDescription.fixtures.go",
+      "target": "ui/popover/PopoverDescription.fixtures.go"
+    },
+    {
+      "path": "PopoverHeader.fixtures.go",
+      "target": "ui/popover/PopoverHeader.fixtures.go"
+    },
+    {
+      "path": "PopoverTitle.fixtures.go",
+      "target": "ui/popover/PopoverTitle.fixtures.go"
+    },
+    {
       "path": "PopoverTrigger.fixtures.go",
       "target": "ui/popover/PopoverTrigger.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/popover/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "button"
   ],
   "requiredTokens": [
     "--border",
     "--popover",
     "--popover-foreground",
-    "--accent",
-    "--ring"
+    "--muted-foreground"
   ]
 }

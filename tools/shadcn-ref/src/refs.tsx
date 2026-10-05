@@ -4,7 +4,7 @@
 //
 // The second parameter of each entry, when used, opens overlays so the
 // spec can capture them.
-import type { ReactNode } from "react"
+import { useEffect, useRef, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import {
   Accordion,
@@ -95,9 +95,15 @@ import {
 } from "@/ui/alert-dialog"
 import {
   ContextMenu,
+  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
   ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuTrigger,
 } from "@/ui/context-menu"
 import {
   Dialog,
@@ -117,23 +123,151 @@ import {
 } from "@/ui/drawer"
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
 } from "@/ui/dropdown-menu"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card"
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/ui/menubar"
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarLabel,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "@/ui/menubar"
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/ui/navigation-menu"
-import { Popover, PopoverContent } from "@/ui/popover"
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+} from "@/ui/popover"
 import { Select, SelectTrigger, SelectValue } from "@/ui/select"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/ui/sheet"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/ui/tooltip"
+
+// OpenContextMenu opens the pinned context menu the way a user does: the
+// menu has no open prop, so the trigger receives the contextmenu event.
+function OpenContextMenu({ open, children }: { open: boolean; children: ReactNode }) {
+  const trigger = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    if (!open) return
+    trigger.current?.dispatchEvent(
+      new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: 16, clientY: 16 }),
+    )
+  }, [open])
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger ref={trigger}>Right-click here</ContextMenuTrigger>
+      {children}
+    </ContextMenu>
+  )
+}
+
+// menubarRef is the reference menubar; value names the open menu.
+function menubarRef(value: string): ReactNode {
+  return (
+    <Menubar value={value}>
+      <MenubarMenu value="file">
+        <MenubarTrigger>File</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            New tab <MenubarShortcut>⌘T</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem>New window</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Documentation</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu value="view">
+        <MenubarTrigger>View</MenubarTrigger>
+        <MenubarContent>
+          <MenubarCheckboxItem>Always show bookmarks bar</MenubarCheckboxItem>
+          <MenubarCheckboxItem checked>Always show full URLs</MenubarCheckboxItem>
+          <MenubarSeparator />
+          <MenubarItem inset>
+            Reload <MenubarShortcut>⌘R</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem inset disabled>
+            Force reload
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu value="profiles">
+        <MenubarTrigger>Profiles</MenubarTrigger>
+        <MenubarContent>
+          <MenubarRadioGroup value="grace">
+            <MenubarLabel inset>Profile</MenubarLabel>
+            <MenubarRadioItem value="ada">Ada</MenubarRadioItem>
+            <MenubarRadioItem value="grace">Grace</MenubarRadioItem>
+          </MenubarRadioGroup>
+          <MenubarSeparator />
+          <MenubarItem inset variant="destructive">
+            Remove profile
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
+  )
+}
+
+// navigationRef is the reference navigation menu; value names the open item.
+// The Gx port has no measured viewport, so the reference uses the pinned
+// viewport={false} mode. Radix marks an active link with an empty
+// data-active, which the pinned data-[active=true] recipe never matches; the
+// reference passes the value the recipe expects.
+function navigationRef(value: string): ReactNode {
+  return (
+    <NavigationMenu viewport={false} value={value}>
+      <NavigationMenuList>
+        <NavigationMenuItem value="products">
+          <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-48 gap-1">
+              <li>
+                <NavigationMenuLink href="/products">All products</NavigationMenuLink>
+              </li>
+              <li>
+                <NavigationMenuLink href="/products/new">New arrivals</NavigationMenuLink>
+              </li>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/" data-active="true" className={navigationMenuTriggerStyle()}>
+            Home
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/docs" className={navigationMenuTriggerStyle()}>
+            Docs
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  )
+}
 
 export type Ref = {
   // body is the reference rendering, or a function of the open flag when an
@@ -437,55 +571,65 @@ export const refs: Record<string, Ref> = {
   popover: {
     body: (open) => (
       <Popover open={open}>
-        <PopoverContent>Place content for the popover here.</PopoverContent>
+        <PopoverContent>
+          <PopoverHeader>
+            <PopoverTitle>Dimensions</PopoverTitle>
+            <PopoverDescription>Set the dimensions for the layer.</PopoverDescription>
+          </PopoverHeader>
+        </PopoverContent>
       </Popover>
     ),
   },
   "dropdown-menu": {
     body: (open) => (
       <DropdownMenu open={open}>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>My account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Documentation</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>
+              Settings
+              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Documentation</DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Sign out</DropdownMenuItem>
+          <DropdownMenuCheckboxItem checked>Status bar</DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem>Panel</DropdownMenuCheckboxItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup value="top">
+            <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive">Sign out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
   },
   "context-menu": {
-    // The pinned context menu opens from a right-click; its content markup is
-    // rendered directly with the same pinned classes.
     body: (open) => (
-      <div
-        data-slot="context-menu-content"
-        className={
-          (open ? "" : "hidden ") +
-          "bg-popover text-popover-foreground fixed top-4 left-4 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md"
-        }
-      >
-        <div
-          role="menuitem"
-          className="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none"
-        >
-          Copy
-        </div>
-        <div
-          role="menuitem"
-          className="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none"
-        >
-          Cut
-        </div>
-        <div role="separator" className="bg-border -mx-1 my-1 h-px" />
-        <div
-          role="menuitem"
-          className="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none"
-        >
-          Docs
-        </div>
-      </div>
+      <OpenContextMenu open={open}>
+        <ContextMenuContent className="w-52">
+          <ContextMenuItem>
+            Copy
+            <ContextMenuShortcut>⌘C</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem>Cut</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuCheckboxItem checked>Show bookmarks</ContextMenuCheckboxItem>
+          <ContextMenuSeparator />
+          <ContextMenuRadioGroup value="ada">
+            <ContextMenuLabel inset>People</ContextMenuLabel>
+            <ContextMenuRadioItem value="ada">Ada</ContextMenuRadioItem>
+            <ContextMenuRadioItem value="grace">Grace</ContextMenuRadioItem>
+          </ContextMenuRadioGroup>
+          <ContextMenuSeparator />
+          <ContextMenuItem>Docs</ContextMenuItem>
+          <ContextMenuItem variant="destructive">Delete</ContextMenuItem>
+        </ContextMenuContent>
+      </OpenContextMenu>
     ),
   },
   tooltip: {
@@ -493,7 +637,7 @@ export const refs: Record<string, Ref> = {
       <TooltipProvider>
         <Tooltip open={open}>
           <TooltipTrigger className="text-sm">Hover me</TooltipTrigger>
-          <TooltipContent className="[text-wrap:normal]">Add to library</TooltipContent>
+          <TooltipContent>Add to library</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     ),
@@ -509,38 +653,24 @@ export const refs: Record<string, Ref> = {
       </HoverCard>
     ),
   },
-  menubar: {
-    body: (
-      <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger className="bg-accent text-accent-foreground">Home</MenubarTrigger>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Docs</MenubarTrigger>
-        </MenubarMenu>
-      </Menubar>
-    ),
-  },
-  "navigation-menu": {
-    body: (
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/" active>
-              Home
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/docs">Docs</NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    ),
-  },
+  menubar: { body: menubarRef("") },
+  "menubar-menu": { body: (open) => menubarRef(open ? "view" : "") },
+  "navigation-menu": { body: navigationRef(""), focus: "a" },
+  "navigation-menu-content": { body: (open) => navigationRef(open ? "products" : "") },
   select: {
     body: (
       <Select value="free">
         <SelectTrigger className="w-48">
+          <SelectValue>Free</SelectValue>
+        </SelectTrigger>
+      </Select>
+    ),
+    focus: "button",
+  },
+  "select-sm": {
+    body: (
+      <Select value="free">
+        <SelectTrigger size="sm" className="w-48">
           <SelectValue>Free</SelectValue>
         </SelectTrigger>
       </Select>

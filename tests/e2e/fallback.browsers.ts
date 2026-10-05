@@ -50,7 +50,9 @@ for (const [name, engine] of engines) {
       await fixture('Tooltip-Top').getByRole('button', { name: 'Hover me' }).focus()
       await page.waitForFunction(() => {
         const el = document.querySelector('section[data-fixture="Tooltip-Top"] [role="tooltip"]')
-        return el !== null && getComputedStyle(el).display !== 'none'
+        if (el === null) return false
+        const style = getComputedStyle(el)
+        return style.display !== 'none' && style.visibility === 'visible' && style.opacity === '1'
       })
 
       // Accessibility on the fallback path.

@@ -1,0 +1,11 @@
+package navigationmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div class="invisible absolute top-full left-0 z-50 w-max origin-top-left scale-95 pt-1.5 opacity-0 transition-[opacity,scale,visibility] delay-150 duration-200 motion-reduce:transition-none group-hover/navigation-menu-item:visible group-hover/navigation-menu-item:scale-100 group-hover/navigation-menu-item:opacity-100 group-focus-within/navigation-menu-item:visible group-focus-within/navigation-menu-item:scale-100 group-focus-within/navigation-menu-item:opacity-100">
+  <div class={gx.Cx("overflow-hidden rounded-md border border-border bg-popover p-2 pr-2.5 text-popover-foreground shadow", p.Class)} {...p.Attrs}>{p.Children}</div>
+</div>

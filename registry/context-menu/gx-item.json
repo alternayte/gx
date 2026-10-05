@@ -9,48 +9,105 @@
       "target": "ui/context-menu/ContextMenu.gx"
     },
     {
-      "path": "ContextMenuTrigger.gx",
-      "target": "ui/context-menu/ContextMenuTrigger.gx"
+      "path": "ContextMenuCheckboxItem.gx",
+      "target": "ui/context-menu/ContextMenuCheckboxItem.gx"
+    },
+    {
+      "path": "ContextMenuGroup.gx",
+      "target": "ui/context-menu/ContextMenuGroup.gx"
     },
     {
       "path": "ContextMenuItem.gx",
       "target": "ui/context-menu/ContextMenuItem.gx"
     },
     {
+      "path": "ContextMenuLabel.gx",
+      "target": "ui/context-menu/ContextMenuLabel.gx"
+    },
+    {
       "path": "ContextMenuLink.gx",
       "target": "ui/context-menu/ContextMenuLink.gx"
+    },
+    {
+      "path": "ContextMenuRadioGroup.gx",
+      "target": "ui/context-menu/ContextMenuRadioGroup.gx"
+    },
+    {
+      "path": "ContextMenuRadioItem.gx",
+      "target": "ui/context-menu/ContextMenuRadioItem.gx"
     },
     {
       "path": "ContextMenuSeparator.gx",
       "target": "ui/context-menu/ContextMenuSeparator.gx"
     },
     {
+      "path": "ContextMenuShortcut.gx",
+      "target": "ui/context-menu/ContextMenuShortcut.gx"
+    },
+    {
+      "path": "ContextMenuTrigger.gx",
+      "target": "ui/context-menu/ContextMenuTrigger.gx"
+    },
+    {
       "path": "ContextMenu.fixtures.go",
       "target": "ui/context-menu/ContextMenu.fixtures.go"
+    },
+    {
+      "path": "ContextMenuCheckboxItem.fixtures.go",
+      "target": "ui/context-menu/ContextMenuCheckboxItem.fixtures.go"
+    },
+    {
+      "path": "ContextMenuGroup.fixtures.go",
+      "target": "ui/context-menu/ContextMenuGroup.fixtures.go"
     },
     {
       "path": "ContextMenuItem.fixtures.go",
       "target": "ui/context-menu/ContextMenuItem.fixtures.go"
     },
     {
+      "path": "ContextMenuLabel.fixtures.go",
+      "target": "ui/context-menu/ContextMenuLabel.fixtures.go"
+    },
+    {
       "path": "ContextMenuLink.fixtures.go",
       "target": "ui/context-menu/ContextMenuLink.fixtures.go"
+    },
+    {
+      "path": "ContextMenuRadioGroup.fixtures.go",
+      "target": "ui/context-menu/ContextMenuRadioGroup.fixtures.go"
+    },
+    {
+      "path": "ContextMenuRadioItem.fixtures.go",
+      "target": "ui/context-menu/ContextMenuRadioItem.fixtures.go"
     },
     {
       "path": "ContextMenuSeparator.fixtures.go",
       "target": "ui/context-menu/ContextMenuSeparator.fixtures.go"
     },
     {
+      "path": "ContextMenuShortcut.fixtures.go",
+      "target": "ui/context-menu/ContextMenuShortcut.fixtures.go"
+    },
+    {
       "path": "ContextMenuTrigger.fixtures.go",
       "target": "ui/context-menu/ContextMenuTrigger.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/context-menu/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--border",
     "--popover",
     "--popover-foreground",
+    "--foreground",
     "--accent",
     "--accent-foreground",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--destructive"
   ]
 }

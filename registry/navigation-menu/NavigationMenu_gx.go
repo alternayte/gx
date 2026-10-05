@@ -7,6 +7,7 @@ import (
 )
 
 type NavigationMenuProps struct {
+	Label    string
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -14,9 +15,9 @@ type NavigationMenuProps struct {
 
 func NavigationMenu(p NavigationMenuProps) gx.Node {
 	var _b gx.Builder
-//line NavigationMenu.gx:9:1
-	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex items-center gap-1", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line NavigationMenu.gx:9:96
+//line NavigationMenu.gx:10:1
+	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-center justify-center gap-1", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
+//line NavigationMenu.gx:12:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -59,6 +59,25 @@ function waitClosed(selector: string): Promise<unknown> {
   }, selector)
 }
 
+// waitFocus waits until the focused element, or the label of a focused
+// checkbox or radio item, starts with the text.
+function waitFocus(text: string): Promise<unknown> {
+  return page.waitForFunction((want) => {
+    const at = document.activeElement
+    return ((at?.closest('label') ?? at)?.textContent ?? '').trim().startsWith(want)
+  }, text)
+}
+
+// waitShown waits until hover or focus content is visible and opaque.
+function waitShown(selector: string): Promise<unknown> {
+  return page.waitForFunction((sel) => {
+    const el = document.querySelector(sel)
+    if (el === null) return false
+    const style = getComputedStyle(el)
+    return style.display !== 'none' && style.visibility === 'visible' && style.opacity === '1'
+  }, selector)
+}
+
 test('REQ-REG-07 dialog opens from the trigger and closes on Escape', async () => {
   await fixture('Dialog-Default').getByRole('button', { name: 'Open dialog' }).click()
   await waitOpen('#demo-dialog')
@@ -94,7 +113,15 @@ test('REQ-REG-07 sheet and drawer close on Escape', async () => {
 })
 
 test('REQ-REG-07 popover toggles from the trigger and closes on Escape', async () => {
-  await fixture('PopoverTrigger-Default').getByRole('button', { name: 'Open popover' }).click()
+  const trigger = fixture('PopoverTrigger-Default').getByRole('button', { name: 'Open popover' })
+  await trigger.click()
+  await waitOpen('#demo-popover')
+  // A second click on the trigger closes the popover and leaves it closed.
+  await trigger.click()
+  await waitClosed('#demo-popover')
+  await Bun.sleep(300)
+  expect(await page.locator('#demo-popover').evaluate((el) => el.matches(':popover-open'))).toBe(false)
+  await trigger.click()
   await waitOpen('#demo-popover')
   await page.keyboard.press('Escape')
   await waitClosed('#demo-popover')
@@ -110,36 +137,128 @@ test('REQ-REG-07 dropdown menu opens with ArrowDown and closes on Escape', async
   await waitClosed('#demo-dropdown')
 })
 
+test('REQ-REG-07 dropdown menu moves one item per arrow key and jumps with Home, End and typeahead', async () => {
+  const trigger = fixture('DropdownMenuTrigger-Default').getByRole('button', { name: 'Open menu' })
+  await trigger.focus()
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Profile')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Settings')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Documentation')
+  await page.keyboard.press('ArrowUp')
+  await waitFocus('Settings')
+  await page.keyboard.press('End')
+  await waitFocus('Sign out')
+  await page.keyboard.press('Home')
+  await waitFocus('Profile')
+  await page.keyboard.press('d')
+  await waitFocus('Documentation')
+})
+
+test('REQ-REG-07 dropdown menu checkbox and radio items change with Space and Enter', async () => {
+  const trigger = fixture('DropdownMenuTrigger-Default').getByRole('button', { name: 'Open menu' })
+  await trigger.focus()
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Profile')
+  // Typeahead reads the label of a checkbox item.
+  await page.keyboard.type('pa')
+  await waitFocus('Panel')
+  const panel = page.locator('#demo-dropdown input[name="panel"]')
+  expect(await panel.isChecked()).toBe(false)
+  await page.keyboard.press('Space')
+  expect(await panel.isChecked()).toBe(true)
+  await page.keyboard.press('Enter')
+  expect(await panel.isChecked()).toBe(false)
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Top')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Bottom')
+  // The arrow keys move focus only; Space selects the radio item.
+  const bottom = page.locator('#demo-dropdown input[value="bottom"]')
+  expect(await bottom.isChecked()).toBe(false)
+  await page.keyboard.press('Space')
+  expect(await bottom.isChecked()).toBe(true)
+  // A checkbox or radio item keeps the menu open.
+  expect(await page.locator('#demo-dropdown').evaluate((el) => el.matches(':popover-open'))).toBe(true)
+})
+
+test('REQ-REG-07 dropdown menu passes a disabled item', async () => {
+  const trigger = fixture('DropdownMenuTrigger-Ghost').getByRole('button', { name: 'Open at the end' })
+  await trigger.focus()
+  await page.keyboard.press('ArrowDown')
+  await waitOpen('#demo-dropdown-end')
+  await waitFocus('Rename')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Duplicate')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Delete')
+  // Enter runs the item and closes the menu.
+  await page.keyboard.press('Enter')
+  await waitClosed('#demo-dropdown-end')
+})
+
 test('REQ-REG-07 context menu opens on a right click and closes on Escape', async () => {
   // Playwright's headless Chrome does not turn a synthetic right click into
   // a contextmenu event; dispatch the event the browser fires.
   await fixture('ContextMenuTrigger-Default').locator('[data-gx-contextmenu]').dispatchEvent('contextmenu', { button: 2 })
   await waitOpen('#demo-context')
+  // The keyboard starts inside the menu.
+  await waitFocus('Copy')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Cut')
   await page.keyboard.press('Escape')
   await waitClosed('#demo-context')
 })
 
 test('REQ-REG-07 menubar moves focus with the arrow keys', async () => {
-  const first = fixture('Menubar-Default').getByRole('menuitem', { name: 'Home' })
+  const first = fixture('Menubar-Default').getByRole('menuitem', { name: 'File', exact: true })
   await first.focus()
   await page.keyboard.press('ArrowRight')
-  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'Docs')
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'View')
+  await page.keyboard.press('ArrowRight')
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'Profiles')
+  await page.keyboard.press('Home')
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'File')
+})
+
+test('REQ-REG-07 menubar opens a menu with ArrowDown and moves between menus', async () => {
+  const view = fixture('Menubar-Default').getByRole('menuitem', { name: 'View' })
+  await view.focus()
+  await page.keyboard.press('ArrowDown')
+  await waitOpen('#demo-menubar-view')
+  await waitFocus('Always show bookmarks bar')
+  // ArrowDown passes the disabled item and stops at the end.
+  await page.keyboard.press('End')
+  await waitFocus('Reload')
+  // ArrowRight closes this menu and opens the next one.
+  await page.keyboard.press('ArrowRight')
+  await waitOpen('#demo-menubar-profiles')
+  await waitClosed('#demo-menubar-view')
+  await waitFocus('Ada')
+  await page.keyboard.press('ArrowLeft')
+  await waitOpen('#demo-menubar-view')
+  await waitClosed('#demo-menubar-profiles')
+  await waitFocus('Always show bookmarks bar')
+  // Escape closes the menu and returns focus to its trigger.
+  await page.keyboard.press('Escape')
+  await waitClosed('#demo-menubar-view')
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'View')
 })
 
 test('REQ-REG-07 tooltip shows on keyboard focus', async () => {
+  const tip = 'section[data-fixture="Tooltip-Top"] [role="tooltip"]'
+  expect(await page.locator(tip).evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden')
   await fixture('Tooltip-Top').getByRole('button', { name: 'Hover me' }).focus()
-  await page.waitForFunction(() => {
-    const el = document.querySelector('section[data-fixture="Tooltip-Top"] [role="tooltip"]')
-    return el !== null && getComputedStyle(el).display !== 'none'
-  })
+  await waitShown(tip)
 })
 
 test('REQ-REG-07 hover card shows on keyboard focus', async () => {
+  const card = 'section[data-fixture="HoverCard-User"] .fixture-body > span > span:last-child'
+  expect(await page.locator(card).evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden')
   await fixture('HoverCard-User').getByRole('button', { name: '@ada' }).focus()
-  await page.waitForFunction(() => {
-    const section = document.querySelector('section[data-fixture="HoverCard-User"]')
-    return section?.textContent?.includes('Ada Lovelace') === true
-  })
+  await waitShown(card)
+  expect(await page.locator(card).textContent()).toContain('Ada Lovelace')
 })
 
 test('REQ-REG-07 accordion toggles with Space', async () => {
@@ -199,6 +318,17 @@ test('REQ-REG-07 slider changes with the arrow keys', async () => {
   await slider.focus()
   await page.keyboard.press('ArrowRight')
   expect(await slider.inputValue()).toBe('51')
+})
+
+test('REQ-REG-07 navigation menu shows its content on keyboard focus', async () => {
+  const content = 'section[data-fixture="NavigationMenu-Default"] li > div'
+  expect(await page.locator(content).evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden')
+  await fixture('NavigationMenu-Default').getByRole('button', { name: 'Products' }).focus()
+  await waitShown(content)
+  // Tab moves into the content and the content stays.
+  await page.keyboard.press('Tab')
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'All products')
+  await waitShown(content)
 })
 
 test('REQ-REG-07 navigation menu and sidebar links take focus', async () => {

@@ -249,8 +249,7 @@
     "capture": {
       "gx": "section[data-fixture=\"Tooltip-Top\"] [role=tooltip]",
       "ref": "[data-slot=tooltip-content]"
-    },
-    "threshold": 0.25
+    }
   },
   {
     "ref": "hover-card",
@@ -268,12 +267,46 @@
     "fixture": "Menubar-Default"
   },
   {
+    "ref": "menubar-menu",
+    "fixture": "Menubar-Default",
+    "open": {
+      "js": "document.querySelector('#demo-menubar-view').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-menubar-view",
+      "ref": "[data-slot=menubar-content]"
+    }
+  },
+  {
     "ref": "navigation-menu",
-    "fixture": "NavigationMenu-Default"
+    "fixture": "NavigationMenu-Default",
+    "focus": {
+      "gx": "nav > ul > li > a",
+      "ref": "a"
+    }
+  },
+  {
+    "ref": "navigation-menu-content",
+    "fixture": "NavigationMenu-Default",
+    "open": {
+      "focus": "button"
+    },
+    "capture": {
+      "gx": "section[data-fixture='NavigationMenu-Default'] li > div > div",
+      "ref": "[data-slot=navigation-menu-content]"
+    }
   },
   {
     "ref": "select",
-    "fixture": "Select-Plan"
+    "fixture": "Select-Plan",
+    "focus": {
+      "gx": "select",
+      "ref": "button"
+    }
+  },
+  {
+    "ref": "select-sm",
+    "fixture": "Select-Small"
   },
   {
     "ref": "tabs",

@@ -1,0 +1,19 @@
+package dropdownmenu
+
+import "github.com/alternayte/gx/examples/shop/ui/icons"
+
+props {
+  Name     string   = ""
+  Value    string   = ""
+  Checked  bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<label class={gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>
+  <input type="radio" role="menuitemradio" tabindex="-1" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class="peer sr-only" {...rovingItem(p.Disabled)} />
+  <span class="pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible"><icons.Circle class="size-2 *:fill-current" /></span>
+  {p.Children}
+</label>

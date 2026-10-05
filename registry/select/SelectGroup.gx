@@ -1,0 +1,9 @@
+package selectbox
+
+props {
+  Label    string
+  Disabled bool = false
+  Children gx.Node
+}
+
+<optgroup label={p.Label} disabled={p.Disabled}>{p.Children}</optgroup>

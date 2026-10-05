@@ -4,10 +4,13 @@ package dropdownmenu
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/registry/button"
 )
 
 type DropdownMenuTriggerProps struct {
 	Id       string
+	Variant  button.Variant
+	Size     button.Size
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -15,9 +18,9 @@ type DropdownMenuTriggerProps struct {
 
 func DropdownMenuTrigger(p DropdownMenuTriggerProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuTrigger.gx:10:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "popovertarget", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenuTrigger.gx:10:326
+//line DropdownMenuTrigger.gx:14:1
+	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: p.Size, Type: "button", Class: p.Class, Children: p.Children, Attrs: p.attrs()}))
+//line DropdownMenuTrigger.gx:14:114
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

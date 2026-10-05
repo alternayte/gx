@@ -4,21 +4,53 @@ package selectbox
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/icons"
 )
 
 type SelectProps struct {
-	Name     string
-	Label    string
-	Class    string
-	Children gx.Node
-	Attrs    gx.Attrs
+	Name        string
+	Label       string
+	Size        Size
+	Placeholder string
+	Class       string
+	Children    gx.Node
+	Attrs       gx.Attrs
 }
 
 func Select(p SelectProps) gx.Node {
 	var _b gx.Builder
-//line Select.gx:11:1
-	_b.Add(gx.El("select", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Select.gx:11:353
+//line Select.gx:15:1
+	var _b1 gx.Builder
+//line Select.gx:15:60
+	_b1.Add(gx.Text("\n  "))
+//line Select.gx:16:3
+	var _b2 gx.Builder
+//line Select.gx:16:590
+	_b2.Add(gx.Text("\n    "))
+//line Select.gx:17:5
+	if p.Placeholder != "" {
+//line Select.gx:17:29
+		_b2.Add(gx.Text("\n      "))
+//line Select.gx:18:7
+		_b2.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: "", Kind: gx.AttrText}, gx.Bool("disabled", true), gx.Bool("selected", true), gx.Bool("hidden", true)}, gx.Text(p.Placeholder)))
+//line Select.gx:18:73
+		_b2.Add(gx.Text("\n    "))
+	}
+//line Select.gx:19:6
+	_b2.Add(gx.Text("\n    "))
+//line Select.gx:20:5
+	_b2.Add(p.Children)
+//line Select.gx:20:17
+	_b2.Add(gx.Text("\n  "))
+	_b1.Add(gx.El("select", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full min-w-0 appearance-none rounded-md border border-input bg-transparent py-0 pr-9 pl-3 text-sm whitespace-nowrap shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 has-[option[value='']:checked]:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:ring-destructive/40", sizeClass[p.size()]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), _b2.Node()))
+//line Select.gx:21:12
+	_b1.Add(gx.Text("\n  "))
+//line Select.gx:22:3
+	_b1.Add(icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground opacity-50"}))
+//line Select.gx:22:134
+	_b1.Add(gx.Text("\n"))
+	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative inline-flex w-fit", p.Class), Kind: gx.AttrText}}, _b1.Node()))
+//line Select.gx:23:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

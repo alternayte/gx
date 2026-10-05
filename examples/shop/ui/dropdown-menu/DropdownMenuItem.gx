@@ -1,9 +1,12 @@
 package dropdownmenu
 
 props {
+  Variant  Variant  = Default
+  Inset    bool     = false
+  Disabled bool     = false
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<button type="button" role="menuitem" tabindex="-1" data-gx-roving-item data-gx-close class={gx.Cx("flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</button>
+<button type="button" role="menuitem" tabindex="-1" disabled={p.Disabled} data-gx-close class={gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>{p.Children}</button>

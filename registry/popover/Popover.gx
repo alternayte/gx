@@ -2,9 +2,10 @@ package popover
 
 props {
   Id       string
+  Align    Align    = Center
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" data-gx-dismiss style={gx.Style("position-anchor: --gx-pop-" + p.Id + "; inset: auto; top: anchor(bottom); left: anchor(left); margin-top: 0.5rem")} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" data-gx-dismiss style={p.style()} class={gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>

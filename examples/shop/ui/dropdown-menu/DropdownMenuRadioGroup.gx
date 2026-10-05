@@ -1,0 +1,10 @@
+package dropdownmenu
+
+props {
+  Label    string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-label={p.Label} class={p.Class} {...p.Attrs}>{p.Children}</div>

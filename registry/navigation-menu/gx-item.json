@@ -9,24 +9,54 @@
       "target": "ui/navigation-menu/NavigationMenu.gx"
     },
     {
+      "path": "NavigationMenuContent.gx",
+      "target": "ui/navigation-menu/NavigationMenuContent.gx"
+    },
+    {
       "path": "NavigationMenuItem.gx",
       "target": "ui/navigation-menu/NavigationMenuItem.gx"
+    },
+    {
+      "path": "NavigationMenuLink.gx",
+      "target": "ui/navigation-menu/NavigationMenuLink.gx"
+    },
+    {
+      "path": "NavigationMenuTrigger.gx",
+      "target": "ui/navigation-menu/NavigationMenuTrigger.gx"
     },
     {
       "path": "NavigationMenu.fixtures.go",
       "target": "ui/navigation-menu/NavigationMenu.fixtures.go"
     },
     {
-      "path": "styles.go",
-      "target": "ui/navigation-menu/styles.go"
+      "path": "NavigationMenuContent.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenuContent.fixtures.go"
     },
     {
       "path": "NavigationMenuItem.fixtures.go",
       "target": "ui/navigation-menu/NavigationMenuItem.fixtures.go"
+    },
+    {
+      "path": "NavigationMenuLink.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenuLink.fixtures.go"
+    },
+    {
+      "path": "NavigationMenuTrigger.fixtures.go",
+      "target": "ui/navigation-menu/NavigationMenuTrigger.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/navigation-menu/styles.go"
     }
   ],
+  "registryDependencies": [
+    "icons"
+  ],
   "requiredTokens": [
-    "--foreground",
+    "--border",
+    "--background",
+    "--popover",
+    "--popover-foreground",
     "--accent",
     "--accent-foreground",
     "--ring"

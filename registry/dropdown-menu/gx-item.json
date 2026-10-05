@@ -9,28 +9,56 @@
       "target": "ui/dropdown-menu/DropdownMenu.gx"
     },
     {
-      "path": "DropdownMenuTrigger.gx",
-      "target": "ui/dropdown-menu/DropdownMenuTrigger.gx"
+      "path": "DropdownMenuCheckboxItem.gx",
+      "target": "ui/dropdown-menu/DropdownMenuCheckboxItem.gx"
+    },
+    {
+      "path": "DropdownMenuGroup.gx",
+      "target": "ui/dropdown-menu/DropdownMenuGroup.gx"
     },
     {
       "path": "DropdownMenuItem.gx",
       "target": "ui/dropdown-menu/DropdownMenuItem.gx"
     },
     {
+      "path": "DropdownMenuLabel.gx",
+      "target": "ui/dropdown-menu/DropdownMenuLabel.gx"
+    },
+    {
       "path": "DropdownMenuLink.gx",
       "target": "ui/dropdown-menu/DropdownMenuLink.gx"
+    },
+    {
+      "path": "DropdownMenuRadioGroup.gx",
+      "target": "ui/dropdown-menu/DropdownMenuRadioGroup.gx"
+    },
+    {
+      "path": "DropdownMenuRadioItem.gx",
+      "target": "ui/dropdown-menu/DropdownMenuRadioItem.gx"
     },
     {
       "path": "DropdownMenuSeparator.gx",
       "target": "ui/dropdown-menu/DropdownMenuSeparator.gx"
     },
     {
-      "path": "DropdownMenuLabel.gx",
-      "target": "ui/dropdown-menu/DropdownMenuLabel.gx"
+      "path": "DropdownMenuShortcut.gx",
+      "target": "ui/dropdown-menu/DropdownMenuShortcut.gx"
+    },
+    {
+      "path": "DropdownMenuTrigger.gx",
+      "target": "ui/dropdown-menu/DropdownMenuTrigger.gx"
     },
     {
       "path": "DropdownMenu.fixtures.go",
       "target": "ui/dropdown-menu/DropdownMenu.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuCheckboxItem.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuCheckboxItem.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuGroup.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuGroup.fixtures.go"
     },
     {
       "path": "DropdownMenuItem.fixtures.go",
@@ -45,13 +73,33 @@
       "target": "ui/dropdown-menu/DropdownMenuLink.fixtures.go"
     },
     {
+      "path": "DropdownMenuRadioGroup.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuRadioGroup.fixtures.go"
+    },
+    {
+      "path": "DropdownMenuRadioItem.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuRadioItem.fixtures.go"
+    },
+    {
       "path": "DropdownMenuSeparator.fixtures.go",
       "target": "ui/dropdown-menu/DropdownMenuSeparator.fixtures.go"
     },
     {
+      "path": "DropdownMenuShortcut.fixtures.go",
+      "target": "ui/dropdown-menu/DropdownMenuShortcut.fixtures.go"
+    },
+    {
       "path": "DropdownMenuTrigger.fixtures.go",
       "target": "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/dropdown-menu/styles.go"
     }
+  ],
+  "registryDependencies": [
+    "button",
+    "icons"
   ],
   "requiredTokens": [
     "--border",
@@ -59,6 +107,7 @@
     "--popover-foreground",
     "--accent",
     "--accent-foreground",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--destructive"
   ]
 }

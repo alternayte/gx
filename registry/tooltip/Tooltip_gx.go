@@ -18,7 +18,7 @@ func Tooltip(p TooltipProps) gx.Node {
 	var _b gx.Builder
 //line Tooltip.gx:11:1
 	var _b1 gx.Builder
-//line Tooltip.gx:11:73
+//line Tooltip.gx:11:81
 	_b1.Add(gx.Text("\n  "))
 //line Tooltip.gx:12:3
 	_b1.Add(p.Children)
@@ -29,14 +29,14 @@ func Tooltip(p TooltipProps) gx.Node {
 //line Tooltip.gx:13:23
 		_b1.Add(gx.Text("\n    "))
 //line Tooltip.gx:14:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute z-50 hidden w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md group-hover:block group-focus-within:block", p.sideClass()), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tooltip", Kind: gx.AttrText}}, gx.Text(p.Content)))
-//line Tooltip.gx:14:246
+		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none invisible absolute z-50 w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background opacity-0 scale-95 transition-[opacity,scale,translate,visibility] duration-150 motion-reduce:transition-none group-hover/tooltip:visible group-hover/tooltip:opacity-100 group-hover/tooltip:scale-100 group-has-[:focus-visible]/tooltip:visible group-has-[:focus-visible]/tooltip:opacity-100 group-has-[:focus-visible]/tooltip:scale-100", sideClass[p.side()]), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tooltip", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.Text(p.Content), gx.Text("\n      "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute size-2.5 rotate-45 rounded-[2px] bg-foreground", arrowClass[p.side()]), Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}), gx.Text("\n    "))))
+//line Tooltip.gx:17:12
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Tooltip.gx:15:4
+//line Tooltip.gx:18:4
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Tooltip.gx:16:8
+	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tooltip relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line Tooltip.gx:19:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

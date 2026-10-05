@@ -10,7 +10,9 @@ A short hint on hover or focus.
 </tooltip.Tooltip>
 ```
 
-The tooltip is CSS only. It shows on hover and on keyboard focus.
+The tooltip is CSS only. It shows on hover and on keyboard focus, with an arrow that points at the control. `Side` selects the edge: `tooltip.Top` (default), `tooltip.Bottom`, `tooltip.Left` or `tooltip.Right`.
+
+The tooltip fades, zooms and slides in from the control. A user who asks for reduced motion gets no transition.
 
 ## Do
 
@@ -26,4 +28,4 @@ The tooltip is CSS only. It shows on hover and on keyboard focus.
 
 | Key | Action |
 | --- | --- |
-| (none) | The tooltip appears when the control takes keyboard focus. |
+| Tab | The tooltip appears when the control takes keyboard focus. |
