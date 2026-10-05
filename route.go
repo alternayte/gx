@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -229,6 +231,11 @@ type Config struct {
 	// classes stay in app-owned source. Without it a toast is the plain
 	// ToastNode.
 	Toast func(ToastPatch) Node
+	// Public holds the app's own static files, for example an embedded
+	// public directory. A GET for a path that names a file in it answers
+	// that file before any route, so the binary needs no file beside it
+	// (NFR-08).
+	Public fs.FS
 }
 
 // App is an http.Handler that owns a ServeMux (REQ-RTE-18).
@@ -243,6 +250,8 @@ type App struct {
 	routes []appRoute
 	// assets lists the /_gx/ asset names the app serves.
 	assets []string
+	// public holds the app's own static files (NFR-08).
+	public fs.FS
 }
 
 // appRoute is one mounted route as registered.
@@ -254,7 +263,7 @@ type appRoute struct {
 // New returns an empty app.
 func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
-	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast}
+	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast, public: cfg.Public}
 	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
 	a.devRoutes()
 	// The theme script needs no adapter: it only reads the stored theme.
@@ -366,6 +375,10 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) serve(w http.ResponseWriter, r *http.Request) {
+	if name := a.publicFile(r); name != "" {
+		http.ServeFileFS(w, r, a.public, name)
+		return
+	}
 	// Buffer a page so the document shell, the stylesheet and the scripts
 	// can join it (request lifecycle step 6); action streams pass through.
 	if wantsEventStream(r) {
@@ -376,6 +389,23 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 	b := newBufferedWriter()
 	a.mux.ServeHTTP(b, r)
 	a.flush(w, b, needs)
+}
+
+// publicFile returns the name of the public file a request asks for, or ""
+// (NFR-08).
+func (a *App) publicFile(r *http.Request) string {
+	if a.public == nil || (r.Method != http.MethodGet && r.Method != http.MethodHead) {
+		return ""
+	}
+	name := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/")
+	if name == "" || !fs.ValidPath(name) {
+		return ""
+	}
+	info, err := fs.Stat(a.public, name)
+	if err != nil || !info.Mode().IsRegular() {
+		return ""
+	}
+	return name
 }
 
 // Group mounts routes under a prefix. Middleware applies to the routes that

@@ -5,6 +5,7 @@ package gx
 import (
 	"encoding/json"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"strconv"
@@ -91,6 +92,16 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 	assets := append([]string{}, a.assets...)
 	if len(Stylesheet()) > 0 {
 		assets = append(assets, "/_gx/app.css")
+	}
+	if a.public != nil {
+		// The app's own files export with the Gx assets (NFR-08).
+		base := strings.TrimSuffix(BasePath(), "/")
+		_ = fs.WalkDir(a.public, ".", func(name string, d fs.DirEntry, err error) error {
+			if err == nil && d.Type().IsRegular() {
+				assets = append(assets, base+"/"+name)
+			}
+			return nil
+		})
 	}
 	var llms LLMSManifest
 	for _, route := range a.routes {
