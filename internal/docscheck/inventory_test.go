@@ -1,10 +1,12 @@
 package docscheck_test
 
 import (
+	"bytes"
 	"go/ast"
 	"go/doc"
 	"go/parser"
 	"go/token"
+	"image/gif"
 	"os"
 	"path/filepath"
 	"strings"
@@ -259,5 +261,147 @@ func TestREQ_DOC_06_HonestComparisons(t *testing.T) {
 	}
 	if !strings.Contains(page, "\n## Which one\n") {
 		t.Error("the page has no summary table")
+	}
+}
+
+// TestREQ_DOC_05_Readme covers the README: the quick start in three
+// commands, the GIF of the dev loop and the Cart example. The sample check
+// compiles the Cart example (REQ-DOC-05). A person looks at the page at
+// gate G4.
+func TestREQ_DOC_05_Readme(t *testing.T) {
+	repo := repoRoot(t)
+	readme, err := docscheck.ReadPage(filepath.Join(repo, "README.md"), "README")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var quick *docscheck.Block
+	files := map[string]string{}
+	blocks := readme.Blocks()
+	for i := range blocks {
+		b := &blocks[i]
+		if b.Lang == "sh" && quick == nil {
+			quick = b
+		}
+		if b.Title != "" {
+			files[b.Title] = b.Code
+		}
+	}
+	if quick == nil {
+		t.Fatal("the README has no shell block")
+	}
+	want := []string{
+		"go install github.com/alternayte/gx/cmd/gx@latest",
+		"gx init acme",
+		"cd acme && go run ./cmd/gx dev",
+	}
+	if got := strings.Split(strings.TrimSpace(quick.Code), "\n"); strings.Join(got, "|") != strings.Join(want, "|") {
+		t.Errorf("the quick start is %q, want the three commands %q", got, want)
+	}
+	if at := strings.Index(readme.Body, "## Quick start"); at < 0 || at > 1200 {
+		t.Errorf("the quick start is not near the top of the README (offset %d)", at)
+	}
+
+	// The Cart example: a signal, an action and a fragment, in three files.
+	for file, parts := range map[string][]string{
+		"cart/Cart.gx":        {"signals {", "bind:value={$Qty}", "on:click={route.Add{}}", "#total(total int)"},
+		"cart/route/route.go": {"gx.Route `POST /cart/add`", "`signal:\"qty\"`", "Rules() gx.Rules"},
+		"cart/cart.go":        {"gx.Action(", "c.Patch(CartTotal("},
+	} {
+		for _, part := range parts {
+			if !strings.Contains(files[file], part) {
+				t.Errorf("the Cart example file %s lacks %q", file, part)
+			}
+		}
+	}
+
+	// The GIF of the dev loop is in the repository and has its frames.
+	const gifPath = "docs/assets/dev-loop.gif"
+	if !strings.Contains(readme.Body, "]("+gifPath+")") {
+		t.Fatalf("the README does not show %s", gifPath)
+	}
+	raw, err := os.ReadFile(filepath.Join(repo, filepath.FromSlash(gifPath)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	anim, err := gif.DecodeAll(bytes.NewReader(raw))
+	if err != nil {
+		t.Fatalf("%s is not a GIF: %v", gifPath, err)
+	}
+	if len(anim.Image) < 4 || len(raw) > 600<<10 {
+		t.Errorf("%s has %d frames and %d bytes; want at least 4 frames and at most 600 KB", gifPath, len(anim.Image), len(raw))
+	}
+	if b := anim.Image[0].Bounds(); b.Dx() < 600 || b.Dy() < 300 {
+		t.Errorf("%s is %dx%d; a reader cannot read it", gifPath, b.Dx(), b.Dy())
+	}
+	if !strings.Contains(readme.Body, "https://gx-docs.pages.dev") {
+		t.Error("the README does not link to the docs site")
+	}
+}
+
+// TestREQ_DOC_01_DeployJob covers the deploy of the docs site: a workflow
+// exports the docs app with gx export and deploys the output to the
+// Cloudflare Pages project, the site URL of the app is the address of that
+// project, and the docs app has no action and no form, so the export can
+// hold all of it (REQ-DOC-01). The browser suite exports the site and reads
+// the result.
+func TestREQ_DOC_01_DeployJob(t *testing.T) {
+	repo := repoRoot(t)
+	raw, err := os.ReadFile(filepath.Join(repo, ".github", "workflows", "docs.yml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	workflow := string(raw)
+	for _, want := range []string{
+		"branches: [main]",
+		"go run ./cmd/gx export -main . --out docs/dist docs",
+		"uses: cloudflare/wrangler-action@v3",
+		"pages deploy docs/dist --project-name=gx-docs",
+		"${{ secrets.CLOUDFLARE_API_TOKEN }}",
+		"${{ secrets.CLOUDFLARE_ACCOUNT_ID }}",
+	} {
+		if !strings.Contains(workflow, want) {
+			t.Errorf("the deploy workflow lacks %q", want)
+		}
+	}
+	// The export comes before the deploy.
+	if strings.Index(workflow, "gx export") > strings.Index(workflow, "pages deploy") {
+		t.Error("the workflow deploys before it exports")
+	}
+	// No secret value is in the file.
+	for _, line := range strings.Split(workflow, "\n") {
+		if strings.Contains(line, "apiToken:") && !strings.Contains(line, "secrets.") {
+			t.Errorf("the workflow holds a token: %s", line)
+		}
+	}
+
+	config, err := os.ReadFile(filepath.Join(repo, "docs", "gx.toml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(config), `url = "https://gx-docs.pages.dev"`) {
+		t.Error("docs/gx.toml does not name the address of the Pages project")
+	}
+
+	// The docs site uses the content features only: it has no action and
+	// no form.
+	files, err := filepath.Glob(filepath.Join(repo, "docs", "site", "*.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, file := range files {
+		// A generated file holds the text of the docs pages, which name
+		// these calls.
+		if strings.HasSuffix(file, "_test.go") || strings.HasSuffix(file, "_gx.go") {
+			continue
+		}
+		src, err := os.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, call := range []string{"gx.Action(", "gx.Form("} {
+			if strings.Contains(string(src), call) {
+				t.Errorf("%s calls %s; the docs site must export to static files", filepath.Base(file), call)
+			}
+		}
 	}
 }

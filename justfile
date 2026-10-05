@@ -126,6 +126,10 @@ cx-cases:
 ste-lint:
     go run ./internal/stelint/cmd/stelint docs/content README.md
 
+# Record the GIF of the dev loop for the README (REQ-DOC-05). Needs Chrome.
+readme-gif:
+    go run ./internal/build/devgif
+
 evidence:
     go run ./internal/build/evidence --write
 

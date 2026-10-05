@@ -126,7 +126,12 @@ func samplePages(t *testing.T, repo string) []docscheck.Page {
 		}
 		out = append(out, p)
 	}
-	return out
+	// The README shows the same kind of sample as a docs page.
+	readme, err := docscheck.ReadPage(filepath.Join(repo, "README.md"), "README")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return append(out, readme)
 }
 
 // TestREQ_DOC_04_Samples covers every code sample of the hand-written docs

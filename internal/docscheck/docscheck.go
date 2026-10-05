@@ -46,35 +46,44 @@ func Pages(dir string) ([]Page, error) {
 		if err != nil || d.IsDir() || filepath.Ext(path) != ".md" {
 			return err
 		}
-		raw, err := os.ReadFile(path)
+		rel, _ := filepath.Rel(dir, path)
+		page, err := ReadPage(path, strings.TrimSuffix(filepath.ToSlash(rel), ".md"))
 		if err != nil {
 			return err
 		}
-		rel, _ := filepath.Rel(dir, path)
-		page := Page{Slug: strings.TrimSuffix(filepath.ToSlash(rel), ".md"), File: path, Meta: map[string]string{}}
-		text := strings.ReplaceAll(string(raw), "\r\n", "\n")
-		if strings.HasPrefix(text, "---\n") {
-			if end := strings.Index(text[4:], "\n---\n"); end >= 0 {
-				for _, line := range strings.Split(text[4:4+end], "\n") {
-					key, value, ok := strings.Cut(line, ":")
-					if !ok || strings.HasPrefix(line, " ") {
-						continue
-					}
-					value = strings.TrimSpace(value)
-					if len(value) >= 2 && value[0] == '"' && value[len(value)-1] == '"' {
-						value = strings.ReplaceAll(value[1:len(value)-1], `\"`, `"`)
-					}
-					page.Meta[strings.TrimSpace(key)] = value
-				}
-				text = text[4+end+5:]
-			}
-		}
-		page.Body = text
 		out = append(out, page)
 		return nil
 	})
 	sort.Slice(out, func(i, j int) bool { return out[i].Slug < out[j].Slug })
 	return out, err
+}
+
+// ReadPage reads one Markdown file as a page with the slug.
+func ReadPage(path, slug string) (Page, error) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return Page{}, err
+	}
+	page := Page{Slug: slug, File: path, Meta: map[string]string{}}
+	text := strings.ReplaceAll(string(raw), "\r\n", "\n")
+	if strings.HasPrefix(text, "---\n") {
+		if end := strings.Index(text[4:], "\n---\n"); end >= 0 {
+			for _, line := range strings.Split(text[4:4+end], "\n") {
+				key, value, ok := strings.Cut(line, ":")
+				if !ok || strings.HasPrefix(line, " ") {
+					continue
+				}
+				value = strings.TrimSpace(value)
+				if len(value) >= 2 && value[0] == '"' && value[len(value)-1] == '"' {
+					value = strings.ReplaceAll(value[1:len(value)-1], `\"`, `"`)
+				}
+				page.Meta[strings.TrimSpace(key)] = value
+			}
+			text = text[4+end+5:]
+		}
+	}
+	page.Body = text
+	return page, nil
 }
 
 var titleOption = regexp.MustCompile(`title="([^"]*)"`)
