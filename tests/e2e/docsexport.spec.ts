@@ -164,3 +164,46 @@ test('REQ-EXP-03 an unknown address answers the exported 404 page', async () => 
   expect(await page.evaluate(() => document.styleSheets.length)).toBeGreaterThan(0)
   await page.close()
 })
+
+test('REQ-AI-10 the docs site publishes llms.txt and a Markdown version of every page', async () => {
+  const { readFileSync } = await import('node:fs')
+  const read = (name: string) => readFileSync(join(dist, name), 'utf8')
+  const index = read('llms.txt')
+  expect(index.startsWith('# Gx\n')).toBe(true)
+  expect(index).toContain('> Gx is a Go framework for server-rendered web apps on Datastar.')
+  // One line for each page: a link, and the description of the page.
+  for (const line of [
+    '- [Quick start](/start/quick-start/): Make an app, run it and change a page in five minutes.',
+    '- [Routing](/guides/routing/): Route types, query values, typed links, layouts, errors and navigation.',
+    '- [GX2001: missing required prop](/errors/GX2001/): ',
+    '- [Comparisons](/compare/comparisons/): ',
+  ]) {
+    expect(index).toContain(line)
+  }
+  const links = [...index.matchAll(/^- \[[^\]]+\]\(([^)]+)\)/gm)].map((m) => m[1]!)
+  expect(links.length).toBeGreaterThan(110)
+
+  // Every page of llms.txt has its HTML file and its Markdown file.
+  for (const link of links) {
+    const slug = link.replace(/^\/|\/$/g, '') || 'index'
+    expect(existsSync(join(dist, slug === 'index' ? 'index.html' : `${slug}/index.html`))).toBe(true)
+    expect(existsSync(join(dist, `${slug}.md`))).toBe(true)
+  }
+  const markdown = read('guides/forms.md')
+  expect(markdown).toContain('A form input is a route type with a `Rules` method.')
+  expect(markdown).toContain('```go title="account/route/route.go"')
+  expect(markdown).not.toContain('<html')
+
+  // The full file holds the text of the pages, and the small file the links.
+  const full = read('llms-full.txt')
+  expect(full).toContain('# Quick start')
+  expect(full).toContain('gx init acme')
+  expect(full.length).toBeGreaterThan(index.length * 5)
+  expect(read('llms-small.txt')).toContain('- [Quick start](/start/quick-start/)')
+
+  // A static host serves the files as they are.
+  const res = await fetch(url + '/llms.txt')
+  expect(res.status).toBe(200)
+  expect(await res.text()).toBe(index)
+  expect((await fetch(url + '/start/quick-start.md')).status).toBe(200)
+})
