@@ -514,10 +514,13 @@
         }
       },
       "toast": {
-        "version": "0.1.0",
+        "version": "0.2.0",
         "files": {
-          "ui/toast/Toaster.fixtures.go": "06bbc881c14e67fbdeacd7a076f96553cd2017c9a3c9126b8689594d6cb397b2",
-          "ui/toast/Toaster.gx": "711eb4facd906c888a54b05fda1c7377c43c4cbdfaa9c627c95b215ae155f2b8"
+          "ui/toast/Toast.fixtures.go": "21466bebdc37275f92e89e2f950bfd6d6415314fb13eec7b5865152f2fd6716e",
+          "ui/toast/Toast.gx": "d488f2b9c25857d5b1f14a92d5ced58eff1136285543155462075df8d6a66678",
+          "ui/toast/Toaster.fixtures.go": "3c257115c921375a584cbcad76069c5cffeabb841825423954a21cb491f901ed",
+          "ui/toast/Toaster.gx": "84e5f65fab706bb26afa849801061302142432388e4f07bb0e0f783e01f57cc2",
+          "ui/toast/icons.go": "3ac130d48f40f7d37566493acafa062214bf71f9c29c5e6fb7eca6558cf09083"
         }
       },
       "toggle": {

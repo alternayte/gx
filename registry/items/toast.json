@@ -1,21 +1,50 @@
 {
   "name": "toast",
-  "version": "0.1.0",
-  "description": "A region for server-pushed toasts.",
+  "version": "0.2.0",
+  "description": "Server-pushed toasts: the toaster region and the toast.",
   "kind": "component",
   "files": [
     {
       "path": "Toaster.gx",
       "target": "ui/toast/Toaster.gx",
-      "content": "package toast\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id=\"gx-toaster\" aria-live=\"polite\" aria-atomic=\"true\" class={gx.Cx(\"fixed right-4 bottom-4 z-50 flex w-72 flex-col gap-2\", p.Class)} {...p.Attrs}\u003e\n  if p.Children != nil {\n    {p.Children}\n  }\n\u003c/div\u003e\n",
-      "sha256": "711eb4facd906c888a54b05fda1c7377c43c4cbdfaa9c627c95b215ae155f2b8"
+      "content": "package toast\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id=\"gx-toaster\" role=\"region\" aria-label=\"Notifications\" aria-live=\"polite\" data-gx-toaster class={gx.Cx(\"fixed right-4 bottom-4 z-50 flex w-[356px] max-w-[calc(100vw-2rem)] flex-col gap-3\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "84e5f65fab706bb26afa849801061302142432388e4f07bb0e0f783e01f57cc2"
+    },
+    {
+      "path": "Toast.gx",
+      "target": "ui/toast/Toast.gx",
+      "content": "package toast\n\nprops {\n  Toast gx.ToastPatch\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex w-full items-start gap-2 rounded-lg border border-border bg-popover p-4 text-sm text-popover-foreground shadow-lg transition-[opacity,translate] duration-200 ease-out starting:translate-y-2 starting:opacity-0 data-[closing]:pointer-events-none data-[closing]:translate-x-4 data-[closing]:opacity-0 motion-reduce:transition-none\", p.Class)} {...gx.ToastAttrs(p.Toast)} {...p.Attrs}\u003e\n  if p.icon() != \"\" {\n    {gx.Icon(p.icon(), gx.IconProps{Class: p.iconClass()})}\n  }\n  \u003cdiv class=\"grid min-w-0 flex-1 gap-0.5\"\u003e\n    \u003cdiv class=\"leading-5 font-medium\"\u003e{p.Toast.Text}\u003c/div\u003e\n    if p.Toast.Description != \"\" {\n      \u003cdiv class=\"leading-5 text-muted-foreground\"\u003e{p.Toast.Description}\u003c/div\u003e\n    }\n  \u003c/div\u003e\n  if p.Toast.Action.Label != \"\" {\n    \u003ca href={p.Toast.Action.URL} class=\"inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50\"\u003e{p.Toast.Action.Label}\u003c/a\u003e\n  }\n  \u003cbutton type=\"button\" data-gx-close aria-label=\"Close\" class=\"-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50\"\u003e\n    {gx.Icon(iconX, gx.IconProps{Class: \"size-4\"})}\n  \u003c/button\u003e\n\u003c/div\u003e\n",
+      "sha256": "d488f2b9c25857d5b1f14a92d5ced58eff1136285543155462075df8d6a66678"
+    },
+    {
+      "path": "icons.go",
+      "target": "ui/toast/icons.go",
+      "content": "package toast\n\nimport \"github.com/alternayte/gx\"\n\n// The icon bodies come from Lucide (https://lucide.dev), ISC License,\n// Copyright (c) Lucide Contributors.\nconst (\n\ticonCircleCheck   = `\u003ccircle cx=\"12\" cy=\"12\" r=\"10\"/\u003e\u003cpath d=\"m9 12 2 2 4-4\"/\u003e`\n\ticonInfo          = `\u003ccircle cx=\"12\" cy=\"12\" r=\"10\"/\u003e\u003cpath d=\"M12 16v-4\"/\u003e\u003cpath d=\"M12 8h.01\"/\u003e`\n\ticonTriangleAlert = `\u003cpath d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/\u003e\u003cpath d=\"M12 9v4\"/\u003e\u003cpath d=\"M12 17h.01\"/\u003e`\n\ticonOctagonX      = `\u003cpath d=\"m15 9-6 6\"/\u003e\u003cpath d=\"M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z\"/\u003e\u003cpath d=\"m9 9 6 6\"/\u003e`\n\ticonLoaderCircle  = `\u003cpath d=\"M21 12a9 9 0 1 1-6.219-8.56\"/\u003e`\n\ticonX             = `\u003cpath d=\"M18 6 6 18\"/\u003e\u003cpath d=\"m6 6 12 12\"/\u003e`\n)\n\n// icon returns the icon body of the toast kind, or \"\" for the default kind.\nfunc (p ToastProps) icon() string {\n\tswitch p.Toast.Kind {\n\tcase gx.ToastSuccess:\n\t\treturn iconCircleCheck\n\tcase gx.ToastInfo:\n\t\treturn iconInfo\n\tcase gx.ToastWarning:\n\t\treturn iconTriangleAlert\n\tcase gx.ToastError:\n\t\treturn iconOctagonX\n\tcase gx.ToastLoading:\n\t\treturn iconLoaderCircle\n\t}\n\treturn \"\"\n}\n\n// iconClass returns the classes of the kind icon. The icon sits on the first\n// text line, and the loading icon turns.\nfunc (p ToastProps) iconClass() string {\n\tconst base = \"mt-0.5 size-4 shrink-0\"\n\tif p.Toast.Kind == gx.ToastLoading {\n\t\treturn base + \" animate-spin motion-reduce:animate-none\"\n\t}\n\treturn base\n}\n\n// Render renders one pushed toast. An app passes it as gx.Config.Toast.\nfunc Render(p gx.ToastPatch) gx.Node {\n\treturn Toast(ToastProps{Toast: p})\n}\n",
+      "sha256": "3ac130d48f40f7d37566493acafa062214bf71f9c29c5e6fb7eca6558cf09083"
     },
     {
       "path": "Toaster.fixtures.go",
       "target": "ui/toast/Toaster.fixtures.go",
-      "content": "package toast\n\nimport \"github.com/alternayte/gx\"\n\nvar ToasterFixtures = gx.Fixtures[ToasterProps]{\n\t\"WithToast\": {Children: gx.ToastNode(\"Saved\")},\n}\n",
-      "sha256": "06bbc881c14e67fbdeacd7a076f96553cd2017c9a3c9126b8689594d6cb397b2"
+      "content": "package toast\n\nimport \"github.com/alternayte/gx\"\n\n// The fixture toaster is static, so it stays inside its gallery section, and\n// its toast is sticky, so it stays for the audits.\nvar ToasterFixtures = gx.Fixtures[ToasterProps]{\n\t\"WithToast\": {Class: \"static\", Children: Render(gx.ToastPatch{Text: \"Saved\", Sticky: true})},\n}\n",
+      "sha256": "3c257115c921375a584cbcad76069c5cffeabb841825423954a21cb491f901ed"
+    },
+    {
+      "path": "Toast.fixtures.go",
+      "target": "ui/toast/Toast.fixtures.go",
+      "content": "package toast\n\nimport \"github.com/alternayte/gx\"\n\n// fixtureWidth is the width a toast has inside the toaster.\nconst fixtureWidth = \"max-w-[356px]\"\n\nvar ToastFixtures = gx.Fixtures[ToastProps]{\n\t\"Default\": {Class: fixtureWidth, Toast: gx.ToastPatch{Text: \"Event created\"}},\n\t\"Success\": {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastSuccess, Text: \"Changes saved\"}},\n\t\"Info\":    {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastInfo, Text: \"A new version is available\"}},\n\t\"Warning\": {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastWarning, Text: \"Your trial ends in 3 days\"}},\n\t\"Error\":   {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastError, Text: \"The upload failed\"}},\n\t\"Loading\": {Class: fixtureWidth, Toast: gx.ToastPatch{Kind: gx.ToastLoading, Text: \"Uploading the file\"}},\n\t\"WithDescription\": {Class: fixtureWidth, Toast: gx.ToastPatch{\n\t\tKind:        gx.ToastSuccess,\n\t\tText:        \"Event created\",\n\t\tDescription: \"Monday, 12 January at 09:00\",\n\t}},\n\t\"WithAction\": {Class: fixtureWidth, Toast: gx.ToastPatch{\n\t\tText:        \"Item added to the cart\",\n\t\tDescription: \"Open the cart to check out.\",\n\t\tAction:      gx.ToastAction{Label: \"View\", URL: \"/\"},\n\t}},\n}\n",
+      "sha256": "21466bebdc37275f92e89e2f950bfd6d6415314fb13eec7b5865152f2fd6716e"
     }
   ],
-  "usage": "# Toast\n\nA region for server-pushed toasts.\n\n## Usage\n\nRender the toaster once, in the root layout.\n\n```gx\n\u003ctoast.Toaster /\u003e\n```\n\nAn action pushes a toast through the adapter:\n\n```go\nreturn c.Toast(\"Saved\")\n```\n\n## Do\n\n- Render one toaster in the root layout.\n- Keep the message short.\n\n## Don't\n\n- Do not render a toaster per page.\n- Do not use a toast for a value the user must not miss. Use an alert.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The toaster is an aria-live region and takes no focus. |\n"
+  "requiredTokens": [
+    "--popover",
+    "--popover-foreground",
+    "--border",
+    "--muted-foreground",
+    "--primary",
+    "--primary-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--ring"
+  ],
+  "usage": "# Toast\n\nServer-pushed toasts: the toaster region and the toast.\n\n## Usage\n\nRender the toaster once, in the root layout.\n\n```gx\n\u003ctoast.Toaster /\u003e\n```\n\nPass `toast.Render` to the app. The app then renders every pushed toast with the `Toast` component of this item.\n\n```go\napp := gx.New(gx.Config{Adapter: datastar.Adapter(), Toast: toast.Render})\n```\n\nAn action or a form pushes a toast.\n\n```go\nreturn c.Toast(\"Saved\")\n```\n\nA kind is an option. The kinds are `gx.ToastDefault`, `gx.ToastSuccess`, `gx.ToastInfo`, `gx.ToastWarning`, `gx.ToastError` and `gx.ToastLoading`.\n\n```go\nreturn c.Toast(\"Changes saved\", gx.ToastSuccess)\n```\n\nAdd a description, a duration or a link to a route.\n\n```go\nreturn c.Toast(\"Item added to the cart\",\n\tgx.ToastDescription(\"Open the cart to check out.\"),\n\tgx.ToastDuration(8*time.Second),\n\tgx.ToastLink(\"View\", route.Cart{}))\n```\n\nA toast leaves after 4 seconds. A loading toast and a `gx.ToastSticky` toast stay until the user closes them.\n\nGive two toasts the same ID. The second toast replaces the first in place.\n\n```go\n// The first action.\nreturn c.Toast(\"Uploading the file\", gx.ToastLoading, gx.ToastID(\"upload\"))\n\n// A later action.\nreturn c.Toast(\"File uploaded\", gx.ToastSuccess, gx.ToastID(\"upload\"))\n```\n\nA failed action or form pushes its error as a `gx.ToastError` toast.\n\nThe toaster shows at most three toasts. The oldest toast leaves first.\n\n## Do\n\n- Render one toaster in the root layout.\n- Set `Toast: toast.Render` in `gx.Config`.\n- Keep the text short. Put detail in the description.\n- Use one ID for the steps of one operation.\n\n## Don't\n\n- Do not render a toaster per page.\n- Do not use a toast for a value the user must not miss. Use an alert.\n- Do not put the only path to a task in a toast link. The toast leaves.\n- Do not write toast classes in package `gx` code. Change `Toast.gx`.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the link and the close button of a toast. The timers stop while focus is in the toaster. |\n| Enter | Follows the focused link, or closes the toast on the close button. |\n| Space | Closes the toast on the close button. |\n| Escape | Closes the toast that holds focus. Focus returns to the element that had it before the toaster. |\n"
 }

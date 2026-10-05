@@ -105,8 +105,12 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 			}
 		case gx.ToastPatch:
 			// Append, so the toaster region keeps its id for the next
-			// toast (REQ-REG-11).
-			if err := sse.PatchElements(gx.String(gx.ToastNode(t.Text)), sdk.WithSelectorID("gx-toaster"), sdk.WithModeAppend()); err != nil {
+			// toast (REQ-REG-11). A toast with an ID carries it as its
+			// element id, and the behaviour runtime puts it in the place
+			// of the earlier toast with that id. The pinned Datastar
+			// logs a warning for every selector with no match, so the
+			// adapter does not send a replace that can miss.
+			if err := sse.PatchElements(gx.String(gx.RenderToast(r, t)), sdk.WithSelectorID("gx-toaster"), sdk.WithModeAppend()); err != nil {
 				return err
 			}
 		}

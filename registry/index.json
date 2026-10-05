@@ -302,8 +302,8 @@
     },
     {
       "name": "toast",
-      "version": "0.1.0",
-      "description": "A region for server-pushed toasts.",
+      "version": "0.2.0",
+      "description": "Server-pushed toasts: the toaster region and the toast.",
       "kind": "component"
     },
     {
