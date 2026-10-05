@@ -1,0 +1,9 @@
+package contextmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="none" data-gx-sub class={p.Class} {...p.Attrs}>{p.Children}</div>

@@ -11,6 +11,13 @@ A horizontal bar of menus.
       New tab
       <menubar.MenubarShortcut>⌘T</menubar.MenubarShortcut>
     </menubar.MenubarItem>
+    <menubar.MenubarSub>
+      <menubar.MenubarSubTrigger>Share</menubar.MenubarSubTrigger>
+      <menubar.MenubarSubContent>
+        <menubar.MenubarItem>Email link</menubar.MenubarItem>
+        <menubar.MenubarItem>Messages</menubar.MenubarItem>
+      </menubar.MenubarSubContent>
+    </menubar.MenubarSub>
     <menubar.MenubarSeparator />
     <menubar.MenubarLink href={gx.URL("/docs")}>Documentation</menubar.MenubarLink>
   </menubar.MenubarMenu>
@@ -22,13 +29,17 @@ A horizontal bar of menus.
 </menubar.Menubar>
 ```
 
-`MenubarMenu` renders the trigger in the bar and the menu that opens from it. `Label` is the text of the trigger and `Id` is the id of the menu. The menu uses the native Popover API. A browser without anchor positioning shows the menu at its place in the document flow.
+`MenubarMenu` renders the trigger in the bar and the menu that opens from it. `Label` is the text of the trigger and `Id` is the id of the menu. The menu uses the native Popover API.
+
+A menu opens below its trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the menu names the side it took.
 
 A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
 
 A menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
 
-A click opens a menu. The pointer does not open the next menu when it moves along the bar. The item has no sub-menu part.
+A click opens a menu. With one menu open, the pointer opens the menu of each trigger it moves over.
+
+`MenubarSub` holds one `MenubarSubTrigger` and one `MenubarSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.
 
 ## Do
 
@@ -40,6 +51,7 @@ A click opens a menu. The pointer does not open the next menu when it moves alon
 
 - Do not put a link or a button directly in the bar. Put it in a menu.
 - Do not use a menubar for a site header. Use the navigation menu.
+- Do not put an element between the trigger and the content of a sub-menu.
 
 ## Keyboard
 
@@ -47,6 +59,8 @@ A click opens a menu. The pointer does not open the next menu when it moves alon
 | --- | --- |
 | Tab | Enters the bar at one trigger and leaves it again. |
 | Left, Right | On a trigger, moves to the previous or next trigger. In a menu, opens the previous or next menu. |
+| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |
+| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |
 | Home, End | Moves to the first or last trigger, or to the first or last item of a menu. |
 | Enter, Space | Opens the menu of the focused trigger. |
 | Down | Opens the menu and moves to the first item. |

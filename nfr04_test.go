@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"slices"
 	"strings"
 	"testing"
 
@@ -71,37 +72,37 @@ func TestNFR_04_ZeroJSWithoutFeatures(t *testing.T) {
 }
 
 // TestNFR_04_FeatureScripts checks that signals and actions pull the adapter
-// runtime, and that forms, navigation and behaviours pull the Gx runtime
-// (NFR-04).
+// runtime, that forms, navigation and page-shell behaviours pull the Gx
+// runtime, and that a component behaviour pulls only its module (NFR-04).
 func TestNFR_04_FeatureScripts(t *testing.T) {
 	tests := []struct {
-		name     string
-		view     func() gx.Node
-		core     bool
-		adapter  bool
-		behavior bool
+		name    string
+		view    func() gx.Node
+		core    bool
+		adapter bool
+		modules []string
 	}{
 		{"signals", func() gx.Node {
 			return gx.El("input", gx.Attrs{
 				{Key: "data-signals", Value: "{}"},
 				{Key: "data-bind", Value: "$q"},
 			})
-		}, true, true, false},
+		}, true, true, nil},
 		{"form", func() gx.Node {
 			return gx.El("form", gx.Attrs{{Key: "data-gx-form", Value: "signup"}})
-		}, true, true, false},
+		}, true, true, nil},
 		{"navigation", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-slot", Value: "page"}})
-		}, true, true, false},
+		}, true, true, nil},
 		{"page-shell behaviour", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-theme", Value: "dark"}})
-		}, true, false, false},
+		}, true, false, nil},
 		{"component behaviour", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-roving", Value: ""}})
-		}, false, false, true},
+		}, false, false, []string{"behavior"}},
 		{"tabs behaviour", func() gx.Node {
 			return gx.El("div", gx.Attrs{{Key: "data-gx-tabs", Value: ""}})
-		}, false, false, true},
+		}, false, false, []string{"tabs"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -112,8 +113,8 @@ func TestNFR_04_FeatureScripts(t *testing.T) {
 			if got := strings.Contains(body, "/_gx/nfr04-adapter.js"); got != tt.adapter {
 				t.Fatalf("adapter runtime = %v, want %v:\n%s", got, tt.adapter, body)
 			}
-			if got := strings.Contains(body, "/_gx/behavior.js"); got != tt.behavior {
-				t.Fatalf("behaviour runtime = %v, want %v:\n%s", got, tt.behavior, body)
+			if got := modulesOf(body); !slices.Equal(got, tt.modules) {
+				t.Fatalf("behaviour modules = %v, want %v:\n%s", got, tt.modules, body)
 			}
 		})
 	}

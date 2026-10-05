@@ -344,6 +344,72 @@
     }
   },
   {
+    "ref": "dropdown-menu-sub",
+    "fixture": "DropdownMenu-Sub",
+    "open": {
+      "js": "document.querySelector('#demo-dropdown-sub').showPopover(); document.querySelector('#demo-dropdown-sub [data-gx-sub] > [popover]').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-dropdown-sub",
+      "ref": "[data-slot=dropdown-menu-content]"
+    }
+  },
+  {
+    "ref": "dropdown-menu-sub-content",
+    "fixture": "DropdownMenu-Sub",
+    "open": {
+      "js": "document.querySelector('#demo-dropdown-sub').showPopover(); document.querySelector('#demo-dropdown-sub [data-gx-sub] > [popover]').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-dropdown-sub [data-gx-sub] > [popover]",
+      "ref": "[data-slot=dropdown-menu-sub-content]"
+    }
+  },
+  {
+    "ref": "context-menu-sub",
+    "fixture": "ContextMenu-Sub",
+    "open": {
+      "js": "document.querySelector('#demo-context-sub').showPopover(); document.querySelector('#demo-context-sub [data-gx-sub] > [popover]').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-context-sub",
+      "ref": "[data-slot=context-menu-content]"
+    }
+  },
+  {
+    "ref": "context-menu-sub-content",
+    "fixture": "ContextMenu-Sub",
+    "open": {
+      "js": "document.querySelector('#demo-context-sub').showPopover(); document.querySelector('#demo-context-sub [data-gx-sub] > [popover]').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-context-sub [data-gx-sub] > [popover]",
+      "ref": "[data-slot=context-menu-sub-content]"
+    }
+  },
+  {
+    "ref": "menubar-sub",
+    "fixture": "Menubar-Sub",
+    "open": {
+      "js": "document.querySelector('#demo-menubar-sub-file').showPopover(); document.querySelector('#demo-menubar-sub-file [data-gx-sub] > [popover]').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-menubar-sub-file",
+      "ref": "[data-slot=menubar-content]"
+    }
+  },
+  {
+    "ref": "menubar-sub-content",
+    "fixture": "Menubar-Sub",
+    "open": {
+      "js": "document.querySelector('#demo-menubar-sub-file').showPopover(); document.querySelector('#demo-menubar-sub-file [data-gx-sub] > [popover]').showPopover()"
+    },
+    "capture": {
+      "gx": "#demo-menubar-sub-file [data-gx-sub] > [popover]",
+      "ref": "[data-slot=menubar-sub-content]"
+    }
+  },
+  {
     "ref": "navigation-menu",
     "fixture": "NavigationMenu-Default",
     "focus": {

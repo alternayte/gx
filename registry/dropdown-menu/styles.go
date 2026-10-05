@@ -15,11 +15,12 @@ const (
 	End    Align = "end"
 )
 
-// The menu zooms from the edge that touches the trigger.
+// The menu zooms from the edge that touches the trigger. The overlay module
+// writes data-side: a menu that flips opens above the trigger.
 var alignClass = gx.Enum[Align]{
-	Center: "origin-top",
-	Start:  "origin-top-left",
-	End:    "origin-top-right",
+	Center: "origin-top data-[side=top]:origin-bottom",
+	Start:  "origin-top-left data-[side=top]:origin-bottom-left",
+	End:    "origin-top-right data-[side=top]:origin-bottom-right",
 }
 
 var alignStyle = gx.Enum[Align]{
@@ -36,10 +37,16 @@ func (p DropdownMenuProps) align() Align {
 	return p.Align
 }
 
-// style anchors the menu below its trigger. A browser without anchor
-// positioning keeps the menu at its place in the document flow.
+// style anchors the menu below its trigger for a page whose scripts did not
+// run. The overlay module then writes the measured place.
 func (p DropdownMenuProps) style() gx.Style {
 	return gx.Style("position-anchor: --gx-menu-" + p.Id + "; inset: auto; margin: 0.25rem 0 0; top: anchor(bottom); " + alignStyle[p.align()])
+}
+
+// place tells the overlay module where the menu goes: below the trigger,
+// 4px away, and inside the viewport.
+func (p DropdownMenuProps) place() string {
+	return "bottom " + string(p.align()) + " 4"
 }
 
 // variant returns the button variant of one trigger; a zero value is
@@ -95,8 +102,13 @@ func rovingItem(disabled bool) gx.Attrs {
 }
 
 // motionClass fades and zooms the menu from 95% and slides it 2 units from
-// the trigger. Safari 26.0 never ends a display transition on an element
+// the trigger, from below when the menu took the top side. Safari 26.0 never ends a display transition on an element
 // that CSS anchor positioning places, which leaves a closed menu rendered.
 // The @supports test matches every engine but WebKit, so Safari closes the
 // menu at once and still animates the enter.
-const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 data-[side=top]:starting:open:translate-y-2 motion-reduce:transition-none"
+
+// subMotionClass fades and zooms the content of a sub-menu from 95% and
+// slides it 2 units from its trigger. The overlay module writes data-side:
+// content that flips to the left slides from the right.
+const subMotionClass = "origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none"

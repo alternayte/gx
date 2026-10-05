@@ -64,14 +64,27 @@ afterAll(async () => {
 async function shoot(p: Page, selector: string): Promise<Buffer> {
   const el = p.locator(selector).first()
   await el.waitFor({ state: "visible", timeout: 15000 })
-  const box = await p.evaluate((s) => {
-    const r = document.querySelector(s)!.getBoundingClientRect()
-    return {
-      x: r.left + window.scrollX,
-      y: r.top + window.scrollY,
-      width: r.width,
-      height: r.height,
+  // Nested floating content of the reference takes its place over several
+  // frames: a sub-menu follows the place of its menu. The box is read when
+  // six frames in a row agree.
+  const box = await p.evaluate(async (s) => {
+    const read = () => {
+      const r = document.querySelector(s)!.getBoundingClientRect()
+      return {
+        x: r.left + window.scrollX,
+        y: r.top + window.scrollY,
+        width: r.width,
+        height: r.height,
+      }
     }
+    let box = read()
+    for (let same = 0, i = 0; same < 6 && i < 120; i++) {
+      await new Promise((done) => requestAnimationFrame(done))
+      const next = read()
+      same = JSON.stringify(next) === JSON.stringify(box) ? same + 1 : 0
+      box = next
+    }
+    return box
   }, selector)
   const client = await p.context().newCDPSession(p)
   try {

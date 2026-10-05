@@ -2,6 +2,7 @@ package gx_test
 
 import (
 	"errors"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -92,13 +93,14 @@ func TestREQ_REG_11_ToastMarkup(t *testing.T) {
 }
 
 // TestREQ_REG_11_ToasterLoadsBehavior checks that a page with the toaster
-// region ships the behaviour runtime, which runs the toast timers.
+// region ships the toast module, which runs the toast timers, and no other
+// behaviour module.
 func TestREQ_REG_11_ToasterLoadsBehavior(t *testing.T) {
 	body := servePage(t, &nfr04Adapter{}, gx.Toaster)
 	if !strings.Contains(body, `id="gx-toaster"`) || !strings.Contains(body, `aria-live="polite"`) {
 		t.Fatalf("page lacks the toaster region:\n%s", body)
 	}
-	if !strings.Contains(body, "/_gx/behavior.js") {
-		t.Fatalf("toaster page lacks the behaviour runtime:\n%s", body)
+	if got := modulesOf(body); !slices.Equal(got, []string{"toast"}) {
+		t.Fatalf("toaster page loads %v, want the toast module only:\n%s", got, body)
 	}
 }

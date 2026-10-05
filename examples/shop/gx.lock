@@ -127,8 +127,8 @@
       "context-menu": {
         "version": "0.1.0",
         "files": {
-          "ui/context-menu/ContextMenu.fixtures.go": "b26256d16c180dea4e105891011104d30a8412ffd939ac2ca29ba9ac0720e848",
-          "ui/context-menu/ContextMenu.gx": "fbb04a33b614afab3631227edda5e3aa14e0b6cbe8eb5f276fd313c11a407319",
+          "ui/context-menu/ContextMenu.fixtures.go": "88bb720880dfd10bdf6e2db8d0ac2efb5b5b806470e5f8d150c578a92a02dd2d",
+          "ui/context-menu/ContextMenu.gx": "9fa5fd032ccabdaaaef7e50bf40e2720057c4e60f51a492973eb5555e23210ee",
           "ui/context-menu/ContextMenuCheckboxItem.fixtures.go": "8ffb28e548c6ca24f54d92e6803e6eba2b3cc1a60a346a12116c8ae39bbfd931",
           "ui/context-menu/ContextMenuCheckboxItem.gx": "39ab2975938cc9eaa7b4c2816c17593b8f4c2ad76847c2485ed5ec7f91873515",
           "ui/context-menu/ContextMenuGroup.fixtures.go": "fde2e982b9a0ecf28e97e3f720346d7f748f28d6e25a93d1b2c87d1ce4785b1b",
@@ -147,9 +147,15 @@
           "ui/context-menu/ContextMenuSeparator.gx": "87dd3fd8e74864e6cc7c0803e9fa837adefb82a0a0b816d1f45c121b4bf8db6e",
           "ui/context-menu/ContextMenuShortcut.fixtures.go": "f73f5a449447bbfedc45af2389cbfa1583ccc16b239261578f58957db710ac74",
           "ui/context-menu/ContextMenuShortcut.gx": "5f20e5ee54505ec3e8996bcadfb80ae67da112a66ac9534fe96db23ff73adb78",
-          "ui/context-menu/ContextMenuTrigger.fixtures.go": "9383b11cdfee9130d49eef959cfb66af06d1a85e166e2b724d03afed07ac533e",
+          "ui/context-menu/ContextMenuSub.fixtures.go": "e8d73647967f2e875261c3251225376b17772cca619cf807b094863e41aab087",
+          "ui/context-menu/ContextMenuSub.gx": "db335cc1a84d53e867e04d2fac85b7b357f462928fc40f979290562a8d0626ea",
+          "ui/context-menu/ContextMenuSubContent.fixtures.go": "5a7ab7aac3e7af051244ef735b18aef68b5275f7aa05c9a561a35261226c4a45",
+          "ui/context-menu/ContextMenuSubContent.gx": "304c6651bd0fdfe3ce337fd5596a10b2453a9e904db6d3cc9473d0cbdfea46d4",
+          "ui/context-menu/ContextMenuSubTrigger.fixtures.go": "228f9dad37be60744f215801ad8ef616473095f27bda33f087f31761552df7aa",
+          "ui/context-menu/ContextMenuSubTrigger.gx": "cd79d10dd728e122c2e61dab27d9a13cf699e759c8d084513918d20c8d8f25f8",
+          "ui/context-menu/ContextMenuTrigger.fixtures.go": "f8e6feed6cdcfe028f14be8bd5038b9932dac96561b7aeeaf22081ba4daf4c32",
           "ui/context-menu/ContextMenuTrigger.gx": "0c8aee2fbd7f4bd2e55d4022be0d6723c42a5edbcc3fee225160d1c0159496d0",
-          "ui/context-menu/styles.go": "d6ed15ce049fbeb915a8a07c287ac865c679a059e7ba50a77f3fbce379044f18"
+          "ui/context-menu/styles.go": "5176748e0193166d67422ee65746a1381ba72fb658d6aa03d647630ce9c0702e"
         }
       },
       "data-table": {
@@ -184,8 +190,8 @@
       "dropdown-menu": {
         "version": "0.1.0",
         "files": {
-          "ui/dropdown-menu/DropdownMenu.fixtures.go": "da794b04eaf5ab01433fc2e89076f01880026a5ec99b209ae818b889f0cc698b",
-          "ui/dropdown-menu/DropdownMenu.gx": "5e47e8d787409e51608796a11a07e1ca9e1c35bbae4eb683abb35a6b76401546",
+          "ui/dropdown-menu/DropdownMenu.fixtures.go": "b36cdc88ec8b72b33af30e4cf317a21d80a2c8364ddfafc40f4dcec88b5bae8a",
+          "ui/dropdown-menu/DropdownMenu.gx": "70b294e0ce955b343c0221e342520f231d49c14580274a243215658232cb9596",
           "ui/dropdown-menu/DropdownMenuCheckboxItem.fixtures.go": "127a8187aea65a12fa4694c1957e04c230d849117853f70dac6bdca2d4cca566",
           "ui/dropdown-menu/DropdownMenuCheckboxItem.gx": "c5c86cdb7bfedb01b3868daa6f1ed94f0fc1b9a7f559d44b6926b92e1faeab20",
           "ui/dropdown-menu/DropdownMenuGroup.fixtures.go": "133a5dc1ea144dd158327cc7158516f576a5f4b3231e5c6277749a7426fde48f",
@@ -204,9 +210,15 @@
           "ui/dropdown-menu/DropdownMenuSeparator.gx": "8853201d228a7da00dd55d1b28db66439a3023b9a04a6d1312555b948cc9d3b2",
           "ui/dropdown-menu/DropdownMenuShortcut.fixtures.go": "19fec5a72be635903b88a901e6e4ea43f48d30c1813934b91cc7cb518aec61bc",
           "ui/dropdown-menu/DropdownMenuShortcut.gx": "b57aaa1e5b43824a9ce562333974152befdea2e309115dae365aca8f1b66318f",
-          "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go": "ba7a3b297c184fc20652e4bac07734d35351c0c00cb3b0096fc9abf53f7790fa",
+          "ui/dropdown-menu/DropdownMenuSub.fixtures.go": "458dafc45498a75c1eb509a6c230d4a18eca2c74b509ff43d2bb1d13702c1e15",
+          "ui/dropdown-menu/DropdownMenuSub.gx": "bf8dc164e758aff7367332e748d32a5d62c114b32a20ac8798365a4614e332ec",
+          "ui/dropdown-menu/DropdownMenuSubContent.fixtures.go": "5c221f5d305ae3d5250901e6457333850a931cec4f0333d869393d91fcb7a26a",
+          "ui/dropdown-menu/DropdownMenuSubContent.gx": "fa9947f9272132d06c3b292f7691e1736aee0b8b0143faec9f207664bbb06532",
+          "ui/dropdown-menu/DropdownMenuSubTrigger.fixtures.go": "2bc3148b8bd80735dad02c68b62afd49f8c6291435c64a6ef04d69c21737d5d2",
+          "ui/dropdown-menu/DropdownMenuSubTrigger.gx": "0d1d697ed43d90d9fd0d11e864a296e2d316c901c8dad622c6d831371098ed18",
+          "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go": "e2f66ecbc3f86f0d54e440a97d8e8aed0d420225575159cdabda116fe26fafdc",
           "ui/dropdown-menu/DropdownMenuTrigger.gx": "a5733a3ef7fd6808922caca7ad071b7e490f90536db34f2dc4c84a9ed943e059",
-          "ui/dropdown-menu/styles.go": "c0278ddb6d9326f62afb8c5da796576c48f9369a4b6e3fe442714da89d91af1b"
+          "ui/dropdown-menu/styles.go": "67a04596681446568922315018fb19a6040d687b52375ee12570e6703caec6b2"
         }
       },
       "empty": {
@@ -373,7 +385,7 @@
       "menubar": {
         "version": "0.1.0",
         "files": {
-          "ui/menubar/Menubar.fixtures.go": "b759651e8731c74bd42fbb4734df101b3f35530712d7427f83fb8b11eae3243f",
+          "ui/menubar/Menubar.fixtures.go": "3f02a6567fe60df98a71e3e1b90b7eb332138bab7ea8e88ffeb52330badf5cd0",
           "ui/menubar/Menubar.gx": "ff94109c4fb1dca2fb0487b54e2ec31a1347a7ce98a8ffd7678dbd12b89f6c6e",
           "ui/menubar/MenubarCheckboxItem.fixtures.go": "0e99996f8b7cbad6f8543ce9fc96cab90a4786307800ba0c34cc757372831bdd",
           "ui/menubar/MenubarCheckboxItem.gx": "eeb0018a5fd802a910eb9b6a7098490047499fdce701e5280b7dd2e16d59465d",
@@ -386,7 +398,7 @@
           "ui/menubar/MenubarLink.fixtures.go": "d67178d236ca0d8da159c397633f65045b5867ed1124dd0dc6629168febfa84a",
           "ui/menubar/MenubarLink.gx": "ff88de8ff147a8998a533c1feed62d8c4dc661398eb13ccf766b5a769328ae88",
           "ui/menubar/MenubarMenu.fixtures.go": "38127c680b021dc823694b7de195688427e093cdc908fc732fee69e1f1b571e3",
-          "ui/menubar/MenubarMenu.gx": "b736efc16a9c11ca7be9ca2d34bbf1f0a1bca5aca1870cae35ce209a1ee7de82",
+          "ui/menubar/MenubarMenu.gx": "2ab1193603637264aa66230fa398ac61e45747c4c342ff527c245817ed377111",
           "ui/menubar/MenubarRadioGroup.fixtures.go": "b8bbb47795f35b6cc51d3afc402298539bdd690140bf633bc21c43fa0c5388b4",
           "ui/menubar/MenubarRadioGroup.gx": "e960c553dca097d6abfc70e24c033475714c08ff8f15d034ed475a4a3db8635d",
           "ui/menubar/MenubarRadioItem.fixtures.go": "b9402691a20d767bfc74efbf256182e559ff6978c5aee59327226a4f1e95913e",
@@ -395,7 +407,13 @@
           "ui/menubar/MenubarSeparator.gx": "ab73971c7550de903f267ecac4396757c6f7de59f3f0ba63c71b8a019dc99ac7",
           "ui/menubar/MenubarShortcut.fixtures.go": "0191c66130b68a4742051c664a4f221d064e06c6c42bedefecf847a689f64684",
           "ui/menubar/MenubarShortcut.gx": "436d22f328e5dc45317c659aa84d3de4aeb987d33d374b168d8a80fb9a387281",
-          "ui/menubar/styles.go": "49991c34913bf61cea3ac58192b55710f61aeae40fed8163fe70875c5f8cb976"
+          "ui/menubar/MenubarSub.fixtures.go": "9b0a51f7bf00e63a120790bc66e7f8643bca1a384fb36c392f673ade33179779",
+          "ui/menubar/MenubarSub.gx": "3a3162ab277405c3d15b2a9c30948b271e7068263ac94498508dd205d56bbf47",
+          "ui/menubar/MenubarSubContent.fixtures.go": "63194aeaabf76eaa88db1d26d38b75c24537613f23274ee51fa3ba1a4576a92d",
+          "ui/menubar/MenubarSubContent.gx": "7d42f32bd7735ba1138641d66ade91b77505681b79bbac114232c79c2847a4fd",
+          "ui/menubar/MenubarSubTrigger.fixtures.go": "b2a94bad389edcba2917ae21fde78a3ee88f715d0ff31d57614adeb57f173e7b",
+          "ui/menubar/MenubarSubTrigger.gx": "94e7441c5c639b29a189c7160ea9a91113ef6d9957ddf39068918d82b59bed90",
+          "ui/menubar/styles.go": "16eb5a031da98ace203cc095b36caefbb357e0ee7b24159c11a30ea066f634b8"
         }
       },
       "navigation-menu": {
@@ -438,7 +456,7 @@
         "version": "0.1.0",
         "files": {
           "ui/popover/Popover.fixtures.go": "1e5ee77e267741f435b0d47f141d13c228556de57a878f078e315c725af2e4f2",
-          "ui/popover/Popover.gx": "ebd224afdc0b4958dbeb3f02af821933a69ae164b9d90edd14297452d037b258",
+          "ui/popover/Popover.gx": "f3a794d0803aad253aba9999709e2de428385f712cea961132b306f178b9a94e",
           "ui/popover/PopoverDescription.fixtures.go": "1888e69dfc14c6057839231ffb2d3a239d7cec27b19f98998500aee093e364ff",
           "ui/popover/PopoverDescription.gx": "b29b1608e733d2310129ad4ddcf20890f1528f88a85ca74f907edee3849b7d54",
           "ui/popover/PopoverHeader.fixtures.go": "2441dad4574a07c14a6403b0c5102a5aab6845a1b5b0fa0c1523a49bc17cf211",
@@ -447,7 +465,7 @@
           "ui/popover/PopoverTitle.gx": "58621765770b7e1d6dd93471494b513405ecfc9754a6073e16e5fb47d09308e3",
           "ui/popover/PopoverTrigger.fixtures.go": "d97dfbddbc13c6f36fabe4db1b1288f5d022a6c2f346f11ea3665d42252df64c",
           "ui/popover/PopoverTrigger.gx": "570bbba16dc9bee0857c3a136342d7fbcec17b2504fbfdafcc17da3d0a5d7462",
-          "ui/popover/styles.go": "99129d9ed35629159fa7238a6dfd58cff2fdfb4d9fc2fc2679a875232e8481dd"
+          "ui/popover/styles.go": "3afde49bff2ebc47352a3d313a5203fce14fa659960a5589567837ae66b393a4"
         }
       },
       "progress": {

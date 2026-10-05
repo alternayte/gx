@@ -120,6 +120,9 @@ import {
   ContextMenuRadioItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/ui/context-menu"
 import {
@@ -149,6 +152,9 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/ui/dropdown-menu"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card"
 import {
@@ -162,6 +168,9 @@ import {
   MenubarRadioItem,
   MenubarSeparator,
   MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger,
 } from "@/ui/menubar"
 import {
@@ -283,6 +292,81 @@ function navigationRef(value: string): ReactNode {
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
+  )
+}
+
+// dropdownSubRef is the reference dropdown menu with its sub-menu open.
+function dropdownSubRef(open: boolean): ReactNode {
+  return (
+    <DropdownMenu open={open}>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuItem>New tab</DropdownMenuItem>
+        <DropdownMenuSub open={open}>
+          <DropdownMenuSubTrigger>More tools</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="w-48">
+            <DropdownMenuItem>Save page</DropdownMenuItem>
+            <DropdownMenuItem>Create shortcut</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Developer tools</DropdownMenuItem>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Print</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+// contextSubRef is the reference context menu with its sub-menu open.
+function contextSubRef(open: boolean): ReactNode {
+  return (
+    <OpenContextMenu open={open}>
+      <ContextMenuContent className="w-52">
+        <ContextMenuItem>Back</ContextMenuItem>
+        <ContextMenuSub open={open}>
+          <ContextMenuSubTrigger>More tools</ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-48">
+            <ContextMenuItem>Save page</ContextMenuItem>
+            <ContextMenuItem>Create shortcut</ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem>Developer tools</ContextMenuItem>
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+        <ContextMenuSeparator />
+        <ContextMenuItem>Reload</ContextMenuItem>
+      </ContextMenuContent>
+    </OpenContextMenu>
+  )
+}
+
+// menubarSubRef is the reference menubar with a menu and its sub-menu open.
+function menubarSubRef(open: boolean): ReactNode {
+  return (
+    <Menubar value={open ? "file" : ""}>
+      <MenubarMenu value="file">
+        <MenubarTrigger>File</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>New tab</MenubarItem>
+          <MenubarSub open={open}>
+            <MenubarSubTrigger>Share</MenubarSubTrigger>
+            <MenubarSubContent>
+              <MenubarItem>Email link</MenubarItem>
+              <MenubarItem>Messages</MenubarItem>
+              <MenubarItem>Notes</MenubarItem>
+            </MenubarSubContent>
+          </MenubarSub>
+          <MenubarSeparator />
+          <MenubarItem>Print</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu value="edit">
+        <MenubarTrigger>Edit</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>Undo</MenubarItem>
+          <MenubarItem>Redo</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   )
 }
 
@@ -670,6 +754,12 @@ export const refs: Record<string, Ref> = {
       </DropdownMenu>
     ),
   },
+  "dropdown-menu-sub": { body: dropdownSubRef },
+  "dropdown-menu-sub-content": { body: dropdownSubRef },
+  "context-menu-sub": { body: contextSubRef },
+  "context-menu-sub-content": { body: contextSubRef },
+  "menubar-sub": { body: menubarSubRef },
+  "menubar-sub-content": { body: menubarSubRef },
   "context-menu": {
     body: (open) => (
       <OpenContextMenu open={open}>

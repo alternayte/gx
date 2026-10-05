@@ -246,6 +246,227 @@ test('REQ-REG-07 menubar opens a menu with ArrowDown and moves between menus', a
   await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'View')
 })
 
+// subOpen waits for the state of the sub-menu content inside a menu.
+function waitSub(menu: string, open: boolean): Promise<unknown> {
+  return page.waitForFunction(
+    ([sel, want]) => document.querySelector(`${sel} [data-gx-sub] > [popover]`)?.matches(':popover-open') === want,
+    [menu, open] as const,
+  )
+}
+
+test('REQ-REG-07 dropdown sub-menu opens with ArrowRight or Enter, closes with ArrowLeft or Escape, and a selection closes the tree', async () => {
+  const trigger = fixture('DropdownMenuTrigger-Sub').getByRole('button', { name: 'Open with a sub-menu' })
+  await trigger.focus()
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('New tab')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('More tools')
+  const subTrigger = page.locator('#demo-dropdown-sub [data-gx-sub] > button')
+  expect(await subTrigger.getAttribute('aria-expanded')).toBe('false')
+  // ArrowRight opens the sub-menu and moves to its first item.
+  await page.keyboard.press('ArrowRight')
+  await waitSub('#demo-dropdown-sub', true)
+  await waitFocus('Save page')
+  expect(await subTrigger.getAttribute('aria-expanded')).toBe('true')
+  // The arrow keys move inside the sub-menu.
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Create shortcut')
+  // ArrowLeft closes the sub-menu only and returns focus to its trigger.
+  await page.keyboard.press('ArrowLeft')
+  await waitSub('#demo-dropdown-sub', false)
+  await waitFocus('More tools')
+  expect(await subTrigger.getAttribute('aria-expanded')).toBe('false')
+  expect(await page.locator('#demo-dropdown-sub').evaluate((el) => el.matches(':popover-open'))).toBe(true)
+  // Enter opens it again, and Escape closes the sub-menu only.
+  await page.keyboard.press('Enter')
+  await waitSub('#demo-dropdown-sub', true)
+  await waitFocus('Save page')
+  await page.keyboard.press('Escape')
+  await waitSub('#demo-dropdown-sub', false)
+  await waitFocus('More tools')
+  await Bun.sleep(150)
+  expect(await page.locator('#demo-dropdown-sub').evaluate((el) => el.matches(':popover-open'))).toBe(true)
+  // A selection in the sub-menu closes the whole tree; focus goes to the
+  // first trigger.
+  await page.keyboard.press('ArrowRight')
+  await waitFocus('Save page')
+  await page.keyboard.press('Enter')
+  await waitClosed('#demo-dropdown-sub')
+  await waitSub('#demo-dropdown-sub', false)
+  await waitFocus('Open with a sub-menu')
+})
+
+test('REQ-REG-07 context menu sub-menu follows the sub-menu keys', async () => {
+  await fixture('ContextMenuTrigger-Sub').locator('[data-gx-contextmenu]').dispatchEvent('contextmenu', { button: 2 })
+  await waitOpen('#demo-context-sub')
+  await waitFocus('Back')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('More tools')
+  await page.keyboard.press('ArrowRight')
+  await waitSub('#demo-context-sub', true)
+  await waitFocus('Save page')
+  await page.keyboard.press('ArrowLeft')
+  await waitSub('#demo-context-sub', false)
+  await waitFocus('More tools')
+  expect(await page.locator('#demo-context-sub').evaluate((el) => el.matches(':popover-open'))).toBe(true)
+  await page.keyboard.press('ArrowRight')
+  await waitFocus('Save page')
+  await page.keyboard.press('End')
+  await waitFocus('Developer tools')
+  await page.keyboard.press('Enter')
+  await waitClosed('#demo-context-sub')
+  await waitSub('#demo-context-sub', false)
+})
+
+test('REQ-REG-07 menubar sub-menu takes ArrowRight and ArrowLeft before the bar does', async () => {
+  const file = fixture('Menubar-Sub').getByRole('menuitem', { name: 'File', exact: true })
+  await file.focus()
+  await page.keyboard.press('ArrowDown')
+  await waitOpen('#demo-menubar-sub-file')
+  await waitFocus('New tab')
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('Share')
+  // On a sub-menu trigger ArrowRight opens the sub-menu, not the next menu.
+  await page.keyboard.press('ArrowRight')
+  await waitSub('#demo-menubar-sub-file', true)
+  await waitFocus('Email link')
+  expect(await page.locator('#demo-menubar-sub-edit').evaluate((el) => el.matches(':popover-open'))).toBe(false)
+  // ArrowLeft closes the sub-menu and keeps the menu.
+  await page.keyboard.press('ArrowLeft')
+  await waitSub('#demo-menubar-sub-file', false)
+  await waitFocus('Share')
+  expect(await page.locator('#demo-menubar-sub-file').evaluate((el) => el.matches(':popover-open'))).toBe(true)
+  await page.keyboard.press('ArrowRight')
+  await waitFocus('Email link')
+  await page.keyboard.press('Enter')
+  await waitClosed('#demo-menubar-sub-file')
+  await waitSub('#demo-menubar-sub-file', false)
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'File')
+})
+
+// box returns the client rectangle of one element and the size of the
+// viewport without its scrollbars.
+function box(selector: string): Promise<{ left: number; top: number; right: number; bottom: number; width: number; height: number; side: string | null }> {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel)!
+    const r = el.getBoundingClientRect()
+    return {
+      left: r.left,
+      top: r.top,
+      right: r.right,
+      bottom: r.bottom,
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+      side: el.getAttribute('data-side'),
+    }
+  }, selector)
+}
+
+// settled waits until the enter transition of an open popover is over, so
+// its rectangle has no scale.
+function settled(selector: string): Promise<unknown> {
+  return page.waitForFunction((sel) => {
+    const el = document.querySelector(sel)
+    return el?.matches(':popover-open') && getComputedStyle(el).scale === '1' && getComputedStyle(el).opacity === '1'
+  }, selector)
+}
+
+test('REQ-REG-07 a menu flips at the bottom edge and shifts at the right edge of the viewport', async () => {
+  const name = 'section[data-fixture="DropdownMenuTrigger-Sub"] button'
+  const trigger = page.locator(name)
+  // In the middle of the viewport the menu opens below its trigger.
+  await trigger.evaluate((el) => window.scrollBy(0, el.getBoundingClientRect().top - 200))
+  await trigger.click()
+  await settled('#demo-dropdown-sub')
+  let at = await box(name)
+  let menu = await box('#demo-dropdown-sub')
+  expect(menu.side).toBe('bottom')
+  expect(Math.round(menu.top - at.bottom)).toBe(4)
+  // The menu is centred on the trigger.
+  expect(Math.abs((menu.left + menu.right) / 2 - (at.left + at.right) / 2)).toBeLessThan(1)
+  await page.keyboard.press('Escape')
+  await waitClosed('#demo-dropdown-sub')
+
+  // The trigger sits at the bottom edge: the menu opens upward.
+  await trigger.evaluate((el) => window.scrollBy(0, el.getBoundingClientRect().bottom - document.documentElement.clientHeight + 12))
+  await trigger.click()
+  await settled('#demo-dropdown-sub')
+  at = await box(name)
+  menu = await box('#demo-dropdown-sub')
+  expect(menu.side).toBe('top')
+  expect(Math.round(at.top - menu.bottom)).toBe(4)
+  expect(menu.top).toBeGreaterThanOrEqual(8)
+  expect(menu.bottom).toBeLessThanOrEqual(menu.height - 8)
+  await page.keyboard.press('Escape')
+  await waitClosed('#demo-dropdown-sub')
+
+  // The trigger sits at the right edge: the menu shifts left and stays 8px
+  // inside. The sub-menu has no room on the right and opens on the left of
+  // its trigger.
+  await trigger.evaluate((el) => {
+    el.style.position = 'fixed'
+    el.style.right = '12px'
+    el.style.top = '200px'
+  })
+  await trigger.focus()
+  await page.keyboard.press('ArrowDown')
+  await settled('#demo-dropdown-sub')
+  at = await box(name)
+  menu = await box('#demo-dropdown-sub')
+  expect(menu.side).toBe('bottom')
+  expect(Math.round(menu.width - menu.right)).toBe(8)
+  expect(menu.left).toBeGreaterThanOrEqual(8)
+  // Unshifted, the centred menu would end right of the viewport.
+  expect((at.left + at.right) / 2 + (menu.right - menu.left) / 2).toBeGreaterThan(menu.width)
+  await page.keyboard.press('ArrowDown')
+  await waitFocus('More tools')
+  await page.keyboard.press('ArrowRight')
+  const sub = '#demo-dropdown-sub [data-gx-sub] > [popover]'
+  await settled(sub)
+  const subTrigger = await box('#demo-dropdown-sub [data-gx-sub] > button')
+  const content = await box(sub)
+  expect(content.side).toBe('left')
+  expect(Math.round(content.right)).toBe(Math.round(subTrigger.left))
+  expect(content.left).toBeGreaterThanOrEqual(8)
+})
+
+test('REQ-REG-07 a popover and a context menu stay inside the viewport', async () => {
+  // A popover at the bottom edge opens upward.
+  const name = 'section[data-fixture="PopoverTrigger-Default"] button'
+  const trigger = page.locator(name)
+  await trigger.evaluate((el) => window.scrollBy(0, el.getBoundingClientRect().bottom - document.documentElement.clientHeight + 12))
+  await trigger.click()
+  await settled('#demo-popover')
+  const at = await box(name)
+  const popover = await box('#demo-popover')
+  expect(popover.side).toBe('top')
+  expect(Math.round(at.top - popover.bottom)).toBe(4)
+  expect(popover.top).toBeGreaterThanOrEqual(8)
+  await page.keyboard.press('Escape')
+  await waitClosed('#demo-popover')
+
+  // A right click near the right and bottom edges: the context menu opens
+  // on the left of the pointer and shifts up.
+  await page.setViewportSize({ width: 360, height: 400 })
+  const area = fixture('ContextMenuTrigger-Default').locator('[data-gx-contextmenu]')
+  await area.evaluate((el) => window.scrollBy(0, el.getBoundingClientRect().bottom - document.documentElement.clientHeight + 4))
+  const r = await box('section[data-fixture="ContextMenuTrigger-Default"] [data-gx-contextmenu]')
+  const x = Math.round(r.right - 10)
+  const y = Math.round(r.bottom - 10)
+  // The event needs its pointer position, so the page builds a mouse event.
+  await area.evaluate(
+    (el, [clientX, clientY]) => el.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, button: 2, clientX, clientY })),
+    [x, y],
+  )
+  await settled('#demo-context')
+  const menu = await box('#demo-context')
+  expect(menu.side).toBe('left')
+  expect(Math.round(menu.right)).toBe(x - 2)
+  expect(menu.left).toBeGreaterThanOrEqual(8)
+  expect(Math.round(menu.height - menu.bottom)).toBe(8)
+  expect(menu.top).toBeGreaterThanOrEqual(8)
+})
+
 test('REQ-REG-07 tooltip shows on keyboard focus', async () => {
   const tip = 'section[data-fixture="Tooltip-Top"] [role="tooltip"]'
   expect(await page.locator(tip).evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden')

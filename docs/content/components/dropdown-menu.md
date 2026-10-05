@@ -67,6 +67,9 @@ The command writes these files.
 | `DropdownMenuRadioItem.gx` | `ui/dropdown-menu/DropdownMenuRadioItem.gx` |
 | `DropdownMenuSeparator.gx` | `ui/dropdown-menu/DropdownMenuSeparator.gx` |
 | `DropdownMenuShortcut.gx` | `ui/dropdown-menu/DropdownMenuShortcut.gx` |
+| `DropdownMenuSub.gx` | `ui/dropdown-menu/DropdownMenuSub.gx` |
+| `DropdownMenuSubContent.gx` | `ui/dropdown-menu/DropdownMenuSubContent.gx` |
+| `DropdownMenuSubTrigger.gx` | `ui/dropdown-menu/DropdownMenuSubTrigger.gx` |
 | `DropdownMenuTrigger.gx` | `ui/dropdown-menu/DropdownMenuTrigger.gx` |
 | `DropdownMenu.fixtures.go` | `ui/dropdown-menu/DropdownMenu.fixtures.go` |
 | `DropdownMenuCheckboxItem.fixtures.go` | `ui/dropdown-menu/DropdownMenuCheckboxItem.fixtures.go` |
@@ -78,6 +81,9 @@ The command writes these files.
 | `DropdownMenuRadioItem.fixtures.go` | `ui/dropdown-menu/DropdownMenuRadioItem.fixtures.go` |
 | `DropdownMenuSeparator.fixtures.go` | `ui/dropdown-menu/DropdownMenuSeparator.fixtures.go` |
 | `DropdownMenuShortcut.fixtures.go` | `ui/dropdown-menu/DropdownMenuShortcut.fixtures.go` |
+| `DropdownMenuSub.fixtures.go` | `ui/dropdown-menu/DropdownMenuSub.fixtures.go` |
+| `DropdownMenuSubContent.fixtures.go` | `ui/dropdown-menu/DropdownMenuSubContent.fixtures.go` |
+| `DropdownMenuSubTrigger.fixtures.go` | `ui/dropdown-menu/DropdownMenuSubTrigger.fixtures.go` |
 | `DropdownMenuTrigger.fixtures.go` | `ui/dropdown-menu/DropdownMenuTrigger.fixtures.go` |
 | `styles.go` | `ui/dropdown-menu/styles.go` |
 
@@ -99,7 +105,7 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" style={p.style()} class={gx.Cx("z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
+<div id={p.Id} popover="auto" role="menu" data-gx-dismiss data-gx-roving="nowrap" data-gx-place={p.place()} style={p.style()} class={gx.Cx("z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}>{p.Children}</div>
 ```
 
 ```gx title="ui/dropdown-menu/DropdownMenuCheckboxItem.gx"
@@ -236,6 +242,49 @@ props {
 <span class={gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</span>
 ```
 
+```gx title="ui/dropdown-menu/DropdownMenuSub.gx"
+package dropdownmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div role="none" data-gx-sub class={p.Class} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuSubContent.gx"
+package dropdownmenu
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div popover="auto" role="menu" data-gx-roving="nowrap" data-gx-place="right start" class={gx.Cx("z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden", subMotionClass, p.Class)} {...p.Attrs}>{p.Children}</div>
+```
+
+```gx title="ui/dropdown-menu/DropdownMenuSubTrigger.gx"
+package dropdownmenu
+
+import "github.com/alternayte/gx/registry/icons"
+
+props {
+  Inset    bool     = false
+  Disabled bool     = false
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" disabled={p.Disabled} class={gx.Cx("flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}>
+  {p.Children}
+  <icons.ChevronRight class="ml-auto size-4" />
+</button>
+```
+
 ```gx title="ui/dropdown-menu/DropdownMenuTrigger.gx"
 package dropdownmenu
 
@@ -290,6 +339,20 @@ var DropdownMenuFixtures = gx.Fixtures[DropdownMenuProps]{
 	"Start": {Id: "demo-dropdown-start", Align: Start, Children: gx.Frag(
 		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Rename")}),
 		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Duplicate")}),
+	)},
+	"Sub": {Id: "demo-dropdown-sub", Class: "w-56", Children: gx.Frag(
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("New tab")}),
+		DropdownMenuSub(DropdownMenuSubProps{Children: gx.Frag(
+			DropdownMenuSubTrigger(DropdownMenuSubTriggerProps{Children: gx.Text("More tools")}),
+			DropdownMenuSubContent(DropdownMenuSubContentProps{Class: "w-48", Children: gx.Frag(
+				DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Save page")}),
+				DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Create shortcut")}),
+				DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+				DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Developer tools")}),
+			)}),
+		)}),
+		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Print")}),
 	)},
 }
 ```
@@ -421,6 +484,70 @@ import "github.com/alternayte/gx"
 var DropdownMenuShortcutFixtures = gx.Fixtures[DropdownMenuShortcutProps]{"Default": {Children: gx.Text("⌘K")}}
 ```
 
+```go title="ui/dropdown-menu/DropdownMenuSub.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuSubFixtures = gx.Fixtures[DropdownMenuSubProps]{
+	"Default": {Children: gx.Frag(
+		DropdownMenuSubTrigger(DropdownMenuSubTriggerProps{Children: gx.Text("More tools")}),
+		DropdownMenuSubContent(DropdownMenuSubContentProps{Children: gx.Frag(
+			DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Save page")}),
+			DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Create shortcut")}),
+		)}),
+	)},
+}
+
+// DropdownMenuSubWrap renders the sub-menu inside a menu, as a page uses it.
+func DropdownMenuSubWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuSubContent.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuSubContentFixtures = gx.Fixtures[DropdownMenuSubContentProps]{
+	"Content": {Class: "w-48", Children: gx.Frag(
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Save page")}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Create shortcut")}),
+		DropdownMenuSeparator(DropdownMenuSeparatorProps{}),
+		DropdownMenuItem(DropdownMenuItemProps{Children: gx.Text("Developer tools")}),
+	)},
+}
+
+// DropdownMenuSubContentWrap renders the content behind its trigger inside a menu,
+// as a page uses it.
+func DropdownMenuSubContentWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}},
+		DropdownMenuSub(DropdownMenuSubProps{Children: gx.Frag(
+			DropdownMenuSubTrigger(DropdownMenuSubTriggerProps{Children: gx.Text("More tools")}),
+			n,
+		)}),
+	)
+}
+```
+
+```go title="ui/dropdown-menu/DropdownMenuSubTrigger.fixtures.go"
+package dropdownmenu
+
+import "github.com/alternayte/gx"
+
+var DropdownMenuSubTriggerFixtures = gx.Fixtures[DropdownMenuSubTriggerProps]{
+	"Trigger":  {Children: gx.Text("More tools")},
+	"Inset":    {Inset: true, Children: gx.Text("More tools")},
+	"Disabled": {Disabled: true, Children: gx.Text("More tools")},
+}
+
+// DropdownMenuSubTriggerWrap renders the trigger inside a menu, as a page uses it.
+func DropdownMenuSubTriggerWrap(n gx.Node) gx.Node {
+	return gx.El("div", gx.Attrs{{Key: "role", Value: "menu"}, {Key: "class", Value: "w-56"}}, n)
+}
+```
+
 ```go title="ui/dropdown-menu/DropdownMenuTrigger.fixtures.go"
 package dropdownmenu
 
@@ -433,6 +560,7 @@ var DropdownMenuTriggerFixtures = gx.Fixtures[DropdownMenuTriggerProps]{
 	"Default": {Id: "demo-dropdown", Children: gx.Text("Open menu")},
 	"Ghost":   {Id: "demo-dropdown-end", Variant: button.Ghost, Size: button.Sm, Class: "ml-32", Children: gx.Text("Open at the end")},
 	"Start":   {Id: "demo-dropdown-start", Variant: button.Secondary, Children: gx.Text("Open at the start")},
+	"Sub":     {Id: "demo-dropdown-sub", Children: gx.Text("Open with a sub-menu")},
 }
 ```
 
@@ -454,11 +582,12 @@ const (
 	End    Align = "end"
 )
 
-// The menu zooms from the edge that touches the trigger.
+// The menu zooms from the edge that touches the trigger. The overlay module
+// writes data-side: a menu that flips opens above the trigger.
 var alignClass = gx.Enum[Align]{
-	Center: "origin-top",
-	Start:  "origin-top-left",
-	End:    "origin-top-right",
+	Center: "origin-top data-[side=top]:origin-bottom",
+	Start:  "origin-top-left data-[side=top]:origin-bottom-left",
+	End:    "origin-top-right data-[side=top]:origin-bottom-right",
 }
 
 var alignStyle = gx.Enum[Align]{
@@ -475,10 +604,16 @@ func (p DropdownMenuProps) align() Align {
 	return p.Align
 }
 
-// style anchors the menu below its trigger. A browser without anchor
-// positioning keeps the menu at its place in the document flow.
+// style anchors the menu below its trigger for a page whose scripts did not
+// run. The overlay module then writes the measured place.
 func (p DropdownMenuProps) style() gx.Style {
 	return gx.Style("position-anchor: --gx-menu-" + p.Id + "; inset: auto; margin: 0.25rem 0 0; top: anchor(bottom); " + alignStyle[p.align()])
+}
+
+// place tells the overlay module where the menu goes: below the trigger,
+// 4px away, and inside the viewport.
+func (p DropdownMenuProps) place() string {
+	return "bottom " + string(p.align()) + " 4"
 }
 
 // variant returns the button variant of one trigger; a zero value is
@@ -534,11 +669,16 @@ func rovingItem(disabled bool) gx.Attrs {
 }
 
 // motionClass fades and zooms the menu from 95% and slides it 2 units from
-// the trigger. Safari 26.0 never ends a display transition on an element
+// the trigger, from below when the menu took the top side. Safari 26.0 never ends a display transition on an element
 // that CSS anchor positioning places, which leaves a closed menu rendered.
 // The @supports test matches every engine but WebKit, so Safari closes the
 // menu at once and still animates the enter.
-const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 motion-reduce:transition-none"
+const motionClass = "opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 data-[side=top]:starting:open:translate-y-2 motion-reduce:transition-none"
+
+// subMotionClass fades and zooms the content of a sub-menu from 95% and
+// slides it 2 units from its trigger. The overlay module writes data-side:
+// content that flips to the left slides from the right.
+const subMotionClass = "origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none"
 ```
 
 </docs.TabItem>
@@ -567,17 +707,27 @@ The theme must define these tokens: `--border`, `--popover`, `--popover-foregrou
     <dropdownmenu.DropdownMenuRadioItem name="position" value="bottom">Bottom</dropdownmenu.DropdownMenuRadioItem>
   </dropdownmenu.DropdownMenuRadioGroup>
   <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuSub>
+    <dropdownmenu.DropdownMenuSubTrigger>Invite users</dropdownmenu.DropdownMenuSubTrigger>
+    <dropdownmenu.DropdownMenuSubContent>
+      <dropdownmenu.DropdownMenuItem>Email</dropdownmenu.DropdownMenuItem>
+      <dropdownmenu.DropdownMenuItem>Message</dropdownmenu.DropdownMenuItem>
+    </dropdownmenu.DropdownMenuSubContent>
+  </dropdownmenu.DropdownMenuSub>
+  <dropdownmenu.DropdownMenuSeparator />
   <dropdownmenu.DropdownMenuItem variant={dropdownmenu.Destructive}>Sign out</dropdownmenu.DropdownMenuItem>
 </dropdownmenu.DropdownMenu>
 ```
 
-The menu uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`. `Align` lines the menu up with the trigger: `dropdownmenu.Center` (default), `dropdownmenu.Start` or `dropdownmenu.End`. A browser without anchor positioning shows the menu at its place in the document flow.
+The menu uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`. `Align` lines the menu up with the trigger: `dropdownmenu.Center` (default), `dropdownmenu.Start` or `dropdownmenu.End`.
+
+The menu opens below the trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the menu names the side it took.
 
 A checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.
 
 The menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.
 
-The item has no sub-menu part.
+`DropdownMenuSub` holds one `DropdownMenuSubTrigger` and one `DropdownMenuSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.
 
 ## Examples
 
@@ -647,6 +797,30 @@ The item has no sub-menu part.
 <dropdownmenu.DropdownMenuTrigger id="demo-dropdown-start" variant={button.Secondary}>
   Open at the start
 </dropdownmenu.DropdownMenuTrigger>
+```
+
+</Example>
+
+### DropdownMenu: Sub
+
+<Example item="dropdown-menu" name="dropdown-menu-sub" label="Dropdown Menu: DropdownMenu: Sub">
+
+```gx
+<dropdownmenu.DropdownMenu id="demo-dropdown-sub" class="w-56">
+  <dropdownmenu.DropdownMenuItem>New tab</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuSub>
+    <dropdownmenu.DropdownMenuSubTrigger>More tools</dropdownmenu.DropdownMenuSubTrigger>
+    <dropdownmenu.DropdownMenuSubContent class="w-48">
+      <dropdownmenu.DropdownMenuItem>Save page</dropdownmenu.DropdownMenuItem>
+      <dropdownmenu.DropdownMenuItem>Create shortcut</dropdownmenu.DropdownMenuItem>
+      <dropdownmenu.DropdownMenuSeparator />
+      <dropdownmenu.DropdownMenuItem>Developer tools</dropdownmenu.DropdownMenuItem>
+    </dropdownmenu.DropdownMenuSubContent>
+  </dropdownmenu.DropdownMenuSub>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuItem>Print</dropdownmenu.DropdownMenuItem>
+</dropdownmenu.DropdownMenu>
+<dropdownmenu.DropdownMenuTrigger id="demo-dropdown-sub">Open with a sub-menu</dropdownmenu.DropdownMenuTrigger>
 ```
 
 </Example>
@@ -825,6 +999,67 @@ The item has no sub-menu part.
 
 </Example>
 
+### DropdownMenuSub: Default
+
+<Example item="dropdown-menu" name="dropdown-menu-sub-default" label="Dropdown Menu: DropdownMenuSub: Default">
+
+```gx
+<dropdownmenu.DropdownMenuSub>
+  <dropdownmenu.DropdownMenuSubTrigger>More tools</dropdownmenu.DropdownMenuSubTrigger>
+  <dropdownmenu.DropdownMenuSubContent>
+    <dropdownmenu.DropdownMenuItem>Save page</dropdownmenu.DropdownMenuItem>
+    <dropdownmenu.DropdownMenuItem>Create shortcut</dropdownmenu.DropdownMenuItem>
+  </dropdownmenu.DropdownMenuSubContent>
+</dropdownmenu.DropdownMenuSub>
+```
+
+</Example>
+
+### DropdownMenuSubContent: Content
+
+<Example item="dropdown-menu" name="dropdown-menu-sub-content-content" label="Dropdown Menu: DropdownMenuSubContent: Content">
+
+```gx
+<dropdownmenu.DropdownMenuSubContent class="w-48">
+  <dropdownmenu.DropdownMenuItem>Save page</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuItem>Create shortcut</dropdownmenu.DropdownMenuItem>
+  <dropdownmenu.DropdownMenuSeparator />
+  <dropdownmenu.DropdownMenuItem>Developer tools</dropdownmenu.DropdownMenuItem>
+</dropdownmenu.DropdownMenuSubContent>
+```
+
+</Example>
+
+### DropdownMenuSubTrigger: Trigger
+
+<Example item="dropdown-menu" name="dropdown-menu-sub-trigger-trigger" label="Dropdown Menu: DropdownMenuSubTrigger: Trigger">
+
+```gx
+<dropdownmenu.DropdownMenuSubTrigger>More tools</dropdownmenu.DropdownMenuSubTrigger>
+```
+
+</Example>
+
+### DropdownMenuSubTrigger: Inset
+
+<Example item="dropdown-menu" name="dropdown-menu-sub-trigger-inset" label="Dropdown Menu: DropdownMenuSubTrigger: Inset">
+
+```gx
+<dropdownmenu.DropdownMenuSubTrigger inset>More tools</dropdownmenu.DropdownMenuSubTrigger>
+```
+
+</Example>
+
+### DropdownMenuSubTrigger: Disabled
+
+<Example item="dropdown-menu" name="dropdown-menu-sub-trigger-disabled" label="Dropdown Menu: DropdownMenuSubTrigger: Disabled">
+
+```gx
+<dropdownmenu.DropdownMenuSubTrigger disabled>More tools</dropdownmenu.DropdownMenuSubTrigger>
+```
+
+</Example>
+
 ## Do and don't
 
 <docs.CardGrid>
@@ -839,7 +1074,8 @@ The item has no sub-menu part.
 <docs.Card title="Don't">
 
 - Do not use a dropdown menu as a select control. Use `select`.
-- Do not nest a dropdown menu in another dropdown menu.
+- Do not put a `DropdownMenu` in another `DropdownMenu`. Use `DropdownMenuSub`.
+- Do not put an element between the trigger and the content of a sub-menu.
 
 </docs.Card>
 </docs.CardGrid>
@@ -855,4 +1091,6 @@ The item has no sub-menu part.
 | A letter | Moves to the next item that starts with the typed text. |
 | Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |
 | Space | Runs the focused item. Toggles a checkbox or radio item. |
+| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |
+| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |
 | Escape | Closes the menu and returns focus to the trigger. |

@@ -45,6 +45,18 @@
       "target": "ui/context-menu/ContextMenuShortcut.gx"
     },
     {
+      "path": "ContextMenuSub.gx",
+      "target": "ui/context-menu/ContextMenuSub.gx"
+    },
+    {
+      "path": "ContextMenuSubContent.gx",
+      "target": "ui/context-menu/ContextMenuSubContent.gx"
+    },
+    {
+      "path": "ContextMenuSubTrigger.gx",
+      "target": "ui/context-menu/ContextMenuSubTrigger.gx"
+    },
+    {
       "path": "ContextMenuTrigger.gx",
       "target": "ui/context-menu/ContextMenuTrigger.gx"
     },
@@ -87,6 +99,18 @@
     {
       "path": "ContextMenuShortcut.fixtures.go",
       "target": "ui/context-menu/ContextMenuShortcut.fixtures.go"
+    },
+    {
+      "path": "ContextMenuSub.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSub.fixtures.go"
+    },
+    {
+      "path": "ContextMenuSubContent.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSubContent.fixtures.go"
+    },
+    {
+      "path": "ContextMenuSubTrigger.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSubTrigger.fixtures.go"
     },
     {
       "path": "ContextMenuTrigger.fixtures.go",

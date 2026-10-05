@@ -24,6 +24,24 @@ if ! cmp -s "$tmp/behavior.js" runtime/js/behavior.js; then
   diff -u runtime/js/behavior.js "$tmp/behavior.js" >&2 || true
   exit 1
 fi
+bun build runtime/js/tabs.ts --outfile "$tmp/tabs.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/tabs.js" runtime/js/tabs.js; then
+  echo "rule: runtime/js/tabs.js is stale; run just runtime" >&2
+  diff -u runtime/js/tabs.js "$tmp/tabs.js" >&2 || true
+  exit 1
+fi
+bun build runtime/js/toast.ts --outfile "$tmp/toast.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/toast.js" runtime/js/toast.js; then
+  echo "rule: runtime/js/toast.js is stale; run just runtime" >&2
+  diff -u runtime/js/toast.js "$tmp/toast.js" >&2 || true
+  exit 1
+fi
+bun build runtime/js/overlay.ts --outfile "$tmp/overlay.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/overlay.js" runtime/js/overlay.js; then
+  echo "rule: runtime/js/overlay.js is stale; run just runtime" >&2
+  diff -u runtime/js/overlay.js "$tmp/overlay.js" >&2 || true
+  exit 1
+fi
 bun build runtime/js/theme.ts --outfile "$tmp/theme.js" --target browser --minify >/dev/null
 if ! cmp -s "$tmp/theme.js" runtime/js/theme.js; then
   echo "rule: runtime/js/theme.js is stale; run just runtime" >&2

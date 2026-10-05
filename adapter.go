@@ -192,8 +192,19 @@ func (a *App) headAssets(needs *runtimeNeeds) []byte {
 		if needs.adapter {
 			b.WriteString(String(a.runtimeScripts()))
 		}
+		// Each behaviour module joins only the page that carries its
+		// marker (REQ-REG-07).
 		if needs.behavior {
-			b.WriteString(String(behaviorRuntime()))
+			b.WriteString(String(behaviorRuntime("behavior")))
+		}
+		if needs.tabs {
+			b.WriteString(String(behaviorRuntime("tabs")))
+		}
+		if needs.toast {
+			b.WriteString(String(behaviorRuntime("toast")))
+		}
+		if needs.overlay {
+			b.WriteString(String(behaviorRuntime("overlay")))
 		}
 	}
 	return b.Bytes()

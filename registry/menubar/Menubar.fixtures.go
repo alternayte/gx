@@ -33,4 +33,23 @@ var MenubarFixtures = gx.Fixtures[MenubarProps]{
 			MenubarItem(MenubarItemProps{Inset: true, Variant: Destructive, Children: gx.Text("Remove profile")}),
 		)}),
 	)},
+	"Sub": {Children: gx.Frag(
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-sub-file", Label: "File", Children: gx.Frag(
+			MenubarItem(MenubarItemProps{Children: gx.Text("New tab")}),
+			MenubarSub(MenubarSubProps{Children: gx.Frag(
+				MenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text("Share")}),
+				MenubarSubContent(MenubarSubContentProps{Children: gx.Frag(
+					MenubarItem(MenubarItemProps{Children: gx.Text("Email link")}),
+					MenubarItem(MenubarItemProps{Children: gx.Text("Messages")}),
+					MenubarItem(MenubarItemProps{Children: gx.Text("Notes")}),
+				)}),
+			)}),
+			MenubarSeparator(MenubarSeparatorProps{}),
+			MenubarItem(MenubarItemProps{Children: gx.Text("Print")}),
+		)}),
+		MenubarMenu(MenubarMenuProps{Id: "demo-menubar-sub-edit", Label: "Edit", Children: gx.Frag(
+			MenubarItem(MenubarItemProps{Children: gx.Text("Undo")}),
+			MenubarItem(MenubarItemProps{Children: gx.Text("Redo")}),
+		)}),
+	)},
 }
