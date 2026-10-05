@@ -59,6 +59,7 @@ const (
 	CodeClientType          = "GX4007"
 	CodeInstanceKey         = "GX2012"
 	CodeSignalDefault       = "GX2014"
+	CodeSignalRoot          = "GX2015"
 	CodeEventMod            = "GX4010"
 	CodeActionMethod        = "GX4009"
 	CodeSignalRules         = "GX4008"
@@ -99,6 +100,7 @@ var Catalog = []Info{
 	{CodeSignal, "signal in a server expression"},
 	{CodeInstanceKey, "signal instance needs a key"},
 	{CodeSignalDefault, "signal needs an initial value"},
+	{CodeSignalRoot, "component with signals has no top-level HTML element"},
 	{CodeURLAttr, "dynamic URL attribute"},
 	{CodeUnrenderable, "value cannot render as text"},
 	{CodeRouteField, "route field type cannot bind"},

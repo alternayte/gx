@@ -3,7 +3,7 @@
 The tree-sitter grammar for `.gx` files (REQ-TLS-06).
 
 The grammar is a fork of [tree-sitter-html](https://github.com/tree-sitter/tree-sitter-html)
-(MIT, Max Brunsfeld and Amaan Qureshi). It follows `docs/grammar.md` and the
+(MIT, Max Brunsfeld and Amaan Qureshi). It follows `docs/content/reference/grammar.md` and the
 parser in `internal/compiler`. A tag name keeps its case, and only a void
 element ends with no closing tag. The additions are:
 

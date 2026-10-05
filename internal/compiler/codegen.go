@@ -140,9 +140,16 @@ type gen struct {
 // firstTopLevelElement returns the first element of a component body.
 func firstTopLevelElement(ns []Node) *Element {
 	for _, n := range ns {
-		if el, ok := n.(*Element); ok {
-			return el
+		el, ok := n.(*Element)
+		if !ok {
+			continue
 		}
+		// A component tag such as <gx.Head> renders through its own
+		// function and drops attributes it does not declare.
+		if _, _, component := componentTag(el.Name); component {
+			continue
+		}
+		return el
 	}
 	return nil
 }

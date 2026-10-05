@@ -434,6 +434,9 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		handler = a.withErrorViews(handler)
 		handler = a.withAdapter(handler)
 		handler = a.withToast(handler)
+		if m, ok := h.(interface{ mountPrefix(string) }); ok {
+			m.mountPrefix(prefix)
+		}
 		pattern := joinPattern(prefix, h.Pattern())
 		if a.patterns[pattern] {
 			panic("gx: duplicate route " + pattern)
@@ -467,7 +470,12 @@ func (a *App) Group(prefix string, parts ...any) *App {
 func joinPattern(prefix, pattern string) string {
 	method, path, ok := strings.Cut(pattern, " ")
 	if !ok {
-		return pattern
+		// A pattern with no method, as a content route has, takes the
+		// prefix too.
+		if prefix == "" || prefix == "/" {
+			return pattern
+		}
+		return strings.TrimSuffix(prefix, "/") + "/" + strings.TrimPrefix(pattern, "/")
 	}
 	if prefix == "" || prefix == "/" {
 		return method + " /" + strings.TrimPrefix(path, "/")

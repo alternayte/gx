@@ -217,6 +217,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, l.checkRuntimeClasses(dirs)...)
 	diags = append(diags, checkTransitions(dirs, l)...)
 	diags = append(diags, checkRoutePackages(pkgs)...)
+	res.resolveContentMounts()
 	return res, diags
 }
 

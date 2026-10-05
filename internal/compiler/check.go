@@ -115,6 +115,18 @@ func (l *loader) checkDir(dir string) []Diagnostic {
 				})
 			}
 		}
+		if len(f.Signals) > 0 && firstTopLevelElement(f.Body) == nil {
+			// The first values of the signals go on the first top-level
+			// HTML element; with none, the browser never gets them.
+			out = append(out, Diagnostic{
+				Code: CodeSignalRoot,
+				File: f.File,
+				Line: f.Signals[0].At.Line - 1,
+				Col:  1,
+				Msg:  "a component with signals needs a top-level HTML element to hold their first values",
+				Fix:  "put the markup inside one HTML element, for example <div>...</div>",
+			})
+		}
 		out = l.checkNodes(p, f, f.Body, out)
 	}
 	return out

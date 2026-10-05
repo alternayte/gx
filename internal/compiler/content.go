@@ -29,6 +29,13 @@ type contentCollection struct {
 	metaType    string
 	metaPkgPath string
 	metaPkgName string
+	// prefix is the mount prefix of the routes of the collection, such as
+	// "/notes", or "" at the root. A link in a content file holds it
+	// (REQ-CNT-10).
+	prefix string
+	// appPage reports whether a path is a page route of the app, so a link
+	// to a page outside the collection is not a broken link.
+	appPage func(path string) bool
 	// bare marks a collection with no Components call. It is checked like
 	// the others, and it gets no generated body renderer: its Markdown
 	// holds no component tag.

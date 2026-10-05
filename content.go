@@ -193,15 +193,17 @@ func (e *ContentError) Error() string { return e.File + ": " + e.Msg }
 // ContentPage is the export input of one content page (REQ-CNT-02).
 type ContentPage struct {
 	Slug string `path:"slug"`
+	// prefix is the mount prefix of the collection, such as "/notes".
+	prefix string
 }
 
 // URL implements the typed link value of a content page (REQ-EXP-01). The
-// index entry is the site root.
+// index entry is the root of the collection.
 func (p ContentPage) URL() string {
 	if p.Slug == "" || p.Slug == "index" {
-		return "/"
+		return p.prefix + "/"
 	}
-	return "/" + p.Slug + "/"
+	return p.prefix + "/" + p.Slug + "/"
 }
 
 // ContentRoute serves one content collection (REQ-CNT-02) and carries the
@@ -210,6 +212,14 @@ type ContentRoute[Meta any] struct {
 	coll *collection[Meta]
 	view func(Entry[Meta]) Node
 	llms *LLMSOptions[Meta]
+	// prefix is the prefix of the Group call that mounts the route.
+	prefix string
+}
+
+// mountPrefix records the prefix of the Group call, so the paths of the
+// static export and of llms.txt hold it.
+func (h *ContentRoute[Meta]) mountPrefix(prefix string) {
+	h.prefix = strings.TrimSuffix(prefix, "/")
 }
 
 // ContentPages makes the content route of the collection (REQ-CNT-02): one
@@ -262,7 +272,7 @@ func (h *ContentRoute[Meta]) staticInputs() ([]any, error) {
 	entries := h.coll.Entries()
 	out := make([]any, 0, len(entries))
 	for _, e := range entries {
-		out = append(out, ContentPage{Slug: e.Slug})
+		out = append(out, ContentPage{Slug: e.Slug, prefix: h.prefix})
 	}
 	return out, nil
 }
@@ -274,7 +284,7 @@ func (h *ContentRoute[Meta]) llmsManifest() LLMSManifest {
 	}
 	m := LLMSManifest{Site: h.llms.Site, Summary: h.llms.Summary}
 	for _, e := range h.coll.Entries() {
-		entry := LLMSEntry{Path: string(ContentPage{Slug: e.Slug}.URL()), Body: stripLLMSkip(string(e.Body))}
+		entry := LLMSEntry{Path: string(ContentPage{Slug: e.Slug, prefix: h.prefix}.URL()), Body: stripLLMSkip(string(e.Body))}
 		if h.llms.Title != nil {
 			entry.Title = h.llms.Title(e.Meta)
 		}

@@ -142,7 +142,7 @@ func TestREQ_ACT_07_SignalRef(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":              moduleWithGx(t),
 		"ui/dialog/Dialog.gx": "package dialog\n\nimport \"github.com/alternayte/gx\"\n\nprops {\n  Open gx.SignalRef[bool]\n}\n\n<div show={p.Open}></div>\n",
-		"ui/page/Page.gx":     "package page\n\nimport \"app/ui/dialog\"\n\nsignals {\n  Open bool = false\n}\n\n<dialog.Dialog open={$Open} />\n",
+		"ui/page/Page.gx":     "package page\n\nimport \"app/ui/dialog\"\n\nsignals {\n  Open bool = false\n}\n\n<div>\n  <dialog.Dialog open={$Open} />\n</div>\n",
 	})
 	files := generateFiles(t, dir)
 	page := string(files[filepath.Join(dir, "ui/page/Page_gx.go")])

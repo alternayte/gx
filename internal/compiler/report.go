@@ -4,6 +4,8 @@ import (
 	"go/ast"
 	"go/token"
 	"go/types"
+	"net/http"
+	"net/url"
 	"sort"
 	"strconv"
 	"strings"
@@ -70,6 +72,41 @@ type mount struct {
 // mountInfo maps route types to the prefix, layouts and middleware of their
 // Group call.
 func mountInfo(res *typesResult) map[string]mount {
+	mounts, _ := mountsAndCollections(res)
+	return mounts
+}
+
+// collectionOf returns the collection variable of a gx.ContentEntries or
+// gx.ContentPages call.
+func collectionOf(pkg *packages.Package, expr ast.Expr) types.Object {
+	call, ok := expr.(*ast.CallExpr)
+	if !ok {
+		return nil
+	}
+	// A chained call such as .LLMS(...) wraps the ContentEntries call.
+	for {
+		if isGxFuncExpr(pkg, call.Fun, "ContentEntries") || isGxFuncExpr(pkg, call.Fun, "ContentPages") {
+			break
+		}
+		sel, ok := call.Fun.(*ast.SelectorExpr)
+		if !ok {
+			return nil
+		}
+		inner, ok := sel.X.(*ast.CallExpr)
+		if !ok {
+			return nil
+		}
+		call = inner
+	}
+	if len(call.Args) == 0 {
+		return nil
+	}
+	return identObject(pkg, call.Args[0])
+}
+
+// mountsAndCollections is mountInfo plus the mount prefix of each content
+// collection, keyed by the collection variable (REQ-CNT-10).
+func mountsAndCollections(res *typesResult) (map[string]mount, map[types.Object]string) {
 	// A route list is a gx.Collect call, an append of route lists, or the
 	// name of another list. collectExprs holds the value of each
 	// package-level variable; members resolves a list to its handlers.
@@ -94,6 +131,10 @@ func mountInfo(res *typesResult) map[string]mount {
 		case *ast.ParenExpr:
 			return exprMembers(pkg, e.X)
 		case *ast.CallExpr:
+			if coll := collectionOf(pkg, e); coll != nil {
+				// The routes of a collection stand for the collection.
+				return []types.Object{coll}
+			}
 			var out []types.Object
 			if id, ok := e.Fun.(*ast.Ident); ok && id.Name == "append" || isGxFunc(pkg, e.Fun, "Collect") {
 				for _, arg := range e.Args {
@@ -129,6 +170,15 @@ func mountInfo(res *typesResult) map[string]mount {
 	}
 
 	out := map[string]mount{}
+	collections := map[types.Object]string{}
+	isCollection := func(obj types.Object) bool {
+		ptr, ok := obj.Type().(*types.Pointer)
+		if !ok {
+			return false
+		}
+		named, ok := ptr.Elem().(*types.Named)
+		return ok && named.Obj().Pkg() != nil && named.Obj().Pkg().Path() == gxPkgPath && named.Obj().Name() == "collection"
+	}
 	for _, pkg := range res.pkgs {
 		for _, file := range pkg.Syntax {
 			ast.Inspect(file, func(n ast.Node) bool {
@@ -165,6 +215,8 @@ func mountInfo(res *typesResult) map[string]mount {
 						for _, m := range list {
 							if _, key, ok := handlerRoute(m); ok {
 								out[key] = cur
+							} else if isCollection(m) {
+								collections[m] = cur.prefix
 							}
 						}
 						continue
@@ -181,7 +233,7 @@ func mountInfo(res *typesResult) map[string]mount {
 			})
 		}
 	}
-	return out
+	return out, collections
 }
 
 // identObject returns the object an identifier or a qualified identifier
@@ -194,4 +246,60 @@ func identObject(pkg *packages.Package, expr ast.Expr) types.Object {
 		return pkg.TypesInfo.Uses[e.Sel]
 	}
 	return nil
+}
+
+// resolveContentMounts gives each collection its mount prefix and a test
+// for the page routes of the app, so the link check knows the site paths
+// (REQ-CNT-10).
+func (res *typesResult) resolveContentMounts() {
+	if len(res.collections) == 0 {
+		return
+	}
+	mounts, prefixes := mountsAndCollections(res)
+	// A mux with each GET page pattern answers "is this path a page".
+	mux := http.NewServeMux()
+	seen := map[string]bool{}
+	for _, d := range res.routes {
+		if d.pkg == nil || methodOf(d.pattern) != "GET" {
+			continue
+		}
+		_, path, _ := strings.Cut(d.pattern, " ")
+		prefix := strings.TrimSuffix(mounts[d.pkg.PkgPath+"."+d.name].prefix, "/")
+		pattern := "GET " + prefix + "/" + strings.TrimPrefix(path, "/")
+		if seen[pattern] {
+			continue
+		}
+		seen[pattern] = true
+		func() {
+			// A pattern that the mux rejects is a diagnostic of its own.
+			defer func() { _ = recover() }()
+			mux.Handle(pattern, http.NotFoundHandler())
+		}()
+	}
+	appPage := func(path string) bool {
+		for _, candidate := range []string{path, strings.TrimSuffix(path, "/"), strings.TrimSuffix(path, "/") + "/"} {
+			if candidate == "" {
+				continue
+			}
+			u, err := url.Parse(candidate)
+			if err != nil {
+				continue
+			}
+			if _, pattern := mux.Handler(&http.Request{Method: http.MethodGet, URL: u}); pattern != "" {
+				return true
+			}
+		}
+		return false
+	}
+	byVar := map[string]string{}
+	for obj, prefix := range prefixes {
+		if obj.Pkg() != nil {
+			byVar[obj.Pkg().Path()+"."+obj.Name()] = strings.TrimSuffix(prefix, "/")
+		}
+	}
+	for i := range res.collections {
+		coll := &res.collections[i]
+		coll.prefix = byVar[coll.pkgPath+"."+coll.varName]
+		coll.appPage = appPage
+	}
 }

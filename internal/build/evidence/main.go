@@ -221,7 +221,11 @@ func goTestNames(path string) ([]string, error) {
 // (SDD section 13.1). `just test` runs them first and alone, and so does the
 // evidence run: their result comes from the solo run, not from the full run
 // where every package competes for the processor.
-var quietPackages = []string{"github.com/alternayte/gx/internal/devserver"}
+var quietPackages = []string{
+	"github.com/alternayte/gx/internal/devserver",
+	"github.com/alternayte/gx/internal/lsp",
+	"github.com/alternayte/gx/internal/exporter",
+}
 
 func runGoTests(root string) (map[string]string, error) {
 	results := map[string]string{}

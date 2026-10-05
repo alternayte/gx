@@ -1,6 +1,11 @@
-# The `.gx` grammar
+---
+title: "The .gx grammar"
+description: "Every construct that the .gx parser accepts."
+section: Reference
+order: 3
+---
 
-This file lists every construct the `.gx` parser accepts (REQ-AUT-20). Nothing
+This page lists every construct that the `.gx` parser accepts. Nothing
 else parses. A construct that is not here is a parse error, `GX1000`.
 
 ## File

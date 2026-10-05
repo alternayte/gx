@@ -35,10 +35,11 @@ build:
 vet:
     go vet ./...
 
-# The dev loop budget (NFR-02) is a timing on a quiet machine, so its package
-# runs first and alone; the full run then takes its result from the cache.
+# The time budgets (NFR-02, NFR-06, NFR-11, REQ-DEV-11) are timings on a quiet
+# machine, so their packages run first, one at a time; the full run then takes
+# their results from the cache.
 test:
-    go test ./internal/devserver
+    go test -p 1 ./internal/devserver ./internal/lsp ./internal/exporter
     go test ./...
     cd docs && go test ./...
 

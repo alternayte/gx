@@ -31,6 +31,11 @@ type Meta struct {
 	Order int `yaml:"order"`
 	// Code is the diagnostic code of a diagnostic page.
 	Code string `yaml:"code"`
+	// Sample names the sample app that the code blocks of a page build.
+	// The pages of the tutorial share one. The gate reads it.
+	Sample string `yaml:"sample"`
+	// Generated names the tool that writes a page.
+	Generated string `yaml:"generated"`
 }
 
 // sections is the order of the sidebar sections before the components.
@@ -105,7 +110,10 @@ func View(e gx.Entry[Meta]) gx.Node {
 				shell.Splash(shell.SplashProps{
 					Title:   e.Meta.Title,
 					Tagline: e.Meta.Description,
-					Actions: docs.LinkButton(docs.LinkButtonProps{Href: entryHref(indexSlug), Children: gx.Text("Browse the components")}),
+					Actions: gx.Frag(
+						docs.LinkButton(docs.LinkButtonProps{Href: entryHref("start/quick-start"), Children: gx.Text("Get started")}),
+						docs.LinkButton(docs.LinkButtonProps{Href: entryHref(indexSlug), Variant: docs.ButtonSecondary, Children: gx.Text("Browse the components")}),
+					),
 				}),
 				gx.El("article", gx.Attrs{{Key: "class", Value: "gx-content"}, {Key: "data-pagefind-body", Value: ""}}, body),
 			),

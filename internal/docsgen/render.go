@@ -38,6 +38,11 @@ func buildPages(reg *registry) []*page {
 // repository root (REQ-DOC-02).
 func render(reg *registry, pages []*page) (map[string][]byte, error) {
 	out := map[string][]byte{}
+	api, err := apiMarkdown(reg.Root)
+	if err != nil {
+		return nil, err
+	}
+	out[apiPage] = []byte(api)
 	for _, p := range pages {
 		md, err := pageMarkdown(reg, p)
 		if err != nil {

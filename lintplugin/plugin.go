@@ -1,6 +1,6 @@
 // Package lintplugin registers the Gx analyzers with golangci-lint through
 // the module plugin system (REQ-TLS-03). The repo's .custom-gcl.yml builds a
-// custom binary with it; docs/lint.md holds the linter configuration.
+// custom binary with it; the docs guide "The dev loop and editors" holds the linter configuration.
 package lintplugin
 
 import (

@@ -9,7 +9,7 @@ import (
 )
 
 // gxLexer is the chroma lexer of .gx source (REQ-CNT-04). It follows
-// docs/grammar.md: the header, the props and signals blocks, tags,
+// docs/content/reference/grammar.md: the header, the props and signals blocks, tags,
 // attributes, directives, fragments, Go expressions, control lines and
 // comments. It never fails: text it does not know stays plain text, so a
 // part of a file highlights too.

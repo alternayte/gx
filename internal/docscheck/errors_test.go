@@ -50,7 +50,6 @@ func sampleModule(t *testing.T, repo string, files map[string]string) string {
 // compares the diagnostics of that code with the output on the page
 // (REQ-DOC-03).
 func TestREQ_DOC_03_DiagnosticPages(t *testing.T) {
-	t.Setenv("GOFLAGS", "-mod=mod")
 	repo := repoRoot(t)
 	pages, err := docscheck.Pages(filepath.Join(docscheck.ContentDir(repo), "errors"))
 	if err != nil {

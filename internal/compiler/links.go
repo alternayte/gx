@@ -113,7 +113,18 @@ func checkCollectionLinks(coll contentCollection, files map[string][]byte) []Dia
 				if hasFileExt(pathPart) && !strings.HasSuffix(pathPart, ".md") {
 					continue // an asset, not a page
 				}
-				target = slugs[strings.Trim(strings.TrimSuffix(pathPart, ".md"), "/")]
+				// A site path holds the mount prefix of the collection.
+				inside, isEntry := pathPart, true
+				if coll.prefix != "" {
+					inside, isEntry = strings.CutPrefix(pathPart, coll.prefix)
+					isEntry = isEntry && (inside == "" || strings.HasPrefix(inside, "/"))
+				}
+				if isEntry {
+					target = slugs[strings.Trim(strings.TrimSuffix(inside, ".md"), "/")]
+				}
+				if target == "" && coll.appPage != nil && coll.appPage(pathPart) {
+					continue // a page route of the app, outside the collection
+				}
 			default:
 				if hasFileExt(pathPart) && !strings.HasSuffix(pathPart, ".md") {
 					continue

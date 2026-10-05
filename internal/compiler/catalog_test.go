@@ -43,6 +43,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX2010 | signal in a server expression",
 		"GX2012 | signal instance needs a key",
 		"GX2014 | signal needs an initial value",
+		"GX2015 | component with signals has no top-level HTML element",
 		"GX2011 | dynamic URL attribute",
 		"GX2013 | value cannot render as text",
 		"GX3000 | route field type cannot bind",

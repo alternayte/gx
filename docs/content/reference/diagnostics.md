@@ -36,6 +36,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX2012](/errors/GX2012/) | Signal instance needs a key. |
 | [GX2013](/errors/GX2013/) | Value cannot render as text. |
 | [GX2014](/errors/GX2014/) | Signal needs an initial value. |
+| [GX2015](/errors/GX2015/) | Component with signals has no top-level HTML element. |
 
 ## Routes
 

@@ -9,7 +9,7 @@ import (
 )
 
 func TestREQ_AUT_20_GrammarSpec(t *testing.T) {
-	data, err := os.ReadFile("../../docs/grammar.md")
+	data, err := os.ReadFile("../../docs/content/reference/grammar.md")
 	if err != nil {
 		t.Fatalf("read grammar spec: %v", err)
 	}

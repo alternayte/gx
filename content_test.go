@@ -148,3 +148,64 @@ func TestREQ_CNT_06_ContentEntryAndHeadings(t *testing.T) {
 		t.Fatalf("headings = %v, want %v", got, want)
 	}
 }
+
+// TestREQ_CNT_02_ContentUnderAPrefix covers a collection that the app
+// mounts under a prefix: its pages answer below the prefix and not at the
+// root, and the paths of the static export hold the prefix (REQ-CNT-02,
+// REQ-RTE-06).
+func TestREQ_CNT_02_ContentUnderAPrefix(t *testing.T) {
+	content.Install()
+	dir := t.TempDir()
+	for rel, body := range map[string]string{
+		"index.md":   "---\ntitle: Notes\n---\n\nThe list.\n",
+		"first.md":   "---\ntitle: First\n---\n\nThe first note.\n",
+		"deep/in.md": "---\ntitle: Deep\n---\n\nA nested note.\n",
+	} {
+		p := filepath.Join(dir, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	coll := gx.Collection[docMeta](dir)
+	route := gx.ContentEntries(coll, func(e gx.Entry[docMeta]) gx.Node {
+		return gx.El("h1", nil, gx.Text(e.Meta.Title))
+	})
+	app := gx.New(gx.Config{})
+	app.Group("/notes", gx.Collect(route))
+
+	get := func(path string) (int, string) {
+		rec := httptest.NewRecorder()
+		app.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		return rec.Code, rec.Body.String()
+	}
+	for path, want := range map[string]string{
+		"/notes/":         "Notes",
+		"/notes/first/":   "First",
+		"/notes/first":    "First",
+		"/notes/deep/in/": "Deep",
+	} {
+		if code, body := get(path); code != http.StatusOK || !strings.Contains(body, "<h1>"+want+"</h1>") {
+			t.Fatalf("GET %s = %d %q, want the page %s", path, code, body, want)
+		}
+	}
+	for _, path := range []string{"/first/", "/deep/in/", "/notes/none/"} {
+		if code, _ := get(path); code != http.StatusNotFound {
+			t.Fatalf("GET %s = %d, want 404", path, code)
+		}
+	}
+
+	ins, ok, err := gx.StaticInputs(route)
+	if err != nil || !ok || len(ins) != 3 {
+		t.Fatalf("StaticInputs = %v, %v, %v", ins, ok, err)
+	}
+	var urls []string
+	for _, in := range ins {
+		urls = append(urls, in.(interface{ URL() string }).URL())
+	}
+	if got := strings.Join(urls, " "); got != "/notes/deep/in/ /notes/first/ /notes/" {
+		t.Fatalf("export paths = %q", got)
+	}
+}

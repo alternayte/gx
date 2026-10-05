@@ -154,3 +154,33 @@ func TestREQ_ACT_14_KeyedFragment(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_ACT_06_SignalRootElement covers where the first values of the
+// signals go: on the first top-level HTML element. A component tag such as
+// <gx.Head> before it does not take them, and a component with signals and
+// no top-level HTML element is GX2015 (REQ-ACT-06).
+func TestREQ_ACT_06_SignalRootElement(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod": moduleWithGx(t),
+		"cart/Page.gx": "package cart\n\nsignals {\n  Open bool = false\n}\n\n" +
+			"<gx.Head title=\"Cart\" />\n<h1>Cart</h1>\n<p show={$Open}>Open</p>\n",
+		"cart/page_test.go": "package cart\n\nimport (\n\t\"strings\"\n\t\"testing\"\n\n\tgx \"github.com/alternayte/gx\"\n)\n\n" +
+			"func TestPage(t *testing.T) {\n" +
+			"\tgot := gx.String(Page(PageProps{}))\n" +
+			"\tif !strings.Contains(got, `<h1 data-signals=\"{&#34;cart&#34;:{&#34;Page&#34;:{&#34;open&#34;:false}}}\" data-gx-instance=\"cart.Page\">Cart</h1>`) {\n" +
+			"\t\tt.Fatalf(\"the first HTML element does not hold the signals: %s\", got)\n" +
+			"\t}\n" +
+			"}\n",
+	})
+	buildGenerated(t, dir, "test", "./...")
+
+	dir = writeTree(t, map[string]string{
+		"go.mod":        moduleWithGx(t),
+		"cart/Card.gx":  "package cart\n\nprops {\n  Children gx.Node\n}\n\n<article>{p.Children}</article>\n",
+		"cart/Panel.gx": "package cart\n\nsignals {\n  Open bool = false\n}\n\n<Card>\n  <p show={$Open}>Open</p>\n</Card>\n",
+	})
+	d := diagWith(t, checkDir(t, dir), compiler.CodeSignalRoot)
+	if !strings.HasSuffix(d.File, "Panel.gx") || d.Line != 3 || !strings.Contains(d.Msg, "HTML element") || d.Fix == "" {
+		t.Fatalf("GX2015 = %+v", d)
+	}
+}
