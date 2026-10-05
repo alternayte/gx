@@ -1,8 +1,11 @@
 package selectbox
 
 props {
+  // Label is the visible name of the option group.
   Label    string
+  // Disabled disables every option of the group.
   Disabled bool = false
+  // Children is the options of the group.
   Children gx.Node
 }
 

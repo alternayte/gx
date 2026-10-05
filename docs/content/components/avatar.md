@@ -48,12 +48,19 @@ Copy each file to its path in the app. Change each import of a registry package 
 package avatar
 
 props {
+  // Src is the URL of the image. An empty value renders the fallback.
   Src      gx.URL
-  Alt      string   = ""
-  Fallback string   = ""
-  Size     Size     = Md
-  Badge    gx.Node  = nil
-  Class    string   = ""
+  // Alt is the alt text of the image.
+  Alt      string = ""
+  // Fallback is the text shown when Src is empty, for example the initials of the user.
+  Fallback string = ""
+  // Size sets the diameter: Sm, Md or Lg.
+  Size     Size = Md
+  // Badge is an AvatarBadge shown at the bottom right corner. A nil value renders no badge.
+  Badge    gx.Node = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -112,8 +119,11 @@ func (p AvatarProps) size() string {
 package avatar
 
 props {
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the badge: an icon. A nil value renders a dot.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -137,8 +147,11 @@ func AvatarBadgeWrap(n gx.Node) gx.Node {
 package avatar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the group: the avatars and an optional AvatarGroupCount.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -169,8 +182,11 @@ var AvatarGroupFixtures = gx.Fixtures[AvatarGroupProps]{
 package avatar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the count, for example +3 or an icon.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -308,6 +324,46 @@ The sizes are `Sm`, `Md` and `Lg`. The fallback, the badge and the group count f
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### avatar.Avatar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Src` | `gx.URL` | Required | Src is the URL of the image. An empty value renders the fallback. |
+| `Alt` | `string` | `""` | Alt is the alt text of the image. |
+| `Fallback` | `string` | `""` | Fallback is the text shown when Src is empty, for example the initials of the user. |
+| `Size` | `Size` | `Md` | Size sets the diameter: Sm, Md or Lg. |
+| `Badge` | `gx.Node` | `nil` | Badge is an AvatarBadge shown at the bottom right corner. A nil value renders no badge. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### avatar.AvatarBadge
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the badge: an icon. A nil value renders a dot. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### avatar.AvatarGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the group: the avatars and an optional AvatarGroupCount. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### avatar.AvatarGroupCount
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the count, for example +3 or an icon. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

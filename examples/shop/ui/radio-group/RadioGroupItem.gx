@@ -3,14 +3,23 @@ package radiogroup
 import "github.com/alternayte/gx/examples/shop/ui/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = ""
-  Checked  bool     = false
-  Disabled bool     = false
-  Invalid  bool     = false
-  Label    string   = ""
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Name is the form field name. Every item of one group has the same name.
+  Name     string = ""
+  // Value is the value the form submits when the item is checked.
+  Value    string = ""
+  // Checked selects the item for the first render.
+  Checked  bool = false
+  // Disabled disables the item.
+  Disabled bool = false
+  // Invalid sets aria-invalid on the input and shows the error style.
+  Invalid  bool = false
+  // Label is the text beside the radio. An empty value renders no text.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is content beside the radio, after the label text.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

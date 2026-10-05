@@ -7,34 +7,37 @@ import (
 )
 
 type FieldSeparatorProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the text on the line. Nil shows the line only.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func FieldSeparator(p FieldSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line FieldSeparator.gx:9:1
+//line FieldSeparator.gx:12:1
 	var _b1 gx.Builder
-//line FieldSeparator.gx:9:180
+//line FieldSeparator.gx:12:180
 	_b1.Add(gx.Text("\n  "))
-//line FieldSeparator.gx:10:3
+//line FieldSeparator.gx:13:3
 	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "absolute inset-0 top-1/2 h-px w-full shrink-0 bg-border", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}))
-//line FieldSeparator.gx:10:142
+//line FieldSeparator.gx:13:142
 	_b1.Add(gx.Text("\n  "))
-//line FieldSeparator.gx:11:3
+//line FieldSeparator.gx:14:3
 	if p.Children != nil {
-//line FieldSeparator.gx:11:25
+//line FieldSeparator.gx:14:25
 		_b1.Add(gx.Text("\n    "))
-//line FieldSeparator.gx:12:5
+//line FieldSeparator.gx:15:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "relative mx-auto block w-fit bg-background px-2 text-muted-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field-separator-content", Kind: gx.AttrText}}, p.Children))
-//line FieldSeparator.gx:12:144
+//line FieldSeparator.gx:15:144
 		_b1.Add(gx.Text("\n  "))
 	}
-//line FieldSeparator.gx:13:4
+//line FieldSeparator.gx:16:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-separator", Kind: gx.AttrText}, gx.Attr{Key: "data-content", Value: gx.TextValue(p.Children != nil), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line FieldSeparator.gx:14:7
+//line FieldSeparator.gx:17:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

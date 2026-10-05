@@ -42,15 +42,25 @@ Copy each file to its path in the app. Change each import of a registry package 
 package toggle
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Name     string   = ""
-  Value    string   = "on"
-  Pressed  bool     = false
-  Disabled bool     = false
-  Invalid  bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default or Outline.
+  Variant  Variant = Default
+  // Size sets the height and padding: Sm, Md or Lg.
+  Size     Size = Md
+  // Name is the form field name.
+  Name     string = ""
+  // Value is the value the form submits when the toggle is pressed.
+  Value    string = "on"
+  // Pressed sets the toggle to pressed for the first render.
+  Pressed  bool = false
+  // Disabled disables the toggle.
+  Disabled bool = false
+  // Invalid sets aria-invalid on the input and shows the error style.
+  Invalid  bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the toggle label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -233,6 +243,25 @@ The variants are `toggle.Default` and `toggle.Outline`. The sizes are `toggle.Sm
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### toggle.Toggle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default or Outline. |
+| `Size` | `Size` | `Md` | Size sets the height and padding: Sm, Md or Lg. |
+| `Name` | `string` | `""` | Name is the form field name. |
+| `Value` | `string` | `"on"` | Value is the value the form submits when the toggle is pressed. |
+| `Pressed` | `bool` | `false` | Pressed sets the toggle to pressed for the first render. |
+| `Disabled` | `bool` | `false` | Disabled disables the toggle. |
+| `Invalid` | `bool` | `false` | Invalid sets aria-invalid on the input and shows the error style. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the toggle label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

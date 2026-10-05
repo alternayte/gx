@@ -1,17 +1,22 @@
 package docs
 
-import (
-  "github.com/alternayte/gx"
-  "github.com/alternayte/gx/content"
-)
+import "github.com/alternayte/gx"
+import "github.com/alternayte/gx/content"
 
 props {
+  // Code is the source to show. The compiler fills it at build time from a repository file.
   Code  gx.Code
+  // Title is the text in the frame bar.
   Title string = ""
+  // Wrap wraps long lines.
   Wrap  bool = false
+  // Marks holds the 1-based numbers of the lines to highlight.
   Marks []int = nil
+  // Ins holds the 1-based numbers of the lines to mark as inserted.
   Ins   []int = nil
+  // Del holds the 1-based numbers of the lines to mark as deleted.
   Del   []int = nil
+  // Words holds the 1-based numbers of the lines to outline.
   Words []int = nil
 }
 

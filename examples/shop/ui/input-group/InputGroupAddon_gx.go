@@ -7,17 +7,21 @@ import (
 )
 
 type InputGroupAddonProps struct {
-	Align    Align
-	Class    string
+	// Align sets the position of the addon: InlineStart, InlineEnd, BlockStart or BlockEnd.
+	Align Align
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the addon, for example an icon, text or a button.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func InputGroupAddon(p InputGroupAddonProps) gx.Node {
 	var _b gx.Builder
-//line InputGroupAddon.gx:10:1
+//line InputGroupAddon.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4", alignClass[Align(p.align())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-addon", Kind: gx.AttrText}, gx.Attr{Key: "data-align", Value: p.align(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line InputGroupAddon.gx:10:407
+//line InputGroupAddon.gx:14:407
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

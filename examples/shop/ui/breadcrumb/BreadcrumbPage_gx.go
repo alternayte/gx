@@ -7,16 +7,19 @@ import (
 )
 
 type BreadcrumbPageProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the label of the current page.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func BreadcrumbPage(p BreadcrumbPageProps) gx.Node {
 	var _b gx.Builder
-//line BreadcrumbPage.gx:9:1
+//line BreadcrumbPage.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("font-normal text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-page", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "link", Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "aria-current", Value: "page", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbPage.gx:9:174
+//line BreadcrumbPage.gx:12:174
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

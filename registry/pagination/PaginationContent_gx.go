@@ -7,16 +7,19 @@ import (
 )
 
 type PaginationContentProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the pagination items.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func PaginationContent(p PaginationContentProps) gx.Node {
 	var _b gx.Builder
-//line PaginationContent.gx:9:1
+//line PaginationContent.gx:12:1
 	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-row items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PaginationContent.gx:9:125
+//line PaginationContent.gx:12:125
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -1,10 +1,15 @@
 package docs
 
 props {
+  // Href is the link target.
   Href        gx.URL
+  // Title is the heading of the card.
   Title       string
+  // Description is the text below the title. Empty omits it.
   Description string = ""
+  // Children is the content below the description. Nil omits it.
   Children    gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

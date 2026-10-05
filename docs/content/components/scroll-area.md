@@ -9,13 +9,18 @@ item: "scroll-area"
 <Example item="scroll-area" name="scroll-area-vertical" label="Scroll Area: Vertical">
 
 ```gx
-{scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/scroll-area/ScrollArea.fixtures.go"
-"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: lines("Line one.", "Line two.", "Line three.", "Line four.", "Line five.", "Line six.", "Line seven.", "Line eight.")}
+<scrollarea.ScrollArea class="h-24 w-48 rounded-md border border-border" attrs={gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}}>
+  <div class="p-2 text-sm">
+    <p>Line one.</p>
+    <p>Line two.</p>
+    <p>Line three.</p>
+    <p>Line four.</p>
+    <p>Line five.</p>
+    <p>Line six.</p>
+    <p>Line seven.</p>
+    <p>Line eight.</p>
+  </div>
+</scrollarea.ScrollArea>
 ```
 
 </Example>
@@ -47,8 +52,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package scrollarea
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content that scrolls.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -60,19 +68,21 @@ package scrollarea
 
 import "github.com/alternayte/gx"
 
-// lines returns one paragraph per line, so the text does not wrap at the
-// scrollbar.
-func lines(text ...string) gx.Node {
-	nodes := make([]gx.Node, 0, len(text))
-	for _, line := range text {
-		nodes = append(nodes, gx.El("p", nil, gx.Text(line)))
-	}
-	return gx.El("div", gx.Attrs{{Key: "class", Value: "p-2 text-sm", Kind: gx.AttrText}}, nodes...)
-}
-
+// Each line is one paragraph, so the text does not wrap at the scrollbar.
 var ScrollAreaFixtures = gx.Fixtures[ScrollAreaProps]{
-	"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: lines("Line one.", "Line two.", "Line three.", "Line four.", "Line five.", "Line six.", "Line seven.", "Line eight.")},
-	"Horizontal": {Class: "w-48 rounded-md border border-border whitespace-nowrap", Attrs: gx.Attrs{{Key: "aria-label", Value: "One long line", Kind: gx.AttrText}}, Children: lines("One long line that does not wrap and scrolls sideways.")},
+	"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: gx.El("div", gx.Attrs{{Key: "class", Value: "p-2 text-sm", Kind: gx.AttrText}},
+		gx.El("p", nil, gx.Text("Line one.")),
+		gx.El("p", nil, gx.Text("Line two.")),
+		gx.El("p", nil, gx.Text("Line three.")),
+		gx.El("p", nil, gx.Text("Line four.")),
+		gx.El("p", nil, gx.Text("Line five.")),
+		gx.El("p", nil, gx.Text("Line six.")),
+		gx.El("p", nil, gx.Text("Line seven.")),
+		gx.El("p", nil, gx.Text("Line eight.")),
+	)},
+	"Horizontal": {Class: "w-48 rounded-md border border-border whitespace-nowrap", Attrs: gx.Attrs{{Key: "aria-label", Value: "One long line", Kind: gx.AttrText}}, Children: gx.El("div", gx.Attrs{{Key: "class", Value: "p-2 text-sm", Kind: gx.AttrText}},
+		gx.El("p", nil, gx.Text("One long line that does not wrap and scrolls sideways.")),
+	)},
 }
 ```
 
@@ -99,13 +109,18 @@ It scrolls on both axes. The browser draws the scrollbar.
 <Example item="scroll-area" name="scroll-area-vertical" label="Scroll Area: Vertical">
 
 ```gx
-{scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/scroll-area/ScrollArea.fixtures.go"
-"Vertical": {Class: "h-24 w-48 rounded-md border border-border", Attrs: gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}, Children: lines("Line one.", "Line two.", "Line three.", "Line four.", "Line five.", "Line six.", "Line seven.", "Line eight.")}
+<scrollarea.ScrollArea class="h-24 w-48 rounded-md border border-border" attrs={gx.Attrs{{Key: "aria-label", Value: "Lines", Kind: gx.AttrText}}}>
+  <div class="p-2 text-sm">
+    <p>Line one.</p>
+    <p>Line two.</p>
+    <p>Line three.</p>
+    <p>Line four.</p>
+    <p>Line five.</p>
+    <p>Line six.</p>
+    <p>Line seven.</p>
+    <p>Line eight.</p>
+  </div>
+</scrollarea.ScrollArea>
 ```
 
 </Example>
@@ -115,16 +130,24 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="scroll-area" name="scroll-area-horizontal" label="Scroll Area: Horizontal">
 
 ```gx
-{scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Horizontal"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/scroll-area/ScrollArea.fixtures.go"
-"Horizontal": {Class: "w-48 rounded-md border border-border whitespace-nowrap", Attrs: gx.Attrs{{Key: "aria-label", Value: "One long line", Kind: gx.AttrText}}, Children: lines("One long line that does not wrap and scrolls sideways.")}
+<scrollarea.ScrollArea class="w-48 rounded-md border border-border whitespace-nowrap" attrs={gx.Attrs{{Key: "aria-label", Value: "One long line", Kind: gx.AttrText}}}>
+  <div class="p-2 text-sm"><p>One long line that does not wrap and scrolls sideways.</p></div>
+</scrollarea.ScrollArea>
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### scrollarea.ScrollArea
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content that scrolls. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

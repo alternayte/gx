@@ -1,9 +1,13 @@
 package accordion
 
 props {
-  Name     string   = ""
-  Class    string   = ""
+  // Name is the name of the accordion. The markup does not render it.
+  Name     string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the accordion: the accordion items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

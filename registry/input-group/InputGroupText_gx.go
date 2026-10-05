@@ -7,16 +7,19 @@ import (
 )
 
 type InputGroupTextProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the text, with or without an icon.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func InputGroupText(p InputGroupTextProps) gx.Node {
 	var _b gx.Builder
-//line InputGroupText.gx:9:1
+//line InputGroupText.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm text-muted-foreground [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line InputGroupText.gx:9:184
+//line InputGroupText.gx:12:184
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

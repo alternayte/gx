@@ -1,8 +1,11 @@
 package avatar
 
 props {
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the badge: an icon. A nil value renders a dot.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

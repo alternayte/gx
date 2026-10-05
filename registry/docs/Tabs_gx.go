@@ -7,17 +7,22 @@ import (
 )
 
 type TabsProps struct {
-	Sync     string
-	Default  string
+	// Sync is the key that links tab groups. Groups with the same key switch together and
+	// remember the chosen tab.
+	Sync string
+	// Default is the label of the tab that starts open. Empty opens the first tab.
+	Default string
+	// Children is the tab items.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Tabs(p TabsProps) gx.Node {
 	var _b gx.Builder
-//line Tabs.gx:10:1
+//line Tabs.gx:15:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-tabs my-4", Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Tabs.gx:10:115
+//line Tabs.gx:15:115
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

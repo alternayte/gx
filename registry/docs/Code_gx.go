@@ -8,20 +8,27 @@ import (
 )
 
 type CodeProps struct {
-	Code  gx.Code
+	// Code is the source to show. The compiler fills it at build time from a repository file.
+	Code gx.Code
+	// Title is the text in the frame bar.
 	Title string
-	Wrap  bool
+	// Wrap wraps long lines.
+	Wrap bool
+	// Marks holds the 1-based numbers of the lines to highlight.
 	Marks []int
-	Ins   []int
-	Del   []int
+	// Ins holds the 1-based numbers of the lines to mark as inserted.
+	Ins []int
+	// Del holds the 1-based numbers of the lines to mark as deleted.
+	Del []int
+	// Words holds the 1-based numbers of the lines to outline.
 	Words []int
 }
 
 func Code(p CodeProps) gx.Node {
 	var _b gx.Builder
-//line Code.gx:18:1
+//line Code.gx:23:1
 	_b.Add(content.Code(p.Code, content.CodeOptions{Title: p.Title, Wrap: p.Wrap, Marks: p.Marks, Ins: p.Ins, Del: p.Del, Words: p.Words}))
-//line Code.gx:18:130
+//line Code.gx:23:130
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

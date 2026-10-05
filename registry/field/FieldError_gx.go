@@ -7,69 +7,74 @@ import (
 )
 
 type FieldErrorProps struct {
-	Errors   []string
-	Class    string
+	// Errors holds the error messages. Empty and repeated messages do not show; two or more
+	// show as a list.
+	Errors []string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the error. It replaces Errors.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func FieldError(p FieldErrorProps) gx.Node {
 	var _b gx.Builder
-//line FieldError.gx:10:1
+//line FieldError.gx:15:1
 	if p.Children != nil || len(p.messages()) > 0 {
-//line FieldError.gx:10:48
+//line FieldError.gx:15:48
 		_b.Add(gx.Text("\n  "))
-//line FieldError.gx:11:3
+//line FieldError.gx:16:3
 		var _b1 gx.Builder
-//line FieldError.gx:11:121
+//line FieldError.gx:16:121
 		_b1.Add(gx.Text("\n    "))
-//line FieldError.gx:12:5
+//line FieldError.gx:17:5
 		if p.Children != nil {
-//line FieldError.gx:12:27
+//line FieldError.gx:17:27
 			_b1.Add(gx.Text("\n      "))
-//line FieldError.gx:13:7
+//line FieldError.gx:18:7
 			_b1.Add(p.Children)
-//line FieldError.gx:13:19
+//line FieldError.gx:18:19
 			_b1.Add(gx.Text("\n    "))
 		} else {
-//line FieldError.gx:14:12
+//line FieldError.gx:19:12
 			if len(p.messages()) == 1 {
-//line FieldError.gx:14:39
+//line FieldError.gx:19:39
 				_b1.Add(gx.Text("\n      "))
-//line FieldError.gx:15:7
+//line FieldError.gx:20:7
 				_b1.Add(gx.Text(p.messages()[0]))
-//line FieldError.gx:15:24
+//line FieldError.gx:20:24
 				_b1.Add(gx.Text("\n    "))
 			} else {
-//line FieldError.gx:16:13
+//line FieldError.gx:21:13
 				_b1.Add(gx.Text("\n      "))
-//line FieldError.gx:17:7
+//line FieldError.gx:22:7
 				var _b2 gx.Builder
-//line FieldError.gx:17:54
+//line FieldError.gx:22:54
 				_b2.Add(gx.Text("\n        "))
-//line FieldError.gx:18:9
+//line FieldError.gx:23:9
 				for _, message := range p.messages() {
-//line FieldError.gx:18:47
+//line FieldError.gx:23:47
 					_b2.Add(gx.Text("\n          "))
-//line FieldError.gx:19:11
+//line FieldError.gx:24:11
 					_b2.Add(gx.El("li", nil, gx.Text(message)))
-//line FieldError.gx:19:29
+//line FieldError.gx:24:29
 					_b2.Add(gx.Text("\n        "))
 				}
-//line FieldError.gx:20:10
+//line FieldError.gx:25:10
 				_b2.Add(gx.Text("\n      "))
 				_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "ml-4 flex list-disc flex-col gap-1", Kind: gx.AttrText}}, _b2.Node()))
-//line FieldError.gx:21:12
+//line FieldError.gx:26:12
 				_b1.Add(gx.Text("\n    "))
 			}
 		}
-//line FieldError.gx:22:6
+//line FieldError.gx:27:6
 		_b1.Add(gx.Text("\n  "))
 		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm font-normal text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field-error", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line FieldError.gx:23:9
+//line FieldError.gx:28:9
 		_b.Add(gx.Text("\n"))
 	}
-//line FieldError.gx:24:2
+//line FieldError.gx:29:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

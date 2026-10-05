@@ -1,12 +1,19 @@
 package togglegroup
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Spacing  int      = 0
-  Label    string   = ""
-  Class    string   = ""
+  // Variant sets the visual style of every item: Default or Outline.
+  Variant  Variant = Default
+  // Size sets the height of every item: Sm, Md or Lg.
+  Size     Size = Md
+  // Spacing is the gap between the items in spacing units. Zero joins the items.
+  Spacing  int = 0
+  // Label is the accessible name of the group.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the toggle items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

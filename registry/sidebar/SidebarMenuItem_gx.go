@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarMenuItemProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the item: the menu button, action, badge and sub menu.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuItem(p SidebarMenuItemProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuItem.gx:9:1
+//line SidebarMenuItem.gx:12:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/menu-item relative", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-item", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuItem.gx:9:141
+//line SidebarMenuItem.gx:12:141
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

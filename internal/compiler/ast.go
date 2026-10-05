@@ -23,9 +23,11 @@ type Import struct {
 	Raw string
 }
 
-// Field is one props or signals field.
+// Field is one props or signals field. Doc is the text of the // lines
+// above it, one line per comment line.
 type Field struct {
 	At         Pos
+	Doc        string
 	Name       string
 	Type       string
 	Default    string

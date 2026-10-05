@@ -13,10 +13,16 @@ item: "navigation-menu"
   <navigationmenu.NavigationMenuItem>
     <navigationmenu.NavigationMenuTrigger>Products</navigationmenu.NavigationMenuTrigger>
     <navigationmenu.NavigationMenuContent>
-      {gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
-        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
-        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
-      )}
+      <ul class="grid w-48 gap-1">
+        <li>
+          <navigationmenu.NavigationMenuLink href={gx.URL("/products")}>All products</navigationmenu.NavigationMenuLink>
+        </li>
+        <li>
+          <navigationmenu.NavigationMenuLink href={gx.URL("/products/new")}>
+            New arrivals
+          </navigationmenu.NavigationMenuLink>
+        </li>
+      </ul>
     </navigationmenu.NavigationMenuContent>
   </navigationmenu.NavigationMenuItem>
   <navigationmenu.NavigationMenuItem>
@@ -74,9 +80,13 @@ Copy each file to its path in the app. Change each import of a registry package 
 package navigationmenu
 
 props {
-  Label    string   = ""
-  Class    string   = ""
+  // Label is the accessible name of the nav element. It is not visible.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the items of the bar.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -89,8 +99,11 @@ props {
 package navigationmenu
 
 props {
-  Class    string   = ""
+  // Class adds classes to the panel element.
+  Class    string = ""
+  // Children is the content of the panel, usually links.
   Children gx.Node
+  // Attrs adds HTML attributes to the panel element.
   Attrs    gx.Attrs = nil
 }
 
@@ -103,8 +116,11 @@ props {
 package navigationmenu
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is one link, or one trigger with its content.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -115,11 +131,18 @@ props {
 package navigationmenu
 
 props {
+  // Href is the URL that the link opens.
   Href     gx.URL
-  Variant  Variant  = Default
-  Active   bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default for a link in the content of a menu, or Trigger
+  // for a link in the bar.
+  Variant  Variant = Default
+  // Active marks the link as the current page. It sets aria-current and the active style.
+  Active   bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the link.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -132,8 +155,11 @@ package navigationmenu
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the trigger. A chevron follows it.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -308,10 +334,16 @@ The content is CSS only. It shows when the pointer is on the item and when focus
   <navigationmenu.NavigationMenuItem>
     <navigationmenu.NavigationMenuTrigger>Products</navigationmenu.NavigationMenuTrigger>
     <navigationmenu.NavigationMenuContent>
-      {gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
-        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
-        gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
-      )}
+      <ul class="grid w-48 gap-1">
+        <li>
+          <navigationmenu.NavigationMenuLink href={gx.URL("/products")}>All products</navigationmenu.NavigationMenuLink>
+        </li>
+        <li>
+          <navigationmenu.NavigationMenuLink href={gx.URL("/products/new")}>
+            New arrivals
+          </navigationmenu.NavigationMenuLink>
+        </li>
+      </ul>
     </navigationmenu.NavigationMenuContent>
   </navigationmenu.NavigationMenuItem>
   <navigationmenu.NavigationMenuItem>
@@ -335,10 +367,14 @@ The content is CSS only. It shows when the pointer is on the item and when focus
 
 ```gx
 <navigationmenu.NavigationMenuContent>
-  {gx.El("ul", gx.Attrs{{Key: "class", Value: "grid w-48 gap-1"}},
-    gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products"), Children: gx.Text("All products")})),
-    gx.El("li", nil, navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkProps{Href: gx.URL("/products/new"), Children: gx.Text("New arrivals")})),
-  )}
+  <ul class="grid w-48 gap-1">
+    <li>
+      <navigationmenu.NavigationMenuLink href={gx.URL("/products")}>All products</navigationmenu.NavigationMenuLink>
+    </li>
+    <li>
+      <navigationmenu.NavigationMenuLink href={gx.URL("/products/new")}>New arrivals</navigationmenu.NavigationMenuLink>
+    </li>
+  </ul>
 </navigationmenu.NavigationMenuContent>
 ```
 
@@ -411,6 +447,54 @@ The content is CSS only. It shows when the pointer is on the item and when focus
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### navigationmenu.NavigationMenu
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | `""` | Label is the accessible name of the nav element. It is not visible. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the items of the bar. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### navigationmenu.NavigationMenuContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the panel element. |
+| `Children` | `gx.Node` | Required | Children is the content of the panel, usually links. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the panel element. |
+
+### navigationmenu.NavigationMenuItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is one link, or one trigger with its content. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### navigationmenu.NavigationMenuLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL that the link opens. |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default for a link in the content of a menu, or Trigger for a link in the bar. |
+| `Active` | `bool` | `false` | Active marks the link as the current page. It sets aria-current and the active style. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the link. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### navigationmenu.NavigationMenuTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the trigger. A chevron follows it. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -7,47 +7,52 @@ import (
 )
 
 type LinkCardProps struct {
-	Href        gx.URL
-	Title       string
+	// Href is the link target.
+	Href gx.URL
+	// Title is the heading of the card.
+	Title string
+	// Description is the text below the title. Empty omits it.
 	Description string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Children is the content below the description. Nil omits it.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func LinkCard(p LinkCardProps) gx.Node {
 	var _b gx.Builder
-//line LinkCard.gx:11:1
+//line LinkCard.gx:16:1
 	var _b1 gx.Builder
-//line LinkCard.gx:11:146
+//line LinkCard.gx:16:146
 	_b1.Add(gx.Text("\n  "))
-//line LinkCard.gx:12:3
+//line LinkCard.gx:17:3
 	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "block font-medium text-foreground", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line LinkCard.gx:12:67
+//line LinkCard.gx:17:67
 	_b1.Add(gx.Text("\n  "))
-//line LinkCard.gx:13:3
+//line LinkCard.gx:18:3
 	if p.Description != "" {
-//line LinkCard.gx:13:27
+//line LinkCard.gx:18:27
 		_b1.Add(gx.Text("\n    "))
-//line LinkCard.gx:14:5
+//line LinkCard.gx:19:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 block text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line LinkCard.gx:14:82
+//line LinkCard.gx:19:82
 		_b1.Add(gx.Text("\n  "))
 	}
-//line LinkCard.gx:15:4
+//line LinkCard.gx:20:4
 	_b1.Add(gx.Text("\n  "))
-//line LinkCard.gx:16:3
+//line LinkCard.gx:21:3
 	if p.Children != nil {
-//line LinkCard.gx:16:25
+//line LinkCard.gx:21:25
 		_b1.Add(gx.Text("\n    "))
-//line LinkCard.gx:17:5
+//line LinkCard.gx:22:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-link-card-body mt-2 block text-sm", Kind: gx.AttrText}}, p.Children))
-//line LinkCard.gx:17:75
+//line LinkCard.gx:22:75
 		_b1.Add(gx.Text("\n  "))
 	}
-//line LinkCard.gx:18:4
+//line LinkCard.gx:23:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-link-card my-4 block rounded-lg border border-border p-4 no-underline transition-colors hover:bg-accent", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs), _b1.Node()))
-//line LinkCard.gx:19:5
+//line LinkCard.gx:24:5
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,17 +7,22 @@ import (
 )
 
 type SeparatorProps struct {
+	// Orientation sets the direction: Horizontal or Vertical.
 	Orientation Orientation
-	Decorative  bool
-	Class       string
-	Attrs       gx.Attrs
+	// Decorative hides the separator from assistive technology. Set it to false for the separator
+	// role.
+	Decorative bool
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Separator(p SeparatorProps) gx.Node {
 	var _b gx.Builder
-//line Separator.gx:10:1
+//line Separator.gx:15:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs())))
-//line Separator.gx:10:177
+//line Separator.gx:15:177
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

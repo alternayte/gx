@@ -9,20 +9,25 @@ item: "sidebar"
 <Example item="sidebar" name="sidebar-full" label="Sidebar: Sidebar: Full">
 
 ```gx
-{sidebar.Sidebar(sidebar.SidebarFixtures["Full"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/Sidebar.fixtures.go"
-"Full": {Id: "demo-sidebar", Class: "h-72", Children: gx.Frag(
-  SidebarHeader(SidebarHeaderProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-sm font-semibold"}}, gx.Text("Gx"))}),
-  SidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Children: gx.Frag(
-    SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Menu")}),
-    SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
-  )})}),
-  SidebarFooter(SidebarFooterProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}),
-)}
+<sidebar.Sidebar id="demo-sidebar" class="h-72">
+  <sidebar.SidebarHeader><span class="px-2 text-sm font-semibold">Gx</span></sidebar.SidebarHeader>
+  <sidebar.SidebarContent>
+    <sidebar.SidebarGroup>
+      <sidebar.SidebarGroupLabel>Menu</sidebar.SidebarGroupLabel>
+      <sidebar.SidebarGroupContent>
+        <sidebar.SidebarMenu>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+        </sidebar.SidebarMenu>
+      </sidebar.SidebarGroupContent>
+    </sidebar.SidebarGroup>
+  </sidebar.SidebarContent>
+  <sidebar.SidebarFooter><span class="px-2 text-xs text-sidebar-foreground/70">v0.1.0</span></sidebar.SidebarFooter>
+</sidebar.Sidebar>
 ```
 
 </Example>
@@ -99,10 +104,16 @@ Copy each file to its path in the app. Change each import of a registry package 
 package sidebar
 
 props {
+  // Id is the id of the root element.
+  // SidebarTrigger shows and hides the sidebar with the id gx-sidebar.
   Id       string
-  Side     Side     = Left
-  Class    string   = ""
+  // Side sets the edge of the page that holds the sidebar: Left or Right.
+  Side     Side = Left
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the sidebar: the header, content and footer.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -113,8 +124,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the header.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -125,8 +139,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the scrolling content of the sidebar: the groups.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -137,8 +154,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the footer.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -149,8 +169,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the main content of the page.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -161,7 +184,9 @@ props {
 package sidebar
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -174,11 +199,17 @@ package sidebar
 import "github.com/alternayte/gx/registry/input"
 
 props {
-  Type        string   = "text"
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Type is the type attribute of the input. An empty value is text.
+  Type        string = "text"
+  // Name is the form field name.
+  Name        string = ""
+  // Value is the value of the input.
+  Value       string = ""
+  // Placeholder is the text that shows while the input is empty.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -188,14 +219,16 @@ props {
 ```gx title="ui/sidebar/SidebarTrigger.gx"
 package sidebar
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/icons"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Controls string   = "gx-sidebar"
-  Class    string   = ""
+  // Controls is the id that aria-controls names. An empty value is gx-sidebar, the id the shell
+  // runtime shows and hides.
+  Controls string = "gx-sidebar"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -209,8 +242,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the group: the label, action and group content.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -221,8 +257,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label text of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -233,9 +272,13 @@ props {
 package sidebar
 
 props {
+  // Label is the accessible name of the button.
   Label    string
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the icon of the button.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -246,8 +289,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the group, usually a SidebarMenu.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -258,8 +304,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the menu items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -270,8 +319,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item: the menu button, action, badge and sub menu.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -282,12 +334,20 @@ props {
 package sidebar
 
 props {
-  Href     gx.URL   = ""
-  Active   bool     = false
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Class    string   = ""
+  // Href is the URL of the link. An empty value renders a button in place of a link.
+  Href     gx.URL = ""
+  // Active marks the button of the current page.
+  // A link gets aria-current and a button gets data-active.
+  Active   bool = false
+  // Variant sets the surface: Default or Outline.
+  Variant  Variant = Default
+  // Size sets the height and the text size: Md, Sm or Lg.
+  Size     Size = Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the button: an icon and a span with the text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -302,10 +362,15 @@ if p.Href != "" {
 package sidebar
 
 props {
+  // Label is the accessible name of the button.
   Label       string
-  ShowOnHover bool     = false
-  Class       string   = ""
+  // ShowOnHover hides the action on a wide screen until its item has the pointer or the focus.
+  ShowOnHover bool = false
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the icon of the button.
   Children    gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -316,8 +381,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the badge text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -328,9 +396,13 @@ props {
 package sidebar
 
 props {
-  ShowIcon bool     = false
-  Width    string   = "70%"
-  Class    string   = ""
+  // ShowIcon adds an icon placeholder before the text bar.
+  ShowIcon bool = false
+  // Width is the maximum width of the text bar as a CSS length. An empty value is 70%.
+  Width    string = "70%"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -346,8 +418,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the sub menu items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -358,8 +433,11 @@ props {
 package sidebar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the sub item: a SidebarMenuSubButton.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -370,11 +448,17 @@ props {
 package sidebar
 
 props {
+  // Href is the URL of the link.
   Href     gx.URL
-  Active   bool     = false
-  Size     Size     = Md
-  Class    string   = ""
+  // Active marks the link of the current page. It sets aria-current and the active style.
+  Active   bool = false
+  // Size sets the text size: Md or Sm.
+  Size     Size = Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the link: an icon and a span with the text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -902,20 +986,25 @@ The sidebar is static. It has no collapsed icon mode, no rail, no floating or in
 <Example item="sidebar" name="sidebar-full" label="Sidebar: Sidebar: Full">
 
 ```gx
-{sidebar.Sidebar(sidebar.SidebarFixtures["Full"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/Sidebar.fixtures.go"
-"Full": {Id: "demo-sidebar", Class: "h-72", Children: gx.Frag(
-  SidebarHeader(SidebarHeaderProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-sm font-semibold"}}, gx.Text("Gx"))}),
-  SidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Children: gx.Frag(
-    SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Menu")}),
-    SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
-  )})}),
-  SidebarFooter(SidebarFooterProps{Children: gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}),
-)}
+<sidebar.Sidebar id="demo-sidebar" class="h-72">
+  <sidebar.SidebarHeader><span class="px-2 text-sm font-semibold">Gx</span></sidebar.SidebarHeader>
+  <sidebar.SidebarContent>
+    <sidebar.SidebarGroup>
+      <sidebar.SidebarGroupLabel>Menu</sidebar.SidebarGroupLabel>
+      <sidebar.SidebarGroupContent>
+        <sidebar.SidebarMenu>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuItem>
+            <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
+          </sidebar.SidebarMenuItem>
+        </sidebar.SidebarMenu>
+      </sidebar.SidebarGroupContent>
+    </sidebar.SidebarGroup>
+  </sidebar.SidebarContent>
+  <sidebar.SidebarFooter><span class="px-2 text-xs text-sidebar-foreground/70">v0.1.0</span></sidebar.SidebarFooter>
+</sidebar.Sidebar>
 ```
 
 </Example>
@@ -925,15 +1014,20 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-right" label="Sidebar: Sidebar: Right">
 
 ```gx
-{sidebar.Sidebar(sidebar.SidebarFixtures["Right"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/Sidebar.fixtures.go"
-"Right": {Id: "demo-sidebar-right", Side: Right, Class: "h-40", Children: SidebarContent(SidebarContentProps{
-  Children: SidebarGroup(SidebarGroupProps{Children: demoMenu()}),
-})}
+<sidebar.Sidebar id="demo-sidebar-right" side={sidebar.Right} class="h-40">
+  <sidebar.SidebarContent>
+    <sidebar.SidebarGroup>
+      <sidebar.SidebarMenu>
+        <sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
+        </sidebar.SidebarMenuItem>
+        <sidebar.SidebarMenuItem>
+          <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
+        </sidebar.SidebarMenuItem>
+      </sidebar.SidebarMenu>
+    </sidebar.SidebarGroup>
+  </sidebar.SidebarContent>
+</sidebar.Sidebar>
 ```
 
 </Example>
@@ -973,17 +1067,20 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-group-labelled" label="Sidebar: SidebarGroup: Labelled">
 
 ```gx
-{sidebar.SidebarGroup(sidebar.SidebarGroupFixtures["Labelled"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/SidebarGroup.fixtures.go"
-"Labelled": {Class: "w-64 bg-sidebar text-sidebar-foreground", Children: gx.Frag(
-  SidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text("Projects")}),
-  SidebarGroupAction(SidebarGroupActionProps{Label: "Project options", Children: more()}),
-  SidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),
-)}
+<sidebar.SidebarGroup class="w-64 bg-sidebar text-sidebar-foreground">
+  <sidebar.SidebarGroupLabel>Projects</sidebar.SidebarGroupLabel>
+  <sidebar.SidebarGroupAction label="Project options"><icons.Ellipsis /></sidebar.SidebarGroupAction>
+  <sidebar.SidebarGroupContent>
+    <sidebar.SidebarMenu>
+      <sidebar.SidebarMenuItem>
+        <sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
+      </sidebar.SidebarMenuItem>
+      <sidebar.SidebarMenuItem>
+        <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
+      </sidebar.SidebarMenuItem>
+    </sidebar.SidebarMenu>
+  </sidebar.SidebarGroupContent>
+</sidebar.SidebarGroup>
 ```
 
 </Example>
@@ -993,13 +1090,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-group-action-add" label="Sidebar: SidebarGroupAction: Add">
 
 ```gx
-{sidebar.SidebarGroupAction(sidebar.SidebarGroupActionFixtures["Add"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/SidebarGroupAction.fixtures.go"
-"Add": {Label: "Project options", Children: more()}
+<sidebar.SidebarGroupAction label="Project options"><icons.Ellipsis /></sidebar.SidebarGroupAction>
 ```
 
 </Example>
@@ -1059,26 +1150,26 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-nested" label="Sidebar: SidebarMenu: Nested">
 
 ```gx
-{sidebar.SidebarMenu(sidebar.SidebarMenuFixtures["Nested"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/SidebarMenu.fixtures.go"
-"Nested": {Class: "w-64", Children: gx.Frag(
-  SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(
-    SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/docs"), Children: gx.El("span", nil, gx.Text("Docs"))}),
-    SidebarMenuBadge(SidebarMenuBadgeProps{Children: gx.Text("12")}),
-    SidebarMenuSub(SidebarMenuSubProps{Children: gx.Frag(
-      SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/start"), Active: true, Children: gx.El("span", nil, gx.Text("Get started"))})}),
-      SidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL("/docs/forms"), Children: gx.El("span", nil, gx.Text("Forms"))})}),
-    )}),
-  )}),
-  SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(
-    SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL("/projects"), Children: gx.El("span", nil, gx.Text("Projects"))}),
-    SidebarMenuAction(SidebarMenuActionProps{Label: "Project options", Children: more()}),
-  )}),
-)}
+<sidebar.SidebarMenu class="w-64">
+  <sidebar.SidebarMenuItem>
+    <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
+    <sidebar.SidebarMenuBadge>12</sidebar.SidebarMenuBadge>
+    <sidebar.SidebarMenuSub>
+      <sidebar.SidebarMenuSubItem>
+        <sidebar.SidebarMenuSubButton href={gx.URL("/docs/start")} active>
+          <span>Get started</span>
+        </sidebar.SidebarMenuSubButton>
+      </sidebar.SidebarMenuSubItem>
+      <sidebar.SidebarMenuSubItem>
+        <sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")}><span>Forms</span></sidebar.SidebarMenuSubButton>
+      </sidebar.SidebarMenuSubItem>
+    </sidebar.SidebarMenuSub>
+  </sidebar.SidebarMenuItem>
+  <sidebar.SidebarMenuItem>
+    <sidebar.SidebarMenuButton href={gx.URL("/projects")}><span>Projects</span></sidebar.SidebarMenuButton>
+    <sidebar.SidebarMenuAction label="Project options"><icons.Ellipsis /></sidebar.SidebarMenuAction>
+  </sidebar.SidebarMenuItem>
+</sidebar.SidebarMenu>
 ```
 
 </Example>
@@ -1102,13 +1193,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-action-add" label="Sidebar: SidebarMenuAction: Add">
 
 ```gx
-{sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Add"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/SidebarMenuAction.fixtures.go"
-"Add":   {Label: "Project options", Children: more()}
+<sidebar.SidebarMenuAction label="Project options"><icons.Ellipsis /></sidebar.SidebarMenuAction>
 ```
 
 </Example>
@@ -1118,13 +1203,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-action-hover" label="Sidebar: SidebarMenuAction: Hover">
 
 ```gx
-{sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Hover"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/sidebar/SidebarMenuAction.fixtures.go"
-"Hover": {Label: "Project options", ShowOnHover: true, Children: more()}
+<sidebar.SidebarMenuAction label="Project options" showOnHover><icons.Ellipsis /></sidebar.SidebarMenuAction>
 ```
 
 </Example>
@@ -1144,7 +1223,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-button-link" label="Sidebar: SidebarMenuButton: Link">
 
 ```gx
-<sidebar.SidebarMenuButton href={gx.URL("/docs")}>{gx.El("span", nil, gx.Text("Docs"))}</sidebar.SidebarMenuButton>
+<sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
 ```
 
 </Example>
@@ -1154,7 +1233,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-button-active" label="Sidebar: SidebarMenuButton: Active">
 
 ```gx
-<sidebar.SidebarMenuButton href={gx.URL("/")} active>{gx.El("span", nil, gx.Text("Home"))}</sidebar.SidebarMenuButton>
+<sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
 ```
 
 </Example>
@@ -1164,7 +1243,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-button-button" label="Sidebar: SidebarMenuButton: Button">
 
 ```gx
-<sidebar.SidebarMenuButton>{gx.El("span", nil, gx.Text("Sign out"))}</sidebar.SidebarMenuButton>
+<sidebar.SidebarMenuButton><span>Sign out</span></sidebar.SidebarMenuButton>
 ```
 
 </Example>
@@ -1175,7 +1254,7 @@ The code renders the fixture by its name. The fixture sets these props.
 
 ```gx
 <sidebar.SidebarMenuButton variant={sidebar.Outline} href={gx.URL("/docs")}>
-  {gx.El("span", nil, gx.Text("Docs"))}
+  <span>Docs</span>
 </sidebar.SidebarMenuButton>
 ```
 
@@ -1186,9 +1265,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-button-small" label="Sidebar: SidebarMenuButton: Small">
 
 ```gx
-<sidebar.SidebarMenuButton size={sidebar.Sm} href={gx.URL("/docs")}>
-  {gx.El("span", nil, gx.Text("Docs"))}
-</sidebar.SidebarMenuButton>
+<sidebar.SidebarMenuButton size={sidebar.Sm} href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
 ```
 
 </Example>
@@ -1198,9 +1275,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-button-large" label="Sidebar: SidebarMenuButton: Large">
 
 ```gx
-<sidebar.SidebarMenuButton size={sidebar.Lg} href={gx.URL("/docs")}>
-  {gx.El("span", nil, gx.Text("Docs"))}
-</sidebar.SidebarMenuButton>
+<sidebar.SidebarMenuButton size={sidebar.Lg} href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
 ```
 
 </Example>
@@ -1243,12 +1318,12 @@ The code renders the fixture by its name. The fixture sets these props.
 <sidebar.SidebarMenuSub>
   <sidebar.SidebarMenuSubItem>
     <sidebar.SidebarMenuSubButton href={gx.URL("/docs/start")} active>
-      {gx.El("span", nil, gx.Text("Get started"))}
+      <span>Get started</span>
     </sidebar.SidebarMenuSubButton>
   </sidebar.SidebarMenuSubItem>
   <sidebar.SidebarMenuSubItem>
     <sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")} size={sidebar.Sm}>
-      {gx.El("span", nil, gx.Text("Forms"))}
+      <span>Forms</span>
     </sidebar.SidebarMenuSubButton>
   </sidebar.SidebarMenuSubItem>
 </sidebar.SidebarMenuSub>
@@ -1261,9 +1336,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="sidebar" name="sidebar-menu-sub-button-link" label="Sidebar: SidebarMenuSubButton: Link">
 
 ```gx
-<sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")}>
-  {gx.El("span", nil, gx.Text("Forms"))}
-</sidebar.SidebarMenuSubButton>
+<sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")}><span>Forms</span></sidebar.SidebarMenuSubButton>
 ```
 
 </Example>
@@ -1274,7 +1347,7 @@ The code renders the fixture by its name. The fixture sets these props.
 
 ```gx
 <sidebar.SidebarMenuSubButton href={gx.URL("/docs/start")} active>
-  {gx.El("span", nil, gx.Text("Get started"))}
+  <span>Get started</span>
 </sidebar.SidebarMenuSubButton>
 ```
 
@@ -1286,7 +1359,7 @@ The code renders the fixture by its name. The fixture sets these props.
 
 ```gx
 <sidebar.SidebarMenuSubButton href={gx.URL("/docs/forms")} size={sidebar.Sm}>
-  {gx.El("span", nil, gx.Text("Forms"))}
+  <span>Forms</span>
 </sidebar.SidebarMenuSubButton>
 ```
 
@@ -1321,6 +1394,193 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### sidebar.Sidebar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the root element. SidebarTrigger shows and hides the sidebar with the id gx-sidebar. |
+| `Side` | `Side` | `Left` | Side sets the edge of the page that holds the sidebar: Left or Right. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the sidebar: the header, content and footer. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the scrolling content of the sidebar: the groups. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the footer. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the group: the label, action and group content. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarGroupAction
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the accessible name of the button. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the icon of the button. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarGroupContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the group, usually a SidebarMenu. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarGroupLabel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label text of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the header. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarInput
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Type` | `string` | `"text"` | Type is the type attribute of the input. An empty value is text. |
+| `Name` | `string` | `""` | Name is the form field name. |
+| `Value` | `string` | `""` | Value is the value of the input. |
+| `Placeholder` | `string` | `""` | Placeholder is the text that shows while the input is empty. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarInset
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the main content of the page. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenu
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the menu items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuAction
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the accessible name of the button. |
+| `ShowOnHover` | `bool` | `false` | ShowOnHover hides the action on a wide screen until its item has the pointer or the focus. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the icon of the button. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuBadge
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the badge text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuButton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | `""` | Href is the URL of the link. An empty value renders a button in place of a link. |
+| `Active` | `bool` | `false` | Active marks the button of the current page. A link gets aria-current and a button gets data-active. |
+| `Variant` | `Variant` | `Default` | Variant sets the surface: Default or Outline. |
+| `Size` | `Size` | `Md` | Size sets the height and the text size: Md, Sm or Lg. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the button: an icon and a span with the text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item: the menu button, action, badge and sub menu. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuSkeleton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ShowIcon` | `bool` | `false` | ShowIcon adds an icon placeholder before the text bar. |
+| `Width` | `string` | `"70%"` | Width is the maximum width of the text bar as a CSS length. An empty value is 70%. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuSub
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the sub menu items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuSubButton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL of the link. |
+| `Active` | `bool` | `false` | Active marks the link of the current page. It sets aria-current and the active style. |
+| `Size` | `Size` | `Md` | Size sets the text size: Md or Sm. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the link: an icon and a span with the text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarMenuSubItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the sub item: a SidebarMenuSubButton. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### sidebar.SidebarTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Controls` | `string` | `"gx-sidebar"` | Controls is the id that aria-controls names. An empty value is gx-sidebar, the id the shell runtime shows and hides. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

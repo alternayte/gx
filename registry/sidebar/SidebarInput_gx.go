@@ -8,19 +8,25 @@ import (
 )
 
 type SidebarInputProps struct {
-	Type        string
-	Name        string
-	Value       string
+	// Type is the type attribute of the input. An empty value is text.
+	Type string
+	// Name is the form field name.
+	Name string
+	// Value is the value of the input.
+	Value string
+	// Placeholder is the text that shows while the input is empty.
 	Placeholder string
-	Class       string
-	Attrs       gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarInput(p SidebarInputProps) gx.Node {
 	var _b gx.Builder
-//line SidebarInput.gx:14:1
+//line SidebarInput.gx:20:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Class, "h-8 w-full bg-background shadow-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-input", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "input", Kind: gx.AttrText}}, p.Attrs)))
-//line SidebarInput.gx:14:225
+//line SidebarInput.gx:20:225
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

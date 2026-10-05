@@ -1,6 +1,7 @@
 package shell
 
 props {
+  // Site is the site-wide data: the title, the version and the header links.
   Site Config
 }
 

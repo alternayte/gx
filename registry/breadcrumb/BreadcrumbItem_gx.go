@@ -7,16 +7,20 @@ import (
 )
 
 type BreadcrumbItemProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the item: a BreadcrumbLink, a BreadcrumbPage or a
+	// BreadcrumbEllipsis.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func BreadcrumbItem(p BreadcrumbItemProps) gx.Node {
 	var _b gx.Builder
-//line BreadcrumbItem.gx:9:1
+//line BreadcrumbItem.gx:13:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbItem.gx:9:122
+//line BreadcrumbItem.gx:13:122
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -1,9 +1,13 @@
 package contextmenu
 
 props {
-  Label    string   = ""
-  Class    string   = ""
+  // Label is the accessible name of the group. It is not visible.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the radio items of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

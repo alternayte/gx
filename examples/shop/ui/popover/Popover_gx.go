@@ -7,18 +7,23 @@ import (
 )
 
 type PopoverProps struct {
-	Id       string
-	Align    Align
-	Class    string
+	// Id is the id of the root element. The trigger opens the popover by this id.
+	Id string
+	// Align sets the edge of the trigger that the popover lines up with: Center, Start or End.
+	Align Align
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the popover.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Popover(p PopoverProps) gx.Node {
 	var _b gx.Builder
-//line Popover.gx:11:1
+//line Popover.gx:16:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true)}, p.Attrs), p.Children))
-//line Popover.gx:11:264
+//line Popover.gx:16:264
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

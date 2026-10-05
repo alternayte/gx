@@ -1,9 +1,13 @@
 package docs
 
 props {
+  // Title is the heading of the card. Empty omits it.
   Title       string = ""
+  // Description is the text below the title. Empty omits it.
   Description string = ""
+  // Children is the content of the card. Nil omits the body.
   Children    gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

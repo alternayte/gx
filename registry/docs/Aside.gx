@@ -1,9 +1,13 @@
 package docs
 
 props {
+  // Kind sets the tone of the callout: Note, Tip, Caution or Danger.
   Kind     Kind = Note
+  // Title is the heading of the callout. Empty omits it.
   Title    string = ""
+  // Children is the content of the callout.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -46,11 +46,17 @@ Copy each file to its path in the app. Change each import of a registry package 
 package alert
 
 props {
-  Variant  Variant  = Default
-  Title    string   = ""
-  Icon     gx.Node  = nil
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Variant sets the tone: Default or Destructive.
+  Variant  Variant = Default
+  // Title is the heading of the alert. An empty value renders no heading.
+  Title    string = ""
+  // Icon is an svg icon shown in the column before the text. A nil value renders no icon column.
+  Icon     gx.Node = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the alert description. A nil value renders no description.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -197,6 +203,21 @@ The theme must define these tokens: `--card`, `--card-foreground`, `--destructiv
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### alert.Alert
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the tone: Default or Destructive. |
+| `Title` | `string` | `""` | Title is the heading of the alert. An empty value renders no heading. |
+| `Icon` | `gx.Node` | `nil` | Icon is an svg icon shown in the column before the text. A nil value renders no icon column. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the alert description. A nil value renders no description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

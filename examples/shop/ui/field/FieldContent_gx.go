@@ -7,16 +7,19 @@ import (
 )
 
 type FieldContentProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the column: the title and the description.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func FieldContent(p FieldContentProps) gx.Node {
 	var _b gx.Builder
-//line FieldContent.gx:9:1
+//line FieldContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-content flex flex-1 flex-col gap-1.5 leading-snug", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldContent.gx:9:151
+//line FieldContent.gx:12:151
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

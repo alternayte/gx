@@ -3,11 +3,17 @@ package inputgroup
 import "github.com/alternayte/gx/examples/shop/ui/textarea"
 
 props {
-  Id          string   = ""
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Id is the id of the root element. A label points at it.
+  Id          string = ""
+  // Name is the name attribute. The form sends the value under this name.
+  Name        string = ""
+  // Value is the start text of the textarea.
+  Value       string = ""
+  // Placeholder is the placeholder attribute: the hint text of an empty control.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

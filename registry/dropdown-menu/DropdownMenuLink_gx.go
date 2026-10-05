@@ -7,17 +7,21 @@ import (
 )
 
 type DropdownMenuLinkProps struct {
-	Href     gx.URL
-	Class    string
+	// Href is the URL that the link opens.
+	Href gx.URL
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the link.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func DropdownMenuLink(p DropdownMenuLinkProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuLink.gx:10:1
+//line DropdownMenuLink.gx:14:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Bool("data-gx-roving-item", true), gx.Bool("data-gx-close", true)}, p.Attrs), p.Children))
-//line DropdownMenuLink.gx:10:487
+//line DropdownMenuLink.gx:14:487
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

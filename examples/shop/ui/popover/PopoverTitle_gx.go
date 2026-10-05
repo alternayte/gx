@@ -7,16 +7,19 @@ import (
 )
 
 type PopoverTitleProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the text of the title.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func PopoverTitle(p PopoverTitleProps) gx.Node {
 	var _b gx.Builder
-//line PopoverTitle.gx:9:1
+//line PopoverTitle.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("font-medium", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PopoverTitle.gx:9:75
+//line PopoverTitle.gx:12:75
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

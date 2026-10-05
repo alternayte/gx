@@ -1,12 +1,20 @@
 package tabs
 
 props {
+  // Orientation sets the layout direction: Horizontal or Vertical. Vertical puts the list beside
+  // the panels.
   Orientation Orientation = Horizontal
-  Sync        string      = ""
-  Default     string      = ""
-  Class       string      = ""
+  // Sync is a key that tab groups share. Groups with the same key keep one selection and remember
+  // it per viewer.
+  Sync        string = ""
+  // Default is the label of the tab that is selected first. An empty value selects the first tab.
+  Default     string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the tab list and the panels.
   Children    gx.Node
-  Attrs       gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div class={gx.Cx("group/tabs flex gap-2 data-[orientation=horizontal]:flex-col", p.Class)} data-gx-tabs data-orientation={p.orientation()} data-sync={p.Sync} data-default={p.Default} {...p.Attrs}>{p.Children}</div>

@@ -7,23 +7,33 @@ import (
 )
 
 type ToggleProps struct {
-	Variant  Variant
-	Size     Size
-	Name     string
-	Value    string
-	Pressed  bool
+	// Variant sets the visual style: Default or Outline.
+	Variant Variant
+	// Size sets the height and padding: Sm, Md or Lg.
+	Size Size
+	// Name is the form field name.
+	Name string
+	// Value is the value the form submits when the toggle is pressed.
+	Value string
+	// Pressed sets the toggle to pressed for the first render.
+	Pressed bool
+	// Disabled disables the toggle.
 	Disabled bool
-	Invalid  bool
-	Class    string
+	// Invalid sets aria-invalid on the input and shows the error style.
+	Invalid bool
+	// Class adds classes to the root element.
+	Class string
+	// Children is the toggle label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Toggle(p ToggleProps) gx.Node {
 	var _b gx.Builder
-//line Toggle.gx:16:1
+//line Toggle.gx:26:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Pressed), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}), gx.Text("\n  "), p.Children, gx.Text("\n"))))
-//line Toggle.gx:19:9
+//line Toggle.gx:29:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

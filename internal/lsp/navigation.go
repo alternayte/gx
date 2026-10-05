@@ -27,6 +27,9 @@ func (s *Server) tagHover(doc *document, m *compiler.Model, pos position) (strin
 				if p.HasDefault {
 					def = " = " + p.Default
 				}
+				if p.Doc != "" {
+					b.WriteString("\t// " + strings.ReplaceAll(p.Doc, "\n", "\n\t// ") + "\n")
+				}
 				fmt.Fprintf(&b, "\t%s %s%s\n", p.Name, p.Type, def)
 			}
 			b.WriteString("}\n```")

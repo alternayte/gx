@@ -9,9 +9,7 @@ item: "tooltip"
 <Example item="tooltip" name="tooltip-top" label="Tooltip: Top">
 
 ```gx
-<tooltip.Tooltip content="Add to library">
-  {gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("Hover me"))}
-</tooltip.Tooltip>
+<tooltip.Tooltip content="Add to library"><button type="button">Hover me</button></tooltip.Tooltip>
 ```
 
 </Example>
@@ -44,10 +42,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package tooltip
 
 props {
-  Content  string   = ""
-  Side     Side     = Top
-  Class    string   = ""
+  // Content is the text of the tooltip. An empty value renders no tooltip.
+  Content  string = ""
+  // Side sets the edge of the trigger that the tooltip appears on: Top, Bottom, Left or Right.
+  Side     Side = Top
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the element that shows the tooltip on hover or on keyboard focus.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -143,9 +146,7 @@ The tooltip fades, zooms and slides in from the control. A user who asks for red
 <Example item="tooltip" name="tooltip-top" label="Tooltip: Top">
 
 ```gx
-<tooltip.Tooltip content="Add to library">
-  {gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("Hover me"))}
-</tooltip.Tooltip>
+<tooltip.Tooltip content="Add to library"><button type="button">Hover me</button></tooltip.Tooltip>
 ```
 
 </Example>
@@ -155,9 +156,7 @@ The tooltip fades, zooms and slides in from the control. A user who asks for red
 <Example item="tooltip" name="tooltip-right" label="Tooltip: Right">
 
 ```gx
-<tooltip.Tooltip content="Add to library" side={tooltip.Right}>
-  {gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("Hover me"))}
-</tooltip.Tooltip>
+<tooltip.Tooltip content="Add to library" side={tooltip.Right}><button type="button">Hover me</button></tooltip.Tooltip>
 ```
 
 </Example>
@@ -168,7 +167,7 @@ The tooltip fades, zooms and slides in from the control. A user who asks for red
 
 ```gx
 <tooltip.Tooltip content="Add to library" side={tooltip.Bottom}>
-  {gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("Hover me"))}
+  <button type="button">Hover me</button>
 </tooltip.Tooltip>
 ```
 
@@ -179,12 +178,24 @@ The tooltip fades, zooms and slides in from the control. A user who asks for red
 <Example item="tooltip" name="tooltip-left" label="Tooltip: Left">
 
 ```gx
-<tooltip.Tooltip content="Add to library" side={tooltip.Left}>
-  {gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("Hover me"))}
-</tooltip.Tooltip>
+<tooltip.Tooltip content="Add to library" side={tooltip.Left}><button type="button">Hover me</button></tooltip.Tooltip>
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### tooltip.Tooltip
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Content` | `string` | `""` | Content is the text of the tooltip. An empty value renders no tooltip. |
+| `Side` | `Side` | `Top` | Side sets the edge of the trigger that the tooltip appears on: Top, Bottom, Left or Right. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the element that shows the tooltip on hover or on keyboard focus. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

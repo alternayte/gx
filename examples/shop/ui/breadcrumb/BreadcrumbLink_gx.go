@@ -7,17 +7,21 @@ import (
 )
 
 type BreadcrumbLinkProps struct {
-	Href     gx.URL
-	Class    string
+	// Href is the URL of the link.
+	Href gx.URL
+	// Class adds classes to the root element.
+	Class string
+	// Children is the link label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func BreadcrumbLink(p BreadcrumbLinkProps) gx.Node {
 	var _b gx.Builder
-//line BreadcrumbLink.gx:10:1
+//line BreadcrumbLink.gx:14:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("transition-colors hover:text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "breadcrumb-link", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbLink.gx:10:141
+//line BreadcrumbLink.gx:14:141
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

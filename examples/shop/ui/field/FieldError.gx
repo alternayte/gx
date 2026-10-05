@@ -1,9 +1,14 @@
 package field
 
 props {
+  // Errors holds the error messages. Empty and repeated messages do not show; two or more
+  // show as a list.
   Errors   []string = nil
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the error. It replaces Errors.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

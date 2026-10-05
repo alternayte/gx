@@ -25,8 +25,12 @@ func Preview(p PreviewProps) gx.Node {
 //line Preview.gx:12:42
 	_b.Add(gx.Text("\n"))
 //line Preview.gx:13:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-stage", gx.When("gx-stage-block", p.Block)), Kind: gx.AttrText}}, p.Children))
-//line Preview.gx:13:72
+	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-stage", gx.When("gx-stage-block", p.Block)), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-stage-content", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
+//line Preview.gx:15:7
+	_b.Add(gx.Text("\n"))
+//line Preview.gx:16:1
+	_b.Add(previewScript())
+//line Preview.gx:16:18
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

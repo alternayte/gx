@@ -86,9 +86,13 @@ var AsideFixtures = gx.Fixtures[AsideProps]{
 package docs
 
 props {
+  // Kind sets the tone of the callout: Note, Tip, Caution or Danger.
   Kind     Kind = Note
+  // Title is the heading of the callout. Empty omits it.
   Title    string = ""
+  // Children is the content of the callout.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -117,8 +121,12 @@ var BadgeFixtures = gx.Fixtures[BadgeProps]{
 package docs
 
 props {
+  // Label is the text of the badge.
   Label   string
+  // Variant sets the visual style: BadgeDefault, BadgeSecondary, BadgeDestructive or
+  // BadgeOutline.
   Variant BadgeVariant = BadgeDefault
+  // Attrs adds HTML attributes to the root element.
   Attrs   gx.Attrs = nil
 }
 
@@ -141,9 +149,13 @@ var CardFixtures = gx.Fixtures[CardProps]{
 package docs
 
 props {
+  // Title is the heading of the card. Empty omits it.
   Title       string = ""
+  // Description is the text below the title. Empty omits it.
   Description string = ""
+  // Children is the content of the card. Nil omits the body.
   Children    gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -177,7 +189,9 @@ var CardGridFixtures = gx.Fixtures[CardGridProps]{
 package docs
 
 props {
+  // Children is the cards of the grid.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -189,27 +203,34 @@ package docs
 
 import "github.com/alternayte/gx"
 
+// The fixtures show go.mod, a file every app has: the example code names it
+// with gx.CodeFile.
 var CodeFixtures = gx.Fixtures[CodeProps]{
-	"Go":     {Code: gx.Code{File: "main.go", Lang: "go", Source: "package main\n\nfunc main() {}\n"}, Title: "main.go"},
-	"Marked": {Code: gx.Code{File: "main.go", Lang: "go", Source: "package main\n\nfunc main() {}\n"}, Marks: []int{1}},
+	"Go":     {Code: gx.Code{File: "go.mod", Lang: "go", Source: "module app\n\ngo 1.25.0\n"}, Title: "go.mod"},
+	"Marked": {Code: gx.Code{File: "go.mod", Lang: "go", Source: "module app\n\ngo 1.25.0\n"}, Marks: []int{1}},
 }
 ```
 
 ```gx title="ui/docs/Code.gx"
 package docs
 
-import (
-  "github.com/alternayte/gx"
-  "github.com/alternayte/gx/content"
-)
+import "github.com/alternayte/gx"
+import "github.com/alternayte/gx/content"
 
 props {
+  // Code is the source to show. The compiler fills it at build time from a repository file.
   Code  gx.Code
+  // Title is the text in the frame bar.
   Title string = ""
+  // Wrap wraps long lines.
   Wrap  bool = false
+  // Marks holds the 1-based numbers of the lines to highlight.
   Marks []int = nil
+  // Ins holds the 1-based numbers of the lines to mark as inserted.
   Ins   []int = nil
+  // Del holds the 1-based numbers of the lines to mark as deleted.
   Del   []int = nil
+  // Words holds the 1-based numbers of the lines to outline.
   Words []int = nil
 }
 
@@ -236,7 +257,9 @@ var FileTreeFixtures = gx.Fixtures[FileTreeProps]{
 package docs
 
 props {
+  // Items holds the top-level files and directories of the tree.
   Items []FileTreeItem
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -264,6 +287,7 @@ var FileTreeItemRowFixtures = gx.Fixtures[FileTreeItemRowProps]{
 package docs
 
 props {
+  // Item is the file or directory of the row. Its children show as a nested list.
   Item FileTreeItem
 }
 
@@ -303,10 +327,15 @@ var HeroFixtures = gx.Fixtures[HeroProps]{
 package docs
 
 props {
+  // Title is the heading of the hero.
   Title    string
+  // Tagline is the text below the title. Empty omits it.
   Tagline  string = ""
+  // Actions is the row of links or buttons below the tagline. Nil omits it.
   Actions  gx.Node = nil
+  // Children is the content below the actions. Nil omits it.
   Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -339,8 +368,12 @@ var IconFixtures = gx.Fixtures[IconProps]{
 package docs
 
 props {
+  // Body is the inner markup of the svg, from a pinned icon pack.
   Body  gx.SafeHTML
+  // Label is the accessible name of the icon.
+  // Empty hides the icon from assistive technology.
   Label string = ""
+  // Class adds classes to the root element.
   Class string = ""
 }
 
@@ -361,6 +394,8 @@ var LLMSkipFixtures = gx.Fixtures[LLMSkipProps]{
 package docs
 
 props {
+  // Children is the content of the block. The component renders nothing; the block marks
+  // Markdown that stays out of llms.txt.
   Children gx.Node = nil
 }
 ```
@@ -382,9 +417,14 @@ var LinkButtonFixtures = gx.Fixtures[LinkButtonProps]{
 package docs
 
 props {
+  // Href is the link target.
   Href     gx.URL
+  // Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline or
+  // ButtonGhost.
   Variant  ButtonVariant = ButtonPrimary
+  // Children is the button label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -406,10 +446,15 @@ var LinkCardFixtures = gx.Fixtures[LinkCardProps]{
 package docs
 
 props {
+  // Href is the link target.
   Href        gx.URL
+  // Title is the heading of the card.
   Title       string
+  // Description is the text below the title. Empty omits it.
   Description string = ""
+  // Children is the content below the description. Nil omits it.
   Children    gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -438,7 +483,9 @@ var StepsFixtures = gx.Fixtures[StepsProps]{
 package docs
 
 props {
+  // Children is the ordered list of steps.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -459,8 +506,11 @@ var TabItemFixtures = gx.Fixtures[TabItemProps]{
 package docs
 
 props {
+  // Label is the text of the tab button. It must be unique inside one tab group.
   Label    string
+  // Children is the content of the tab panel.
   Children gx.Node
+  // Attrs holds HTML attributes. The markup does not render them.
   Attrs    gx.Attrs = nil
 }
 
@@ -491,9 +541,14 @@ var TabsFixtures = gx.Fixtures[TabsProps]{
 package docs
 
 props {
+  // Sync is the key that links tab groups. Groups with the same key switch together and
+  // remember the chosen tab.
   Sync     string = ""
+  // Default is the label of the tab that starts open. Empty opens the first tab.
   Default  string = ""
+  // Children is the tab items.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -756,13 +811,7 @@ In Markdown:
 <Example item="docs" name="code-go" label="Docs: Code: Go" block>
 
 ```gx
-{docs.Code(docs.CodeFixtures["Go"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs/Code.fixtures.go"
-"Go":     {Code: gx.Code{File: "main.go", Lang: "go", Source: "package main\n\nfunc main() {}\n"}, Title: "main.go"}
+<docs.Code code={gx.CodeFile("go.mod", "")} title="go.mod" />
 ```
 
 </Example>
@@ -772,13 +821,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs" name="code-marked" label="Docs: Code: Marked" block>
 
 ```gx
-{docs.Code(docs.CodeFixtures["Marked"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs/Code.fixtures.go"
-"Marked": {Code: gx.Code{File: "main.go", Lang: "go", Source: "package main\n\nfunc main() {}\n"}, Marks: []int{1}}
+<docs.Code code={gx.CodeFile("go.mod", "")} marks={[]int{1}} />
 ```
 
 </Example>
@@ -980,6 +1023,135 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### docs.Aside
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Kind` | `Kind` | `Note` | Kind sets the tone of the callout: Note, Tip, Caution or Danger. |
+| `Title` | `string` | `""` | Title is the heading of the callout. Empty omits it. |
+| `Children` | `gx.Node` | Required | Children is the content of the callout. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.Badge
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the text of the badge. |
+| `Variant` | `BadgeVariant` | `BadgeDefault` | Variant sets the visual style: BadgeDefault, BadgeSecondary, BadgeDestructive or BadgeOutline. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.Card
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | `""` | Title is the heading of the card. Empty omits it. |
+| `Description` | `string` | `""` | Description is the text below the title. Empty omits it. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the card. Nil omits the body. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.CardGrid
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Children` | `gx.Node` | Required | Children is the cards of the grid. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.Code
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Code` | `gx.Code` | Required | Code is the source to show. The compiler fills it at build time from a repository file. |
+| `Title` | `string` | `""` | Title is the text in the frame bar. |
+| `Wrap` | `bool` | `false` | Wrap wraps long lines. |
+| `Marks` | `[]int` | `nil` | Marks holds the 1-based numbers of the lines to highlight. |
+| `Ins` | `[]int` | `nil` | Ins holds the 1-based numbers of the lines to mark as inserted. |
+| `Del` | `[]int` | `nil` | Del holds the 1-based numbers of the lines to mark as deleted. |
+| `Words` | `[]int` | `nil` | Words holds the 1-based numbers of the lines to outline. |
+
+### docs.FileTree
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Items` | `[]FileTreeItem` | Required | Items holds the top-level files and directories of the tree. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.FileTreeItemRow
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Item` | `FileTreeItem` | Required | Item is the file or directory of the row. Its children show as a nested list. |
+
+### docs.Hero
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | Required | Title is the heading of the hero. |
+| `Tagline` | `string` | `""` | Tagline is the text below the title. Empty omits it. |
+| `Actions` | `gx.Node` | `nil` | Actions is the row of links or buttons below the tagline. Nil omits it. |
+| `Children` | `gx.Node` | `nil` | Children is the content below the actions. Nil omits it. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.Icon
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Body` | `gx.SafeHTML` | Required | Body is the inner markup of the svg, from a pinned icon pack. |
+| `Label` | `string` | `""` | Label is the accessible name of the icon. Empty hides the icon from assistive technology. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+
+### docs.LLMSkip
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Children` | `gx.Node` | `nil` | Children is the content of the block. The component renders nothing; the block marks Markdown that stays out of llms.txt. |
+
+### docs.LinkButton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the link target. |
+| `Variant` | `ButtonVariant` | `ButtonPrimary` | Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline or ButtonGhost. |
+| `Children` | `gx.Node` | Required | Children is the button label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.LinkCard
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the link target. |
+| `Title` | `string` | Required | Title is the heading of the card. |
+| `Description` | `string` | `""` | Description is the text below the title. Empty omits it. |
+| `Children` | `gx.Node` | `nil` | Children is the content below the description. Nil omits it. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.Steps
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Children` | `gx.Node` | Required | Children is the ordered list of steps. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### docs.TabItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the text of the tab button. It must be unique inside one tab group. |
+| `Children` | `gx.Node` | Required | Children is the content of the tab panel. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs holds HTML attributes. The markup does not render them. |
+
+### docs.Tabs
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Sync` | `string` | `""` | Sync is the key that links tab groups. Groups with the same key switch together and remember the chosen tab. |
+| `Default` | `string` | `""` | Default is the label of the tab that starts open. Empty opens the first tab. |
+| `Children` | `gx.Node` | Required | Children is the tab items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

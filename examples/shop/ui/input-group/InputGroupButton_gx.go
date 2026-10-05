@@ -8,19 +8,26 @@ import (
 )
 
 type InputGroupButtonProps struct {
-	Variant  button.Variant
-	Size     Size
-	Type     string
-	Class    string
+	// Variant sets the visual style. It takes a button.Variant: Default, Secondary, Destructive,
+	// Outline, Ghost or Link.
+	Variant button.Variant
+	// Size sets the height and padding: Xs, Sm, or IconXs or IconSm for a square button.
+	Size Size
+	// Type is the type attribute: "button", "submit" or "reset".
+	Type string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the button label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func InputGroupButton(p InputGroupButtonProps) gx.Node {
 	var _b gx.Builder
-//line InputGroupButton.gx:14:1
+//line InputGroupButton.gx:21:1
 	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: buttonSize[p.size()], Type: p.Type, Class: gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class), Children: p.Children, Attrs: p.Attrs}))
-//line InputGroupButton.gx:14:215
+//line InputGroupButton.gx:21:215
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,6 +7,8 @@ import (
 )
 
 type LLMSkipProps struct {
+	// Children is the content of the block. The component renders nothing; the block marks
+	// Markdown that stays out of llms.txt.
 	Children gx.Node
 }
 

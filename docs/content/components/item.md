@@ -9,13 +9,14 @@ item: "item"
 <Example item="item" name="item-full" label="Item: Item: Full">
 
 ```gx
-{item.Item(item.ItemFixtures["Full"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/item/Item.fixtures.go"
-"Full":    {Variant: Outline, Children: body()}
+<item.Item variant={item.Outline}>
+  <item.ItemMedia variant={item.MediaIcon}><icons.Info /></item.ItemMedia>
+  <item.ItemContent>
+    <item.ItemTitle>Item title</item.ItemTitle>
+    <item.ItemDescription>A short description of the item.</item.ItemDescription>
+  </item.ItemContent>
+  <item.ItemActions><button.Button variant={button.Outline} size={button.Sm}>Open</button.Button></item.ItemActions>
+</item.Item>
 ```
 
 </Example>
@@ -70,11 +71,17 @@ Copy each file to its path in the app. Change each import of a registry package 
 package item
 
 props {
-  Variant  Variant  = Default
-  Size     Size     = Md
-  Href     gx.URL   = ""
-  Class    string   = ""
+  // Variant sets the surface: Default, Outline or Muted.
+  Variant  Variant = Default
+  // Size sets the padding and the gap: Md or Sm.
+  Size     Size = Md
+  // Href is the link target. With a value the root is an a element; empty gives a div.
+  Href     gx.URL = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -89,9 +96,13 @@ if p.Href != "" {
 package item
 
 props {
-  Variant  Media    = MediaDefault
-  Class    string   = ""
+  // Variant sets the look of the media: MediaDefault, MediaIcon or MediaImage.
+  Variant  Media = MediaDefault
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the media, for example an icon or an image.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -102,8 +113,11 @@ props {
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the column: the title and the description.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -114,8 +128,11 @@ props {
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the title text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -126,8 +143,11 @@ props {
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the description text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -138,8 +158,11 @@ props {
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the actions of the item, for example buttons.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -150,8 +173,11 @@ props {
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the header.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -162,8 +188,11 @@ props {
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the footer.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -288,8 +317,11 @@ var ItemTitleFixtures = gx.Fixtures[ItemTitleProps]{"Title": {Children: gx.Text(
 package item
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the items of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -320,7 +352,9 @@ var ItemGroupFixtures = gx.Fixtures[ItemGroupProps]{
 package item
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -457,13 +491,14 @@ Set `Href` to make the whole item one link. A link item has a hover state.
 <Example item="item" name="item-full" label="Item: Item: Full">
 
 ```gx
-{item.Item(item.ItemFixtures["Full"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/item/Item.fixtures.go"
-"Full":    {Variant: Outline, Children: body()}
+<item.Item variant={item.Outline}>
+  <item.ItemMedia variant={item.MediaIcon}><icons.Info /></item.ItemMedia>
+  <item.ItemContent>
+    <item.ItemTitle>Item title</item.ItemTitle>
+    <item.ItemDescription>A short description of the item.</item.ItemDescription>
+  </item.ItemContent>
+  <item.ItemActions><button.Button variant={button.Outline} size={button.Sm}>Open</button.Button></item.ItemActions>
+</item.Item>
 ```
 
 </Example>
@@ -473,13 +508,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="item" name="item-default" label="Item: Item: Default">
 
 ```gx
-{item.Item(item.ItemFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/item/Item.fixtures.go"
-"Default": {Children: body()}
+<item.Item>
+  <item.ItemMedia variant={item.MediaIcon}><icons.Info /></item.ItemMedia>
+  <item.ItemContent>
+    <item.ItemTitle>Item title</item.ItemTitle>
+    <item.ItemDescription>A short description of the item.</item.ItemDescription>
+  </item.ItemContent>
+  <item.ItemActions><button.Button variant={button.Outline} size={button.Sm}>Open</button.Button></item.ItemActions>
+</item.Item>
 ```
 
 </Example>
@@ -489,13 +525,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="item" name="item-muted" label="Item: Item: Muted">
 
 ```gx
-{item.Item(item.ItemFixtures["Muted"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/item/Item.fixtures.go"
-"Muted":   {Variant: Muted, Children: body()}
+<item.Item variant={item.Muted}>
+  <item.ItemMedia variant={item.MediaIcon}><icons.Info /></item.ItemMedia>
+  <item.ItemContent>
+    <item.ItemTitle>Item title</item.ItemTitle>
+    <item.ItemDescription>A short description of the item.</item.ItemDescription>
+  </item.ItemContent>
+  <item.ItemActions><button.Button variant={button.Outline} size={button.Sm}>Open</button.Button></item.ItemActions>
+</item.Item>
 ```
 
 </Example>
@@ -646,11 +683,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="item" name="item-media-image" label="Item: ItemMedia: Image">
 
 ```gx
-<item.ItemMedia variant={item.MediaImage}>
-  {gx.El("div", gx.Attrs{
-    {Key: "class", Value: "size-full bg-muted"},
-  })}
-</item.ItemMedia>
+<item.ItemMedia variant={item.MediaImage}><div class="size-full bg-muted" /></item.ItemMedia>
 ```
 
 </Example>
@@ -674,6 +707,93 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### item.Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the surface: Default, Outline or Muted. |
+| `Size` | `Size` | `Md` | Size sets the padding and the gap: Md or Sm. |
+| `Href` | `gx.URL` | `""` | Href is the link target. With a value the root is an a element; empty gives a div. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemActions
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the actions of the item, for example buttons. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the column: the title and the description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the description text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the footer. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the items of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the header. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemMedia
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Media` | `MediaDefault` | Variant sets the look of the media: MediaDefault, MediaIcon or MediaImage. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the media, for example an icon or an image. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### item.ItemTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the title text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -1,8 +1,11 @@
 package table
 
 props {
-  Class    string   = ""
+  // Class adds classes to the table element.
+  Class    string = ""
+  // Children is the content of the table: the caption, header, body and footer.
   Children gx.Node
+  // Attrs adds HTML attributes to the table element.
   Attrs    gx.Attrs = nil
 }
 

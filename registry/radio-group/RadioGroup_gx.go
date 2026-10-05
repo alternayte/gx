@@ -7,19 +7,25 @@ import (
 )
 
 type RadioGroupProps struct {
-	Name        string
+	// Name is the form field name of the group. The group does not render it; set Name on each item.
+	Name string
+	// Orientation sets the layout direction: Vertical or Horizontal.
 	Orientation Orientation
-	Label       string
-	Class       string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Label is the accessible name of the group.
+	Label string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the radio items.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func RadioGroup(p RadioGroupProps) gx.Node {
 	var _b gx.Builder
-//line RadioGroup.gx:12:1
+//line RadioGroup.gx:18:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("grid gap-3", orientationClass[p.orientation()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "radiogroup", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "aria-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line RadioGroup.gx:12:183
+//line RadioGroup.gx:18:183
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

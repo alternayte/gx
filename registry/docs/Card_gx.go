@@ -7,53 +7,57 @@ import (
 )
 
 type CardProps struct {
-	Title       string
+	// Title is the heading of the card. Empty omits it.
+	Title string
+	// Description is the text below the title. Empty omits it.
 	Description string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Children is the content of the card. Nil omits the body.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Card(p CardProps) gx.Node {
 	var _b gx.Builder
-//line Card.gx:10:1
+//line Card.gx:14:1
 	var _b1 gx.Builder
-//line Card.gx:10:115
+//line Card.gx:14:115
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:11:3
+//line Card.gx:15:3
 	if p.Title != "" {
-//line Card.gx:11:21
+//line Card.gx:15:21
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:12:5
+//line Card.gx:16:5
 		_b1.Add(gx.El("h3", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-base font-semibold leading-none tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Card.gx:12:87
+//line Card.gx:16:87
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:13:4
+//line Card.gx:17:4
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:14:3
+//line Card.gx:18:3
 	if p.Description != "" {
-//line Card.gx:14:27
+//line Card.gx:18:27
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:15:5
+//line Card.gx:19:5
 		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 mt-1.5 text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Card.gx:15:76
+//line Card.gx:19:76
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:16:4
+//line Card.gx:20:4
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:17:3
+//line Card.gx:21:3
 	if p.Children != nil {
-//line Card.gx:17:25
+//line Card.gx:21:25
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:18:5
+//line Card.gx:22:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-body mt-4", Kind: gx.AttrText}}, p.Children))
-//line Card.gx:18:54
+//line Card.gx:22:54
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:19:4
+//line Card.gx:23:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card my-4 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Card.gx:20:7
+//line Card.gx:24:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

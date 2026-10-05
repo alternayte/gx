@@ -28,7 +28,10 @@ type Example struct {
 	// Fixtures lists the fixtures the example renders, as
 	// "Component/Fixture".
 	Fixtures []string
-	Node     func() gx.Node
+	// Toast is true when the example is one toast that an action pushes.
+	// The preview shows it on a button press.
+	Toast bool
+	Node  func() gx.Node
 }
 
 // Find returns the item with the given name.

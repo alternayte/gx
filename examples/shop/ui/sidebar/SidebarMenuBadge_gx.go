@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarMenuBadgeProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the badge text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuBadge(p SidebarMenuBadgeProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuBadge.gx:9:1
+//line SidebarMenuBadge.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-badge", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-badge", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuBadge.gx:9:592
+//line SidebarMenuBadge.gx:12:592
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,17 +7,21 @@ import (
 )
 
 type ItemMediaProps struct {
-	Variant  Media
-	Class    string
+	// Variant sets the look of the media: MediaDefault, MediaIcon or MediaImage.
+	Variant Media
+	// Class adds classes to the root element.
+	Class string
+	// Children is the media, for example an icon or an image.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ItemMedia(p ItemMediaProps) gx.Node {
 	var _b gx.Builder
-//line ItemMedia.gx:10:1
+//line ItemMedia.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none", mediaClass[Media(p.variant())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-media", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemMedia.gx:10:340
+//line ItemMedia.gx:14:340
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

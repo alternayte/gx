@@ -48,12 +48,19 @@ Copy each file to its path in the app. Change each import of a registry package 
 package card
 
 props {
-  Title       string   = ""
-  Description string   = ""
-  Action      gx.Node  = nil
-  Footer      gx.Node  = nil
-  Class       string   = ""
-  Children    gx.Node  = nil
+  // Title is the heading of the card. An empty value renders no heading.
+  Title       string = ""
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Action is a control shown at the top right of the card header. A nil value renders no action.
+  Action      gx.Node = nil
+  // Footer is the content of the card footer. A nil value renders no footer.
+  Footer      gx.Node = nil
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the content of the card.
+  Children    gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 
@@ -167,6 +174,22 @@ The children are the content. `Footer` is the last row.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### card.Card
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | `""` | Title is the heading of the card. An empty value renders no heading. |
+| `Description` | `string` | `""` | Description is the text below the title. An empty value renders no description. |
+| `Action` | `gx.Node` | `nil` | Action is a control shown at the top right of the card header. A nil value renders no action. |
+| `Footer` | `gx.Node` | `nil` | Footer is the content of the card footer. A nil value renders no footer. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the card. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

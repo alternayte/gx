@@ -7,16 +7,19 @@ import (
 )
 
 type ItemActionsProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the actions of the item, for example buttons.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ItemActions(p ItemActionsProps) gx.Node {
 	var _b gx.Builder
-//line ItemActions.gx:9:1
+//line ItemActions.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-actions", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemActions.gx:9:112
+//line ItemActions.gx:12:112
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

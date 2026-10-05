@@ -7,16 +7,19 @@ import (
 )
 
 type AvatarGroupProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the group: the avatars and an optional AvatarGroupCount.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func AvatarGroup(p AvatarGroupProps) gx.Node {
 	var _b gx.Builder
-//line AvatarGroup.gx:9:1
+//line AvatarGroup.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line AvatarGroup.gx:9:188
+//line AvatarGroup.gx:12:188
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

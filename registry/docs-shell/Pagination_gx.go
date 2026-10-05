@@ -7,54 +7,56 @@ import (
 )
 
 type PaginationProps struct {
+	// Prev is the previous sidebar item. Nil omits the link.
 	Prev *NavItem
+	// Next is the next sidebar item. Nil omits the link.
 	Next *NavItem
 }
 
 func Pagination(p PaginationProps) gx.Node {
 	var _b gx.Builder
-//line Pagination.gx:8:1
+//line Pagination.gx:10:1
 	if p.Prev != nil || p.Next != nil {
-//line Pagination.gx:8:36
+//line Pagination.gx:10:36
 		_b.Add(gx.Text("\n  "))
-//line Pagination.gx:9:3
+//line Pagination.gx:11:3
 		var _b1 gx.Builder
-//line Pagination.gx:9:118
+//line Pagination.gx:11:118
 		_b1.Add(gx.Text("\n    "))
-//line Pagination.gx:10:5
+//line Pagination.gx:12:5
 		if p.Prev != nil {
-//line Pagination.gx:10:23
-			_b1.Add(gx.Text("\n      "))
-//line Pagination.gx:11:7
-			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-prev", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}, gx.Frag(gx.Text("Previous: "), gx.Text(p.Prev.Label))))
-//line Pagination.gx:11:95
-			_b1.Add(gx.Text("\n    "))
-		} else {
-//line Pagination.gx:12:13
+//line Pagination.gx:12:23
 			_b1.Add(gx.Text("\n      "))
 //line Pagination.gx:13:7
-			_b1.Add(gx.El("span", nil))
-//line Pagination.gx:13:20
+			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-prev", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}, gx.Frag(gx.Text("Previous: "), gx.Text(p.Prev.Label))))
+//line Pagination.gx:13:95
 			_b1.Add(gx.Text("\n    "))
-		}
-//line Pagination.gx:14:6
-		_b1.Add(gx.Text("\n    "))
-//line Pagination.gx:15:5
-		if p.Next != nil {
-//line Pagination.gx:15:23
+		} else {
+//line Pagination.gx:14:13
 			_b1.Add(gx.Text("\n      "))
-//line Pagination.gx:16:7
-			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-next", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}, gx.Frag(gx.Text("Next: "), gx.Text(p.Next.Label))))
-//line Pagination.gx:16:91
+//line Pagination.gx:15:7
+			_b1.Add(gx.El("span", nil))
+//line Pagination.gx:15:20
 			_b1.Add(gx.Text("\n    "))
 		}
-//line Pagination.gx:17:6
+//line Pagination.gx:16:6
+		_b1.Add(gx.Text("\n    "))
+//line Pagination.gx:17:5
+		if p.Next != nil {
+//line Pagination.gx:17:23
+			_b1.Add(gx.Text("\n      "))
+//line Pagination.gx:18:7
+			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-next", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}, gx.Frag(gx.Text("Next: "), gx.Text(p.Next.Label))))
+//line Pagination.gx:18:91
+			_b1.Add(gx.Text("\n    "))
+		}
+//line Pagination.gx:19:6
 		_b1.Add(gx.Text("\n  "))
 		_b.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination mt-10 flex justify-between gap-4 border-t border-border pt-4 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Pages", Kind: gx.AttrText}}, _b1.Node()))
-//line Pagination.gx:18:9
+//line Pagination.gx:20:9
 		_b.Add(gx.Text("\n"))
 	}
-//line Pagination.gx:19:2
+//line Pagination.gx:21:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

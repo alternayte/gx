@@ -51,12 +51,18 @@ Copy each file to its path in the app. Change each import of a registry package 
 package radiogroup
 
 props {
-  Name        string      = ""
+  // Name is the form field name of the group. The group does not render it; set Name on each item.
+  Name        string = ""
+  // Orientation sets the layout direction: Vertical or Horizontal.
   Orientation Orientation = Vertical
-  Label       string      = ""
-  Class       string      = ""
+  // Label is the accessible name of the group.
+  Label       string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the radio items.
   Children    gx.Node
-  Attrs       gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div role="radiogroup" aria-label={p.Label} aria-orientation={p.orientation()} class={gx.Cx("grid gap-3", orientationClass[p.orientation()], p.Class)} {...p.Attrs}>{p.Children}</div>
@@ -68,14 +74,23 @@ package radiogroup
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = ""
-  Checked  bool     = false
-  Disabled bool     = false
-  Invalid  bool     = false
-  Label    string   = ""
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Name is the form field name. Every item of one group has the same name.
+  Name     string = ""
+  // Value is the value the form submits when the item is checked.
+  Value    string = ""
+  // Checked selects the item for the first render.
+  Checked  bool = false
+  // Disabled disables the item.
+  Disabled bool = false
+  // Invalid sets aria-invalid on the input and shows the error style.
+  Invalid  bool = false
+  // Label is the text beside the radio. An empty value renders no text.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is content beside the radio, after the label text.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -255,6 +270,35 @@ Each item is a native radio input behind a styled circle.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### radiogroup.RadioGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the form field name of the group. The group does not render it; set Name on each item. |
+| `Orientation` | `Orientation` | `Vertical` | Orientation sets the layout direction: Vertical or Horizontal. |
+| `Label` | `string` | `""` | Label is the accessible name of the group. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the radio items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### radiogroup.RadioGroupItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the form field name. Every item of one group has the same name. |
+| `Value` | `string` | `""` | Value is the value the form submits when the item is checked. |
+| `Checked` | `bool` | `false` | Checked selects the item for the first render. |
+| `Disabled` | `bool` | `false` | Disabled disables the item. |
+| `Invalid` | `bool` | `false` | Invalid sets aria-invalid on the input and shows the error style. |
+| `Label` | `string` | `""` | Label is the text beside the radio. An empty value renders no text. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is content beside the radio, after the label text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

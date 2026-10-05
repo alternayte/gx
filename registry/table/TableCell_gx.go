@@ -7,16 +7,19 @@ import (
 )
 
 type TableCellProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the cell.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TableCell(p TableCellProps) gx.Node {
 	var _b gx.Builder
-//line TableCell.gx:9:1
+//line TableCell.gx:12:1
 	_b.Add(gx.El("td", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("p-2 align-middle whitespace-nowrap [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-cell", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableCell.gx:9:305
+//line TableCell.gx:12:305
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

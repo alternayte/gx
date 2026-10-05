@@ -3,12 +3,19 @@ package inputgroup
 import "github.com/alternayte/gx/examples/shop/ui/button"
 
 props {
+  // Variant sets the visual style. It takes a button.Variant: Default, Secondary, Destructive,
+  // Outline, Ghost or Link.
   Variant  button.Variant = button.Ghost
-  Size     Size           = Xs
-  Type     string         = "button"
-  Class    string         = ""
+  // Size sets the height and padding: Xs, Sm, or IconXs or IconSm for a square button.
+  Size     Size = Xs
+  // Type is the type attribute: "button", "submit" or "reset".
+  Type     string = "button"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
-  Attrs    gx.Attrs       = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <button.Button type={p.Type} variant={p.variant()} size={buttonSize[p.size()]} class={gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class)} attrs={p.Attrs}>{p.Children}</button.Button>

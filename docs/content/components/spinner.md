@@ -42,8 +42,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package spinner
 
 props {
-  Label string   = "Loading"
-  Class string   = ""
+  // Label is the accessible name of the spinner. An empty value is Loading.
+  Label string = "Loading"
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -123,6 +126,18 @@ The spinner is the loader icon with a rotation. Set the size and the colour with
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### spinner.Spinner
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | `"Loading"` | Label is the accessible name of the spinner. An empty value is Loading. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

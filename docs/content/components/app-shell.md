@@ -16,22 +16,16 @@ item: "app-shell"
       <sidebar.SidebarGroupContent>
         <sidebar.SidebarMenu>
           <sidebar.SidebarMenuItem>
-            <sidebar.SidebarMenuButton href={gx.URL("/")} active>
-              {gx.El("span", nil, gx.Text("Home"))}
-            </sidebar.SidebarMenuButton>
+            <sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
           </sidebar.SidebarMenuItem>
           <sidebar.SidebarMenuItem>
-            <sidebar.SidebarMenuButton href={gx.URL("/docs")}>
-              {gx.El("span", nil, gx.Text("Docs"))}
-            </sidebar.SidebarMenuButton>
+            <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
           </sidebar.SidebarMenuItem>
         </sidebar.SidebarMenu>
       </sidebar.SidebarGroupContent>
     </sidebar.SidebarGroup>
   </:nav>
-  <:footer>
-    {gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}
-  </:footer>
+  <:footer><span class="px-2 text-xs text-sidebar-foreground/70">v0.1.0</span></:footer>
   Page content.
 </appshell.AppShell>
 ```
@@ -71,9 +65,13 @@ package appshell
 import "github.com/alternayte/gx/registry/sidebar"
 
 props {
+  // Title is the app name. It shows in the sidebar header and in the page header.
   Title    string
+  // Nav is the primary navigation. It renders in the sidebar content.
   Nav      gx.Node
-  Footer   gx.Node  = nil
+  // Footer is the content of the sidebar footer. A nil value renders no footer.
+  Footer   gx.Node = nil
+  // Children is the content of the main area.
   Children gx.Node
 }
 
@@ -152,27 +150,34 @@ The block is copied source. Wrap it in a `gx.Layout` so every page shares the fr
       <sidebar.SidebarGroupContent>
         <sidebar.SidebarMenu>
           <sidebar.SidebarMenuItem>
-            <sidebar.SidebarMenuButton href={gx.URL("/")} active>
-              {gx.El("span", nil, gx.Text("Home"))}
-            </sidebar.SidebarMenuButton>
+            <sidebar.SidebarMenuButton href={gx.URL("/")} active><span>Home</span></sidebar.SidebarMenuButton>
           </sidebar.SidebarMenuItem>
           <sidebar.SidebarMenuItem>
-            <sidebar.SidebarMenuButton href={gx.URL("/docs")}>
-              {gx.El("span", nil, gx.Text("Docs"))}
-            </sidebar.SidebarMenuButton>
+            <sidebar.SidebarMenuButton href={gx.URL("/docs")}><span>Docs</span></sidebar.SidebarMenuButton>
           </sidebar.SidebarMenuItem>
         </sidebar.SidebarMenu>
       </sidebar.SidebarGroupContent>
     </sidebar.SidebarGroup>
   </:nav>
-  <:footer>
-    {gx.El("span", gx.Attrs{{Key: "class", Value: "px-2 text-xs text-sidebar-foreground/70"}}, gx.Text("v0.1.0"))}
-  </:footer>
+  <:footer><span class="px-2 text-xs text-sidebar-foreground/70">v0.1.0</span></:footer>
   Page content.
 </appshell.AppShell>
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### appshell.AppShell
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | Required | Title is the app name. It shows in the sidebar header and in the page header. |
+| `Nav` | `gx.Node` | Required | Nav is the primary navigation. It renders in the sidebar content. |
+| `Footer` | `gx.Node` | `nil` | Footer is the content of the sidebar footer. A nil value renders no footer. |
+| `Children` | `gx.Node` | Required | Children is the content of the main area. |
 
 ## Do and don't
 

@@ -7,16 +7,20 @@ import (
 )
 
 type ButtonGroupSeparatorProps struct {
+	// Orientation sets the direction of the line: Vertical or Horizontal. Use Vertical in a
+	// horizontal group.
 	Orientation Orientation
-	Class       string
-	Attrs       gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ButtonGroupSeparator(p ButtonGroupSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line ButtonGroupSeparator.gx:9:1
+//line ButtonGroupSeparator.gx:13:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", separatorClass[Orientation(p.orientation())], "relative m-0! self-stretch bg-input", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "button-group-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.Attrs)))
-//line ButtonGroupSeparator.gx:9:237
+//line ButtonGroupSeparator.gx:13:237
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

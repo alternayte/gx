@@ -7,18 +7,23 @@ import (
 )
 
 type ProgressProps struct {
+	// Value is the current value. The bar clamps it to the range 0 to Max.
 	Value int
-	Max   int
+	// Max is the maximum value. A zero value is 100.
+	Max int
+	// Label is the accessible name of the progress bar.
 	Label string
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func Progress(p ProgressProps) gx.Node {
 	var _b gx.Builder
-//line Progress.gx:11:1
+//line Progress.gx:16:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative h-2 w-full overflow-hidden rounded-full bg-primary/20", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "progressbar", Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemin", Value: gx.TextValue(0), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemax", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuenow", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "h-full w-full flex-1 bg-primary transition-all motion-reduce:transition-none", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("transform: translateX(-" + p.offset() + "%)")))), Kind: gx.AttrStyle}}), gx.Text("\n"))))
-//line Progress.gx:13:7
+//line Progress.gx:18:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -1,9 +1,13 @@
 package empty
 
 props {
-  Variant  Variant  = Default
-  Class    string   = ""
+  // Variant sets the look of the media: Default or Icon. Icon draws a muted rounded box.
+  Variant  Variant = Default
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the media, for example an icon.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

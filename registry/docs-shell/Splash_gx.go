@@ -7,57 +7,61 @@ import (
 )
 
 type SplashProps struct {
-	Title    string
-	Tagline  string
-	Actions  gx.Node
+	// Title is the heading of the splash.
+	Title string
+	// Tagline is the text below the title. Empty omits it.
+	Tagline string
+	// Actions is the row of links or buttons below the tagline. Nil omits it.
+	Actions gx.Node
+	// Children is the content below the actions. Nil omits it.
 	Children gx.Node
 }
 
 func Splash(p SplashProps) gx.Node {
 	var _b gx.Builder
-//line Splash.gx:10:1
+//line Splash.gx:14:1
 	var _b1 gx.Builder
-//line Splash.gx:10:45
-	_b1.Add(gx.Text("\n  "))
-//line Splash.gx:11:3
-	_b1.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-5xl font-bold tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Splash.gx:11:67
-	_b1.Add(gx.Text("\n  "))
-//line Splash.gx:12:3
-	if p.Tagline != "" {
-//line Splash.gx:12:23
-		_b1.Add(gx.Text("\n    "))
-//line Splash.gx:13:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto mt-4 max-w-2xl text-lg text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Tagline)))
-//line Splash.gx:13:84
-		_b1.Add(gx.Text("\n  "))
-	}
-//line Splash.gx:14:4
+//line Splash.gx:14:45
 	_b1.Add(gx.Text("\n  "))
 //line Splash.gx:15:3
-	if p.Actions != nil {
-//line Splash.gx:15:24
-		_b1.Add(gx.Text("\n    "))
-//line Splash.gx:16:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 flex flex-wrap items-center justify-center gap-3", Kind: gx.AttrText}}, p.Actions))
-//line Splash.gx:16:89
-		_b1.Add(gx.Text("\n  "))
-	}
-//line Splash.gx:17:4
+	_b1.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-5xl font-bold tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Splash.gx:15:67
 	_b1.Add(gx.Text("\n  "))
-//line Splash.gx:18:3
-	if p.Children != nil {
-//line Splash.gx:18:25
+//line Splash.gx:16:3
+	if p.Tagline != "" {
+//line Splash.gx:16:23
 		_b1.Add(gx.Text("\n    "))
-//line Splash.gx:19:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-splash-body mt-10", Kind: gx.AttrText}}, p.Children))
-//line Splash.gx:19:57
+//line Splash.gx:17:5
+		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto mt-4 max-w-2xl text-lg text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Tagline)))
+//line Splash.gx:17:84
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Splash.gx:20:4
+//line Splash.gx:18:4
+	_b1.Add(gx.Text("\n  "))
+//line Splash.gx:19:3
+	if p.Actions != nil {
+//line Splash.gx:19:24
+		_b1.Add(gx.Text("\n    "))
+//line Splash.gx:20:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 flex flex-wrap items-center justify-center gap-3", Kind: gx.AttrText}}, p.Actions))
+//line Splash.gx:20:89
+		_b1.Add(gx.Text("\n  "))
+	}
+//line Splash.gx:21:4
+	_b1.Add(gx.Text("\n  "))
+//line Splash.gx:22:3
+	if p.Children != nil {
+//line Splash.gx:22:25
+		_b1.Add(gx.Text("\n    "))
+//line Splash.gx:23:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-splash-body mt-10", Kind: gx.AttrText}}, p.Children))
+//line Splash.gx:23:57
+		_b1.Add(gx.Text("\n  "))
+	}
+//line Splash.gx:24:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "gx-splash my-12 text-center", Kind: gx.AttrText}}, _b1.Node()))
-//line Splash.gx:21:10
+//line Splash.gx:25:10
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

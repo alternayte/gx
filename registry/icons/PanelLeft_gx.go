@@ -7,15 +7,18 @@ import (
 )
 
 type PanelLeftProps struct {
+	// Label is the accessible name of the icon.
+	// Empty hides the icon from assistive technology.
 	Label string
+	// Class adds classes to the root element.
 	Class string
 }
 
 func PanelLeft(p PanelLeftProps) gx.Node {
 	var _b gx.Builder
-//line PanelLeft.gx:8:1
+//line PanelLeft.gx:11:1
 	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\"/><path d=\"M9 3v18\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line PanelLeft.gx:8:255
+//line PanelLeft.gx:11:255
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

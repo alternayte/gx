@@ -42,16 +42,26 @@ Copy each file to its path in the app. Change each import of a registry package 
 package slider
 
 props {
+  // Orientation sets the direction: Horizontal or Vertical.
   Orientation Orientation = Horizontal
-  Name        string      = ""
-  Min         int         = 0
-  Max         int         = 100
-  Value       int         = 0
-  Step        int         = 1
-  Label       string      = ""
-  Disabled    bool        = false
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Name is the form field name.
+  Name        string = ""
+  // Min is the minimum value.
+  Min         int = 0
+  // Max is the maximum value. A zero value is 100.
+  Max         int = 100
+  // Value is the value of the first render.
+  Value       int = 0
+  // Step is the size of one step. A zero value is 1.
+  Step        int = 1
+  // Label is the accessible name of the slider.
+  Label       string = ""
+  // Disabled disables the slider.
+  Disabled    bool = false
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <input type="range" name={p.Name} min={p.min()} max={p.max()} value={p.Value} step={p.step()} aria-label={p.Label} disabled={p.Disabled} data-gx-behavior style={p.fill()} class={p.class()} {...p.Attrs} />
@@ -222,6 +232,25 @@ A slider has one thumb.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### slider.Slider
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Orientation` | `Orientation` | `Horizontal` | Orientation sets the direction: Horizontal or Vertical. |
+| `Name` | `string` | `""` | Name is the form field name. |
+| `Min` | `int` | `0` | Min is the minimum value. |
+| `Max` | `int` | `100` | Max is the maximum value. A zero value is 100. |
+| `Value` | `int` | `0` | Value is the value of the first render. |
+| `Step` | `int` | `1` | Step is the size of one step. A zero value is 1. |
+| `Label` | `string` | `""` | Label is the accessible name of the slider. |
+| `Disabled` | `bool` | `false` | Disabled disables the slider. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

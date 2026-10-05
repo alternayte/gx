@@ -8,37 +8,40 @@ import (
 )
 
 type BreadcrumbSeparatorProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the separator. A nil value renders a chevron icon.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func BreadcrumbSeparator(p BreadcrumbSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line BreadcrumbSeparator.gx:11:1
+//line BreadcrumbSeparator.gx:14:1
 	var _b1 gx.Builder
-//line BreadcrumbSeparator.gx:11:133
+//line BreadcrumbSeparator.gx:14:133
 	_b1.Add(gx.Text("\n  "))
-//line BreadcrumbSeparator.gx:12:3
+//line BreadcrumbSeparator.gx:15:3
 	if p.Children != nil {
-//line BreadcrumbSeparator.gx:12:25
+//line BreadcrumbSeparator.gx:15:25
 		_b1.Add(gx.Text("\n    "))
-//line BreadcrumbSeparator.gx:13:5
+//line BreadcrumbSeparator.gx:16:5
 		_b1.Add(p.Children)
-//line BreadcrumbSeparator.gx:13:17
+//line BreadcrumbSeparator.gx:16:17
 		_b1.Add(gx.Text("\n  "))
 	} else {
-//line BreadcrumbSeparator.gx:14:11
+//line BreadcrumbSeparator.gx:17:11
 		_b1.Add(gx.Text("\n    "))
-//line BreadcrumbSeparator.gx:15:5
+//line BreadcrumbSeparator.gx:18:5
 		_b1.Add(icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""}))
-//line BreadcrumbSeparator.gx:15:27
+//line BreadcrumbSeparator.gx:18:27
 		_b1.Add(gx.Text("\n  "))
 	}
-//line BreadcrumbSeparator.gx:16:4
+//line BreadcrumbSeparator.gx:19:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&>svg]:size-3.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line BreadcrumbSeparator.gx:17:6
+//line BreadcrumbSeparator.gx:20:6
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

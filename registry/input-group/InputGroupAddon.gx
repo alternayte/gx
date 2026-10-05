@@ -1,9 +1,13 @@
 package inputgroup
 
 props {
-  Align    Align    = InlineStart
-  Class    string   = ""
+  // Align sets the position of the addon: InlineStart, InlineEnd, BlockStart or BlockEnd.
+  Align    Align = InlineStart
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the addon, for example an icon, text or a button.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

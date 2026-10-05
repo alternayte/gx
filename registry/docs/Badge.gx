@@ -1,8 +1,12 @@
 package docs
 
 props {
+  // Label is the text of the badge.
   Label   string
+  // Variant sets the visual style: BadgeDefault, BadgeSecondary, BadgeDestructive or
+  // BadgeOutline.
   Variant BadgeVariant = BadgeDefault
+  // Attrs adds HTML attributes to the root element.
   Attrs   gx.Attrs = nil
 }
 

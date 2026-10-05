@@ -7,17 +7,21 @@ import (
 )
 
 type LabelProps struct {
-	For      string
-	Class    string
+	// For is the id of the control that the label names. Empty omits the for attribute.
+	For string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the label text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Label(p LabelProps) gx.Node {
 	var _b gx.Builder
-//line Label.gx:10:1
+//line Label.gx:14:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "label", Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line Label.gx:10:299
+//line Label.gx:14:299
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -1,10 +1,15 @@
 package tabs
 
 props {
-  Variant  Variant  = Default
-  Label    string   = ""
-  Class    string   = ""
+  // Variant sets the visual style: Default, a muted pill, or Line, an underline.
+  Variant  Variant = Default
+  // Label is the accessible name of the tab list.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the tab triggers.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

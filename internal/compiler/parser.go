@@ -178,8 +178,11 @@ func (p *parser) parseImport() []Import {
 func (p *parser) parseFields() []Field {
 	var fields []Field
 	for {
-		p.skipSpaceNewlinesAndComments()
+		doc, hasDoc := p.parseFieldDoc()
 		if p.take("}") {
+			if hasDoc {
+				p.fail(p.off-1, CodeParse, "a comment in a block must be on the lines above a field")
+			}
 			return fields
 		}
 		if p.eof() {
@@ -191,51 +194,86 @@ func (p *parser) parseFields() []Field {
 			p.fail(p.off, CodeParse, "expected a field name")
 		}
 		typeStart := p.off
-		depth := 0
-		for !p.eof() {
-			c := p.src[p.off]
-			if c == '\n' && depth == 0 {
-				break
-			}
-			if c == '}' && depth == 0 {
-				break
-			}
-			if c == '=' && depth == 0 && !p.isDoubleEquals() {
-				break
-			}
-			if c == '(' || c == '[' || c == '{' {
-				depth++
-			}
-			if c == ')' || c == ']' || c == '}' {
-				depth--
-			}
-			p.off++
-		}
-		field := Field{At: nameAt, Name: name, Type: canonExpr(p.src[typeStart:p.off])}
+		p.skipFieldPart(true)
+		field := Field{At: nameAt, Name: name, Type: canonExpr(p.src[typeStart:p.off]), Doc: doc}
 		if p.has("=") {
 			p.off++
 			defStart := p.off
-			depth = 0
-			for !p.eof() {
-				c := p.src[p.off]
-				if c == '\n' && depth == 0 {
-					break
-				}
-				if c == '}' && depth == 0 {
-					break
-				}
-				if c == '(' || c == '[' || c == '{' {
-					depth++
-				}
-				if c == ')' || c == ']' || c == '}' {
-					depth--
-				}
-				p.off++
-			}
+			p.skipFieldPart(false)
 			field.Default = canonExpr(p.src[defStart:p.off])
 			field.HasDefault = true
 		}
 		fields = append(fields, field)
+	}
+}
+
+// parseFieldDoc reads the // lines above a field. They are the description
+// of the field: each line loses its marker and one leading space. A block
+// holds no other comment.
+func (p *parser) parseFieldDoc() (string, bool) {
+	var lines []string
+	for {
+		p.skipSpaceNewlines()
+		if p.has("/*") {
+			p.fail(p.off, CodeParse, "a block holds // comments only")
+		}
+		if !p.has("//") {
+			return strings.Join(lines, "\n"), len(lines) > 0
+		}
+		start := p.off + 2
+		p.skipToLineEnd()
+		lines = append(lines, strings.TrimRight(strings.TrimPrefix(p.src[start:p.off], " "), " \t\r\n"))
+	}
+}
+
+// skipFieldPart advances past a field type or default. It stops at a line
+// end or a closing brace outside brackets and, for a type, at the = of a
+// default. A string holds any byte.
+func (p *parser) skipFieldPart(stopAtEquals bool) {
+	depth := 0
+	for !p.eof() {
+		c := p.src[p.off]
+		if depth == 0 && (c == '\n' || c == '}') {
+			return
+		}
+		if depth == 0 && stopAtEquals && c == '=' && !p.isDoubleEquals() {
+			return
+		}
+		switch c {
+		case '"', '\'', '`':
+			p.skipGoString(c)
+			continue
+		case '/':
+			if p.has("//") || p.has("/*") {
+				p.fail(p.off, CodeParse, "a comment in a block must be on the lines above a field")
+			}
+		case '(', '[', '{':
+			depth++
+		case ')', ']', '}':
+			depth--
+		}
+		p.off++
+	}
+}
+
+// skipGoString advances past a Go string or rune literal that starts at the
+// current offset. An unclosed literal ends at the line end; the Go type
+// check reports it.
+func (p *parser) skipGoString(quote byte) {
+	p.off++
+	for !p.eof() {
+		c := p.src[p.off]
+		if c == '\n' && quote != '`' {
+			return
+		}
+		p.off++
+		if c == '\\' && quote != '`' && !p.eof() && p.src[p.off] != '\n' {
+			p.off++
+			continue
+		}
+		if c == quote {
+			return
+		}
 	}
 }
 

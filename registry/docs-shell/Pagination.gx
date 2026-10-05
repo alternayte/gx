@@ -1,7 +1,9 @@
 package shell
 
 props {
+  // Prev is the previous sidebar item. Nil omits the link.
   Prev *NavItem
+  // Next is the next sidebar item. Nil omits the link.
   Next *NavItem
 }
 

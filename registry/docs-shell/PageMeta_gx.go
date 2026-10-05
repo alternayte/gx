@@ -7,40 +7,42 @@ import (
 )
 
 type PageMetaProps struct {
+	// Site is the site-wide data. Its EditBase builds the edit link; empty hides the link.
 	Site Config
+	// Page is the data of the current page: its path and its last-updated text.
 	Page Page
 }
 
 func PageMeta(p PageMetaProps) gx.Node {
 	var _b gx.Builder
-//line PageMeta.gx:8:1
+//line PageMeta.gx:10:1
 	var _b1 gx.Builder
-//line PageMeta.gx:8:83
+//line PageMeta.gx:10:83
 	_b1.Add(gx.Text("\n  "))
-//line PageMeta.gx:9:3
+//line PageMeta.gx:11:3
 	if p.Site.EditURL(p.Page) != "" {
-//line PageMeta.gx:9:36
+//line PageMeta.gx:11:36
 		_b1.Add(gx.Text("\n    "))
-//line PageMeta.gx:10:5
+//line PageMeta.gx:12:5
 		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-edit-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Site.EditURL(p.Page))), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Edit this page")))
-//line PageMeta.gx:10:85
+//line PageMeta.gx:12:85
 		_b1.Add(gx.Text("\n  "))
 	}
-//line PageMeta.gx:11:4
+//line PageMeta.gx:13:4
 	_b1.Add(gx.Text("\n  "))
-//line PageMeta.gx:12:3
+//line PageMeta.gx:14:3
 	if p.Page.Updated != "" {
-//line PageMeta.gx:12:28
+//line PageMeta.gx:14:28
 		_b1.Add(gx.Text("\n    "))
-//line PageMeta.gx:13:5
+//line PageMeta.gx:15:5
 		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-updated", Kind: gx.AttrText}, gx.Bool("data-gx-updated", true)}, gx.Frag(gx.Text("Last updated "), gx.Text(p.Page.Updated))))
-//line PageMeta.gx:13:82
+//line PageMeta.gx:15:82
 		_b1.Add(gx.Text("\n  "))
 	}
-//line PageMeta.gx:14:4
+//line PageMeta.gx:16:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-page-meta mt-8 flex flex-wrap gap-4 text-sm text-muted-foreground", Kind: gx.AttrText}}, _b1.Node()))
-//line PageMeta.gx:15:7
+//line PageMeta.gx:17:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

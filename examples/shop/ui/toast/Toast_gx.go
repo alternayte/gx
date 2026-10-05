@@ -7,67 +7,70 @@ import (
 )
 
 type ToastProps struct {
+	// Toast is the pushed toast: its text, kind, description, action and timing.
 	Toast gx.ToastPatch
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func Toast(p ToastProps) gx.Node {
 	var _b gx.Builder
-//line Toast.gx:9:1
+//line Toast.gx:12:1
 	var _b1 gx.Builder
-//line Toast.gx:9:406
-	_b1.Add(gx.Text("\n  "))
-//line Toast.gx:10:3
-	if p.icon() != "" {
-//line Toast.gx:10:22
-		_b1.Add(gx.Text("\n    "))
-//line Toast.gx:11:5
-		_b1.Add(gx.Icon(p.icon(), gx.IconProps{Class: p.iconClass()}))
-//line Toast.gx:11:60
-		_b1.Add(gx.Text("\n  "))
-	}
-//line Toast.gx:12:4
+//line Toast.gx:12:406
 	_b1.Add(gx.Text("\n  "))
 //line Toast.gx:13:3
-	var _b2 gx.Builder
-//line Toast.gx:13:44
-	_b2.Add(gx.Text("\n    "))
-//line Toast.gx:14:5
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "leading-5 font-medium", Kind: gx.AttrText}}, gx.Text(p.Toast.Text)))
-//line Toast.gx:14:60
-	_b2.Add(gx.Text("\n    "))
-//line Toast.gx:15:5
-	if p.Toast.Description != "" {
-//line Toast.gx:15:35
-		_b2.Add(gx.Text("\n      "))
-//line Toast.gx:16:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "leading-5 text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Toast.Description)))
-//line Toast.gx:16:79
-		_b2.Add(gx.Text("\n    "))
-	}
-//line Toast.gx:17:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "grid min-w-0 flex-1 gap-0.5", Kind: gx.AttrText}}, _b2.Node()))
-//line Toast.gx:18:9
-	_b1.Add(gx.Text("\n  "))
-//line Toast.gx:19:3
-	if p.Toast.Action.Label != "" {
-//line Toast.gx:19:34
+	if p.icon() != "" {
+//line Toast.gx:13:22
 		_b1.Add(gx.Text("\n    "))
-//line Toast.gx:20:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Toast.Action.URL), Kind: gx.AttrURL, Active: "page"}}, gx.Text(p.Toast.Action.Label)))
-//line Toast.gx:20:262
+//line Toast.gx:14:5
+		_b1.Add(gx.Icon(p.icon(), gx.IconProps{Class: p.iconClass()}))
+//line Toast.gx:14:60
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Toast.gx:21:4
+//line Toast.gx:15:4
+	_b1.Add(gx.Text("\n  "))
+//line Toast.gx:16:3
+	var _b2 gx.Builder
+//line Toast.gx:16:44
+	_b2.Add(gx.Text("\n    "))
+//line Toast.gx:17:5
+	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "leading-5 font-medium", Kind: gx.AttrText}}, gx.Text(p.Toast.Text)))
+//line Toast.gx:17:60
+	_b2.Add(gx.Text("\n    "))
+//line Toast.gx:18:5
+	if p.Toast.Description != "" {
+//line Toast.gx:18:35
+		_b2.Add(gx.Text("\n      "))
+//line Toast.gx:19:7
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "leading-5 text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Toast.Description)))
+//line Toast.gx:19:79
+		_b2.Add(gx.Text("\n    "))
+	}
+//line Toast.gx:20:6
+	_b2.Add(gx.Text("\n  "))
+	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "grid min-w-0 flex-1 gap-0.5", Kind: gx.AttrText}}, _b2.Node()))
+//line Toast.gx:21:9
 	_b1.Add(gx.Text("\n  "))
 //line Toast.gx:22:3
+	if p.Toast.Action.Label != "" {
+//line Toast.gx:22:34
+		_b1.Add(gx.Text("\n    "))
+//line Toast.gx:23:5
+		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex h-6 shrink-0 items-center rounded-md bg-primary px-2 text-xs font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Toast.Action.URL), Kind: gx.AttrURL, Active: "page"}}, gx.Text(p.Toast.Action.Label)))
+//line Toast.gx:23:262
+		_b1.Add(gx.Text("\n  "))
+	}
+//line Toast.gx:24:4
+	_b1.Add(gx.Text("\n  "))
+//line Toast.gx:25:3
 	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "-my-0.5 -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true), gx.Attr{Key: "aria-label", Value: "Close", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.Icon(iconX, gx.IconProps{Class: "size-4"}), gx.Text("\n  "))))
-//line Toast.gx:24:12
+//line Toast.gx:27:12
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full items-start gap-2 rounded-lg border border-border bg-popover p-4 text-sm text-popover-foreground shadow-lg transition-[opacity,translate] duration-200 ease-out starting:translate-y-2 starting:opacity-0 data-[closing]:pointer-events-none data-[closing]:translate-x-4 data-[closing]:opacity-0 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.ToastAttrs(p.Toast), p.Attrs), _b1.Node()))
-//line Toast.gx:25:7
+//line Toast.gx:28:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

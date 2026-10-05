@@ -7,16 +7,19 @@ import (
 )
 
 type BreadcrumbListProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the list: the items and the separators between them.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func BreadcrumbList(p BreadcrumbListProps) gx.Node {
 	var _b gx.Builder
-//line BreadcrumbList.gx:9:1
+//line BreadcrumbList.gx:12:1
 	_b.Add(gx.El("ol", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-list", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbList.gx:9:178
+//line BreadcrumbList.gx:12:178
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

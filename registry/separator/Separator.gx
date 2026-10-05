@@ -1,10 +1,15 @@
 package separator
 
 props {
+  // Orientation sets the direction: Horizontal or Vertical.
   Orientation Orientation = Horizontal
-  Decorative  bool        = true
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Decorative hides the separator from assistive technology. Set it to false for the separator
+  // role.
+  Decorative  bool = true
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div data-slot="separator" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}></div>

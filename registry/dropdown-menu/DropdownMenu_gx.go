@@ -7,18 +7,23 @@ import (
 )
 
 type DropdownMenuProps struct {
-	Id       string
-	Align    Align
-	Class    string
+	// Id is the id of the root element. The trigger opens the menu by this id.
+	Id string
+	// Align sets the edge of the trigger that the menu lines up with: Center, Start or End.
+	Align Align
+	// Class adds classes to the root element.
+	Class string
+	// Children is the menu items.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func DropdownMenu(p DropdownMenuProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenu.gx:11:1
+//line DropdownMenu.gx:16:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenu.gx:11:342
+//line DropdownMenu.gx:16:342
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

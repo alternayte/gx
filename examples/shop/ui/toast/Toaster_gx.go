@@ -7,16 +7,19 @@ import (
 )
 
 type ToasterProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the toasts the toaster holds at render. Nil renders an empty toaster.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Toaster(p ToasterProps) gx.Node {
 	var _b gx.Builder
-//line Toaster.gx:9:1
+//line Toaster.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed right-4 bottom-4 z-50 flex w-[356px] max-w-[calc(100vw-2rem)] flex-col gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: "gx-toaster", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "region", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Notifications", Kind: gx.AttrText}, gx.Attr{Key: "aria-live", Value: "polite", Kind: gx.AttrText}, gx.Bool("data-gx-toaster", true)}, p.Attrs), p.Children))
-//line Toaster.gx:9:238
+//line Toaster.gx:12:238
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

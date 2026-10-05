@@ -7,17 +7,22 @@ import (
 )
 
 type LinkButtonProps struct {
-	Href     gx.URL
-	Variant  ButtonVariant
+	// Href is the link target.
+	Href gx.URL
+	// Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline or
+	// ButtonGhost.
+	Variant ButtonVariant
+	// Children is the button label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func LinkButton(p LinkButtonProps) gx.Node {
 	var _b gx.Builder
-//line LinkButton.gx:10:1
+//line LinkButton.gx:15:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-link-button my-2 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs), p.Children))
-//line LinkButton.gx:10:187
+//line LinkButton.gx:15:187
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

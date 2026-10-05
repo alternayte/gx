@@ -7,17 +7,21 @@ import (
 )
 
 type SelectOptionProps struct {
-	Value    string
+	// Value is the value the form submits when the option is selected.
+	Value string
+	// Selected selects the option for the first render.
 	Selected bool
+	// Disabled disables the option.
 	Disabled bool
+	// Children is the option label.
 	Children gx.Node
 }
 
 func SelectOption(p SelectOptionProps) gx.Node {
 	var _b gx.Builder
-//line SelectOption.gx:10:1
+//line SelectOption.gx:14:1
 	_b.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("selected", p.Selected), gx.Bool("disabled", p.Disabled)}, p.Children))
-//line SelectOption.gx:10:90
+//line SelectOption.gx:14:90
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -13,6 +13,7 @@ type completionItem struct {
 	Label      string    `json:"label"`
 	Kind       int       `json:"kind,omitempty"`
 	Detail     string    `json:"detail,omitempty"`
+	Doc        string    `json:"documentation,omitempty"`
 	InsertText string    `json:"insertText,omitempty"`
 	TextEdit   *textEdit `json:"textEdit,omitempty"`
 	SortText   string    `json:"sortText,omitempty"`
@@ -254,7 +255,9 @@ func complete(doc *document, m *compiler.Model, pos position) any {
 						if !prop.HasDefault {
 							detail += " (required)"
 						}
-						items = append(items, item(attr, kindProperty, detail, attr))
+						it := item(attr, kindProperty, detail, attr)
+						it.Doc = prop.Doc
+						items = append(items, it)
 					}
 				}
 			}
@@ -295,7 +298,9 @@ func memberCompletions(m *compiler.Model, f *compiler.File, st documentState, it
 		if comp := componentOfFile(m, f); comp != nil {
 			for _, prop := range comp.Props {
 				if strings.HasPrefix(prop.Name, st.word) {
-					out = append(out, item(prop.Name, kindField, prop.Type, prop.Name))
+					it := item(prop.Name, kindField, prop.Type, prop.Name)
+					it.Doc = prop.Doc
+					out = append(out, it)
 				}
 			}
 		}

@@ -7,16 +7,19 @@ import (
 )
 
 type FieldSetProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the field set.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func FieldSet(p FieldSetProps) gx.Node {
 	var _b gx.Builder
-//line FieldSet.gx:9:1
+//line FieldSet.gx:12:1
 	_b.Add(gx.El("fieldset", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-6 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-set", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldSet.gx:9:192
+//line FieldSet.gx:12:192
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

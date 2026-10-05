@@ -95,8 +95,11 @@ Copy each file to its path in the app. Change each import of a registry package 
 package menubar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the menus of the bar.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -109,12 +112,19 @@ package menubar
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = "on"
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Name is the name attribute of the checkbox input. A form or a signal reads it.
+  Name     string = ""
+  // Value is the value that the form sends when the item is checked.
+  Value    string = "on"
+  // Checked sets the item as checked on the first render.
+  Checked  bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -129,9 +139,13 @@ props {
 package menubar
 
 props {
-  Label    string   = ""
-  Class    string   = ""
+  // Label is the accessible name of the group. It is not visible.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the items of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -142,11 +156,17 @@ props {
 package menubar
 
 props {
-  Variant  Variant  = Default
-  Inset    bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default or Destructive.
+  Variant  Variant = Default
+  // Inset adds left padding, so the item lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -157,9 +177,13 @@ props {
 package menubar
 
 props {
-  Inset    bool     = false
-  Class    string   = ""
+  // Inset adds left padding, so the label lines up with the checkbox and radio items.
+  Inset    bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -170,9 +194,13 @@ props {
 package menubar
 
 props {
+  // Href is the URL that the link opens.
   Href     gx.URL
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the link.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -183,10 +211,15 @@ props {
 package menubar
 
 props {
+  // Id is the id of the menu element. The trigger in the bar opens the menu by this id.
   Id       string
+  // Label is the text of the trigger in the bar. It is also the accessible name of the menu.
   Label    string
-  Class    string   = ""
+  // Class adds classes to the menu element.
+  Class    string = ""
+  // Children is the menu items.
   Children gx.Node
+  // Attrs adds HTML attributes to the menu element.
   Attrs    gx.Attrs = nil
 }
 
@@ -198,9 +231,13 @@ props {
 package menubar
 
 props {
-  Label    string   = ""
-  Class    string   = ""
+  // Label is the accessible name of the group. It is not visible.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the radio items of the group.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -213,12 +250,20 @@ package menubar
 import "github.com/alternayte/gx/registry/icons"
 
 props {
-  Name     string   = ""
-  Value    string   = ""
-  Checked  bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Name is the name attribute of the radio input. The radio items of one group share
+  // the same name.
+  Name     string = ""
+  // Value is the value that the form sends when the item is checked.
+  Value    string = ""
+  // Checked sets the item as checked on the first render.
+  Checked  bool = false
+  // Disabled turns the item off. The arrow keys pass it.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label of the item.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -233,7 +278,9 @@ props {
 package menubar
 
 props {
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 
@@ -244,8 +291,11 @@ props {
 package menubar
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the keyboard shortcut.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -749,6 +799,114 @@ A click opens a menu. The pointer does not open the next menu when it moves alon
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### menubar.Menubar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the menus of the bar. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarCheckboxItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the name attribute of the checkbox input. A form or a signal reads it. |
+| `Value` | `string` | `"on"` | Value is the value that the form sends when the item is checked. |
+| `Checked` | `bool` | `false` | Checked sets the item as checked on the first render. |
+| `Disabled` | `bool` | `false` | Disabled turns the item off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | `""` | Label is the accessible name of the group. It is not visible. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the items of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default or Destructive. |
+| `Inset` | `bool` | `false` | Inset adds left padding, so the item lines up with the checkbox and radio items. |
+| `Disabled` | `bool` | `false` | Disabled turns the item off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarLabel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Inset` | `bool` | `false` | Inset adds left padding, so the label lines up with the checkbox and radio items. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the text of the label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Href` | `gx.URL` | Required | Href is the URL that the link opens. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the link. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarMenu
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the menu element. The trigger in the bar opens the menu by this id. |
+| `Label` | `string` | Required | Label is the text of the trigger in the bar. It is also the accessible name of the menu. |
+| `Class` | `string` | `""` | Class adds classes to the menu element. |
+| `Children` | `gx.Node` | Required | Children is the menu items. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the menu element. |
+
+### menubar.MenubarRadioGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | `""` | Label is the accessible name of the group. It is not visible. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the radio items of the group. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarRadioItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | `string` | `""` | Name is the name attribute of the radio input. The radio items of one group share the same name. |
+| `Value` | `string` | `""` | Value is the value that the form sends when the item is checked. |
+| `Checked` | `bool` | `false` | Checked sets the item as checked on the first render. |
+| `Disabled` | `bool` | `false` | Disabled turns the item off. The arrow keys pass it. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the label of the item. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### menubar.MenubarShortcut
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the text of the keyboard shortcut. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

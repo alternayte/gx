@@ -1,11 +1,18 @@
 package navigationmenu
 
 props {
+  // Href is the URL that the link opens.
   Href     gx.URL
-  Variant  Variant  = Default
-  Active   bool     = false
-  Class    string   = ""
+  // Variant sets the visual style: Default for a link in the content of a menu, or Trigger
+  // for a link in the bar.
+  Variant  Variant = Default
+  // Active marks the link as the current page. It sets aria-current and the active style.
+  Active   bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the link.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

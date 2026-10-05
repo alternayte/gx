@@ -7,16 +7,19 @@ import (
 )
 
 type TableFooterProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the rows of the footer.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func TableFooter(p TableFooterProps) gx.Node {
 	var _b gx.Builder
-//line TableFooter.gx:9:1
+//line TableFooter.gx:12:1
 	_b.Add(gx.El("tfoot", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-footer", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableFooter.gx:9:148
+//line TableFooter.gx:12:148
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

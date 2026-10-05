@@ -9,16 +9,19 @@ import (
 )
 
 type PaginationNextProps struct {
-	Href  gx.URL
+	// Href is the URL of the next page.
+	Href gx.URL
+	// Class adds classes to the root element.
 	Class string
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func PaginationNext(p PaginationNextProps) gx.Node {
 	var _b gx.Builder
-//line PaginationNext.gx:14:1
+//line PaginationNext.gx:15:1
 	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class), Children: gx.Frag(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "hidden sm:block", Kind: gx.AttrText}}, gx.Text("Next")), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""})), Attrs: p.attrs()}))
-//line PaginationNext.gx:17:18
+//line PaginationNext.gx:18:18
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

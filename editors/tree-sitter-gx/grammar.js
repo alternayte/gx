@@ -59,19 +59,27 @@ module.exports = grammar({
       '}',
     )),
 
-    // The props and signals blocks hold Go struct fields.
+    // The props and signals blocks hold Go struct fields. A // comment
+    // above a field is its description. A brace in a comment or in a
+    // string does not open or close the block.
     go_block: $ => prec(3, seq(
       token(prec(2, choice('props', 'signals'))),
-      $.go_body,
+      '{',
+      repeat(choice(
+        $.expression,
+        $.line_comment,
+        $.go_string,
+        token(choice(/[^{}\/"`\s][^{}\/"`\n]*/, '/', '"', '`')),
+      )),
+      '}',
     )),
 
-    go_body: $ => seq(
-      '{',
-      repeat(choice($.expression, $.go_body, $.go_chunk)),
-      '}',
-    ),
+    line_comment: _ => token(seq('//', /[^\n]*/)),
 
-    go_chunk: _ => /[^{}]+/,
+    go_string: _ => token(choice(
+      seq('"', repeat(choice(/[^"\\\n]/, /\\./)), '"'),
+      seq('`', /[^`]*/, '`'),
+    )),
 
     // A fragment attribute: #name or #name(params).
     fragment_attribute: $ => prec(2, seq(

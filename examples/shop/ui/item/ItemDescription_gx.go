@@ -7,16 +7,19 @@ import (
 )
 
 type ItemDescriptionProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the description text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ItemDescription(p ItemDescriptionProps) gx.Node {
 	var _b gx.Builder
-//line ItemDescription.gx:9:1
+//line ItemDescription.gx:12:1
 	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("line-clamp-2 text-sm leading-normal font-normal text-balance text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-description", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemDescription.gx:9:237
+//line ItemDescription.gx:12:237
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

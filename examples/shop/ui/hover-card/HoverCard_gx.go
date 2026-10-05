@@ -7,18 +7,23 @@ import (
 )
 
 type HoverCardProps struct {
-	Trigger  gx.Node
-	Align    Align
-	Class    string
+	// Trigger is the element that shows the card on hover or on keyboard focus.
+	Trigger gx.Node
+	// Align sets the edge of the trigger that the card lines up with: Start, Center or End.
+	Align Align
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the card.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func HoverCard(p HoverCardProps) gx.Node {
 	var _b gx.Builder
-//line HoverCard.gx:11:1
+//line HoverCard.gx:16:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/hover-card relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), p.Trigger, gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("invisible absolute top-full z-50 mt-1 w-64 -translate-y-2 scale-95 rounded-md border border-border bg-popover p-4 text-popover-foreground opacity-0 shadow-md outline-hidden transition-[opacity,scale,translate,visibility] delay-300 duration-150 motion-reduce:transition-none group-hover/hover-card:visible group-hover/hover-card:translate-y-0 group-hover/hover-card:scale-100 group-hover/hover-card:opacity-100 group-hover/hover-card:delay-700 group-has-[:focus-visible]/hover-card:visible group-has-[:focus-visible]/hover-card:translate-y-0 group-has-[:focus-visible]/hover-card:scale-100 group-has-[:focus-visible]/hover-card:opacity-100 group-has-[:focus-visible]/hover-card:delay-700", alignClass[p.align()]), Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line HoverCard.gx:14:8
+//line HoverCard.gx:19:8
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,23 +7,33 @@ import (
 )
 
 type SliderProps struct {
+	// Orientation sets the direction: Horizontal or Vertical.
 	Orientation Orientation
-	Name        string
-	Min         int
-	Max         int
-	Value       int
-	Step        int
-	Label       string
-	Disabled    bool
-	Class       string
-	Attrs       gx.Attrs
+	// Name is the form field name.
+	Name string
+	// Min is the minimum value.
+	Min int
+	// Max is the maximum value. A zero value is 100.
+	Max int
+	// Value is the value of the first render.
+	Value int
+	// Step is the size of one step. A zero value is 1.
+	Step int
+	// Label is the accessible name of the slider.
+	Label string
+	// Disabled disables the slider.
+	Disabled bool
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Slider(p SliderProps) gx.Node {
 	var _b gx.Builder
-//line Slider.gx:16:1
+//line Slider.gx:26:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.fill()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "type", Value: "range", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: gx.TextValue(p.min()), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "step", Value: gx.TextValue(p.step()), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-behavior", true)}, p.Attrs)))
-//line Slider.gx:16:205
+//line Slider.gx:26:205
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

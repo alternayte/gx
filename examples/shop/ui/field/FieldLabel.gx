@@ -1,9 +1,13 @@
 package field
 
 props {
-  For      string   = ""
-  Class    string   = ""
+  // For is the id of the control that the label names. Empty omits the for attribute.
+  For      string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the label text.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -1,9 +1,13 @@
 package selectbox
 
 props {
+  // Value is the value the form submits when the option is selected.
   Value    string = ""
-  Selected bool   = false
-  Disabled bool   = false
+  // Selected selects the option for the first render.
+  Selected bool = false
+  // Disabled disables the option.
+  Disabled bool = false
+  // Children is the option label.
   Children gx.Node
 }
 

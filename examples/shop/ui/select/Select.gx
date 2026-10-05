@@ -3,12 +3,20 @@ package selectbox
 import "github.com/alternayte/gx/examples/shop/ui/icons"
 
 props {
-  Name        string   = ""
-  Label       string   = ""
-  Size        Size     = Md
-  Placeholder string   = ""
-  Class       string   = ""
+  // Name is the form field name.
+  Name        string = ""
+  // Label is the accessible name of the select.
+  Label       string = ""
+  // Size sets the height: Md or Sm.
+  Size        Size = Md
+  // Placeholder is the text of a disabled first option that shows while no value is selected. An
+  // empty value renders no placeholder option.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the options of the select.
   Children    gx.Node
+  // Attrs adds HTML attributes to the select element.
   Attrs       gx.Attrs = nil
 }
 

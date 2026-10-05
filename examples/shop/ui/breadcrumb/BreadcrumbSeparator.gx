@@ -3,8 +3,11 @@ package breadcrumb
 import "github.com/alternayte/gx/examples/shop/ui/icons"
 
 props {
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the separator. A nil value renders a chevron icon.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

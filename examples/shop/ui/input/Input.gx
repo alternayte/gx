@@ -1,12 +1,19 @@
 package input
 
 props {
-  Id          string   = ""
-  Type        string   = "text"
-  Name        string   = ""
-  Value       string   = ""
-  Placeholder string   = ""
-  Class       string   = ""
+  // Id is the id of the root element. A label points at it.
+  Id          string = ""
+  // Type is the type attribute. Empty means "text".
+  Type        string = "text"
+  // Name is the name attribute. The form sends the value under this name.
+  Name        string = ""
+  // Value is the value attribute: the start value of the input.
+  Value       string = ""
+  // Placeholder is the placeholder attribute: the hint text of an empty control.
+  Placeholder string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs       gx.Attrs = nil
 }
 

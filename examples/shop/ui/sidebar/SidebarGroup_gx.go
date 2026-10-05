@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarGroupProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the group: the label, action and group content.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarGroup(p SidebarGroupProps) gx.Node {
 	var _b gx.Builder
-//line SidebarGroup.gx:9:1
+//line SidebarGroup.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarGroup.gx:9:152
+//line SidebarGroup.gx:12:152
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

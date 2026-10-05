@@ -7,31 +7,35 @@ import (
 )
 
 type ButtonGroupTextProps struct {
-	For      string
-	Class    string
+	// For is the id of an input. A non-empty value renders the text as the label of that input.
+	For string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the text block.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ButtonGroupText(p ButtonGroupTextProps) gx.Node {
 	var _b gx.Builder
-//line ButtonGroupText.gx:10:1
+//line ButtonGroupText.gx:14:1
 	if p.For != "" {
-//line ButtonGroupText.gx:10:17
+//line ButtonGroupText.gx:14:17
 		_b.Add(gx.Text("\n  "))
-//line ButtonGroupText.gx:11:3
+//line ButtonGroupText.gx:15:3
 		_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "for", Value: p.For, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ButtonGroupText.gx:11:246
+//line ButtonGroupText.gx:15:246
 		_b.Add(gx.Text("\n"))
 	} else {
-//line ButtonGroupText.gx:12:9
+//line ButtonGroupText.gx:16:9
 		_b.Add(gx.Text("\n  "))
-//line ButtonGroupText.gx:13:3
+//line ButtonGroupText.gx:17:3
 		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ButtonGroupText.gx:13:230
+//line ButtonGroupText.gx:17:230
 		_b.Add(gx.Text("\n"))
 	}
-//line ButtonGroupText.gx:14:2
+//line ButtonGroupText.gx:18:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

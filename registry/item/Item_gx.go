@@ -7,33 +7,39 @@ import (
 )
 
 type ItemProps struct {
-	Variant  Variant
-	Size     Size
-	Href     gx.URL
-	Class    string
+	// Variant sets the surface: Default, Outline or Muted.
+	Variant Variant
+	// Size sets the padding and the gap: Md or Sm.
+	Size Size
+	// Href is the link target. With a value the root is an a element; empty gives a div.
+	Href gx.URL
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the item.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Item(p ItemProps) gx.Node {
 	var _b gx.Builder
-//line Item.gx:12:1
+//line Item.gx:18:1
 	if p.Href != "" {
-//line Item.gx:12:18
+//line Item.gx:18:18
 		_b.Add(gx.Text("\n  "))
-//line Item.gx:13:3
+//line Item.gx:19:3
 		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Item.gx:13:132
+//line Item.gx:19:132
 		_b.Add(gx.Text("\n"))
 	} else {
-//line Item.gx:14:9
+//line Item.gx:20:9
 		_b.Add(gx.Text("\n  "))
-//line Item.gx:15:3
+//line Item.gx:21:3
 		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Item.gx:15:122
+//line Item.gx:21:122
 		_b.Add(gx.Text("\n"))
 	}
-//line Item.gx:16:2
+//line Item.gx:22:2
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

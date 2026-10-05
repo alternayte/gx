@@ -7,19 +7,25 @@ import (
 )
 
 type ButtonProps struct {
-	Variant  Variant
-	Size     Size
-	Type     string
-	Class    string
+	// Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.
+	Variant Variant
+	// Size sets the height and padding: Xs, Sm, Md, Lg, or an Icon size for a square button.
+	Size Size
+	// Type is the type attribute: "button", "submit" or "reset".
+	Type string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the button label.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Button(p ButtonProps) gx.Node {
 	var _b gx.Builder
-//line Button.gx:12:1
+//line Button.gx:18:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: Class(p.Variant, p.Size, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.typeAttr(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Button.gx:12:172
+//line Button.gx:18:172
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

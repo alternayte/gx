@@ -8,19 +8,26 @@ import (
 )
 
 type PaginationLinkProps struct {
-	Href     gx.URL
-	Active   bool
-	Size     button.Size
-	Class    string
+	// Href is the URL of the page.
+	Href gx.URL
+	// Active marks the link of the current page. It sets aria-current and the outline style.
+	Active bool
+	// Size sets the height and padding with a button size. The default is button.Icon, a square
+	// link.
+	Size button.Size
+	// Class adds classes to the root element.
+	Class string
+	// Children is the link label, for example the page number.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func PaginationLink(p PaginationLinkProps) gx.Node {
 	var _b gx.Builder
-//line PaginationLink.gx:14:1
+//line PaginationLink.gx:21:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "pagination-link", Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line PaginationLink.gx:14:95
+//line PaginationLink.gx:21:95
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

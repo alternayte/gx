@@ -9,35 +9,57 @@ item: "data-table-page"
 <Example item="data-table-page" name="data-table-page-default" label="Data Table Page: Default" block>
 
 ```gx
-{datatablepage.DataTablePage(datatablepage.DataTablePageFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/data-table-page/DataTablePage.fixtures.go"
-"Default": {
-  Title:       "Invoices",
-  Description: "Every invoice for this workspace.",
-  Filter:      input.Input(input.InputProps{Name: "q", Type: "search", Placeholder: "Search", Attrs: gx.Attrs{{Key: "aria-label", Value: "Search"}}}),
-  Table: table.Table(table.TableProps{Children: gx.Frag(
-    table.TableHeader(table.TableHeaderProps{Children: table.TableRow(table.TableRowProps{Children: gx.Frag(
-      table.TableHead(table.TableHeadProps{Children: gx.Text("Invoice")}),
-      table.TableHead(table.TableHeadProps{Children: gx.Text("Status")}),
-      table.TableHead(table.TableHeadProps{Class: "text-right", Children: gx.Text("Amount")}),
-    )})}),
-    table.TableBody(table.TableBodyProps{Children: gx.Frag(
-      row("INV-001", "Paid", "$120.00"),
-      row("INV-002", "Open", "$80.00"),
-      row("INV-003", "Paid", "$310.00"),
-    )}),
-  )}),
-  Pagination: pagination.Pagination(pagination.PaginationProps{Children: pagination.PaginationContent(pagination.PaginationContentProps{Children: gx.Frag(
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationPrevious(pagination.PaginationPreviousProps{Href: gx.URL("/invoices?page=1")})}),
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationLink(pagination.PaginationLinkProps{Href: gx.URL("/invoices?page=1"), Active: true, Children: gx.Text("1")})}),
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationLink(pagination.PaginationLinkProps{Href: gx.URL("/invoices?page=2"), Children: gx.Text("2")})}),
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationNext(pagination.PaginationNextProps{Href: gx.URL("/invoices?page=2")})}),
-  )})}),
-}
+<datatablepage.DataTablePage title="Invoices" description="Every invoice for this workspace.">
+  <:filter>
+    <input.Input name="q" type="search" placeholder="Search" attrs={gx.Attrs{{Key: "aria-label", Value: "Search"}}} />
+  </:filter>
+  <:table>
+    <table.Table>
+      <table.TableHeader>
+        <table.TableRow>
+          <table.TableHead>Invoice</table.TableHead>
+          <table.TableHead>Status</table.TableHead>
+          <table.TableHead class="text-right">Amount</table.TableHead>
+        </table.TableRow>
+      </table.TableHeader>
+      <table.TableBody>
+        <table.TableRow>
+          <table.TableCell class="font-medium">INV-001</table.TableCell>
+          <table.TableCell>Paid</table.TableCell>
+          <table.TableCell class="text-right">$120.00</table.TableCell>
+        </table.TableRow>
+        <table.TableRow>
+          <table.TableCell class="font-medium">INV-002</table.TableCell>
+          <table.TableCell>Open</table.TableCell>
+          <table.TableCell class="text-right">$80.00</table.TableCell>
+        </table.TableRow>
+        <table.TableRow>
+          <table.TableCell class="font-medium">INV-003</table.TableCell>
+          <table.TableCell>Paid</table.TableCell>
+          <table.TableCell class="text-right">$310.00</table.TableCell>
+        </table.TableRow>
+      </table.TableBody>
+    </table.Table>
+  </:table>
+  <:pagination>
+    <pagination.Pagination>
+      <pagination.PaginationContent>
+        <pagination.PaginationItem>
+          <pagination.PaginationPrevious href={gx.URL("/invoices?page=1")} />
+        </pagination.PaginationItem>
+        <pagination.PaginationItem>
+          <pagination.PaginationLink href={gx.URL("/invoices?page=1")} active>1</pagination.PaginationLink>
+        </pagination.PaginationItem>
+        <pagination.PaginationItem>
+          <pagination.PaginationLink href={gx.URL("/invoices?page=2")}>2</pagination.PaginationLink>
+        </pagination.PaginationItem>
+        <pagination.PaginationItem>
+          <pagination.PaginationNext href={gx.URL("/invoices?page=2")} />
+        </pagination.PaginationItem>
+      </pagination.PaginationContent>
+    </pagination.Pagination>
+  </:pagination>
+</datatablepage.DataTablePage>
 ```
 
 </Example>
@@ -78,17 +100,20 @@ Copy each file to its path in the app. Change each import of a registry package 
 ```gx title="ui/data-table-page/DataTablePage.gx"
 package datatablepage
 
-import (
-	"github.com/alternayte/gx/registry/card"
-	"github.com/alternayte/gx/registry/input"
-)
+import "github.com/alternayte/gx/registry/card"
+import "github.com/alternayte/gx/registry/input"
 
 props {
+  // Title is the heading of the page.
   Title       string
-  Description string   = ""
-  Filter      gx.Node  = nil
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Filter is the filter control shown in the header row. A nil value renders no filter.
+  Filter      gx.Node = nil
+  // Table is the data table. It renders in a card.
   Table       gx.Node
-  Pagination  gx.Node  = nil
+  // Pagination is the paging links shown below the table. A nil value renders no paging.
+  Pagination  gx.Node = nil
 }
 
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-6">
@@ -180,38 +205,74 @@ The block is copied source. The table and the paging links come from the app, so
 <Example item="data-table-page" name="data-table-page-default" label="Data Table Page: Default" block>
 
 ```gx
-{datatablepage.DataTablePage(datatablepage.DataTablePageFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/data-table-page/DataTablePage.fixtures.go"
-"Default": {
-  Title:       "Invoices",
-  Description: "Every invoice for this workspace.",
-  Filter:      input.Input(input.InputProps{Name: "q", Type: "search", Placeholder: "Search", Attrs: gx.Attrs{{Key: "aria-label", Value: "Search"}}}),
-  Table: table.Table(table.TableProps{Children: gx.Frag(
-    table.TableHeader(table.TableHeaderProps{Children: table.TableRow(table.TableRowProps{Children: gx.Frag(
-      table.TableHead(table.TableHeadProps{Children: gx.Text("Invoice")}),
-      table.TableHead(table.TableHeadProps{Children: gx.Text("Status")}),
-      table.TableHead(table.TableHeadProps{Class: "text-right", Children: gx.Text("Amount")}),
-    )})}),
-    table.TableBody(table.TableBodyProps{Children: gx.Frag(
-      row("INV-001", "Paid", "$120.00"),
-      row("INV-002", "Open", "$80.00"),
-      row("INV-003", "Paid", "$310.00"),
-    )}),
-  )}),
-  Pagination: pagination.Pagination(pagination.PaginationProps{Children: pagination.PaginationContent(pagination.PaginationContentProps{Children: gx.Frag(
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationPrevious(pagination.PaginationPreviousProps{Href: gx.URL("/invoices?page=1")})}),
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationLink(pagination.PaginationLinkProps{Href: gx.URL("/invoices?page=1"), Active: true, Children: gx.Text("1")})}),
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationLink(pagination.PaginationLinkProps{Href: gx.URL("/invoices?page=2"), Children: gx.Text("2")})}),
-    pagination.PaginationItem(pagination.PaginationItemProps{Children: pagination.PaginationNext(pagination.PaginationNextProps{Href: gx.URL("/invoices?page=2")})}),
-  )})}),
-}
+<datatablepage.DataTablePage title="Invoices" description="Every invoice for this workspace.">
+  <:filter>
+    <input.Input name="q" type="search" placeholder="Search" attrs={gx.Attrs{{Key: "aria-label", Value: "Search"}}} />
+  </:filter>
+  <:table>
+    <table.Table>
+      <table.TableHeader>
+        <table.TableRow>
+          <table.TableHead>Invoice</table.TableHead>
+          <table.TableHead>Status</table.TableHead>
+          <table.TableHead class="text-right">Amount</table.TableHead>
+        </table.TableRow>
+      </table.TableHeader>
+      <table.TableBody>
+        <table.TableRow>
+          <table.TableCell class="font-medium">INV-001</table.TableCell>
+          <table.TableCell>Paid</table.TableCell>
+          <table.TableCell class="text-right">$120.00</table.TableCell>
+        </table.TableRow>
+        <table.TableRow>
+          <table.TableCell class="font-medium">INV-002</table.TableCell>
+          <table.TableCell>Open</table.TableCell>
+          <table.TableCell class="text-right">$80.00</table.TableCell>
+        </table.TableRow>
+        <table.TableRow>
+          <table.TableCell class="font-medium">INV-003</table.TableCell>
+          <table.TableCell>Paid</table.TableCell>
+          <table.TableCell class="text-right">$310.00</table.TableCell>
+        </table.TableRow>
+      </table.TableBody>
+    </table.Table>
+  </:table>
+  <:pagination>
+    <pagination.Pagination>
+      <pagination.PaginationContent>
+        <pagination.PaginationItem>
+          <pagination.PaginationPrevious href={gx.URL("/invoices?page=1")} />
+        </pagination.PaginationItem>
+        <pagination.PaginationItem>
+          <pagination.PaginationLink href={gx.URL("/invoices?page=1")} active>1</pagination.PaginationLink>
+        </pagination.PaginationItem>
+        <pagination.PaginationItem>
+          <pagination.PaginationLink href={gx.URL("/invoices?page=2")}>2</pagination.PaginationLink>
+        </pagination.PaginationItem>
+        <pagination.PaginationItem>
+          <pagination.PaginationNext href={gx.URL("/invoices?page=2")} />
+        </pagination.PaginationItem>
+      </pagination.PaginationContent>
+    </pagination.Pagination>
+  </:pagination>
+</datatablepage.DataTablePage>
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### datatablepage.DataTablePage
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | Required | Title is the heading of the page. |
+| `Description` | `string` | `""` | Description is the text below the title. An empty value renders no description. |
+| `Filter` | `gx.Node` | `nil` | Filter is the filter control shown in the header row. A nil value renders no filter. |
+| `Table` | `gx.Node` | Required | Table is the data table. It renders in a card. |
+| `Pagination` | `gx.Node` | `nil` | Pagination is the paging links shown below the table. A nil value renders no paging. |
 
 ## Do and don't
 

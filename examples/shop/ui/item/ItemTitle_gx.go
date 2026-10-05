@@ -7,16 +7,19 @@ import (
 )
 
 type ItemTitleProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the title text.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func ItemTitle(p ItemTitleProps) gx.Node {
 	var _b gx.Builder
-//line ItemTitle.gx:9:1
+//line ItemTitle.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-title", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemTitle.gx:9:149
+//line ItemTitle.gx:12:149
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

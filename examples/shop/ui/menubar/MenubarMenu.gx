@@ -1,10 +1,15 @@
 package menubar
 
 props {
+  // Id is the id of the menu element. The trigger in the bar opens the menu by this id.
   Id       string
+  // Label is the text of the trigger in the bar. It is also the accessible name of the menu.
   Label    string
-  Class    string   = ""
+  // Class adds classes to the menu element.
+  Class    string = ""
+  // Children is the menu items.
   Children gx.Node
+  // Attrs adds HTML attributes to the menu element.
   Attrs    gx.Attrs = nil
 }
 

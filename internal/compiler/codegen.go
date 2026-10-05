@@ -182,6 +182,9 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 	g.write("type %sProps struct {", name)
 	g.ind++
 	for _, fld := range f.Props {
+		for _, line := range docLines(fld.Doc) {
+			g.write("%s", strings.TrimRight("// "+line, " "))
+		}
 		g.write("%s %s", fld.Name, fld.Type)
 	}
 	if g.scoped && !hasProp(f, "GxKey") {
@@ -200,6 +203,9 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		for _, fld := range f.Signals {
 			// The JSON tag matches the signal name the client sees
 			// (REQ-ACT-05).
+			for _, line := range docLines(fld.Doc) {
+				g.write("%s", strings.TrimRight("// "+line, " "))
+			}
 			g.write("%s %s `json:%s`", fld.Name, fld.Type, strconv.Quote(lowerFirst(fld.Name)))
 		}
 		g.ind--

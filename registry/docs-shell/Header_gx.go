@@ -7,69 +7,70 @@ import (
 )
 
 type HeaderProps struct {
+	// Site is the site-wide data: the title, the version and the header links.
 	Site Config
 }
 
 func Header(p HeaderProps) gx.Node {
 	var _b gx.Builder
-//line Header.gx:7:1
+//line Header.gx:8:1
 	var _b1 gx.Builder
-//line Header.gx:7:99
+//line Header.gx:8:99
 	_b1.Add(gx.Text("\n  "))
-//line Header.gx:8:3
+//line Header.gx:9:3
 	var _b2 gx.Builder
-//line Header.gx:8:68
-	_b2.Add(gx.Text("\n    "))
-//line Header.gx:9:5
-	_b2.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-menu-button rounded-md border border-border px-2 py-1 text-sm lg:hidden", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-menu", true), gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "aria-controls", Value: "gx-sidebar", Kind: gx.AttrText}}, gx.Text("Menu")))
-//line Header.gx:9:185
+//line Header.gx:9:68
 	_b2.Add(gx.Text("\n    "))
 //line Header.gx:10:5
-	_b2.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-site-title font-semibold", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("/")), Kind: gx.AttrURL, Active: "page"}}, gx.Text(p.Site.Title)))
-//line Header.gx:10:81
+	_b2.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-menu-button rounded-md border border-border px-2 py-1 text-sm lg:hidden", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-menu", true), gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "aria-controls", Value: "gx-sidebar", Kind: gx.AttrText}}, gx.Text("Menu")))
+//line Header.gx:10:185
 	_b2.Add(gx.Text("\n    "))
 //line Header.gx:11:5
+	_b2.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-site-title font-semibold", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("/")), Kind: gx.AttrURL, Active: "page"}}, gx.Text(p.Site.Title)))
+//line Header.gx:11:81
+	_b2.Add(gx.Text("\n    "))
+//line Header.gx:12:5
 	if p.Site.Version != "" {
-//line Header.gx:11:30
+//line Header.gx:12:30
 		_b2.Add(gx.Text("\n      "))
-//line Header.gx:12:7
+//line Header.gx:13:7
 		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-version rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground", Kind: gx.AttrText}, gx.Bool("data-gx-version", true)}, gx.Text(p.Site.Version)))
-//line Header.gx:12:147
+//line Header.gx:13:147
 		_b2.Add(gx.Text("\n    "))
 	}
-//line Header.gx:13:6
+//line Header.gx:14:6
 	_b2.Add(gx.Text("\n    "))
-//line Header.gx:14:5
+//line Header.gx:15:5
 	var _b3 gx.Builder
-//line Header.gx:14:58
-	_b3.Add(gx.Text("\n      "))
-//line Header.gx:15:7
-	_b3.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-button rounded-md border border-border px-2 py-1 text-muted-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-open", true), gx.Attr{Key: "aria-haspopup", Value: "dialog", Kind: gx.AttrText}}, gx.Frag(gx.Text("Search "), gx.El("kbd", gx.Attrs{gx.Attr{Key: "class", Value: "ml-1 text-xs", Kind: gx.AttrText}}, gx.Text("Ctrl K")))))
-//line Header.gx:15:215
+//line Header.gx:15:58
 	_b3.Add(gx.Text("\n      "))
 //line Header.gx:16:7
+	_b3.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-button rounded-md border border-border px-2 py-1 text-muted-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-open", true), gx.Attr{Key: "aria-haspopup", Value: "dialog", Kind: gx.AttrText}}, gx.Frag(gx.Text("Search "), gx.El("kbd", gx.Attrs{gx.Attr{Key: "class", Value: "ml-1 text-xs", Kind: gx.AttrText}}, gx.Text("Ctrl K")))))
+//line Header.gx:16:215
+	_b3.Add(gx.Text("\n      "))
+//line Header.gx:17:7
 	for _, l := range p.Site.Links {
-//line Header.gx:16:39
+//line Header.gx:17:39
 		_b3.Add(gx.Text("\n        "))
-//line Header.gx:17:9
+//line Header.gx:18:9
 		_b3.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-header-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(l.Href), Kind: gx.AttrURL, Active: "page"}}, gx.Text(l.Label)))
-//line Header.gx:17:62
+//line Header.gx:18:62
 		_b3.Add(gx.Text("\n      "))
 	}
-//line Header.gx:18:8
+//line Header.gx:19:8
 	_b3.Add(gx.Text("\n      "))
-//line Header.gx:19:7
+//line Header.gx:20:7
 	_b3.Add(ThemeSelect(ThemeSelectProps{}))
-//line Header.gx:19:22
+//line Header.gx:20:22
 	_b3.Add(gx.Text("\n    "))
 	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "ml-auto flex items-center gap-3 text-sm", Kind: gx.AttrText}}, _b3.Node()))
-//line Header.gx:20:11
+//line Header.gx:21:11
 	_b2.Add(gx.Text("\n  "))
 	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-7xl items-center gap-4 px-4 py-3", Kind: gx.AttrText}}, _b2.Node()))
-//line Header.gx:21:9
+//line Header.gx:22:9
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "gx-header sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur", Kind: gx.AttrText}}, _b1.Node()))
-//line Header.gx:22:10
+//line Header.gx:23:10
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

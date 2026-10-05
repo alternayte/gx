@@ -1,13 +1,14 @@
 package pagination
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/icons"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/icons"
 
 props {
+  // Href is the URL of the previous page.
   Href  gx.URL
-  Class string   = ""
+  // Class adds classes to the root element.
+  Class string = ""
+  // Attrs adds HTML attributes to the root element.
   Attrs gx.Attrs = nil
 }
 

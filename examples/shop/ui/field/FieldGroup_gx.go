@@ -7,16 +7,19 @@ import (
 )
 
 type FieldGroupProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the group: the fields, the field sets and the separators.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func FieldGroup(p FieldGroupProps) gx.Node {
 	var _b gx.Builder
-//line FieldGroup.gx:9:1
+//line FieldGroup.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldGroup.gx:9:222
+//line FieldGroup.gx:12:222
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

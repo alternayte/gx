@@ -3,9 +3,13 @@ package appshell
 import "github.com/alternayte/gx/examples/shop/ui/sidebar"
 
 props {
+  // Title is the app name. It shows in the sidebar header and in the page header.
   Title    string
+  // Nav is the primary navigation. It renders in the sidebar content.
   Nav      gx.Node
-  Footer   gx.Node  = nil
+  // Footer is the content of the sidebar footer. A nil value renders no footer.
+  Footer   gx.Node = nil
+  // Children is the content of the main area.
   Children gx.Node
 }
 

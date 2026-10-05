@@ -9,13 +9,14 @@ item: "tabs"
 <Example item="tabs" name="tabs-two" label="Tabs: Tabs: Two">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["Two"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"Two":          {Children: demo(Default, "Account", "Password")}
+<tabs.Tabs>
+  <tabs.TabsList variant={tabs.Default} label="Settings">
+    <tabs.TabsTrigger label="Account" />
+    <tabs.TabsTrigger label="Password" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="Account">Account settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Password">Password settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -54,12 +55,20 @@ Copy each file to its path in the app. Change each import of a registry package 
 package tabs
 
 props {
+  // Orientation sets the layout direction: Horizontal or Vertical. Vertical puts the list beside
+  // the panels.
   Orientation Orientation = Horizontal
-  Sync        string      = ""
-  Default     string      = ""
-  Class       string      = ""
+  // Sync is a key that tab groups share. Groups with the same key keep one selection and remember
+  // it per viewer.
+  Sync        string = ""
+  // Default is the label of the tab that is selected first. An empty value selects the first tab.
+  Default     string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children is the tab list and the panels.
   Children    gx.Node
-  Attrs       gx.Attrs    = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div class={gx.Cx("group/tabs flex gap-2 data-[orientation=horizontal]:flex-col", p.Class)} data-gx-tabs data-orientation={p.orientation()} data-sync={p.Sync} data-default={p.Default} {...p.Attrs}>{p.Children}</div>
@@ -69,10 +78,15 @@ props {
 package tabs
 
 props {
-  Variant  Variant  = Default
-  Label    string   = ""
-  Class    string   = ""
+  // Variant sets the visual style: Default, a muted pill, or Line, an underline.
+  Variant  Variant = Default
+  // Label is the accessible name of the tab list.
+  Label    string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the tab triggers.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -83,10 +97,16 @@ props {
 package tabs
 
 props {
+  // Label is the key that pairs the trigger with its panel. It is also the text when Children is
+  // nil.
   Label    string
-  Disabled bool     = false
-  Class    string   = ""
-  Children gx.Node  = nil
+  // Disabled disables the trigger.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the trigger. It replaces the label text.
+  Children gx.Node = nil
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -103,9 +123,13 @@ props {
 package tabs
 
 props {
+  // Label is the label of the trigger that shows this panel.
   Label    string
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the panel.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -292,13 +316,14 @@ The behaviour runtime selects the tab. Without JavaScript, every panel shows.
 <Example item="tabs" name="tabs-two" label="Tabs: Tabs: Two">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["Two"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"Two":          {Children: demo(Default, "Account", "Password")}
+<tabs.Tabs>
+  <tabs.TabsList variant={tabs.Default} label="Settings">
+    <tabs.TabsTrigger label="Account" />
+    <tabs.TabsTrigger label="Password" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="Account">Account settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Password">Password settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -308,13 +333,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="tabs" name="tabs-line" label="Tabs: Tabs: Line">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["Line"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"Line":         {Children: demo(Line, "Account", "Password")}
+<tabs.Tabs>
+  <tabs.TabsList variant={tabs.Line} label="Settings">
+    <tabs.TabsTrigger label="Account" />
+    <tabs.TabsTrigger label="Password" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="Account">Account settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Password">Password settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -324,13 +350,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="tabs" name="tabs-vertical" label="Tabs: Tabs: Vertical">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["Vertical"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"Vertical":     {Orientation: Vertical, Children: demo(Default, "Account", "Password")}
+<tabs.Tabs orientation={tabs.Vertical}>
+  <tabs.TabsList variant={tabs.Default} label="Settings">
+    <tabs.TabsTrigger label="Account" />
+    <tabs.TabsTrigger label="Password" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="Account">Account settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Password">Password settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -340,13 +367,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="tabs" name="tabs-vertical-line" label="Tabs: Tabs: Vertical line">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["VerticalLine"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"VerticalLine": {Orientation: Vertical, Children: demo(Line, "Account", "Password")}
+<tabs.Tabs orientation={tabs.Vertical}>
+  <tabs.TabsList variant={tabs.Line} label="Settings">
+    <tabs.TabsTrigger label="Account" />
+    <tabs.TabsTrigger label="Password" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="Account">Account settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Password">Password settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -356,13 +384,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="tabs" name="tabs-default" label="Tabs: Tabs: Default">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"Default":      {Default: "Password", Children: demo(Default, "Account", "Password")}
+<tabs.Tabs default="Password">
+  <tabs.TabsList variant={tabs.Default} label="Settings">
+    <tabs.TabsTrigger label="Account" />
+    <tabs.TabsTrigger label="Password" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="Account">Account settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Password">Password settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -372,13 +401,14 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="tabs" name="tabs-synced" label="Tabs: Tabs: Synced">
 
 ```gx
-{tabs.Tabs(tabs.TabsFixtures["Synced"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/tabs/Tabs.fixtures.go"
-"Synced":       {Sync: "demo-tabs", Children: demo(Default, "First", "Second")}
+<tabs.Tabs sync="demo-tabs">
+  <tabs.TabsList variant={tabs.Default} label="Settings">
+    <tabs.TabsTrigger label="First" />
+    <tabs.TabsTrigger label="Second" />
+  </tabs.TabsList>
+  <tabs.TabsContent label="First">First settings.</tabs.TabsContent>
+  <tabs.TabsContent label="Second">Second settings.</tabs.TabsContent>
+</tabs.Tabs>
 ```
 
 </Example>
@@ -457,6 +487,50 @@ The code renders the fixture by its name. The fixture sets these props.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### tabs.Tabs
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Orientation` | `Orientation` | `Horizontal` | Orientation sets the layout direction: Horizontal or Vertical. Vertical puts the list beside the panels. |
+| `Sync` | `string` | `""` | Sync is a key that tab groups share. Groups with the same key keep one selection and remember it per viewer. |
+| `Default` | `string` | `""` | Default is the label of the tab that is selected first. An empty value selects the first tab. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the tab list and the panels. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### tabs.TabsContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the label of the trigger that shows this panel. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the panel. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### tabs.TabsList
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Variant` | `Variant` | `Default` | Variant sets the visual style: Default, a muted pill, or Line, an underline. |
+| `Label` | `string` | `""` | Label is the accessible name of the tab list. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the tab triggers. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### tabs.TabsTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Label` | `string` | Required | Label is the key that pairs the trigger with its panel. It is also the text when Children is nil. |
+| `Disabled` | `bool` | `false` | Disabled disables the trigger. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the trigger. It replaces the label text. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -8,20 +8,27 @@ import (
 )
 
 type DropdownMenuCheckboxItemProps struct {
-	Name     string
-	Value    string
-	Checked  bool
+	// Name is the name attribute of the checkbox input. A form or a signal reads it.
+	Name string
+	// Value is the value that the form sends when the item is checked.
+	Value string
+	// Checked sets the item as checked on the first render.
+	Checked bool
+	// Disabled turns the item off. The arrow keys pass it.
 	Disabled bool
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the label of the item.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func DropdownMenuCheckboxItem(p DropdownMenuCheckboxItemProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuCheckboxItem.gx:15:1
+//line DropdownMenuCheckboxItem.gx:22:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitemcheckbox", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled))), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible", Kind: gx.AttrText}}, icons.Check(icons.CheckProps{Label: "", Class: "size-4"})), gx.Text("\n  "), p.Children, gx.Text("\n"))))
-//line DropdownMenuCheckboxItem.gx:19:9
+//line DropdownMenuCheckboxItem.gx:26:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

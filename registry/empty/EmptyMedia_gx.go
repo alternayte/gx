@@ -7,17 +7,21 @@ import (
 )
 
 type EmptyMediaProps struct {
-	Variant  Variant
-	Class    string
+	// Variant sets the look of the media: Default or Icon. Icon draws a muted rounded box.
+	Variant Variant
+	// Class adds classes to the root element.
+	Class string
+	// Children is the media, for example an icon.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func EmptyMedia(p EmptyMediaProps) gx.Node {
 	var _b gx.Builder
-//line EmptyMedia.gx:10:1
+//line EmptyMedia.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0", variantClass[Variant(p.variant())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-icon", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyMedia.gx:10:241
+//line EmptyMedia.gx:14:241
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

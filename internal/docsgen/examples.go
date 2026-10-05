@@ -24,6 +24,12 @@ type example struct {
 	Parts []part
 }
 
+// toast reports whether the example is one toast that an action pushes. Its
+// preview shows the toast on a button press.
+func (ex *example) toast() bool {
+	return len(ex.Parts) == 1 && ex.Parts[0].Snippet.Action != ""
+}
+
 // examplesOf returns the examples of one item: the fixtures of the main
 // component first, each component in source order.
 func examplesOf(reg *registry, it *item) []*example {
@@ -90,7 +96,10 @@ func examplesOf(reg *registry, it *item) []*example {
 // lower case. An example heading must differ from each, so every anchor of
 // the page is unique.
 func reservedHeadings(it *item) map[string]bool {
-	out := map[string]bool{"installation": true, "usage": true, "examples": true, "do and don't": true, "keyboard": true}
+	out := map[string]bool{"installation": true, "usage": true, "examples": true, "api reference": true, "do and don't": true, "keyboard": true}
+	for _, comp := range it.Components {
+		out[strings.ToLower(referenceTitle(it, comp))] = true
+	}
 	for _, s := range it.Usage.Other {
 		out[strings.ToLower(s.Title)] = true
 	}

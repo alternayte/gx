@@ -60,10 +60,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package popover
 
 props {
+  // Id is the id of the root element. The trigger opens the popover by this id.
   Id       string
-  Align    Align    = Center
-  Class    string   = ""
+  // Align sets the edge of the trigger that the popover lines up with: Center, Start or End.
+  Align    Align = Center
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the popover.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -74,8 +79,11 @@ props {
 package popover
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the description.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -86,8 +94,11 @@ props {
 package popover
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the header, usually a title and a description.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -98,8 +109,11 @@ props {
 package popover
 
 props {
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the text of the title.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -112,12 +126,20 @@ package popover
 import "github.com/alternayte/gx/registry/button"
 
 props {
+  // Id is the id of the popover that the trigger opens.
   Id       string
+  // Variant sets the visual style of the button: button.Default, button.Secondary,
+  // button.Destructive, button.Outline, button.Ghost or button.Link.
   Variant  button.Variant = button.Outline
-  Size     button.Size    = button.Md
-  Class    string         = ""
+  // Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg,
+  // or an Icon size for a square button.
+  Size     button.Size = button.Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
-  Attrs    gx.Attrs       = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <button.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}>{p.Children}</button.Button>
@@ -350,6 +372,55 @@ The popover fades and zooms in and out. Safari shows the enter transition only. 
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### popover.Popover
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the root element. The trigger opens the popover by this id. |
+| `Align` | `Align` | `Center` | Align sets the edge of the trigger that the popover lines up with: Center, Start or End. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the popover. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### popover.PopoverDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the text of the description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### popover.PopoverHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the header, usually a title and a description. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### popover.PopoverTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the text of the title. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### popover.PopoverTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the popover that the trigger opens. |
+| `Variant` | `button.Variant` | `button.Outline` | Variant sets the visual style of the button: button.Default, button.Secondary, button.Destructive, button.Outline, button.Ghost or button.Link. |
+| `Size` | `button.Size` | `button.Md` | Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg, or an Icon size for a square button. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the button label. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -7,55 +7,61 @@ import (
 )
 
 type AlertProps struct {
-	Variant  Variant
-	Title    string
-	Icon     gx.Node
-	Class    string
+	// Variant sets the tone: Default or Destructive.
+	Variant Variant
+	// Title is the heading of the alert. An empty value renders no heading.
+	Title string
+	// Icon is an svg icon shown in the column before the text. A nil value renders no icon column.
+	Icon gx.Node
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the alert description. A nil value renders no description.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Alert(p AlertProps) gx.Node {
 	var _b gx.Builder
-//line Alert.gx:12:1
+//line Alert.gx:18:1
 	var _b1 gx.Builder
-//line Alert.gx:12:68
-	_b1.Add(gx.Text("\n  "))
-//line Alert.gx:13:3
-	if p.Icon != nil {
-//line Alert.gx:13:21
-		_b1.Add(gx.Text("\n    "))
-//line Alert.gx:14:5
-		_b1.Add(p.Icon)
-//line Alert.gx:14:13
-		_b1.Add(gx.Text("\n  "))
-	}
-//line Alert.gx:15:4
-	_b1.Add(gx.Text("\n  "))
-//line Alert.gx:16:3
-	if p.Title != "" {
-//line Alert.gx:16:21
-		_b1.Add(gx.Text("\n    "))
-//line Alert.gx:17:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-title", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Alert.gx:17:117
-		_b1.Add(gx.Text("\n  "))
-	}
-//line Alert.gx:18:4
+//line Alert.gx:18:68
 	_b1.Add(gx.Text("\n  "))
 //line Alert.gx:19:3
-	if p.Children != nil {
-//line Alert.gx:19:25
+	if p.Icon != nil {
+//line Alert.gx:19:21
 		_b1.Add(gx.Text("\n    "))
 //line Alert.gx:20:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-description", Kind: gx.AttrText}}, p.Children))
-//line Alert.gx:20:161
+		_b1.Add(p.Icon)
+//line Alert.gx:20:13
 		_b1.Add(gx.Text("\n  "))
 	}
 //line Alert.gx:21:4
+	_b1.Add(gx.Text("\n  "))
+//line Alert.gx:22:3
+	if p.Title != "" {
+//line Alert.gx:22:21
+		_b1.Add(gx.Text("\n    "))
+//line Alert.gx:23:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-title", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Alert.gx:23:117
+		_b1.Add(gx.Text("\n  "))
+	}
+//line Alert.gx:24:4
+	_b1.Add(gx.Text("\n  "))
+//line Alert.gx:25:3
+	if p.Children != nil {
+//line Alert.gx:25:25
+		_b1.Add(gx.Text("\n    "))
+//line Alert.gx:26:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-description", Kind: gx.AttrText}}, p.Children))
+//line Alert.gx:26:161
+		_b1.Add(gx.Text("\n  "))
+	}
+//line Alert.gx:27:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Alert.gx:22:7
+//line Alert.gx:28:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

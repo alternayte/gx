@@ -7,16 +7,19 @@ import (
 )
 
 type MenubarProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the menus of the bar.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Menubar(p MenubarProps) gx.Node {
 	var _b gx.Builder
-//line Menubar.gx:9:1
+//line Menubar.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-9 items-center gap-1 rounded-md border border-border bg-background p-1 shadow-xs", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "menubar", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Menubar.gx:9:190
+//line Menubar.gx:12:190
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

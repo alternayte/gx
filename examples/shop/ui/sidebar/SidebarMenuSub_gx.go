@@ -7,16 +7,19 @@ import (
 )
 
 type SidebarMenuSubProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the sub menu items.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func SidebarMenuSub(p SidebarMenuSubProps) gx.Node {
 	var _b gx.Builder
-//line SidebarMenuSub.gx:9:1
+//line SidebarMenuSub.gx:12:1
 	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-sub", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-sub", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuSub.gx:9:209
+//line SidebarMenuSub.gx:12:209
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

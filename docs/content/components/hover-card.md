@@ -9,17 +9,11 @@ item: "hover-card"
 <Example item="hover-card" name="hover-card-user" label="Hover Card: User">
 
 ```gx
-{hovercard.HoverCard(hovercard.HoverCardFixtures["User"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/hover-card/HoverCard.fixtures.go"
-"User": {
-  Class:    "text-sm",
-  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada")),
-  Children: demoCard(),
-}
+<hovercard.HoverCard class="text-sm">
+  <:trigger><button type="button">@ada</button></:trigger>
+  <p class="font-medium">Ada Lovelace</p>
+  <p class="text-muted-foreground">First programmer.</p>
+</hovercard.HoverCard>
 ```
 
 </Example>
@@ -52,10 +46,15 @@ Copy each file to its path in the app. Change each import of a registry package 
 package hovercard
 
 props {
+  // Trigger is the element that shows the card on hover or on keyboard focus.
   Trigger  gx.Node
-  Align    Align    = Start
-  Class    string   = ""
+  // Align sets the edge of the trigger that the card lines up with: Start, Center or End.
+  Align    Align = Start
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the card.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -157,17 +156,11 @@ The card fades, zooms and slides in. A user who asks for reduced motion gets no 
 <Example item="hover-card" name="hover-card-user" label="Hover Card: User">
 
 ```gx
-{hovercard.HoverCard(hovercard.HoverCardFixtures["User"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/hover-card/HoverCard.fixtures.go"
-"User": {
-  Class:    "text-sm",
-  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada")),
-  Children: demoCard(),
-}
+<hovercard.HoverCard class="text-sm">
+  <:trigger><button type="button">@ada</button></:trigger>
+  <p class="font-medium">Ada Lovelace</p>
+  <p class="text-muted-foreground">First programmer.</p>
+</hovercard.HoverCard>
 ```
 
 </Example>
@@ -177,18 +170,11 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="hover-card" name="hover-card-center" label="Hover Card: Center">
 
 ```gx
-{hovercard.HoverCard(hovercard.HoverCardFixtures["Center"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/hover-card/HoverCard.fixtures.go"
-"Center": {
-  Class:    "ml-32 text-sm",
-  Align:    Center,
-  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada, centered")),
-  Children: demoCard(),
-}
+<hovercard.HoverCard class="ml-32 text-sm" align={hovercard.Center}>
+  <:trigger><button type="button">@ada, centered</button></:trigger>
+  <p class="font-medium">Ada Lovelace</p>
+  <p class="text-muted-foreground">First programmer.</p>
+</hovercard.HoverCard>
 ```
 
 </Example>
@@ -198,21 +184,28 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="hover-card" name="hover-card-end" label="Hover Card: End">
 
 ```gx
-{hovercard.HoverCard(hovercard.HoverCardFixtures["End"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/hover-card/HoverCard.fixtures.go"
-"End": {
-  Class:    "ml-64 text-sm",
-  Align:    End,
-  Trigger:  gx.El("button", gx.Attrs{{Key: "type", Value: "button"}}, gx.Text("@ada, at the end")),
-  Children: demoCard(),
-}
+<hovercard.HoverCard class="ml-64 text-sm" align={hovercard.End}>
+  <:trigger><button type="button">@ada, at the end</button></:trigger>
+  <p class="font-medium">Ada Lovelace</p>
+  <p class="text-muted-foreground">First programmer.</p>
+</hovercard.HoverCard>
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### hovercard.HoverCard
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Trigger` | `gx.Node` | Required | Trigger is the element that shows the card on hover or on keyboard focus. |
+| `Align` | `Align` | `Start` | Align sets the edge of the trigger that the card lines up with: Start, Center or End. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the card. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

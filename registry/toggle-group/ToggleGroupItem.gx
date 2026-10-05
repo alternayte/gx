@@ -1,13 +1,21 @@
 package togglegroup
 
 props {
+  // Name is the form field name. Every item of an exclusive group has the same name.
   Name     string
+  // Value is the value the form submits when the item is checked.
   Value    string
-  Checked  bool     = false
-  Multiple bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Checked selects the item for the first render.
+  Checked  bool = false
+  // Multiple renders a checkbox in place of a radio, so the item toggles on its own.
+  Multiple bool = false
+  // Disabled disables the item.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the item label.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

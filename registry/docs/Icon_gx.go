@@ -7,16 +7,20 @@ import (
 )
 
 type IconProps struct {
-	Body  gx.SafeHTML
+	// Body is the inner markup of the svg, from a pinned icon pack.
+	Body gx.SafeHTML
+	// Label is the accessible name of the icon.
+	// Empty hides the icon from assistive technology.
 	Label string
+	// Class adds classes to the root element.
 	Class string
 }
 
 func Icon(p IconProps) gx.Node {
 	var _b gx.Builder
-//line Icon.gx:9:1
+//line Icon.gx:13:1
 	_b.Add(gx.Icon(string(p.Body), gx.IconProps{Label: p.Label, Class: gx.Cx("inline-block size-5", p.Class)}))
-//line Icon.gx:9:102
+//line Icon.gx:13:102
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

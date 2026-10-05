@@ -51,15 +51,25 @@ package sheet
 import "github.com/alternayte/gx/registry/icons"
 
 props {
+  // Id is the id of the dialog element. The trigger opens the sheet by this id.
   Id          string
-  Side        Side     = Right
-  Title       string   = ""
-  Description string   = ""
-  Trigger     gx.Node  = nil
-  Footer      gx.Node  = nil
-  Open        bool     = false
-  Class       string   = ""
-  Children    gx.Node  = nil
+  // Side sets the edge of the screen that the sheet slides from: Right, Left, Top or Bottom.
+  Side        Side = Right
+  // Title is the heading of the sheet. An empty value renders no heading.
+  Title       string = ""
+  // Description is the text below the title. An empty value renders no description.
+  Description string = ""
+  // Trigger is the element that opens the sheet on a click. A nil value renders no trigger.
+  Trigger     gx.Node = nil
+  // Footer is the content at the bottom of the sheet, usually the action buttons.
+  Footer      gx.Node = nil
+  // Open renders the sheet open on the first render.
+  Open        bool = false
+  // Class adds classes to the dialog element.
+  Class       string = ""
+  // Children is the content of the sheet.
+  Children    gx.Node = nil
+  // Attrs adds HTML attributes to the dialog element.
   Attrs       gx.Attrs = nil
 }
 
@@ -191,6 +201,25 @@ The theme must define these tokens: `--background`, `--foreground`, `--border`, 
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### sheet.Sheet
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Id` | `string` | Required | Id is the id of the dialog element. The trigger opens the sheet by this id. |
+| `Side` | `Side` | `Right` | Side sets the edge of the screen that the sheet slides from: Right, Left, Top or Bottom. |
+| `Title` | `string` | `""` | Title is the heading of the sheet. An empty value renders no heading. |
+| `Description` | `string` | `""` | Description is the text below the title. An empty value renders no description. |
+| `Trigger` | `gx.Node` | `nil` | Trigger is the element that opens the sheet on a click. A nil value renders no trigger. |
+| `Footer` | `gx.Node` | `nil` | Footer is the content at the bottom of the sheet, usually the action buttons. |
+| `Open` | `bool` | `false` | Open renders the sheet open on the first render. |
+| `Class` | `string` | `""` | Class adds classes to the dialog element. |
+| `Children` | `gx.Node` | `nil` | Children is the content of the sheet. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the dialog element. |
 
 ## Do and don't
 

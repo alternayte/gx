@@ -6,7 +6,9 @@ The grammar is a fork of [tree-sitter-html](https://github.com/tree-sitter/tree-
 (MIT, Max Brunsfeld and Amaan Qureshi) with three additions:
 
 - `expression`: a `{...}` Go expression, nested braces included.
-- `go_block`: the `props` and `signals` blocks, whose bodies are Go.
+- `go_block`: the `props` and `signals` blocks, whose bodies are Go. A
+  `line_comment` above a field is its description; a `go_string` holds any
+  character.
 - `fragment_attribute`: `#name` and `#name(params)`.
 
 `queries/highlights.scm` marks component tags, fragments, signals and

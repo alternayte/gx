@@ -1,8 +1,11 @@
 package navigationmenu
 
 props {
-  Class    string   = ""
+  // Class adds classes to the panel element.
+  Class    string = ""
+  // Children is the content of the panel, usually links.
   Children gx.Node
+  // Attrs adds HTML attributes to the panel element.
   Attrs    gx.Attrs = nil
 }
 

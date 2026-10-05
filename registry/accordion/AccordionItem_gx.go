@@ -8,20 +8,28 @@ import (
 )
 
 type AccordionItemProps struct {
-	Name     string
-	Title    string
-	Open     bool
+	// Name is the name attribute of the details element.
+	// Items with the same name form one accordion, and only one of them is open at a time.
+	Name string
+	// Title is the text of the summary, the part that opens and closes the item.
+	Title string
+	// Open renders the item open. The default is closed.
+	Open bool
+	// Disabled stops the summary from opening or closing the item.
 	Disabled bool
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the item panel.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func AccordionItem(p AccordionItemProps) gx.Node {
 	var _b gx.Builder
-//line AccordionItem.gx:15:1
+//line AccordionItem.gx:23:1
 	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/accordion-item border-border border-b last:border-b-0 [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 inert:pointer-events-none inert:opacity-50 [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}, gx.Bool("inert", p.Disabled)}, gx.Frag(gx.Text("\n    "), gx.Text(p.Title), gx.Text("\n    "), icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-open/accordion-item:rotate-180 motion-reduce:transition-none"}), gx.Text("\n  "))), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "pt-0 pb-4 text-sm", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line AccordionItem.gx:21:11
+//line AccordionItem.gx:29:11
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

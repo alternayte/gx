@@ -3,12 +3,20 @@ package popover
 import "github.com/alternayte/gx/examples/shop/ui/button"
 
 props {
+  // Id is the id of the popover that the trigger opens.
   Id       string
+  // Variant sets the visual style of the button: button.Default, button.Secondary,
+  // button.Destructive, button.Outline, button.Ghost or button.Link.
   Variant  button.Variant = button.Outline
-  Size     button.Size    = button.Md
-  Class    string         = ""
+  // Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg,
+  // or an Icon size for a square button.
+  Size     button.Size = button.Md
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the button label.
   Children gx.Node
-  Attrs    gx.Attrs       = nil
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
 }
 
 <button.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}>{p.Children}</button.Button>

@@ -7,21 +7,29 @@ import (
 )
 
 type SwitchProps struct {
-	Size     Size
-	Name     string
-	Label    string
-	Value    string
-	Checked  bool
+	// Size sets the size of the track and the thumb: Md or Sm.
+	Size Size
+	// Name is the form field name.
+	Name string
+	// Label is the accessible name of the switch.
+	Label string
+	// Value is the value the form submits when the switch is on.
+	Value string
+	// Checked sets the switch on for the first render.
+	Checked bool
+	// Disabled disables the switch.
 	Disabled bool
-	Class    string
-	Attrs    gx.Attrs
+	// Class adds classes to the root element.
+	Class string
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Switch(p SwitchProps) gx.Node {
 	var _b gx.Builder
-//line Switch.gx:14:1
+//line Switch.gx:22:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex shrink-0 items-center rounded-full border border-transparent bg-input shadow-xs transition-all outline-none has-[:checked]:bg-primary has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 dark:bg-input/80 dark:has-[:checked]:bg-primary motion-reduce:transition-none", trackClass[p.size()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-size", Value: string(p.size()), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "switch", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none block translate-x-0 rounded-full bg-background ring-0 transition-transform peer-checked:translate-x-[calc(100%-2px)] dark:bg-foreground dark:peer-checked:bg-primary-foreground motion-reduce:transition-none", thumbClass[p.size()]), Kind: gx.AttrText}}), gx.Text("\n"))))
-//line Switch.gx:17:9
+//line Switch.gx:25:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

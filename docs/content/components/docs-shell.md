@@ -9,13 +9,12 @@ item: "docs-shell"
 <Example item="docs-shell" name="header-default" label="Docs shell: Header: Default" block>
 
 ```gx
-{shell.Header(shell.HeaderFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Header.fixtures.go"
-"Default": {Site: fixtureSite}
+<shell.Header site={shell.Config{
+  Title:    "Deedbox docs",
+  Version:  "v0.1.0",
+  Links:    []shell.Link{{Label: "GitHub", Href: gx.URL("https://example.com/gx")}},
+  EditBase: "https://example.com/edit/main/content/docs/",
+}} />
 ```
 
 </Example>
@@ -82,6 +81,7 @@ var HeaderFixtures = gx.Fixtures[HeaderProps]{
 package shell
 
 props {
+  // Site is the site-wide data: the title, the version and the header links.
   Site Config
 }
 
@@ -117,8 +117,11 @@ var NotFoundFixtures = gx.Fixtures[NotFoundProps]{
 package shell
 
 props {
+  // Title is the heading of the page.
   Title   string = "Page not found"
+  // Message is the text below the title.
   Message string = "The page does not exist. Check the address or return to the start."
+  // Home is the target of the Go home link.
   Home    string = "/"
 }
 
@@ -145,7 +148,9 @@ var PageMetaFixtures = gx.Fixtures[PageMetaProps]{
 package shell
 
 props {
+  // Site is the site-wide data. Its EditBase builds the edit link; empty hides the link.
   Site Config
+  // Page is the data of the current page: its path and its last-updated text.
   Page Page
 }
 
@@ -165,8 +170,8 @@ package shell
 import "github.com/alternayte/gx"
 
 var PaginationFixtures = gx.Fixtures[PaginationProps]{
-	"Both":  {Prev: &NavItem{Label: "Start", Href: gx.URL("/start/")}, Next: fixturePage.Next},
-	"Next":  {Next: fixturePage.Next},
+	"Both":  {Prev: &NavItem{Label: "Start", Href: gx.URL("/start/")}, Next: fixtureNext},
+	"Next":  {Next: fixtureNext},
 	"Empty": {},
 }
 ```
@@ -175,7 +180,9 @@ var PaginationFixtures = gx.Fixtures[PaginationProps]{
 package shell
 
 props {
+  // Prev is the previous sidebar item. Nil omits the link.
   Prev *NavItem
+  // Next is the next sidebar item. Nil omits the link.
   Next *NavItem
 }
 
@@ -230,9 +237,14 @@ var ShellFixtures = gx.Fixtures[ShellProps]{
 package shell
 
 props {
+  // Site is the site-wide data: the title, the version and the header links.
   Site     Config
+  // Nav is the sidebar model: the groups and their items.
   Nav      Nav
+  // Page is the data of the current page: its path, its headings and its previous and next
+  // items.
   Page     Page
+  // Children is the content of the page.
   Children gx.Node
 }
 
@@ -266,7 +278,10 @@ var SidebarFixtures = gx.Fixtures[SidebarProps]{
 package shell
 
 props {
+  // Nav is the sidebar model: the groups and their items.
   Nav  Nav
+  // Path is the site path of the current page.
+  // A nested item that holds the page starts open.
   Path string
 }
 
@@ -285,8 +300,8 @@ package shell
 import "github.com/alternayte/gx"
 
 var SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{
-	"Default": {Group: fixtureNav.Groups[0], Path: "/start/"},
-	"Nested":  {Group: fixtureNav.Groups[1], Path: "/guides/routing/pages/"},
+	"Default": {Group: fixtureStart, Path: "/start/"},
+	"Nested":  {Group: fixtureGuides, Path: "/guides/routing/pages/"},
 }
 ```
 
@@ -294,7 +309,11 @@ var SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{
 package shell
 
 props {
+  // Group is the sidebar section: its label, its badge and its items.
+  // A group with Collapsed starts closed.
   Group NavGroup
+  // Path is the site path of the current page.
+  // A nested item that holds the page starts open.
   Path  string
 }
 
@@ -320,7 +339,7 @@ import "github.com/alternayte/gx"
 
 var SidebarItemFixtures = gx.Fixtures[SidebarItemProps]{
 	"Link":   {Item: NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")}, Path: "/guides/routing/"},
-	"Nested": {Item: fixtureNav.Groups[1].Items[0], Path: "/guides/routing/pages/"},
+	"Nested": {Item: fixtureRouting, Path: "/guides/routing/pages/"},
 }
 ```
 
@@ -328,7 +347,10 @@ var SidebarItemFixtures = gx.Fixtures[SidebarItemProps]{
 package shell
 
 props {
+  // Item is the sidebar link. An item with nested items shows as a collapsible list.
   Item NavItem
+  // Path is the site path of the current page.
+  // A nested item that holds the page starts open.
   Path string
 }
 
@@ -373,9 +395,13 @@ var SplashFixtures = gx.Fixtures[SplashProps]{
 package shell
 
 props {
+  // Title is the heading of the splash.
   Title    string
+  // Tagline is the text below the title. Empty omits it.
   Tagline  string = ""
+  // Actions is the row of links or buttons below the tagline. Nil omits it.
   Actions  gx.Node = nil
+  // Children is the content below the actions. Nil omits it.
   Children gx.Node = nil
 }
 
@@ -419,7 +445,7 @@ package shell
 import "github.com/alternayte/gx"
 
 var TocFixtures = gx.Fixtures[TocProps]{
-	"Default": {Headings: fixturePage.ShownTOC()},
+	"Default": {Headings: fixtureHeadings},
 }
 ```
 
@@ -427,6 +453,7 @@ var TocFixtures = gx.Fixtures[TocProps]{
 package shell
 
 props {
+  // Headings holds the entries of the table of contents. Empty renders nothing.
   Headings []Heading
 }
 
@@ -451,16 +478,22 @@ package shell
 
 import "github.com/alternayte/gx"
 
+// fixtureRouting is the nested item of the shell fixtures.
+var fixtureRouting = NavItem{Label: "Routing", Href: gx.URL("/guides/routing/"), Items: []NavItem{
+	{Label: "Pages", Href: gx.URL("/guides/routing/pages/")},
+}}
+
+// fixtureStart and fixtureGuides are the open groups of the shell fixtures.
+var fixtureStart = NavGroup{Label: "Start", Items: []NavItem{
+	{Label: "Introduction", Href: gx.URL("/start/"), Badge: "New"},
+}}
+
+var fixtureGuides = NavGroup{Label: "Guides", Badge: "12", Items: []NavItem{fixtureRouting}}
+
 // fixtureNav is the sidebar model of the shell fixtures (REQ-CNT-06).
 var fixtureNav = Nav{Groups: []NavGroup{
-	{Label: "Start", Items: []NavItem{
-		{Label: "Introduction", Href: gx.URL("/start/"), Badge: "New"},
-	}},
-	{Label: "Guides", Badge: "12", Items: []NavItem{
-		{Label: "Routing", Href: gx.URL("/guides/routing/"), Items: []NavItem{
-			{Label: "Pages", Href: gx.URL("/guides/routing/pages/")},
-		}},
-	}},
+	fixtureStart,
+	fixtureGuides,
 	{Label: "Errors", Collapsed: true, Items: []NavItem{
 		{Label: "GX1000", Href: gx.URL("/errors/GX1000/")},
 	}},
@@ -474,6 +507,16 @@ var fixtureSite = Config{
 	EditBase: "https://example.com/edit/main/content/docs/",
 }
 
+// fixtureNext is the next page of the shell fixtures.
+var fixtureNext = &NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")}
+
+// fixtureHeadings are the headings of the shell fixtures. Each one is in
+// the default depth of the table of contents.
+var fixtureHeadings = []Heading{
+	{Level: 2, Text: "Install", ID: "install"},
+	{Level: 3, Text: "First page", ID: "first-page"},
+}
+
 // fixturePage is the page data of the shell fixtures.
 var fixturePage = Page{
 	Title:   "Introduction",
@@ -481,11 +524,8 @@ var fixturePage = Page{
 	Section: "Start",
 	Updated: "Oct 2, 2026",
 	Prev:    nil,
-	Next:    &NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")},
-	TOC: []Heading{
-		{Level: 2, Text: "Install", ID: "install"},
-		{Level: 3, Text: "First page", ID: "first-page"},
-	},
+	Next:    fixtureNext,
+	TOC:     fixtureHeadings,
 }
 ```
 
@@ -669,13 +709,12 @@ Set `[site] url` in `gx.toml` so the export writes canonical links,
 <Example item="docs-shell" name="header-default" label="Docs shell: Header: Default" block>
 
 ```gx
-{shell.Header(shell.HeaderFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Header.fixtures.go"
-"Default": {Site: fixtureSite}
+<shell.Header site={shell.Config{
+  Title:    "Deedbox docs",
+  Version:  "v0.1.0",
+  Links:    []shell.Link{{Label: "GitHub", Href: gx.URL("https://example.com/gx")}},
+  EditBase: "https://example.com/edit/main/content/docs/",
+}} />
 ```
 
 </Example>
@@ -695,13 +734,23 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="page-meta-default" label="Docs shell: PageMeta: Default" block>
 
 ```gx
-{shell.PageMeta(shell.PageMetaFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/PageMeta.fixtures.go"
-"Default": {Site: fixtureSite, Page: fixturePage}
+<shell.PageMeta site={shell.Config{
+  Title:    "Deedbox docs",
+  Version:  "v0.1.0",
+  Links:    []shell.Link{{Label: "GitHub", Href: gx.URL("https://example.com/gx")}},
+  EditBase: "https://example.com/edit/main/content/docs/",
+}} page={shell.Page{
+  Title:   "Introduction",
+  Path:    "/start/",
+  Section: "Start",
+  Updated: "Oct 2, 2026",
+  Prev:    nil,
+  Next:    &shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")},
+  TOC: []shell.Heading{
+    {Level: 2, Text: "Install", ID: "install"},
+    {Level: 3, Text: "First page", ID: "first-page"},
+  },
+}} />
 ```
 
 </Example>
@@ -721,13 +770,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="pagination-both" label="Docs shell: Pagination: Both" block>
 
 ```gx
-{shell.Pagination(shell.PaginationFixtures["Both"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Pagination.fixtures.go"
-"Both":  {Prev: &NavItem{Label: "Start", Href: gx.URL("/start/")}, Next: fixturePage.Next}
+<shell.Pagination prev={&shell.NavItem{Label: "Start", Href: gx.URL("/start/")}} next={&shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")}} />
 ```
 
 </Example>
@@ -737,13 +780,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="pagination-next" label="Docs shell: Pagination: Next" block>
 
 ```gx
-{shell.Pagination(shell.PaginationFixtures["Next"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Pagination.fixtures.go"
-"Next":  {Next: fixturePage.Next}
+<shell.Pagination next={&shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")}} prev={(*shell.NavItem)(nil)} />
 ```
 
 </Example>
@@ -753,13 +790,7 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="pagination-empty" label="Docs shell: Pagination: Empty" block>
 
 ```gx
-{shell.Pagination(shell.PaginationFixtures["Empty"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Pagination.fixtures.go"
-"Empty": {}
+<shell.Pagination prev={(*shell.NavItem)(nil)} next={(*shell.NavItem)(nil)} />
 ```
 
 </Example>
@@ -779,13 +810,35 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="shell-default" label="Docs shell: Shell: Default" block>
 
 ```gx
-{shell.Shell(shell.ShellFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Shell.fixtures.go"
-"Default": {Site: fixtureSite, Nav: fixtureNav, Page: fixturePage, Children: gx.Text("Body.")}
+<shell.Shell site={shell.Config{
+  Title:    "Deedbox docs",
+  Version:  "v0.1.0",
+  Links:    []shell.Link{{Label: "GitHub", Href: gx.URL("https://example.com/gx")}},
+  EditBase: "https://example.com/edit/main/content/docs/",
+}} nav={shell.Nav{Groups: []shell.NavGroup{
+  shell.NavGroup{Label: "Start", Items: []shell.NavItem{
+    {Label: "Introduction", Href: gx.URL("/start/"), Badge: "New"},
+  }},
+  shell.NavGroup{Label: "Guides", Badge: "12", Items: []shell.NavItem{shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/"), Items: []shell.NavItem{
+    {Label: "Pages", Href: gx.URL("/guides/routing/pages/")},
+  }}}},
+  {Label: "Errors", Collapsed: true, Items: []shell.NavItem{
+    {Label: "GX1000", Href: gx.URL("/errors/GX1000/")},
+  }},
+}}} page={shell.Page{
+  Title:   "Introduction",
+  Path:    "/start/",
+  Section: "Start",
+  Updated: "Oct 2, 2026",
+  Prev:    nil,
+  Next:    &shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/")},
+  TOC: []shell.Heading{
+    {Level: 2, Text: "Install", ID: "install"},
+    {Level: 3, Text: "First page", ID: "first-page"},
+  },
+}}>
+  Body.
+</shell.Shell>
 ```
 
 </Example>
@@ -795,13 +848,17 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="sidebar-default" label="Docs shell: Sidebar: Default" block>
 
 ```gx
-{shell.Sidebar(shell.SidebarFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Sidebar.fixtures.go"
-"Default": {Nav: fixtureNav, Path: "/guides/routing/pages/"}
+<shell.Sidebar nav={shell.Nav{Groups: []shell.NavGroup{
+  shell.NavGroup{Label: "Start", Items: []shell.NavItem{
+    {Label: "Introduction", Href: gx.URL("/start/"), Badge: "New"},
+  }},
+  shell.NavGroup{Label: "Guides", Badge: "12", Items: []shell.NavItem{shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/"), Items: []shell.NavItem{
+    {Label: "Pages", Href: gx.URL("/guides/routing/pages/")},
+  }}}},
+  {Label: "Errors", Collapsed: true, Items: []shell.NavItem{
+    {Label: "GX1000", Href: gx.URL("/errors/GX1000/")},
+  }},
+}}} path="/guides/routing/pages/" />
 ```
 
 </Example>
@@ -811,13 +868,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="sidebar-group-default" label="Docs shell: SidebarGroup: Default" block>
 
 ```gx
-{shell.SidebarGroup(shell.SidebarGroupFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/SidebarGroup.fixtures.go"
-"Default": {Group: fixtureNav.Groups[0], Path: "/start/"}
+<shell.SidebarGroup group={shell.NavGroup{Label: "Start", Items: []shell.NavItem{
+  {Label: "Introduction", Href: gx.URL("/start/"), Badge: "New"},
+}}} path="/start/" />
 ```
 
 </Example>
@@ -827,13 +880,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="sidebar-group-nested" label="Docs shell: SidebarGroup: Nested" block>
 
 ```gx
-{shell.SidebarGroup(shell.SidebarGroupFixtures["Nested"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/SidebarGroup.fixtures.go"
-"Nested":  {Group: fixtureNav.Groups[1], Path: "/guides/routing/pages/"}
+<shell.SidebarGroup group={shell.NavGroup{Label: "Guides", Badge: "12", Items: []shell.NavItem{shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/"), Items: []shell.NavItem{
+  {Label: "Pages", Href: gx.URL("/guides/routing/pages/")},
+}}}}} path="/guides/routing/pages/" />
 ```
 
 </Example>
@@ -853,13 +902,9 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="sidebar-item-nested" label="Docs shell: SidebarItem: Nested" block>
 
 ```gx
-{shell.SidebarItem(shell.SidebarItemFixtures["Nested"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/SidebarItem.fixtures.go"
-"Nested": {Item: fixtureNav.Groups[1].Items[0], Path: "/guides/routing/pages/"}
+<shell.SidebarItem item={shell.NavItem{Label: "Routing", Href: gx.URL("/guides/routing/"), Items: []shell.NavItem{
+  {Label: "Pages", Href: gx.URL("/guides/routing/pages/")},
+}}} path="/guides/routing/pages/" />
 ```
 
 </Example>
@@ -899,16 +944,98 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="docs-shell" name="toc-default" label="Docs shell: Toc: Default" block>
 
 ```gx
-{shell.Toc(shell.TocFixtures["Default"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/docs-shell/Toc.fixtures.go"
-"Default": {Headings: fixturePage.ShownTOC()}
+<shell.Toc headings={[]shell.Heading{
+  {Level: 2, Text: "Install", ID: "install"},
+  {Level: 3, Text: "First page", ID: "first-page"},
+}} />
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### shell.Header
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Site` | `Config` | Required | Site is the site-wide data: the title, the version and the header links. |
+
+### shell.NotFound
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | `"Page not found"` | Title is the heading of the page. |
+| `Message` | `string` | `"The page does not exist. Check the address or return to the start."` | Message is the text below the title. |
+| `Home` | `string` | `"/"` | Home is the target of the Go home link. |
+
+### shell.PageMeta
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Site` | `Config` | Required | Site is the site-wide data. Its EditBase builds the edit link; empty hides the link. |
+| `Page` | `Page` | Required | Page is the data of the current page: its path and its last-updated text. |
+
+### shell.Pagination
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Prev` | `*NavItem` | Required | Prev is the previous sidebar item. Nil omits the link. |
+| `Next` | `*NavItem` | Required | Next is the next sidebar item. Nil omits the link. |
+
+### shell.SearchDialog
+
+The component has no props.
+
+### shell.Shell
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Site` | `Config` | Required | Site is the site-wide data: the title, the version and the header links. |
+| `Nav` | `Nav` | Required | Nav is the sidebar model: the groups and their items. |
+| `Page` | `Page` | Required | Page is the data of the current page: its path, its headings and its previous and next items. |
+| `Children` | `gx.Node` | Required | Children is the content of the page. |
+
+### shell.Sidebar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Nav` | `Nav` | Required | Nav is the sidebar model: the groups and their items. |
+| `Path` | `string` | Required | Path is the site path of the current page. A nested item that holds the page starts open. |
+
+### shell.SidebarGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Group` | `NavGroup` | Required | Group is the sidebar section: its label, its badge and its items. A group with Collapsed starts closed. |
+| `Path` | `string` | Required | Path is the site path of the current page. A nested item that holds the page starts open. |
+
+### shell.SidebarItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Item` | `NavItem` | Required | Item is the sidebar link. An item with nested items shows as a collapsible list. |
+| `Path` | `string` | Required | Path is the site path of the current page. A nested item that holds the page starts open. |
+
+### shell.Splash
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | Required | Title is the heading of the splash. |
+| `Tagline` | `string` | `""` | Tagline is the text below the title. Empty omits it. |
+| `Actions` | `gx.Node` | `nil` | Actions is the row of links or buttons below the tagline. Nil omits it. |
+| `Children` | `gx.Node` | `nil` | Children is the content below the actions. Nil omits it. |
+
+### shell.ThemeSelect
+
+The component has no props.
+
+### shell.Toc
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Headings` | `[]Heading` | Required | Headings holds the entries of the table of contents. Empty renders nothing. |
 
 ## Do and don't
 

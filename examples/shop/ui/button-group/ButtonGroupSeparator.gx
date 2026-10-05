@@ -1,9 +1,13 @@
 package buttongroup
 
 props {
+  // Orientation sets the direction of the line: Vertical or Horizontal. Use Vertical in a
+  // horizontal group.
   Orientation Orientation = Vertical
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div data-slot="button-group-separator" role="none" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", separatorClass[Orientation(p.orientation())], "relative m-0! self-stretch bg-input", p.Class)} {...p.Attrs}></div>

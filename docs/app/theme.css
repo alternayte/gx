@@ -21,6 +21,10 @@
   .gx-content :where(h3) {
     @apply mt-8 scroll-mt-20 text-lg font-semibold tracking-tight;
   }
+  /* A heading that is one long name breaks inside the name. */
+  .gx-content :where(h2, h3) {
+    overflow-wrap: anywhere;
+  }
   .gx-content :where(p) {
     @apply my-4 leading-7;
   }
@@ -47,9 +51,10 @@
   .gx-content :where(h2, h3) > a.anchor:focus-visible {
     @apply opacity-100;
   }
-  /* The preview frame: taller for a block. */
+  /* The preview frame. The preview sets the height of the frame from its
+     content; these heights hold until it loads. */
   .gx-frame {
-    height: 22rem;
+    height: 12rem;
   }
   .gx-frame-block {
     height: 40rem;
@@ -66,6 +71,11 @@
   }
   .gx-content :where(td) {
     @apply border-b border-border px-3 py-2 align-top;
+  }
+  /* The last column holds prose: it keeps a width a sentence can use when
+     the table scrolls. */
+  .gx-content :where(td:last-child:not(:first-child)) {
+    @apply min-w-56;
   }
 
   /* Code frames: a long source file scrolls inside its frame. */
@@ -109,13 +119,26 @@
   /* The stage of a preview page. An inline example sits in the centre; a
      block-level example takes the full width. */
   .gx-stage {
-    @apply min-h-screen content-center p-6 text-center;
+    @apply grid min-h-screen content-center p-6;
   }
-  .gx-stage > * {
+  /* The content has the height of the example alone; the frame takes its
+     height from it. */
+  .gx-stage-content {
+    @apply flow-root min-w-0 text-center;
+  }
+  .gx-stage-content > * {
     @apply mx-auto text-start;
   }
+  /* An example with an overlay starts at the top: its popover opens into
+     the room below. */
+  .gx-stage-top {
+    @apply content-start;
+  }
   .gx-stage-block {
-    @apply content-normal p-0 text-start;
+    @apply content-normal p-0;
+  }
+  .gx-stage-block > .gx-stage-content {
+    @apply text-start;
   }
 }
 

@@ -1,9 +1,14 @@
 package aspectratio
 
 props {
-  Ratio    string   = "16 / 9"
-  Class    string   = ""
+  // Ratio is the CSS aspect-ratio value, width over height, for example 4 / 3. An empty value is
+  // 16 / 9.
+  Ratio    string = "16 / 9"
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the box, for example an image.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

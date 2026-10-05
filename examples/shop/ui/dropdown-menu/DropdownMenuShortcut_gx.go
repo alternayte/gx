@@ -7,16 +7,19 @@ import (
 )
 
 type DropdownMenuShortcutProps struct {
-	Class    string
+	// Class adds classes to the root element.
+	Class string
+	// Children is the text of the keyboard shortcut.
 	Children gx.Node
-	Attrs    gx.Attrs
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func DropdownMenuShortcut(p DropdownMenuShortcutProps) gx.Node {
 	var _b gx.Builder
-//line DropdownMenuShortcut.gx:9:1
+//line DropdownMenuShortcut.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenuShortcut.gx:9:119
+//line DropdownMenuShortcut.gx:12:119
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

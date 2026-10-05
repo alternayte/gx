@@ -54,10 +54,14 @@ Copy each file to its path in the app. Change each import of a registry package 
 package buttongroup
 
 props {
+  // Orientation sets the direction of the group: Horizontal for a row or Vertical for a column.
   Orientation Orientation = Horizontal
+  // Children is the content of the group: the buttons, inputs, separators and text.
   Children    gx.Node
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div role="group" data-slot="button-group" data-orientation={p.orientation()} class={gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class)} {...p.Attrs}>{p.Children}</div>
@@ -106,9 +110,13 @@ var ButtonGroupFixtures = gx.Fixtures[ButtonGroupProps]{
 package buttongroup
 
 props {
-  For      string   = ""
-  Class    string   = ""
+  // For is the id of an input. A non-empty value renders the text as the label of that input.
+  For      string = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the text block.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
@@ -131,9 +139,13 @@ var ButtonGroupTextFixtures = gx.Fixtures[ButtonGroupTextProps]{"Text": {Childre
 package buttongroup
 
 props {
+  // Orientation sets the direction of the line: Vertical or Horizontal. Use Vertical in a
+  // horizontal group.
   Orientation Orientation = Vertical
-  Class       string      = ""
-  Attrs       gx.Attrs    = nil
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
 }
 
 <div data-slot="button-group-separator" role="none" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", separatorClass[Orientation(p.orientation())], "relative m-0! self-stretch bg-input", p.Class)} {...p.Attrs}></div>
@@ -327,6 +339,36 @@ A group in a group makes a gap between the inner groups.
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### buttongroup.ButtonGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Orientation` | `Orientation` | `Horizontal` | Orientation sets the direction of the group: Horizontal for a row or Vertical for a column. |
+| `Children` | `gx.Node` | Required | Children is the content of the group: the buttons, inputs, separators and text. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### buttongroup.ButtonGroupSeparator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Orientation` | `Orientation` | `Vertical` | Orientation sets the direction of the line: Vertical or Horizontal. Use Vertical in a horizontal group. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
+
+### buttongroup.ButtonGroupText
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `For` | `string` | `""` | For is the id of an input. A non-empty value renders the text as the label of that input. |
+| `Class` | `string` | `""` | Class adds classes to the root element. |
+| `Children` | `gx.Node` | Required | Children is the content of the text block. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ## Do and don't
 

@@ -7,92 +7,99 @@ import (
 )
 
 type CardProps struct {
-	Title       string
+	// Title is the heading of the card. An empty value renders no heading.
+	Title string
+	// Description is the text below the title. An empty value renders no description.
 	Description string
-	Action      gx.Node
-	Footer      gx.Node
-	Class       string
-	Children    gx.Node
-	Attrs       gx.Attrs
+	// Action is a control shown at the top right of the card header. A nil value renders no action.
+	Action gx.Node
+	// Footer is the content of the card footer. A nil value renders no footer.
+	Footer gx.Node
+	// Class adds classes to the root element.
+	Class string
+	// Children is the content of the card.
+	Children gx.Node
+	// Attrs adds HTML attributes to the root element.
+	Attrs gx.Attrs
 }
 
 func Card(p CardProps) gx.Node {
 	var _b gx.Builder
-//line Card.gx:13:1
+//line Card.gx:20:1
 	var _b1 gx.Builder
-//line Card.gx:13:158
+//line Card.gx:20:158
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:14:3
+//line Card.gx:21:3
 	if p.Title != "" || p.Description != "" || p.Action != nil {
-//line Card.gx:14:63
+//line Card.gx:21:63
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:15:5
+//line Card.gx:22:5
 		var _b2 gx.Builder
-//line Card.gx:15:195
+//line Card.gx:22:195
 		_b2.Add(gx.Text("\n      "))
-//line Card.gx:16:7
+//line Card.gx:23:7
 		if p.Title != "" {
-//line Card.gx:16:25
+//line Card.gx:23:25
 			_b2.Add(gx.Text("\n        "))
-//line Card.gx:17:9
+//line Card.gx:24:9
 			_b2.Add(gx.El("h3", gx.Attrs{gx.Attr{Key: "class", Value: "leading-none font-semibold", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "card-title", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Card.gx:17:85
+//line Card.gx:24:85
 			_b2.Add(gx.Text("\n      "))
 		}
-//line Card.gx:18:8
+//line Card.gx:25:8
 		_b2.Add(gx.Text("\n      "))
-//line Card.gx:19:7
+//line Card.gx:26:7
 		if p.Description != "" {
-//line Card.gx:19:31
+//line Card.gx:26:31
 			_b2.Add(gx.Text("\n        "))
-//line Card.gx:20:9
+//line Card.gx:27:9
 			_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "card-description", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Card.gx:20:98
+//line Card.gx:27:98
 			_b2.Add(gx.Text("\n      "))
 		}
-//line Card.gx:21:8
+//line Card.gx:28:8
 		_b2.Add(gx.Text("\n      "))
-//line Card.gx:22:7
+//line Card.gx:29:7
 		if p.Action != nil {
-//line Card.gx:22:27
+//line Card.gx:29:27
 			_b2.Add(gx.Text("\n        "))
-//line Card.gx:23:9
+//line Card.gx:30:9
 			_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 row-span-2 row-start-1 self-start justify-self-end", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "card-action", Kind: gx.AttrText}}, p.Action))
-//line Card.gx:23:125
+//line Card.gx:30:125
 			_b2.Add(gx.Text("\n      "))
 		}
-//line Card.gx:24:8
+//line Card.gx:31:8
 		_b2.Add(gx.Text("\n    "))
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "card-header", Kind: gx.AttrText}}, _b2.Node()))
-//line Card.gx:25:11
+//line Card.gx:32:11
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:26:4
+//line Card.gx:33:4
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:27:3
+//line Card.gx:34:3
 	if p.Children != nil {
-//line Card.gx:27:25
+//line Card.gx:34:25
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:28:5
+//line Card.gx:35:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "px-6", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "card-content", Kind: gx.AttrText}}, p.Children))
-//line Card.gx:28:66
+//line Card.gx:35:66
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:29:4
+//line Card.gx:36:4
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:30:3
+//line Card.gx:37:3
 	if p.Footer != nil {
-//line Card.gx:30:23
+//line Card.gx:37:23
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:31:5
+//line Card.gx:38:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center px-6 [.border-t]:pt-6", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "card-footer", Kind: gx.AttrText}}, p.Footer))
-//line Card.gx:31:98
+//line Card.gx:38:98
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:32:4
+//line Card.gx:39:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-6 rounded-xl border border-border bg-card py-6 text-card-foreground shadow-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "card", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Card.gx:33:7
+//line Card.gx:40:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

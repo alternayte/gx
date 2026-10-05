@@ -1,9 +1,13 @@
 package sidebar
 
 props {
+  // Label is the accessible name of the button.
   Label    string
-  Class    string   = ""
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the icon of the button.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -7,15 +7,18 @@ import (
 )
 
 type TriangleAlertProps struct {
+	// Label is the accessible name of the icon.
+	// Empty hides the icon from assistive technology.
 	Label string
+	// Class adds classes to the root element.
 	Class string
 }
 
 func TriangleAlert(p TriangleAlertProps) gx.Node {
 	var _b gx.Builder
-//line TriangleAlert.gx:8:1
+//line TriangleAlert.gx:11:1
 	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line TriangleAlert.gx:8:270
+//line TriangleAlert.gx:11:270
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

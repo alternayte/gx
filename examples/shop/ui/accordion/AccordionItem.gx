@@ -3,12 +3,20 @@ package accordion
 import "github.com/alternayte/gx/examples/shop/ui/icons"
 
 props {
+  // Name is the name attribute of the details element.
+  // Items with the same name form one accordion, and only one of them is open at a time.
   Name     string
+  // Title is the text of the summary, the part that opens and closes the item.
   Title    string
-  Open     bool     = false
-  Disabled bool     = false
-  Class    string   = ""
+  // Open renders the item open. The default is closed.
+  Open     bool = false
+  // Disabled stops the summary from opening or closing the item.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the item panel.
   Children gx.Node
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 

@@ -7,6 +7,7 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -75,15 +76,16 @@ type component struct {
 	Name string
 	// Gx is the parsed .gx file. It is nil for a component written in Go.
 	Gx *compiler.File
-	// FixturesVar is the declared gx.Fixtures variable.
+	// FixturesVar is the declared gx.Fixtures variable; PropsType is its
+	// type argument.
 	FixturesVar string
+	PropsType   ast.Expr
 	// Wrap is the optional <Name>Wrap function of the fixtures file.
 	Wrap     string
 	Fixtures []fixture
-	// file is the parsed fixtures file; src is its text.
+	// file is the parsed fixtures file; in is its text.
 	file *ast.File
-	src  []byte
-	fset *token.FileSet
+	in   *source
 }
 
 // item is one registry item.
@@ -103,6 +105,37 @@ type item struct {
 	Server bool
 	// names holds the package-level identifiers of the item package.
 	names map[string]bool
+	// structs holds the fields of the props structs that the Go files of
+	// the item declare, by type name.
+	structs map[string][]prop
+	// helpers holds the unexported package-level values and one-line
+	// functions of the item package. The converter writes their value in
+	// place of their name.
+	helpers map[string]*helper
+}
+
+// prop is one row of an API reference table.
+type prop struct {
+	Name, Type, Default, Doc string
+	// Required is true for a prop with no default.
+	Required bool
+}
+
+// source is one parsed Go file of an item.
+type source struct {
+	src  []byte
+	fset *token.FileSet
+	// imports maps each package qualifier of the file to its import path.
+	imports map[string]string
+}
+
+// helper is an unexported constant, variable or function of an item
+// package that a fixture names. A function helper is one return statement.
+type helper struct {
+	in     *source
+	value  ast.Expr
+	params []string
+	isFunc bool
 }
 
 // registry is the loaded registry directory.
@@ -190,6 +223,8 @@ func (reg *registry) loadItem(it *item) error {
 		return err
 	}
 	it.names = map[string]bool{}
+	it.helpers = map[string]*helper{}
+	it.structs = map[string][]prop{}
 	fset := token.NewFileSet()
 	var fixtureFiles []string
 	for _, e := range entries {
@@ -202,12 +237,14 @@ func (reg *registry) loadItem(it *item) error {
 		if err != nil {
 			return err
 		}
-		file, err := parser.ParseFile(fset, path, src, parser.SkipObjectResolution)
+		file, err := parser.ParseFile(fset, path, src, parser.SkipObjectResolution|parser.ParseComments)
 		if err != nil {
 			return fmt.Errorf("docsgen: %w", err)
 		}
 		it.PkgName = file.Name.Name
 		declaredNames(file, it.names)
+		declaredHelpers(file, &source{src: src, fset: fset, imports: reg.fileImports(file)}, it.helpers)
+		declaredProps(file, src, fset, it.structs)
 		if strings.HasSuffix(name, ".fixtures.go") {
 			fixtureFiles = append(fixtureFiles, name)
 		}
@@ -275,6 +312,133 @@ func declaredNames(file *ast.File, names map[string]bool) {
 	}
 }
 
+// fileImports maps the package qualifiers of a Go file to import paths. An
+// import of a registry item has the package name of the item.
+func (reg *registry) fileImports(file *ast.File) map[string]string {
+	out := map[string]string{}
+	for _, spec := range file.Imports {
+		p, err := strconv.Unquote(spec.Path.Value)
+		if err != nil {
+			continue
+		}
+		name := path.Base(p)
+		if spec.Name != nil {
+			name = spec.Name.Name
+		} else if dir, ok := reg.packageDir(p); ok {
+			if pkg := packageName(dir); pkg != "" {
+				name = pkg
+			}
+		}
+		out[name] = p
+	}
+	return out
+}
+
+// packageName returns the package name of the Go files in dir, or "".
+func packageName(dir string) string {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return ""
+	}
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".go") || strings.HasSuffix(e.Name(), "_test.go") {
+			continue
+		}
+		file, err := parser.ParseFile(token.NewFileSet(), filepath.Join(dir, e.Name()), nil, parser.PackageClauseOnly)
+		if err == nil {
+			return file.Name.Name
+		}
+	}
+	return ""
+}
+
+// declaredHelpers adds the unexported helpers of file to helpers: a
+// constant or variable with one value, and a function whose body is one
+// return of one value.
+func declaredHelpers(file *ast.File, in *source, helpers map[string]*helper) {
+	for _, decl := range file.Decls {
+		switch d := decl.(type) {
+		case *ast.FuncDecl:
+			if d.Recv != nil || ast.IsExported(d.Name.Name) || d.Body == nil || len(d.Body.List) != 1 || d.Type.TypeParams != nil {
+				continue
+			}
+			ret, ok := d.Body.List[0].(*ast.ReturnStmt)
+			if !ok || len(ret.Results) != 1 {
+				continue
+			}
+			h := &helper{in: in, value: ret.Results[0], isFunc: true}
+			variadic := false
+			for _, field := range d.Type.Params.List {
+				if _, ok := field.Type.(*ast.Ellipsis); ok {
+					variadic = true
+				}
+				for _, n := range field.Names {
+					h.params = append(h.params, n.Name)
+				}
+			}
+			if !variadic {
+				helpers[d.Name.Name] = h
+			}
+		case *ast.GenDecl:
+			if d.Tok != token.CONST && d.Tok != token.VAR {
+				continue
+			}
+			for _, spec := range d.Specs {
+				vs, ok := spec.(*ast.ValueSpec)
+				if !ok || len(vs.Names) != 1 || len(vs.Values) != 1 || ast.IsExported(vs.Names[0].Name) {
+					continue
+				}
+				helpers[vs.Names[0].Name] = &helper{in: in, value: vs.Values[0]}
+			}
+		}
+	}
+}
+
+// declaredProps adds the fields of every <Name>Props struct of file to
+// structs. A component that is a Go function has no props block; its props
+// are this struct.
+func declaredProps(file *ast.File, src []byte, fset *token.FileSet, structs map[string][]prop) {
+	for _, decl := range file.Decls {
+		gen, ok := decl.(*ast.GenDecl)
+		if !ok || gen.Tok != token.TYPE {
+			continue
+		}
+		for _, spec := range gen.Specs {
+			ts, ok := spec.(*ast.TypeSpec)
+			if !ok || !strings.HasSuffix(ts.Name.Name, "Props") {
+				continue
+			}
+			st, ok := ts.Type.(*ast.StructType)
+			if !ok {
+				continue
+			}
+			for _, field := range st.Fields.List {
+				typ := string(src[fset.Position(field.Type.Pos()).Offset:fset.Position(field.Type.End()).Offset])
+				for _, name := range field.Names {
+					if ast.IsExported(name.Name) {
+						structs[ts.Name.Name] = append(structs[ts.Name.Name], prop{
+							Name: name.Name, Type: typ, Doc: strings.TrimSpace(field.Doc.Text()),
+						})
+					}
+				}
+			}
+		}
+	}
+}
+
+// props returns the API reference rows of a component: the fields of its
+// props block, or of its props struct when the component is a Go function.
+func (it *item) props(comp *component) []prop {
+	if comp.Gx == nil {
+		return it.structs[comp.Name+"Props"]
+	}
+	var out []prop
+	for _, f := range comp.Gx.Props {
+		out = append(out, prop{Name: f.Name, Type: f.Type, Default: f.Default, Required: !f.HasDefault, Doc: f.Doc})
+	}
+	return out
+}
+
 // loadComponent reads one <Name>.fixtures.go file: the gx.Fixtures literal
 // in source order, and the optional wrap function. It returns nil when the
 // file declares no fixtures.
@@ -289,7 +453,8 @@ func (reg *registry) loadComponent(it *item, fileName string) (*component, error
 	if err != nil {
 		return nil, fmt.Errorf("docsgen: %w", err)
 	}
-	comp := &component{Name: strings.TrimSuffix(fileName, ".fixtures.go"), file: file, src: src, fset: fset}
+	comp := &component{Name: strings.TrimSuffix(fileName, ".fixtures.go"), file: file}
+	comp.in = &source{src: src, fset: fset, imports: reg.fileImports(file)}
 	comp.Gx = reg.componentFile(it.Dir, comp.Name)
 	for _, decl := range file.Decls {
 		if fn, ok := decl.(*ast.FuncDecl); ok && fn.Recv == nil && fn.Name.Name == comp.Name+"Wrap" {
@@ -310,6 +475,11 @@ func (reg *registry) loadComponent(it *item, fileName string) (*component, error
 				continue
 			}
 			comp.FixturesVar = vs.Names[0].Name
+			if lit.Type != nil {
+				comp.PropsType = lit.Type.(*ast.IndexExpr).Index
+			} else {
+				comp.PropsType = vs.Type.(*ast.IndexExpr).Index
+			}
 			if !ast.IsExported(comp.FixturesVar) {
 				return nil, fmt.Errorf("docsgen: %s: the fixtures variable %s is not exported", path, comp.FixturesVar)
 			}

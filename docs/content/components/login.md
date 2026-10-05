@@ -44,16 +44,17 @@ Copy each file to its path in the app. Change each import of a registry package 
 ```gx title="ui/login/Login.gx"
 package login
 
-import (
-	"github.com/alternayte/gx/registry/button"
-	"github.com/alternayte/gx/registry/card"
-	"github.com/alternayte/gx/registry/field"
-	"github.com/alternayte/gx/registry/input"
-)
+import "github.com/alternayte/gx/registry/button"
+import "github.com/alternayte/gx/registry/card"
+import "github.com/alternayte/gx/registry/field"
+import "github.com/alternayte/gx/registry/input"
 
 props {
+  // Title is the heading of the card.
   Title       string = "Sign in"
+  // Description is the text below the title.
   Description string = "Enter your email and password."
+  // Action is the URL that the form posts to. Empty posts to the current URL.
   Action      gx.URL = ""
 }
 
@@ -119,6 +120,18 @@ The block is copied source. Replace the raw form with a typed `gx.Form` and rout
 ```
 
 </Example>
+
+## API reference
+
+A tag sets a prop by its name with a lower-case first letter: `Class` is `class`.
+
+### login.Login
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | `string` | `"Sign in"` | Title is the heading of the card. |
+| `Description` | `string` | `"Enter your email and password."` | Description is the text below the title. |
+| `Action` | `gx.URL` | `""` | Action is the URL that the form posts to. Empty posts to the current URL. |
 
 ## Do and don't
 

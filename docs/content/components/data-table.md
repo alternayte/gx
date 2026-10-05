@@ -9,21 +9,12 @@ item: "data-table"
 <Example item="data-table" name="data-table-three" label="Data Table: Three">
 
 ```gx
-{datatable.DataTable(datatable.DataTableFixtures["Three"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/data-table/DataTable.fixtures.go"
-"Three": {
-  Columns: []Column[fixtureRow]{
-    {Key: "name", Label: "Name", Sort: "name", Cell: func(r fixtureRow) gx.Node { return gx.Text(r.Name) }},
-    {Key: "total", Label: "Total", Cell: func(r fixtureRow) gx.Node { return gx.Text(strconv.Itoa(r.Total)) }},
-  },
-  Rows: []fixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
-  Page: Page{Number: 1, Size: 10, Total: 3},
-  Href: func(sort, dir string, page int) gx.URL { return gx.URL("/") },
-}
+{datatable.DataTable(datatable.DataTableProps[datatable.FixtureRow]{
+  Columns: datatable.FixtureColumns,
+  Rows:    []datatable.FixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
+  Page:    datatable.Page{Number: 1, Size: 10, Total: 3},
+  Href:    datatable.FixtureHref,
+})}
 ```
 
 </Example>
@@ -101,12 +92,20 @@ type Href func(sort, dir string, page int) gx.URL
 
 // DataTableProps holds one rendered table.
 type DataTableProps[T any] struct {
+	// Columns are the typed columns, in display order.
 	Columns []Column[T]
-	Rows    []T
-	Page    Page
-	Sort    string
-	Dir     string
-	Href    Href
+	// Rows are the rows of the current page.
+	Rows []T
+	// Page is the paging state: the page number, the page size and the
+	// total row count.
+	Page Page
+	// Sort is the Sort value of the column the rows are sorted by. Empty
+	// means no sort.
+	Sort string
+	// Dir is the sort direction: "asc" or "desc".
+	Dir string
+	// Href builds the URL of a sort link and of a paging link.
+	Href Href
 	// Empty renders in place of the rows when the page holds none.
 	Empty gx.Node
 }
@@ -290,27 +289,34 @@ import (
 	"github.com/alternayte/gx"
 )
 
-type fixtureRow struct {
+// FixtureRow is the row type of the data table fixtures.
+type FixtureRow struct {
 	Name  string
 	Total int
 }
 
-var DataTableFixtures = gx.Fixtures[DataTableProps[fixtureRow]]{
+// FixtureColumns are the columns of the data table fixtures. The name column
+// is a sort link.
+var FixtureColumns = []Column[FixtureRow]{
+	{Key: "name", Label: "Name", Sort: "name", Cell: func(r FixtureRow) gx.Node { return gx.Text(r.Name) }},
+	{Key: "total", Label: "Total", Cell: func(r FixtureRow) gx.Node { return gx.Text(strconv.Itoa(r.Total)) }},
+}
+
+// FixtureHref is the Href of the data table fixtures. An app returns its own
+// typed route here.
+func FixtureHref(sort, dir string, page int) gx.URL { return gx.URL("/") }
+
+var DataTableFixtures = gx.Fixtures[DataTableProps[FixtureRow]]{
 	"Three": {
-		Columns: []Column[fixtureRow]{
-			{Key: "name", Label: "Name", Sort: "name", Cell: func(r fixtureRow) gx.Node { return gx.Text(r.Name) }},
-			{Key: "total", Label: "Total", Cell: func(r fixtureRow) gx.Node { return gx.Text(strconv.Itoa(r.Total)) }},
-		},
-		Rows: []fixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
-		Page: Page{Number: 1, Size: 10, Total: 3},
-		Href: func(sort, dir string, page int) gx.URL { return gx.URL("/") },
+		Columns: FixtureColumns,
+		Rows:    []FixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
+		Page:    Page{Number: 1, Size: 10, Total: 3},
+		Href:    FixtureHref,
 	},
 	"Empty": {
-		Columns: []Column[fixtureRow]{
-			{Key: "name", Label: "Name", Cell: func(r fixtureRow) gx.Node { return gx.Text(r.Name) }},
-		},
-		Page: Page{Number: 1, Size: 10, Total: 0},
-		Href: func(sort, dir string, page int) gx.URL { return gx.URL("/") },
+		Columns: FixtureColumns,
+		Page:    Page{Number: 1, Size: 10, Total: 0},
+		Href:    FixtureHref,
 	},
 }
 ```
@@ -353,21 +359,12 @@ datatable.DataTable(datatable.DataTableProps[Row]{
 <Example item="data-table" name="data-table-three" label="Data Table: Three">
 
 ```gx
-{datatable.DataTable(datatable.DataTableFixtures["Three"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/data-table/DataTable.fixtures.go"
-"Three": {
-  Columns: []Column[fixtureRow]{
-    {Key: "name", Label: "Name", Sort: "name", Cell: func(r fixtureRow) gx.Node { return gx.Text(r.Name) }},
-    {Key: "total", Label: "Total", Cell: func(r fixtureRow) gx.Node { return gx.Text(strconv.Itoa(r.Total)) }},
-  },
-  Rows: []fixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
-  Page: Page{Number: 1, Size: 10, Total: 3},
-  Href: func(sort, dir string, page int) gx.URL { return gx.URL("/") },
-}
+{datatable.DataTable(datatable.DataTableProps[datatable.FixtureRow]{
+  Columns: datatable.FixtureColumns,
+  Rows:    []datatable.FixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
+  Page:    datatable.Page{Number: 1, Size: 10, Total: 3},
+  Href:    datatable.FixtureHref,
+})}
 ```
 
 </Example>
@@ -377,22 +374,30 @@ The code renders the fixture by its name. The fixture sets these props.
 <Example item="data-table" name="data-table-empty" label="Data Table: Empty">
 
 ```gx
-{datatable.DataTable(datatable.DataTableFixtures["Empty"])}
-```
-
-The code renders the fixture by its name. The fixture sets these props.
-
-```go title="registry/data-table/DataTable.fixtures.go"
-"Empty": {
-  Columns: []Column[fixtureRow]{
-    {Key: "name", Label: "Name", Cell: func(r fixtureRow) gx.Node { return gx.Text(r.Name) }},
-  },
-  Page: Page{Number: 1, Size: 10, Total: 0},
-  Href: func(sort, dir string, page int) gx.URL { return gx.URL("/") },
-}
+{datatable.DataTable(datatable.DataTableProps[datatable.FixtureRow]{
+  Columns: datatable.FixtureColumns,
+  Page:    datatable.Page{Number: 1, Size: 10, Total: 0},
+  Href:    datatable.FixtureHref,
+})}
 ```
 
 </Example>
+
+## API reference
+
+### datatable.DataTable
+
+The component is a Go function. Its props are the fields of `DataTableProps`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Columns` | `[]Column[T]` | Zero value | Columns are the typed columns, in display order. |
+| `Rows` | `[]T` | Zero value | Rows are the rows of the current page. |
+| `Page` | `Page` | Zero value | Page is the paging state: the page number, the page size and the total row count. |
+| `Sort` | `string` | Zero value | Sort is the Sort value of the column the rows are sorted by. Empty means no sort. |
+| `Dir` | `string` | Zero value | Dir is the sort direction: "asc" or "desc". |
+| `Href` | `Href` | Zero value | Href builds the URL of a sort link and of a paging link. |
+| `Empty` | `gx.Node` | Zero value | Empty renders in place of the rows when the page holds none. |
 
 ## Do and don't
 

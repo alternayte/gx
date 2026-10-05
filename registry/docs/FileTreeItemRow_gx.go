@@ -7,78 +7,79 @@ import (
 )
 
 type FileTreeItemRowProps struct {
+	// Item is the file or directory of the row. Its children show as a nested list.
 	Item FileTreeItem
 }
 
 func FileTreeItemRow(p FileTreeItemRowProps) gx.Node {
 	var _b gx.Builder
-//line FileTreeItemRow.gx:7:1
+//line FileTreeItemRow.gx:8:1
 	var _b1 gx.Builder
-//line FileTreeItemRow.gx:7:31
+//line FileTreeItemRow.gx:8:31
 	_b1.Add(gx.Text("\n  "))
-//line FileTreeItemRow.gx:8:3
+//line FileTreeItemRow.gx:9:3
 	var _b2 gx.Builder
-//line FileTreeItemRow.gx:8:41
+//line FileTreeItemRow.gx:9:41
 	_b2.Add(gx.Text("\n    "))
-//line FileTreeItemRow.gx:9:5
+//line FileTreeItemRow.gx:10:5
 	if p.Item.Dir {
-//line FileTreeItemRow.gx:9:20
+//line FileTreeItemRow.gx:10:20
 		_b2.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:10:7
+//line FileTreeItemRow.gx:11:7
 		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "font-medium text-foreground", Kind: gx.AttrText}}, gx.Frag(gx.Text(p.Item.Name), gx.Text("/"))))
-//line FileTreeItemRow.gx:10:70
+//line FileTreeItemRow.gx:11:70
 		_b2.Add(gx.Text("\n    "))
 	} else {
-//line FileTreeItemRow.gx:11:13
+//line FileTreeItemRow.gx:12:13
 		_b2.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:12:7
+//line FileTreeItemRow.gx:13:7
 		_b2.Add(gx.El("span", nil, gx.Text(p.Item.Name)))
-//line FileTreeItemRow.gx:12:33
+//line FileTreeItemRow.gx:13:33
 		_b2.Add(gx.Text("\n    "))
 	}
-//line FileTreeItemRow.gx:13:6
+//line FileTreeItemRow.gx:14:6
 	_b2.Add(gx.Text("\n    "))
-//line FileTreeItemRow.gx:14:5
+//line FileTreeItemRow.gx:15:5
 	if p.Item.Comment != "" {
-//line FileTreeItemRow.gx:14:30
+//line FileTreeItemRow.gx:15:30
 		_b2.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:15:7
+//line FileTreeItemRow.gx:16:7
 		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Item.Comment)))
-//line FileTreeItemRow.gx:15:66
+//line FileTreeItemRow.gx:16:66
 		_b2.Add(gx.Text("\n    "))
 	}
-//line FileTreeItemRow.gx:16:6
+//line FileTreeItemRow.gx:17:6
 	_b2.Add(gx.Text("\n  "))
 	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2", Kind: gx.AttrText}}, _b2.Node()))
-//line FileTreeItemRow.gx:17:10
+//line FileTreeItemRow.gx:18:10
 	_b1.Add(gx.Text("\n  "))
-//line FileTreeItemRow.gx:18:3
+//line FileTreeItemRow.gx:19:3
 	if len(p.Item.Children) > 0 {
-//line FileTreeItemRow.gx:18:32
+//line FileTreeItemRow.gx:19:32
 		_b1.Add(gx.Text("\n    "))
-//line FileTreeItemRow.gx:19:5
+//line FileTreeItemRow.gx:20:5
 		var _b3 gx.Builder
-//line FileTreeItemRow.gx:19:74
+//line FileTreeItemRow.gx:20:74
 		_b3.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:20:7
+//line FileTreeItemRow.gx:21:7
 		for _, child := range p.Item.Children {
-//line FileTreeItemRow.gx:20:46
+//line FileTreeItemRow.gx:21:46
 			_b3.Add(gx.Text("\n        "))
-//line FileTreeItemRow.gx:21:9
+//line FileTreeItemRow.gx:22:9
 			_b3.Add(FileTreeItemRow(FileTreeItemRowProps{Item: child}))
-//line FileTreeItemRow.gx:21:41
+//line FileTreeItemRow.gx:22:41
 			_b3.Add(gx.Text("\n      "))
 		}
-//line FileTreeItemRow.gx:22:8
+//line FileTreeItemRow.gx:23:8
 		_b3.Add(gx.Text("\n    "))
 		_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 list-none space-y-1 border-l border-border p-0 pl-4", Kind: gx.AttrText}}, _b3.Node()))
-//line FileTreeItemRow.gx:23:10
+//line FileTreeItemRow.gx:24:10
 		_b1.Add(gx.Text("\n  "))
 	}
-//line FileTreeItemRow.gx:24:4
+//line FileTreeItemRow.gx:25:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("li", gx.Attrs{gx.Attr{Key: "class", Value: "gx-file-tree-item", Kind: gx.AttrText}}, _b1.Node()))
-//line FileTreeItemRow.gx:25:6
+//line FileTreeItemRow.gx:26:6
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }
