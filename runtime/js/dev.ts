@@ -37,9 +37,11 @@ const clearOverlay = (): void => {
 
 const reload = (): void => {
   clearOverlay()
-  const nav = (globalThis as { __gx?: { navigate?: (url: string, push: boolean) => Promise<void> } }).__gx?.navigate
+  const nav = (globalThis as { __gx?: { navigate?: (url: string, push: boolean, keep: boolean) => Promise<void> } }).__gx
+    ?.navigate
   if (typeof nav === 'function') {
-    void nav(location.pathname + location.search, false)
+    // keep: the page is the same, so its state stays (REQ-DEV-03).
+    void nav(location.pathname + location.search, false, true)
     return
   }
   location.reload()

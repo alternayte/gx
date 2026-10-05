@@ -559,29 +559,38 @@ const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null):
   updateActive()
 }
 
-const navigate = async (url: string, push: boolean): Promise<void> => {
-  const res = await fetch(url, {
-    headers: {
-      'Gx-Nav': '1',
-      'Gx-Layouts': layoutChain().join(','),
-      'Datastar-Request': 'true',
-      Accept: 'text/event-stream',
-    },
-    credentials: 'same-origin',
-  })
-  if (!res.ok || !res.body || res.headers.get('Gx-Nav') === 'full') {
-    location.href = url
+// navigate fetches the patch of a page and applies it. keep is for the
+// reload of the dev loop: the page is the same, so the scroll position and
+// the signal values stay (REQ-DEV-03).
+const navigate = async (url: string, push: boolean, keep = false): Promise<void> => {
+  const headers: Record<string, string> = {
+    'Gx-Nav': '1',
+    'Gx-Layouts': layoutChain().join(','),
+    'Datastar-Request': 'true',
+    Accept: 'text/event-stream',
+  }
+  if (keep) headers['Gx-Dev-Reload'] = '1'
+  const res = await fetch(url, { headers, credentials: 'same-origin' })
+  // A page with no layout slot answers HTML, not patches: load it in full.
+  const patches = (res.headers.get('Content-Type') ?? '').includes('text/event-stream')
+  if (!res.ok || !res.body || !patches || res.headers.get('Gx-Nav') === 'full') {
+    if (keep) location.reload()
+    else location.href = url
     return
   }
   await withViewTransition(async () => {
     // Gx owns scroll: scroll before the morph so an on:visible element of
     // the new page never sees the old scroll position.
-    window.scrollTo(0, 0)
+    if (!keep) window.scrollTo(0, 0)
     await readFrames(res)
     if (push) history.pushState({ gx: true }, '', url)
     updateActive()
   })
 }
+
+// The dev client morphs the page through navigate after a rebuild
+// (REQ-DEV-03).
+;(gx as typeof gx & { navigate?: typeof navigate }).navigate = navigate
 
 if (typeof document !== 'undefined') {
   document.addEventListener('click', (e) => {

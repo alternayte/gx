@@ -87,7 +87,7 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 			if t.Transition {
 				opts = append(opts, sdk.WithViewTransitions())
 			}
-			if err := sse.PatchElements(gx.String(t.Node), opts...); err != nil {
+			if err := sse.PatchElements(gx.StringRequest(r, t.Node), opts...); err != nil {
 				return err
 			}
 		case gx.SignalPatch:

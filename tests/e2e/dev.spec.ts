@@ -101,6 +101,48 @@ test('REQ-DEV-06 a broken template shows the overlay and the fix recovers', asyn
   expect(new URL(page.url()).pathname).toBe('/')
 }, 60000)
 
+test('REQ-DEV-03 a rebuild morphs the page and keeps the signal, the input value and the scroll position', async () => {
+  page = await browser.newPage({ viewport: { width: 900, height: 320 } })
+  await page.goto(url + '/')
+  await page.waitForSelector('[data-gx-instance="cart.Cart.alpha"]')
+  // State of the page: a signal with its bound input, a plain property that
+  // a full reload destroys, and a scroll position.
+  const qty = '[data-label="Alpha"] input[type="number"]'
+  await page.fill(qty, '7')
+  await page.evaluate(() => {
+    ;(window as unknown as { alive?: number }).alive = 1
+    window.scrollTo(0, 120)
+  })
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(60)
+
+  const view = join(dir, 'Home.gx')
+  const original = readFileSync(view, 'utf8')
+  writeFileSync(view, original.replace('Two carts', 'Two carts, edited'))
+  try {
+    await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Two carts, edited', undefined, {
+      timeout: 30000,
+    })
+    // The page did not load again: it took a patch.
+    expect(await page.evaluate(() => (window as unknown as { alive?: number }).alive)).toBe(1)
+    expect(await page.inputValue(qty)).toBe('7')
+    // The signal holds 7 too: a client expression of the cart reads it.
+    await page.click('[data-label="Alpha"] button:text-is("Add")')
+    await page.waitForFunction(
+      () => document.querySelector('[data-label="Alpha"] span[id^="cart-total"]')?.textContent === '70',
+      undefined,
+      { timeout: 10000 },
+    )
+    // The other cart did not get the value of the first one.
+    expect(await page.inputValue('[data-label="Beta"] input[type="number"]')).toBe('1')
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(60)
+  } finally {
+    writeFileSync(view, original)
+    await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Two carts', undefined, {
+      timeout: 30000,
+    })
+  }
+}, 90000)
+
 test('REQ-AI-03 the dev gallery renders fixtures and missing components', async () => {
   const res = await fetch(url + '/_gx/gallery')
   expect(res.status).toBe(200)

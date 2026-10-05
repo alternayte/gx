@@ -63,6 +63,17 @@ func (a *App) devRoutes() {
 	a.mux.Handle("GET /_gx/export", http.HandlerFunc(a.serveExportList))
 }
 
+// devReloadHeader marks the request that the dev client sends after a
+// rebuild (REQ-DEV-03).
+const devReloadHeader = "Gx-Dev-Reload"
+
+// devKeepSignals reports whether the page renders for a dev reload. The
+// first values of its signals then set only the signals that the browser
+// does not hold, so the state of the page survives the rebuild.
+func devKeepSignals(r *http.Request) bool {
+	return r != nil && r.Header.Get(devReloadHeader) != ""
+}
+
 // exportHeader marks a request of `gx export` (REQ-EXP-02).
 const exportHeader = "Gx-Export"
 

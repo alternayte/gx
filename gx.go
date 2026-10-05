@@ -244,7 +244,7 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 	}
 	// The app writes the document shell around this fragment, and the
 	// gx.Head output moves into its head.
-	st := &renderState{request: r, requestURI: r.URL.RequestURI(), headWritten: true, nonce: needs.nonce}
+	st := &renderState{request: r, requestURI: r.URL.RequestURI(), headWritten: true, nonce: needs.nonce, keepSignals: devKeepSignals(r)}
 	collectHead(n, st, 1)
 	var head, body strings.Builder
 	renderHead(&head, st)
@@ -260,7 +260,7 @@ func String(n Node) string { return StringRequest(nil, n) }
 // StringRequest returns the HTML of n with the request in scope.
 func StringRequest(r *http.Request, n Node) string {
 	var b strings.Builder
-	st := &renderState{request: r, nonce: Nonce(r)}
+	st := &renderState{request: r, nonce: Nonce(r), keepSignals: devKeepSignals(r)}
 	if r != nil && r.URL != nil {
 		st.requestURI = r.URL.RequestURI()
 	}
@@ -307,6 +307,11 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 			}
 			b.WriteByte(' ')
 			b.WriteString(a.Key)
+			if st != nil && st.keepSignals && a.Key == "data-signals" {
+				// A dev reload keeps the state of the page: a signal
+				// that the browser holds keeps its value.
+				b.WriteString("__ifmissing")
+			}
 			b.WriteString(`="`)
 			switch a.Kind {
 			case AttrURL:

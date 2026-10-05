@@ -55,6 +55,10 @@ type renderState struct {
 	adapterSet bool
 	// nonce is the CSP nonce every script element gets (SI-11).
 	nonce string
+	// keepSignals is true for the reload of a dev build: the first values
+	// of the signals then do not replace the values in the browser
+	// (REQ-DEV-03).
+	keepSignals bool
 }
 
 // HeadOf returns the merged head of a node tree (REQ-RTE-11, REQ-RTE-12).

@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/alternayte/gx"
+	"net/http"
+	"net/http/httptest"
 )
 
 func TestREQ_ACT_05_SignalJSON(t *testing.T) {
@@ -42,5 +44,18 @@ func TestREQ_ACT_14_FragmentID(t *testing.T) {
 	}
 	if got, want := gx.FragmentID("cart", "row", "42"), "cart-row-42"; got != want {
 		t.Fatalf("keyed FragmentID = %q, want %q", got, want)
+	}
+}
+
+// TestREQ_DEV_03_ProdIgnoresReloadHeader covers the dev reload header in a
+// production build: a request that holds it still gets the first values of
+// the signals, so a client cannot keep stale values with a header
+// (REQ-DEV-03, SI-08). The browser suite covers the dev build.
+func TestREQ_DEV_03_ProdIgnoresReloadHeader(t *testing.T) {
+	node := gx.El("div", gx.Attrs{{Key: "data-signals", Value: `{"a":1}`}}, gx.Text("x"))
+	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r.Header.Set("Gx-Dev-Reload", "1")
+	if got, want := gx.StringRequest(r, node), `<div data-signals="{&#34;a&#34;:1}">x</div>`; got != want {
+		t.Fatalf("render = %s, want %s", got, want)
 	}
 }
