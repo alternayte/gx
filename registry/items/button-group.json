@@ -7,21 +7,55 @@
     {
       "path": "ButtonGroup.gx",
       "target": "ui/button-group/ButtonGroup.gx",
-      "content": "package buttongroup\n\nprops {\n  Children gx.Node\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" class={gx.Cx(\"inline-flex -space-x-px shadow-xs [\u0026\u003ebutton]:rounded-none [\u0026\u003ebutton:first-child]:rounded-l-md [\u0026\u003ebutton:last-child]:rounded-r-md [\u0026\u003ebutton:not(:first-child)]:border-l-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "51d516b556e976452091b3e2f0212c9d25b6e619612be81d70859b0338fdba2a"
+      "content": "package buttongroup\n\nprops {\n  // Orientation sets the direction of the group: Horizontal for a row or Vertical for a column.\n  Orientation Orientation = Horizontal\n  // Children is the content of the group: the buttons, inputs, separators and text.\n  Children    gx.Node\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" data-slot=\"button-group\" data-orientation={p.orientation()} class={gx.Cx(\"flex w-fit items-stretch has-[\u003e[data-slot=button-group]]:gap-2 [\u0026\u003e*]:focus-visible:relative [\u0026\u003e*]:focus-visible:z-10 [\u0026\u003e[data-slot=select-trigger]:not([class*='w-'])]:w-fit [\u0026\u003einput]:flex-1\", orientationClass[Orientation(p.orientation())], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "72c9d09bce8c0712151aaee85b613dbbfb07054e09f5469b78d0c27f9834840d"
     },
     {
       "path": "ButtonGroup.fixtures.go",
       "target": "ui/button-group/ButtonGroup.fixtures.go",
-      "content": "package buttongroup\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\nvar ButtonGroupFixtures = gx.Fixtures[ButtonGroupProps]{\n\t\"Three\": {Children: gx.Frag(\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"One\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Two\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Three\")}),\n\t)},\n}\n",
-      "sha256": "1a5c618c51d55aa793177ccaf2bed9fe56afd672c3f33ae62064e56c8d49cbaf"
+      "content": "package buttongroup\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n\t\"github.com/alternayte/gx/registry/icons\"\n)\n\nvar ButtonGroupFixtures = gx.Fixtures[ButtonGroupProps]{\n\t\"Three\": {Children: gx.Frag(\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"One\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Two\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Three\")}),\n\t)},\n\t\"Vertical\": {Orientation: Vertical, Children: gx.Frag(\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"One\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Two\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Three\")}),\n\t)},\n\t\"Separator\": {Children: gx.Frag(\n\t\tbutton.Button(button.ButtonProps{Variant: button.Secondary, Children: gx.Text(\"Copy\")}),\n\t\tButtonGroupSeparator(ButtonGroupSeparatorProps{}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Secondary, Size: button.Icon, Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"More\"}}, Children: icons.ChevronDown(icons.ChevronDownProps{})}),\n\t)},\n\t\"Text\": {Children: gx.Frag(\n\t\tButtonGroupText(ButtonGroupTextProps{Children: gx.Text(\"https://\")}),\n\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"example.com\")}),\n\t)},\n\t\"Nested\": {Children: gx.Frag(\n\t\tButtonGroup(ButtonGroupProps{Children: gx.Frag(\n\t\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"One\")}),\n\t\t\tbutton.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Two\")}),\n\t\t)}),\n\t\tButtonGroup(ButtonGroupProps{Children: button.Button(button.ButtonProps{Variant: button.Outline, Children: gx.Text(\"Three\")})}),\n\t)},\n}\n",
+      "sha256": "88eed5f021c7becc596621fc13bb407149438dedac9c30eb0e8b036db4b297a1"
+    },
+    {
+      "path": "ButtonGroupText.gx",
+      "target": "ui/button-group/ButtonGroupText.gx",
+      "content": "package buttongroup\n\nprops {\n  // For is the id of an input. A non-empty value renders the text as the label of that input.\n  For      string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the text block.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\nif p.For != \"\" {\n  \u003clabel for={p.For} class={gx.Cx(\"flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [\u0026_svg]:pointer-events-none [\u0026_svg:not([class*='size-'])]:size-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/label\u003e\n} else {\n  \u003cdiv class={gx.Cx(\"flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [\u0026_svg]:pointer-events-none [\u0026_svg:not([class*='size-'])]:size-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n}\n",
+      "sha256": "94282abac043fb96bf8e9b451ede5024dfc9c3337764437282cc002843dadb3c"
+    },
+    {
+      "path": "ButtonGroupText.fixtures.go",
+      "target": "ui/button-group/ButtonGroupText.fixtures.go",
+      "content": "package buttongroup\n\nimport \"github.com/alternayte/gx\"\n\nvar ButtonGroupTextFixtures = gx.Fixtures[ButtonGroupTextProps]{\"Text\": {Children: gx.Text(\"https://\")}}\n",
+      "sha256": "4548ffabe30481d096a6ebbb4f6c83b01291b60e6dedcf9f51572840e7a1f27b"
+    },
+    {
+      "path": "ButtonGroupSeparator.gx",
+      "target": "ui/button-group/ButtonGroupSeparator.gx",
+      "content": "package buttongroup\n\nprops {\n  // Orientation sets the direction of the line: Vertical or Horizontal. Use Vertical in a\n  // horizontal group.\n  Orientation Orientation = Vertical\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"button-group-separator\" role=\"none\" data-orientation={p.orientation()} class={gx.Cx(\"shrink-0 bg-border\", separatorClass[Orientation(p.orientation())], \"relative m-0! self-stretch bg-input\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "b95d5fdd4e6d8a069000887520204eae5e817c251c75de4510f528cbed85d3a1"
+    },
+    {
+      "path": "ButtonGroupSeparator.fixtures.go",
+      "target": "ui/button-group/ButtonGroupSeparator.fixtures.go",
+      "content": "package buttongroup\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\nvar ButtonGroupSeparatorFixtures = gx.Fixtures[ButtonGroupSeparatorProps]{\"Default\": {}}\n\n// ButtonGroupSeparatorWrap renders the separator between two buttons, as a\n// group uses it.\nfunc ButtonGroupSeparatorWrap(n gx.Node) gx.Node {\n\treturn ButtonGroup(ButtonGroupProps{Children: gx.Frag(\n\t\tbutton.Button(button.ButtonProps{Variant: button.Secondary, Children: gx.Text(\"One\")}),\n\t\tn,\n\t\tbutton.Button(button.ButtonProps{Variant: button.Secondary, Children: gx.Text(\"Two\")}),\n\t)})\n}\n",
+      "sha256": "a714b1546c1c3bdbd0a368122a2f52332d1512f9bd2f2fd88f22bd2ff1840ae0"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/button-group/styles.go",
+      "content": "package buttongroup\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the direction of a button group or of its separator.\ntype Orientation string\n\n// The orientations of buttongroup.ButtonGroup and\n// buttongroup.ButtonGroupSeparator.\nconst (\n\tHorizontal Orientation = \"horizontal\"\n\tVertical   Orientation = \"vertical\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tHorizontal: \"[\u0026\u003e*:not(:first-child)]:rounded-l-none [\u0026\u003e*:not(:first-child)]:border-l-0 [\u0026\u003e*:not(:last-child)]:rounded-r-none\",\n\tVertical:   \"flex-col [\u0026\u003e*:not(:first-child)]:rounded-t-none [\u0026\u003e*:not(:first-child)]:border-t-0 [\u0026\u003e*:not(:last-child)]:rounded-b-none\",\n}\n\n// separatorClass sizes the separator: a vertical line takes the height of\n// the group, a horizontal line takes its width.\nvar separatorClass = gx.Enum[Orientation]{\n\tHorizontal: \"h-px w-full\",\n\tVertical:   \"h-auto w-px\",\n}\n\n// orientation returns the data-orientation value; a zero value is\n// Horizontal.\nfunc (p ButtonGroupProps) orientation() string {\n\tif p.Orientation == \"\" {\n\t\treturn string(Horizontal)\n\t}\n\treturn string(p.Orientation)\n}\n\n// orientation returns the data-orientation value; a zero value is\n// Vertical, the line between the buttons of a horizontal group.\nfunc (p ButtonGroupSeparatorProps) orientation() string {\n\tif p.Orientation == \"\" {\n\t\treturn string(Vertical)\n\t}\n\treturn string(p.Orientation)\n}\n",
+      "sha256": "8f2334e5b2f585f417727561334bf73316a6495c11c0c0aa46f981b5ad44c7c3"
     }
   ],
   "registryDependencies": [
-    "button"
+    "button",
+    "icons"
   ],
   "requiredTokens": [
-    "--ring"
+    "--ring",
+    "--border",
+    "--input",
+    "--muted"
   ],
-  "usage": "# Button Group\n\nA row of related buttons.\n\n## Usage\n\n```gx\n\u003cbuttongroup.ButtonGroup\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eOne\u003c/button.Button\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eTwo\u003c/button.Button\u003e\n\u003c/buttongroup.ButtonGroup\u003e\n```\n\n## Do\n\n- Group buttons that act on the same object.\n- Give each button a distinct label.\n\n## Don't\n\n- Do not group unrelated actions.\n- Do not nest a button group inside another button group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus between the buttons. |\n| Enter | Activates the focused button. |\n"
+  "usage": "# Button Group\n\nA row or a column of related buttons.\n\n## Usage\n\n```gx\n\u003cbuttongroup.ButtonGroup\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eOne\u003c/button.Button\u003e\n  \u003cbutton.Button variant={button.Outline}\u003eTwo\u003c/button.Button\u003e\n\u003c/buttongroup.ButtonGroup\u003e\n\n\u003cbuttongroup.ButtonGroup\u003e\n  \u003cbutton.Button variant={button.Secondary}\u003eCopy\u003c/button.Button\u003e\n  \u003cbuttongroup.ButtonGroupSeparator /\u003e\n  \u003cbutton.Button variant={button.Secondary} size={button.Icon}\u003e\u003cicons.ChevronDown /\u003e\u003c/button.Button\u003e\n\u003c/buttongroup.ButtonGroup\u003e\n```\n\nSet `orientation={buttongroup.Vertical}` for a column.\n`ButtonGroupText` shows text or a label next to a button or an input. Set `For` to make it the label of an input.\n`ButtonGroupSeparator` draws a line between two buttons that have no border.\nA group in a group makes a gap between the inner groups.\n\n## Do\n\n- Give the group an `aria-label` when its purpose is not clear from the buttons.\n- Use the same variant for every button of a group.\n\n## Don't\n\n- Do not mix button sizes in one group.\n- Do not put a separator between outline buttons. Their borders divide them.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus from one button to the next. |\n| Enter | Activates the focused button. |\n| Space | Activates the focused button. |\n"
 }

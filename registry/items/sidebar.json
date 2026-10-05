@@ -7,50 +7,140 @@
     {
       "path": "Sidebar.gx",
       "target": "ui/sidebar/Sidebar.gx",
-      "content": "package sidebar\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003caside id={p.Id} data-gx-sidebar class={gx.Cx(\"flex w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/aside\u003e\n",
-      "sha256": "4ae8d16f02bf1def163fdbfbcf36c19e0c4ba91ae8049c59777b8edcc8084504"
+      "content": "package sidebar\n\nprops {\n  // Id is the id of the root element.\n  // SidebarTrigger shows and hides the sidebar with the id gx-sidebar.\n  Id       string\n  // Side sets the edge of the page that holds the sidebar: Left or Right.\n  Side     Side = Left\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the sidebar: the header, content and footer.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003caside id={p.Id} data-gx-sidebar data-slot=\"sidebar\" data-side={p.side()} class={gx.Cx(\"flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/aside\u003e\n",
+      "sha256": "b8aeed71ae48cfbcb4e1d4265290a52b7437ef81ec16bad99211aefe1b54c9be"
     },
     {
       "path": "SidebarHeader.gx",
       "target": "ui/sidebar/SidebarHeader.gx",
-      "content": "package sidebar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex items-center gap-2 p-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "f1827943255ea06b52f50cd75f144e4595791681ccdda6f7bd3275a45ae7e56a"
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the header.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-header\" data-sidebar=\"header\" class={gx.Cx(\"flex flex-col gap-2 p-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "b13616a56f93ce105b3037d6cd044b3ddee7b9340070b4ae9fb0bfee6db569c9"
     },
     {
       "path": "SidebarContent.gx",
       "target": "ui/sidebar/SidebarContent.gx",
-      "content": "package sidebar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex-1 overflow-y-auto p-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "499fd7ed05b10515c118073dc55f90952f32e577bafda40acb2bb255680ec4f5"
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the scrolling content of the sidebar: the groups.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-content\" data-sidebar=\"content\" class={gx.Cx(\"flex min-h-0 flex-1 flex-col gap-2 overflow-auto\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "bc2f13b6a107aae3c7f2395630a35ae7ddb22eadf3e6332abc7a074de6aadf48"
     },
     {
       "path": "SidebarFooter.gx",
       "target": "ui/sidebar/SidebarFooter.gx",
-      "content": "package sidebar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"mt-auto p-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "854ab688be197ad37b939f2c76ad7ce05958f5b471bd0450c8c48051858003b2"
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the footer.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-footer\" data-sidebar=\"footer\" class={gx.Cx(\"flex flex-col gap-2 p-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "4c4a76d63594169f492d8d9fd9954d8e6cebb6808b93b53043d58b28b5068000"
+    },
+    {
+      "path": "SidebarInset.gx",
+      "target": "ui/sidebar/SidebarInset.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the main content of the page.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cmain data-slot=\"sidebar-inset\" class={gx.Cx(\"relative flex w-full flex-1 flex-col bg-background\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/main\u003e\n",
+      "sha256": "e7aa006a9e779ff3cdeb1b65ff4566d70a6c43d2a8788c8ea5a1699945eaa35b"
+    },
+    {
+      "path": "SidebarSeparator.gx",
+      "target": "ui/sidebar/SidebarSeparator.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-separator\" data-sidebar=\"separator\" role=\"none\" data-orientation=\"horizontal\" class={gx.Cx(\"h-px w-full shrink-0 bg-border\", \"mx-2 w-auto bg-sidebar-border\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "c70aeb05b720d04d04ec4d6aa7382b259cf036b974be32451879187e132498a3"
+    },
+    {
+      "path": "SidebarInput.gx",
+      "target": "ui/sidebar/SidebarInput.gx",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx/registry/input\"\n\nprops {\n  // Type is the type attribute of the input. An empty value is text.\n  Type        string = \"text\"\n  // Name is the form field name.\n  Name        string = \"\"\n  // Value is the value of the input.\n  Value       string = \"\"\n  // Placeholder is the text that shows while the input is empty.\n  Placeholder string = \"\"\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot=\"sidebar-input\" data-sidebar=\"input\" class={gx.Cx(input.Class, \"h-8 w-full bg-background shadow-none\", p.Class)} {...p.Attrs} /\u003e\n",
+      "sha256": "425e3eebe9d24c3552115bb00a67caef387c803cecef92287964eb70ed392248"
+    },
+    {
+      "path": "SidebarTrigger.gx",
+      "target": "ui/sidebar/SidebarTrigger.gx",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx/registry/button\"\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Controls is the id that aria-controls names. An empty value is gx-sidebar, the id the shell\n  // runtime shows and hides.\n  Controls string = \"gx-sidebar\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton.Button variant={button.Ghost} size={button.Icon} class={gx.Cx(\"size-7\", p.Class)} attrs={p.attrs()}\u003e\n  \u003cicons.PanelLeft /\u003e\n  \u003cspan class=\"sr-only\"\u003eToggle Sidebar\u003c/span\u003e\n\u003c/button.Button\u003e\n",
+      "sha256": "348679c29e4c8453510e0b1f4e3e2590e2abdf486c3a254d09ae3899670fe410"
     },
     {
       "path": "SidebarGroup.gx",
       "target": "ui/sidebar/SidebarGroup.gx",
-      "content": "package sidebar\n\nprops {\n  Title    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex flex-col gap-1 py-2\", p.Class)} {...p.Attrs}\u003e\n  if p.Title != \"\" {\n    \u003cp class=\"px-2 text-xs font-medium text-muted-foreground\"\u003e{p.Title}\u003c/p\u003e\n  }\n  {p.Children}\n\u003c/div\u003e\n",
-      "sha256": "d3cd852a9f9ee69fdca71f5654c75833c891528057adc651738867b87f0ee0c7"
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the group: the label, action and group content.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-group\" data-sidebar=\"group\" class={gx.Cx(\"relative flex w-full min-w-0 flex-col p-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "ba59efdda171d057910118e7a402ceae3e31d62dac7c96fdeeab07276085c42d"
     },
     {
-      "path": "SidebarItem.gx",
-      "target": "ui/sidebar/SidebarItem.gx",
-      "content": "package sidebar\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} aria-current={p.current()} class={gx.Cx(\"flex items-center gap-2 rounded-md px-2 py-1.5 text-sm no-underline transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
-      "sha256": "536b58ab168f4b1afbb4cda9d14bd3e6235fdbf3a6f9771c11c6595a6e315c56"
+      "path": "SidebarGroupLabel.gx",
+      "target": "ui/sidebar/SidebarGroupLabel.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label text of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-group-label\" data-sidebar=\"group-label\" class={gx.Cx(\"flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear motion-reduce:transition-none focus-visible:ring-2 [\u0026\u003esvg]:size-4 [\u0026\u003esvg]:shrink-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "a307e48d0037fe76871c25005ad3afea9c744d14492babe74aaee4cb1999abd2"
+    },
+    {
+      "path": "SidebarGroupAction.gx",
+      "target": "ui/sidebar/SidebarGroupAction.gx",
+      "content": "package sidebar\n\nprops {\n  // Label is the accessible name of the button.\n  Label    string\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the icon of the button.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" aria-label={p.Label} data-slot=\"sidebar-group-action\" data-sidebar=\"group-action\" class={gx.Cx(\"absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [\u0026\u003esvg]:size-4 [\u0026\u003esvg]:shrink-0 after:absolute after:-inset-2 md:after:hidden\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "f870d046dad8980545db48a344b0e86ab976b3870a49ac1442a30f95e0c4ebff"
+    },
+    {
+      "path": "SidebarGroupContent.gx",
+      "target": "ui/sidebar/SidebarGroupContent.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the group, usually a SidebarMenu.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-group-content\" data-sidebar=\"group-content\" class={gx.Cx(\"w-full text-sm\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "6cade408084a47a955dbb85ad7f6153d133e63d718b9c24e96e10a7a12c06f8d"
+    },
+    {
+      "path": "SidebarMenu.gx",
+      "target": "ui/sidebar/SidebarMenu.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the menu items.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cul data-slot=\"sidebar-menu\" data-sidebar=\"menu\" class={gx.Cx(\"flex w-full min-w-0 flex-col gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/ul\u003e\n",
+      "sha256": "cdc9dfb2028f2888886cf80d8dafda97ccca4eac3fe3cd604d916a3bb5acdd54"
+    },
+    {
+      "path": "SidebarMenuItem.gx",
+      "target": "ui/sidebar/SidebarMenuItem.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item: the menu button, action, badge and sub menu.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli data-slot=\"sidebar-menu-item\" data-sidebar=\"menu-item\" class={gx.Cx(\"group/menu-item relative\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/li\u003e\n",
+      "sha256": "bbba0dc1efd95db8d5069e795ab7d8fe106a7be61e78c9bf45b8bae8cfffd973"
+    },
+    {
+      "path": "SidebarMenuButton.gx",
+      "target": "ui/sidebar/SidebarMenuButton.gx",
+      "content": "package sidebar\n\nprops {\n  // Href is the URL of the link. An empty value renders a button in place of a link.\n  Href     gx.URL = \"\"\n  // Active marks the button of the current page.\n  // A link gets aria-current and a button gets data-active.\n  Active   bool = false\n  // Variant sets the surface: Default or Outline.\n  Variant  Variant = Default\n  // Size sets the height and the text size: Md, Sm or Lg.\n  Size     Size = Md\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the button: an icon and a span with the text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\nif p.Href != \"\" {\n  \u003ca href={p.Href} data-slot=\"sidebar-menu-button\" data-sidebar=\"menu-button\" data-size={p.size()} class={p.class()} {...p.attrs()}\u003e{p.Children}\u003c/a\u003e\n} else {\n  \u003cbutton type=\"button\" data-slot=\"sidebar-menu-button\" data-sidebar=\"menu-button\" data-size={p.size()} class={p.class()} {...p.buttonAttrs()}\u003e{p.Children}\u003c/button\u003e\n}\n",
+      "sha256": "94163f210c4e5945f89ca72c5c2624ae8b073721ad256b91944e214f4d7da4f1"
+    },
+    {
+      "path": "SidebarMenuAction.gx",
+      "target": "ui/sidebar/SidebarMenuAction.gx",
+      "content": "package sidebar\n\nprops {\n  // Label is the accessible name of the button.\n  Label       string\n  // ShowOnHover hides the action on a wide screen until its item has the pointer or the focus.\n  ShowOnHover bool = false\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Children is the icon of the button.\n  Children    gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" aria-label={p.Label} data-slot=\"sidebar-menu-action\" data-sidebar=\"menu-action\" class={gx.Cx(\"absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [\u0026\u003esvg]:size-4 [\u0026\u003esvg]:shrink-0 after:absolute after:-inset-2 md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5\", hoverClass[p.ShowOnHover], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "d86d7b16fc9b0b4085193115d45b393e2eb25c45c53e309fd551c9d18453f3b8"
+    },
+    {
+      "path": "SidebarMenuBadge.gx",
+      "target": "ui/sidebar/SidebarMenuBadge.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the badge text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-menu-badge\" data-sidebar=\"menu-badge\" class={gx.Cx(\"pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "fb22893a7deccca603e97a5ef8a2646e887953b32a3b9d2c7aa033092a6fd119"
+    },
+    {
+      "path": "SidebarMenuSkeleton.gx",
+      "target": "ui/sidebar/SidebarMenuSkeleton.gx",
+      "content": "package sidebar\n\nprops {\n  // ShowIcon adds an icon placeholder before the text bar.\n  ShowIcon bool = false\n  // Width is the maximum width of the text bar as a CSS length. An empty value is 70%.\n  Width    string = \"70%\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"sidebar-menu-skeleton\" data-sidebar=\"menu-skeleton\" class={gx.Cx(\"flex h-8 items-center gap-2 rounded-md px-2\", p.Class)} {...p.Attrs}\u003e\n  if p.ShowIcon {\n    \u003cdiv data-slot=\"skeleton\" data-sidebar=\"menu-skeleton-icon\" class=\"size-4 animate-pulse rounded-md bg-accent\"\u003e\u003c/div\u003e\n  }\n  \u003cdiv data-slot=\"skeleton\" data-sidebar=\"menu-skeleton-text\" style={gx.Style(\"--skeleton-width: \" + p.width())} class=\"h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-accent\"\u003e\u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "90cc577b3bc67fc81b93deda5050d49ee8ea8b1cb84f3fd446772790e1014c8f"
+    },
+    {
+      "path": "SidebarMenuSub.gx",
+      "target": "ui/sidebar/SidebarMenuSub.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the sub menu items.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cul data-slot=\"sidebar-menu-sub\" data-sidebar=\"menu-sub\" class={gx.Cx(\"mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/ul\u003e\n",
+      "sha256": "9c9abcd920fa5609b328d3972317a947c6677ea8c6c88b6122f44570f6f97810"
+    },
+    {
+      "path": "SidebarMenuSubItem.gx",
+      "target": "ui/sidebar/SidebarMenuSubItem.gx",
+      "content": "package sidebar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the sub item: a SidebarMenuSubButton.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli data-slot=\"sidebar-menu-sub-item\" data-sidebar=\"menu-sub-item\" class={gx.Cx(\"group/menu-sub-item relative\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/li\u003e\n",
+      "sha256": "0d004bdc44c55db666ecf209d952f6f2208a631ce4e53ef0fe501665970e03c1"
+    },
+    {
+      "path": "SidebarMenuSubButton.gx",
+      "target": "ui/sidebar/SidebarMenuSubButton.gx",
+      "content": "package sidebar\n\nprops {\n  // Href is the URL of the link.\n  Href     gx.URL\n  // Active marks the link of the current page. It sets aria-current and the active style.\n  Active   bool = false\n  // Size sets the text size: Md or Sm.\n  Size     Size = Md\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the link: an icon and a span with the text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} data-slot=\"sidebar-menu-sub-button\" data-sidebar=\"menu-sub-button\" data-size={p.size()} class={gx.Cx(\"flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [\u0026\u003espan:last-child]:truncate [\u0026\u003esvg]:size-4 [\u0026\u003esvg]:shrink-0 [\u0026\u003esvg]:text-sidebar-accent-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground\", subSizeClass[Size(p.size())], subActiveClass[p.Active], p.Class)} {...p.attrs()}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "d2458e70555424ddb1410d7ec051dbfff52daa17fd9c54078ac6b854ea47b101"
     },
     {
       "path": "Sidebar.fixtures.go",
       "target": "ui/sidebar/Sidebar.fixtures.go",
-      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarFixtures = gx.Fixtures[SidebarProps]{\n\t\"Full\": {Id: \"demo-sidebar\", Class: \"h-72\", Children: gx.Frag(\n\t\tSidebarHeader(SidebarHeaderProps{Children: gx.Text(\"Gx\")}),\n\t\tSidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Title: \"Menu\", Children: gx.Frag(\n\t\t\tSidebarItem(SidebarItemProps{Href: gx.URL(\"/\"), Active: true, Children: gx.Text(\"Home\")}),\n\t\t\tSidebarItem(SidebarItemProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t\t)})}),\n\t\tSidebarFooter(SidebarFooterProps{Children: gx.Text(\"v0.1.0\")}),\n\t)},\n\t\"Hidden\": {Id: \"demo-sidebar-hidden\", Attrs: gx.Attrs{gx.Bool(\"hidden\", true)}},\n}\n",
-      "sha256": "3496c7bb6ee1e4cbe02f67cb8fa14a267baf36e1bee21b139e5f1db89e5cc42a"
+      "content": "package sidebar\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/icons\"\n)\n\n// more is the icon of the action fixtures.\nfunc more() gx.Node {\n\treturn icons.Ellipsis(icons.EllipsisProps{})\n}\n\n// demoMenu is the menu of the sidebar fixtures.\nfunc demoMenu() gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Children: gx.Frag(\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL(\"/\"), Active: true, Children: gx.El(\"span\", nil, gx.Text(\"Home\"))})}),\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL(\"/docs\"), Children: gx.El(\"span\", nil, gx.Text(\"Docs\"))})}),\n\t)})\n}\n\nvar SidebarFixtures = gx.Fixtures[SidebarProps]{\n\t\"Full\": {Id: \"demo-sidebar\", Class: \"h-72\", Children: gx.Frag(\n\t\tSidebarHeader(SidebarHeaderProps{Children: gx.El(\"span\", gx.Attrs{{Key: \"class\", Value: \"px-2 text-sm font-semibold\"}}, gx.Text(\"Gx\"))}),\n\t\tSidebarContent(SidebarContentProps{Children: SidebarGroup(SidebarGroupProps{Children: gx.Frag(\n\t\t\tSidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text(\"Menu\")}),\n\t\t\tSidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),\n\t\t)})}),\n\t\tSidebarFooter(SidebarFooterProps{Children: gx.El(\"span\", gx.Attrs{{Key: \"class\", Value: \"px-2 text-xs text-sidebar-foreground/70\"}}, gx.Text(\"v0.1.0\"))}),\n\t)},\n\t\"Right\": {Id: \"demo-sidebar-right\", Side: Right, Class: \"h-40\", Children: SidebarContent(SidebarContentProps{\n\t\tChildren: SidebarGroup(SidebarGroupProps{Children: demoMenu()}),\n\t})},\n\t\"Hidden\": {Id: \"demo-sidebar-hidden\", Attrs: gx.Attrs{gx.Bool(\"hidden\", true)}},\n}\n",
+      "sha256": "e784ec7c804dbdb3f62e7b62004d63714338330798120f179efa38eb80de4db2"
     },
     {
-      "path": "styles.go",
-      "target": "ui/sidebar/styles.go",
-      "content": "package sidebar\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-sidebar-accent font-medium text-sidebar-accent-foreground\",\n\tfalse: \"text-sidebar-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p SidebarItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
-      "sha256": "67503340679a7112723c34e3e3bee63d9d06c6838cf5930c483d1fb6cd168c73"
+      "path": "SidebarHeader.fixtures.go",
+      "target": "ui/sidebar/SidebarHeader.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarHeaderFixtures = gx.Fixtures[SidebarHeaderProps]{\"Empty\": {}}\n",
+      "sha256": "669980f0deeb773f1e30ea1fbf7a3f861561d11fcccb1c31eb2220e715527089"
     },
     {
       "path": "SidebarContent.fixtures.go",
@@ -65,31 +155,129 @@
       "sha256": "ec7da04800836a40b2b1923937a618c42448c2cbc49a3b041285ec3f7fc8b520"
     },
     {
+      "path": "SidebarInset.fixtures.go",
+      "target": "ui/sidebar/SidebarInset.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarInsetFixtures = gx.Fixtures[SidebarInsetProps]{\"Page\": {Class: \"p-4\", Children: gx.Text(\"Page content.\")}}\n",
+      "sha256": "b98d481a3bf1eb72df355fb7a2c93f2fb914982d670c767bc020bd1269ef5ac7"
+    },
+    {
+      "path": "SidebarSeparator.fixtures.go",
+      "target": "ui/sidebar/SidebarSeparator.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarSeparatorFixtures = gx.Fixtures[SidebarSeparatorProps]{\"Default\": {}}\n",
+      "sha256": "cf5abe3bb50b66e694f241126dead5f6d2060fa9194a207f4971df5f81a34405"
+    },
+    {
+      "path": "SidebarInput.fixtures.go",
+      "target": "ui/sidebar/SidebarInput.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarInputFixtures = gx.Fixtures[SidebarInputProps]{\"Search\": {Placeholder: \"Search the docs\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Search\"}}}}\n",
+      "sha256": "0ca5f687c4175de7abf8f150b26ec426baf569d56b9755430135ead63e943848"
+    },
+    {
+      "path": "SidebarTrigger.fixtures.go",
+      "target": "ui/sidebar/SidebarTrigger.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarTriggerFixtures = gx.Fixtures[SidebarTriggerProps]{\"Default\": {Controls: \"demo-sidebar\"}}\n",
+      "sha256": "c3b67e609542be04725f54459046cebeaa6a9668b88217fe28123aecec2f25dc"
+    },
+    {
       "path": "SidebarGroup.fixtures.go",
       "target": "ui/sidebar/SidebarGroup.fixtures.go",
-      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{\"Group\": {Title: \"Menu\", Children: gx.Text(\"Items\")}}\n",
-      "sha256": "8af214259769c39b00004e6960518dced5608fd348388c5b6e3ea5d2d245c3cb"
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarGroupFixtures = gx.Fixtures[SidebarGroupProps]{\n\t\"Labelled\": {Class: \"w-64 bg-sidebar text-sidebar-foreground\", Children: gx.Frag(\n\t\tSidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text(\"Projects\")}),\n\t\tSidebarGroupAction(SidebarGroupActionProps{Label: \"Project options\", Children: more()}),\n\t\tSidebarGroupContent(SidebarGroupContentProps{Children: demoMenu()}),\n\t)},\n}\n",
+      "sha256": "b2606e0b84c23620ddee04fab74239e64f322b4d77dc4f6d91467596d8289e29"
     },
     {
-      "path": "SidebarHeader.fixtures.go",
-      "target": "ui/sidebar/SidebarHeader.fixtures.go",
-      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarHeaderFixtures = gx.Fixtures[SidebarHeaderProps]{\"Empty\": {}}\n",
-      "sha256": "669980f0deeb773f1e30ea1fbf7a3f861561d11fcccb1c31eb2220e715527089"
+      "path": "SidebarGroupLabel.fixtures.go",
+      "target": "ui/sidebar/SidebarGroupLabel.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarGroupLabelFixtures = gx.Fixtures[SidebarGroupLabelProps]{\"Label\": {Children: gx.Text(\"Projects\")}}\n",
+      "sha256": "cc9fe6e68790c199b5781c39bea8d73e5e9cdaf98b9db4a18e858b5d0f4bdf60"
     },
     {
-      "path": "SidebarItem.fixtures.go",
-      "target": "ui/sidebar/SidebarItem.fixtures.go",
-      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarItemFixtures = gx.Fixtures[SidebarItemProps]{\"Item\": {Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")}}\n",
-      "sha256": "1e94c6275b1dd49cbb8bc2111205ca4e7caabedd19d7b0f835667a184d9d6f4d"
+      "path": "SidebarGroupAction.fixtures.go",
+      "target": "ui/sidebar/SidebarGroupAction.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarGroupActionFixtures = gx.Fixtures[SidebarGroupActionProps]{\"Add\": {Label: \"Project options\", Children: more()}}\n\n// SidebarGroupActionWrap renders the action in a group, which positions\n// it.\nfunc SidebarGroupActionWrap(n gx.Node) gx.Node {\n\treturn SidebarGroup(SidebarGroupProps{Class: \"w-64\", Children: gx.Frag(\n\t\tSidebarGroupLabel(SidebarGroupLabelProps{Children: gx.Text(\"Projects\")}),\n\t\tn,\n\t)})\n}\n",
+      "sha256": "480fe82a3ee8cb08a020bd70a7327560a648723850ce0ecb5cee4cfe08f97435"
+    },
+    {
+      "path": "SidebarGroupContent.fixtures.go",
+      "target": "ui/sidebar/SidebarGroupContent.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarGroupContentFixtures = gx.Fixtures[SidebarGroupContentProps]{\"Empty\": {}}\n",
+      "sha256": "aceb37865165ed6bd81c54fd7c468528c8f4190c99e5a31354e465dd10f561b6"
+    },
+    {
+      "path": "SidebarMenu.fixtures.go",
+      "target": "ui/sidebar/SidebarMenu.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuFixtures = gx.Fixtures[SidebarMenuProps]{\n\t\"Nested\": {Class: \"w-64\", Children: gx.Frag(\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(\n\t\t\tSidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL(\"/docs\"), Children: gx.El(\"span\", nil, gx.Text(\"Docs\"))}),\n\t\t\tSidebarMenuBadge(SidebarMenuBadgeProps{Children: gx.Text(\"12\")}),\n\t\t\tSidebarMenuSub(SidebarMenuSubProps{Children: gx.Frag(\n\t\t\t\tSidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL(\"/docs/start\"), Active: true, Children: gx.El(\"span\", nil, gx.Text(\"Get started\"))})}),\n\t\t\t\tSidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL(\"/docs/forms\"), Children: gx.El(\"span\", nil, gx.Text(\"Forms\"))})}),\n\t\t\t)}),\n\t\t)}),\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(\n\t\t\tSidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL(\"/projects\"), Children: gx.El(\"span\", nil, gx.Text(\"Projects\"))}),\n\t\t\tSidebarMenuAction(SidebarMenuActionProps{Label: \"Project options\", Children: more()}),\n\t\t)}),\n\t)},\n\t\"Loading\": {Class: \"w-64\", Children: gx.Frag(\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuSkeleton(SidebarMenuSkeletonProps{ShowIcon: true, Width: \"80%\"})}),\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuSkeleton(SidebarMenuSkeletonProps{ShowIcon: true, Width: \"55%\"})}),\n\t\tSidebarMenuItem(SidebarMenuItemProps{Children: SidebarMenuSkeleton(SidebarMenuSkeletonProps{ShowIcon: true, Width: \"70%\"})}),\n\t)},\n}\n",
+      "sha256": "723a97789be5b27f1da68b7aec3135149a60eec1f5f3c22e0d276ab9f8a0f2d6"
+    },
+    {
+      "path": "SidebarMenuItem.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuItem.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuItemFixtures = gx.Fixtures[SidebarMenuItemProps]{\"Empty\": {}}\n\n// SidebarMenuItemWrap renders the part in a menu, where it belongs.\nfunc SidebarMenuItemWrap(n gx.Node) gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Class: \"w-64\", Children: n})\n}\n",
+      "sha256": "a09dbf53d03bde775e3cdd309c3b48ffdf349701b6944db9198c6c752a5f6184"
+    },
+    {
+      "path": "SidebarMenuButton.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuButton.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuButtonFixtures = gx.Fixtures[SidebarMenuButtonProps]{\n\t\"Link\":    {Href: gx.URL(\"/docs\"), Children: gx.El(\"span\", nil, gx.Text(\"Docs\"))},\n\t\"Active\":  {Href: gx.URL(\"/\"), Active: true, Children: gx.El(\"span\", nil, gx.Text(\"Home\"))},\n\t\"Button\":  {Children: gx.El(\"span\", nil, gx.Text(\"Sign out\"))},\n\t\"Outline\": {Variant: Outline, Href: gx.URL(\"/docs\"), Children: gx.El(\"span\", nil, gx.Text(\"Docs\"))},\n\t\"Small\":   {Size: Sm, Href: gx.URL(\"/docs\"), Children: gx.El(\"span\", nil, gx.Text(\"Docs\"))},\n\t\"Large\":   {Size: Lg, Href: gx.URL(\"/docs\"), Children: gx.El(\"span\", nil, gx.Text(\"Docs\"))},\n}\n\n// SidebarMenuButtonWrap renders the part in a menu, where it belongs.\nfunc SidebarMenuButtonWrap(n gx.Node) gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Class: \"w-64\", Children: SidebarMenuItem(SidebarMenuItemProps{Children: n})})\n}\n",
+      "sha256": "ee0f835d47c5c47eb64cc4c07d6f0576781ebb9257738b30f1ae6f72d3bd905d"
+    },
+    {
+      "path": "SidebarMenuAction.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuAction.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuActionFixtures = gx.Fixtures[SidebarMenuActionProps]{\n\t\"Add\":   {Label: \"Project options\", Children: more()},\n\t\"Hover\": {Label: \"Project options\", ShowOnHover: true, Children: more()},\n}\n\n// SidebarMenuActionWrap renders the part in a menu, where it belongs.\nfunc SidebarMenuActionWrap(n gx.Node) gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Class: \"w-64\", Children: SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL(\"/projects\"), Children: gx.El(\"span\", nil, gx.Text(\"Projects\"))}), n)})})\n}\n",
+      "sha256": "2ae31b3e61852a3f0b34fa549043a41ed961015acf39bd99935059301f9723fb"
+    },
+    {
+      "path": "SidebarMenuBadge.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuBadge.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuBadgeFixtures = gx.Fixtures[SidebarMenuBadgeProps]{\"Count\": {Children: gx.Text(\"12\")}}\n\n// SidebarMenuBadgeWrap renders the part in a menu, where it belongs.\nfunc SidebarMenuBadgeWrap(n gx.Node) gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Class: \"w-64\", Children: SidebarMenuItem(SidebarMenuItemProps{Children: gx.Frag(SidebarMenuButton(SidebarMenuButtonProps{Href: gx.URL(\"/projects\"), Children: gx.El(\"span\", nil, gx.Text(\"Projects\"))}), n)})})\n}\n",
+      "sha256": "6986f7fa0198db0d523c029a5c500a70aa70b2dc8086c85e565c93ef8f8ab08e"
+    },
+    {
+      "path": "SidebarMenuSkeleton.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSkeleton.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuSkeletonFixtures = gx.Fixtures[SidebarMenuSkeletonProps]{\n\t\"Text\": {},\n\t\"Icon\": {ShowIcon: true, Width: \"55%\"},\n}\n\n// SidebarMenuSkeletonWrap renders the part in a menu, where it belongs.\nfunc SidebarMenuSkeletonWrap(n gx.Node) gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Class: \"w-64\", Children: SidebarMenuItem(SidebarMenuItemProps{Children: n})})\n}\n",
+      "sha256": "162af8d18d8899edece1080a4d8d7e1cf98b9e769df5c370b4c89005a995f597"
+    },
+    {
+      "path": "SidebarMenuSub.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSub.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuSubFixtures = gx.Fixtures[SidebarMenuSubProps]{\n\t\"Two\": {Children: gx.Frag(\n\t\tSidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL(\"/docs/start\"), Active: true, Children: gx.El(\"span\", nil, gx.Text(\"Get started\"))})}),\n\t\tSidebarMenuSubItem(SidebarMenuSubItemProps{Children: SidebarMenuSubButton(SidebarMenuSubButtonProps{Href: gx.URL(\"/docs/forms\"), Size: Sm, Children: gx.El(\"span\", nil, gx.Text(\"Forms\"))})}),\n\t)},\n}\n\n// SidebarMenuSubWrap renders the part in a menu, where it belongs.\nfunc SidebarMenuSubWrap(n gx.Node) gx.Node {\n\treturn SidebarMenu(SidebarMenuProps{Class: \"w-64\", Children: SidebarMenuItem(SidebarMenuItemProps{Children: n})})\n}\n",
+      "sha256": "361ba94b57a43b7b201760b1fef35821cce54023a351c51d07f6560d2d48e88c"
+    },
+    {
+      "path": "SidebarMenuSubItem.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSubItem.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuSubItemFixtures = gx.Fixtures[SidebarMenuSubItemProps]{\"Empty\": {}}\n\n// SidebarMenuSubItemWrap renders the part in a sub menu, where it belongs.\nfunc SidebarMenuSubItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"class\", Value: \"w-64\"}}, SidebarMenuSub(SidebarMenuSubProps{Children: n}))\n}\n",
+      "sha256": "16bcfcc730b2eee0af742ec7d5cae8bcd5b2f3a0248717fcf0d67635d7e64565"
+    },
+    {
+      "path": "SidebarMenuSubButton.fixtures.go",
+      "target": "ui/sidebar/SidebarMenuSubButton.fixtures.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarMenuSubButtonFixtures = gx.Fixtures[SidebarMenuSubButtonProps]{\n\t\"Link\":   {Href: gx.URL(\"/docs/forms\"), Children: gx.El(\"span\", nil, gx.Text(\"Forms\"))},\n\t\"Active\": {Href: gx.URL(\"/docs/start\"), Active: true, Children: gx.El(\"span\", nil, gx.Text(\"Get started\"))},\n\t\"Small\":  {Href: gx.URL(\"/docs/forms\"), Size: Sm, Children: gx.El(\"span\", nil, gx.Text(\"Forms\"))},\n}\n\n// SidebarMenuSubButtonWrap renders the part in a sub menu, where it belongs.\nfunc SidebarMenuSubButtonWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"class\", Value: \"w-64\"}}, SidebarMenuSub(SidebarMenuSubProps{Children: SidebarMenuSubItem(SidebarMenuSubItemProps{Children: n})}))\n}\n",
+      "sha256": "7f92170c236f104482d7f78ecbe56afa0686e80d9c8f4878299bd5ec53d9a4eb"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/sidebar/styles.go",
+      "content": "package sidebar\n\nimport \"github.com/alternayte/gx\"\n\n// Side is the edge of the page that holds the sidebar.\ntype Side string\n\n// The sides of sidebar.Sidebar.\nconst (\n\tLeft  Side = \"left\"\n\tRight Side = \"right\"\n)\n\n// side returns the data-side value; a zero value is Left. The border of\n// the sidebar follows this attribute.\nfunc (p SidebarProps) side() string {\n\tif p.Side == \"\" {\n\t\treturn string(Left)\n\t}\n\treturn string(p.Side)\n}\n\n// Variant is the surface of a menu button.\ntype Variant string\n\n// The variants of sidebar.SidebarMenuButton.\nconst (\n\tDefault Variant = \"default\"\n\tOutline Variant = \"outline\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"hover:bg-sidebar-accent hover:text-sidebar-accent-foreground\",\n\tOutline: \"bg-background shadow-[0_0_0_1px_var(--sidebar-border)] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_var(--sidebar-accent)]\",\n}\n\n// Size is the height and the text size of a menu button.\ntype Size string\n\n// The sizes of sidebar.SidebarMenuButton. A sub button has Md and Sm.\nconst (\n\tMd Size = \"default\"\n\tSm Size = \"sm\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tMd: \"h-8 text-sm\",\n\tSm: \"h-7 text-xs\",\n\tLg: \"h-12 text-sm\",\n}\n\n// subSizeClass is the text size of a sub button. Its height is fixed.\nvar subSizeClass = gx.Enum[Size]{\n\tMd: \"text-sm\",\n\tSm: \"text-xs\",\n\tLg: \"text-sm\",\n}\n\n// hoverClass hides a menu action on a wide screen until its item has the\n// pointer or the focus.\nvar hoverClass = map[bool]string{\n\ttrue:  \"group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground data-[state=open]:opacity-100 md:opacity-0\",\n\tfalse: \"\",\n}\n\n// size returns the data-size value; a zero value is Md. The action and the\n// badge of the item read this attribute.\nfunc (p SidebarMenuButtonProps) size() string {\n\tif p.Size == \"\" {\n\t\treturn string(Md)\n\t}\n\treturn string(p.Size)\n}\n\n// class returns the classes of one menu button.\nfunc (p SidebarMenuButtonProps) class() string {\n\tconst base = \"peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm ring-sidebar-ring outline-hidden transition-[width,height,padding] motion-reduce:transition-none group-has-data-[sidebar=menu-action]/menu-item:pr-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground [\u0026\u003espan:last-child]:truncate [\u0026\u003esvg]:size-4 [\u0026\u003esvg]:shrink-0\"\n\tvariant := p.Variant\n\tif variant == \"\" {\n\t\tvariant = Default\n\t}\n\treturn gx.Cx(base, variantClass[variant], sizeClass[Size(p.size())], activeClass[p.Active], p.Class)\n}\n\n// activeClass is the look of a menu button with Active set. A link also\n// takes this look from aria-current and data-active, which the framework\n// keeps current for a typed href.\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-sidebar-accent font-medium text-sidebar-accent-foreground\",\n\tfalse: \"\",\n}\n\n// subActiveClass is the look of a sub button with Active set.\nvar subActiveClass = map[bool]string{\n\ttrue:  \"bg-sidebar-accent text-sidebar-accent-foreground\",\n\tfalse: \"\",\n}\n\n// attrs marks the link of the current page, then adds the caller's\n// attributes.\nfunc (p SidebarMenuButtonProps) attrs() gx.Attrs {\n\tif !p.Active {\n\t\treturn p.Attrs\n\t}\n\treturn append(gx.Attrs{{Key: \"aria-current\", Value: \"page\"}}, p.Attrs...)\n}\n\n// buttonAttrs marks an active button, then adds the caller's attributes.\n// The action and the badge of the item read data-active.\nfunc (p SidebarMenuButtonProps) buttonAttrs() gx.Attrs {\n\tif !p.Active {\n\t\treturn p.Attrs\n\t}\n\treturn append(gx.Attrs{{Key: \"data-active\", Value: \"true\"}}, p.Attrs...)\n}\n\n// size returns the data-size value; a zero value is Md.\nfunc (p SidebarMenuSubButtonProps) size() string {\n\tif p.Size == \"\" {\n\t\treturn string(Md)\n\t}\n\treturn string(p.Size)\n}\n\n// attrs marks the link of the current page, then adds the caller's\n// attributes.\nfunc (p SidebarMenuSubButtonProps) attrs() gx.Attrs {\n\tif !p.Active {\n\t\treturn p.Attrs\n\t}\n\treturn append(gx.Attrs{{Key: \"aria-current\", Value: \"page\"}}, p.Attrs...)\n}\n\n// width returns the width of the text bar; a zero value is 70%.\nfunc (p SidebarMenuSkeletonProps) width() string {\n\tif p.Width == \"\" {\n\t\treturn \"70%\"\n\t}\n\treturn p.Width\n}\n\n// inputType returns the type of the input; a zero value is text.\nfunc (p SidebarInputProps) inputType() string {\n\tif p.Type == \"\" {\n\t\treturn \"text\"\n\t}\n\treturn p.Type\n}\n\n// controls returns the id of the sidebar; a zero value is gx-sidebar, the\n// id the shell runtime shows and hides.\nfunc (p SidebarTriggerProps) controls() string {\n\tif p.Controls == \"\" {\n\t\treturn \"gx-sidebar\"\n\t}\n\treturn p.Controls\n}\n\n// attrs returns the attributes of the trigger: the shell runtime reads\n// data-gx-menu and keeps aria-expanded current.\nfunc (p SidebarTriggerProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{\n\t\t{Key: \"data-sidebar\", Value: \"trigger\"},\n\t\tgx.Bool(\"data-gx-menu\", true),\n\t\t{Key: \"aria-controls\", Value: p.controls()},\n\t\t{Key: \"aria-expanded\", Value: \"false\"},\n\t}, p.Attrs...)\n}\n",
+      "sha256": "945deacb6d8021d8581d4a2f507b3575a5ea3f506b13699389687a7bcbe566a1"
     }
+  ],
+  "registryDependencies": [
+    "button",
+    "icons",
+    "input"
   ],
   "requiredTokens": [
     "--border",
+    "--background",
+    "--accent",
     "--sidebar",
     "--sidebar-foreground",
     "--sidebar-accent",
     "--sidebar-accent-foreground",
-    "--muted-foreground"
+    "--sidebar-border",
+    "--sidebar-ring"
   ],
-  "usage": "# Sidebar\n\nA vertical panel for the app or docs navigation.\n\n## Usage\n\n```gx\n\u003csidebar.Sidebar id=\"gx-sidebar\"\u003e\n  \u003csidebar.SidebarHeader\u003eGx\u003c/sidebar.SidebarHeader\u003e\n  \u003csidebar.SidebarContent\u003e\n    \u003csidebar.SidebarGroup title=\"Menu\"\u003e\n      \u003csidebar.SidebarItem href={gx.URL(\"/\")} active={true}\u003eHome\u003c/sidebar.SidebarItem\u003e\n    \u003c/sidebar.SidebarGroup\u003e\n  \u003c/sidebar.SidebarContent\u003e\n\u003c/sidebar.Sidebar\u003e\n```\n\nPair the sidebar with a button that carries `data-gx-menu` and `aria-controls` set to the sidebar id.\n\n## Do\n\n- Give the sidebar the id `gx-sidebar` when it pairs with the shell menu button.\n- Keep groups short.\n\n## Don't\n\n- Do not put a second sidebar on one page.\n- Do not hide the sidebar on a wide screen.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the items. |\n| Enter | Follows the focused link. |\n"
+  "usage": "# Sidebar\n\nA vertical panel for the app or docs navigation.\n\n## Usage\n\n```gx\n\u003csidebar.Sidebar id=\"gx-sidebar\"\u003e\n  \u003csidebar.SidebarHeader\u003e\n    \u003csidebar.SidebarInput name=\"q\" placeholder=\"Search\" /\u003e\n  \u003c/sidebar.SidebarHeader\u003e\n  \u003csidebar.SidebarContent\u003e\n    \u003csidebar.SidebarGroup\u003e\n      \u003csidebar.SidebarGroupLabel\u003eMenu\u003c/sidebar.SidebarGroupLabel\u003e\n      \u003csidebar.SidebarGroupContent\u003e\n        \u003csidebar.SidebarMenu\u003e\n          \u003csidebar.SidebarMenuItem\u003e\n            \u003csidebar.SidebarMenuButton href={homeRoute} active={true}\u003e\u003cspan\u003eHome\u003c/span\u003e\u003c/sidebar.SidebarMenuButton\u003e\n          \u003c/sidebar.SidebarMenuItem\u003e\n          \u003csidebar.SidebarMenuItem\u003e\n            \u003csidebar.SidebarMenuButton href={docsRoute}\u003e\u003cspan\u003eDocs\u003c/span\u003e\u003c/sidebar.SidebarMenuButton\u003e\n            \u003csidebar.SidebarMenuBadge\u003e12\u003c/sidebar.SidebarMenuBadge\u003e\n            \u003csidebar.SidebarMenuSub\u003e\n              \u003csidebar.SidebarMenuSubItem\u003e\n                \u003csidebar.SidebarMenuSubButton href={formsRoute}\u003e\u003cspan\u003eForms\u003c/span\u003e\u003c/sidebar.SidebarMenuSubButton\u003e\n              \u003c/sidebar.SidebarMenuSubItem\u003e\n            \u003c/sidebar.SidebarMenuSub\u003e\n          \u003c/sidebar.SidebarMenuItem\u003e\n        \u003c/sidebar.SidebarMenu\u003e\n      \u003c/sidebar.SidebarGroupContent\u003e\n    \u003c/sidebar.SidebarGroup\u003e\n  \u003c/sidebar.SidebarContent\u003e\n  \u003csidebar.SidebarFooter\u003ev0.1.0\u003c/sidebar.SidebarFooter\u003e\n\u003c/sidebar.Sidebar\u003e\n\u003csidebar.SidebarInset\u003e\n  \u003csidebar.SidebarTrigger class=\"lg:hidden\" /\u003e\n\u003c/sidebar.SidebarInset\u003e\n```\n\n`SidebarMenuButton` is a link when it has `Href`, and a button when it has none. Its variants are `Default` and `Outline`. Its sizes are `Md`, `Sm` and `Lg`.\n`SidebarMenuAction` and `SidebarMenuBadge` sit at the right of the button of their item. `SidebarGroupAction` sits at the right of the group label.\n`SidebarMenuSkeleton` is the placeholder of one menu row.\n`SidebarTrigger` shows and hides the sidebar with the id `gx-sidebar` on a narrow screen. The sidebar is always visible on a wide screen.\nSet `side={sidebar.Right}` for a sidebar at the right edge.\n\nThe sidebar is static. It has no collapsed icon mode, no rail, no floating or inset variant and no mobile sheet.\n\n## Do\n\n- Give the sidebar the id `gx-sidebar` when it pairs with `SidebarTrigger`.\n- Put the text of a menu button in a `\u003cspan\u003e`. A long text is then cut with an ellipsis.\n- Give `SidebarMenuAction` and `SidebarGroupAction` a `Label`.\n\n## Don't\n\n- Do not put a second sidebar on one page.\n- Do not hide the sidebar on a wide screen.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the links and the buttons. |\n| Enter | Follows the focused link, or activates the focused button. |\n| Space | Activates the focused button. |\n"
 }

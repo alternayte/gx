@@ -7,18 +7,19 @@
     {
       "path": "ScrollArea.gx",
       "target": "ui/scroll-area/ScrollArea.gx",
-      "content": "package scrollarea\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"relative overflow-auto\", p.Class)} tabindex=\"0\" style={gx.Style(\"scrollbar-width: thin\")} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "0b904a0c1edbf5d7a6427f8f5df0b709656789fb6d1ccdfbb6c902f3823be21d"
+      "content": "package scrollarea\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content that scrolls.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"relative overflow-auto transition-[color,box-shadow] outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 motion-reduce:transition-none\", p.Class)} tabindex=\"0\" {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "629b2a6b5b1a82e05d7036914ee995ea2f0b5080c11f5fd31b6b321f9c8f9725"
     },
     {
       "path": "ScrollArea.fixtures.go",
       "target": "ui/scroll-area/ScrollArea.fixtures.go",
-      "content": "package scrollarea\n\nimport \"github.com/alternayte/gx\"\n\nvar ScrollAreaFixtures = gx.Fixtures[ScrollAreaProps]{\n\t\"Vertical\": {Class: \"h-24 w-48 rounded-md border border-border p-2\", Children: gx.Text(\"Line one. Line two. Line three. Line four. Line five. Line six. Line seven. Line eight.\")},\n}\n",
-      "sha256": "eb3e41415af947e4883fd3a18f9ab26bc53dd5fd5ddbe4b9e5a1e729592b37b5"
+      "content": "package scrollarea\n\nimport \"github.com/alternayte/gx\"\n\n// Each line is one paragraph, so the text does not wrap at the scrollbar.\nvar ScrollAreaFixtures = gx.Fixtures[ScrollAreaProps]{\n\t\"Vertical\": {Class: \"h-24 w-48 rounded-md border border-border\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Lines\", Kind: gx.AttrText}}, Children: gx.El(\"div\", gx.Attrs{{Key: \"class\", Value: \"p-2 text-sm\", Kind: gx.AttrText}},\n\t\tgx.El(\"p\", nil, gx.Text(\"Line one.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line two.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line three.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line four.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line five.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line six.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line seven.\")),\n\t\tgx.El(\"p\", nil, gx.Text(\"Line eight.\")),\n\t)},\n\t\"Horizontal\": {Class: \"w-48 rounded-md border border-border whitespace-nowrap\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"One long line\", Kind: gx.AttrText}}, Children: gx.El(\"div\", gx.Attrs{{Key: \"class\", Value: \"p-2 text-sm\", Kind: gx.AttrText}},\n\t\tgx.El(\"p\", nil, gx.Text(\"One long line that does not wrap and scrolls sideways.\")),\n\t)},\n}\n",
+      "sha256": "4efe104612c630f6ac3dd2fee1419888cf523c7186c8d6502b7b1b1952a74345"
     }
   ],
   "requiredTokens": [
-    "--border"
+    "--border",
+    "--ring"
   ],
-  "usage": "# Scroll Area\n\nA box with a styled scrollbar.\n\n## Usage\n\n```gx\n\u003cscrollarea.ScrollArea class=\"h-64\"\u003e\n  \u003cp\u003eLong content.\u003c/p\u003e\n\u003c/scrollarea.ScrollArea\u003e\n```\n\n## Do\n\n- Set a height on the area.\n- Keep the scroll on one axis.\n\n## Don't\n\n- Do not nest two scroll areas.\n- Do not use a scroll area for the whole page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Page keys | Scroll the area when it holds focus. |\n"
+  "usage": "# Scroll Area\n\nA box with a styled scrollbar.\n\n## Usage\n\n```gx\n\u003cscrollarea.ScrollArea class=\"h-64 rounded-md border\"\u003e\n  \u003cdiv class=\"p-4\"\u003eLong content.\u003c/div\u003e\n\u003c/scrollarea.ScrollArea\u003e\n```\n\nThe area is a native scroller with a thin scrollbar in the border colour.\nIt scrolls on both axes. The browser draws the scrollbar.\n\n## Do\n\n- Set a height on the area.\n- Put the padding on the content, not on the area.\n- Keep the scroll on one axis.\n\n## Don't\n\n- Do not nest two scroll areas.\n- Do not use a scroll area for the whole page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the area. |\n| Arrow keys, Page keys | Scroll the area when it holds focus. |\n"
 }

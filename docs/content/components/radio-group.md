@@ -9,7 +9,7 @@ item: "radio-group"
 <Example item="radio-group" name="radio-group-vertical" label="Radio Group: RadioGroup: Vertical">
 
 ```gx
-<radiogroup.RadioGroup name="plan" label="Plan">
+<radiogroup.RadioGroup label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>
@@ -51,8 +51,6 @@ Copy each file to its path in the app. Change each import of a registry package 
 package radiogroup
 
 props {
-  // Name is the form field name of the group. The group does not render it; set Name on each item.
-  Name        string = ""
   // Orientation sets the layout direction: Vertical or Horizontal.
   Orientation Orientation = Vertical
   // Label is the accessible name of the group.
@@ -117,7 +115,6 @@ import "github.com/alternayte/gx"
 // across the whole gallery page, and only one of them stays checked.
 var RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{
 	"Vertical": {
-		Name:  "plan",
 		Label: "Plan",
 		Children: gx.Frag(
 			RadioGroupItem(RadioGroupItemProps{Name: "plan", Value: "free", Checked: true, Label: "Free"}),
@@ -125,7 +122,6 @@ var RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{
 		),
 	},
 	"Horizontal": {
-		Name:        "size",
 		Label:       "Size",
 		Orientation: Horizontal,
 		Children: gx.Frag(
@@ -194,7 +190,7 @@ The theme must define these tokens: `--primary`, `--input`, `--ring`, `--destruc
 ## Usage
 
 ```gx
-<radiogroup.RadioGroup name="plan" label="Plan">
+<radiogroup.RadioGroup label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked={true} label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>
@@ -210,7 +206,7 @@ Each item is a native radio input behind a styled circle.
 <Example item="radio-group" name="radio-group-vertical" label="Radio Group: RadioGroup: Vertical">
 
 ```gx
-<radiogroup.RadioGroup name="plan" label="Plan">
+<radiogroup.RadioGroup label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>
@@ -223,7 +219,7 @@ Each item is a native radio input behind a styled circle.
 <Example item="radio-group" name="radio-group-horizontal" label="Radio Group: RadioGroup: Horizontal">
 
 ```gx
-<radiogroup.RadioGroup name="size" label="Size" orientation={radiogroup.Horizontal}>
+<radiogroup.RadioGroup label="Size" orientation={radiogroup.Horizontal}>
   <radiogroup.RadioGroupItem name="size" value="s" checked label="Small" />
   <radiogroup.RadioGroupItem name="size" value="m" label="Medium" />
 </radiogroup.RadioGroup>
@@ -279,7 +275,6 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Name` | `string` | `""` | Name is the form field name of the group. The group does not render it; set Name on each item. |
 | `Orientation` | `Orientation` | `Vertical` | Orientation sets the layout direction: Vertical or Horizontal. |
 | `Label` | `string` | `""` | Label is the accessible name of the group. |
 | `Class` | `string` | `""` | Class adds classes to the root element. |

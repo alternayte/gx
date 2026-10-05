@@ -1,8 +1,6 @@
 package accordion
 
 props {
-  // Name is the name of the accordion. The markup does not render it.
-  Name     string = ""
   // Class adds classes to the root element.
   Class    string = ""
   // Children is the content of the accordion: the accordion items.

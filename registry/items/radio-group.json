@@ -7,36 +7,42 @@
     {
       "path": "RadioGroup.gx",
       "target": "ui/radio-group/RadioGroup.gx",
-      "content": "package radiogroup\n\nprops {\n  Name        string      = \"\"\n  Orientation Orientation = Vertical\n  Class       string      = \"\"\n  Children    gx.Node\n  Attrs       gx.Attrs    = nil\n}\n\n\u003cdiv role=\"radiogroup\" aria-orientation={p.Orientation} class={gx.Cx(\"grid gap-2\", orientationClass[p.Orientation], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "5a9fc6c1325e13a374508718e1263bdcf6ef11e5509ee96c982b99c06a22c807"
+      "content": "package radiogroup\n\nprops {\n  // Orientation sets the layout direction: Vertical or Horizontal.\n  Orientation Orientation = Vertical\n  // Label is the accessible name of the group.\n  Label       string = \"\"\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Children is the radio items.\n  Children    gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv role=\"radiogroup\" aria-label={p.Label} aria-orientation={p.orientation()} class={gx.Cx(\"grid gap-3\", orientationClass[p.orientation()], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "2ef92365461e0d5473e01216c1946f4e6de1da93082f1ce2367470bc6b505350"
     },
     {
       "path": "RadioGroupItem.gx",
       "target": "ui/radio-group/RadioGroupItem.gx",
-      "content": "package radiogroup\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"\"\n  Checked  bool     = false\n  Label    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"flex items-center gap-2 text-sm\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" name={p.Name} value={p.Value} checked={p.Checked} class=\"size-4 accent-primary\" /\u003e\n  if p.Label != \"\" {\n    \u003cspan\u003e{p.Label}\u003c/span\u003e\n  }\n  if p.Children != nil {\n    \u003cspan\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/label\u003e\n",
-      "sha256": "6a8749ca1aa53401a4bde2b03ffa379c755c58bc2915ce497fdad443700407ff"
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the form field name. Every item of one group has the same name.\n  Name     string = \"\"\n  // Value is the value the form submits when the item is checked.\n  Value    string = \"\"\n  // Checked selects the item for the first render.\n  Checked  bool = false\n  // Disabled disables the item.\n  Disabled bool = false\n  // Invalid sets aria-invalid on the input and shows the error style.\n  Invalid  bool = false\n  // Label is the text beside the radio. An empty value renders no text.\n  Label    string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is content beside the radio, after the label text.\n  Children gx.Node = nil\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"flex items-center gap-2 text-sm leading-none font-medium select-none\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} aria-invalid={p.invalid()} class=\"peer sr-only\" /\u003e\n  \u003cspan aria-hidden=\"true\" class=\"relative aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 motion-reduce:transition-none [\u0026\u003esvg]:opacity-0 peer-checked:[\u0026\u003esvg]:opacity-100\"\u003e\n    \u003cicons.Circle class=\"absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 [\u0026\u003ecircle]:fill-primary\" /\u003e\n  \u003c/span\u003e\n  if p.Label != \"\" {\n    \u003cspan class=\"peer-disabled:cursor-not-allowed peer-disabled:opacity-50\"\u003e{p.Label}\u003c/span\u003e\n  }\n  if p.Children != nil {\n    \u003cspan class=\"peer-disabled:cursor-not-allowed peer-disabled:opacity-50\"\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/label\u003e\n",
+      "sha256": "ebf13d5b5544af5a632a4d417ff0ece4d095dd3f9508890a104559cf68b77184"
     },
     {
       "path": "RadioGroup.fixtures.go",
       "target": "ui/radio-group/RadioGroup.fixtures.go",
-      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{\n\t\"Vertical\": {\n\t\tName: \"plan\",\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"free\", Checked: true, Label: \"Free\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"pro\", Label: \"Pro\"}),\n\t\t),\n\t},\n\t\"Horizontal\": {\n\t\tName:        \"size\",\n\t\tOrientation: Horizontal,\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"s\", Checked: true, Label: \"Small\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"m\", Label: \"Medium\"}),\n\t\t),\n\t},\n}\n",
-      "sha256": "faf942101480a679e997bd7f3dd8bf436f61443e97770df5e2c50e3df1996187"
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\n// Each fixture has its own name: radios that share a name form one group\n// across the whole gallery page, and only one of them stays checked.\nvar RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{\n\t\"Vertical\": {\n\t\tLabel: \"Plan\",\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"free\", Checked: true, Label: \"Free\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"plan\", Value: \"pro\", Label: \"Pro\"}),\n\t\t),\n\t},\n\t\"Horizontal\": {\n\t\tLabel:       \"Size\",\n\t\tOrientation: Horizontal,\n\t\tChildren: gx.Frag(\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"s\", Checked: true, Label: \"Small\"}),\n\t\t\tRadioGroupItem(RadioGroupItemProps{Name: \"size\", Value: \"m\", Label: \"Medium\"}),\n\t\t),\n\t},\n}\n",
+      "sha256": "7ffe38be0256a4d3f437cc776424f84e46bc4cd8dfdf2249f68dc93c5925aa42"
     },
     {
       "path": "styles.go",
       "target": "ui/radio-group/styles.go",
-      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the layout direction of a radio group.\ntype Orientation string\n\n// The orientations of radiogroup.RadioGroup.\nconst (\n\tVertical   Orientation = \"vertical\"\n\tHorizontal Orientation = \"horizontal\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tVertical:   \"grid-cols-1\",\n\tHorizontal: \"grid-flow-col auto-cols-max gap-4\",\n}\n",
-      "sha256": "fa3b85ae2d59a8411f245bdfe1c1cbf431fd2375b31a68065742860c715379da"
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the layout direction of a radio group.\ntype Orientation string\n\n// The orientations of radiogroup.RadioGroup.\nconst (\n\tVertical   Orientation = \"vertical\"\n\tHorizontal Orientation = \"horizontal\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tVertical:   \"grid-cols-1\",\n\tHorizontal: \"grid-flow-col auto-cols-max gap-4\",\n}\n\n// orientation returns the orientation of one group; a zero value is\n// Vertical.\nfunc (p RadioGroupProps) orientation() Orientation {\n\tif p.Orientation == \"\" {\n\t\treturn Vertical\n\t}\n\treturn p.Orientation\n}\n\n// invalid returns the aria-invalid value of the input.\nfunc (p RadioGroupItemProps) invalid() string {\n\tif p.Invalid {\n\t\treturn \"true\"\n\t}\n\treturn \"false\"\n}\n",
+      "sha256": "d738bd3dd78db1799f3412aa2db57373e4a33a93dc64768fa1b9f5b0dd9d8260"
     },
     {
       "path": "RadioGroupItem.fixtures.go",
       "target": "ui/radio-group/RadioGroupItem.fixtures.go",
-      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupItemFixtures = gx.Fixtures[RadioGroupItemProps]{\n\t\"Unchecked\": {Name: \"plan\", Value: \"free\", Label: \"Free\"},\n\t\"Checked\":   {Name: \"plan\", Value: \"pro\", Checked: true, Label: \"Pro\"},\n}\n",
-      "sha256": "6f5f976503d5fa466f7dc040e2b88ac5b692f24ca43b9483f1a483ba9ccb60f2"
+      "content": "package radiogroup\n\nimport \"github.com/alternayte/gx\"\n\nvar RadioGroupItemFixtures = gx.Fixtures[RadioGroupItemProps]{\n\t\"Unchecked\": {Name: \"item-unchecked\", Value: \"free\", Label: \"Free\"},\n\t\"Checked\":   {Name: \"item-checked\", Value: \"pro\", Checked: true, Label: \"Pro\"},\n\t\"Disabled\":  {Name: \"item-disabled\", Value: \"pro\", Checked: true, Disabled: true, Label: \"Pro\"},\n\t\"Invalid\":   {Name: \"item-invalid\", Value: \"pro\", Invalid: true, Label: \"Pro\"},\n}\n",
+      "sha256": "b4d957dc1d2ec9975ea9d2349d69d1b4d9f02541580f9b356c63a343f1068f44"
     }
   ],
-  "requiredTokens": [
-    "--primary"
+  "registryDependencies": [
+    "icons"
   ],
-  "usage": "# Radio Group\n\nA group of exclusive choices.\n\n## Usage\n\n```gx\n\u003cradiogroup.RadioGroup name=\"plan\"\u003e\n  \u003cradiogroup.RadioGroupItem name=\"plan\" value=\"free\" checked={true} label=\"Free\" /\u003e\n  \u003cradiogroup.RadioGroupItem name=\"plan\" value=\"pro\" label=\"Pro\" /\u003e\n\u003c/radiogroup.RadioGroup\u003e\n```\n\n## Do\n\n- Give every item the same `Name`.\n- Set `Checked` on exactly one item.\n\n## Don't\n\n- Do not use a radio group for a boolean. Use a checkbox or a switch.\n- Do not mix two names in one group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checked item. |\n| Arrow keys | Moves the choice and selects it. |\n| Space | Selects the focused item. |\n"
+  "requiredTokens": [
+    "--primary",
+    "--input",
+    "--ring",
+    "--destructive"
+  ],
+  "usage": "# Radio Group\n\nA group of exclusive choices.\n\n## Usage\n\n```gx\n\u003cradiogroup.RadioGroup label=\"Plan\"\u003e\n  \u003cradiogroup.RadioGroupItem name=\"plan\" value=\"free\" checked={true} label=\"Free\" /\u003e\n  \u003cradiogroup.RadioGroupItem name=\"plan\" value=\"pro\" label=\"Pro\" /\u003e\n\u003c/radiogroup.RadioGroup\u003e\n```\n\nEach item is a native radio input behind a styled circle.\n`Disabled` and `Invalid` set the state of the input.\n\n## Do\n\n- Give every item the same `Name`.\n- Set `Checked` on exactly one item.\n- Give the group a `Label`.\n\n## Don't\n\n- Do not use a radio group for a boolean. Use a checkbox or a switch.\n- Do not mix two names in one group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checked item. |\n| Arrow keys | Moves the choice and selects it. |\n| Space | Selects the focused item. |\n"
 }

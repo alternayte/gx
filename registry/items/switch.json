@@ -7,20 +7,29 @@
     {
       "path": "Switch.gx",
       "target": "ui/switch/Switch.gx",
-      "content": "package switches\n\nprops {\n  Name    string   = \"\"\n  Label   string   = \"\"\n  Value   string   = \"on\"\n  Checked bool     = false\n  Class   string   = \"\"\n  Attrs   gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors has-[:checked]:bg-primary\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" role=\"switch\" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  \u003cspan class=\"pointer-events-none block size-4 translate-x-0.5 rounded-full bg-background shadow-lg transition-transform peer-checked:translate-x-4\"\u003e\u003c/span\u003e\n\u003c/label\u003e\n",
-      "sha256": "989b955e605515f5908948d428435531b7bdb7ae8f2e5a666947cc983b5d1fc5"
+      "content": "package switches\n\nprops {\n  // Size sets the size of the track and the thumb: Md or Sm.\n  Size     Size = Md\n  // Name is the form field name.\n  Name     string = \"\"\n  // Label is the accessible name of the switch.\n  Label    string = \"\"\n  // Value is the value the form submits when the switch is on.\n  Value    string = \"on\"\n  // Checked sets the switch on for the first render.\n  Checked  bool = false\n  // Disabled disables the switch.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel data-size={p.size()} class={gx.Cx(\"inline-flex shrink-0 items-center rounded-full border border-transparent bg-input shadow-xs transition-all outline-none has-[:checked]:bg-primary has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 dark:bg-input/80 dark:has-[:checked]:bg-primary motion-reduce:transition-none\", trackClass[p.size()], p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" role=\"switch\" name={p.Name} aria-label={p.Label} value={p.Value} checked={p.Checked} disabled={p.Disabled} class=\"peer sr-only\" /\u003e\n  \u003cspan class={gx.Cx(\"pointer-events-none block translate-x-0 rounded-full bg-background ring-0 transition-transform peer-checked:translate-x-[calc(100%-2px)] dark:bg-foreground dark:peer-checked:bg-primary-foreground motion-reduce:transition-none\", thumbClass[p.size()])}\u003e\u003c/span\u003e\n\u003c/label\u003e\n",
+      "sha256": "b465a6d35e90eb2a63216d715275faa1fa4c4749830cec9f930b6c70fdf8ba5b"
     },
     {
       "path": "Switch.fixtures.go",
       "target": "ui/switch/Switch.fixtures.go",
-      "content": "package switches\n\nimport \"github.com/alternayte/gx\"\n\nvar SwitchFixtures = gx.Fixtures[SwitchProps]{\n\t\"Off\":      {Name: \"wifi\", Label: \"Wifi\"},\n\t\"On\":       {Name: \"wifi\", Label: \"Wifi\", Checked: true},\n\t\"Disabled\": {Name: \"wifi\", Label: \"Wifi\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}},\n}\n",
-      "sha256": "15a93a544267db943cc2bb3f3a060dc1abcf366eb6aa3e943081da57774a51c1"
+      "content": "package switches\n\nimport \"github.com/alternayte/gx\"\n\nvar SwitchFixtures = gx.Fixtures[SwitchProps]{\n\t\"Off\":      {Name: \"wifi\", Label: \"Wifi\"},\n\t\"On\":       {Name: \"wifi\", Label: \"Wifi\", Checked: true},\n\t\"Disabled\": {Name: \"wifi\", Label: \"Wifi\", Disabled: true},\n\t\"Small\":    {Name: \"wifi\", Label: \"Wifi\", Size: Sm},\n\t\"SmallOn\":  {Name: \"wifi\", Label: \"Wifi\", Size: Sm, Checked: true},\n}\n",
+      "sha256": "2d375ec355c6aee3d40fa8866cd8dc15dbbb19b065da96e4dcfcf3f7c16e70ef"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/switch/styles.go",
+      "content": "package switches\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the size of a switch.\ntype Size string\n\n// The sizes of switches.Switch.\nconst (\n\tMd Size = \"default\"\n\tSm Size = \"sm\"\n)\n\nvar trackClass = gx.Enum[Size]{\n\tMd: \"h-[1.15rem] w-8\",\n\tSm: \"h-3.5 w-6\",\n}\n\nvar thumbClass = gx.Enum[Size]{\n\tMd: \"size-4\",\n\tSm: \"size-3\",\n}\n\n// size returns the size of one switch; a zero value is Md.\nfunc (p SwitchProps) size() Size {\n\tif p.Size == \"\" {\n\t\treturn Md\n\t}\n\treturn p.Size\n}\n",
+      "sha256": "e6269d9f7710ac7eaa08346dcc32aa92982cc28d0fef9df4030a4d6b46a3d3ee"
     }
   ],
   "requiredTokens": [
     "--input",
     "--primary",
-    "--background"
+    "--primary-foreground",
+    "--background",
+    "--foreground",
+    "--ring"
   ],
-  "usage": "# Switch\n\nA control for an immediate on or off setting.\n\n## Usage\n\n```gx\n\u003cswitch.Switch name=\"wifi\" checked={p.Wifi} /\u003e\n```\n\n## Do\n\n- Use a switch when the change takes effect at once.\n- Pair the switch with a visible label.\n\n## Don't\n\n- Do not use a switch inside a form that needs a submit button.\n- Do not use a switch for a multi-choice setting.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the switch. |\n| Space | Toggles the switch. |\n"
+  "usage": "# Switch\n\nA control for an immediate on or off setting.\n\n## Usage\n\n```gx\n\u003cswitches.Switch name=\"wifi\" label=\"Wifi\" checked={p.Wifi} /\u003e\n\u003cswitches.Switch name=\"sync\" label=\"Sync\" size={switches.Sm} /\u003e\n```\n\nThe switch is a styled checkbox with the `switch` role.\nThe sizes are `switches.Md` and `switches.Sm`.\n`Disabled` disables the checkbox.\n\n## Do\n\n- Use a switch when the change takes effect at once.\n- Pair the switch with a visible label.\n\n## Don't\n\n- Do not use a switch inside a form that needs a submit button.\n- Do not use a switch for a multi-choice setting.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the switch. |\n| Space | Toggles the switch. |\n"
 }

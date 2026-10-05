@@ -7,34 +7,78 @@
     {
       "path": "Popover.gx",
       "target": "ui/popover/Popover.gx",
-      "content": "package popover\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" data-gx-dismiss style={gx.Style(\"position-anchor: --gx-pop-\" + p.Id + \"; inset: auto; top: anchor(bottom); left: anchor(left); margin-top: 0.5rem\")} class={gx.Cx(\"z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "97b1f24d71867527a9d5ebcc64254286a4780ee66045b64763f8bcf08cbe0e33"
+      "content": "package popover\n\nprops {\n  // Id is the id of the root element. The trigger opens the popover by this id.\n  Id       string\n  // Align sets the edge of the trigger that the popover lines up with: Center, Start or End.\n  Align    Align = Center\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the popover.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" data-gx-dismiss data-gx-place={p.place()} style={p.style()} class={gx.Cx(\"z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-hidden\", motionClass, alignClass[p.align()], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "4747dffcf54431886334cc70555c80af194201c2bdb8d89c86903a0ef65b9948"
+    },
+    {
+      "path": "PopoverDescription.gx",
+      "target": "ui/popover/PopoverDescription.gx",
+      "content": "package popover\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text of the description.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp class={gx.Cx(\"text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "63d5992f07f264d8e81c803fce40e8bcb1f7e2ba5457ffedc874ad94f1a463ad"
+    },
+    {
+      "path": "PopoverHeader.gx",
+      "target": "ui/popover/PopoverHeader.gx",
+      "content": "package popover\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the header, usually a title and a description.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex flex-col gap-1 text-sm\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "342569d5d06f74e389ceaf7efaf31f00cf2a53dcf96ec6d41f6f5173d1cda5a8"
+    },
+    {
+      "path": "PopoverTitle.gx",
+      "target": "ui/popover/PopoverTitle.gx",
+      "content": "package popover\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text of the title.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"font-medium\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "7124316f296f3cb6d656a7c2af527d821a250e7ebd60ba65841c6050464dd124"
     },
     {
       "path": "PopoverTrigger.gx",
       "target": "ui/popover/PopoverTrigger.gx",
-      "content": "package popover\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" popovertarget={p.Id} popovertargetaction=\"toggle\" style={gx.Style(\"anchor-name: --gx-pop-\" + p.Id)} class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
-      "sha256": "3d7164a130523444fa6b38ea446c3caf1a8352786e7dc4ebf020215028a1a6f1"
+      "content": "package popover\n\nimport \"github.com/alternayte/gx/registry/button\"\n\nprops {\n  // Id is the id of the popover that the trigger opens.\n  Id       string\n  // Variant sets the visual style of the button: button.Default, button.Secondary,\n  // button.Destructive, button.Outline, button.Ghost or button.Link.\n  Variant  button.Variant = button.Outline\n  // Size sets the height and padding of the button: button.Xs, button.Sm, button.Md, button.Lg,\n  // or an Icon size for a square button.\n  Size     button.Size = button.Md\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the button label.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton.Button variant={p.variant()} size={p.Size} class={p.Class} attrs={p.attrs()}\u003e{p.Children}\u003c/button.Button\u003e\n",
+      "sha256": "83ebd42a765123010a15ef9e00eeb05c4f115995db5d293f1ba2dd3fb9b0caaf"
     },
     {
       "path": "Popover.fixtures.go",
       "target": "ui/popover/Popover.fixtures.go",
-      "content": "package popover\n\nimport \"github.com/alternayte/gx\"\n\nvar PopoverFixtures = gx.Fixtures[PopoverProps]{\n\t\"Content\": {Id: \"demo-popover\", Children: gx.Text(\"Place content for the popover here.\")},\n}\n",
-      "sha256": "0b48c027ec2454c2b22c35a4ab29d55203eef97067686a26c1aa8b779d24e654"
+      "content": "package popover\n\nimport \"github.com/alternayte/gx\"\n\nvar PopoverFixtures = gx.Fixtures[PopoverProps]{\n\t\"Content\": {Id: \"demo-popover\", Children: PopoverHeader(PopoverHeaderProps{Children: gx.Frag(\n\t\tPopoverTitle(PopoverTitleProps{Children: gx.Text(\"Dimensions\")}),\n\t\tPopoverDescription(PopoverDescriptionProps{Children: gx.Text(\"Set the dimensions for the layer.\")}),\n\t)})},\n\t\"Start\": {Id: \"demo-popover-start\", Align: Start, Children: gx.Text(\"Place content for the popover here.\")},\n\t\"End\":   {Id: \"demo-popover-end\", Align: End, Children: gx.Text(\"Place content for the popover here.\")},\n}\n",
+      "sha256": "1e5ee77e267741f435b0d47f141d13c228556de57a878f078e315c725af2e4f2"
+    },
+    {
+      "path": "PopoverDescription.fixtures.go",
+      "target": "ui/popover/PopoverDescription.fixtures.go",
+      "content": "package popover\n\nimport \"github.com/alternayte/gx\"\n\nvar PopoverDescriptionFixtures = gx.Fixtures[PopoverDescriptionProps]{\"Default\": {Children: gx.Text(\"Set the dimensions for the layer.\")}}\n",
+      "sha256": "1888e69dfc14c6057839231ffb2d3a239d7cec27b19f98998500aee093e364ff"
+    },
+    {
+      "path": "PopoverHeader.fixtures.go",
+      "target": "ui/popover/PopoverHeader.fixtures.go",
+      "content": "package popover\n\nimport \"github.com/alternayte/gx\"\n\nvar PopoverHeaderFixtures = gx.Fixtures[PopoverHeaderProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tPopoverTitle(PopoverTitleProps{Children: gx.Text(\"Dimensions\")}),\n\t\tPopoverDescription(PopoverDescriptionProps{Children: gx.Text(\"Set the dimensions for the layer.\")}),\n\t)},\n}\n",
+      "sha256": "2441dad4574a07c14a6403b0c5102a5aab6845a1b5b0fa0c1523a49bc17cf211"
+    },
+    {
+      "path": "PopoverTitle.fixtures.go",
+      "target": "ui/popover/PopoverTitle.fixtures.go",
+      "content": "package popover\n\nimport \"github.com/alternayte/gx\"\n\nvar PopoverTitleFixtures = gx.Fixtures[PopoverTitleProps]{\"Default\": {Children: gx.Text(\"Dimensions\")}}\n",
+      "sha256": "8e60af512b70f25e45693cb01afc2747af0468c0bc1ba5c518f8cf7c1c34738e"
     },
     {
       "path": "PopoverTrigger.fixtures.go",
       "target": "ui/popover/PopoverTrigger.fixtures.go",
-      "content": "package popover\n\nimport \"github.com/alternayte/gx\"\n\nvar PopoverTriggerFixtures = gx.Fixtures[PopoverTriggerProps]{\n\t\"Default\": {Id: \"demo-popover\", Children: gx.Text(\"Open popover\")},\n}\n",
-      "sha256": "7c956b09ec2c38b62b0db7f47fe07afd16b48241d3f6d507b5bd1d9464d94325"
+      "content": "package popover\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\nvar PopoverTriggerFixtures = gx.Fixtures[PopoverTriggerProps]{\n\t\"Default\": {Id: \"demo-popover\", Children: gx.Text(\"Open popover\")},\n\t\"Start\":   {Id: \"demo-popover-start\", Children: gx.Text(\"Open at the start\")},\n\t\"End\":     {Id: \"demo-popover-end\", Variant: button.Secondary, Class: \"ml-64\", Children: gx.Text(\"Open at the end\")},\n}\n",
+      "sha256": "2444a0773056867ff03e551843226113dba0b5dd1021bb4a38827fc18972e6e8"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/popover/styles.go",
+      "content": "package popover\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\n// Align is the edge of the trigger that the popover lines up with.\ntype Align string\n\n// The alignments of popover.Popover.\nconst (\n\tCenter Align = \"center\"\n\tStart  Align = \"start\"\n\tEnd    Align = \"end\"\n)\n\n// The popover zooms from the edge that touches the trigger. The overlay\n// module writes data-side: a popover that flips opens above the trigger.\nvar alignClass = gx.Enum[Align]{\n\tCenter: \"origin-top data-[side=top]:origin-bottom\",\n\tStart:  \"origin-top-left data-[side=top]:origin-bottom-left\",\n\tEnd:    \"origin-top-right data-[side=top]:origin-bottom-right\",\n}\n\nvar alignStyle = gx.Enum[Align]{\n\tCenter: \"justify-self: anchor-center\",\n\tStart:  \"left: anchor(left)\",\n\tEnd:    \"right: anchor(right)\",\n}\n\n// align returns the alignment of one popover; a zero value is Center.\nfunc (p PopoverProps) align() Align {\n\tif p.Align == \"\" {\n\t\treturn Center\n\t}\n\treturn p.Align\n}\n\n// style anchors the popover below its trigger for a page whose scripts did\n// not run. The overlay module then writes the measured place.\nfunc (p PopoverProps) style() gx.Style {\n\treturn gx.Style(\"position-anchor: --gx-pop-\" + p.Id + \"; inset: auto; margin: 0.25rem 0 0; top: anchor(bottom); \" + alignStyle[p.align()])\n}\n\n// place tells the overlay module where the popover goes: below the trigger,\n// 4px away, and inside the viewport.\nfunc (p PopoverProps) place() string {\n\treturn \"bottom \" + string(p.align()) + \" 4\"\n}\n\n// variant returns the button variant of one trigger; a zero value is\n// button.Outline.\nfunc (p PopoverTriggerProps) variant() button.Variant {\n\tif p.Variant == \"\" {\n\t\treturn button.Outline\n\t}\n\treturn p.Variant\n}\n\n// attrs wires the trigger to its popover and names it as the anchor.\nfunc (p PopoverTriggerProps) attrs() gx.Attrs {\n\treturn gx.JoinAttrs(gx.Attrs{\n\t\t{Key: \"popovertarget\", Value: p.Id},\n\t\t{Key: \"popovertargetaction\", Value: \"toggle\"},\n\t\t{Key: \"style\", Value: \"anchor-name: --gx-pop-\" + p.Id, Kind: gx.AttrStyle},\n\t}, p.Attrs)\n}\n\n// motionClass fades and zooms the popover from 95% and slides it 2 units from\n// the trigger, from below when the popover took the top side. Safari 26.0 never ends a display transition on an element\n// that CSS anchor positioning places, which leaves a closed popover rendered.\n// The @supports test matches every engine but WebKit, so Safari closes the\n// popover at once and still animates the enter.\nconst motionClass = \"opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 data-[side=top]:starting:open:translate-y-2 motion-reduce:transition-none\"\n",
+      "sha256": "bd5fc3db2b93ed923b19bb6cb2ed6f953333864ed0d4ec4c6f5467337c9e2903"
     }
+  ],
+  "registryDependencies": [
+    "button"
   ],
   "requiredTokens": [
     "--border",
     "--popover",
     "--popover-foreground",
-    "--accent",
-    "--ring"
+    "--muted-foreground"
   ],
-  "usage": "# Popover\n\nA small panel anchored to a trigger.\n\n## Usage\n\n```gx\n\u003cpopover.PopoverTrigger id=\"menu\"\u003eOpen\u003c/popover.PopoverTrigger\u003e\n\u003cpopover.Popover id=\"menu\"\u003e\n  \u003cp\u003ePlace content for the popover here.\u003c/p\u003e\n\u003c/popover.Popover\u003e\n```\n\nThe element uses the native Popover API. A browser without anchor positioning centers the panel instead of anchoring it.\n\n## Do\n\n- Give the popover and the trigger the same `Id`.\n- Keep the content short.\n\n## Don't\n\n- Do not put a form with many fields in a popover.\n- Do not open a popover from another popover.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Enter, Space | Toggles the popover. |\n| Tab | Moves focus into the popover. |\n| Escape | Closes the popover. |\n"
+  "usage": "# Popover\n\nA small panel anchored to a trigger.\n\n## Usage\n\n```gx\n\u003cpopover.PopoverTrigger id=\"dimensions\"\u003eOpen\u003c/popover.PopoverTrigger\u003e\n\u003cpopover.Popover id=\"dimensions\"\u003e\n  \u003cpopover.PopoverHeader\u003e\n    \u003cpopover.PopoverTitle\u003eDimensions\u003c/popover.PopoverTitle\u003e\n    \u003cpopover.PopoverDescription\u003eSet the dimensions for the layer.\u003c/popover.PopoverDescription\u003e\n  \u003c/popover.PopoverHeader\u003e\n\u003c/popover.Popover\u003e\n```\n\nThe element uses the native Popover API. The trigger is a `button.Button`; `Variant` and `Size` select its style, and the default is `button.Outline`.\n\n`Align` lines the popover up with the trigger: `popover.Center` (default), `popover.Start` or `popover.End`. The popover opens below the trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the popover names the side it took.\n\nThe popover fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.\n\n## Do\n\n- Give the popover and the trigger the same `Id`.\n- Put the popover directly after its trigger in the markup.\n- Keep the content short.\n\n## Don't\n\n- Do not put a form with many fields in a popover.\n- Do not open a popover from another popover.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Enter, Space | Toggles the popover. |\n| Tab | Moves focus into the popover. |\n| Escape | Closes the popover. |\n"
 }

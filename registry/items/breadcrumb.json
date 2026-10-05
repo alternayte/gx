@@ -7,50 +7,50 @@
     {
       "path": "Breadcrumb.gx",
       "target": "ui/breadcrumb/Breadcrumb.gx",
-      "content": "package breadcrumb\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cnav aria-label=\"breadcrumb\" class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/nav\u003e\n",
-      "sha256": "1fecc25fa4101e1435810798dd979c263700dc45f2cb35ed1376d33636ed9632"
+      "content": "package breadcrumb\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the breadcrumb: one BreadcrumbList.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cnav aria-label=\"breadcrumb\" data-slot=\"breadcrumb\" class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/nav\u003e\n",
+      "sha256": "dc7482d29f25c1cb2cc826d859ec2d34ff4c4463e2b352978cedbd8a03722acd"
     },
     {
       "path": "BreadcrumbList.gx",
       "target": "ui/breadcrumb/BreadcrumbList.gx",
-      "content": "package breadcrumb\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003col class={gx.Cx(\"flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground sm:gap-2.5\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/ol\u003e\n",
-      "sha256": "e3f2027921cb762e0263e2fc9cf6d987d0b3f36adc8aa04c4f0c0f17e0cda321"
+      "content": "package breadcrumb\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the list: the items and the separators between them.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003col data-slot=\"breadcrumb-list\" class={gx.Cx(\"flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/ol\u003e\n",
+      "sha256": "544d5e163f8476ee8f3f80682c72689286aa130c5bd64bae11fdaa82a218711f"
     },
     {
       "path": "BreadcrumbItem.gx",
       "target": "ui/breadcrumb/BreadcrumbItem.gx",
-      "content": "package breadcrumb\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli class={gx.Cx(\"inline-flex items-center gap-1.5\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/li\u003e\n",
-      "sha256": "ee91412892efdbc2872cbc45cf97609ad6f3776f1e70fbebdf4a0d2bec5e01ae"
+      "content": "package breadcrumb\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item: a BreadcrumbLink, a BreadcrumbPage or a\n  // BreadcrumbEllipsis.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli data-slot=\"breadcrumb-item\" class={gx.Cx(\"inline-flex items-center gap-1.5\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/li\u003e\n",
+      "sha256": "69ac0db1d2c9f73d58b0ce00aa7502b12ab48a8ec22466f129cb0c05da9ee1bb"
     },
     {
       "path": "BreadcrumbLink.gx",
       "target": "ui/breadcrumb/BreadcrumbLink.gx",
-      "content": "package breadcrumb\n\nprops {\n  Href     gx.URL\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} class={gx.Cx(\"transition-colors hover:text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
-      "sha256": "12e64cd4c78e39863c1a1eec29e657578e24725a29db1336b110f31834a1f740"
+      "content": "package breadcrumb\n\nprops {\n  // Href is the URL of the link.\n  Href     gx.URL\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the link label.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} data-slot=\"breadcrumb-link\" class={gx.Cx(\"transition-colors hover:text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "984765628e19d38446889c1aff9d52cda0da209c2dc568d09b3bb549d2c8cd01"
     },
     {
       "path": "BreadcrumbPage.gx",
       "target": "ui/breadcrumb/BreadcrumbPage.gx",
-      "content": "package breadcrumb\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan role=\"link\" aria-disabled=\"true\" aria-current=\"page\" class={gx.Cx(\"font-normal text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
-      "sha256": "f53ddf3aa0532b2c5ea054f5988db86a0d92710d32cbfeb84cc15283a60a34a6"
+      "content": "package breadcrumb\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the current page.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan data-slot=\"breadcrumb-page\" role=\"link\" aria-disabled=\"true\" aria-current=\"page\" class={gx.Cx(\"font-normal text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
+      "sha256": "2e908c212a59c41ee34da76e99791ad948076b0b02a70e18e734f74e11414121"
     },
     {
       "path": "BreadcrumbSeparator.gx",
       "target": "ui/breadcrumb/BreadcrumbSeparator.gx",
-      "content": "package breadcrumb\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli role=\"presentation\" aria-hidden=\"true\" class={gx.Cx(\"[\u0026\u003esvg]:size-3.5\", p.Class)} {...p.Attrs}\u003e\n  if p.Children != nil {\n    {p.Children}\n  } else {\n    \u003cspan\u003e/\u003c/span\u003e\n  }\n\u003c/li\u003e\n",
-      "sha256": "c9dba650e1df7f2782c95aa245e47f413eb9528c08eba0148f0480b4b2d70055"
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the separator. A nil value renders a chevron icon.\n  Children gx.Node = nil\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli data-slot=\"breadcrumb-separator\" role=\"presentation\" aria-hidden=\"true\" class={gx.Cx(\"[\u0026\u003esvg]:size-3.5\", p.Class)} {...p.Attrs}\u003e\n  if p.Children != nil {\n    {p.Children}\n  } else {\n    \u003cicons.ChevronRight /\u003e\n  }\n\u003c/li\u003e\n",
+      "sha256": "59facce37ee431698578360619e4eb7d0fe7d81421b4c16e37a458e93e9047ba"
     },
     {
       "path": "BreadcrumbEllipsis.gx",
       "target": "ui/breadcrumb/BreadcrumbEllipsis.gx",
-      "content": "package breadcrumb\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan role=\"presentation\" aria-hidden=\"true\" class={gx.Cx(\"flex size-9 items-center justify-center\", p.Class)} {...p.Attrs}\u003e\n  \u003cspan aria-hidden=\"true\"\u003e…\u003c/span\u003e\n  \u003cspan class=\"sr-only\"\u003eMore\u003c/span\u003e\n\u003c/span\u003e\n",
-      "sha256": "fe43266a4f872c32035a93d31efda5436107913832b3b71649c674fe2d1c32fa"
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan data-slot=\"breadcrumb-ellipsis\" role=\"presentation\" aria-hidden=\"true\" class={gx.Cx(\"flex size-9 items-center justify-center\", p.Class)} {...p.Attrs}\u003e\n  \u003cicons.Ellipsis class=\"size-4\" /\u003e\n  \u003cspan class=\"sr-only\"\u003eMore\u003c/span\u003e\n\u003c/span\u003e\n",
+      "sha256": "a633e1a07b8e796230624627ed754fb0e1dbbf2fbe1ccfa67f1e80630658829f"
     },
     {
       "path": "Breadcrumb.fixtures.go",
       "target": "ui/breadcrumb/Breadcrumb.fixtures.go",
-      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbFixtures = gx.Fixtures[BreadcrumbProps]{\n\t\"Trail\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text(\"Breadcrumb\")})}),\n\t)})},\n\t\"Ellipsis\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbEllipsis(BreadcrumbEllipsisProps{})}),\n\t)})},\n}\n",
-      "sha256": "177bf813fa801840fe20a8f5c62f394367910bf33444243216f715402712c8f4"
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbFixtures = gx.Fixtures[BreadcrumbProps]{\n\t\"Trail\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text(\"Breadcrumb\")})}),\n\t)})},\n\t\"Ellipsis\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbEllipsis(BreadcrumbEllipsisProps{})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text(\"Breadcrumb\")})}),\n\t)})},\n\t\"CustomSeparator\": {Children: BreadcrumbList(BreadcrumbListProps{Children: gx.Frag(\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbLink(BreadcrumbLinkProps{Href: gx.URL(\"/\"), Children: gx.Text(\"Home\")})}),\n\t\tBreadcrumbSeparator(BreadcrumbSeparatorProps{Children: gx.Text(\"/\")}),\n\t\tBreadcrumbItem(BreadcrumbItemProps{Children: BreadcrumbPage(BreadcrumbPageProps{Children: gx.Text(\"Breadcrumb\")})}),\n\t)})},\n}\n",
+      "sha256": "974741d46a94e8c5672af245edfdc174979248866e78bb0ff9cb2f40744404dd"
     },
     {
       "path": "BreadcrumbEllipsis.fixtures.go",
@@ -85,13 +85,16 @@
     {
       "path": "BreadcrumbSeparator.fixtures.go",
       "target": "ui/breadcrumb/BreadcrumbSeparator.fixtures.go",
-      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbSeparatorFixtures = gx.Fixtures[BreadcrumbSeparatorProps]{\"Default\": {}}\n",
-      "sha256": "86a0f15d050aae4bdac4d2bf35a1e36a2b8326785cc99d544ad03e51cedbb150"
+      "content": "package breadcrumb\n\nimport \"github.com/alternayte/gx\"\n\nvar BreadcrumbSeparatorFixtures = gx.Fixtures[BreadcrumbSeparatorProps]{\"Default\": {}}\n\n// BreadcrumbSeparatorWrap renders the separator inside a list, as a page\n// uses it.\nfunc BreadcrumbSeparatorWrap(n gx.Node) gx.Node {\n\treturn BreadcrumbList(BreadcrumbListProps{Children: n})\n}\n",
+      "sha256": "00825f2e09466b1e0ba88a5f80d016329b7b2d1c888b0a6b7653ddfbe9c05a0b"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--foreground",
     "--muted-foreground"
   ],
-  "usage": "# Breadcrumb\n\nA trail of links to the current page.\n\n## Usage\n\n```gx\n\u003cbreadcrumb.Breadcrumb\u003e\n  \u003cbreadcrumb.BreadcrumbList\u003e\n    \u003cbreadcrumb.BreadcrumbItem\u003e\n      \u003cbreadcrumb.BreadcrumbLink href={gx.URL(\"/\")}\u003eHome\u003c/breadcrumb.BreadcrumbLink\u003e\n    \u003c/breadcrumb.BreadcrumbItem\u003e\n    \u003cbreadcrumb.BreadcrumbSeparator /\u003e\n    \u003cbreadcrumb.BreadcrumbItem\u003e\n      \u003cbreadcrumb.BreadcrumbPage\u003eProducts\u003c/breadcrumb.BreadcrumbPage\u003e\n    \u003c/breadcrumb.BreadcrumbItem\u003e\n  \u003c/breadcrumb.BreadcrumbList\u003e\n\u003c/breadcrumb.Breadcrumb\u003e\n```\n\n## Do\n\n- End the trail with `BreadcrumbPage`.\n- Use `BreadcrumbEllipsis` for a collapsed middle.\n\n## Don't\n\n- Do not use a breadcrumb for primary navigation.\n- Do not link the current page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Breadcrumb\n\nA trail of links to the current page.\n\n## Usage\n\n```gx\n\u003cbreadcrumb.Breadcrumb\u003e\n  \u003cbreadcrumb.BreadcrumbList\u003e\n    \u003cbreadcrumb.BreadcrumbItem\u003e\n      \u003cbreadcrumb.BreadcrumbLink href={gx.URL(\"/\")}\u003eHome\u003c/breadcrumb.BreadcrumbLink\u003e\n    \u003c/breadcrumb.BreadcrumbItem\u003e\n    \u003cbreadcrumb.BreadcrumbSeparator /\u003e\n    \u003cbreadcrumb.BreadcrumbItem\u003e\n      \u003cbreadcrumb.BreadcrumbPage\u003eProducts\u003c/breadcrumb.BreadcrumbPage\u003e\n    \u003c/breadcrumb.BreadcrumbItem\u003e\n  \u003c/breadcrumb.BreadcrumbList\u003e\n\u003c/breadcrumb.Breadcrumb\u003e\n```\n\n`BreadcrumbSeparator` shows a chevron. Pass a child to show another icon or a character.\n`BreadcrumbEllipsis` shows the ellipsis icon for a collapsed middle.\n\n## Do\n\n- End the trail with `BreadcrumbPage`.\n- Use `BreadcrumbEllipsis` for a collapsed middle.\n\n## Don't\n\n- Do not use a breadcrumb for primary navigation.\n- Do not link the current page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

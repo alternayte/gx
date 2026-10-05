@@ -9,7 +9,7 @@ item: "accordion"
 <Example item="accordion" name="accordion-two" label="Accordion: Accordion: Two">
 
 ```gx
-<accordion.Accordion name="faq">
+<accordion.Accordion>
   <accordion.AccordionItem name="faq" title="Is it accessible?" open>
     Yes. It uses the native details element.
   </accordion.AccordionItem>
@@ -52,8 +52,6 @@ Copy each file to its path in the app. Change each import of a registry package 
 package accordion
 
 props {
-  // Name is the name of the accordion. The markup does not render it.
-  Name     string = ""
   // Class adds classes to the root element.
   Class    string = ""
   // Children is the content of the accordion: the accordion items.
@@ -103,7 +101,7 @@ package accordion
 import "github.com/alternayte/gx"
 
 var AccordionFixtures = gx.Fixtures[AccordionProps]{
-	"Two": {Name: "faq", Children: gx.Frag(
+	"Two": {Children: gx.Frag(
 		AccordionItem(AccordionItemProps{Name: "faq", Title: "Is it accessible?", Open: true, Children: gx.Text("Yes. It uses the native details element.")}),
 		AccordionItem(AccordionItemProps{Name: "faq", Title: "Is it animated?", Children: gx.Text("Yes. The panel height animates.")}),
 	)},
@@ -132,7 +130,7 @@ The theme must define these tokens: `--border`, `--muted-foreground`, `--ring`.
 ## Usage
 
 ```gx
-<accordion.Accordion name="faq">
+<accordion.Accordion>
   <accordion.AccordionItem name="faq" title="Is it accessible?">
     Yes. It uses the native details element.
   </accordion.AccordionItem>
@@ -150,7 +148,7 @@ Set `Disabled` to stop an item from opening.
 <Example item="accordion" name="accordion-two" label="Accordion: Accordion: Two">
 
 ```gx
-<accordion.Accordion name="faq">
+<accordion.Accordion>
   <accordion.AccordionItem name="faq" title="Is it accessible?" open>
     Yes. It uses the native details element.
   </accordion.AccordionItem>
@@ -198,7 +196,6 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Name` | `string` | `""` | Name is the name of the accordion. The markup does not render it. |
 | `Class` | `string` | `""` | Class adds classes to the root element. |
 | `Children` | `gx.Node` | Required | Children is the content of the accordion: the accordion items. |
 | `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |

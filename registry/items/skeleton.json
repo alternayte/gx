@@ -7,8 +7,8 @@
     {
       "path": "Skeleton.gx",
       "target": "ui/skeleton/Skeleton.gx",
-      "content": "package skeleton\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"animate-pulse rounded-md bg-muted\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
-      "sha256": "6982087ffacd495ae8c6861890900429e4b38bfdbf5342562881269d1c27eb33"
+      "content": "package skeleton\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"skeleton\" class={gx.Cx(\"animate-pulse rounded-md bg-accent\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "cef1a211a578fe462e79cad7525b2a2ca95f53134580106934f9989254765d28"
     },
     {
       "path": "Skeleton.fixtures.go",
@@ -18,7 +18,7 @@
     }
   ],
   "requiredTokens": [
-    "--muted"
+    "--accent"
   ],
-  "usage": "# Skeleton\n\nA placeholder while content loads.\n\n## Usage\n\n```gx\n\u003cskeleton.Skeleton class=\"h-4 w-40\" /\u003e\n```\n\n## Do\n\n- Match the size of the content that will replace it.\n- Use two or three skeletons for a list.\n\n## Don't\n\n- Do not leave a skeleton on the page after the load finishes.\n- Do not show a skeleton for longer than a moment.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Skeleton\n\nA placeholder while content loads.\n\n## Usage\n\n```gx\n\u003cskeleton.Skeleton class=\"h-4 w-40\" /\u003e\n```\n\nThe skeleton uses the accent colour and a pulse.\n\n## Do\n\n- Match the size of the content that will replace it.\n- Use two or three skeletons for a list.\n\n## Don't\n\n- Do not leave a skeleton on the page after the load finishes.\n- Do not show a skeleton for longer than a moment.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

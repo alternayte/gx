@@ -7,22 +7,30 @@
     {
       "path": "Toggle.gx",
       "target": "ui/toggle/Toggle.gx",
-      "content": "package toggle\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"on\"\n  Pressed  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Pressed} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
-      "sha256": "f1b23cf742b0f6724f7f7c03a6331a3f1edb97b4f67e257f062b857ba2db23a2"
+      "content": "package toggle\n\nprops {\n  // Variant sets the visual style: Default or Outline.\n  Variant  Variant = Default\n  // Size sets the height and padding: Sm, Md or Lg.\n  Size     Size = Md\n  // Name is the form field name.\n  Name     string = \"\"\n  // Value is the value the form submits when the toggle is pressed.\n  Value    string = \"on\"\n  // Pressed sets the toggle to pressed for the first render.\n  Pressed  bool = false\n  // Disabled disables the toggle.\n  Disabled bool = false\n  // Invalid sets aria-invalid on the input and shows the error style.\n  Invalid  bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the toggle label.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={p.class()} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Pressed} disabled={p.Disabled} aria-invalid={p.invalid()} class=\"peer sr-only\" /\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "4c9fb4082e62f51a2bdc0710ac5cff6d57877923ae84a04ba6df55fad006a178"
     },
     {
       "path": "Toggle.fixtures.go",
       "target": "ui/toggle/Toggle.fixtures.go",
-      "content": "package toggle\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleFixtures = gx.Fixtures[ToggleProps]{\n\t\"Off\":      {Name: \"bold\", Children: gx.Text(\"Bold\")},\n\t\"On\":       {Name: \"bold\", Pressed: true, Children: gx.Text(\"Bold\")},\n\t\"Disabled\": {Name: \"bold\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: gx.Text(\"Bold\")},\n}\n",
-      "sha256": "3d25aa0f916a13f15d5c2d63a7b75ccdb3009a77aa917b6f2023eb2660723313"
+      "content": "package toggle\n\nimport \"github.com/alternayte/gx\"\n\nvar ToggleFixtures = gx.Fixtures[ToggleProps]{\n\t\"Off\":       {Name: \"bold\", Children: gx.Text(\"Bold\")},\n\t\"On\":        {Name: \"bold\", Pressed: true, Children: gx.Text(\"Bold\")},\n\t\"Disabled\":  {Name: \"bold\", Disabled: true, Children: gx.Text(\"Bold\")},\n\t\"Outline\":   {Name: \"bold\", Variant: Outline, Children: gx.Text(\"Bold\")},\n\t\"OutlineOn\": {Name: \"bold\", Variant: Outline, Pressed: true, Children: gx.Text(\"Bold\")},\n\t\"Invalid\":   {Name: \"bold\", Variant: Outline, Invalid: true, Children: gx.Text(\"Bold\")},\n\t\"Small\":     {Name: \"bold\", Variant: Outline, Size: Sm, Children: gx.Text(\"Bold\")},\n\t\"Large\":     {Name: \"bold\", Variant: Outline, Size: Lg, Children: gx.Text(\"Bold\")},\n}\n",
+      "sha256": "247a82bc5721cc439ce2490d91413727a4e584737bdf70c03c1422b32fd3fffe"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/toggle/styles.go",
+      "content": "package toggle\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the visual style of a toggle.\ntype Variant string\n\n// The variants of toggle.Toggle.\nconst (\n\tDefault Variant = \"default\"\n\tOutline Variant = \"outline\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"bg-transparent\",\n\tOutline: \"border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground\",\n}\n\n// Size is the height and padding of a toggle.\ntype Size string\n\n// The sizes of toggle.Toggle.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"h-8 min-w-8 px-1.5\",\n\tMd: \"h-9 min-w-9 px-2\",\n\tLg: \"h-10 min-w-10 px-2.5\",\n}\n\n// class returns the classes of one toggle. The label carries the recipe and\n// reads the state of the checkbox inside it.\nfunc (p ToggleProps) class() string {\n\tconst base = \"inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-destructive/20 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground dark:has-[[aria-invalid=true]]:ring-destructive/40 motion-reduce:transition-none [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4\"\n\tvariant := p.Variant\n\tif variant == \"\" {\n\t\tvariant = Default\n\t}\n\tsize := p.Size\n\tif size == \"\" {\n\t\tsize = Md\n\t}\n\treturn gx.Cx(base, variantClass[variant], sizeClass[size], p.Class)\n}\n\n// invalid returns the aria-invalid value of the input.\nfunc (p ToggleProps) invalid() string {\n\tif p.Invalid {\n\t\treturn \"true\"\n\t}\n\treturn \"false\"\n}\n",
+      "sha256": "66e91d596dca8319147307a0dbe2afb7f8ec1d5156372564c266f9ce8f76aeb9"
     }
   ],
   "requiredTokens": [
     "--muted",
+    "--muted-foreground",
     "--accent",
     "--accent-foreground",
+    "--input",
     "--ring",
-    "--foreground"
+    "--destructive"
   ],
-  "usage": "# Toggle\n\nA two-state button.\n\n## Usage\n\n```gx\n\u003ctoggle.Toggle name=\"bold\" pressed={p.Bold}\u003eBold\u003c/toggle.Toggle\u003e\n```\n\nThe toggle is a styled checkbox, so it works without JavaScript.\n\n## Do\n\n- Give the toggle a name that reads as a state.\n- Use it for a formatting choice.\n\n## Don't\n\n- Do not use a toggle for an immediate setting. Use a switch.\n- Do not use a toggle for a group of choices. Use a toggle group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the toggle. |\n| Space | Toggles the state. |\n"
+  "usage": "# Toggle\n\nA two-state button.\n\n## Usage\n\n```gx\n\u003ctoggle.Toggle name=\"bold\" pressed={p.Bold}\u003eBold\u003c/toggle.Toggle\u003e\n\u003ctoggle.Toggle name=\"italic\" variant={toggle.Outline} size={toggle.Sm}\u003eItalic\u003c/toggle.Toggle\u003e\n```\n\nThe toggle is a styled checkbox, so it works without JavaScript.\nThe variants are `toggle.Default` and `toggle.Outline`. The sizes are `toggle.Sm`, `toggle.Md` and `toggle.Lg`.\n`Disabled` and `Invalid` set the state of the checkbox.\n\n## Do\n\n- Give the toggle a name that reads as a state.\n- Use it for a formatting choice.\n\n## Don't\n\n- Do not use a toggle for an immediate setting. Use a switch.\n- Do not use a toggle for a group of choices. Use a toggle group.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the toggle. |\n| Space | Toggles the state. |\n"
 }

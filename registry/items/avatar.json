@@ -7,25 +7,64 @@
     {
       "path": "Avatar.gx",
       "target": "ui/avatar/Avatar.gx",
-      "content": "package avatar\n\nprops {\n  Src      gx.URL\n  Alt      string   = \"\"\n  Fallback string   = \"\"\n  Size     Size     = Md\n  Class    string   = \"\"\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative flex shrink-0 overflow-hidden rounded-full\", p.sizeClass(), p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg src={p.Src} alt={p.Alt} class=\"aspect-square size-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan class=\"flex size-full items-center justify-center rounded-full bg-muted text-xs font-medium\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "f7c445e6daee68f4cae138b1d6f7e6e873fbf2b228a34ebfb97e3f78f011e9ac"
+      "content": "package avatar\n\nprops {\n  // Src is the URL of the image. An empty value renders the fallback.\n  Src      gx.URL\n  // Alt is the alt text of the image.\n  Alt      string = \"\"\n  // Fallback is the text shown when Src is empty, for example the initials of the user.\n  Fallback string = \"\"\n  // Size sets the diameter: Sm, Md or Lg.\n  Size     Size = Md\n  // Badge is an AvatarBadge shown at the bottom right corner. A nil value renders no badge.\n  Badge    gx.Node = nil\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan data-slot=\"avatar\" data-size={p.size()} class={gx.Cx(\"group/avatar relative flex size-8 shrink-0 rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6\", p.Class)} {...p.Attrs}\u003e\n  if p.Src != \"\" {\n    \u003cimg data-slot=\"avatar-image\" src={p.Src} alt={p.Alt} class=\"aspect-square size-full rounded-full object-cover\" /\u003e\n  } else if p.Fallback != \"\" {\n    \u003cspan data-slot=\"avatar-fallback\" class=\"flex size-full items-center justify-center rounded-full bg-muted text-sm text-foreground group-data-[size=sm]/avatar:text-xs\"\u003e{p.Fallback}\u003c/span\u003e\n  }\n  if p.Badge != nil {\n    {p.Badge}\n  }\n\u003c/span\u003e\n",
+      "sha256": "badd4220048934a80244320fedf95935710024abf391124162e4e52c5fe80db7"
     },
     {
       "path": "Avatar.fixtures.go",
       "target": "ui/avatar/Avatar.fixtures.go",
-      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\nvar AvatarFixtures = gx.Fixtures[AvatarProps]{\n\t\"Fallback\": {Fallback: \"NA\"},\n\t\"Small\":    {Fallback: \"NA\", Size: Sm},\n\t\"Large\":    {Fallback: \"NA\", Size: Lg},\n}\n",
-      "sha256": "5771f46e8d90accb558f417442df6ee8a3634fea0d544314b0775df845e2b913"
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\nvar AvatarFixtures = gx.Fixtures[AvatarProps]{\n\t\"Fallback\": {Fallback: \"NA\"},\n\t\"Small\":    {Fallback: \"NA\", Size: Sm},\n\t\"Large\":    {Fallback: \"NA\", Size: Lg},\n\t\"Badge\":    {Fallback: \"NA\", Badge: AvatarBadge(AvatarBadgeProps{})},\n\t\"LargeBadge\": {Fallback: \"NA\", Size: Lg, Badge: AvatarBadge(AvatarBadgeProps{\n\t\tClass: \"bg-green-600 dark:bg-green-800\",\n\t})},\n}\n",
+      "sha256": "b5e9a15e3a1ac4ba44ecd7524bcb705e6b38dbcfdd3b3fc5da6529dc712e9401"
     },
     {
       "path": "styles.go",
       "target": "ui/avatar/styles.go",
-      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of an avatar.\ntype Size string\n\n// The sizes of avatar.Avatar.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-6 text-xs\",\n\tMd: \"size-8\",\n\tLg: \"size-10 text-base\",\n}\n\n// sizeClass returns the classes of one avatar size; a zero value is Md.\nfunc (p AvatarProps) sizeClass() string {\n\tif p.Size == \"\" {\n\t\treturn sizeClass[Md]\n\t}\n\treturn sizeClass[p.Size]\n}\n",
-      "sha256": "3ed59233be8e69e692b154cbcf76f73ae69c4c1cb1786a52c7063217831dc2f0"
+      "content": "package avatar\n\n// Size is the diameter of an avatar.\ntype Size string\n\n// The sizes of avatar.Avatar.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"default\"\n\tLg Size = \"lg\"\n)\n\n// size returns the data-size value; a zero value is Md. The size classes\n// of the avatar, its fallback and its badge follow this attribute.\nfunc (p AvatarProps) size() string {\n\tif p.Size == \"\" {\n\t\treturn string(Md)\n\t}\n\treturn string(p.Size)\n}\n",
+      "sha256": "ad0b82baf0652fe2bbfaf0676badf065b5860bbcbf3b21b78f350ab07711829b"
+    },
+    {
+      "path": "AvatarBadge.gx",
+      "target": "ui/avatar/AvatarBadge.gx",
+      "content": "package avatar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the badge: an icon. A nil value renders a dot.\n  Children gx.Node = nil\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan data-slot=\"avatar-badge\" class={gx.Cx(\"absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background select-none group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[\u0026\u003esvg]:hidden group-data-[size=default]/avatar:size-2.5 group-data-[size=default]/avatar:[\u0026\u003esvg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[\u0026\u003esvg]:size-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
+      "sha256": "dd9abfc2abacb62a80016a7951a0fffac945a91ea9360dd44815a39b2d79fdda"
+    },
+    {
+      "path": "AvatarBadge.fixtures.go",
+      "target": "ui/avatar/AvatarBadge.fixtures.go",
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\nvar AvatarBadgeFixtures = gx.Fixtures[AvatarBadgeProps]{\"Default\": {}}\n\n// AvatarBadgeWrap renders the badge on an avatar, as a page uses it.\nfunc AvatarBadgeWrap(n gx.Node) gx.Node {\n\treturn Avatar(AvatarProps{Fallback: \"NA\", Badge: n})\n}\n",
+      "sha256": "94d72265b8ba10556e641cf17226210882e2a14be49f7c46b5f62c69a570a796"
+    },
+    {
+      "path": "AvatarGroup.gx",
+      "target": "ui/avatar/AvatarGroup.gx",
+      "content": "package avatar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the group: the avatars and an optional AvatarGroupCount.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"avatar-group\" class={gx.Cx(\"group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "bd82535ffcc8c48307db7815d7dd3f1cf1d923cd41cbf1cea97d71ad746481de"
+    },
+    {
+      "path": "AvatarGroup.fixtures.go",
+      "target": "ui/avatar/AvatarGroup.fixtures.go",
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\nvar AvatarGroupFixtures = gx.Fixtures[AvatarGroupProps]{\n\t\"Three\": {Children: gx.Frag(\n\t\tAvatar(AvatarProps{Fallback: \"NA\"}),\n\t\tAvatar(AvatarProps{Fallback: \"AL\"}),\n\t\tAvatar(AvatarProps{Fallback: \"GH\"}),\n\t\tAvatarGroupCount(AvatarGroupCountProps{Children: gx.Text(\"+3\")}),\n\t)},\n\t\"Small\": {Children: gx.Frag(\n\t\tAvatar(AvatarProps{Fallback: \"NA\", Size: Sm}),\n\t\tAvatar(AvatarProps{Fallback: \"AL\", Size: Sm}),\n\t\tAvatarGroupCount(AvatarGroupCountProps{Children: gx.Text(\"+2\")}),\n\t)},\n}\n",
+      "sha256": "588f555278ffbffb4e91e65f07ec1492f9f50a227932e54bd876750cd39fdd5d"
+    },
+    {
+      "path": "AvatarGroupCount.gx",
+      "target": "ui/avatar/AvatarGroupCount.gx",
+      "content": "package avatar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the count, for example +3 or an icon.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"avatar-group-count\" class={gx.Cx(\"relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-foreground ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [\u0026\u003esvg]:size-4 group-has-data-[size=lg]/avatar-group:[\u0026\u003esvg]:size-5 group-has-data-[size=sm]/avatar-group:[\u0026\u003esvg]:size-3\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "a9e654b72d146859bba2861a4952da0b65667c4dcc6de6a890ba94aba6b00a95"
+    },
+    {
+      "path": "AvatarGroupCount.fixtures.go",
+      "target": "ui/avatar/AvatarGroupCount.fixtures.go",
+      "content": "package avatar\n\nimport \"github.com/alternayte/gx\"\n\nvar AvatarGroupCountFixtures = gx.Fixtures[AvatarGroupCountProps]{\"Count\": {Children: gx.Text(\"+3\")}}\n",
+      "sha256": "bca86151daa3ebca1a5b5d0fc3d457beee979f405c9bdae2e6043fb485872973"
     }
   ],
   "requiredTokens": [
     "--muted",
-    "--muted-foreground"
+    "--foreground",
+    "--primary",
+    "--primary-foreground",
+    "--background"
   ],
-  "usage": "# Avatar\n\nA user image with a fallback.\n\n## Usage\n\n```gx\n\u003cavatar.Avatar src={gx.URL(user.Image)} alt={user.Name} fallback=\"NA\" /\u003e\n```\n\n## Do\n\n- Always set `Alt` when the image carries meaning.\n- Set `Fallback` to the initials of the user.\n\n## Don't\n\n- Do not build an image URL from a raw string. Use `gx.URL`.\n- Do not use an avatar as the only label of an action.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Avatar\n\nA user image with a fallback.\n\n## Usage\n\n```gx\n\u003cavatar.Avatar src={gx.URL(user.Image)} alt={user.Name} fallback=\"NA\" /\u003e\n\u003cavatar.Avatar fallback=\"NA\" size={avatar.Lg} badge={\u003cavatar.AvatarBadge /\u003e} /\u003e\n\n\u003cavatar.AvatarGroup\u003e\n  \u003cavatar.Avatar fallback=\"NA\" /\u003e\n  \u003cavatar.Avatar fallback=\"AL\" /\u003e\n  \u003cavatar.AvatarGroupCount\u003e+3\u003c/avatar.AvatarGroupCount\u003e\n\u003c/avatar.AvatarGroup\u003e\n```\n\nThe sizes are `Sm`, `Md` and `Lg`. The fallback, the badge and the group count follow the size of the avatar.\n`AvatarBadge` takes an icon as its child. A small avatar hides the icon.\n\n## Do\n\n- Always set `Alt` when the image carries meaning.\n- Set `Fallback` to the initials of the user.\n- Use one size for every avatar of a group.\n\n## Don't\n\n- Do not build an image URL from a raw string. Use `gx.URL`.\n- Do not use an avatar as the only label of an action.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

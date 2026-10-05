@@ -7,50 +7,134 @@
     {
       "path": "ContextMenu.gx",
       "target": "ui/context-menu/ContextMenu.gx",
-      "content": "package contextmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" class={gx.Cx(\"fixed m-0 z-50 min-w-[8rem] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "cc74f795bb5cd847c62d37b211c5cfc5a15cd369f19472d76de4e4f250d6cf2c"
+      "content": "package contextmenu\n\nprops {\n  // Id is the id of the root element. The trigger opens the menu by this id.\n  Id       string\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the menu items.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" data-gx-dismiss data-gx-roving=\"nowrap\" data-gx-place=\"right start 2\" class={gx.Cx(\"fixed z-50 m-0 min-w-[8rem] origin-top-left overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "d6ae22ca11080bfe51c9f030bdb3eb85df4d087920dc504afccb448bc3d745cc"
     },
     {
-      "path": "ContextMenuTrigger.gx",
-      "target": "ui/context-menu/ContextMenuTrigger.gx",
-      "content": "package contextmenu\n\nprops {\n  Id       string\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-gx-contextmenu={\"#\" + p.Id} class={gx.Cx(\"flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground select-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "e2d5fbb8f642aed3385e7f80b57ebb2b8f6cbdcb0b23d7e826e761b633ce7f1d"
+      "path": "ContextMenuCheckboxItem.gx",
+      "target": "ui/context-menu/ContextMenuCheckboxItem.gx",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the name attribute of the checkbox input. A form or a signal reads it.\n  Name     string = \"\"\n  // Value is the value that the form sends when the item is checked.\n  Value    string = \"on\"\n  // Checked sets the item as checked on the first render.\n  Checked  bool = false\n  // Disabled turns the item off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" role=\"menuitemcheckbox\" tabindex=\"-1\" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class=\"peer sr-only\" {...rovingItem(p.Disabled)} /\u003e\n  \u003cspan class=\"pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible\"\u003e\u003cicons.Check class=\"size-4\" /\u003e\u003c/span\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "1cf8ee829a682d4ca86382f97c0c67d22a431e7da339f41da8e6e7af76b4dd7d"
+    },
+    {
+      "path": "ContextMenuGroup.gx",
+      "target": "ui/context-menu/ContextMenuGroup.gx",
+      "content": "package contextmenu\n\nprops {\n  // Label is the accessible name of the group. It is not visible.\n  Label    string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the items of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" aria-label={p.Label} class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "ba3835676a397b56166fb5ffdeff5c5a488e4bd3c76bd1f183529eaf00be76ce"
     },
     {
       "path": "ContextMenuItem.gx",
       "target": "ui/context-menu/ContextMenuItem.gx",
-      "content": "package contextmenu\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" data-gx-roving-item data-gx-close class={gx.Cx(\"flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
-      "sha256": "dcdcdab79a22b41b05d991dc6a411558bd8b9027b5d316888ffcc84bb089f2d9"
+      "content": "package contextmenu\n\nprops {\n  // Variant sets the visual style: Default or Destructive.\n  Variant  Variant = Default\n  // Inset adds left padding, so the item lines up with the checkbox and radio items.\n  Inset    bool = false\n  // Disabled turns the item off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" disabled={p.Disabled} data-gx-close class={gx.Cx(\"relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4 [\u0026_svg:not([class*='text-'])]:text-muted-foreground\", variantClass[p.variant()], insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "47788674b24b1630c0cffbef441adbfe8734dafbf5e5817b1c5b13e0ff563d15"
+    },
+    {
+      "path": "ContextMenuLabel.gx",
+      "target": "ui/context-menu/ContextMenuLabel.gx",
+      "content": "package contextmenu\n\nprops {\n  // Inset adds left padding, so the label lines up with the checkbox and radio items.\n  Inset    bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text of the label.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"presentation\" class={gx.Cx(\"px-2 py-1.5 text-sm font-medium text-foreground\", insetClass[p.Inset], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "e779a3235044f6ed9a808c9e98ebf6fb232cf7dc90198db494acfb89e1fa6fcc"
     },
     {
       "path": "ContextMenuLink.gx",
       "target": "ui/context-menu/ContextMenuLink.gx",
-      "content": "package contextmenu\n\nprops {\n  Href     gx.URL\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx(\"flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
-      "sha256": "7d0191271781c35fdc3571184789d94c7fe1cbecb9b2fccd51a6c4202b470f54"
+      "content": "package contextmenu\n\nprops {\n  // Href is the URL that the link opens.\n  Href     gx.URL\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the link.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx(\"relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4 [\u0026_svg:not([class*='text-'])]:text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "b37b53f3d1ff62bf9c97100dd35bbb9c06a4682ef423a473d472203ce8abc806"
+    },
+    {
+      "path": "ContextMenuRadioGroup.gx",
+      "target": "ui/context-menu/ContextMenuRadioGroup.gx",
+      "content": "package contextmenu\n\nprops {\n  // Label is the accessible name of the group. It is not visible.\n  Label    string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the radio items of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" aria-label={p.Label} class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "9c306f41ca6afd59f63cd5833b4549c4242e047f6ebee1f02a4d4bdad8b75d44"
+    },
+    {
+      "path": "ContextMenuRadioItem.gx",
+      "target": "ui/context-menu/ContextMenuRadioItem.gx",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the name attribute of the radio input. The radio items of one group share\n  // the same name.\n  Name     string = \"\"\n  // Value is the value that the form sends when the item is checked.\n  Value    string = \"\"\n  // Checked sets the item as checked on the first render.\n  Checked  bool = false\n  // Disabled turns the item off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" role=\"menuitemradio\" tabindex=\"-1\" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class=\"peer sr-only\" {...rovingItem(p.Disabled)} /\u003e\n  \u003cspan class=\"pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible\"\u003e\u003cicons.Circle class=\"size-2 *:fill-current\" /\u003e\u003c/span\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "478197b2a46a859ce117c915ffcf33c89786de1891235010efa0f21b9d89fc80"
     },
     {
       "path": "ContextMenuSeparator.gx",
       "target": "ui/context-menu/ContextMenuSeparator.gx",
-      "content": "package contextmenu\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"separator\" class={gx.Cx(\"-mx-1 my-1 h-px bg-border\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
-      "sha256": "87dd3fd8e74864e6cc7c0803e9fa837adefb82a0a0b816d1f45c121b4bf8db6e"
+      "content": "package contextmenu\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"separator\" class={gx.Cx(\"-mx-1 my-1 h-px bg-border\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "27a22ee367b349fc9a957ada4f53f844aca63cddf56676e35cd01dd87c82870b"
+    },
+    {
+      "path": "ContextMenuShortcut.gx",
+      "target": "ui/context-menu/ContextMenuShortcut.gx",
+      "content": "package contextmenu\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text of the keyboard shortcut.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"ml-auto text-xs tracking-widest text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
+      "sha256": "58e10a45bebd3480321e88aa84568da610548e8aeb04bfa4098cc49808c9c2b9"
+    },
+    {
+      "path": "ContextMenuSub.gx",
+      "target": "ui/context-menu/ContextMenuSub.gx",
+      "content": "package contextmenu\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the sub-menu trigger, followed by the sub-menu content.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"none\" data-gx-sub class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "62048ebde76304f2eeeea513895197e8d62c835e88ee3d7747ec2166db4f7ce9"
+    },
+    {
+      "path": "ContextMenuSubContent.gx",
+      "target": "ui/context-menu/ContextMenuSubContent.gx",
+      "content": "package contextmenu\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the list of items of the sub-menu.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv popover=\"auto\" role=\"menu\" data-gx-roving=\"nowrap\" data-gx-place=\"right start\" class={gx.Cx(\"z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden\", subMotionClass, p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "e178c0289fdb60ebe75cc59e5ad62b4468b48e87c1a4838de5852014d2bc7858"
+    },
+    {
+      "path": "ContextMenuSubTrigger.gx",
+      "target": "ui/context-menu/ContextMenuSubTrigger.gx",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Inset adds left padding, so the trigger lines up with the checkbox and radio items.\n  Inset    bool = false\n  // Disabled turns the trigger off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the trigger. A chevron follows it.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" aria-haspopup=\"menu\" aria-expanded=\"false\" disabled={p.Disabled} class={gx.Cx(\"flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4 [\u0026_svg:not([class*='text-'])]:text-muted-foreground\", insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}\u003e\n  {p.Children}\n  \u003cicons.ChevronRight class=\"ml-auto\" /\u003e\n\u003c/button\u003e\n",
+      "sha256": "8e19fc1dfd9771c0a8a551eed0a01ffb3694675e3ad6c734fee6bada33bec20a"
+    },
+    {
+      "path": "ContextMenuTrigger.gx",
+      "target": "ui/context-menu/ContextMenuTrigger.gx",
+      "content": "package contextmenu\n\nprops {\n  // Id is the id of the menu that a right click on the trigger opens.\n  Id       string\n  // Class adds classes to the root element. The trigger has no style of its own.\n  Class    string = \"\"\n  // Children is the content of the area that takes the right click.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-gx-contextmenu={\"#\" + p.Id} class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "930e3821a6e2d3dd22a130d515c593e3c42df1c09f711f44a80fe8f851b9e987"
     },
     {
       "path": "ContextMenu.fixtures.go",
       "target": "ui/context-menu/ContextMenu.fixtures.go",
-      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuFixtures = gx.Fixtures[ContextMenuProps]{\n\t\"Menu\": {Id: \"demo-context\", Children: gx.Frag(\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Copy\")}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Cut\")}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuLink(ContextMenuLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t)},\n}\n",
-      "sha256": "b7fe8f7bfdf627d6c9fe48dc7c4e11edd3989c44384762d733ba0301524b2ddd"
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuFixtures = gx.Fixtures[ContextMenuProps]{\n\t\"Menu\": {Id: \"demo-context\", Class: \"w-52\", Children: gx.Frag(\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Frag(\n\t\t\tgx.Text(\"Copy\"),\n\t\t\tContextMenuShortcut(ContextMenuShortcutProps{Children: gx.Text(\"⌘C\")}),\n\t\t)}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Cut\")}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuCheckboxItem(ContextMenuCheckboxItemProps{Name: \"bookmarks\", Checked: true, Children: gx.Text(\"Show bookmarks\")}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuRadioGroup(ContextMenuRadioGroupProps{Label: \"People\", Children: gx.Frag(\n\t\t\tContextMenuLabel(ContextMenuLabelProps{Inset: true, Children: gx.Text(\"People\")}),\n\t\t\tContextMenuRadioItem(ContextMenuRadioItemProps{Name: \"demo-context-person\", Value: \"ada\", Checked: true, Children: gx.Text(\"Ada\")}),\n\t\t\tContextMenuRadioItem(ContextMenuRadioItemProps{Name: \"demo-context-person\", Value: \"grace\", Children: gx.Text(\"Grace\")}),\n\t\t)}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuLink(ContextMenuLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t\tContextMenuItem(ContextMenuItemProps{Variant: Destructive, Children: gx.Text(\"Delete\")}),\n\t)},\n\t\"Sub\": {Id: \"demo-context-sub\", Class: \"w-52\", Children: gx.Frag(\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Back\")}),\n\t\tContextMenuSub(ContextMenuSubProps{Children: gx.Frag(\n\t\t\tContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text(\"More tools\")}),\n\t\t\tContextMenuSubContent(ContextMenuSubContentProps{Class: \"w-48\", Children: gx.Frag(\n\t\t\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Save page\")}),\n\t\t\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Create shortcut\")}),\n\t\t\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\t\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Developer tools\")}),\n\t\t\t)}),\n\t\t)}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Reload\")}),\n\t)},\n}\n",
+      "sha256": "88bb720880dfd10bdf6e2db8d0ac2efb5b5b806470e5f8d150c578a92a02dd2d"
+    },
+    {
+      "path": "ContextMenuCheckboxItem.fixtures.go",
+      "target": "ui/context-menu/ContextMenuCheckboxItem.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuCheckboxItemFixtures = gx.Fixtures[ContextMenuCheckboxItemProps]{\n\t\"Checked\":   {Name: \"status-bar\", Checked: true, Children: gx.Text(\"Status bar\")},\n\t\"Unchecked\": {Name: \"panel\", Children: gx.Text(\"Panel\")},\n\t\"Disabled\":  {Name: \"activity\", Disabled: true, Children: gx.Text(\"Activity bar\")},\n}\n\n// ContextMenuCheckboxItemWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuCheckboxItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "8ffb28e548c6ca24f54d92e6803e6eba2b3cc1a60a346a12116c8ae39bbfd931"
+    },
+    {
+      "path": "ContextMenuGroup.fixtures.go",
+      "target": "ui/context-menu/ContextMenuGroup.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuGroupFixtures = gx.Fixtures[ContextMenuGroupProps]{\n\t\"Default\": {Label: \"Account\", Children: gx.Frag(\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Profile\")}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Billing\")}),\n\t)},\n}\n\n// ContextMenuGroupWrap renders the group inside a menu, as a page uses it.\nfunc ContextMenuGroupWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "fde2e982b9a0ecf28e97e3f720346d7f748f28d6e25a93d1b2c87d1ce4785b1b"
     },
     {
       "path": "ContextMenuItem.fixtures.go",
       "target": "ui/context-menu/ContextMenuItem.fixtures.go",
-      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{\"Item\": {Children: gx.Text(\"Copy\")}}\n\n// ContextMenuItemWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}}, n)\n}\n",
-      "sha256": "817819c691be5ef4cf634a886b7de450e022904aacb0e704835391499eccb654"
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuItemFixtures = gx.Fixtures[ContextMenuItemProps]{\n\t\"Item\":        {Children: gx.Text(\"Profile\")},\n\t\"Inset\":       {Inset: true, Children: gx.Text(\"Profile\")},\n\t\"Destructive\": {Variant: Destructive, Children: gx.Text(\"Delete\")},\n\t\"Disabled\":    {Disabled: true, Children: gx.Text(\"Profile\")},\n}\n\n// ContextMenuItemWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "8a62091722fc87ea424277ca7062af7c2abe401fe03e32498a416b46af4f203a"
+    },
+    {
+      "path": "ContextMenuLabel.fixtures.go",
+      "target": "ui/context-menu/ContextMenuLabel.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuLabelFixtures = gx.Fixtures[ContextMenuLabelProps]{\n\t\"Label\": {Children: gx.Text(\"My account\")},\n\t\"Inset\": {Inset: true, Children: gx.Text(\"My account\")},\n}\n",
+      "sha256": "f592f7e52c7ac7f80c673cb195268c201dd3603d7161c994f3ecf259506438f1"
     },
     {
       "path": "ContextMenuLink.fixtures.go",
       "target": "ui/context-menu/ContextMenuLink.fixtures.go",
-      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n\n// ContextMenuLinkWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuLinkWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}}, n)\n}\n",
-      "sha256": "736774d50b804048a068f0a1d170f32cbc6dbb487bba812c6b7aab776eb2a351"
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuLinkFixtures = gx.Fixtures[ContextMenuLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}}\n\n// ContextMenuLinkWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuLinkWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "4885c1bfed5f5c0437f66a2bcf8a901e25f934c869375b787d29b8839f3df4f4"
+    },
+    {
+      "path": "ContextMenuRadioGroup.fixtures.go",
+      "target": "ui/context-menu/ContextMenuRadioGroup.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuRadioGroupFixtures = gx.Fixtures[ContextMenuRadioGroupProps]{\n\t\"Default\": {Label: \"Position\", Children: gx.Frag(\n\t\tContextMenuRadioItem(ContextMenuRadioItemProps{Name: \"context-menu-group-position\", Value: \"top\", Checked: true, Children: gx.Text(\"Top\")}),\n\t\tContextMenuRadioItem(ContextMenuRadioItemProps{Name: \"context-menu-group-position\", Value: \"bottom\", Children: gx.Text(\"Bottom\")}),\n\t)},\n}\n\n// ContextMenuRadioGroupWrap renders the group inside a menu, as a page uses it.\nfunc ContextMenuRadioGroupWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "e18f87436e99ea512fc1a6ce23f7063cd809da9c44dbf781d8cdfb1653ceaf22"
+    },
+    {
+      "path": "ContextMenuRadioItem.fixtures.go",
+      "target": "ui/context-menu/ContextMenuRadioItem.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuRadioItemFixtures = gx.Fixtures[ContextMenuRadioItemProps]{\n\t\"Checked\":   {Name: \"context-menu-item-checked\", Value: \"top\", Checked: true, Children: gx.Text(\"Top\")},\n\t\"Unchecked\": {Name: \"context-menu-item-unchecked\", Value: \"bottom\", Children: gx.Text(\"Bottom\")},\n}\n\n// ContextMenuRadioItemWrap renders the item inside a menu, as a page uses it.\nfunc ContextMenuRadioItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "5596581c824f667f55a6fdf82ca6650df14c51e296f8a1de90dc0382a2293876"
     },
     {
       "path": "ContextMenuSeparator.fixtures.go",
@@ -59,19 +143,54 @@
       "sha256": "d762c5ddc74f826f5e01aa2793df1dfa8083c526e2e29b1d9293321ed2f20079"
     },
     {
+      "path": "ContextMenuShortcut.fixtures.go",
+      "target": "ui/context-menu/ContextMenuShortcut.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuShortcutFixtures = gx.Fixtures[ContextMenuShortcutProps]{\"Default\": {Children: gx.Text(\"⌘K\")}}\n",
+      "sha256": "f73f5a449447bbfedc45af2389cbfa1583ccc16b239261578f58957db710ac74"
+    },
+    {
+      "path": "ContextMenuSub.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSub.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuSubFixtures = gx.Fixtures[ContextMenuSubProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text(\"More tools\")}),\n\t\tContextMenuSubContent(ContextMenuSubContentProps{Children: gx.Frag(\n\t\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Save page\")}),\n\t\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Create shortcut\")}),\n\t\t)}),\n\t)},\n}\n\n// ContextMenuSubWrap renders the sub-menu inside a menu, as a page uses it.\nfunc ContextMenuSubWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "e8d73647967f2e875261c3251225376b17772cca619cf807b094863e41aab087"
+    },
+    {
+      "path": "ContextMenuSubContent.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSubContent.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuSubContentFixtures = gx.Fixtures[ContextMenuSubContentProps]{\n\t\"Content\": {Class: \"w-48\", Children: gx.Frag(\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Save page\")}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Create shortcut\")}),\n\t\tContextMenuSeparator(ContextMenuSeparatorProps{}),\n\t\tContextMenuItem(ContextMenuItemProps{Children: gx.Text(\"Developer tools\")}),\n\t)},\n}\n\n// ContextMenuSubContentWrap renders the content behind its trigger inside a menu,\n// as a page uses it.\nfunc ContextMenuSubContentWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}},\n\t\tContextMenuSub(ContextMenuSubProps{Children: gx.Frag(\n\t\t\tContextMenuSubTrigger(ContextMenuSubTriggerProps{Children: gx.Text(\"More tools\")}),\n\t\t\tn,\n\t\t)}),\n\t)\n}\n",
+      "sha256": "5a7ab7aac3e7af051244ef735b18aef68b5275f7aa05c9a561a35261226c4a45"
+    },
+    {
+      "path": "ContextMenuSubTrigger.fixtures.go",
+      "target": "ui/context-menu/ContextMenuSubTrigger.fixtures.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuSubTriggerFixtures = gx.Fixtures[ContextMenuSubTriggerProps]{\n\t\"Trigger\":  {Children: gx.Text(\"More tools\")},\n\t\"Inset\":    {Inset: true, Children: gx.Text(\"More tools\")},\n\t\"Disabled\": {Disabled: true, Children: gx.Text(\"More tools\")},\n}\n\n// ContextMenuSubTriggerWrap renders the trigger inside a menu, as a page uses it.\nfunc ContextMenuSubTriggerWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "228f9dad37be60744f215801ad8ef616473095f27bda33f087f31761552df7aa"
+    },
+    {
       "path": "ContextMenuTrigger.fixtures.go",
       "target": "ui/context-menu/ContextMenuTrigger.fixtures.go",
-      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuTriggerFixtures = gx.Fixtures[ContextMenuTriggerProps]{\"Default\": {Id: \"demo-context\", Children: gx.Text(\"Right-click here\")}}\n",
-      "sha256": "ef749fdbed04380938dc7ac336a2244e313c5bf79d07ccb49e001e28df6df9d2"
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\nvar ContextMenuTriggerFixtures = gx.Fixtures[ContextMenuTriggerProps]{\n\t\"Default\": {\n\t\tId:       \"demo-context\",\n\t\tClass:    \"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm\",\n\t\tChildren: gx.Text(\"Right-click here\"),\n\t},\n\t\"Sub\": {\n\t\tId:       \"demo-context-sub\",\n\t\tClass:    \"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm\",\n\t\tChildren: gx.Text(\"Right-click for a sub-menu\"),\n\t},\n}\n",
+      "sha256": "f8e6feed6cdcfe028f14be8bd5038b9932dac96561b7aeeaf22081ba4daf4c32"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/context-menu/styles.go",
+      "content": "package contextmenu\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the visual style of a menu item.\ntype Variant string\n\n// The variants of contextmenu.ContextMenuItem.\nconst (\n\tDefault     Variant = \"default\"\n\tDestructive Variant = \"destructive\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"\",\n\tDestructive: \"text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive!\",\n}\n\n// variant returns the variant of one item; a zero value is Default.\nfunc (p ContextMenuItemProps) variant() Variant {\n\tif p.Variant == \"\" {\n\t\treturn Default\n\t}\n\treturn p.Variant\n}\n\n// insetClass lines an item or a label up with the checkbox and radio items.\nvar insetClass = map[bool]string{\n\ttrue:  \"pl-8\",\n\tfalse: \"\",\n}\n\n// rovingItem marks an item for the roving tabindex of its menu. A disabled\n// item is not marked, so the arrow keys pass it.\nfunc rovingItem(disabled bool) gx.Attrs {\n\treturn gx.Attrs{gx.Bool(\"data-gx-roving-item\", !disabled)}\n}\n\n// subMotionClass fades and zooms the content of a sub-menu from 95% and\n// slides it 2 units from its trigger. The overlay module writes data-side:\n// content that flips to the left slides from the right.\nconst subMotionClass = \"origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none\"\n",
+      "sha256": "5176748e0193166d67422ee65746a1381ba72fb658d6aa03d647630ce9c0702e"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--border",
     "--popover",
     "--popover-foreground",
+    "--foreground",
     "--accent",
     "--accent-foreground",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--destructive"
   ],
-  "usage": "# Context Menu\n\nA menu that opens on a right click.\n\n## Usage\n\n```gx\n\u003ccontextmenu.ContextMenuTrigger id=\"row-menu\"\u003eRight-click here\u003c/contextmenu.ContextMenuTrigger\u003e\n\u003ccontextmenu.ContextMenu id=\"row-menu\"\u003e\n  \u003ccontextmenu.ContextMenuItem\u003eCopy\u003c/contextmenu.ContextMenuItem\u003e\n  \u003ccontextmenu.ContextMenuSeparator /\u003e\n  \u003ccontextmenu.ContextMenuLink href={gx.URL(\"/docs\")}\u003eDocs\u003c/contextmenu.ContextMenuLink\u003e\n\u003c/contextmenu.ContextMenu\u003e\n```\n\n## Do\n\n- Attach the menu to the object it acts on.\n- Keep the same items as the visible row menu.\n\n## Don't\n\n- Do not hide the only action behind a right click.\n- Do not open a context menu on a whole page.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Context menu key | Opens the menu at the focused item. |\n| Arrow keys | Moves through the items. |\n| Escape | Closes the menu. |\n"
+  "usage": "# Context Menu\n\nA menu that opens on a right click.\n\n## Usage\n\n```gx\n\u003ccontextmenu.ContextMenuTrigger id=\"row-menu\" class=\"rounded-md border border-dashed p-8\"\u003eRight-click here\u003c/contextmenu.ContextMenuTrigger\u003e\n\u003ccontextmenu.ContextMenu id=\"row-menu\" class=\"w-52\"\u003e\n  \u003ccontextmenu.ContextMenuItem\u003e\n    Copy\n    \u003ccontextmenu.ContextMenuShortcut\u003e⌘C\u003c/contextmenu.ContextMenuShortcut\u003e\n  \u003c/contextmenu.ContextMenuItem\u003e\n  \u003ccontextmenu.ContextMenuSeparator /\u003e\n  \u003ccontextmenu.ContextMenuCheckboxItem name=\"bookmarks\" checked={true}\u003eShow bookmarks\u003c/contextmenu.ContextMenuCheckboxItem\u003e\n  \u003ccontextmenu.ContextMenuRadioGroup label=\"People\"\u003e\n    \u003ccontextmenu.ContextMenuLabel inset={true}\u003ePeople\u003c/contextmenu.ContextMenuLabel\u003e\n    \u003ccontextmenu.ContextMenuRadioItem name=\"person\" value=\"ada\" checked={true}\u003eAda\u003c/contextmenu.ContextMenuRadioItem\u003e\n    \u003ccontextmenu.ContextMenuRadioItem name=\"person\" value=\"grace\"\u003eGrace\u003c/contextmenu.ContextMenuRadioItem\u003e\n  \u003c/contextmenu.ContextMenuRadioGroup\u003e\n  \u003ccontextmenu.ContextMenuSeparator /\u003e\n  \u003ccontextmenu.ContextMenuSub\u003e\n    \u003ccontextmenu.ContextMenuSubTrigger\u003eMore tools\u003c/contextmenu.ContextMenuSubTrigger\u003e\n    \u003ccontextmenu.ContextMenuSubContent\u003e\n      \u003ccontextmenu.ContextMenuItem\u003eSave page\u003c/contextmenu.ContextMenuItem\u003e\n      \u003ccontextmenu.ContextMenuItem\u003eDeveloper tools\u003c/contextmenu.ContextMenuItem\u003e\n    \u003c/contextmenu.ContextMenuSubContent\u003e\n  \u003c/contextmenu.ContextMenuSub\u003e\n  \u003ccontextmenu.ContextMenuLink href={gx.URL(\"/docs\")}\u003eDocs\u003c/contextmenu.ContextMenuLink\u003e\n  \u003ccontextmenu.ContextMenuItem variant={contextmenu.Destructive}\u003eDelete\u003c/contextmenu.ContextMenuItem\u003e\n\u003c/contextmenu.ContextMenu\u003e\n```\n\nThe trigger is an area with no style of its own; `Class` gives it one. The menu opens at the pointer and focus moves to the first item. It opens to the left of the pointer when the right side is too small, and it shifts up to stay 8px inside the viewport. `data-side` on the menu names the side it took.\n\nA checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.\n\nThe menu fades and zooms in and out. A user who asks for reduced motion gets no transition.\n\n`ContextMenuSub` holds one `ContextMenuSubTrigger` and one `ContextMenuSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.\n\n## Do\n\n- Attach the menu to the object it acts on.\n- Keep the same items as the visible row menu.\n- Give the radio items of one group the same `Name`.\n\n## Don't\n\n- Do not hide the only action behind a right click.\n- Do not open a context menu on a whole page.\n- Do not put an element between the trigger and the content of a sub-menu.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Context menu key, Shift+F10 | Opens the menu at the focused element of the area. |\n| Up, Down | Moves through the items. A disabled item is passed. |\n| Home, End | Moves to the first or last item. |\n| A letter | Moves to the next item that starts with the typed text. |\n| Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |\n| Space | Runs the focused item. Toggles a checkbox or radio item. |\n| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |\n| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |\n| Escape | Closes the menu. |\n"
 }

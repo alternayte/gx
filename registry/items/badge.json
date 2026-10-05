@@ -7,21 +7,24 @@
     {
       "path": "Badge.gx",
       "target": "ui/badge/Badge.gx",
-      "content": "package badge\n\nprops {\n  Variant  Variant  = Default\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
-      "sha256": "42d5cdbe05cf53c0ed2635cc735c92d8c8671fb81862911424f56cd71903db9e"
+      "content": "package badge\n\nprops {\n  // Variant sets the visual style: Default, Secondary, Destructive, Outline, Ghost or Link.\n  Variant  Variant = Default\n  // Href is the URL of the link. A non-empty value renders the badge as an a element, not a span.\n  Href     gx.URL = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the badge label.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\nif p.Href != \"\" {\n  \u003ca href={p.Href} data-slot=\"badge\" data-variant={p.variant()} class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n} else {\n  \u003cspan data-slot=\"badge\" data-variant={p.variant()} class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n}\n",
+      "sha256": "97ff94c4c28b4e183bf48c1fb4c895ae11f72b242cab0c22eeb031644710bf30"
     },
     {
       "path": "Badge.fixtures.go",
       "target": "ui/badge/Badge.fixtures.go",
-      "content": "package badge\n\nimport \"github.com/alternayte/gx\"\n\nvar BadgeFixtures = gx.Fixtures[BadgeProps]{\n\t\"Default\":     {Children: gx.Text(\"Badge\")},\n\t\"Secondary\":   {Variant: Secondary, Children: gx.Text(\"Secondary\")},\n\t\"Destructive\": {Variant: Destructive, Children: gx.Text(\"Destructive\")},\n\t\"Outline\":     {Variant: Outline, Children: gx.Text(\"Outline\")},\n}\n",
-      "sha256": "74066f2b14e71485afc9982f72504c4d63d84e3d794883cf4e1eb38673fbd79a"
+      "content": "package badge\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/icons\"\n)\n\nvar BadgeFixtures = gx.Fixtures[BadgeProps]{\n\t\"Default\":     {Children: gx.Text(\"Badge\")},\n\t\"Secondary\":   {Variant: Secondary, Children: gx.Text(\"Secondary\")},\n\t\"Destructive\": {Variant: Destructive, Children: gx.Text(\"Destructive\")},\n\t\"Outline\":     {Variant: Outline, Children: gx.Text(\"Outline\")},\n\t\"Ghost\":       {Variant: Ghost, Children: gx.Text(\"Ghost\")},\n\t\"Link\":        {Variant: Link, Href: gx.URL(\"/docs\"), Children: gx.Text(\"Link\")},\n\t\"WithIcon\":    {Variant: Secondary, Children: gx.Frag(icons.CircleCheck(icons.CircleCheckProps{}), gx.Text(\"Verified\"))},\n\t\"Anchor\":      {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")},\n}\n",
+      "sha256": "adb9e19b08373654dfd331828b43f2854861834e22262b571eb5e5212ce8a8be"
     },
     {
       "path": "styles.go",
       "target": "ui/badge/styles.go",
-      "content": "package badge\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the visual style of a badge.\ntype Variant string\n\n// The variants of badge.Badge.\nconst (\n\tDefault     Variant = \"default\"\n\tSecondary   Variant = \"secondary\"\n\tDestructive Variant = \"destructive\"\n\tOutline     Variant = \"outline\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"border-transparent bg-primary text-primary-foreground\",\n\tSecondary:   \"border-transparent bg-secondary text-secondary-foreground\",\n\tDestructive: \"border-transparent bg-destructive text-destructive-foreground\",\n\tOutline:     \"text-foreground\",\n}\n\n// class returns the classes of one badge.\nfunc (p BadgeProps) class() string {\n\tconst base = \"inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [\u0026\u003esvg]:pointer-events-none [\u0026\u003esvg]:size-3\"\n\tvariant := p.Variant\n\tif variant == \"\" {\n\t\tvariant = Default\n\t}\n\treturn gx.Cx(base, variantClass[variant], p.Class)\n}\n",
-      "sha256": "1658071f8b595f31b046b3b772987ea9c2443891d46c4183c52718dda7c67750"
+      "content": "package badge\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the visual style of a badge.\ntype Variant string\n\n// The variants of badge.Badge.\nconst (\n\tDefault     Variant = \"default\"\n\tSecondary   Variant = \"secondary\"\n\tDestructive Variant = \"destructive\"\n\tOutline     Variant = \"outline\"\n\tGhost       Variant = \"ghost\"\n\tLink        Variant = \"link\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"bg-primary text-primary-foreground [a\u0026]:hover:bg-primary/90\",\n\tSecondary:   \"bg-secondary text-secondary-foreground [a\u0026]:hover:bg-secondary/90\",\n\tDestructive: \"bg-destructive text-white focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 [a\u0026]:hover:bg-destructive/90\",\n\tOutline:     \"border-border text-foreground [a\u0026]:hover:bg-accent [a\u0026]:hover:text-accent-foreground\",\n\tGhost:       \"[a\u0026]:hover:bg-accent [a\u0026]:hover:text-accent-foreground\",\n\tLink:        \"text-primary underline-offset-4 [a\u0026]:hover:underline\",\n}\n\n// variant returns the data-variant value; a zero value is Default.\nfunc (p BadgeProps) variant() string {\n\tif p.Variant == \"\" {\n\t\treturn string(Default)\n\t}\n\treturn string(p.Variant)\n}\n\n// class returns the classes of one badge.\nfunc (p BadgeProps) class() string {\n\tconst base = \"inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [\u0026\u003esvg]:pointer-events-none [\u0026\u003esvg]:size-3\"\n\treturn gx.Cx(base, variantClass[Variant(p.variant())], p.Class)\n}\n",
+      "sha256": "046aff2bb61e9e257a9a03848589e6cd6ece3ee93ce362272f5c90989acabb28"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--primary",
@@ -29,7 +32,11 @@
     "--secondary",
     "--secondary-foreground",
     "--destructive",
+    "--accent",
+    "--accent-foreground",
+    "--border",
+    "--foreground",
     "--ring"
   ],
-  "usage": "# Badge\n\nA small label for a status or a count.\n\n## Usage\n\n```gx\n\u003cbadge.Badge\u003eNew\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Destructive}\u003eFailed\u003c/badge.Badge\u003e\n```\n\n## Do\n\n- Keep the label short, one or two words.\n- Use `Destructive` only for a failed or dangerous state.\n\n## Don't\n\n- Do not use a badge as a button.\n- Do not put a long sentence in a badge.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Badge\n\nA small label for a status or a count.\n\n## Usage\n\n```gx\n\u003cbadge.Badge\u003eNew\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Outline}\u003eDraft\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Secondary}\u003e\u003cicons.CircleCheck /\u003eVerified\u003c/badge.Badge\u003e\n\u003cbadge.Badge variant={badge.Link} href={docsRoute}\u003eDocs\u003c/badge.Badge\u003e\n```\n\nThe variants are `Default`, `Secondary`, `Destructive`, `Outline`, `Ghost` and `Link`.\nSet `Href` to render the badge as a link. A link badge has a hover state.\n\n## Do\n\n- Keep the text to one or two words.\n- Use `Destructive` only for an error or a removal.\n\n## Don't\n\n- Do not use a badge as a button. Use a button.\n- Do not use colour as the only signal. Write the status in the text.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to a link badge. |\n| Enter | Follows a link badge. |\n"
 }

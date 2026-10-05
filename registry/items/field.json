@@ -7,56 +7,56 @@
     {
       "path": "Field.gx",
       "target": "ui/field/Field.gx",
-      "content": "package field\n\nprops {\n  Invalid  bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-invalid={p.Invalid} class={gx.Cx(\"group/field flex w-full flex-col gap-2 data-[invalid=true]:text-destructive\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "4266202fbd7fa537a484a8f9bffa896059c52e6d061435a94896126b3c56c6cd"
+      "content": "package field\n\nprops {\n  // Orientation sets the direction of the label and the control: Vertical, Horizontal or\n  // Responsive. Responsive is vertical in a narrow field group and horizontal in a wide one.\n  Orientation Orientation = Vertical\n  // Invalid sets data-invalid on the field. The field text takes the destructive colour.\n  Invalid     bool = false\n  // Disabled sets data-disabled on the field. The label and the title fade.\n  Disabled    bool = false\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Children is the content of the field: the label, the control and the description.\n  Children    gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" data-slot=\"field\" data-orientation={p.orientation()} class={gx.Cx(\"group/field flex w-full gap-3 data-[invalid=true]:text-destructive\", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "5bc4dc88e24489004fc480858b569494598824f45f0ef6ca94d14a971bc76ea9"
     },
     {
       "path": "FieldLabel.gx",
       "target": "ui/field/FieldLabel.gx",
-      "content": "package field\n\nprops {\n  For      string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel for={p.For} class={gx.Cx(\"flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[invalid=true]/field:text-destructive\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/label\u003e\n",
-      "sha256": "58047cea3b1b6f7f071e3dd139c6241c0e47f460c0395b34c4f72938eccbd927"
+      "content": "package field\n\nprops {\n  // For is the id of the control that the label names. Empty omits the for attribute.\n  For      string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel data-slot=\"field-label\" class={gx.Cx(\"flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50\", \"group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[\u003e[data-slot=field]]:w-full has-[\u003e[data-slot=field]]:flex-col has-[\u003e[data-slot=field]]:rounded-md has-[\u003e[data-slot=field]]:border [\u0026\u003e*]:data-[slot=field]:p-4 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10\", p.Class)} {...p.attrs()}\u003e{p.Children}\u003c/label\u003e\n",
+      "sha256": "384d5e579b69c8b4e4be574a32a401bb647ff929df0c780d0c9c22b309f4f810"
     },
     {
       "path": "FieldDescription.gx",
       "target": "ui/field/FieldDescription.gx",
-      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp class={gx.Cx(\"text-sm leading-normal font-normal text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
-      "sha256": "60b4fd4895a2d221345d4419a7bfc79b93d6d929c3c2637507e3a55213afdd6b"
+      "content": "package field\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the description text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp data-slot=\"field-description\" class={gx.Cx(\"text-sm leading-normal font-normal text-muted-foreground group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+\u0026]:-mt-1.5 [\u0026\u003ea]:underline [\u0026\u003ea]:underline-offset-4 [\u0026\u003ea:hover]:text-primary\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "6c2b52d3c25aeac8f8afde5879cd7e293f45f0ac6a5b11925b0a0bbf5b6fa4c8"
     },
     {
       "path": "FieldError.gx",
       "target": "ui/field/FieldError.gx",
-      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp role=\"alert\" class={gx.Cx(\"text-sm font-normal text-destructive\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
-      "sha256": "84cacc217108a23abfa6e34ea07f62fb2e037ad0d4bf483e08cfdf62be4a157b"
+      "content": "package field\n\nprops {\n  // Errors holds the error messages. Empty and repeated messages do not show; two or more\n  // show as a list.\n  Errors   []string = nil\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the error. It replaces Errors.\n  Children gx.Node = nil\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\nif p.Children != nil || len(p.messages()) \u003e 0 {\n  \u003cdiv role=\"alert\" data-slot=\"field-error\" class={gx.Cx(\"text-sm font-normal text-destructive\", p.Class)} {...p.Attrs}\u003e\n    if p.Children != nil {\n      {p.Children}\n    } else if len(p.messages()) == 1 {\n      {p.messages()[0]}\n    } else {\n      \u003cul class=\"ml-4 flex list-disc flex-col gap-1\"\u003e\n        for _, message := range p.messages() {\n          \u003cli\u003e{message}\u003c/li\u003e\n        }\n      \u003c/ul\u003e\n    }\n  \u003c/div\u003e\n}\n",
+      "sha256": "ca9b4a13d3c1a5eb5c9b2198bc30442ff29184d7f3495f461e6c9c85157e4f0f"
     },
     {
       "path": "FieldGroup.gx",
       "target": "ui/field/FieldGroup.gx",
-      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"group/field-group flex w-full flex-col gap-7\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "6a288724e9db67bd7167a63830aa23226c1638f1e454b01519757968a835386d"
+      "content": "package field\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the group: the fields, the field sets and the separators.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"field-group\" class={gx.Cx(\"group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [\u0026\u003e[data-slot=field-group]]:gap-4\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "00e3cd1069369a791e161deaa1b209584c9478c6e362b1e6948d993273c7afa8"
     },
     {
       "path": "FieldSet.gx",
       "target": "ui/field/FieldSet.gx",
-      "content": "package field\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cfieldset class={gx.Cx(\"flex flex-col gap-6\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/fieldset\u003e\n",
-      "sha256": "f3d63a74da1207f0737198f43bfc32074836f39bcb3f9d247775d0a8bdffe185"
+      "content": "package field\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the field set.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cfieldset data-slot=\"field-set\" class={gx.Cx(\"flex flex-col gap-6 has-[\u003e[data-slot=checkbox-group]]:gap-3 has-[\u003e[data-slot=radio-group]]:gap-3\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/fieldset\u003e\n",
+      "sha256": "f653446b3d16cc8f078674ac44352f98d097d791ab73f0fc8348b59bf2f4401e"
     },
     {
       "path": "FieldLegend.gx",
       "target": "ui/field/FieldLegend.gx",
-      "content": "package field\n\nprops {\n  Variant  Variant  = Legend\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003clegend data-variant={p.Variant} class={gx.Cx(\"mb-3 font-medium\", p.legendClass(), p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/legend\u003e\n",
-      "sha256": "58a1634805fa5bcb7bc20bb20a11ed0d7938fe391f3273bcc6bab0d8770d3366"
+      "content": "package field\n\nprops {\n  // Variant sets the text size: Legend or Label. Label is the smaller size.\n  Variant  Variant = Legend\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the legend text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clegend data-slot=\"field-legend\" data-variant={p.variant()} class={gx.Cx(\"mb-3 font-medium data-[variant=legend]:text-base data-[variant=label]:text-sm\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/legend\u003e\n",
+      "sha256": "5efb425f659c92dffbdd699ed1914bb9193abbc52c7780f64bc50928986f6212"
     },
     {
       "path": "Field.fixtures.go",
       "target": "ui/field/Field.fixtures.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldFixtures = gx.Fixtures[FieldProps]{\n\t\"LabelAndInput\": {Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"We never share your email.\")}),\n\t)},\n\t\"Invalid\": {Invalid: true, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"email\", Children: gx.Text(\"Email\")}),\n\t\tFieldError(FieldErrorProps{Children: gx.Text(\"Enter a valid email address.\")}),\n\t)},\n}\n",
-      "sha256": "ab0e3cd1e25d8333b59a5a840dd18e0d7b7bf194916e8978352eaaee8c5e7055"
+      "content": "package field\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/input\"\n)\n\nvar FieldFixtures = gx.Fixtures[FieldProps]{\n\t\"LabelAndInput\": {Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"field-email\", Children: gx.Text(\"Email\")}),\n\t\tinput.Input(input.InputProps{Id: \"field-email\", Type: \"email\", Placeholder: \"you@example.com\"}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"We never share your email.\")}),\n\t)},\n\t\"Invalid\": {Invalid: true, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"field-invalid\", Children: gx.Text(\"Email\")}),\n\t\tinput.Input(input.InputProps{Id: \"field-invalid\", Type: \"email\", Value: \"ada@\", Attrs: gx.Attrs{{Key: \"aria-invalid\", Value: \"true\"}}}),\n\t\tFieldError(FieldErrorProps{Children: gx.Text(\"Enter a valid email address.\")}),\n\t)},\n\t\"Disabled\": {Disabled: true, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"field-disabled\", Children: gx.Text(\"Email\")}),\n\t\tinput.Input(input.InputProps{Id: \"field-disabled\", Type: \"email\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}}),\n\t)},\n\t\"Horizontal\": {Orientation: Horizontal, Children: gx.Frag(\n\t\tFieldContent(FieldContentProps{Children: gx.Frag(\n\t\t\tFieldTitle(FieldTitleProps{Children: gx.Text(\"Product news\")}),\n\t\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"One message each month.\")}),\n\t\t)}),\n\t\tgx.El(\"input\", gx.Attrs{\n\t\t\t{Key: \"type\", Value: \"checkbox\"},\n\t\t\t{Key: \"aria-label\", Value: \"Product news\"},\n\t\t\t{Key: \"class\", Value: \"size-4 accent-primary\"},\n\t\t}),\n\t)},\n\t\"Responsive\": {Orientation: Responsive, Children: gx.Frag(\n\t\tFieldLabel(FieldLabelProps{For: \"field-responsive\", Children: gx.Text(\"Name\")}),\n\t\tinput.Input(input.InputProps{Id: \"field-responsive\"}),\n\t)},\n}\n\n// FieldWrap renders the field in a field group, as a form uses it. The\n// group is the container that a responsive field measures.\nfunc FieldWrap(n gx.Node) gx.Node {\n\treturn FieldGroup(FieldGroupProps{Children: n})\n}\n",
+      "sha256": "231e6d2ca306d1063b28fd46f83b8d5e3200237e9daa41f4b87e783b56971477"
     },
     {
       "path": "styles.go",
       "target": "ui/field/styles.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the size of a field legend.\ntype Variant string\n\n// The variants of field.FieldLegend.\nconst (\n\tLegend Variant = \"legend\"\n\tLabel  Variant = \"label\"\n)\n\nvar legendClass = gx.Enum[Variant]{\n\tLegend: \"text-base\",\n\tLabel:  \"text-sm\",\n}\n\n// legendClass returns the classes of one legend variant; a zero value is\n// Legend.\nfunc (p FieldLegendProps) legendClass() string {\n\tif p.Variant == \"\" {\n\t\treturn legendClass[Legend]\n\t}\n\treturn legendClass[p.Variant]\n}\n",
-      "sha256": "067968b9f2e22b13361b5898253f6538f2be13c226fb6785b19e8a74425d3400"
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the size of a field legend.\ntype Variant string\n\n// The variants of field.FieldLegend.\nconst (\n\tLegend Variant = \"legend\"\n\tLabel  Variant = \"label\"\n)\n\n// variant returns the data-variant value; a zero value is Legend. The\n// legend size and the gap below it follow this attribute.\nfunc (p FieldLegendProps) variant() string {\n\tif p.Variant == \"\" {\n\t\treturn string(Legend)\n\t}\n\treturn string(p.Variant)\n}\n\n// Orientation is the direction of the label and the control of a field.\ntype Orientation string\n\n// The orientations of field.Field. Responsive is vertical in a narrow\n// field group and horizontal in a wide one.\nconst (\n\tVertical   Orientation = \"vertical\"\n\tHorizontal Orientation = \"horizontal\"\n\tResponsive Orientation = \"responsive\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tVertical:   \"flex-col [\u0026\u003e*]:w-full [\u0026\u003e.sr-only]:w-auto\",\n\tHorizontal: \"flex-row items-center [\u0026\u003e[data-slot=field-label]]:flex-auto has-[\u003e[data-slot=field-content]]:items-start has-[\u003e[data-slot=field-content]]:[\u0026\u003e:is([role=checkbox],[role=radio],input[type=checkbox],input[type=radio])]:mt-px\",\n\tResponsive: \"flex-col @md/field-group:flex-row @md/field-group:items-center [\u0026\u003e*]:w-full @md/field-group:[\u0026\u003e*]:w-auto [\u0026\u003e.sr-only]:w-auto @md/field-group:[\u0026\u003e[data-slot=field-label]]:flex-auto @md/field-group:has-[\u003e[data-slot=field-content]]:items-start @md/field-group:has-[\u003e[data-slot=field-content]]:[\u0026\u003e:is([role=checkbox],[role=radio],input[type=checkbox],input[type=radio])]:mt-px\",\n}\n\n// orientation returns the data-orientation value; a zero value is Vertical.\nfunc (p FieldProps) orientation() string {\n\tif p.Orientation == \"\" {\n\t\treturn string(Vertical)\n\t}\n\treturn string(p.Orientation)\n}\n\n// attrs returns the state attributes of one field, then the caller's. The\n// field and its label read data-invalid and data-disabled.\nfunc (p FieldProps) attrs() gx.Attrs {\n\tvar a gx.Attrs\n\tif p.Invalid {\n\t\ta = append(a, gx.Attr{Key: \"data-invalid\", Value: \"true\"})\n\t}\n\tif p.Disabled {\n\t\ta = append(a, gx.Attr{Key: \"data-disabled\", Value: \"true\"})\n\t}\n\treturn append(a, p.Attrs...)\n}\n\n// attrs returns the for attribute when the label names a control, then the\n// caller's attributes.\nfunc (p FieldLabelProps) attrs() gx.Attrs {\n\tif p.For == \"\" {\n\t\treturn p.Attrs\n\t}\n\treturn append(gx.Attrs{{Key: \"for\", Value: p.For}}, p.Attrs...)\n}\n\n// messages returns the distinct, non-empty errors in their first order.\nfunc (p FieldErrorProps) messages() []string {\n\tseen := make(map[string]bool, len(p.Errors))\n\tout := make([]string, 0, len(p.Errors))\n\tfor _, message := range p.Errors {\n\t\tif message == \"\" || seen[message] {\n\t\t\tcontinue\n\t\t}\n\t\tseen[message] = true\n\t\tout = append(out, message)\n\t}\n\treturn out\n}\n",
+      "sha256": "b4de46cdf5f36b3f914dd20a148f1e1fdbc845c5a8de21312d0e16ac86a07683"
     },
     {
       "path": "FieldDescription.fixtures.go",
@@ -67,14 +67,14 @@
     {
       "path": "FieldError.fixtures.go",
       "target": "ui/field/FieldError.fixtures.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{\"Error\": {Children: gx.Text(\"This field is required.\")}}\n",
-      "sha256": "afba242560eef86ce4b16ceac12d316020ef5ff68436ed1a3c4341060f98219b"
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldErrorFixtures = gx.Fixtures[FieldErrorProps]{\n\t\"Error\": {Children: gx.Text(\"This field is required.\")},\n\t\"One\":   {Errors: []string{\"Enter a valid email address.\", \"Enter a valid email address.\"}},\n\t\"List\":  {Errors: []string{\"Use 12 characters or more.\", \"Use one number.\"}},\n}\n",
+      "sha256": "65ca1eba97f4a62b873c4b9ac41f0bac17390f82b1265349414149f394b40551"
     },
     {
       "path": "FieldGroup.fixtures.go",
       "target": "ui/field/FieldGroup.fixtures.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{\"Empty\": {}}\n",
-      "sha256": "9e4c56a0fce0efcaf8061729d683eafd2e5812c3e1cf0de534089c508744fe80"
+      "content": "package field\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/input\"\n)\n\nvar FieldGroupFixtures = gx.Fixtures[FieldGroupProps]{\n\t\"TwoFields\": {Children: gx.Frag(\n\t\tField(FieldProps{Children: gx.Frag(\n\t\t\tFieldLabel(FieldLabelProps{For: \"group-name\", Children: gx.Text(\"Name\")}),\n\t\t\tinput.Input(input.InputProps{Id: \"group-name\"}),\n\t\t)}),\n\t\tFieldSeparator(FieldSeparatorProps{}),\n\t\tField(FieldProps{Children: gx.Frag(\n\t\t\tFieldLabel(FieldLabelProps{For: \"group-email\", Children: gx.Text(\"Email\")}),\n\t\t\tinput.Input(input.InputProps{Id: \"group-email\", Type: \"email\"}),\n\t\t)}),\n\t)},\n}\n",
+      "sha256": "591e3642d1ca4d02ccd4285fbecb142c1277bc1d7ce5e1c908681d80a7299f30"
     },
     {
       "path": "FieldLabel.fixtures.go",
@@ -85,19 +85,61 @@
     {
       "path": "FieldLegend.fixtures.go",
       "target": "ui/field/FieldLegend.fixtures.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{\"Legend\": {Children: gx.Text(\"Address\")}}\n",
-      "sha256": "560e2f34e7936297568f843ba9310fcaca69f63bfdca11162ef1a63eb4753003"
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldLegendFixtures = gx.Fixtures[FieldLegendProps]{\n\t\"Legend\": {Children: gx.Text(\"Address\")},\n\t\"Label\":  {Variant: Label, Children: gx.Text(\"Address\")},\n}\n\n// FieldLegendWrap renders the legend in a field set, where a legend\n// belongs.\nfunc FieldLegendWrap(n gx.Node) gx.Node {\n\treturn FieldSet(FieldSetProps{Children: n})\n}\n",
+      "sha256": "2a68ee0439e9d0aca575841172f501eb21bceb1ee4bea33d28cb01ce965d776d"
     },
     {
       "path": "FieldSet.fixtures.go",
       "target": "ui/field/FieldSet.fixtures.go",
-      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldSetFixtures = gx.Fixtures[FieldSetProps]{\"Empty\": {}}\n",
-      "sha256": "87781363f219c6d1a3b2332172fd1903da95720216406fdbf88025d69841a9b1"
+      "content": "package field\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/input\"\n)\n\nvar FieldSetFixtures = gx.Fixtures[FieldSetProps]{\n\t\"Address\": {Children: gx.Frag(\n\t\tFieldLegend(FieldLegendProps{Children: gx.Text(\"Address\")}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"We send the invoice to this address.\")}),\n\t\tFieldGroup(FieldGroupProps{Children: gx.Frag(\n\t\t\tField(FieldProps{Children: gx.Frag(\n\t\t\t\tFieldLabel(FieldLabelProps{For: \"set-street\", Children: gx.Text(\"Street\")}),\n\t\t\t\tinput.Input(input.InputProps{Id: \"set-street\"}),\n\t\t\t)}),\n\t\t\tField(FieldProps{Children: gx.Frag(\n\t\t\t\tFieldLabel(FieldLabelProps{For: \"set-city\", Children: gx.Text(\"City\")}),\n\t\t\t\tinput.Input(input.InputProps{Id: \"set-city\"}),\n\t\t\t)}),\n\t\t)}),\n\t)},\n}\n",
+      "sha256": "3b418f95bc9b50a9c2651793736b3c3c29441b47cf238c0f012393bd585b0b01"
+    },
+    {
+      "path": "FieldContent.gx",
+      "target": "ui/field/FieldContent.gx",
+      "content": "package field\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the column: the title and the description.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"field-content\" class={gx.Cx(\"group/field-content flex flex-1 flex-col gap-1.5 leading-snug\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "2bad15c7b42d5c8dbd45dae580ce9bcb47229ea975dcc2aa9dbca30bc5f1e7de"
+    },
+    {
+      "path": "FieldContent.fixtures.go",
+      "target": "ui/field/FieldContent.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldContentFixtures = gx.Fixtures[FieldContentProps]{\n\t\"TitleAndDescription\": {Children: gx.Frag(\n\t\tFieldTitle(FieldTitleProps{Children: gx.Text(\"Product news\")}),\n\t\tFieldDescription(FieldDescriptionProps{Children: gx.Text(\"One message each month.\")}),\n\t)},\n}\n",
+      "sha256": "81661b2b640116d49678d9b89dcbdf63924359c55fce7b4d96750fc11a0472f8"
+    },
+    {
+      "path": "FieldTitle.gx",
+      "target": "ui/field/FieldTitle.gx",
+      "content": "package field\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the title text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"field-label\" class={gx.Cx(\"flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "3aa8f0220fc0c7e98d819622f8a256daeebe776262d7cd7e0b775257a6c81362"
+    },
+    {
+      "path": "FieldTitle.fixtures.go",
+      "target": "ui/field/FieldTitle.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldTitleFixtures = gx.Fixtures[FieldTitleProps]{\"Title\": {Children: gx.Text(\"Product news\")}}\n",
+      "sha256": "c207a6293c48163e53c97f1293d0a9d5d5682b4e2d0d0e78d1faac10dd96349d"
+    },
+    {
+      "path": "FieldSeparator.gx",
+      "target": "ui/field/FieldSeparator.gx",
+      "content": "package field\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text on the line. Nil shows the line only.\n  Children gx.Node = nil\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"field-separator\" data-content={p.Children != nil} class={gx.Cx(\"relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2\", p.Class)} {...p.Attrs}\u003e\n  \u003cdiv data-slot=\"separator\" role=\"none\" data-orientation=\"horizontal\" class=\"absolute inset-0 top-1/2 h-px w-full shrink-0 bg-border\"\u003e\u003c/div\u003e\n  if p.Children != nil {\n    \u003cspan data-slot=\"field-separator-content\" class=\"relative mx-auto block w-fit bg-background px-2 text-muted-foreground\"\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/div\u003e\n",
+      "sha256": "8a6ef831550b4cd88c3e9257475b32488c3a85031b34503f2caf6bcdf7f7d449"
+    },
+    {
+      "path": "FieldSeparator.fixtures.go",
+      "target": "ui/field/FieldSeparator.fixtures.go",
+      "content": "package field\n\nimport \"github.com/alternayte/gx\"\n\nvar FieldSeparatorFixtures = gx.Fixtures[FieldSeparatorProps]{\n\t\"Line\": {},\n\t\"Text\": {Children: gx.Text(\"Or continue with\")},\n}\n",
+      "sha256": "8539a1aecfc063289bfe278e31d6abde38a4122d5b20626c6a3d9ba55610299a"
     }
+  ],
+  "registryDependencies": [
+    "input"
   ],
   "requiredTokens": [
     "--destructive",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--border",
+    "--background",
+    "--primary"
   ],
-  "usage": "# Field\n\nLayout and labels for one form field.\n\n## Usage\n\n```gx\n\u003cfield.Field\u003e\n  \u003cfield.FieldLabel for=\"email\"\u003eEmail\u003c/field.FieldLabel\u003e\n  \u003cinput.Input name=\"email\" type=\"email\" /\u003e\n  \u003cfield.FieldDescription\u003eWe never share your email.\u003c/field.FieldDescription\u003e\n\u003c/field.Field\u003e\n```\n\nFor a generated form field with rules and errors, use the `gx.FormField` control.\n\n## Do\n\n- Set `Invalid` on the field when a rule fails.\n- Put the error in `FieldError` below the control.\n\n## Don't\n\n- Do not use a field for a layout grid. Use CSS.\n- Do not set `For` to an id that does not exist.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Field\n\nLayout and labels for one form field.\n\n## Usage\n\n```gx\n\u003cfield.FieldGroup\u003e\n  \u003cfield.Field\u003e\n    \u003cfield.FieldLabel for=\"email\"\u003eEmail\u003c/field.FieldLabel\u003e\n    \u003cinput.Input id=\"email\" name=\"email\" type=\"email\" /\u003e\n    \u003cfield.FieldDescription\u003eWe never share your email.\u003c/field.FieldDescription\u003e\n  \u003c/field.Field\u003e\n  \u003cfield.FieldSeparator\u003eOr\u003c/field.FieldSeparator\u003e\n  \u003cfield.Field orientation={field.Horizontal}\u003e\n    \u003cfield.FieldContent\u003e\n      \u003cfield.FieldTitle\u003eProduct news\u003c/field.FieldTitle\u003e\n      \u003cfield.FieldDescription\u003eOne message each month.\u003c/field.FieldDescription\u003e\n    \u003c/field.FieldContent\u003e\n    \u003cswitches.Switch name=\"news\" label=\"Product news\" /\u003e\n  \u003c/field.Field\u003e\n\u003c/field.FieldGroup\u003e\n```\n\n`Field` has three orientations: `Vertical`, `Horizontal` and `Responsive`. A responsive field is horizontal when its `FieldGroup` is wide.\n`FieldSet` and `FieldLegend` group related fields. `FieldGroup` sets the space between fields.\n`FieldError` shows its children, or the distinct messages of `Errors`. It renders nothing when it has no message.\n\nFor a generated form field with rules and errors, use the `gx.FormField` control.\n\n## Do\n\n- Set `Invalid` on the field when a rule fails. Set `aria-invalid` on the control too.\n- Put the error in `FieldError` below the control.\n- Set `Disabled` on the field when its control is disabled.\n\n## Don't\n\n- Do not use a field for a layout grid. Use CSS.\n- Do not set `For` to an id that does not exist.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

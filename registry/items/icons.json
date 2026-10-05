@@ -1,0 +1,177 @@
+{
+  "name": "icons",
+  "version": "0.1.0",
+  "description": "The Lucide icons that the registry components use.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Check.gx",
+      "target": "ui/icons/Check.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"M20 6L9 17l-5-5\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "b5573688b4ec52c12441a56a42ee2274bb9d69a944e60740d9295b10ec45eca3"
+    },
+    {
+      "path": "Check.fixtures.go",
+      "target": "ui/icons/Check.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar CheckFixtures = gx.Fixtures[CheckProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "2d76d5466c0cb61b6e7486bd1ef8a198c106c61257f5e8be5b897968ea6ab963"
+    },
+    {
+      "path": "ChevronDown.gx",
+      "target": "ui/icons/ChevronDown.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"m6 9l6 6l6-6\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "9a47d11e0fbce4f4e2e0568f999d1deccc464c6612c1b850ac12878c05756670"
+    },
+    {
+      "path": "ChevronDown.fixtures.go",
+      "target": "ui/icons/ChevronDown.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar ChevronDownFixtures = gx.Fixtures[ChevronDownProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "fcc37b5b967fa733a5cca110df19592740e99ca2f51f00136a4ba26287b9c8a0"
+    },
+    {
+      "path": "ChevronLeft.gx",
+      "target": "ui/icons/ChevronLeft.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"m15 18l-6-6l6-6\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "654b23be2fe3d2f4ef362797d6a6f064fb02600b357861572fb0e0dedb193ed0"
+    },
+    {
+      "path": "ChevronLeft.fixtures.go",
+      "target": "ui/icons/ChevronLeft.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar ChevronLeftFixtures = gx.Fixtures[ChevronLeftProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "8de75e6e58eeb8b59df42e77ff5b3293cc6962fb17029534d8f0c3d850b8208e"
+    },
+    {
+      "path": "ChevronRight.gx",
+      "target": "ui/icons/ChevronRight.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"m9 18l6-6l-6-6\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "9a23782fe8f9110c4a0e81f6cbdce1b92fd99e96921239d4baf7476801debe36"
+    },
+    {
+      "path": "ChevronRight.fixtures.go",
+      "target": "ui/icons/ChevronRight.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar ChevronRightFixtures = gx.Fixtures[ChevronRightProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "f4b397e0f22192f9173cc6a89c3ae18a0c1a831763ca7c9ea986b2c847a8b691"
+    },
+    {
+      "path": "ChevronUp.gx",
+      "target": "ui/icons/ChevronUp.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"m18 15l-6-6l-6 6\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "14699b7b11c6d78cb5fb5df69ee6351a64cbd1a5bcacc1c40478ee70a9fd5915"
+    },
+    {
+      "path": "ChevronUp.fixtures.go",
+      "target": "ui/icons/ChevronUp.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar ChevronUpFixtures = gx.Fixtures[ChevronUpProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "81b74ed2da844ba71458e825e0e47f514802410655ed1ba3d54092127b6ef3dd"
+    },
+    {
+      "path": "Circle.gx",
+      "target": "ui/icons/Circle.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003ccircle cx=\\\"12\\\" cy=\\\"12\\\" r=\\\"10\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "ccc9c3b7b6a9fd38bc15830086c180a4d8f79c83aff01b72b6e62cd82b3a9eb8"
+    },
+    {
+      "path": "Circle.fixtures.go",
+      "target": "ui/icons/Circle.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar CircleFixtures = gx.Fixtures[CircleProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "96f0b3485078cf6a082b9d52cf63a576cfe0ecda6aa7b8482874948eefb7036c"
+    },
+    {
+      "path": "CircleCheck.gx",
+      "target": "ui/icons/CircleCheck.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cg fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\"\u003e\u003ccircle cx=\\\"12\\\" cy=\\\"12\\\" r=\\\"10\\\"/\u003e\u003cpath d=\\\"m16 9l-5.5 5.5L8 12\\\"/\u003e\u003c/g\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "22d426d902f2868226f99eff5751f413a9257f7a2361f509452c86969dd4e707"
+    },
+    {
+      "path": "CircleCheck.fixtures.go",
+      "target": "ui/icons/CircleCheck.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar CircleCheckFixtures = gx.Fixtures[CircleCheckProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "d0be2f7ba7ce4cba7e830eaff8d153c281bafdeefc8b92f0e87239359bb87248"
+    },
+    {
+      "path": "Ellipsis.gx",
+      "target": "ui/icons/Ellipsis.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cg fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\"\u003e\u003ccircle cx=\\\"12\\\" cy=\\\"12\\\" r=\\\"1\\\"/\u003e\u003ccircle cx=\\\"19\\\" cy=\\\"12\\\" r=\\\"1\\\"/\u003e\u003ccircle cx=\\\"5\\\" cy=\\\"12\\\" r=\\\"1\\\"/\u003e\u003c/g\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "8170a70e97ac7c04209e88235560cc8b3f53936c202cdba0ad252231e4254ca8"
+    },
+    {
+      "path": "Ellipsis.fixtures.go",
+      "target": "ui/icons/Ellipsis.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar EllipsisFixtures = gx.Fixtures[EllipsisProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "9e5092cd905e9d27403fa0f8ba1b27596527fef765f7398ffbdfbb4bcef879d3"
+    },
+    {
+      "path": "Info.gx",
+      "target": "ui/icons/Info.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cg fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\"\u003e\u003ccircle cx=\\\"12\\\" cy=\\\"12\\\" r=\\\"10\\\"/\u003e\u003cpath d=\\\"M12 16v-4m0-4h.01\\\"/\u003e\u003c/g\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "f2619fab96dfa09b7ab7ed8262fd8f3872bcb19682dbd9c0dcc0e4051f7e44fe"
+    },
+    {
+      "path": "Info.fixtures.go",
+      "target": "ui/icons/Info.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar InfoFixtures = gx.Fixtures[InfoProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "9212b1b379c8df1f20151e260a3b4584c9cf5f5f4540489d0aff68b8c0f8e189"
+    },
+    {
+      "path": "LoaderCircle.gx",
+      "target": "ui/icons/LoaderCircle.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"M21 12a9 9 0 1 1-6.219-8.56\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "895a5b6d141904f18d821769f4b9d5786ac8b840b99b20f4827be2af49a6e4ab"
+    },
+    {
+      "path": "LoaderCircle.fixtures.go",
+      "target": "ui/icons/LoaderCircle.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar LoaderCircleFixtures = gx.Fixtures[LoaderCircleProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "e50b5bcd813c90b68357aec79a5c454fb57df67eb8b1a149a55850bc383421d0"
+    },
+    {
+      "path": "OctagonX.gx",
+      "target": "ui/icons/OctagonX.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"m15 9l-6 6m-6.414 1.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586zM9 9l6 6\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "bc15375b33bd62b845b4c8b5dc242aa1830ad88dbe1e92f95e7d2eb3725dd820"
+    },
+    {
+      "path": "OctagonX.fixtures.go",
+      "target": "ui/icons/OctagonX.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar OctagonXFixtures = gx.Fixtures[OctagonXProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "571168d8e99598467ef9487e797ccfd261a63c29e77e17e18adc40a33452d903"
+    },
+    {
+      "path": "PanelLeft.gx",
+      "target": "ui/icons/PanelLeft.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cg fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\"\u003e\u003crect width=\\\"18\\\" height=\\\"18\\\" x=\\\"3\\\" y=\\\"3\\\" rx=\\\"2\\\"/\u003e\u003cpath d=\\\"M9 3v18\\\"/\u003e\u003c/g\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "7307d8c5f04f4af21e079037b1e0bac3bb7cae4cf91c1bff812db9f37c95f2b5"
+    },
+    {
+      "path": "PanelLeft.fixtures.go",
+      "target": "ui/icons/PanelLeft.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar PanelLeftFixtures = gx.Fixtures[PanelLeftProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "069575805623eb7005549c942d2e2e2115413de5c8d94e80ac148671af207b33"
+    },
+    {
+      "path": "TriangleAlert.gx",
+      "target": "ui/icons/TriangleAlert.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "0300bd360c1b530e80df612d6709214e383bc571ae87a5205597871c7a7748f4"
+    },
+    {
+      "path": "TriangleAlert.fixtures.go",
+      "target": "ui/icons/TriangleAlert.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar TriangleAlertFixtures = gx.Fixtures[TriangleAlertProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "b734a11a9e7fb102acc2e436f092904ce6d0bd52f3d31f22f7dba9ede4151b1c"
+    },
+    {
+      "path": "X.gx",
+      "target": "ui/icons/X.gx",
+      "content": "package icons\n\nprops {\n  // Label is the accessible name of the icon.\n  // Empty hides the icon from assistive technology.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n}\n\n{gx.Icon(\"\u003cpath fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" stroke-width=\\\"2\\\" d=\\\"M18 6L6 18M6 6l12 12\\\"/\u003e\", gx.IconProps{Label: p.Label, Class: p.Class})}\n",
+      "sha256": "7886088ef30a4d4ab67696c5b42852114b164a97db489a925fbe709242086f6c"
+    },
+    {
+      "path": "X.fixtures.go",
+      "target": "ui/icons/X.fixtures.go",
+      "content": "package icons\n\nimport \"github.com/alternayte/gx\"\n\nvar XFixtures = gx.Fixtures[XProps]{\n\t\"Default\": {Class: \"size-4\"},\n}\n",
+      "sha256": "56d3e292ca21fcb755f9f007fb7cc0667b88d7b274357169a7786a9447239a8a"
+    }
+  ],
+  "usage": "# Icons\n\nThe Lucide icons that the registry components use.\n\nEach icon is an inline SVG that takes the text colour. The paths come from Lucide (ISC licence, https://lucide.dev/license).\n\n## Usage\n\n```gx\n\u003cicons.Check class=\"size-4\" /\u003e\n\u003cicons.X class=\"size-4\" label=\"Close\" /\u003e\n```\n\n## Do\n\n- Set the size with a `size-*` class.\n- Set `label` when the icon is the only content of a control.\n\n## Don't\n\n- Do not add an icon to this package for one app. Run `gx icons pin lucide@\u003cversion\u003e` for the full set.\n- Do not set `label` on a decorative icon. A decorative icon stays hidden from assistive technology.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+}

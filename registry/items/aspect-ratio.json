@@ -7,15 +7,21 @@
     {
       "path": "AspectRatio.gx",
       "target": "ui/aspect-ratio/AspectRatio.gx",
-      "content": "package aspectratio\n\nprops {\n  Ratio    string   = \"16 / 9\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv style={gx.Style(\"aspect-ratio: \" + p.Ratio)} class={gx.Cx(\"w-full overflow-hidden rounded-md\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "133afe46173a8c0f83861906c8071f11855a0ac102a28b3214e7db5fe310b244"
+      "content": "package aspectratio\n\nprops {\n  // Ratio is the CSS aspect-ratio value, width over height, for example 4 / 3. An empty value is\n  // 16 / 9.\n  Ratio    string = \"16 / 9\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the box, for example an image.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"aspect-ratio\" style={gx.Style(\"aspect-ratio: \" + p.ratio())} class={gx.Cx(\"relative w-full overflow-hidden\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "d80458412949cf81400829c89bad3ea10a80bc5035b08489c10f47f05dfc65c8"
     },
     {
       "path": "AspectRatio.fixtures.go",
       "target": "ui/aspect-ratio/AspectRatio.fixtures.go",
-      "content": "package aspectratio\n\nimport \"github.com/alternayte/gx\"\n\nvar AspectRatioFixtures = gx.Fixtures[AspectRatioProps]{\n\t\"Wide\":   {Ratio: \"16 / 9\", Children: gx.Text(\"16 / 9\")},\n\t\"Square\": {Ratio: \"1 / 1\", Children: gx.Text(\"1 / 1\")},\n}\n",
-      "sha256": "db6be10bd030d6c86a9dbbf4dc68b9ebdb30580e2455e9eb0cd6822d5aad4f8d"
+      "content": "package aspectratio\n\nimport \"github.com/alternayte/gx\"\n\nvar AspectRatioFixtures = gx.Fixtures[AspectRatioProps]{\n\t\"Wide\":   {Ratio: \"16 / 9\", Class: \"rounded-lg bg-muted\", Children: gx.Text(\"16 / 9\")},\n\t\"Square\": {Ratio: \"1 / 1\", Class: \"max-w-40 rounded-lg bg-muted\", Children: gx.Text(\"1 / 1\")},\n}\n",
+      "sha256": "b24bf33d5c367cb1ef5121fb473248cd3143ce182dbadc8180b33d7a76e41fdf"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/aspect-ratio/styles.go",
+      "content": "package aspectratio\n\n// ratio returns the CSS ratio; a zero value is 16 / 9.\nfunc (p AspectRatioProps) ratio() string {\n\tif p.Ratio == \"\" {\n\t\treturn \"16 / 9\"\n\t}\n\treturn p.Ratio\n}\n",
+      "sha256": "dd3fd4acdbfe3b3ff91cbc6c1e64bc73a462d5c28c3668a5e7f665ef68ec41a5"
     }
   ],
-  "usage": "# Aspect Ratio\n\nA box that keeps a fixed width to height ratio.\n\n## Usage\n\n```gx\n\u003caspectratio.AspectRatio ratio=\"16 / 9\"\u003e\n  \u003cimg src={gx.URL(\"/hero.jpg\")} alt=\"Hero\" class=\"size-full object-cover\" /\u003e\n\u003c/aspectratio.AspectRatio\u003e\n```\n\n## Do\n\n- Set `Ratio` as a CSS ratio, for example `16 / 9`.\n- Let the child fill the box with `size-full`.\n\n## Don't\n\n- Do not use an aspect ratio for text content.\n- Do not nest aspect ratio boxes.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Aspect Ratio\n\nA box that keeps a fixed width to height ratio.\n\n## Usage\n\n```gx\n\u003caspectratio.AspectRatio ratio=\"16 / 9\" class=\"rounded-lg bg-muted\"\u003e\n  \u003cimg src={gx.URL(\"/hero.jpg\")} alt=\"Hero\" class=\"size-full object-cover\" /\u003e\n\u003c/aspectratio.AspectRatio\u003e\n```\n\n## Do\n\n- Set `Ratio` as a CSS ratio, for example `16 / 9`.\n- Let the child fill the box with `size-full`.\n\n## Don't\n\n- Do not use an aspect ratio for text content.\n- Do not nest aspect ratio boxes.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

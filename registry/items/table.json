@@ -7,56 +7,56 @@
     {
       "path": "Table.gx",
       "target": "ui/table/Table.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class=\"relative w-full overflow-x-auto\"\u003e\n  \u003ctable class={gx.Cx(\"w-full caption-bottom text-sm\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/table\u003e\n\u003c/div\u003e\n",
-      "sha256": "2983e49ee921f8dcd511d4c5f0ed5d1fa187c9d85887dd22171d630317d66bd6"
+      "content": "package table\n\nprops {\n  // Class adds classes to the table element.\n  Class    string = \"\"\n  // Children is the content of the table: the caption, header, body and footer.\n  Children gx.Node\n  // Attrs adds HTML attributes to the table element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"table-container\" class=\"relative w-full overflow-x-auto\"\u003e\n  \u003ctable data-slot=\"table\" class={gx.Cx(\"w-full caption-bottom text-sm\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/table\u003e\n\u003c/div\u003e\n",
+      "sha256": "417ef1a7ac4429faf8fa97abb51504415faffcbdfa7e38e2199e4f14a0b423bf"
     },
     {
       "path": "TableHeader.gx",
       "target": "ui/table/TableHeader.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cthead class={gx.Cx(\"[\u0026_tr]:border-b\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/thead\u003e\n",
-      "sha256": "16520b19f7047b47b7ce444743ec6c2ba8a8a1e70c0220e6b203dec0df9fe449"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the rows of the header.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cthead data-slot=\"table-header\" class={gx.Cx(\"[\u0026_tr]:border-b\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/thead\u003e\n",
+      "sha256": "e77b773e818d9e361fe84a6a57b25f41dcee99ff3aecb477e6b2e7963a39bab9"
     },
     {
       "path": "TableBody.gx",
       "target": "ui/table/TableBody.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctbody class={gx.Cx(\"[\u0026_tr:last-child]:border-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/tbody\u003e\n",
-      "sha256": "10773d0658b08aadfdb65896e2dd7054ee1989f80eac1eb055921847ef8a12cc"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the rows of the body.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctbody data-slot=\"table-body\" class={gx.Cx(\"[\u0026_tr:last-child]:border-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/tbody\u003e\n",
+      "sha256": "a091dbaa9f1fed9adc0c7cb8f4fa82e52b988e99b4bc8343eca21e743f36d640"
     },
     {
       "path": "TableFooter.gx",
       "target": "ui/table/TableFooter.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctfoot class={gx.Cx(\"border-t bg-muted/50 font-medium [\u0026\u003etr]:last:border-b-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/tfoot\u003e\n",
-      "sha256": "10340c041c2ddf073e92435ae00ebd7e96a91bef2428f47b31bffaffcc073189"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the rows of the footer.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctfoot data-slot=\"table-footer\" class={gx.Cx(\"border-t bg-muted/50 font-medium [\u0026\u003etr]:last:border-b-0\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/tfoot\u003e\n",
+      "sha256": "c59dd6c6f7c965436d5b177a24fb5020ba1dfaea9b3da6f8115beeb03935f712"
     },
     {
       "path": "TableRow.gx",
       "target": "ui/table/TableRow.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctr class={gx.Cx(\"border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/tr\u003e\n",
-      "sha256": "6c2468013c1ac953a4a7b88472337340c5fa15912dedfef614b733d1116f37d3"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the cells of the row.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctr data-slot=\"table-row\" class={gx.Cx(\"border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/tr\u003e\n",
+      "sha256": "7c69e985586793ceab8af5bd42dcd5a59274494a4d20fbc3a0daff598362c29d"
     },
     {
       "path": "TableHead.gx",
       "target": "ui/table/TableHead.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cth class={gx.Cx(\"h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/th\u003e\n",
-      "sha256": "21a16cbf8815ff72a4bdf3bd26e50300539235f549d1784210b5ef7667f03763"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the header cell.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cth data-slot=\"table-head\" class={gx.Cx(\"h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [\u0026:has(:is([role=checkbox],input[type=checkbox],label:has(\u003einput[type=checkbox])))]:pr-0 [\u0026\u003e:is([role=checkbox],input[type=checkbox],label:has(\u003einput[type=checkbox]))]:translate-y-[2px]\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/th\u003e\n",
+      "sha256": "694e0dc36f7fd40a355335d29d1d38ecddfc76dfc59c2f6b83c71f354136b48f"
     },
     {
       "path": "TableCell.gx",
       "target": "ui/table/TableCell.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctd class={gx.Cx(\"p-2 align-middle whitespace-nowrap\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/td\u003e\n",
-      "sha256": "3ce72988f5ba99e72198768967cc495f939ac56073a13747a3a6d097e34be22c"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the cell.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ctd data-slot=\"table-cell\" class={gx.Cx(\"p-2 align-middle whitespace-nowrap [\u0026:has(:is([role=checkbox],input[type=checkbox],label:has(\u003einput[type=checkbox])))]:pr-0 [\u0026\u003e:is([role=checkbox],input[type=checkbox],label:has(\u003einput[type=checkbox]))]:translate-y-[2px]\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/td\u003e\n",
+      "sha256": "bd99c81a0e85817949008d1af918ece1f17d8c2462aa9c64abe53b54350eeed4"
     },
     {
       "path": "TableCaption.gx",
       "target": "ui/table/TableCaption.gx",
-      "content": "package table\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ccaption class={gx.Cx(\"mt-4 text-sm text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/caption\u003e\n",
-      "sha256": "62a173ff0694665461ea4857951e7bbcd1d8dadb06dac9b7a6fe4094d4b8cef8"
+      "content": "package table\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the caption text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ccaption data-slot=\"table-caption\" class={gx.Cx(\"mt-4 text-sm text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/caption\u003e\n",
+      "sha256": "72d99949e7045d50306ba3119c926c25f469a638faa614e792afe06b099078f5"
     },
     {
       "path": "Table.fixtures.go",
       "target": "ui/table/Table.fixtures.go",
-      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\nvar TableFixtures = gx.Fixtures[TableProps]{\n\t\"Simple\": {Children: gx.Frag(\n\t\tTableCaption(TableCaptionProps{Children: gx.Text(\"A list of invoices.\")}),\n\t\tTableHeader(TableHeaderProps{Children: TableRow(TableRowProps{Children: gx.Frag(\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Invoice\")}),\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Status\")}),\n\t\t\tTableHead(TableHeadProps{Children: gx.Text(\"Amount\")}),\n\t\t)})}),\n\t\tTableBody(TableBodyProps{Children: gx.Frag(\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-001\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Paid\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$120.00\")}),\n\t\t\t)}),\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-002\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Open\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$80.00\")}),\n\t\t\t)}),\n\t\t)}),\n\t)},\n}\n",
-      "sha256": "841fb08d8533c967fd6d33c51f0a6771970c21a73dee8c929d538f1070bf925d"
+      "content": "package table\n\nimport \"github.com/alternayte/gx\"\n\n// invoiceRows are the body rows of the table fixtures.\nfunc invoiceRows() gx.Node {\n\treturn gx.Frag(\n\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-001\")}),\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Paid\")}),\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$120.00\")}),\n\t\t)}),\n\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-002\")}),\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Open\")}),\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$80.00\")}),\n\t\t)}),\n\t)\n}\n\n// invoiceHead is the header row of the table fixtures.\nfunc invoiceHead() gx.Node {\n\treturn TableHeader(TableHeaderProps{Children: TableRow(TableRowProps{Children: gx.Frag(\n\t\tTableHead(TableHeadProps{Children: gx.Text(\"Invoice\")}),\n\t\tTableHead(TableHeadProps{Children: gx.Text(\"Status\")}),\n\t\tTableHead(TableHeadProps{Children: gx.Text(\"Amount\")}),\n\t)})})\n}\n\nvar TableFixtures = gx.Fixtures[TableProps]{\n\t\"Simple\": {Children: gx.Frag(\n\t\tTableCaption(TableCaptionProps{Children: gx.Text(\"A list of invoices.\")}),\n\t\tinvoiceHead(),\n\t\tTableBody(TableBodyProps{Children: invoiceRows()}),\n\t)},\n\t\"Footer\": {Children: gx.Frag(\n\t\tinvoiceHead(),\n\t\tTableBody(TableBodyProps{Children: invoiceRows()}),\n\t\tTableFooter(TableFooterProps{Children: TableRow(TableRowProps{Children: gx.Frag(\n\t\t\tTableCell(TableCellProps{Attrs: gx.Attrs{{Key: \"colspan\", Value: \"2\"}}, Children: gx.Text(\"Total\")}),\n\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$200.00\")}),\n\t\t)})}),\n\t)},\n\t\"Selected\": {Children: gx.Frag(\n\t\tinvoiceHead(),\n\t\tTableBody(TableBodyProps{Children: gx.Frag(\n\t\t\tTableRow(TableRowProps{Attrs: gx.Attrs{{Key: \"data-state\", Value: \"selected\"}}, Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-001\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Paid\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$120.00\")}),\n\t\t\t)}),\n\t\t\tTableRow(TableRowProps{Children: gx.Frag(\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"INV-002\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"Open\")}),\n\t\t\t\tTableCell(TableCellProps{Children: gx.Text(\"$80.00\")}),\n\t\t\t)}),\n\t\t)}),\n\t)},\n}\n",
+      "sha256": "06b40d8ec44996506f2fc33135d5f0f382ec4c9c8d48700313e58cb88e3b9fd8"
     },
     {
       "path": "TableBody.fixtures.go",
@@ -107,5 +107,5 @@
     "--muted-foreground",
     "--foreground"
   ],
-  "usage": "# Table\n\nA data table built from composable parts.\n\n## Usage\n\n```gx\n\u003ctable.Table\u003e\n  \u003ctable.TableHeader\u003e\n    \u003ctable.TableRow\u003e\n      \u003ctable.TableHead\u003eInvoice\u003c/table.TableHead\u003e\n      \u003ctable.TableHead\u003eStatus\u003c/table.TableHead\u003e\n    \u003c/table.TableRow\u003e\n  \u003c/table.TableHeader\u003e\n  \u003ctable.TableBody\u003e\n    \u003ctable.TableRow\u003e\n      \u003ctable.TableCell\u003eINV-001\u003c/table.TableCell\u003e\n      \u003ctable.TableCell\u003ePaid\u003c/table.TableCell\u003e\n    \u003c/table.TableRow\u003e\n  \u003c/table.TableBody\u003e\n\u003c/table.Table\u003e\n```\n\nFor sorting, filtering and paging over many rows, use the data table component.\n\n## Do\n\n- Put a `TableCaption` on every table.\n- Use `TableHead` for header cells.\n\n## Don't\n\n- Do not use a table for layout.\n- Do not put a table inside a table head.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Table\n\nA data table built from composable parts.\n\n## Usage\n\n```gx\n\u003ctable.Table\u003e\n  \u003ctable.TableHeader\u003e\n    \u003ctable.TableRow\u003e\n      \u003ctable.TableHead\u003eInvoice\u003c/table.TableHead\u003e\n      \u003ctable.TableHead\u003eStatus\u003c/table.TableHead\u003e\n    \u003c/table.TableRow\u003e\n  \u003c/table.TableHeader\u003e\n  \u003ctable.TableBody\u003e\n    \u003ctable.TableRow\u003e\n      \u003ctable.TableCell\u003eINV-001\u003c/table.TableCell\u003e\n      \u003ctable.TableCell\u003ePaid\u003c/table.TableCell\u003e\n    \u003c/table.TableRow\u003e\n  \u003c/table.TableBody\u003e\n\u003c/table.Table\u003e\n```\n\nFor sorting, filtering and paging over many rows, use the data table component.\n\n`TableFooter` holds the total rows. Set `data-state=\"selected\"` on a `TableRow` to mark it.\nA row that holds an expanded control takes the hover colour.\nPass `class=\"text-right\"` to a `TableHead` and its cells for a number column.\n\n## Do\n\n- Put a `TableCaption` on every table.\n- Use `TableHead` for header cells.\n\n## Don't\n\n- Do not use a table for layout.\n- Do not put a table inside a table head.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

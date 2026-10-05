@@ -7,8 +7,8 @@
     {
       "path": "Collapsible.gx",
       "target": "ui/collapsible/Collapsible.gx",
-      "content": "package collapsible\n\nprops {\n  Summary  gx.Node\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails open={p.Open} class={gx.Cx(\"group\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [\u0026::-webkit-details-marker]:hidden\"\u003e{p.Summary}\u003c/summary\u003e\n  \u003cdiv class=\"pt-2\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
-      "sha256": "6ac2415d90c8b3d7ab6eb9b0e55a163e8dba1cc764c86b88a7628fc23d5ba977"
+      "content": "package collapsible\n\nprops {\n  // Summary is the content of the summary, the part that opens and closes the panel.\n  Summary  gx.Node\n  // Open renders the collapsible open. The default is closed.\n  Open     bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the panel.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails open={p.Open} class={gx.Cx(\"group/collapsible [interpolate-size:allow-keywords] [\u0026::details-content]:h-0 [\u0026::details-content]:overflow-hidden [\u0026::details-content]:transition-[height,content-visibility] [\u0026::details-content]:transition-discrete [\u0026::details-content]:duration-200 [\u0026::details-content]:ease-out open:[\u0026::details-content]:h-auto motion-reduce:[\u0026::details-content]:transition-none\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [\u0026::-webkit-details-marker]:hidden\"\u003e{p.Summary}\u003c/summary\u003e\n  {p.Children}\n\u003c/details\u003e\n",
+      "sha256": "1d609545a0a27c2270918f075dc6538a4a390f5ae7515fee02654667bb821cdd"
     },
     {
       "path": "Collapsible.fixtures.go",
@@ -17,5 +17,8 @@
       "sha256": "9c020f8b90e99acf39fc2e062f63c1b0ecc86bcf17e3c6c8c9c1937157e0f1bc"
     }
   ],
-  "usage": "# Collapsible\n\nOne panel that opens on demand.\n\n## Usage\n\n```gx\n\u003ccollapsible.Collapsible summary={gx.Text(\"Show details\")}\u003e\n  \u003cp\u003eHidden content.\u003c/p\u003e\n\u003c/collapsible.Collapsible\u003e\n```\n\nThe panel uses the native `\u003cdetails\u003e` element.\n\n## Do\n\n- Use it for one optional block of content.\n- Put a verb in the summary.\n\n## Don't\n\n- Do not hide essential content.\n- Do not use a collapsible for a list of questions. Use an accordion.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the summary. |\n| Enter, Space | Opens or closes the panel. |\n"
+  "requiredTokens": [
+    "--ring"
+  ],
+  "usage": "# Collapsible\n\nOne panel that opens on demand.\n\n## Usage\n\n```gx\n\u003ccollapsible.Collapsible summary={gx.Text(\"Show details\")}\u003e\n  \u003cp\u003eHidden content.\u003c/p\u003e\n\u003c/collapsible.Collapsible\u003e\n```\n\nThe panel uses the native `\u003cdetails\u003e` element.\nThe panel height animates in a browser that supports `interpolate-size`. Other browsers open the panel at once.\nThe panel has no spacing of its own. Put the spacing on the content.\n\n## Do\n\n- Use it for one optional block of content.\n- Put a verb in the summary.\n\n## Don't\n\n- Do not hide essential content.\n- Do not use a collapsible for a list of questions. Use an accordion.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the summary. |\n| Enter, Space | Opens or closes the panel. |\n"
 }

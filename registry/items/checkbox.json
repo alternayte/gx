@@ -7,19 +7,31 @@
     {
       "path": "Checkbox.gx",
       "target": "ui/checkbox/Checkbox.gx",
-      "content": "package checkbox\n\nprops {\n  Name     string   = \"\"\n  Value    string   = \"on\"\n  Checked  bool     = false\n  Class    string   = \"\"\n  Children gx.Node  = nil\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"flex select-none items-center gap-2 text-sm font-medium leading-none\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Checked} class=\"peer sr-only\" /\u003e\n  \u003cspan aria-hidden=\"true\" class=\"grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs outline-none transition-shadow dark:bg-input/30 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50\"\u003e\n    \u003csvg class=\"size-3.5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\u003e\u003cpath d=\"M20 6 9 17l-5-5\"\u003e\u003c/path\u003e\u003c/svg\u003e\n  \u003c/span\u003e\n  if p.Children != nil {\n    \u003cspan\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/label\u003e\n",
-      "sha256": "2d9684604ec8855e034533bb2b71bf78b5ff0885664d8c9420b793753dbca76c"
+      "content": "package checkbox\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the name attribute of the input. The form sends the value under this name.\n  Name     string = \"\"\n  // Value is the value the form sends when the checkbox is checked.\n  Value    string = \"on\"\n  // Checked renders the checkbox checked.\n  Checked  bool = false\n  // Disabled stops the user from changing the checkbox and dims it.\n  Disabled bool = false\n  // Invalid sets aria-invalid on the input and shows the error style.\n  Invalid  bool = false\n  // Class adds classes to the root element, the label.\n  Class    string = \"\"\n  // Children is the checkbox label. A nil value renders the box alone.\n  Children gx.Node = nil\n  // Attrs adds HTML attributes to the root element, the label.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"flex items-center gap-2 text-sm leading-none font-medium select-none\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} aria-invalid={p.invalid()} class=\"peer sr-only\" /\u003e\n  \u003cspan aria-hidden=\"true\" class=\"grid size-4 shrink-0 place-content-center rounded-[4px] border border-input text-transparent shadow-xs transition-shadow outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 peer-checked:border-primary peer-checked:bg-primary peer-checked:peer-focus-visible:border-primary peer-checked:text-primary-foreground dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 dark:peer-checked:bg-primary motion-reduce:transition-none\"\u003e\n    \u003cicons.Check class=\"size-3.5\" /\u003e\n  \u003c/span\u003e\n  if p.Children != nil {\n    \u003cspan class=\"peer-disabled:cursor-not-allowed peer-disabled:opacity-50\"\u003e{p.Children}\u003c/span\u003e\n  }\n\u003c/label\u003e\n",
+      "sha256": "59db31c680c32b718ab0162e6dc34566eec811f29d0a9cb21693e81f9365e028"
     },
     {
       "path": "Checkbox.fixtures.go",
       "target": "ui/checkbox/Checkbox.fixtures.go",
-      "content": "package checkbox\n\nimport \"github.com/alternayte/gx\"\n\nvar CheckboxFixtures = gx.Fixtures[CheckboxProps]{\n\t\"Unchecked\": {Name: \"terms\", Children: gx.Text(\"Accept the terms\")},\n\t\"Checked\":   {Name: \"terms\", Checked: true, Children: gx.Text(\"Accept the terms\")},\n\t\"Disabled\":  {Name: \"terms\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: gx.Text(\"Disabled\")},\n}\n",
-      "sha256": "7fe9a00db1663c00d5b5d52406e565ba9195797aa252c7445c864e55ae414377"
+      "content": "package checkbox\n\nimport \"github.com/alternayte/gx\"\n\nvar CheckboxFixtures = gx.Fixtures[CheckboxProps]{\n\t\"Unchecked\":       {Name: \"terms\", Children: gx.Text(\"Accept the terms\")},\n\t\"Checked\":         {Name: \"terms\", Checked: true, Children: gx.Text(\"Accept the terms\")},\n\t\"Disabled\":        {Name: \"terms\", Disabled: true, Children: gx.Text(\"Disabled\")},\n\t\"DisabledChecked\": {Name: \"terms\", Checked: true, Disabled: true, Children: gx.Text(\"Disabled\")},\n\t\"Invalid\":         {Name: \"terms\", Invalid: true, Children: gx.Text(\"Accept the terms\")},\n}\n",
+      "sha256": "3fe349acbf82550013afc4ce2d2f99a41cfaa9c78bd777d4e5770071cb7e5087"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/checkbox/styles.go",
+      "content": "package checkbox\n\n// invalid returns the aria-invalid value of the input.\nfunc (p CheckboxProps) invalid() string {\n\tif p.Invalid {\n\t\treturn \"true\"\n\t}\n\treturn \"false\"\n}\n",
+      "sha256": "c456a0337593850830f26f90fc74043e9af662cec65f0b308afef8c9ef2002fa"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--input",
-    "--primary"
+    "--primary",
+    "--primary-foreground",
+    "--ring",
+    "--destructive"
   ],
-  "usage": "# Checkbox\n\nA single boolean control with a label.\n\n## Usage\n\n```gx\n\u003ccheckbox.Checkbox name=\"terms\" checked={p.Accepted}\u003eAccept the terms\u003c/checkbox.Checkbox\u003e\n```\n\n## Do\n\n- Use one checkbox per independent choice.\n- Wrap the control and its label in the component.\n\n## Don't\n\n- Do not use a checkbox for a mutually exclusive choice. Use a radio group.\n- Do not use a checkbox for an immediate action. Use a switch.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checkbox. |\n| Space | Toggles the value. |\n"
+  "usage": "# Checkbox\n\nA single boolean control with a label.\n\n## Usage\n\n```gx\n\u003ccheckbox.Checkbox name=\"terms\" checked={p.Accepted}\u003eAccept the terms\u003c/checkbox.Checkbox\u003e\n\u003ccheckbox.Checkbox name=\"terms\" invalid={p.TermsMissing}\u003eAccept the terms\u003c/checkbox.Checkbox\u003e\n```\n\nThe checkbox is a native input behind a styled box.\n`Disabled` and `Invalid` set the state of the input.\n\n## Do\n\n- Use one checkbox per independent choice.\n- Wrap the control and its label in the component.\n\n## Don't\n\n- Do not use a checkbox for a mutually exclusive choice. Use a radio group.\n- Do not use a checkbox for an immediate action. Use a switch.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the checkbox. |\n| Space | Toggles the value. |\n"
 }

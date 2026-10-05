@@ -7,8 +7,8 @@
     {
       "path": "Progress.gx",
       "target": "ui/progress/Progress.gx",
-      "content": "package progress\n\nprops {\n  Value int      = 0\n  Max   int      = 100\n  Label string   = \"\"\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"progressbar\" aria-valuemin={0} aria-valuemax={p.max()} aria-valuenow={p.Value} aria-label={p.Label} class={gx.Cx(\"bg-primary/20 relative h-2 w-full overflow-hidden rounded-full\", p.Class)} {...p.Attrs}\u003e\n  \u003cdiv class=\"bg-primary h-full w-full flex-1\" style={gx.Style(\"transform: translateX(-\" + p.offset() + \"%)\")}\u003e\u003c/div\u003e\n\u003c/div\u003e\n",
-      "sha256": "95f780bfb6526ac022f0a856bbdb43d6342447367c2dcccd27f081075c314739"
+      "content": "package progress\n\nprops {\n  // Value is the current value. The bar clamps it to the range 0 to Max.\n  Value int = 0\n  // Max is the maximum value. A zero value is 100.\n  Max   int = 100\n  // Label is the accessible name of the progress bar.\n  Label string = \"\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"progressbar\" aria-valuemin={0} aria-valuemax={p.max()} aria-valuenow={p.Value} aria-label={p.Label} class={gx.Cx(\"relative h-2 w-full overflow-hidden rounded-full bg-primary/20\", p.Class)} {...p.Attrs}\u003e\n  \u003cdiv class=\"h-full w-full flex-1 bg-primary transition-all motion-reduce:transition-none\" style={gx.Style(\"transform: translateX(-\" + p.offset() + \"%)\")}\u003e\u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "263c2f75c3dbf08f95f5ae1fc1006be8f793c3caa2eaadf550ca8d04c6ab588e"
     },
     {
       "path": "Progress.fixtures.go",
@@ -24,8 +24,7 @@
     }
   ],
   "requiredTokens": [
-    "--primary",
-    "--muted"
+    "--primary"
   ],
   "usage": "# Progress\n\nA bar that shows the completion of a task.\n\n## Usage\n\n```gx\n\u003cprogress.Progress value={p.Done} max={p.Total} label=\"Upload\" /\u003e\n```\n\n## Do\n\n- Set `Label` so the bar has an accessible name.\n- Update the value as the task advances.\n\n## Don't\n\n- Do not use a progress bar for an unknown duration. Use a spinner.\n- Do not animate the bar backward without a reason.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

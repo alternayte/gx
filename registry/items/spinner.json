@@ -7,24 +7,21 @@
     {
       "path": "Spinner.gx",
       "target": "ui/spinner/Spinner.gx",
-      "content": "package spinner\n\nprops {\n  Label string   = \"\"\n  Size  Size     = Md\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan role=\"status\" class={gx.Cx(\"inline-flex items-center gap-2 text-muted-foreground\", p.Class)} {...p.Attrs}\u003e\n  \u003csvg class={gx.Cx(\"animate-spin\", p.sizeClass())} viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"\u003e\n    \u003ccircle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"\u003e\u003c/circle\u003e\n    \u003cpath class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z\"\u003e\u003c/path\u003e\n  \u003c/svg\u003e\n  if p.Label != \"\" {\n    \u003cspan\u003e{p.Label}\u003c/span\u003e\n  }\n\u003c/span\u003e\n",
-      "sha256": "a549bf63b1349479cd231a660cf39a832eb9caa9ab87f30d3b7115b8ceb2e608"
+      "content": "package spinner\n\nprops {\n  // Label is the accessible name of the spinner. An empty value is Loading.\n  Label string = \"Loading\"\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003csvg role=\"status\" aria-label={p.label()} xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class={gx.Cx(\"size-4 animate-spin\", p.Class)} {...p.Attrs}\u003e\n  \u003cpath d=\"M21 12a9 9 0 1 1-6.219-8.56\"\u003e\u003c/path\u003e\n\u003c/svg\u003e\n",
+      "sha256": "2405fda1a26768c70992515b5698116b6b41c9fc56ca590d327b4f2196a5fe14"
     },
     {
       "path": "Spinner.fixtures.go",
       "target": "ui/spinner/Spinner.fixtures.go",
-      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\nvar SpinnerFixtures = gx.Fixtures[SpinnerProps]{\n\t\"Small\": {Size: Sm},\n\t\"Label\": {Label: \"Loading\"},\n\t\"Large\": {Size: Lg, Label: \"Loading\"},\n}\n",
-      "sha256": "73cbe35869e10d025da1b57284e9d967e2bd03f58819a271e47a1ad1937461d6"
+      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\nvar SpinnerFixtures = gx.Fixtures[SpinnerProps]{\n\t\"Default\": {},\n\t\"Large\":   {Class: \"size-8\"},\n\t\"Muted\":   {Class: \"size-6 text-muted-foreground\", Label: \"Saving\"},\n}\n",
+      "sha256": "b68a6256dcaddb185083ecce2411380306d8547f2bf12257c9eb10932f645338"
     },
     {
       "path": "styles.go",
       "target": "ui/spinner/styles.go",
-      "content": "package spinner\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the diameter of a spinner.\ntype Size string\n\n// The sizes of spinner.Spinner.\nconst (\n\tSm Size = \"sm\"\n\tMd Size = \"md\"\n\tLg Size = \"lg\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tSm: \"size-4\",\n\tMd: \"size-5\",\n\tLg: \"size-8\",\n}\n\n// sizeClass returns the classes of one spinner size; a zero value is Md.\nfunc (p SpinnerProps) sizeClass() string {\n\tif p.Size == \"\" {\n\t\treturn sizeClass[Md]\n\t}\n\treturn sizeClass[p.Size]\n}\n",
-      "sha256": "2933658b669842b14bf6d37c4f1efdaa6a7bae1fae14a2ef883c1c9ecb310ec7"
+      "content": "package spinner\n\n// label returns the accessible name; a zero value is Loading.\nfunc (p SpinnerProps) label() string {\n\tif p.Label == \"\" {\n\t\treturn \"Loading\"\n\t}\n\treturn p.Label\n}\n",
+      "sha256": "3ec1c6eb001bf6a1ad1d419f87fc69055952cb0e6b34ca32adcf9e11ac09526c"
     }
   ],
-  "requiredTokens": [
-    "--muted-foreground"
-  ],
-  "usage": "# Spinner\n\nAn indicator for an unknown wait.\n\n## Usage\n\n```gx\n\u003cspinner.Spinner label=\"Loading\" /\u003e\n```\n\n## Do\n\n- Add a label when the wait is longer than a moment.\n- Keep the spinner near the content it replaces.\n\n## Don't\n\n- Do not use a spinner for a known duration. Use a progress bar.\n- Do not show more than one spinner for one wait.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Spinner\n\nAn indicator for work in progress.\n\n## Usage\n\n```gx\n\u003cspinner.Spinner /\u003e\n\u003cspinner.Spinner class=\"size-6 text-muted-foreground\" label=\"Saving\" /\u003e\n\u003cbutton.Button attrs={gx.Attrs{gx.Bool(\"disabled\", true)}}\u003e\u003cspinner.Spinner /\u003eSaving\u003c/button.Button\u003e\n```\n\nThe spinner is the loader icon with a rotation. Set the size and the colour with `Class`.\n`Label` is the name a screen reader announces. The default is `Loading`.\n\n## Do\n\n- Show the spinner next to the text of the action that is in progress.\n- Change `Label` when the work is not a load.\n\n## Don't\n\n- Do not show a spinner for a wait that has a known length. Use a progress bar.\n- Do not block the whole page with a spinner.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

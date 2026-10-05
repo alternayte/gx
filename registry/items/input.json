@@ -7,26 +7,30 @@
     {
       "path": "Input.gx",
       "target": "ui/input/Input.gx",
-      "content": "package input\n\nprops {\n  Id          string   = \"\"\n  Type        string   = \"text\"\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput id={p.Id} type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx(\"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs} /\u003e\n",
-      "sha256": "67d796fa29a0b700b63e85ecfcd5115ca38e0c0e00939ebbf43cf80ce6d38441"
+      "content": "package input\n\nprops {\n  // Id is the id of the root element. A label points at it.\n  Id          string = \"\"\n  // Type is the type attribute. Empty means \"text\".\n  Type        string = \"text\"\n  // Name is the name attribute. The form sends the value under this name.\n  Name        string = \"\"\n  // Value is the value attribute: the start value of the input.\n  Value       string = \"\"\n  // Placeholder is the placeholder attribute: the hint text of an empty control.\n  Placeholder string = \"\"\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cinput id={p.Id} type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot=\"input\" class={gx.Cx(Class, p.Class)} {...p.Attrs} /\u003e\n",
+      "sha256": "e59c95a51a52b81f0d264f27fa581c8bd479e097fffc5f57ae8d7d340334956e"
     },
     {
       "path": "Input.fixtures.go",
       "target": "ui/input/Input.fixtures.go",
-      "content": "package input\n\nimport \"github.com/alternayte/gx\"\n\nvar InputFixtures = gx.Fixtures[InputProps]{\n\t\"Text\":     {Placeholder: \"Email\"},\n\t\"Filled\":   {Value: \"ada@example.com\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Email\"}}},\n\t\"Disabled\": {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n\t\"File\":     {Type: \"file\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"File\"}}},\n}\n",
-      "sha256": "03981d58d6d21260105b8fe87c8ea077e2b5e937d51b696ac134433bc6c2df39"
+      "content": "package input\n\nimport \"github.com/alternayte/gx\"\n\nvar InputFixtures = gx.Fixtures[InputProps]{\n\t\"Text\":     {Placeholder: \"Email\"},\n\t\"Filled\":   {Value: \"ada@example.com\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Email\"}}},\n\t\"Disabled\": {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n\t\"Invalid\":  {Value: \"ada@\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Email\"}, {Key: \"aria-invalid\", Value: \"true\"}}},\n\t\"File\":     {Type: \"file\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"File\"}}},\n}\n",
+      "sha256": "8a85faa3882a922b53cbd13a47c463622b1a7e1c85a763ede69d807924822144"
     },
     {
       "path": "styles.go",
       "target": "ui/input/styles.go",
-      "content": "package input\n\n// inputType returns the type of the input; a zero value is text.\nfunc (p InputProps) inputType() string {\n\tif p.Type == \"\" {\n\t\treturn \"text\"\n\t}\n\treturn p.Type\n}\n",
-      "sha256": "be9805b57a16cf51f1e90da7c45cd571afccbbf048ef8342f2cd1e1d7a192493"
+      "content": "package input\n\n// Control is the classes of an input without its focus ring. A group that\n// draws the ring on its own border takes these classes for its control.\nconst Control = \"h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40\"\n\n// Class is the classes of an input. A control that looks like an input\n// takes these classes.\nconst Class = Control + \" focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50\"\n\n// inputType returns the type of the input; a zero value is text.\nfunc (p InputProps) inputType() string {\n\tif p.Type == \"\" {\n\t\treturn \"text\"\n\t}\n\treturn p.Type\n}\n",
+      "sha256": "4ee82b2c0a7fcdce62ad3becd5a691ed9118cfab4e1b613e4c9819d7ecac9c5c"
     }
   ],
   "requiredTokens": [
     "--input",
     "--ring",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--primary",
+    "--primary-foreground",
+    "--foreground",
+    "--destructive"
   ],
-  "usage": "# Input\n\nA single-line text control.\n\n## Usage\n\n```gx\n\u003cinput.Input name=\"email\" type=\"email\" placeholder=\"Email\" /\u003e\n```\n\nFor a form with rules and errors, use the generated `gx.FormField` control instead.\n\n## Do\n\n- Always pair an input with a label.\n- Set `Type` to the data the field expects.\n\n## Don't\n\n- Do not use placeholder text as a label.\n- Do not build `value` from untrusted text without escaping. Gx escapes attribute values.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the input. |\n| Enter | Submits the form when the input is in a form. |\n"
+  "usage": "# Input\n\nA single-line text control.\n\n## Usage\n\n```gx\n\u003cinput.Input name=\"email\" type=\"email\" placeholder=\"Email\" /\u003e\n```\n\nFor a form with rules and errors, use the generated `gx.FormField` control instead.\n\nSet `aria-invalid=\"true\"` through `Attrs` to show the error border.\n`input.Class` holds the classes of the input for another control that must look the same.\n\n## Do\n\n- Always pair an input with a label.\n- Set `Type` to the data the field expects.\n\n## Don't\n\n- Do not use placeholder text as a label.\n- Do not build `value` from untrusted text without escaping. Gx escapes attribute values.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the input. |\n| Enter | Submits the form when the input is in a form. |\n"
 }

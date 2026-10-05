@@ -7,44 +7,44 @@
     {
       "path": "Pagination.gx",
       "target": "ui/pagination/Pagination.gx",
-      "content": "package pagination\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cnav role=\"navigation\" aria-label=\"pagination\" class={gx.Cx(\"mx-auto flex w-full justify-center\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/nav\u003e\n",
-      "sha256": "8438c7a4465a1b1b0a075292435fbbdab6c72e9256c7ce418e7369f4ba7ce346"
+      "content": "package pagination\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the navigation: a PaginationContent.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cnav role=\"navigation\" aria-label=\"pagination\" data-slot=\"pagination\" class={gx.Cx(\"mx-auto flex w-full justify-center\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/nav\u003e\n",
+      "sha256": "2042a0a064676fdd0151a601d24f4e0fb5a9dad896b72c593887f04e9901c87a"
     },
     {
       "path": "PaginationContent.gx",
       "target": "ui/pagination/PaginationContent.gx",
-      "content": "package pagination\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cul class={gx.Cx(\"flex flex-row items-center gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/ul\u003e\n",
-      "sha256": "a9046293c0d9ccba87c77a54cce331784d9784b5603976e4198709f25ad0ecb2"
+      "content": "package pagination\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the pagination items.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cul data-slot=\"pagination-content\" class={gx.Cx(\"flex flex-row items-center gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/ul\u003e\n",
+      "sha256": "12a3f96750f74acc176bbc79b319238f781fc4f1ea34eed5114fabdedc48daee"
     },
     {
       "path": "PaginationItem.gx",
       "target": "ui/pagination/PaginationItem.gx",
-      "content": "package pagination\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/li\u003e\n",
-      "sha256": "037054126378d7dde0e990c3884663041682855b8333191f195ce593b1900455"
+      "content": "package pagination\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item: a link or an ellipsis.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cli data-slot=\"pagination-item\" class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/li\u003e\n",
+      "sha256": "ea73b849f7b3ceb69fb79114646bfeef562a554aa2b1764933135b24bf420c82"
     },
     {
       "path": "PaginationLink.gx",
       "target": "ui/pagination/PaginationLink.gx",
-      "content": "package pagination\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Size     Size     = Icon\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} aria-current={p.current()} class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
-      "sha256": "d57c45ee7a84ff913a210f3faa8737797e31b61b5c9dc5ad0812544432ff4f8c"
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx/registry/button\"\n\nprops {\n  // Href is the URL of the page.\n  Href     gx.URL\n  // Active marks the link of the current page. It sets aria-current and the outline style.\n  Active   bool = false\n  // Size sets the height and padding with a button size. The default is button.Icon, a square\n  // link.\n  Size     button.Size = button.Icon\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the link label, for example the page number.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca href={p.Href} data-slot=\"pagination-link\" class={p.class()} {...p.attrs()}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "cfd2596cadc10020660623eb4eab46577b4cb9858c69754b4a14f2a751eb22fd"
     },
     {
       "path": "PaginationPrevious.gx",
       "target": "ui/pagination/PaginationPrevious.gx",
-      "content": "package pagination\n\nprops {\n  Href  gx.URL\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cPaginationLink href={p.Href} size={Text} class={p.Class} attrs={p.attrs()}\u003e\u003cspan\u003ePrevious\u003c/span\u003e\u003c/PaginationLink\u003e\n",
-      "sha256": "4059a78a2dba72bf5f1488f6dd2372e5e5c84df0af94e11f434d9645766b5b68"
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx/registry/button\"\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Href is the URL of the previous page.\n  Href  gx.URL\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cPaginationLink href={p.Href} size={button.Md} class={gx.Cx(\"gap-1 px-2.5 sm:pl-2.5\", p.Class)} attrs={p.attrs()}\u003e\n  \u003cicons.ChevronLeft /\u003e\n  \u003cspan class=\"hidden sm:block\"\u003ePrevious\u003c/span\u003e\n\u003c/PaginationLink\u003e\n",
+      "sha256": "4d38ca41bf4d5e7e7181f1f879e48cfe244e7ca9abd37ef68ee8ad63f7f453ff"
     },
     {
       "path": "PaginationNext.gx",
       "target": "ui/pagination/PaginationNext.gx",
-      "content": "package pagination\n\nprops {\n  Href  gx.URL\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cPaginationLink href={p.Href} size={Text} class={p.Class} attrs={p.attrs()}\u003e\u003cspan\u003eNext\u003c/span\u003e\u003c/PaginationLink\u003e\n",
-      "sha256": "a118d04eab606f766e2d5df3df98471cd9a659a07ab7d5ff73d2302bdccc615d"
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx/registry/button\"\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Href is the URL of the next page.\n  Href  gx.URL\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cPaginationLink href={p.Href} size={button.Md} class={gx.Cx(\"gap-1 px-2.5 sm:pr-2.5\", p.Class)} attrs={p.attrs()}\u003e\n  \u003cspan class=\"hidden sm:block\"\u003eNext\u003c/span\u003e\n  \u003cicons.ChevronRight /\u003e\n\u003c/PaginationLink\u003e\n",
+      "sha256": "ccd122f94425577943da9d0bad08c683a6de33c0bee7e52a7ac184c49bfa0e1c"
     },
     {
       "path": "PaginationEllipsis.gx",
       "target": "ui/pagination/PaginationEllipsis.gx",
-      "content": "package pagination\n\nprops {\n  Class string   = \"\"\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan aria-hidden=\"true\" class={gx.Cx(\"flex size-9 items-center justify-center\", p.Class)} {...p.Attrs}\u003e\n  \u003cspan aria-hidden=\"true\"\u003e…\u003c/span\u003e\n  \u003cspan class=\"sr-only\"\u003eMore pages\u003c/span\u003e\n\u003c/span\u003e\n",
-      "sha256": "ee1262be31ee5a15a5b1f645cdc3632c54de15c1c6dc70c46285d98efd7a6d8b"
+      "content": "package pagination\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cspan aria-hidden=\"true\" data-slot=\"pagination-ellipsis\" class={gx.Cx(\"flex size-9 items-center justify-center\", p.Class)} {...p.Attrs}\u003e\n  \u003cicons.Ellipsis class=\"size-4\" /\u003e\n  \u003cspan class=\"sr-only\"\u003eMore pages\u003c/span\u003e\n\u003c/span\u003e\n",
+      "sha256": "2766f2cdf5b3e995630005bbb1c1058234256d56eec8833bec64baf0b3331e54"
     },
     {
       "path": "Pagination.fixtures.go",
@@ -55,8 +55,8 @@
     {
       "path": "styles.go",
       "target": "ui/pagination/styles.go",
-      "content": "package pagination\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the shape of a pagination link.\ntype Size string\n\n// The sizes of pagination.PaginationLink.\nconst (\n\tIcon Size = \"icon\"\n\tText Size = \"text\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tIcon: \"size-9\",\n\tText: \"h-9 px-3\",\n}\n\n// sizeClass returns the classes of one link size; a zero value is Icon.\nfunc (p PaginationLinkProps) sizeClass() string {\n\tif p.Size == \"\" {\n\t\treturn sizeClass[Icon]\n\t}\n\treturn sizeClass[p.Size]\n}\n\n// current returns the aria-current value of one link.\nfunc (p PaginationLinkProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n\n// class returns the classes of one pagination link.\nfunc (p PaginationLinkProps) class() string {\n\tbase := \"inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50\"\n\tif p.Active {\n\t\treturn gx.Cx(base, p.sizeClass(), \"border border-border\", p.Class)\n\t}\n\treturn gx.Cx(base, p.sizeClass(), p.Class)\n}\n\n// attrs returns the link attributes of the previous link.\nfunc (p PaginationPreviousProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{{Key: \"aria-label\", Value: \"Go to previous page\"}}, p.Attrs...)\n}\n\n// attrs returns the link attributes of the next link.\nfunc (p PaginationNextProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{{Key: \"aria-label\", Value: \"Go to next page\"}}, p.Attrs...)\n}\n",
-      "sha256": "10f46a3468e87d330d65804082be6d8baf7bfafbf61e0b9964e2b70f2c9b8a3f"
+      "content": "package pagination\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n)\n\n// class returns the classes of one pagination link: the outline button for\n// the current page, the ghost button for the others. A zero size is Icon.\nfunc (p PaginationLinkProps) class() string {\n\tsize := p.Size\n\tif size == \"\" {\n\t\tsize = button.Icon\n\t}\n\tif p.Active {\n\t\treturn button.Class(button.Outline, size, p.Class)\n\t}\n\treturn button.Class(button.Ghost, size, p.Class)\n}\n\n// attrs returns the state attributes of one link, then the caller's.\nfunc (p PaginationLinkProps) attrs() gx.Attrs {\n\tif !p.Active {\n\t\treturn p.Attrs\n\t}\n\treturn append(gx.Attrs{{Key: \"aria-current\", Value: \"page\"}}, p.Attrs...)\n}\n\n// attrs returns the link attributes of the previous link.\nfunc (p PaginationPreviousProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{{Key: \"aria-label\", Value: \"Go to previous page\"}}, p.Attrs...)\n}\n\n// attrs returns the link attributes of the next link.\nfunc (p PaginationNextProps) attrs() gx.Attrs {\n\treturn append(gx.Attrs{{Key: \"aria-label\", Value: \"Go to next page\"}}, p.Attrs...)\n}\n",
+      "sha256": "d4f231f61bce6a79481e8e42d5eee96aaf67d23772da8a164b995f5aa5f9b4fc"
     },
     {
       "path": "PaginationContent.fixtures.go",
@@ -95,11 +95,15 @@
       "sha256": "894a40adfecacbdfbfc950843ecd1de318803ee8f7a20f940c2143ca3afc15f7"
     }
   ],
+  "registryDependencies": [
+    "button",
+    "icons"
+  ],
   "requiredTokens": [
     "--border",
     "--accent",
     "--accent-foreground",
     "--ring"
   ],
-  "usage": "# Pagination\n\nLinks between pages of a result set.\n\n## Usage\n\n```gx\n\u003cpagination.Pagination\u003e\n  \u003cpagination.PaginationContent\u003e\n    \u003cpagination.PaginationItem\u003e\n      \u003cpagination.PaginationPrevious href={products.List{Page: p.Page - 1}} /\u003e\n    \u003c/pagination.PaginationItem\u003e\n    \u003cpagination.PaginationItem\u003e\n      \u003cpagination.PaginationLink href={products.List{Page: 1}} active={p.Page == 1}\u003e1\u003c/pagination.PaginationLink\u003e\n    \u003c/pagination.PaginationItem\u003e\n    \u003cpagination.PaginationItem\u003e\n      \u003cpagination.PaginationNext href={products.List{Page: p.Page + 1}} /\u003e\n    \u003c/pagination.PaginationItem\u003e\n  \u003c/pagination.PaginationContent\u003e\n\u003c/pagination.Pagination\u003e\n```\n\n## Do\n\n- Pass typed route values to `Href`.\n- Set `Active` on the current page link.\n\n## Don't\n\n- Do not use a pagination link for an action.\n- Do not show more links than fit on one line.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the links. |\n| Enter | Follows the link. |\n"
+  "usage": "# Pagination\n\nLinks between pages of a result set.\n\n## Usage\n\n```gx\n\u003cpagination.Pagination\u003e\n  \u003cpagination.PaginationContent\u003e\n    \u003cpagination.PaginationItem\u003e\n      \u003cpagination.PaginationPrevious href={products.List{Page: p.Page - 1}} /\u003e\n    \u003c/pagination.PaginationItem\u003e\n    \u003cpagination.PaginationItem\u003e\n      \u003cpagination.PaginationLink href={products.List{Page: 1}} active={p.Page == 1}\u003e1\u003c/pagination.PaginationLink\u003e\n    \u003c/pagination.PaginationItem\u003e\n    \u003cpagination.PaginationItem\u003e\n      \u003cpagination.PaginationNext href={products.List{Page: p.Page + 1}} /\u003e\n    \u003c/pagination.PaginationItem\u003e\n  \u003c/pagination.PaginationContent\u003e\n\u003c/pagination.Pagination\u003e\n```\n\nA link has the look of a ghost button. The current page has the look of an outline button.\n`PaginationPrevious` and `PaginationNext` show a chevron. They hide their text on a narrow screen.\n`PaginationLink` takes a `button.Size`. The default is `button.Icon`.\n\n## Do\n\n- Pass typed route values to `Href`.\n- Set `Active` on the current page link.\n\n## Don't\n\n- Do not use a pagination link for an action.\n- Do not show more links than fit on one line.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves between the links. |\n| Enter | Follows the link. |\n"
 }

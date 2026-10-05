@@ -7,40 +7,190 @@
     {
       "path": "Menubar.gx",
       "target": "ui/menubar/Menubar.gx",
-      "content": "package menubar\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"menubar\" data-gx-roving=\"nowrap\" class={gx.Cx(\"flex h-9 items-center gap-1 rounded-md border border-border bg-background p-1 shadow-xs\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "ff94109c4fb1dca2fb0487b54e2ec31a1347a7ce98a8ffd7678dbd12b89f6c6e"
+      "content": "package menubar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the menus of the bar.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"menubar\" data-gx-roving=\"nowrap\" class={gx.Cx(\"flex h-9 items-center gap-1 rounded-md border border-border bg-background p-1 shadow-xs\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "e77afd1ce307fb3684eedec75f1e1362df523a4dd01e41c2ae61d86a24472508"
+    },
+    {
+      "path": "MenubarCheckboxItem.gx",
+      "target": "ui/menubar/MenubarCheckboxItem.gx",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the name attribute of the checkbox input. A form or a signal reads it.\n  Name     string = \"\"\n  // Value is the value that the form sends when the item is checked.\n  Value    string = \"on\"\n  // Checked sets the item as checked on the first render.\n  Checked  bool = false\n  // Disabled turns the item off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"relative flex cursor-default items-center gap-2 rounded-xs py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"checkbox\" role=\"menuitemcheckbox\" tabindex=\"-1\" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class=\"peer sr-only\" {...rovingItem(p.Disabled)} /\u003e\n  \u003cspan class=\"pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible\"\u003e\u003cicons.Check class=\"size-4\" /\u003e\u003c/span\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "866b9b07a6a3902617d46eeccaa452db392a0e1dbc7b231bb84a9fa3f72aea92"
+    },
+    {
+      "path": "MenubarGroup.gx",
+      "target": "ui/menubar/MenubarGroup.gx",
+      "content": "package menubar\n\nprops {\n  // Label is the accessible name of the group. It is not visible.\n  Label    string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the items of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" aria-label={p.Label} class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "c7e4c40d610db2092245a75e8d7250ac74d9172518bcb83de0effaf7f0a69612"
     },
     {
       "path": "MenubarItem.gx",
       "target": "ui/menubar/MenubarItem.gx",
-      "content": "package menubar\n\nprops {\n  Href     gx.URL\n  Active   bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item aria-current={p.current()} class={gx.Cx(\"inline-flex items-center rounded-sm px-2 py-1 text-sm font-medium no-underline outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground\", activeClass[p.Active], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
-      "sha256": "4947e2854aff76210fefcbc79d585d1ccf19f02ce36ebcf539e2e1353bbbf172"
+      "content": "package menubar\n\nprops {\n  // Variant sets the visual style: Default or Destructive.\n  Variant  Variant = Default\n  // Inset adds left padding, so the item lines up with the checkbox and radio items.\n  Inset    bool = false\n  // Disabled turns the item off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" disabled={p.Disabled} data-gx-close class={gx.Cx(\"relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4 [\u0026_svg:not([class*='text-'])]:text-muted-foreground\", variantClass[p.variant()], insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}\u003e{p.Children}\u003c/button\u003e\n",
+      "sha256": "df165093142261195938ee6c57eb80ed9173875ba0f4d5e7212dd2fed1ec6057"
+    },
+    {
+      "path": "MenubarLabel.gx",
+      "target": "ui/menubar/MenubarLabel.gx",
+      "content": "package menubar\n\nprops {\n  // Inset adds left padding, so the label lines up with the checkbox and radio items.\n  Inset    bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text of the label.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"presentation\" class={gx.Cx(\"px-2 py-1.5 text-sm font-medium\", insetClass[p.Inset], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "bc111937709678b8dafccc47f24cbb65659b95f05333e3bbc4e7a28bf03d45d7"
+    },
+    {
+      "path": "MenubarLink.gx",
+      "target": "ui/menubar/MenubarLink.gx",
+      "content": "package menubar\n\nprops {\n  // Href is the URL that the link opens.\n  Href     gx.URL\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the link.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ca role=\"menuitem\" tabindex=\"-1\" href={p.Href} data-gx-roving-item data-gx-close class={gx.Cx(\"relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4 [\u0026_svg:not([class*='text-'])]:text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n",
+      "sha256": "e7dfd9ba52ea27925e903cfccab0012f34e841eaf9ebaa377e2b1344db17d0fe"
+    },
+    {
+      "path": "MenubarMenu.gx",
+      "target": "ui/menubar/MenubarMenu.gx",
+      "content": "package menubar\n\nprops {\n  // Id is the id of the menu element. The trigger in the bar opens the menu by this id.\n  Id       string\n  // Label is the text of the trigger in the bar. It is also the accessible name of the menu.\n  Label    string\n  // Class adds classes to the menu element.\n  Class    string = \"\"\n  // Children is the menu items.\n  Children gx.Node\n  // Attrs adds HTML attributes to the menu element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" aria-haspopup=\"menu\" popovertarget={p.Id} data-gx-roving-item style={p.triggerStyle()} class=\"flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground\"\u003e{p.Label}\u003c/button\u003e\n\u003cdiv id={p.Id} popover=\"auto\" role=\"menu\" aria-label={p.Label} data-gx-dismiss data-gx-roving=\"nowrap\" data-gx-place=\"bottom start 8 -4\" style={p.contentStyle()} class={gx.Cx(\"z-50 min-w-[12rem] origin-top-left data-[side=top]:origin-bottom-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden\", motionClass, p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "06ab6fdb4a17b8c4851be8ad862ba311af230bc7d87b21296f8021193aa56de2"
+    },
+    {
+      "path": "MenubarRadioGroup.gx",
+      "target": "ui/menubar/MenubarRadioGroup.gx",
+      "content": "package menubar\n\nprops {\n  // Label is the accessible name of the group. It is not visible.\n  Label    string = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the radio items of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"group\" aria-label={p.Label} class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "74bbebfa25d6a610dbbf15bf7d36929bd38c1317b01daaea1f1f0aead99f3593"
+    },
+    {
+      "path": "MenubarRadioItem.gx",
+      "target": "ui/menubar/MenubarRadioItem.gx",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the name attribute of the radio input. The radio items of one group share\n  // the same name.\n  Name     string = \"\"\n  // Value is the value that the form sends when the item is checked.\n  Value    string = \"\"\n  // Checked sets the item as checked on the first render.\n  Checked  bool = false\n  // Disabled turns the item off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003clabel class={gx.Cx(\"relative flex cursor-default items-center gap-2 rounded-xs py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4\", p.Class)} {...p.Attrs}\u003e\n  \u003cinput type=\"radio\" role=\"menuitemradio\" tabindex=\"-1\" name={p.Name} value={p.Value} checked={p.Checked} disabled={p.Disabled} class=\"peer sr-only\" {...rovingItem(p.Disabled)} /\u003e\n  \u003cspan class=\"pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible\"\u003e\u003cicons.Circle class=\"size-2 *:fill-current\" /\u003e\u003c/span\u003e\n  {p.Children}\n\u003c/label\u003e\n",
+      "sha256": "df7b5687ef3f58a6e22b448b5f6680ad6bd3295defa2dbf938e706562c023804"
+    },
+    {
+      "path": "MenubarSeparator.gx",
+      "target": "ui/menubar/MenubarSeparator.gx",
+      "content": "package menubar\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv role=\"separator\" class={gx.Cx(\"-mx-1 my-1 h-px bg-border\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "f0b6f95825c0563555340fc3f2cbbfa6121e77cbf54d9b155ca4374c7476e1d0"
+    },
+    {
+      "path": "MenubarShortcut.gx",
+      "target": "ui/menubar/MenubarShortcut.gx",
+      "content": "package menubar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the text of the keyboard shortcut.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"ml-auto text-xs tracking-widest text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/span\u003e\n",
+      "sha256": "fb5da1f74ca74cf3dc9d79b9a8fb10a6ac344ccad1e45940eb208cddd52b8870"
+    },
+    {
+      "path": "MenubarSub.gx",
+      "target": "ui/menubar/MenubarSub.gx",
+      "content": "package menubar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the sub-menu trigger, followed by the sub-menu content.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv role=\"none\" data-gx-sub class={p.Class} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "39b38f3b1742a6f18bde323181a82b6b4832675eb90a87b7bf48fd9368458c4c"
+    },
+    {
+      "path": "MenubarSubContent.gx",
+      "target": "ui/menubar/MenubarSubContent.gx",
+      "content": "package menubar\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the list of items of the sub-menu.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv popover=\"auto\" role=\"menu\" data-gx-roving=\"nowrap\" data-gx-place=\"right start\" class={gx.Cx(\"z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden\", subMotionClass, p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "29b302438eb27afda7bfa9b763537e4d09454c2dbdb13796afd3ee80e6201bee"
+    },
+    {
+      "path": "MenubarSubTrigger.gx",
+      "target": "ui/menubar/MenubarSubTrigger.gx",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Inset adds left padding, so the trigger lines up with the checkbox and radio items.\n  Inset    bool = false\n  // Disabled turns the trigger off. The arrow keys pass it.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the label of the trigger. A chevron follows it.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cbutton type=\"button\" role=\"menuitem\" tabindex=\"-1\" aria-haspopup=\"menu\" aria-expanded=\"false\" disabled={p.Disabled} class={gx.Cx(\"flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50\", insetClass[p.Inset], p.Class)} {...rovingItem(p.Disabled)} {...p.Attrs}\u003e\n  {p.Children}\n  \u003cicons.ChevronRight class=\"ml-auto h-4 w-4\" /\u003e\n\u003c/button\u003e\n",
+      "sha256": "5655f0b7682d344d6182b7f1a5a60c64cce723f3867606095d8dccb378ee0998"
     },
     {
       "path": "Menubar.fixtures.go",
       "target": "ui/menubar/Menubar.fixtures.go",
-      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarFixtures = gx.Fixtures[MenubarProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tMenubarItem(MenubarItemProps{Href: gx.URL(\"/\"), Active: true, Children: gx.Text(\"Home\")}),\n\t\tMenubarItem(MenubarItemProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}),\n\t)},\n}\n",
-      "sha256": "c7edae52445b52fcfe94b825145fbdc519b77b5ab7a0630fc59e475a367d0a6e"
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarFixtures = gx.Fixtures[MenubarProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tMenubarMenu(MenubarMenuProps{Id: \"demo-menubar-file\", Label: \"File\", Children: gx.Frag(\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Frag(\n\t\t\t\tgx.Text(\"New tab\"),\n\t\t\t\tMenubarShortcut(MenubarShortcutProps{Children: gx.Text(\"⌘T\")}),\n\t\t\t)}),\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"New window\")}),\n\t\t\tMenubarSeparator(MenubarSeparatorProps{}),\n\t\t\tMenubarLink(MenubarLinkProps{Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}),\n\t\t)}),\n\t\tMenubarMenu(MenubarMenuProps{Id: \"demo-menubar-view\", Label: \"View\", Children: gx.Frag(\n\t\t\tMenubarCheckboxItem(MenubarCheckboxItemProps{Name: \"bookmarks\", Children: gx.Text(\"Always show bookmarks bar\")}),\n\t\t\tMenubarCheckboxItem(MenubarCheckboxItemProps{Name: \"urls\", Checked: true, Children: gx.Text(\"Always show full URLs\")}),\n\t\t\tMenubarSeparator(MenubarSeparatorProps{}),\n\t\t\tMenubarItem(MenubarItemProps{Inset: true, Children: gx.Frag(\n\t\t\t\tgx.Text(\"Reload\"),\n\t\t\t\tMenubarShortcut(MenubarShortcutProps{Children: gx.Text(\"⌘R\")}),\n\t\t\t)}),\n\t\t\tMenubarItem(MenubarItemProps{Inset: true, Disabled: true, Children: gx.Text(\"Force reload\")}),\n\t\t)}),\n\t\tMenubarMenu(MenubarMenuProps{Id: \"demo-menubar-profiles\", Label: \"Profiles\", Children: gx.Frag(\n\t\t\tMenubarRadioGroup(MenubarRadioGroupProps{Label: \"Profile\", Children: gx.Frag(\n\t\t\t\tMenubarLabel(MenubarLabelProps{Inset: true, Children: gx.Text(\"Profile\")}),\n\t\t\t\tMenubarRadioItem(MenubarRadioItemProps{Name: \"demo-menubar-profile\", Value: \"ada\", Children: gx.Text(\"Ada\")}),\n\t\t\t\tMenubarRadioItem(MenubarRadioItemProps{Name: \"demo-menubar-profile\", Value: \"grace\", Checked: true, Children: gx.Text(\"Grace\")}),\n\t\t\t)}),\n\t\t\tMenubarSeparator(MenubarSeparatorProps{}),\n\t\t\tMenubarItem(MenubarItemProps{Inset: true, Variant: Destructive, Children: gx.Text(\"Remove profile\")}),\n\t\t)}),\n\t)},\n\t\"Sub\": {Children: gx.Frag(\n\t\tMenubarMenu(MenubarMenuProps{Id: \"demo-menubar-sub-file\", Label: \"File\", Children: gx.Frag(\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"New tab\")}),\n\t\t\tMenubarSub(MenubarSubProps{Children: gx.Frag(\n\t\t\t\tMenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text(\"Share\")}),\n\t\t\t\tMenubarSubContent(MenubarSubContentProps{Children: gx.Frag(\n\t\t\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Email link\")}),\n\t\t\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Messages\")}),\n\t\t\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Notes\")}),\n\t\t\t\t)}),\n\t\t\t)}),\n\t\t\tMenubarSeparator(MenubarSeparatorProps{}),\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Print\")}),\n\t\t)}),\n\t\tMenubarMenu(MenubarMenuProps{Id: \"demo-menubar-sub-edit\", Label: \"Edit\", Children: gx.Frag(\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Undo\")}),\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Redo\")}),\n\t\t)}),\n\t)},\n}\n",
+      "sha256": "3f02a6567fe60df98a71e3e1b90b7eb332138bab7ea8e88ffeb52330badf5cd0"
     },
     {
-      "path": "styles.go",
-      "target": "ui/menubar/styles.go",
-      "content": "package menubar\n\nvar activeClass = map[bool]string{\n\ttrue:  \"bg-accent text-accent-foreground\",\n\tfalse: \"text-foreground\",\n}\n\n// current returns the aria-current value of one item.\nfunc (p MenubarItemProps) current() string {\n\tif p.Active {\n\t\treturn \"page\"\n\t}\n\treturn \"\"\n}\n",
-      "sha256": "0892ed2772c48ed346987b3eac6aaea0f2f3d8426855168d40672f8099bc021e"
+      "path": "MenubarCheckboxItem.fixtures.go",
+      "target": "ui/menubar/MenubarCheckboxItem.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarCheckboxItemFixtures = gx.Fixtures[MenubarCheckboxItemProps]{\n\t\"Checked\":   {Name: \"status-bar\", Checked: true, Children: gx.Text(\"Status bar\")},\n\t\"Unchecked\": {Name: \"panel\", Children: gx.Text(\"Panel\")},\n\t\"Disabled\":  {Name: \"activity\", Disabled: true, Children: gx.Text(\"Activity bar\")},\n}\n\n// MenubarCheckboxItemWrap renders the item inside a menu, as a page uses it.\nfunc MenubarCheckboxItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "0e99996f8b7cbad6f8543ce9fc96cab90a4786307800ba0c34cc757372831bdd"
+    },
+    {
+      "path": "MenubarGroup.fixtures.go",
+      "target": "ui/menubar/MenubarGroup.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarGroupFixtures = gx.Fixtures[MenubarGroupProps]{\n\t\"Default\": {Label: \"Account\", Children: gx.Frag(\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Profile\")}),\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Billing\")}),\n\t)},\n}\n\n// MenubarGroupWrap renders the group inside a menu, as a page uses it.\nfunc MenubarGroupWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "a11f68adba593d11562fb33961f715c51109634efe2a60c9e17c0d038669871a"
     },
     {
       "path": "MenubarItem.fixtures.go",
       "target": "ui/menubar/MenubarItem.fixtures.go",
-      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{\"Item\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Docs\")}}\n\n// MenubarItemWrap renders the item inside a bar, as a page uses it.\nfunc MenubarItemWrap(n gx.Node) gx.Node {\n\treturn Menubar(MenubarProps{Children: n})\n}\n",
-      "sha256": "aeef0c6edd2ae0159dc89ed66bc350257f7005c901184e84a170d8a610809702"
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarItemFixtures = gx.Fixtures[MenubarItemProps]{\n\t\"Item\":        {Children: gx.Text(\"Profile\")},\n\t\"Inset\":       {Inset: true, Children: gx.Text(\"Profile\")},\n\t\"Destructive\": {Variant: Destructive, Children: gx.Text(\"Delete\")},\n\t\"Disabled\":    {Disabled: true, Children: gx.Text(\"Profile\")},\n}\n\n// MenubarItemWrap renders the item inside a menu, as a page uses it.\nfunc MenubarItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "3e779981fd8f1293e2426bde2c9d95dab0cab155204ad8a26cde2eca595d39c5"
+    },
+    {
+      "path": "MenubarLabel.fixtures.go",
+      "target": "ui/menubar/MenubarLabel.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarLabelFixtures = gx.Fixtures[MenubarLabelProps]{\n\t\"Label\": {Children: gx.Text(\"My account\")},\n\t\"Inset\": {Inset: true, Children: gx.Text(\"My account\")},\n}\n",
+      "sha256": "c7b40d6baf02036a15d2d9807c516360356aba391f934ab2bed6071b427dfcc6"
+    },
+    {
+      "path": "MenubarLink.fixtures.go",
+      "target": "ui/menubar/MenubarLink.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarLinkFixtures = gx.Fixtures[MenubarLinkProps]{\"Link\": {Href: gx.URL(\"/docs\"), Children: gx.Text(\"Documentation\")}}\n\n// MenubarLinkWrap renders the item inside a menu, as a page uses it.\nfunc MenubarLinkWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "d67178d236ca0d8da159c397633f65045b5867ed1124dd0dc6629168febfa84a"
+    },
+    {
+      "path": "MenubarMenu.fixtures.go",
+      "target": "ui/menubar/MenubarMenu.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarMenuFixtures = gx.Fixtures[MenubarMenuProps]{\n\t\"Menu\": {Id: \"demo-menubar-menu\", Label: \"Edit\", Children: gx.Frag(\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Undo\")}),\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Redo\")}),\n\t)},\n}\n\n// MenubarMenuWrap renders the menu inside a bar, as a page uses it.\nfunc MenubarMenuWrap(n gx.Node) gx.Node {\n\treturn Menubar(MenubarProps{Children: n})\n}\n",
+      "sha256": "38127c680b021dc823694b7de195688427e093cdc908fc732fee69e1f1b571e3"
+    },
+    {
+      "path": "MenubarRadioGroup.fixtures.go",
+      "target": "ui/menubar/MenubarRadioGroup.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarRadioGroupFixtures = gx.Fixtures[MenubarRadioGroupProps]{\n\t\"Default\": {Label: \"Position\", Children: gx.Frag(\n\t\tMenubarRadioItem(MenubarRadioItemProps{Name: \"menubar-group-position\", Value: \"top\", Checked: true, Children: gx.Text(\"Top\")}),\n\t\tMenubarRadioItem(MenubarRadioItemProps{Name: \"menubar-group-position\", Value: \"bottom\", Children: gx.Text(\"Bottom\")}),\n\t)},\n}\n\n// MenubarRadioGroupWrap renders the group inside a menu, as a page uses it.\nfunc MenubarRadioGroupWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "b8bbb47795f35b6cc51d3afc402298539bdd690140bf633bc21c43fa0c5388b4"
+    },
+    {
+      "path": "MenubarRadioItem.fixtures.go",
+      "target": "ui/menubar/MenubarRadioItem.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarRadioItemFixtures = gx.Fixtures[MenubarRadioItemProps]{\n\t\"Checked\":   {Name: \"menubar-item-checked\", Value: \"top\", Checked: true, Children: gx.Text(\"Top\")},\n\t\"Unchecked\": {Name: \"menubar-item-unchecked\", Value: \"bottom\", Children: gx.Text(\"Bottom\")},\n}\n\n// MenubarRadioItemWrap renders the item inside a menu, as a page uses it.\nfunc MenubarRadioItemWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "b9402691a20d767bfc74efbf256182e559ff6978c5aee59327226a4f1e95913e"
+    },
+    {
+      "path": "MenubarSeparator.fixtures.go",
+      "target": "ui/menubar/MenubarSeparator.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarSeparatorFixtures = gx.Fixtures[MenubarSeparatorProps]{\"Default\": {}}\n",
+      "sha256": "203fa04533ddf214d48f1a375ce71a71609af0baef213a5607211567ab63d484"
+    },
+    {
+      "path": "MenubarShortcut.fixtures.go",
+      "target": "ui/menubar/MenubarShortcut.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarShortcutFixtures = gx.Fixtures[MenubarShortcutProps]{\"Default\": {Children: gx.Text(\"⌘K\")}}\n",
+      "sha256": "0191c66130b68a4742051c664a4f221d064e06c6c42bedefecf847a689f64684"
+    },
+    {
+      "path": "MenubarSub.fixtures.go",
+      "target": "ui/menubar/MenubarSub.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarSubFixtures = gx.Fixtures[MenubarSubProps]{\n\t\"Default\": {Children: gx.Frag(\n\t\tMenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text(\"More tools\")}),\n\t\tMenubarSubContent(MenubarSubContentProps{Children: gx.Frag(\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Save page\")}),\n\t\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Create shortcut\")}),\n\t\t)}),\n\t)},\n}\n\n// MenubarSubWrap renders the sub-menu inside a menu, as a page uses it.\nfunc MenubarSubWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "9b0a51f7bf00e63a120790bc66e7f8643bca1a384fb36c392f673ade33179779"
+    },
+    {
+      "path": "MenubarSubContent.fixtures.go",
+      "target": "ui/menubar/MenubarSubContent.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarSubContentFixtures = gx.Fixtures[MenubarSubContentProps]{\n\t\"Content\": {Class: \"w-48\", Children: gx.Frag(\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Save page\")}),\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Create shortcut\")}),\n\t\tMenubarSeparator(MenubarSeparatorProps{}),\n\t\tMenubarItem(MenubarItemProps{Children: gx.Text(\"Developer tools\")}),\n\t)},\n}\n\n// MenubarSubContentWrap renders the content behind its trigger inside a menu,\n// as a page uses it.\nfunc MenubarSubContentWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}},\n\t\tMenubarSub(MenubarSubProps{Children: gx.Frag(\n\t\t\tMenubarSubTrigger(MenubarSubTriggerProps{Children: gx.Text(\"More tools\")}),\n\t\t\tn,\n\t\t)}),\n\t)\n}\n",
+      "sha256": "63194aeaabf76eaa88db1d26d38b75c24537613f23274ee51fa3ba1a4576a92d"
+    },
+    {
+      "path": "MenubarSubTrigger.fixtures.go",
+      "target": "ui/menubar/MenubarSubTrigger.fixtures.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\nvar MenubarSubTriggerFixtures = gx.Fixtures[MenubarSubTriggerProps]{\n\t\"Trigger\":  {Children: gx.Text(\"More tools\")},\n\t\"Inset\":    {Inset: true, Children: gx.Text(\"More tools\")},\n\t\"Disabled\": {Disabled: true, Children: gx.Text(\"More tools\")},\n}\n\n// MenubarSubTriggerWrap renders the trigger inside a menu, as a page uses it.\nfunc MenubarSubTriggerWrap(n gx.Node) gx.Node {\n\treturn gx.El(\"div\", gx.Attrs{{Key: \"role\", Value: \"menu\"}, {Key: \"class\", Value: \"w-56\"}}, n)\n}\n",
+      "sha256": "b2a94bad389edcba2917ae21fde78a3ee88f715d0ff31d57614adeb57f173e7b"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/menubar/styles.go",
+      "content": "package menubar\n\nimport \"github.com/alternayte/gx\"\n\n// triggerStyle names the trigger of one menu as the anchor of its content.\nfunc (p MenubarMenuProps) triggerStyle() gx.Style {\n\treturn gx.Style(\"anchor-name: --gx-menubar-\" + p.Id)\n}\n\n// contentStyle anchors the content below its trigger, 8px down and 4px to\n// the left as the reference offsets do, for a page whose scripts did not\n// run. The overlay module then writes the measured place from the same\n// offsets.\nfunc (p MenubarMenuProps) contentStyle() gx.Style {\n\treturn gx.Style(\"position-anchor: --gx-menubar-\" + p.Id + \"; inset: auto; margin: 0.5rem 0 0 -0.25rem; top: anchor(bottom); left: anchor(left)\")\n}\n\n// Variant is the visual style of a menu item.\ntype Variant string\n\n// The variants of menubar.MenubarItem.\nconst (\n\tDefault     Variant = \"default\"\n\tDestructive Variant = \"destructive\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault:     \"\",\n\tDestructive: \"text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive!\",\n}\n\n// variant returns the variant of one item; a zero value is Default.\nfunc (p MenubarItemProps) variant() Variant {\n\tif p.Variant == \"\" {\n\t\treturn Default\n\t}\n\treturn p.Variant\n}\n\n// insetClass lines an item or a label up with the checkbox and radio items.\nvar insetClass = map[bool]string{\n\ttrue:  \"pl-8\",\n\tfalse: \"\",\n}\n\n// rovingItem marks an item for the roving tabindex of its menu. A disabled\n// item is not marked, so the arrow keys pass it.\nfunc rovingItem(disabled bool) gx.Attrs {\n\treturn gx.Attrs{gx.Bool(\"data-gx-roving-item\", !disabled)}\n}\n\n// motionClass fades and zooms the menu from 95% and slides it 2 units from\n// the trigger, from below when the menu took the top side. Safari 26.0 never ends a display transition on an element\n// that CSS anchor positioning places, which leaves a closed menu rendered.\n// The @supports test matches every engine but WebKit, so Safari closes the\n// menu at once and still animates the enter.\nconst motionClass = \"opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] not-supports-[font:-apple-system-body]:transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-y-2 data-[side=top]:starting:open:translate-y-2 motion-reduce:transition-none\"\n\n// subMotionClass fades and zooms the content of a sub-menu from 95% and\n// slides it 2 units from its trigger. The overlay module writes data-side:\n// content that flips to the left slides from the right.\nconst subMotionClass = \"origin-top-left opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none\"\n",
+      "sha256": "16eb5a031da98ace203cc095b36caefbb357e0ee7b24159c11a30ea066f634b8"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--border",
     "--background",
+    "--popover",
+    "--popover-foreground",
     "--accent",
     "--accent-foreground",
-    "--foreground"
+    "--muted-foreground",
+    "--destructive"
   ],
-  "usage": "# Menubar\n\nA horizontal bar of menu actions.\n\n## Usage\n\n```gx\n\u003cmenubar.Menubar\u003e\n  \u003cmenubar.MenubarItem href={gx.URL(\"/\")} active={true}\u003eHome\u003c/menubar.MenubarItem\u003e\n  \u003cmenubar.MenubarItem href={gx.URL(\"/docs\")}\u003eDocs\u003c/menubar.MenubarItem\u003e\n\u003c/menubar.Menubar\u003e\n```\n\n## Do\n\n- Keep the bar to one row.\n- Mark the current page with `Active`.\n\n## Don't\n\n- Do not mix unrelated destinations in one menubar.\n- Do not use a menubar for a site header. Use the navigation menu.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Enters the bar at the first item. |\n| Left, Right | Moves focus between items. |\n| Home, End | Moves to the first or last item. |\n| Enter | Follows the focused link. |\n"
+  "usage": "# Menubar\n\nA horizontal bar of menus.\n\n## Usage\n\n```gx\n\u003cmenubar.Menubar\u003e\n  \u003cmenubar.MenubarMenu id=\"file-menu\" label=\"File\"\u003e\n    \u003cmenubar.MenubarItem\u003e\n      New tab\n      \u003cmenubar.MenubarShortcut\u003e⌘T\u003c/menubar.MenubarShortcut\u003e\n    \u003c/menubar.MenubarItem\u003e\n    \u003cmenubar.MenubarSub\u003e\n      \u003cmenubar.MenubarSubTrigger\u003eShare\u003c/menubar.MenubarSubTrigger\u003e\n      \u003cmenubar.MenubarSubContent\u003e\n        \u003cmenubar.MenubarItem\u003eEmail link\u003c/menubar.MenubarItem\u003e\n        \u003cmenubar.MenubarItem\u003eMessages\u003c/menubar.MenubarItem\u003e\n      \u003c/menubar.MenubarSubContent\u003e\n    \u003c/menubar.MenubarSub\u003e\n    \u003cmenubar.MenubarSeparator /\u003e\n    \u003cmenubar.MenubarLink href={gx.URL(\"/docs\")}\u003eDocumentation\u003c/menubar.MenubarLink\u003e\n  \u003c/menubar.MenubarMenu\u003e\n  \u003cmenubar.MenubarMenu id=\"view-menu\" label=\"View\"\u003e\n    \u003cmenubar.MenubarCheckboxItem name=\"urls\" checked={true}\u003eAlways show full URLs\u003c/menubar.MenubarCheckboxItem\u003e\n    \u003cmenubar.MenubarSeparator /\u003e\n    \u003cmenubar.MenubarItem inset={true}\u003eReload\u003c/menubar.MenubarItem\u003e\n  \u003c/menubar.MenubarMenu\u003e\n\u003c/menubar.Menubar\u003e\n```\n\n`MenubarMenu` renders the trigger in the bar and the menu that opens from it. `Label` is the text of the trigger and `Id` is the id of the menu. The menu uses the native Popover API.\n\nA menu opens below its trigger. It flips above the trigger when the space below is too small, and it shifts along the trigger to stay 8px inside the viewport. `data-side` on the menu names the side it took.\n\nA checkbox item and a radio item are native inputs. They carry `Name` and `Value`, so a form or a signal reads them. They keep the menu open. An item has `Inset`, `Disabled` and the `Destructive` variant.\n\nA menu fades and zooms in and out. Safari shows the enter transition only. A user who asks for reduced motion gets no transition.\n\nA click opens a menu. With one menu open, the pointer opens the menu of each trigger it moves over.\n\n`MenubarSub` holds one `MenubarSubTrigger` and one `MenubarSubContent`, in that order. The sub-menu opens to the right of its trigger, or to the left when the right side is too small. It opens on a click and after the pointer rests on the trigger. It stays open while the pointer moves toward it. An item of a sub-menu closes the whole menu. The trigger has `Inset` and `Disabled`.\n\n## Do\n\n- Give each menu a unique `Id`.\n- Keep the bar to one row.\n- Give the radio items of one group the same `Name`.\n\n## Don't\n\n- Do not put a link or a button directly in the bar. Put it in a menu.\n- Do not use a menubar for a site header. Use the navigation menu.\n- Do not put an element between the trigger and the content of a sub-menu.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Enters the bar at one trigger and leaves it again. |\n| Left, Right | On a trigger, moves to the previous or next trigger. In a menu, opens the previous or next menu. |\n| Right, Enter, Space | On a sub-menu trigger, opens the sub-menu and moves to its first item. |\n| Left, Escape | In a sub-menu, closes it and returns focus to its trigger. |\n| Home, End | Moves to the first or last trigger, or to the first or last item of a menu. |\n| Enter, Space | Opens the menu of the focused trigger. |\n| Down | Opens the menu and moves to the first item. |\n| Up, Down | Moves through the items. A disabled item is passed. |\n| A letter | Moves to the next item that starts with the typed text. |\n| Enter | Runs the focused item and closes the menu. Toggles a checkbox or radio item. |\n| Escape | Closes the menu and returns focus to its trigger. |\n"
 }

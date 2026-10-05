@@ -1,8 +1,6 @@
 package radiogroup
 
 props {
-  // Name is the form field name of the group. The group does not render it; set Name on each item.
-  Name        string = ""
   // Orientation sets the layout direction: Vertical or Horizontal.
   Orientation Orientation = Vertical
   // Label is the accessible name of the group.

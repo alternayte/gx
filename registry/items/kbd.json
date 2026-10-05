@@ -7,20 +7,32 @@
     {
       "path": "Kbd.gx",
       "target": "ui/kbd/Kbd.gx",
-      "content": "package kbd\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003ckbd class={gx.Cx(\"inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1.5 font-mono text-[0.7rem] font-medium text-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/kbd\u003e\n",
-      "sha256": "21cbd4677bcd9c5430078efede9431ff94e55322df10f74c137eeffb1d489e4b"
+      "content": "package kbd\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the key text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ckbd data-slot=\"kbd\" class={gx.Cx(\"pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-foreground select-none [\u0026_svg:not([class*='size-'])]:size-3 [[data-slot=tooltip-content]_\u0026]:bg-background/20 [[data-slot=tooltip-content]_\u0026]:text-background dark:[[data-slot=tooltip-content]_\u0026]:bg-background/10\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/kbd\u003e\n",
+      "sha256": "d56056bedb75b4ab0cb8ee206c0facf5bc768f14957403dd0a39dab42ef0e91b"
     },
     {
       "path": "Kbd.fixtures.go",
       "target": "ui/kbd/Kbd.fixtures.go",
       "content": "package kbd\n\nimport \"github.com/alternayte/gx\"\n\nvar KbdFixtures = gx.Fixtures[KbdProps]{\n\t\"Key\":   {Children: gx.Text(\"K\")},\n\t\"Combo\": {Children: gx.Text(\"Ctrl\")},\n}\n",
       "sha256": "1af797a5b1d069cd6eb1871bc5aaa331c664291b2527045abb8c83bd659f22b6"
+    },
+    {
+      "path": "KbdGroup.gx",
+      "target": "ui/kbd/KbdGroup.gx",
+      "content": "package kbd\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the keys of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003ckbd data-slot=\"kbd-group\" class={gx.Cx(\"inline-flex items-center gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/kbd\u003e\n",
+      "sha256": "a22ecd65ab6c8e86c63785272cd8f547d6cdb47ad4095bec87d5ffb17a1e9022"
+    },
+    {
+      "path": "KbdGroup.fixtures.go",
+      "target": "ui/kbd/KbdGroup.fixtures.go",
+      "content": "package kbd\n\nimport \"github.com/alternayte/gx\"\n\nvar KbdGroupFixtures = gx.Fixtures[KbdGroupProps]{\n\t\"Shortcut\": {Children: gx.Frag(\n\t\tKbd(KbdProps{Children: gx.Text(\"Ctrl\")}),\n\t\tgx.El(\"span\", nil, gx.Text(\"+\")),\n\t\tKbd(KbdProps{Children: gx.Text(\"K\")}),\n\t)},\n}\n",
+      "sha256": "945e10358f42aae9f2c94614009c6e828842231d571c754e32701b3bd5a88d0d"
     }
   ],
   "requiredTokens": [
-    "--border",
     "--muted",
-    "--muted-foreground"
+    "--foreground",
+    "--background"
   ],
-  "usage": "# Kbd\n\nA key or key combination.\n\n## Usage\n\n```gx\n\u003ckbd.Kbd\u003eCtrl\u003c/kbd.Kbd\u003e \u003ckbd.Kbd\u003eK\u003c/kbd\u003e\n```\n\n## Do\n\n- Write one key per element.\n- Use the same order as the physical keys.\n\n## Don't\n\n- Do not use a kbd for a mouse action.\n- Do not use a kbd for a sentence.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Kbd\n\nA key or a key combination.\n\n## Usage\n\n```gx\n\u003ckbd.Kbd\u003eEsc\u003c/kbd.Kbd\u003e\n\n\u003ckbd.KbdGroup\u003e\n  \u003ckbd.Kbd\u003eCtrl\u003c/kbd.Kbd\u003e\n  \u003cspan\u003e+\u003c/span\u003e\n  \u003ckbd.Kbd\u003eK\u003c/kbd.Kbd\u003e\n\u003c/kbd.KbdGroup\u003e\n```\n\n`KbdGroup` keeps the keys of one shortcut on one line.\n\n## Do\n\n- Write the key as it is printed on the keyboard.\n- Put one key in one `Kbd`.\n\n## Don't\n\n- Do not use a kbd for a button. It does not take a click.\n- Do not put a sentence in a kbd.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

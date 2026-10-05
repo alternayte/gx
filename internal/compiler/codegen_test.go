@@ -83,6 +83,25 @@ func TestREQ_AUT_02_CrossPackageDefaultFromThirdPackage(t *testing.T) {
 	}
 }
 
+// TestREQ_AUT_03_RawElementBody covers script and style: the contents are
+// raw and reach the page as written (REQ-AUT-03).
+func TestREQ_AUT_03_RawElementBody(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":          moduleWithGx(t),
+		"ui/page/Page.gx": "package page\n\n<script>if (a < b && c) { run(\"x\") }</script>\n<style>.a > .b { color: red }</style>\n",
+	})
+	files := generateFiles(t, dir)
+	src := string(files[filepath.Join(dir, "ui/page/Page_gx.go")])
+	for _, want := range []string{
+		`gx.Raw(gx.SafeHTML("if (a < b && c) { run(\"x\") }"))`,
+		`gx.Raw(gx.SafeHTML(".a > .b { color: red }"))`,
+	} {
+		if !strings.Contains(src, want) {
+			t.Fatalf("Page_gx.go lacks %s:\n%s", want, src)
+		}
+	}
+}
+
 func TestREQ_AUT_02_GeneratedCodeRenders(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":          moduleWithGx(t),

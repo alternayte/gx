@@ -510,11 +510,11 @@ props {
   Label    string
   // Children is the content of the tab panel.
   Children gx.Node
-  // Attrs holds HTML attributes. The markup does not render them.
+  // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
-<div class="gx-tab" data-gx-tab-item>
+<div class="gx-tab" data-gx-tab-item {...p.Attrs}>
   <button type="button" class="gx-tab-button -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground" data-gx-tab={p.Label} aria-expanded="false">{p.Label}</button>
   <div class="gx-tab-panel pt-4" data-gx-tab-panel>{p.Children}</div>
 </div>
@@ -1142,7 +1142,7 @@ A tag sets a prop by its name with a lower-case first letter: `Class` is `class`
 | --- | --- | --- | --- |
 | `Label` | `string` | Required | Label is the text of the tab button. It must be unique inside one tab group. |
 | `Children` | `gx.Node` | Required | Children is the content of the tab panel. |
-| `Attrs` | `gx.Attrs` | `nil` | Attrs holds HTML attributes. The markup does not render them. |
+| `Attrs` | `gx.Attrs` | `nil` | Attrs adds HTML attributes to the root element. |
 
 ### docs.Tabs
 

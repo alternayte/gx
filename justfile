@@ -45,6 +45,11 @@ docs-gen:
     go run ./internal/docsgen
     tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT; go run ./cmd/gx build -main . -o "$tmp/docs" docs
 
+# Rebuild the published files of the official registry: index.json and
+# items/. `gx add` reads them when the registry directory is the source.
+registry:
+    tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT; go run ./cmd/gx registry build --out "$tmp" registry && cp "$tmp/index.json" registry/index.json && rm -rf registry/items && cp -R "$tmp/items" registry/items
+
 # Run the docs site with rebuild and reload.
 docs-dev:
     cd docs && go run ../cmd/gx dev -main .

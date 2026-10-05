@@ -7,31 +7,35 @@
     {
       "path": "Accordion.gx",
       "target": "ui/accordion/Accordion.gx",
-      "content": "package accordion\n\nprops {\n  Name     string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"w-full\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "bb7f5fd82aee98ba7ce4d1d25559b21a6182e1363525ef0189d8e993c758a59e"
+      "content": "package accordion\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the accordion: the accordion items.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"w-full\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "1f53a9c376e5e4d4ba60dc3a91f0c06449b973f5ae88a6ff69198999a5330eb0"
     },
     {
       "path": "AccordionItem.gx",
       "target": "ui/accordion/AccordionItem.gx",
-      "content": "package accordion\n\nprops {\n  Name     string\n  Title    string\n  Open     bool     = false\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails name={p.Name} open={p.Open} class={gx.Cx(\"group border-b border-border\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary class=\"flex cursor-pointer list-none items-center justify-between gap-4 rounded-md py-4 text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [\u0026::-webkit-details-marker]:hidden\"\u003e\n    {p.Title}\n    \u003cspan class=\"text-muted-foreground transition-transform group-open:rotate-45\"\u003e+\u003c/span\u003e\n  \u003c/summary\u003e\n  \u003cdiv class=\"pb-4 text-sm\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
-      "sha256": "bb291cd1bbdcaca483997ce3d6bb6ba80fa14db5a97e724c12677eb844d0042c"
+      "content": "package accordion\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the name attribute of the details element.\n  // Items with the same name form one accordion, and only one of them is open at a time.\n  Name     string\n  // Title is the text of the summary, the part that opens and closes the item.\n  Title    string\n  // Open renders the item open. The default is closed.\n  Open     bool = false\n  // Disabled stops the summary from opening or closing the item.\n  Disabled bool = false\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item panel.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdetails name={p.Name} open={p.Open} class={gx.Cx(\"group/accordion-item border-border border-b last:border-b-0 [interpolate-size:allow-keywords] [\u0026::details-content]:h-0 [\u0026::details-content]:overflow-hidden [\u0026::details-content]:transition-[height,content-visibility] [\u0026::details-content]:transition-discrete [\u0026::details-content]:duration-200 [\u0026::details-content]:ease-out open:[\u0026::details-content]:h-auto motion-reduce:[\u0026::details-content]:transition-none\", p.Class)} {...p.Attrs}\u003e\n  \u003csummary inert={p.Disabled} class=\"flex flex-1 list-none items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 inert:pointer-events-none inert:opacity-50 [\u0026::-webkit-details-marker]:hidden\"\u003e\n    {p.Title}\n    \u003cicons.ChevronDown class=\"pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-open/accordion-item:rotate-180 motion-reduce:transition-none\" /\u003e\n  \u003c/summary\u003e\n  \u003cdiv class=\"pt-0 pb-4 text-sm\"\u003e{p.Children}\u003c/div\u003e\n\u003c/details\u003e\n",
+      "sha256": "d21c9fc8043f68aa0b25b6f2104c602cd47fbc25cc54d2985896985a1f978e4c"
     },
     {
       "path": "Accordion.fixtures.go",
       "target": "ui/accordion/Accordion.fixtures.go",
-      "content": "package accordion\n\nimport \"github.com/alternayte/gx\"\n\nvar AccordionFixtures = gx.Fixtures[AccordionProps]{\n\t\"Two\": {Name: \"faq\", Children: gx.Frag(\n\t\tAccordionItem(AccordionItemProps{Name: \"faq\", Title: \"Is it accessible?\", Open: true, Children: gx.Text(\"Yes. It uses the native details element.\")}),\n\t\tAccordionItem(AccordionItemProps{Name: \"faq\", Title: \"Is it animated?\", Children: gx.Text(\"No. The panel opens at once.\")}),\n\t)},\n}\n",
-      "sha256": "1e1d60db3e35bdea20ca9afdd12153869391d2a395d4c76f14ab8a1f48371624"
+      "content": "package accordion\n\nimport \"github.com/alternayte/gx\"\n\nvar AccordionFixtures = gx.Fixtures[AccordionProps]{\n\t\"Two\": {Children: gx.Frag(\n\t\tAccordionItem(AccordionItemProps{Name: \"faq\", Title: \"Is it accessible?\", Open: true, Children: gx.Text(\"Yes. It uses the native details element.\")}),\n\t\tAccordionItem(AccordionItemProps{Name: \"faq\", Title: \"Is it animated?\", Children: gx.Text(\"Yes. The panel height animates.\")}),\n\t)},\n}\n",
+      "sha256": "42d228d6ff7ae74ad4ebea9e5443fac0af281a6b616492953adcf9ee5874d1b0"
     },
     {
       "path": "AccordionItem.fixtures.go",
       "target": "ui/accordion/AccordionItem.fixtures.go",
-      "content": "package accordion\n\nimport \"github.com/alternayte/gx\"\n\nvar AccordionItemFixtures = gx.Fixtures[AccordionItemProps]{\n\t\"Closed\": {Name: \"faq\", Title: \"A question\", Children: gx.Text(\"An answer.\")},\n\t\"Open\":   {Name: \"faq\", Title: \"A question\", Open: true, Children: gx.Text(\"An answer.\")},\n}\n",
-      "sha256": "0abe66d724f68da55f322346ac46f9d3e642c92ef7e753c075d3f89104135973"
+      "content": "package accordion\n\nimport \"github.com/alternayte/gx\"\n\n// Each fixture has its own name: details elements that share a name form one\n// exclusive group across the whole gallery page.\nvar AccordionItemFixtures = gx.Fixtures[AccordionItemProps]{\n\t\"Closed\":   {Name: \"item-closed\", Title: \"A question\", Children: gx.Text(\"An answer.\")},\n\t\"Open\":     {Name: \"item-open\", Title: \"A question\", Open: true, Children: gx.Text(\"An answer.\")},\n\t\"Disabled\": {Name: \"item-disabled\", Title: \"A question\", Disabled: true, Children: gx.Text(\"An answer.\")},\n}\n",
+      "sha256": "d0d828b7256c098064ef9ff08a00ca5a084244194ccbd1be14e4d70d11941563"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--border",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--ring"
   ],
-  "usage": "# Accordion\n\nA stack of panels that open one at a time.\n\n## Usage\n\n```gx\n\u003caccordion.Accordion name=\"faq\"\u003e\n  \u003caccordion.AccordionItem name=\"faq\" title=\"Is it accessible?\"\u003e\n    Yes. It uses the native details element.\n  \u003c/accordion.AccordionItem\u003e\n\u003c/accordion.Accordion\u003e\n```\n\nThe accordion uses `\u003cdetails name\u003e`, so the browser gives the open and close behaviour.\n\n## Do\n\n- Give every item the same `Name`.\n- Put a question in `Title` and the answer in the body.\n\n## Don't\n\n- Do not use an accordion for primary navigation.\n- Do not open more than one item.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the summary. |\n| Enter, Space | Opens or closes the item. |\n"
+  "usage": "# Accordion\n\nA stack of panels that open one at a time.\n\n## Usage\n\n```gx\n\u003caccordion.Accordion\u003e\n  \u003caccordion.AccordionItem name=\"faq\" title=\"Is it accessible?\"\u003e\n    Yes. It uses the native details element.\n  \u003c/accordion.AccordionItem\u003e\n\u003c/accordion.Accordion\u003e\n```\n\nThe accordion uses `\u003cdetails name\u003e`, so the browser gives the open and close behaviour.\nThe panel height animates in a browser that supports `interpolate-size`. Other browsers open the panel at once.\nSet `Disabled` to stop an item from opening.\n\n## Do\n\n- Give every item of one accordion the same `Name`.\n- Give each accordion on a page its own `Name`.\n- Put a question in `Title` and the answer in the body.\n\n## Don't\n\n- Do not use an accordion for primary navigation.\n- Do not open more than one item.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the summary. |\n| Enter, Space | Opens or closes the item. |\n"
 }

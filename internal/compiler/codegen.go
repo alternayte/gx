@@ -460,6 +460,14 @@ func (g *gen) exprValue(n any, raw string) string {
 }
 
 func (g *gen) elementExpr(el *Element) string {
+	if el.HasRaw {
+		// The contents of script and style are raw (REQ-AUT-03). They are
+		// a constant of the template, so the conversion is safe.
+		if el.RawText == "" {
+			return g.elementCall(el, "")
+		}
+		return g.elementCall(el, "gx.Raw(gx.SafeHTML("+strconv.Quote(el.RawText)+"))")
+	}
 	return g.elementCall(el, g.childExprs(el.Children))
 }
 

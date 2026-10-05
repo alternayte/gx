@@ -7,31 +7,66 @@
     {
       "path": "Select.gx",
       "target": "ui/select/Select.gx",
-      "content": "package selectbox\n\nprops {\n  Name     string   = \"\"\n  Label    string   = \"\"\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cselect name={p.Name} aria-label={p.Label} class={gx.Cx(\"h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/select\u003e\n",
-      "sha256": "d42e261edf96a72761521966dbb4118ce24a5469cfe5d4d105eec648bdd0e600"
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx/registry/icons\"\n\nprops {\n  // Name is the form field name.\n  Name        string = \"\"\n  // Label is the accessible name of the select.\n  Label       string = \"\"\n  // Size sets the height: Md or Sm.\n  Size        Size = Md\n  // Placeholder is the text of a disabled first option that shows while no value is selected. An\n  // empty value renders no placeholder option.\n  Placeholder string = \"\"\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Children is the options of the select.\n  Children    gx.Node\n  // Attrs adds HTML attributes to the select element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cspan class={gx.Cx(\"relative inline-flex w-fit\", p.Class)}\u003e\n  \u003cselect name={p.Name} aria-label={p.Label} class={gx.Cx(\"w-full min-w-0 appearance-none rounded-md border border-input bg-transparent py-0 pr-9 pl-3 text-sm whitespace-nowrap shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 has-[option[value='']:checked]:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:ring-destructive/40\", sizeClass[p.size()])} {...p.Attrs}\u003e\n    if p.Placeholder != \"\" {\n      \u003coption value=\"\" disabled selected hidden\u003e{p.Placeholder}\u003c/option\u003e\n    }\n    {p.Children}\n  \u003c/select\u003e\n  \u003cicons.ChevronDown class=\"pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground opacity-50\" /\u003e\n\u003c/span\u003e\n",
+      "sha256": "1a4149018c72c412e339a0e46e5d477cd7b375644f4c3b69419e1ab188ca0e11"
+    },
+    {
+      "path": "SelectGroup.gx",
+      "target": "ui/select/SelectGroup.gx",
+      "content": "package selectbox\n\nprops {\n  // Label is the visible name of the option group.\n  Label    string\n  // Disabled disables every option of the group.\n  Disabled bool = false\n  // Children is the options of the group.\n  Children gx.Node\n}\n\n\u003coptgroup label={p.Label} disabled={p.Disabled}\u003e{p.Children}\u003c/optgroup\u003e\n",
+      "sha256": "84b38d68b60e2d4a77d23ab858d78485771fd4ad6b5be1e3ad80c8774bbf9a62"
     },
     {
       "path": "SelectOption.gx",
       "target": "ui/select/SelectOption.gx",
-      "content": "package selectbox\n\nprops {\n  Value    string = \"\"\n  Selected bool   = false\n  Children gx.Node\n}\n\n\u003coption value={p.Value} selected={p.Selected}\u003e{p.Children}\u003c/option\u003e\n",
-      "sha256": "1aa31f87bfd568a90bac9d0063d8ff101c1804aaa81903c3fc9b648b5bd3a1ec"
+      "content": "package selectbox\n\nprops {\n  // Value is the value the form submits when the option is selected.\n  Value    string = \"\"\n  // Selected selects the option for the first render.\n  Selected bool = false\n  // Disabled disables the option.\n  Disabled bool = false\n  // Children is the option label.\n  Children gx.Node\n}\n\n\u003coption value={p.Value} selected={p.Selected} disabled={p.Disabled}\u003e{p.Children}\u003c/option\u003e\n",
+      "sha256": "722e5d476079bf1dcdbd914eded9415b5a214f234676a6f12ec9f044a2fff6bc"
+    },
+    {
+      "path": "SelectSeparator.gx",
+      "target": "ui/select/SelectSeparator.gx",
+      "content": "package selectbox\n\nprops {\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003chr {...p.Attrs} /\u003e\n",
+      "sha256": "da5b79cf219f076f67799ef257a641be6c6cb0aa94672112d5798875b2360944"
     },
     {
       "path": "Select.fixtures.go",
       "target": "ui/select/Select.fixtures.go",
-      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectFixtures = gx.Fixtures[SelectProps]{\n\t\"Plan\": {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Children: gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"free\", Selected: true, Children: gx.Text(\"Free\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"pro\", Children: gx.Text(\"Pro\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"team\", Children: gx.Text(\"Team\")}),\n\t)},\n\t\"Disabled\": {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: SelectOption(SelectOptionProps{Value: \"free\", Children: gx.Text(\"Free\")})},\n}\n",
-      "sha256": "6546334b5eed514232f6c1bf63d7837a6c75aef5d6d5d85a9604946588712b8b"
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nfunc plans() gx.Node {\n\treturn gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"free\", Selected: true, Children: gx.Text(\"Free\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"pro\", Children: gx.Text(\"Pro\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"team\", Children: gx.Text(\"Team\")}),\n\t)\n}\n\nvar SelectFixtures = gx.Fixtures[SelectProps]{\n\t\"Plan\":     {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Children: plans()},\n\t\"Small\":    {Name: \"plan\", Label: \"Plan\", Size: Sm, Class: \"w-48\", Children: plans()},\n\t\"Fit\":      {Name: \"plan\", Label: \"Plan\", Children: plans()},\n\t\"Disabled\": {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Children: SelectOption(SelectOptionProps{Value: \"free\", Children: gx.Text(\"Free\")})},\n\t\"Invalid\":  {Name: \"plan\", Label: \"Plan\", Class: \"w-48\", Attrs: gx.Attrs{{Key: \"aria-invalid\", Value: \"true\"}}, Children: plans()},\n\t\"Placeholder\": {Name: \"fruit\", Label: \"Fruit\", Placeholder: \"Select a fruit\", Class: \"w-48\", Children: gx.Frag(\n\t\tSelectGroup(SelectGroupProps{Label: \"Fruits\", Children: gx.Frag(\n\t\t\tSelectOption(SelectOptionProps{Value: \"apple\", Children: gx.Text(\"Apple\")}),\n\t\t\tSelectOption(SelectOptionProps{Value: \"banana\", Children: gx.Text(\"Banana\")}),\n\t\t)}),\n\t\tSelectSeparator(SelectSeparatorProps{}),\n\t\tSelectGroup(SelectGroupProps{Label: \"Vegetables\", Children: gx.Frag(\n\t\t\tSelectOption(SelectOptionProps{Value: \"carrot\", Children: gx.Text(\"Carrot\")}),\n\t\t\tSelectOption(SelectOptionProps{Value: \"leek\", Disabled: true, Children: gx.Text(\"Leek\")}),\n\t\t)}),\n\t)},\n}\n",
+      "sha256": "b17a2a0df4bbeeb538564b4313b1810b9faa1853af4e006ca00821098281a74f"
+    },
+    {
+      "path": "SelectGroup.fixtures.go",
+      "target": "ui/select/SelectGroup.fixtures.go",
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectGroupFixtures = gx.Fixtures[SelectGroupProps]{\n\t\"Group\": {Label: \"Fruits\", Children: gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"apple\", Children: gx.Text(\"Apple\")}),\n\t\tSelectOption(SelectOptionProps{Value: \"banana\", Children: gx.Text(\"Banana\")}),\n\t)},\n}\n\n// SelectGroupWrap renders the group inside a select, as a page uses it.\nfunc SelectGroupWrap(n gx.Node) gx.Node {\n\treturn Select(SelectProps{Label: \"Fruit\", Children: n})\n}\n",
+      "sha256": "151b320585cbd4b46e6be52ccfd00f5f83c1a556286482cc2504a7fcc188e426"
     },
     {
       "path": "SelectOption.fixtures.go",
       "target": "ui/select/SelectOption.fixtures.go",
-      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectOptionFixtures = gx.Fixtures[SelectOptionProps]{\"Option\": {Value: \"free\", Children: gx.Text(\"Free\")}}\n",
-      "sha256": "b56f51952e9c85e1ac390e68ae68cdf90f238b7b89fe19cb8f254dd6afe81d54"
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectOptionFixtures = gx.Fixtures[SelectOptionProps]{\"Option\": {Value: \"free\", Children: gx.Text(\"Free\")}}\n\n// SelectOptionWrap renders the option inside a select, as a page uses it.\nfunc SelectOptionWrap(n gx.Node) gx.Node {\n\treturn Select(SelectProps{Label: \"Plan\", Children: n})\n}\n",
+      "sha256": "e42391eb604d569ea921e2418fa89efa7d0008a009fd6cf965cab3a3aa6aad12"
+    },
+    {
+      "path": "SelectSeparator.fixtures.go",
+      "target": "ui/select/SelectSeparator.fixtures.go",
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\nvar SelectSeparatorFixtures = gx.Fixtures[SelectSeparatorProps]{\"Default\": {}}\n\n// SelectSeparatorWrap renders the separator between two options of a select.\nfunc SelectSeparatorWrap(n gx.Node) gx.Node {\n\treturn Select(SelectProps{Label: \"Plan\", Children: gx.Frag(\n\t\tSelectOption(SelectOptionProps{Value: \"free\", Children: gx.Text(\"Free\")}),\n\t\tn,\n\t\tSelectOption(SelectOptionProps{Value: \"pro\", Children: gx.Text(\"Pro\")}),\n\t)})\n}\n",
+      "sha256": "1ff2d3dedbbf850472fc13bc3ad883bfa1e08939beffd1e497608164adc590f9"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/select/styles.go",
+      "content": "package selectbox\n\nimport \"github.com/alternayte/gx\"\n\n// Size is the height of a select.\ntype Size string\n\n// The sizes of selectbox.Select.\nconst (\n\tMd Size = \"default\"\n\tSm Size = \"sm\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tMd: \"h-9\",\n\tSm: \"h-8\",\n}\n\n// size returns the size of one select; a zero value is Md.\nfunc (p SelectProps) size() Size {\n\tif p.Size == \"\" {\n\t\treturn Md\n\t}\n\treturn p.Size\n}\n",
+      "sha256": "fae0b4833126655972b3ca95237312f5accef5c1b5777410891c66f25b133fed"
     }
+  ],
+  "registryDependencies": [
+    "icons"
   ],
   "requiredTokens": [
     "--input",
-    "--ring"
+    "--ring",
+    "--muted-foreground",
+    "--destructive"
   ],
-  "usage": "# Select\n\nA native list of exclusive choices.\n\n## Usage\n\n```gx\n\u003cselect.Select name=\"plan\"\u003e\n  \u003cselect.SelectOption value=\"free\" selected={true}\u003eFree\u003c/select.SelectOption\u003e\n  \u003cselect.SelectOption value=\"pro\"\u003ePro\u003c/select.SelectOption\u003e\n\u003c/select.Select\u003e\n```\n\nThe component is a styled native `\u003cselect\u003e`, so the keyboard and the mobile picker come from the browser.\n\n## Do\n\n- Mark one option with `Selected`.\n- Pair the select with a label.\n\n## Don't\n\n- Do not use a select for fewer than four options. Use a radio group.\n- Do not leave the select without a name in a form.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the select. |\n| Arrow keys | Moves through the options. |\n| Enter, Space | Opens or commits the choice. |\n"
+  "usage": "# Select\n\nA native list of exclusive choices.\n\n## Usage\n\n```gx\n\u003cselectbox.Select name=\"fruit\" label=\"Fruit\" placeholder=\"Select a fruit\" class=\"w-48\"\u003e\n  \u003cselectbox.SelectGroup label=\"Fruits\"\u003e\n    \u003cselectbox.SelectOption value=\"apple\"\u003eApple\u003c/selectbox.SelectOption\u003e\n    \u003cselectbox.SelectOption value=\"banana\"\u003eBanana\u003c/selectbox.SelectOption\u003e\n  \u003c/selectbox.SelectGroup\u003e\n  \u003cselectbox.SelectSeparator /\u003e\n  \u003cselectbox.SelectOption value=\"carrot\" selected={true}\u003eCarrot\u003c/selectbox.SelectOption\u003e\n\u003c/selectbox.Select\u003e\n```\n\nThe component is a styled native `\u003cselect\u003e`, so the keyboard, the option list and the mobile picker come from the browser. `Size` is `selectbox.Md` (default) or `selectbox.Sm`. `Class` sets the width of the control; without it the control is as wide as its longest option. `Attrs` go on the `\u003cselect\u003e`.\n\n`Placeholder` shows muted text until the user selects an option. `SelectGroup` is an `\u003coptgroup\u003e` and `SelectSeparator` is an `\u003chr\u003e` between options.\n\n## Do\n\n- Mark one option with `Selected`, or set a `Placeholder`.\n- Pair the select with a label, or set `Label`.\n- Set `aria-invalid` through `Attrs` when the value fails validation.\n\n## Don't\n\n- Do not use a select for fewer than four options. Use a radio group.\n- Do not leave the select without a name in a form.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the select. |\n| Arrow keys | Moves through the options. |\n| A letter | Selects the next option that starts with the typed text. |\n| Enter, Space | Opens or commits the choice. |\n"
 }

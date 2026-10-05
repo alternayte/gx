@@ -4,8 +4,8 @@
       "accordion": {
         "version": "0.1.0",
         "files": {
-          "ui/accordion/Accordion.fixtures.go": "e41ce25a444d8cf5d4536801b7770b1da5694cdb1445a5cf449724ed0ad292df",
-          "ui/accordion/Accordion.gx": "f3ec3a4a3274eef5ef324132cf45880f22ff7fad4f248ec84390be157751f94a",
+          "ui/accordion/Accordion.fixtures.go": "42d228d6ff7ae74ad4ebea9e5443fac0af281a6b616492953adcf9ee5874d1b0",
+          "ui/accordion/Accordion.gx": "1f53a9c376e5e4d4ba60dc3a91f0c06449b973f5ae88a6ff69198999a5330eb0",
           "ui/accordion/AccordionItem.fixtures.go": "d0d828b7256c098064ef9ff08a00ca5a084244194ccbd1be14e4d70d11941563",
           "ui/accordion/AccordionItem.gx": "a5c87e215c0614da716146635985148c615972fe38a25acf255c01e6f98cf260"
         }
@@ -479,8 +479,8 @@
       "radio-group": {
         "version": "0.1.0",
         "files": {
-          "ui/radio-group/RadioGroup.fixtures.go": "8d64d0ce037ae2e8708c89c10786ced3750304cda71c475ec3c73fb58fe056e0",
-          "ui/radio-group/RadioGroup.gx": "0a1f608c926ab77c0a4deff031441fae5c6dfc94cc31e055ecce2382807330ae",
+          "ui/radio-group/RadioGroup.fixtures.go": "7ffe38be0256a4d3f437cc776424f84e46bc4cd8dfdf2249f68dc93c5925aa42",
+          "ui/radio-group/RadioGroup.gx": "2ef92365461e0d5473e01216c1946f4e6de1da93082f1ce2367470bc6b505350",
           "ui/radio-group/RadioGroupItem.fixtures.go": "b4d957dc1d2ec9975ea9d2349d69d1b4d9f02541580f9b356c63a343f1068f44",
           "ui/radio-group/RadioGroupItem.gx": "14e3bcbedf65fade5d913d43d2730a073a5e9cd24072fc2c3cd8de523db231ed",
           "ui/radio-group/styles.go": "d738bd3dd78db1799f3412aa2db57373e4a33a93dc64768fa1b9f5b0dd9d8260"

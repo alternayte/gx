@@ -7,26 +7,27 @@
     {
       "path": "Textarea.gx",
       "target": "ui/textarea/Textarea.gx",
-      "content": "package textarea\n\nprops {\n  Name        string   = \"\"\n  Value       string   = \"\"\n  Placeholder string   = \"\"\n  Rows        int      = 4\n  Class       string   = \"\"\n  Attrs       gx.Attrs = nil\n}\n\n\u003ctextarea name={p.Name} rows={p.rows()} placeholder={p.Placeholder} class={gx.Cx(\"flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\", p.Class)} {...p.Attrs}\u003e{p.Value}\u003c/textarea\u003e\n",
-      "sha256": "3b1feb1f6e70f824ccd82034af648b261e192d555c8de09e091e863c94171cca"
+      "content": "package textarea\n\nprops {\n  // Name is the form field name.\n  Name        string = \"\"\n  // Value is the text of the textarea.\n  Value       string = \"\"\n  // Placeholder is the text that shows while the textarea is empty.\n  Placeholder string = \"\"\n  // Rows is the rows attribute. A value of zero or less renders no attribute.\n  Rows        int = 0\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003ctextarea name={p.Name} placeholder={p.Placeholder} data-slot=\"textarea\" class={gx.Cx(Class, p.Class)} {...p.attrs()}\u003e{p.Value}\u003c/textarea\u003e\n",
+      "sha256": "d37e8377651957a49e2fdf5335e53a5084350a24b20996864de29876eb707649"
     },
     {
       "path": "Textarea.fixtures.go",
       "target": "ui/textarea/Textarea.fixtures.go",
-      "content": "package textarea\n\nimport \"github.com/alternayte/gx\"\n\nvar TextareaFixtures = gx.Fixtures[TextareaProps]{\n\t\"Placeholder\": {Placeholder: \"Tell us more.\"},\n\t\"Filled\":      {Value: \"A short note.\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Note\"}}},\n\t\"Disabled\":    {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n}\n",
-      "sha256": "6cf88cb3b061958b144b06ff094977798a6876eceb02b2182cde488745f6b4a6"
+      "content": "package textarea\n\nimport \"github.com/alternayte/gx\"\n\nvar TextareaFixtures = gx.Fixtures[TextareaProps]{\n\t\"Placeholder\": {Placeholder: \"Tell us more.\"},\n\t\"Filled\":      {Value: \"A short note.\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Note\"}}},\n\t\"Rows\":        {Rows: 6, Placeholder: \"Six rows in a browser without field-sizing.\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Long note\"}}},\n\t\"Invalid\":     {Value: \"No.\", Attrs: gx.Attrs{{Key: \"aria-label\", Value: \"Reason\"}, {Key: \"aria-invalid\", Value: \"true\"}}},\n\t\"Disabled\":    {Attrs: gx.Attrs{gx.Bool(\"disabled\", true)}, Placeholder: \"Disabled\"},\n}\n",
+      "sha256": "88d49a875726c06aac609666a21d5ff9ff134ab7da39b7770407bccf25c3c82a"
     },
     {
       "path": "styles.go",
       "target": "ui/textarea/styles.go",
-      "content": "package textarea\n\n// rows returns the visible rows; a zero value is 4.\nfunc (p TextareaProps) rows() int {\n\tif p.Rows == 0 {\n\t\treturn 4\n\t}\n\treturn p.Rows\n}\n",
-      "sha256": "4b1263988af5bfe691256af3189b81e15a031f8356b485f2570fa6733c06a996"
+      "content": "package textarea\n\nimport (\n\t\"strconv\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n// Control is the classes of a textarea without its focus ring. A group\n// that draws the ring on its own border takes these classes for its\n// control.\nconst Control = \"flex field-sizing-content min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:ring-destructive/40\"\n\n// Class is the classes of a textarea. A control that looks like a textarea\n// takes these classes.\nconst Class = Control + \" focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50\"\n\n// attrs returns the rows attribute when the caller sets one, then the\n// caller's attributes. The textarea grows with its content, so rows only\n// counts in a browser without field-sizing.\nfunc (p TextareaProps) attrs() gx.Attrs {\n\tif p.Rows \u003c= 0 {\n\t\treturn p.Attrs\n\t}\n\treturn append(gx.Attrs{{Key: \"rows\", Value: strconv.Itoa(p.Rows)}}, p.Attrs...)\n}\n",
+      "sha256": "ae2b59f4f3a7c12b68e14692790b34395ca326d47ac02707d3c66e83d347cd79"
     }
   ],
   "requiredTokens": [
     "--input",
     "--ring",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--destructive"
   ],
-  "usage": "# Textarea\n\nA multi-line text control.\n\n## Usage\n\n```gx\n\u003ctextarea.Textarea name=\"note\" rows={6} placeholder=\"Tell us more.\" /\u003e\n```\n\n## Do\n\n- Use a textarea for a message longer than one line.\n- Set `Rows` to the expected size.\n\n## Don't\n\n- Do not use a textarea for a single value.\n- Do not disable the resize handle unless the layout needs it.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the textarea. |\n| Enter | Inserts a new line. |\n"
+  "usage": "# Textarea\n\nA multi-line text control.\n\n## Usage\n\n```gx\n\u003ctextarea.Textarea name=\"note\" placeholder=\"Tell us more.\" /\u003e\n```\n\nThe textarea grows with its content. It starts at two lines.\n`Rows` sets the height only in a browser without `field-sizing`.\nSet `aria-invalid=\"true\"` through `Attrs` to show the error border.\n\n## Do\n\n- Use a textarea for a message longer than one line.\n- Set a `max-h-` class when a long text must scroll.\n\n## Don't\n\n- Do not use a textarea for a single value.\n- Do not disable the resize handle unless the layout needs it.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the textarea. |\n| Enter | Inserts a new line. |\n"
 }

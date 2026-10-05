@@ -7,24 +7,24 @@
     {
       "path": "Separator.gx",
       "target": "ui/separator/Separator.gx",
-      "content": "package separator\n\nprops {\n  Orientation Orientation = Horizontal\n  Decorative  bool        = true\n  Class       string      = \"\"\n  Attrs       gx.Attrs    = nil\n}\n\n\u003cdiv {...p.attrs()}\u003e\u003c/div\u003e\n",
-      "sha256": "5b5532f36974763a30a4bd59387a755c5fd1daf8bfcb086644b8b9873cfc0323"
+      "content": "package separator\n\nprops {\n  // Orientation sets the direction: Horizontal or Vertical.\n  Orientation Orientation = Horizontal\n  // Decorative hides the separator from assistive technology. Set it to false for the separator\n  // role.\n  Decorative  bool = true\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"separator\" data-orientation={p.orientation()} class={gx.Cx(\"shrink-0 bg-border\", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}\u003e\u003c/div\u003e\n",
+      "sha256": "f83ecd63c700af0f49f28a5f95027eae4d116f826729bd723b72b5c57d096030"
     },
     {
       "path": "Separator.fixtures.go",
       "target": "ui/separator/Separator.fixtures.go",
-      "content": "package separator\n\nimport \"github.com/alternayte/gx\"\n\nvar SeparatorFixtures = gx.Fixtures[SeparatorProps]{\n\t\"Horizontal\": {Class: \"w-40\"},\n\t\"Vertical\":   {Orientation: Vertical, Class: \"h-8\"},\n}\n",
-      "sha256": "2a45758af50b52b3b7ec945cabe08473b735edaca6e987541cb3c51c61f76232"
+      "content": "package separator\n\nimport \"github.com/alternayte/gx\"\n\nvar SeparatorFixtures = gx.Fixtures[SeparatorProps]{\n\t\"Horizontal\": {Decorative: true, Class: \"w-40\"},\n\t\"Vertical\":   {Decorative: true, Orientation: Vertical, Class: \"h-8\"},\n\t\"Semantic\":   {Class: \"w-40\"},\n}\n",
+      "sha256": "68fd47e86d8f2ce5331e769d8ebda3b448ac74634c3057b738c14bdbf5c346e6"
     },
     {
       "path": "styles.go",
       "target": "ui/separator/styles.go",
-      "content": "package separator\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the direction of a separator.\ntype Orientation string\n\n// The orientations of separator.Separator.\nconst (\n\tHorizontal Orientation = \"horizontal\"\n\tVertical   Orientation = \"vertical\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tHorizontal: \"h-px w-full\",\n\tVertical:   \"h-full w-px\",\n}\n\n// sizeClass returns the classes of one orientation; a zero value is\n// Horizontal.\nfunc (p SeparatorProps) sizeClass() string {\n\tif p.Orientation == \"\" {\n\t\treturn orientationClass[Horizontal]\n\t}\n\treturn orientationClass[p.Orientation]\n}\n\n// attrs returns the attributes of one separator.\nfunc (p SeparatorProps) attrs() gx.Attrs {\n\ta := gx.Attrs{\n\t\t{Key: \"role\", Value: \"separator\"},\n\t\t{Key: \"data-orientation\", Value: string(p.Orientation)},\n\t\t{Key: \"class\", Value: gx.Cx(\"shrink-0 bg-border\", p.sizeClass(), p.Class)},\n\t}\n\tif p.Decorative {\n\t\ta = append(a, gx.Attr{Key: \"aria-hidden\", Value: \"true\"})\n\t}\n\treturn a\n}\n",
-      "sha256": "0e4ff0b1177424059295b008a80dd7818ff47b3006afaff64143ea0a2a49918d"
+      "content": "package separator\n\nimport \"github.com/alternayte/gx\"\n\n// Orientation is the direction of a separator.\ntype Orientation string\n\n// The orientations of separator.Separator.\nconst (\n\tHorizontal Orientation = \"horizontal\"\n\tVertical   Orientation = \"vertical\"\n)\n\nvar orientationClass = gx.Enum[Orientation]{\n\tHorizontal: \"h-px w-full\",\n\tVertical:   \"h-full w-px\",\n}\n\n// orientation returns the data-orientation value; a zero value is\n// Horizontal.\nfunc (p SeparatorProps) orientation() string {\n\tif p.Orientation == \"\" {\n\t\treturn string(Horizontal)\n\t}\n\treturn string(p.Orientation)\n}\n\n// attrs returns the role of one separator, then the caller's attributes. A\n// decorative separator has no role. A semantic separator names its\n// orientation when it is vertical.\nfunc (p SeparatorProps) attrs() gx.Attrs {\n\ta := gx.Attrs{{Key: \"role\", Value: \"none\"}}\n\tif !p.Decorative {\n\t\ta = gx.Attrs{{Key: \"role\", Value: \"separator\"}}\n\t\tif p.Orientation == Vertical {\n\t\t\ta = append(a, gx.Attr{Key: \"aria-orientation\", Value: \"vertical\"})\n\t\t}\n\t}\n\treturn append(a, p.Attrs...)\n}\n",
+      "sha256": "956f2ad864294c96c8c2765d0c52e3c19a8a793d9086be5ed8fbab25c856950b"
     }
   ],
   "requiredTokens": [
     "--border"
   ],
-  "usage": "# Separator\n\nA visual divider between content.\n\n## Usage\n\n```gx\n\u003cseparator.Separator /\u003e\n\u003cseparator.Separator orientation={separator.Vertical} class=\"h-6\" /\u003e\n```\n\n## Do\n\n- Use a separator between groups that need a visual break.\n- Keep the decorative default for a pure layout line.\n\n## Don't\n\n- Do not use a separator where whitespace is enough.\n- Do not set `Decorative` to false unless the line is a real landmark.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Separator\n\nA visual divider between content.\n\n## Usage\n\n```gx\n\u003cseparator.Separator /\u003e\n\u003cseparator.Separator orientation={separator.Vertical} class=\"h-6\" /\u003e\n```\n\nA decorative separator has the role `none`. A separator with `decorative={false}` has the role `separator`.\n\n## Do\n\n- Use a separator between groups that need a visual break.\n- Keep the decorative default for a pure layout line.\n\n## Don't\n\n- Do not use a separator where whitespace is enough.\n- Do not set `Decorative` to false unless the line is a real landmark.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
 }

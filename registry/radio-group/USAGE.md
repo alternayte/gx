@@ -5,7 +5,7 @@ A group of exclusive choices.
 ## Usage
 
 ```gx
-<radiogroup.RadioGroup name="plan" label="Plan">
+<radiogroup.RadioGroup label="Plan">
   <radiogroup.RadioGroupItem name="plan" value="free" checked={true} label="Free" />
   <radiogroup.RadioGroupItem name="plan" value="pro" label="Pro" />
 </radiogroup.RadioGroup>

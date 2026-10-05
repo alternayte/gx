@@ -5,7 +5,7 @@ A stack of panels that open one at a time.
 ## Usage
 
 ```gx
-<accordion.Accordion name="faq">
+<accordion.Accordion>
   <accordion.AccordionItem name="faq" title="Is it accessible?">
     Yes. It uses the native details element.
   </accordion.AccordionItem>

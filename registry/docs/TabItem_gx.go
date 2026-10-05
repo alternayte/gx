@@ -11,14 +11,14 @@ type TabItemProps struct {
 	Label string
 	// Children is the content of the tab panel.
 	Children gx.Node
-	// Attrs holds HTML attributes. The markup does not render them.
+	// Attrs adds HTML attributes to the root element.
 	Attrs gx.Attrs
 }
 
 func TabItem(p TabItemProps) gx.Node {
 	var _b gx.Builder
 //line TabItem.gx:12:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab", Kind: gx.AttrText}, gx.Bool("data-gx-tab-item", true)}, gx.Frag(gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab-button -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}}, gx.Text(p.Label)), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab-panel pt-4", Kind: gx.AttrText}, gx.Bool("data-gx-tab-panel", true)}, p.Children), gx.Text("\n"))))
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab", Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tab-item", true)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab-button -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}}, gx.Text(p.Label)), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab-panel pt-4", Kind: gx.AttrText}, gx.Bool("data-gx-tab-panel", true)}, p.Children), gx.Text("\n"))))
 //line TabItem.gx:15:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

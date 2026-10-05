@@ -6,7 +6,6 @@ import "github.com/alternayte/gx"
 // across the whole gallery page, and only one of them stays checked.
 var RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{
 	"Vertical": {
-		Name:  "plan",
 		Label: "Plan",
 		Children: gx.Frag(
 			RadioGroupItem(RadioGroupItemProps{Name: "plan", Value: "free", Checked: true, Label: "Free"}),
@@ -14,7 +13,6 @@ var RadioGroupFixtures = gx.Fixtures[RadioGroupProps]{
 		),
 	},
 	"Horizontal": {
-		Name:        "size",
 		Label:       "Size",
 		Orientation: Horizontal,
 		Children: gx.Frag(

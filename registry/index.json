@@ -145,6 +145,12 @@
       "kind": "component"
     },
     {
+      "name": "icons",
+      "version": "0.1.0",
+      "description": "The Lucide icons that the registry components use.",
+      "kind": "component"
+    },
+    {
       "name": "input",
       "version": "0.1.0",
       "description": "A single-line text control.",
@@ -291,7 +297,7 @@
     {
       "name": "tabs",
       "version": "0.1.0",
-      "description": "Exclusive panels behind a row of tab buttons.",
+      "description": "Exclusive panels behind a list of tab buttons.",
       "kind": "component"
     },
     {
@@ -302,7 +308,7 @@
     },
     {
       "name": "toast",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "description": "Server-pushed toasts: the toaster region and the toast.",
       "kind": "component"
     },
@@ -315,7 +321,7 @@
     {
       "name": "toggle-group",
       "version": "0.1.0",
-      "description": "A segmented control of exclusive choices.",
+      "description": "A segmented control of toggle items.",
       "kind": "component"
     },
     {

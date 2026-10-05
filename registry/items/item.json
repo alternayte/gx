@@ -7,56 +7,56 @@
     {
       "path": "Item.gx",
       "target": "ui/item/Item.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "9f3271ee68f66e562738474f8764d416a07180467a7967a13a0aae2390248550"
+      "content": "package item\n\nprops {\n  // Variant sets the surface: Default, Outline or Muted.\n  Variant  Variant = Default\n  // Size sets the padding and the gap: Md or Sm.\n  Size     Size = Md\n  // Href is the link target. With a value the root is an a element; empty gives a div.\n  Href     gx.URL = \"\"\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the item.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\nif p.Href != \"\" {\n  \u003ca href={p.Href} data-slot=\"item\" data-variant={p.variant()} data-size={p.size()} class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/a\u003e\n} else {\n  \u003cdiv data-slot=\"item\" data-variant={p.variant()} data-size={p.size()} class={p.class()} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n}\n",
+      "sha256": "a28c20bfee3e68b90d1262afc9cc4bf97a5339d5948ff857bf885e5bf4da8de8"
     },
     {
       "path": "ItemMedia.gx",
       "target": "ui/item/ItemMedia.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex shrink-0 items-center justify-center gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "9c329139ce410d22678de180f82615a0001538a53d88513516cc4bab3bf4d950"
+      "content": "package item\n\nprops {\n  // Variant sets the look of the media: MediaDefault, MediaIcon or MediaImage.\n  Variant  Media = MediaDefault\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the media, for example an icon or an image.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-media\" data-variant={p.variant()} class={gx.Cx(\"flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start [\u0026_svg]:pointer-events-none\", mediaClass[Media(p.variant())], p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "11e2bf25328df070b0b37469405971a780177bc7c5492462b3d4d7b7e7ba6e4e"
     },
     {
       "path": "ItemContent.gx",
       "target": "ui/item/ItemContent.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex flex-1 flex-col gap-1\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "2e10dcc8e702c5d46fda08e7cc5e2b9abb4946a6808d733eb76083236fae98ad"
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the column: the title and the description.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-content\" class={gx.Cx(\"flex flex-1 flex-col gap-1 [\u0026+[data-slot=item-content]]:flex-none\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "d815f6b33ad3a3f7858d2a3207d2e5c1e74a34aa75fd0887de75a7e8921f7420"
     },
     {
       "path": "ItemTitle.gx",
       "target": "ui/item/ItemTitle.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex w-fit items-center gap-2 text-sm leading-snug font-medium\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "7493b4859a81f7dc5949ddabc8fa501c204278b4b86303d765dc328f1c812754"
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the title text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-title\" class={gx.Cx(\"flex w-fit items-center gap-2 text-sm leading-snug font-medium\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "fc67733f3d776559960e9f39a13c7a72ee3ac9c3c7779c0afbf96519120259da"
     },
     {
       "path": "ItemDescription.gx",
       "target": "ui/item/ItemDescription.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp class={gx.Cx(\"line-clamp-2 text-sm leading-normal font-normal text-muted-foreground\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
-      "sha256": "c5004ea4de9f099a49e40b643fb08536460f7ab07c164c5beb9416b6f9563682"
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the description text.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cp data-slot=\"item-description\" class={gx.Cx(\"line-clamp-2 text-sm leading-normal font-normal text-balance text-muted-foreground [\u0026\u003ea]:underline [\u0026\u003ea]:underline-offset-4 [\u0026\u003ea:hover]:text-primary\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "c506a7ebb644d2a08ebb7ee960e46f66d4582d569def1fa29cbd7a3bf244f292"
     },
     {
       "path": "ItemActions.gx",
       "target": "ui/item/ItemActions.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex items-center gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "8dedd6edcee6241479d416e78f900d2ffb155073c108e216cf587881247610c8"
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the actions of the item, for example buttons.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-actions\" class={gx.Cx(\"flex items-center gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "bfe735bfee197f1424c0dde5026755f6b588195a3d4e91eb2b2a6e636e4f5c5f"
     },
     {
       "path": "ItemHeader.gx",
       "target": "ui/item/ItemHeader.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex basis-full items-center justify-between\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "9c89c83a88ef15e47784d7576cb43e6bb071107b0b8f20ca47378aa9eb9dc2ba"
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the header.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-header\" class={gx.Cx(\"flex basis-full items-center justify-between gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "1bed50432b7fcde95e3bca606593cd773de9f4e8bbc41b74dd0cd3af4807f62e"
     },
     {
       "path": "ItemFooter.gx",
       "target": "ui/item/ItemFooter.gx",
-      "content": "package item\n\nprops {\n  Class    string   = \"\"\n  Children gx.Node\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv class={gx.Cx(\"flex basis-full items-center justify-between\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
-      "sha256": "9c89c83a88ef15e47784d7576cb43e6bb071107b0b8f20ca47378aa9eb9dc2ba"
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the content of the footer.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-footer\" class={gx.Cx(\"flex basis-full items-center justify-between gap-2\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "162951aa4457074148e6ac3bd96763993f9a4bb5fd755806fe6a66fc0f012225"
     },
     {
       "path": "Item.fixtures.go",
       "target": "ui/item/Item.fixtures.go",
-      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemFixtures = gx.Fixtures[ItemProps]{\n\t\"Full\": {Class: \"p-4\", Children: gx.Frag(\n\t\tItemMedia(ItemMediaProps{Children: gx.Text(\"*\")}),\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Item title\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"A short description of the item.\")}),\n\t\t)}),\n\t\tItemActions(ItemActionsProps{Children: gx.Text(\"Open\")}),\n\t)},\n}\n",
-      "sha256": "1add5a68503902605b01e58125b428df9a2f802a8d7e936d124a1853f521b2b7"
+      "content": "package item\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/button\"\n\t\"github.com/alternayte/gx/registry/icons\"\n)\n\n// body is the content of the item fixtures: an icon, a title with a\n// description, and one action.\nfunc body() gx.Node {\n\treturn gx.Frag(\n\t\tItemMedia(ItemMediaProps{Variant: MediaIcon, Children: icons.Info(icons.InfoProps{})}),\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Item title\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"A short description of the item.\")}),\n\t\t)}),\n\t\tItemActions(ItemActionsProps{Children: button.Button(button.ButtonProps{Variant: button.Outline, Size: button.Sm, Children: gx.Text(\"Open\")})}),\n\t)\n}\n\nvar ItemFixtures = gx.Fixtures[ItemProps]{\n\t\"Full\":    {Variant: Outline, Children: body()},\n\t\"Default\": {Children: body()},\n\t\"Muted\":   {Variant: Muted, Children: body()},\n\t\"Small\": {Variant: Outline, Size: Sm, Children: gx.Frag(\n\t\tItemMedia(ItemMediaProps{Children: icons.CircleCheck(icons.CircleCheckProps{Class: \"size-5\"})}),\n\t\tItemContent(ItemContentProps{Children: ItemTitle(ItemTitleProps{Children: gx.Text(\"Your profile is verified.\")})}),\n\t\tItemActions(ItemActionsProps{Children: icons.ChevronRight(icons.ChevronRightProps{Class: \"size-4\"})}),\n\t)},\n\t\"Link\": {Variant: Outline, Size: Sm, Href: gx.URL(\"/docs\"), Children: gx.Frag(\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Read the docs\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"The item is one link.\")}),\n\t\t)}),\n\t\tItemActions(ItemActionsProps{Children: icons.ChevronRight(icons.ChevronRightProps{Class: \"size-4\"})}),\n\t)},\n\t\"HeaderAndFooter\": {Variant: Outline, Children: gx.Frag(\n\t\tItemHeader(ItemHeaderProps{Children: gx.Text(\"Header\")}),\n\t\tItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Item title\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"A short description of the item.\")}),\n\t\t)}),\n\t\tItemFooter(ItemFooterProps{Children: gx.Text(\"Footer\")}),\n\t)},\n}\n",
+      "sha256": "e37d3bb256e2899f4ffe6ce94bcb9c8fb33a1bd93e42730a43217eaac1a3dd60"
     },
     {
       "path": "ItemActions.fixtures.go",
@@ -91,21 +91,57 @@
     {
       "path": "ItemMedia.fixtures.go",
       "target": "ui/item/ItemMedia.fixtures.go",
-      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{\"Empty\": {}}\n",
-      "sha256": "d69e24de2791f5e7ed84e6204cc044499851b91d7629d22367cb3e1d39cb6616"
+      "content": "package item\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/icons\"\n)\n\nvar ItemMediaFixtures = gx.Fixtures[ItemMediaProps]{\n\t\"Icon\":    {Variant: MediaIcon, Children: icons.Info(icons.InfoProps{})},\n\t\"Default\": {Children: icons.Info(icons.InfoProps{Class: \"size-5\"})},\n\t\"Image\": {Variant: MediaImage, Children: gx.El(\"div\", gx.Attrs{\n\t\t{Key: \"class\", Value: \"size-full bg-muted\"},\n\t})},\n}\n",
+      "sha256": "e65ae6c0901121238c25a9822b33b02024d80a02bd5b6f882d99b177dc441d7b"
     },
     {
       "path": "ItemTitle.fixtures.go",
       "target": "ui/item/ItemTitle.fixtures.go",
       "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemTitleFixtures = gx.Fixtures[ItemTitleProps]{\"Title\": {Children: gx.Text(\"Item title\")}}\n",
       "sha256": "f20d4563c1c44b9f9ec207f8ce9d7e2abc7ff2b0dd2eda11985d46363383cdae"
+    },
+    {
+      "path": "ItemGroup.gx",
+      "target": "ui/item/ItemGroup.gx",
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class    string = \"\"\n  // Children is the items of the group.\n  Children gx.Node\n  // Attrs adds HTML attributes to the root element.\n  Attrs    gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-group\" class={gx.Cx(\"group/item-group flex flex-col\", p.Class)} {...p.Attrs}\u003e{p.Children}\u003c/div\u003e\n",
+      "sha256": "47e929b4cbdaca317df85473b04be88515ba33eb4c033a763b2ed5cdcf7241ba"
+    },
+    {
+      "path": "ItemGroup.fixtures.go",
+      "target": "ui/item/ItemGroup.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemGroupFixtures = gx.Fixtures[ItemGroupProps]{\n\t\"Separated\": {Children: gx.Frag(\n\t\tItem(ItemProps{Children: ItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Ada Lovelace\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"ada@example.com\")}),\n\t\t)})}),\n\t\tItemSeparator(ItemSeparatorProps{}),\n\t\tItem(ItemProps{Children: ItemContent(ItemContentProps{Children: gx.Frag(\n\t\t\tItemTitle(ItemTitleProps{Children: gx.Text(\"Grace Hopper\")}),\n\t\t\tItemDescription(ItemDescriptionProps{Children: gx.Text(\"grace@example.com\")}),\n\t\t)})}),\n\t)},\n}\n",
+      "sha256": "e6e7556e372f5eb7cd963997d1ec7f8d6b07b02716346e397fc3912f2168f6a5"
+    },
+    {
+      "path": "ItemSeparator.gx",
+      "target": "ui/item/ItemSeparator.gx",
+      "content": "package item\n\nprops {\n  // Class adds classes to the root element.\n  Class string = \"\"\n  // Attrs adds HTML attributes to the root element.\n  Attrs gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"item-separator\" role=\"none\" data-orientation=\"horizontal\" class={gx.Cx(\"h-px w-full shrink-0 bg-border my-0\", p.Class)} {...p.Attrs}\u003e\u003c/div\u003e\n",
+      "sha256": "5ce7fbfbaea53dc8f82245e0612bad480d9e25c44acf787f41a758d78861df6d"
+    },
+    {
+      "path": "ItemSeparator.fixtures.go",
+      "target": "ui/item/ItemSeparator.fixtures.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\nvar ItemSeparatorFixtures = gx.Fixtures[ItemSeparatorProps]{\"Default\": {}}\n",
+      "sha256": "3068d55725c6a3bf88cd4f1860674f5ab25ec808c681ad04340ea8dec22916b6"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/item/styles.go",
+      "content": "package item\n\nimport \"github.com/alternayte/gx\"\n\n// Variant is the surface of an item.\ntype Variant string\n\n// The variants of item.Item.\nconst (\n\tDefault Variant = \"default\"\n\tOutline Variant = \"outline\"\n\tMuted   Variant = \"muted\"\n)\n\nvar variantClass = gx.Enum[Variant]{\n\tDefault: \"bg-transparent\",\n\tOutline: \"border-border\",\n\tMuted:   \"bg-muted/50\",\n}\n\n// Size is the padding and the gap of an item.\ntype Size string\n\n// The sizes of item.Item.\nconst (\n\tMd Size = \"default\"\n\tSm Size = \"sm\"\n)\n\nvar sizeClass = gx.Enum[Size]{\n\tMd: \"gap-4 p-4\",\n\tSm: \"gap-2.5 px-4 py-3\",\n}\n\n// Media is the look of the media slot of an item.\ntype Media string\n\n// The variants of item.ItemMedia.\nconst (\n\tMediaDefault Media = \"default\"\n\tMediaIcon    Media = \"icon\"\n\tMediaImage   Media = \"image\"\n)\n\nvar mediaClass = gx.Enum[Media]{\n\tMediaDefault: \"bg-transparent\",\n\tMediaIcon:    \"size-8 rounded-sm border border-border bg-muted [\u0026_svg:not([class*='size-'])]:size-4\",\n\tMediaImage:   \"size-10 overflow-hidden rounded-sm [\u0026_img]:size-full [\u0026_img]:object-cover\",\n}\n\n// variant returns the data-variant value; a zero value is Default.\nfunc (p ItemProps) variant() string {\n\tif p.Variant == \"\" {\n\t\treturn string(Default)\n\t}\n\treturn string(p.Variant)\n}\n\n// size returns the data-size value; a zero value is Md.\nfunc (p ItemProps) size() string {\n\tif p.Size == \"\" {\n\t\treturn string(Md)\n\t}\n\treturn string(p.Size)\n}\n\n// class returns the classes of one item.\nfunc (p ItemProps) class() string {\n\tconst base = \"group/item flex flex-wrap items-center rounded-md border border-transparent text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-accent/50\"\n\treturn gx.Cx(base, variantClass[Variant(p.variant())], sizeClass[Size(p.size())], p.Class)\n}\n\n// variant returns the data-variant value; a zero value is MediaDefault.\nfunc (p ItemMediaProps) variant() string {\n\tif p.Variant == \"\" {\n\t\treturn string(MediaDefault)\n\t}\n\treturn string(p.Variant)\n}\n",
+      "sha256": "50caddcfedd57cbe44e3530d8721a0607242ed58d6d0a733165bdb894038475b"
     }
+  ],
+  "registryDependencies": [
+    "button",
+    "icons"
   ],
   "requiredTokens": [
     "--border",
-    "--ring",
+    "--muted",
+    "--muted-foreground",
     "--accent",
-    "--muted-foreground"
+    "--ring",
+    "--primary"
   ],
-  "usage": "# Item\n\nA row for one entry in a list.\n\n## Usage\n\n```gx\n\u003citem.Item class=\"p-4\"\u003e\n  \u003citem.ItemMedia\u003e*\u003c/item.ItemMedia\u003e\n  \u003citem.ItemContent\u003e\n    \u003citem.ItemTitle\u003eItem title\u003c/item.ItemTitle\u003e\n    \u003citem.ItemDescription\u003eA short description.\u003c/item.ItemDescription\u003e\n  \u003c/item.ItemContent\u003e\n  \u003citem.ItemActions\u003e\u003ca href={items.Show{ID: it.ID}}\u003eOpen\u003c/a\u003e\u003c/item.ItemActions\u003e\n\u003c/item.Item\u003e\n```\n\n## Do\n\n- Keep one row per entry.\n- Put the row action in `ItemActions`.\n\n## Don't\n\n- Do not put a whole table in an item.\n- Do not nest one item in another.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The component is static. |\n"
+  "usage": "# Item\n\nA row with media, a title, a description and actions.\n\n## Usage\n\n```gx\n\u003citem.Item variant={item.Outline}\u003e\n  \u003citem.ItemMedia variant={item.MediaIcon}\u003e\u003cicons.Info /\u003e\u003c/item.ItemMedia\u003e\n  \u003citem.ItemContent\u003e\n    \u003citem.ItemTitle\u003eItem title\u003c/item.ItemTitle\u003e\n    \u003citem.ItemDescription\u003eA short description of the item.\u003c/item.ItemDescription\u003e\n  \u003c/item.ItemContent\u003e\n  \u003citem.ItemActions\u003e\n    \u003cbutton.Button variant={button.Outline} size={button.Sm}\u003eOpen\u003c/button.Button\u003e\n  \u003c/item.ItemActions\u003e\n\u003c/item.Item\u003e\n\n\u003citem.ItemGroup\u003e\n  \u003citem.Item\u003e...\u003c/item.Item\u003e\n  \u003citem.ItemSeparator /\u003e\n  \u003citem.Item\u003e...\u003c/item.Item\u003e\n\u003c/item.ItemGroup\u003e\n```\n\nThe variants are `Default`, `Outline` and `Muted`. The sizes are `Md` and `Sm`.\n`ItemMedia` has the variants `MediaDefault`, `MediaIcon` and `MediaImage`. The media aligns with the title when the item has a description.\nSet `Href` to make the whole item one link. A link item has a hover state.\n`ItemHeader` and `ItemFooter` take a full row above and below the content.\n\n## Do\n\n- Keep the title to one line.\n- Use `ItemGroup` and `ItemSeparator` for a list of items.\n\n## Don't\n\n- Do not put a button in an item that has `Href`. A link does not hold a button.\n- Do not use an item for tabular data. Use a table.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to a link item, then to the controls in `ItemActions`. |\n| Enter | Follows a link item. |\n"
 }
