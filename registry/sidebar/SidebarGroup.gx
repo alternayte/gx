@@ -1,15 +1,9 @@
 package sidebar
 
 props {
-  Title    string   = ""
   Class    string   = ""
   Children gx.Node
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex flex-col gap-1 py-2", p.Class)} {...p.Attrs}>
-  if p.Title != "" {
-    <p class="px-2 text-xs font-medium text-muted-foreground">{p.Title}</p>
-  }
-  {p.Children}
-</div>
+<div data-slot="sidebar-group" data-sidebar="group" class={gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -16,8 +16,8 @@ type BreadcrumbLinkProps struct {
 func BreadcrumbLink(p BreadcrumbLinkProps) gx.Node {
 	var _b gx.Builder
 //line BreadcrumbLink.gx:10:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("transition-colors hover:text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs), p.Children))
-//line BreadcrumbLink.gx:10:113
+	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("transition-colors hover:text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "breadcrumb-link", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line BreadcrumbLink.gx:10:141
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

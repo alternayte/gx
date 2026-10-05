@@ -8,6 +8,8 @@ A placeholder while content loads.
 <skeleton.Skeleton class="h-4 w-40" />
 ```
 
+The skeleton uses the accent colour and a pulse.
+
 ## Do
 
 - Match the size of the content that will replace it.

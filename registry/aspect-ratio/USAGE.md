@@ -5,7 +5,7 @@ A box that keeps a fixed width to height ratio.
 ## Usage
 
 ```gx
-<aspectratio.AspectRatio ratio="16 / 9">
+<aspectratio.AspectRatio ratio="16 / 9" class="rounded-lg bg-muted">
   <img src={gx.URL("/hero.jpg")} alt="Hero" class="size-full object-cover" />
 </aspectratio.AspectRatio>
 ```

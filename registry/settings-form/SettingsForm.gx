@@ -5,7 +5,6 @@ import (
 	"github.com/alternayte/gx/registry/card"
 	"github.com/alternayte/gx/registry/field"
 	"github.com/alternayte/gx/registry/input"
-	"github.com/alternayte/gx/registry/separator"
 	switches "github.com/alternayte/gx/registry/switch"
 )
 
@@ -16,7 +15,7 @@ props {
 <div class="mx-auto flex w-full max-w-2xl flex-col gap-6">
   <form method="post" action={p.Action} class="flex flex-col gap-6">
     <card.Card title="Profile" description="Your public name and email.">
-      <div class="flex flex-col gap-4">
+      <field.FieldGroup>
         <field.Field>
           <field.FieldLabel for="name">Name</field.FieldLabel>
           <input.Input id="name" name="name" type="text" />
@@ -25,26 +24,26 @@ props {
           <field.FieldLabel for="email">Email</field.FieldLabel>
           <input.Input id="email" name="email" type="email" />
         </field.Field>
-      </div>
+      </field.FieldGroup>
     </card.Card>
     <card.Card title="Notifications" description="Choose what reaches your inbox.">
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-between gap-4">
-          <field.Field>
-            <field.FieldLabel>Product news</field.FieldLabel>
+      <field.FieldGroup>
+        <field.Field orientation={field.Horizontal}>
+          <field.FieldContent>
+            <field.FieldTitle>Product news</field.FieldTitle>
             <field.FieldDescription>One message each month.</field.FieldDescription>
-          </field.Field>
+          </field.FieldContent>
           <switches.Switch name="news" label="Product news" />
-        </div>
-        <separator.Separator />
-        <div class="flex items-center justify-between gap-4">
-          <field.Field>
-            <field.FieldLabel>Security alerts</field.FieldLabel>
+        </field.Field>
+        <field.FieldSeparator />
+        <field.Field orientation={field.Horizontal}>
+          <field.FieldContent>
+            <field.FieldTitle>Security alerts</field.FieldTitle>
             <field.FieldDescription>Sign-in and password changes.</field.FieldDescription>
-          </field.Field>
+          </field.FieldContent>
           <switches.Switch name="alerts" label="Security alerts" checked={true} />
-        </div>
-      </div>
+        </field.Field>
+      </field.FieldGroup>
     </card.Card>
     <div class="flex justify-end">
       <button.Button type="submit">Save changes</button.Button>

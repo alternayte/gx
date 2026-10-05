@@ -15,8 +15,8 @@ type PaginationContentProps struct {
 func PaginationContent(p PaginationContentProps) gx.Node {
 	var _b gx.Builder
 //line PaginationContent.gx:9:1
-	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-row items-center gap-1", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PaginationContent.gx:9:94
+	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-row items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line PaginationContent.gx:9:125
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -16,8 +16,8 @@ type EmptyMediaProps struct {
 func EmptyMedia(p EmptyMediaProps) gx.Node {
 	var _b gx.Builder
 //line EmptyMedia.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex shrink-0 items-center justify-center", p.variantClass(), p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-variant", Value: string(p.Variant), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyMedia.gx:10:148
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0", variantClass[Variant(p.variant())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-icon", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line EmptyMedia.gx:10:241
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

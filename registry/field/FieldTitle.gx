@@ -1,0 +1,9 @@
+package field
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="field-label" class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50", p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -1,0 +1,17 @@
+package sidebar
+
+import (
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
+
+props {
+  Controls string   = "gx-sidebar"
+  Class    string   = ""
+  Attrs    gx.Attrs = nil
+}
+
+<button.Button variant={button.Ghost} size={button.Icon} class={gx.Cx("size-7", p.Class)} attrs={p.attrs()}>
+  <icons.PanelLeft />
+  <span class="sr-only">Toggle Sidebar</span>
+</button.Button>

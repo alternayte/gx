@@ -4,6 +4,7 @@ package breadcrumb
 
 import (
 	gx "github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/ui/icons"
 )
 
 type BreadcrumbSeparatorProps struct {
@@ -14,30 +15,30 @@ type BreadcrumbSeparatorProps struct {
 
 func BreadcrumbSeparator(p BreadcrumbSeparatorProps) gx.Node {
 	var _b gx.Builder
-//line BreadcrumbSeparator.gx:9:1
+//line BreadcrumbSeparator.gx:11:1
 	var _b1 gx.Builder
-//line BreadcrumbSeparator.gx:9:100
+//line BreadcrumbSeparator.gx:11:133
 	_b1.Add(gx.Text("\n  "))
-//line BreadcrumbSeparator.gx:10:3
+//line BreadcrumbSeparator.gx:12:3
 	if p.Children != nil {
-//line BreadcrumbSeparator.gx:10:25
-		_b1.Add(gx.Text("\n    "))
-//line BreadcrumbSeparator.gx:11:5
-		_b1.Add(p.Children)
-//line BreadcrumbSeparator.gx:11:17
-		_b1.Add(gx.Text("\n  "))
-	} else {
-//line BreadcrumbSeparator.gx:12:11
+//line BreadcrumbSeparator.gx:12:25
 		_b1.Add(gx.Text("\n    "))
 //line BreadcrumbSeparator.gx:13:5
-		_b1.Add(gx.El("span", nil, gx.Text("/")))
-//line BreadcrumbSeparator.gx:13:19
+		_b1.Add(p.Children)
+//line BreadcrumbSeparator.gx:13:17
+		_b1.Add(gx.Text("\n  "))
+	} else {
+//line BreadcrumbSeparator.gx:14:11
+		_b1.Add(gx.Text("\n    "))
+//line BreadcrumbSeparator.gx:15:5
+		_b1.Add(icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""}))
+//line BreadcrumbSeparator.gx:15:27
 		_b1.Add(gx.Text("\n  "))
 	}
-//line BreadcrumbSeparator.gx:14:4
+//line BreadcrumbSeparator.gx:16:4
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&>svg]:size-3.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line BreadcrumbSeparator.gx:15:6
+	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&>svg]:size-3.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line BreadcrumbSeparator.gx:17:6
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

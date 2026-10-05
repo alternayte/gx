@@ -15,8 +15,8 @@ type FieldGroupProps struct {
 func FieldGroup(p FieldGroupProps) gx.Node {
 	var _b gx.Builder
 //line FieldGroup.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-group flex w-full flex-col gap-7", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldGroup.gx:9:108
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line FieldGroup.gx:9:222
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

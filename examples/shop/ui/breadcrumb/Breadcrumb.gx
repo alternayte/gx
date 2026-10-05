@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<nav aria-label="breadcrumb" class={p.Class} {...p.Attrs}>{p.Children}</nav>
+<nav aria-label="breadcrumb" data-slot="breadcrumb" class={p.Class} {...p.Attrs}>{p.Children}</nav>

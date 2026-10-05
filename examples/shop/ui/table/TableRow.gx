@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<tr class={gx.Cx("border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", p.Class)} {...p.Attrs}>{p.Children}</tr>
+<tr data-slot="table-row" class={gx.Cx("border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted", p.Class)} {...p.Attrs}>{p.Children}</tr>

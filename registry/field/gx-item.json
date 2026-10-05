@@ -63,10 +63,40 @@
     {
       "path": "FieldSet.fixtures.go",
       "target": "ui/field/FieldSet.fixtures.go"
+    },
+    {
+      "path": "FieldContent.gx",
+      "target": "ui/field/FieldContent.gx"
+    },
+    {
+      "path": "FieldContent.fixtures.go",
+      "target": "ui/field/FieldContent.fixtures.go"
+    },
+    {
+      "path": "FieldTitle.gx",
+      "target": "ui/field/FieldTitle.gx"
+    },
+    {
+      "path": "FieldTitle.fixtures.go",
+      "target": "ui/field/FieldTitle.fixtures.go"
+    },
+    {
+      "path": "FieldSeparator.gx",
+      "target": "ui/field/FieldSeparator.gx"
+    },
+    {
+      "path": "FieldSeparator.fixtures.go",
+      "target": "ui/field/FieldSeparator.fixtures.go"
     }
+  ],
+  "registryDependencies": [
+    "input"
   ],
   "requiredTokens": [
     "--destructive",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--border",
+    "--background",
+    "--primary"
   ]
 }

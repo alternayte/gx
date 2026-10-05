@@ -15,8 +15,8 @@ type ItemContentProps struct {
 func ItemContent(p ItemContentProps) gx.Node {
 	var _b gx.Builder
 //line ItemContent.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-1 flex-col gap-1", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemContent.gx:9:90
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ItemContent.gx:9:154
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -19,50 +19,43 @@ func Alert(p AlertProps) gx.Node {
 	var _b gx.Builder
 //line Alert.gx:12:1
 	var _b1 gx.Builder
-//line Alert.gx:12:50
+//line Alert.gx:12:68
 	_b1.Add(gx.Text("\n  "))
 //line Alert.gx:13:3
 	if p.Icon != nil {
 //line Alert.gx:13:21
 		_b1.Add(gx.Text("\n    "))
 //line Alert.gx:14:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "[&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current", Kind: gx.AttrText}}, gx.Frag(gx.Text(" "), p.Icon, gx.Text(" "))))
-//line Alert.gx:14:96
+		_b1.Add(p.Icon)
+//line Alert.gx:14:13
 		_b1.Add(gx.Text("\n  "))
 	}
 //line Alert.gx:15:4
 	_b1.Add(gx.Text("\n  "))
 //line Alert.gx:16:3
-	var _b2 gx.Builder
-//line Alert.gx:16:59
-	_b2.Add(gx.Text("\n    "))
-//line Alert.gx:17:5
 	if p.Title != "" {
-//line Alert.gx:17:23
-		_b2.Add(gx.Text("\n      "))
-//line Alert.gx:18:7
-		_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Alert.gx:18:79
-		_b2.Add(gx.Text("\n    "))
+//line Alert.gx:16:21
+		_b1.Add(gx.Text("\n    "))
+//line Alert.gx:17:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-title", Kind: gx.AttrText}}, gx.Text(p.Title)))
+//line Alert.gx:17:117
+		_b1.Add(gx.Text("\n  "))
 	}
-//line Alert.gx:19:6
-	_b2.Add(gx.Text("\n    "))
-//line Alert.gx:20:5
+//line Alert.gx:18:4
+	_b1.Add(gx.Text("\n  "))
+//line Alert.gx:19:3
 	if p.Children != nil {
-//line Alert.gx:20:27
-		_b2.Add(gx.Text("\n      "))
-//line Alert.gx:21:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm text-muted-foreground [&_p]:leading-relaxed", p.descClass()), Kind: gx.AttrText}}, p.Children))
-//line Alert.gx:21:114
-		_b2.Add(gx.Text("\n    "))
+//line Alert.gx:19:25
+		_b1.Add(gx.Text("\n    "))
+//line Alert.gx:20:5
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-description", Kind: gx.AttrText}}, p.Children))
+//line Alert.gx:20:161
+		_b1.Add(gx.Text("\n  "))
 	}
-//line Alert.gx:22:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1", Kind: gx.AttrText}}, _b2.Node()))
-//line Alert.gx:23:9
+//line Alert.gx:21:4
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Alert.gx:24:7
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line Alert.gx:22:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

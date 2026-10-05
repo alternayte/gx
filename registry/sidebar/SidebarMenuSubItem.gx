@@ -1,0 +1,9 @@
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<li data-slot="sidebar-menu-sub-item" data-sidebar="menu-sub-item" class={gx.Cx("group/menu-sub-item relative", p.Class)} {...p.Attrs}>{p.Children}</li>

@@ -15,8 +15,8 @@ type TableBodyProps struct {
 func TableBody(p TableBodyProps) gx.Node {
 	var _b gx.Builder
 //line TableBody.gx:9:1
-	_b.Add(gx.El("tbody", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr:last-child]:border-0", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableBody.gx:9:94
+	_b.Add(gx.El("tbody", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr:last-child]:border-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-body", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line TableBody.gx:9:117
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,4 +7,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<label for={p.For} class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class)} {...p.Attrs}>{p.Children}</label>
+<label data-slot="label" class={gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class)} {...p.attrs()}>{p.Children}</label>

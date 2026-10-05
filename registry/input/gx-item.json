@@ -20,6 +20,10 @@
   "requiredTokens": [
     "--input",
     "--ring",
-    "--muted-foreground"
+    "--muted-foreground",
+    "--primary",
+    "--primary-foreground",
+    "--foreground",
+    "--destructive"
   ]
 }

@@ -15,8 +15,8 @@ type ItemDescriptionProps struct {
 func ItemDescription(p ItemDescriptionProps) gx.Node {
 	var _b gx.Builder
 //line ItemDescription.gx:9:1
-	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("line-clamp-2 text-sm leading-normal font-normal text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemDescription.gx:9:129
+	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("line-clamp-2 text-sm leading-normal font-normal [text-wrap:balance] text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-description", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ItemDescription.gx:9:244
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

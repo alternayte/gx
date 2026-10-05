@@ -1,0 +1,12 @@
+package sidebar
+
+props {
+  Href     gx.URL
+  Active   bool     = false
+  Size     Size     = Md
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<a href={p.Href} data-slot="sidebar-menu-sub-button" data-sidebar="menu-sub-button" data-size={p.size()} class={gx.Cx("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground", subSizeClass[Size(p.size())], subActiveClass[p.Active], p.Class)} {...p.attrs()}>{p.Children}</a>

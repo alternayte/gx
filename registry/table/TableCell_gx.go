@@ -15,8 +15,8 @@ type TableCellProps struct {
 func TableCell(p TableCellProps) gx.Node {
 	var _b gx.Builder
 //line TableCell.gx:9:1
-	_b.Add(gx.El("td", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("p-2 align-middle whitespace-nowrap", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableCell.gx:9:96
+	_b.Add(gx.El("td", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("p-2 align-middle whitespace-nowrap [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-cell", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line TableCell.gx:9:305
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

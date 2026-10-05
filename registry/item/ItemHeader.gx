@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex basis-full items-center justify-between", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-header" class={gx.Cx("flex basis-full items-center justify-between gap-2", p.Class)} {...p.Attrs}>{p.Children}</div>

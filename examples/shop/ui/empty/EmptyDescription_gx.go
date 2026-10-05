@@ -15,8 +15,8 @@ type EmptyDescriptionProps struct {
 func EmptyDescription(p EmptyDescriptionProps) gx.Node {
 	var _b gx.Builder
 //line EmptyDescription.gx:9:1
-	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyDescription.gx:9:155
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm leading-relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-description", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line EmptyDescription.gx:9:205
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

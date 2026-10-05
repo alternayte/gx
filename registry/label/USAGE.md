@@ -9,6 +9,8 @@ A caption for a form control.
 <input id="email" name="email" type="email" />
 ```
 
+The label dims when its control is a disabled `peer`, or when a parent `group` has `data-disabled="true"`.
+
 ## Do
 
 - Point `For` at the id of the control.

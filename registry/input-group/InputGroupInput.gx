@@ -1,6 +1,9 @@
 package inputgroup
 
+import "github.com/alternayte/gx/registry/input"
+
 props {
+  Id          string   = ""
   Type        string   = "text"
   Name        string   = ""
   Value       string   = ""
@@ -9,4 +12,4 @@ props {
   Attrs       gx.Attrs = nil
 }
 
-<input type={p.Type} name={p.Name} value={p.Value} placeholder={p.Placeholder} class={gx.Cx("flex-1 rounded-none border-0 bg-transparent px-3 py-1 text-base shadow-none outline-none placeholder:text-muted-foreground focus-visible:ring-0 md:text-sm", p.Class)} {...p.Attrs} />
+<input type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot="input-group-control" class={gx.Cx(input.Control, "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class)} {...p.attrs()} />

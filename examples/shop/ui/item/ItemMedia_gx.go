@@ -7,6 +7,7 @@ import (
 )
 
 type ItemMediaProps struct {
+	Variant  Media
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -14,9 +15,9 @@ type ItemMediaProps struct {
 
 func ItemMedia(p ItemMediaProps) gx.Node {
 	var _b gx.Builder
-//line ItemMedia.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex shrink-0 items-center justify-center gap-2", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemMedia.gx:9:111
+//line ItemMedia.gx:10:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none", mediaClass[Media(p.variant())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-media", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ItemMedia.gx:10:340
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

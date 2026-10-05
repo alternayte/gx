@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<div class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class)} {...p.Attrs}>{p.Children}</div>
+<div data-slot="item-title" class={gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class)} {...p.Attrs}>{p.Children}</div>

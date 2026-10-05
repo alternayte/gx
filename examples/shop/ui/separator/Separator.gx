@@ -7,4 +7,4 @@ props {
   Attrs       gx.Attrs    = nil
 }
 
-<div {...p.attrs()}></div>
+<div data-slot="separator" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class)} {...p.attrs()}></div>

@@ -16,8 +16,8 @@ type AspectRatioProps struct {
 func AspectRatio(p AspectRatioProps) gx.Node {
 	var _b gx.Builder
 //line AspectRatio.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full overflow-hidden rounded-md", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("aspect-ratio: " + p.Ratio)))), Kind: gx.AttrStyle}}, p.Attrs), p.Children))
-//line AspectRatio.gx:10:142
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative w-full overflow-hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("aspect-ratio: " + p.ratio())))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "aspect-ratio", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line AspectRatio.gx:10:167
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,17 +7,19 @@ import (
 )
 
 type FieldProps struct {
-	Invalid  bool
-	Class    string
-	Children gx.Node
-	Attrs    gx.Attrs
+	Orientation Orientation
+	Invalid     bool
+	Disabled    bool
+	Class       string
+	Children    gx.Node
+	Attrs       gx.Attrs
 }
 
 func Field(p FieldProps) gx.Node {
 	var _b gx.Builder
-//line Field.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field flex w-full flex-col gap-2 data-[invalid=true]:text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-invalid", Value: gx.TextValue(p.Invalid), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Field.gx:10:164
+//line Field.gx:12:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field flex w-full gap-3 data-[invalid=true]:text-destructive", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs()), p.Children))
+//line Field.gx:12:246
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

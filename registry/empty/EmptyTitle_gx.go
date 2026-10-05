@@ -15,8 +15,8 @@ type EmptyTitleProps struct {
 func EmptyTitle(p EmptyTitleProps) gx.Node {
 	var _b gx.Builder
 //line EmptyTitle.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-lg font-medium tracking-tight", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyTitle.gx:9:98
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-lg font-medium tracking-tight", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-title", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line EmptyTitle.gx:9:122
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

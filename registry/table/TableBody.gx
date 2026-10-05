@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<tbody class={gx.Cx("[&_tr:last-child]:border-0", p.Class)} {...p.Attrs}>{p.Children}</tbody>
+<tbody data-slot="table-body" class={gx.Cx("[&_tr:last-child]:border-0", p.Class)} {...p.Attrs}>{p.Children}</tbody>

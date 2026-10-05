@@ -1,15 +1,17 @@
 package breadcrumb
 
+import "github.com/alternayte/gx/registry/icons"
+
 props {
   Class    string   = ""
   Children gx.Node  = nil
   Attrs    gx.Attrs = nil
 }
 
-<li role="presentation" aria-hidden="true" class={gx.Cx("[&>svg]:size-3.5", p.Class)} {...p.Attrs}>
+<li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" class={gx.Cx("[&>svg]:size-3.5", p.Class)} {...p.Attrs}>
   if p.Children != nil {
     {p.Children}
   } else {
-    <span>/</span>
+    <icons.ChevronRight />
   }
 </li>

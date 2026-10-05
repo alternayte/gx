@@ -20,6 +20,10 @@ Links between pages of a result set.
 </pagination.Pagination>
 ```
 
+A link has the look of a ghost button. The current page has the look of an outline button.
+`PaginationPrevious` and `PaginationNext` show a chevron. They hide their text on a narrow screen.
+`PaginationLink` takes a `button.Size`. The default is `button.Icon`.
+
 ## Do
 
 - Pass typed route values to `Href`.

@@ -15,8 +15,8 @@ type ItemTitleProps struct {
 func ItemTitle(p ItemTitleProps) gx.Node {
 	var _b gx.Builder
 //line ItemTitle.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemTitle.gx:9:126
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-title", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ItemTitle.gx:9:149
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

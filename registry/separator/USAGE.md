@@ -9,6 +9,8 @@ A visual divider between content.
 <separator.Separator orientation={separator.Vertical} class="h-6" />
 ```
 
+A decorative separator has the role `none`. A separator with `decorative={false}` has the role `separator`.
+
 ## Do
 
 - Use a separator between groups that need a visual break.

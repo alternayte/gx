@@ -15,8 +15,8 @@ type ItemActionsProps struct {
 func ItemActions(p ItemActionsProps) gx.Node {
 	var _b gx.Builder
 //line ItemActions.gx:9:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemActions.gx:9:87
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-actions", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line ItemActions.gx:9:112
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

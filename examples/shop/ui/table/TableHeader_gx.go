@@ -15,8 +15,8 @@ type TableHeaderProps struct {
 func TableHeader(p TableHeaderProps) gx.Node {
 	var _b gx.Builder
 //line TableHeader.gx:9:1
-	_b.Add(gx.El("thead", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr]:border-b", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableHeader.gx:9:83
+	_b.Add(gx.El("thead", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr]:border-b", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-header", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line TableHeader.gx:9:108
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

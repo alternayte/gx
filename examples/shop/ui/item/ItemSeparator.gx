@@ -1,0 +1,8 @@
+package item
+
+props {
+  Class string   = ""
+  Attrs gx.Attrs = nil
+}
+
+<div data-slot="item-separator" role="none" data-orientation="horizontal" class={gx.Cx("h-px w-full shrink-0 bg-border my-0", p.Class)} {...p.Attrs}></div>

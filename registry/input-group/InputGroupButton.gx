@@ -1,0 +1,14 @@
+package inputgroup
+
+import "github.com/alternayte/gx/registry/button"
+
+props {
+  Variant  button.Variant = button.Ghost
+  Size     Size           = Xs
+  Type     string         = "button"
+  Class    string         = ""
+  Children gx.Node
+  Attrs    gx.Attrs       = nil
+}
+
+<button.Button type={p.Type} variant={p.variant()} size={buttonSize[p.size()]} class={gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class)} attrs={p.Attrs}>{p.Children}</button.Button>

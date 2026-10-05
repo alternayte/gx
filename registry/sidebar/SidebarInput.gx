@@ -1,0 +1,14 @@
+package sidebar
+
+import "github.com/alternayte/gx/registry/input"
+
+props {
+  Type        string   = "text"
+  Name        string   = ""
+  Value       string   = ""
+  Placeholder string   = ""
+  Class       string   = ""
+  Attrs       gx.Attrs = nil
+}
+
+<input type={p.inputType()} name={p.Name} value={p.Value} placeholder={p.Placeholder} data-slot="sidebar-input" data-sidebar="input" class={gx.Cx(input.Class, "h-8 w-full bg-background shadow-none", p.Class)} {...p.Attrs} />

@@ -7,7 +7,6 @@ import (
 )
 
 type SidebarGroupProps struct {
-	Title    string
 	Class    string
 	Children gx.Node
 	Attrs    gx.Attrs
@@ -15,27 +14,9 @@ type SidebarGroupProps struct {
 
 func SidebarGroup(p SidebarGroupProps) gx.Node {
 	var _b gx.Builder
-//line SidebarGroup.gx:10:1
-	var _b1 gx.Builder
-//line SidebarGroup.gx:10:70
-	_b1.Add(gx.Text("\n  "))
-//line SidebarGroup.gx:11:3
-	if p.Title != "" {
-//line SidebarGroup.gx:11:21
-		_b1.Add(gx.Text("\n    "))
-//line SidebarGroup.gx:12:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "px-2 text-xs font-medium text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line SidebarGroup.gx:12:76
-		_b1.Add(gx.Text("\n  "))
-	}
-//line SidebarGroup.gx:13:4
-	_b1.Add(gx.Text("\n  "))
-//line SidebarGroup.gx:14:3
-	_b1.Add(p.Children)
-//line SidebarGroup.gx:14:15
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-1 py-2", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line SidebarGroup.gx:15:7
+//line SidebarGroup.gx:9:1
+	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line SidebarGroup.gx:9:152
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

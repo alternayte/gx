@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<thead class={gx.Cx("[&_tr]:border-b", p.Class)} {...p.Attrs}>{p.Children}</thead>
+<thead data-slot="table-header" class={gx.Cx("[&_tr]:border-b", p.Class)} {...p.Attrs}>{p.Children}</thead>

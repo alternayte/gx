@@ -1,0 +1,9 @@
+package sidebar
+
+props {
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+<ul data-slot="sidebar-menu" data-sidebar="menu" class={gx.Cx("flex w-full min-w-0 flex-col gap-1", p.Class)} {...p.Attrs}>{p.Children}</ul>

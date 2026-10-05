@@ -1,9 +1,17 @@
 package pagination
 
+import (
+	"github.com/alternayte/gx/registry/button"
+	"github.com/alternayte/gx/registry/icons"
+)
+
 props {
   Href  gx.URL
   Class string   = ""
   Attrs gx.Attrs = nil
 }
 
-<PaginationLink href={p.Href} size={Text} class={p.Class} attrs={p.attrs()}><span>Next</span></PaginationLink>
+<PaginationLink href={p.Href} size={button.Md} class={gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class)} attrs={p.attrs()}>
+  <span class="hidden sm:block">Next</span>
+  <icons.ChevronRight />
+</PaginationLink>

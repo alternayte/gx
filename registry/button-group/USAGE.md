@@ -1,6 +1,6 @@
 # Button Group
 
-A row of related buttons.
+A row or a column of related buttons.
 
 ## Usage
 
@@ -9,21 +9,33 @@ A row of related buttons.
   <button.Button variant={button.Outline}>One</button.Button>
   <button.Button variant={button.Outline}>Two</button.Button>
 </buttongroup.ButtonGroup>
+
+<buttongroup.ButtonGroup>
+  <button.Button variant={button.Secondary}>Copy</button.Button>
+  <buttongroup.ButtonGroupSeparator />
+  <button.Button variant={button.Secondary} size={button.Icon}><icons.ChevronDown /></button.Button>
+</buttongroup.ButtonGroup>
 ```
+
+Set `orientation={buttongroup.Vertical}` for a column.
+`ButtonGroupText` shows text or a label next to a button or an input. Set `For` to make it the label of an input.
+`ButtonGroupSeparator` draws a line between two buttons that have no border.
+A group in a group makes a gap between the inner groups.
 
 ## Do
 
-- Group buttons that act on the same object.
-- Give each button a distinct label.
+- Give the group an `aria-label` when its purpose is not clear from the buttons.
+- Use the same variant for every button of a group.
 
 ## Don't
 
-- Do not group unrelated actions.
-- Do not nest a button group inside another button group.
+- Do not mix button sizes in one group.
+- Do not put a separator between outline buttons. Their borders divide them.
 
 ## Keyboard
 
 | Key | Action |
 | --- | --- |
-| Tab | Moves focus between the buttons. |
+| Tab | Moves focus from one button to the next. |
 | Enter | Activates the focused button. |
+| Space | Activates the focused button. |

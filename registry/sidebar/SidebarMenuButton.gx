@@ -1,0 +1,17 @@
+package sidebar
+
+props {
+  Href     gx.URL   = ""
+  Active   bool     = false
+  Variant  Variant  = Default
+  Size     Size     = Md
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+if p.Href != "" {
+  <a href={p.Href} data-slot="sidebar-menu-button" data-sidebar="menu-button" data-size={p.size()} class={p.class()} {...p.attrs()}>{p.Children}</a>
+} else {
+  <button type="button" data-slot="sidebar-menu-button" data-sidebar="menu-button" data-size={p.size()} class={p.class()} {...p.buttonAttrs()}>{p.Children}</button>
+}

@@ -1,0 +1,9 @@
+package buttongroup
+
+props {
+  Orientation Orientation = Vertical
+  Class       string      = ""
+  Attrs       gx.Attrs    = nil
+}
+
+<div data-slot="button-group-separator" role="none" data-orientation={p.orientation()} class={gx.Cx("shrink-0 bg-border", separatorClass[Orientation(p.orientation())], "relative m-0! self-stretch bg-input", p.Class)} {...p.Attrs}></div>

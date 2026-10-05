@@ -1,0 +1,14 @@
+package buttongroup
+
+props {
+  For      string   = ""
+  Class    string   = ""
+  Children gx.Node
+  Attrs    gx.Attrs = nil
+}
+
+if p.For != "" {
+  <label for={p.For} class={gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>{p.Children}</label>
+} else {
+  <div class={gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class)} {...p.Attrs}>{p.Children}</div>
+}

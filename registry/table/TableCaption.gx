@@ -6,4 +6,4 @@ props {
   Attrs    gx.Attrs = nil
 }
 
-<caption class={gx.Cx("mt-4 text-sm text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</caption>
+<caption data-slot="table-caption" class={gx.Cx("mt-4 text-sm text-muted-foreground", p.Class)} {...p.Attrs}>{p.Children}</caption>

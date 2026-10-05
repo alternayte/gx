@@ -15,8 +15,8 @@ type BreadcrumbListProps struct {
 func BreadcrumbList(p BreadcrumbListProps) gx.Node {
 	var _b gx.Builder
 //line BreadcrumbList.gx:9:1
-	_b.Add(gx.El("ol", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground sm:gap-2.5", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbList.gx:9:138
+	_b.Add(gx.El("ol", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-list", Kind: gx.AttrText}}, p.Attrs), p.Children))
+//line BreadcrumbList.gx:9:178
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }
