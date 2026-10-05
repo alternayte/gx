@@ -26,3 +26,22 @@ jobs:
       # drive the example apps reliably (see docs/build/decisions.md).
       - if: runner.os != 'Windows'
         run: just e2e
+
+  # NFR-07: every default user workflow runs with no node tool on the PATH.
+  # The golang image holds Go and git, and no node, npm or bun.
+  no-node:
+    runs-on: ubuntu-latest
+    container: golang:1.26
+    steps:
+      - uses: actions/checkout@v4
+      - name: The PATH holds no node tool
+        run: |
+          for tool in node npm npx bun pnpm yarn deno; do
+            if command -v "$tool" >/dev/null 2>&1; then
+              echo "$tool is on the PATH" >&2
+              exit 1
+            fi
+          done
+      # The checkout belongs to another user inside the container.
+      - run: git config --global --add safe.directory '*'
+      - run: go test ./gxcli -run 'TestNFR_07' -count=1 -v

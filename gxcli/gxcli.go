@@ -14,7 +14,9 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"syscall"
 
@@ -976,11 +978,8 @@ func runLint(args []string) int {
 	if rest := fs.Args(); len(rest) > 0 {
 		dir = rest[0]
 	}
-	vet := exec.Command("go", "vet", "./...")
-	vet.Dir = dir
 	// go vet has no Gx codes; its text stays off stdout so --json is clean.
-	vet.Stdout, vet.Stderr = os.Stderr, os.Stderr
-	vetErr := vet.Run()
+	vetErr := runVet(dir, os.Stderr)
 	findings, err := analyze.Lint(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx lint: %v\n", err)
@@ -1003,6 +1002,109 @@ func runLint(args []string) int {
 		return 1
 	}
 	return 0
+}
+
+// routeTagLine matches the embedded route field of a route type: the tag
+// holds a method and a pattern, which is not the key:"value" form go vet
+// expects (REQ-RTE-01).
+var routeTagLine = regexp.MustCompile("^\\s*\\w+\\.Route\\s+`")
+
+// runVet runs go vet on every package of dir and prints its findings to w.
+// It leaves out one finding: the struct tag of a gx.Route field. It returns
+// an error when a finding stays or a package does not compile (REQ-TLS-03).
+func runVet(dir string, w io.Writer) error {
+	cmd := exec.Command("go", "vet", "-json", "./...")
+	cmd.Dir = dir
+	var raw bytes.Buffer
+	cmd.Stdout, cmd.Stderr = &raw, &raw
+	runErr := cmd.Run()
+
+	type finding struct {
+		Posn    string `json:"posn"`
+		Message string `json:"message"`
+	}
+	abs, _ := filepath.Abs(dir)
+	found := 0
+	report := func(analyzer string, f finding) {
+		if analyzer == "structtag" && isRouteTag(f.Posn) {
+			return
+		}
+		found++
+		posn := f.Posn
+		if rel, err := filepath.Rel(abs, posn); err == nil && !strings.HasPrefix(rel, "..") {
+			posn = rel
+		}
+		fmt.Fprintf(w, "%s: %s\n", posn, f.Message)
+	}
+	// The output mixes "# package" lines, compiler errors and one JSON
+	// object per package with findings.
+	var object []string
+	for _, line := range strings.Split(raw.String(), "\n") {
+		if len(object) == 0 && line != "{" {
+			// A package with no finding prints an empty object.
+			if text := strings.TrimSpace(line); text != "" && text != "{}" && !strings.HasPrefix(line, "# ") {
+				fmt.Fprintln(w, line)
+			}
+			continue
+		}
+		object = append(object, line)
+		if line != "}" {
+			continue
+		}
+		var packages map[string]map[string]json.RawMessage
+		if err := json.Unmarshal([]byte(strings.Join(object, "\n")), &packages); err != nil {
+			fmt.Fprintln(w, strings.Join(object, "\n"))
+			found++
+		}
+		object = nil
+		for _, analyzers := range packages {
+			names := make([]string, 0, len(analyzers))
+			for name := range analyzers {
+				names = append(names, name)
+			}
+			sort.Strings(names)
+			for _, name := range names {
+				var findings []finding
+				if err := json.Unmarshal(analyzers[name], &findings); err != nil {
+					// An analyzer that failed gives an object with
+					// its error.
+					fmt.Fprintf(w, "%s: %s\n", name, analyzers[name])
+					found++
+					continue
+				}
+				for _, f := range findings {
+					report(name, f)
+				}
+			}
+		}
+	}
+	if runErr != nil {
+		return runErr
+	}
+	if found > 0 {
+		return fmt.Errorf("go vet: %d findings", found)
+	}
+	return nil
+}
+
+// isRouteTag reports whether a vet position is the embedded gx.Route field
+// of a route type.
+func isRouteTag(posn string) bool {
+	// The position is file:line:column; a Windows path has a drive colon.
+	parts := strings.Split(posn, ":")
+	if len(parts) < 3 {
+		return false
+	}
+	line, err := strconv.Atoi(parts[len(parts)-2])
+	if err != nil {
+		return false
+	}
+	data, err := os.ReadFile(strings.Join(parts[:len(parts)-2], ":"))
+	if err != nil {
+		return false
+	}
+	lines := strings.Split(string(data), "\n")
+	return line >= 1 && line <= len(lines) && routeTagLine.MatchString(lines[line-1])
 }
 
 func runLSP(args []string) int {
