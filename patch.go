@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 // Patch is one change an adapter sends to the client (REQ-ACT-04).
@@ -120,7 +122,7 @@ func (c *Ctx) Patch(nodes ...Node) error {
 			}
 			c.res.Patches = append(c.res.Patches, ElementPatch{
 				Mode:       mode,
-				Target:     "#" + id,
+				Target:     idSelector(id),
 				Node:       el,
 				Transition: transition,
 			})
@@ -202,4 +204,33 @@ func attrValue(el *elNode, name string) string {
 		}
 	}
 	return ""
+}
+
+// idSelector returns the CSS selector of an element id. An id can hold an
+// instance key with a dot or a space, which has a meaning in a selector, so
+// each such character gets a CSS escape (REQ-ACT-14).
+func idSelector(id string) string {
+	var b strings.Builder
+	b.Grow(len(id) + 1)
+	b.WriteByte('#')
+	for i, r := range id {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r == '_', r >= 0x80:
+			b.WriteRune(r)
+		case r == '-' && len(id) > 1:
+			b.WriteRune(r)
+		case r >= '0' && r <= '9' && i > 0 && !(i == 1 && id[0] == '-'):
+			b.WriteRune(r)
+		case r < 0x20 || r == 0x7f || (r >= '0' && r <= '9'):
+			// A control character or a leading digit takes the code
+			// point form, which a space ends.
+			b.WriteByte('\\')
+			b.WriteString(strconv.FormatInt(int64(r), 16))
+			b.WriteByte(' ')
+		default:
+			b.WriteByte('\\')
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }

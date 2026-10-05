@@ -147,9 +147,11 @@ func (adapter) Invoke(method, url, scope string) gx.Attr {
 	default:
 		return gx.Attr{}
 	}
-	value := fn + "('" + url + "')"
+	// The URL and the scope hold server values, such as an instance key.
+	// Each one is a JavaScript string literal with escapes (SI-05).
+	value := fn + "(" + jsString(url) + ")"
 	if scope != "" {
-		value = fn + "('" + url + "', {headers: {'Gx-Scope': '" + scope + "'}})"
+		value = fn + "(" + jsString(url) + ", {headers: {'Gx-Scope': " + jsString(scope) + "}})"
 	}
 	return gx.Attr{Key: "data-on:click", Value: value}
 }
@@ -177,3 +179,25 @@ func scopeObject(scope string, v any) any {
 }
 
 var _ gx.Adapter = adapter{}
+
+// jsString returns s as a JavaScript string literal in single quotes. The
+// literal cannot end early and cannot hold a line break. The renderer
+// escapes the attribute for HTML.
+func jsString(s string) string {
+	var b strings.Builder
+	b.Grow(len(s) + 2)
+	b.WriteByte('\'')
+	for _, r := range s {
+		switch {
+		case r == '\'' || r == '\\':
+			b.WriteByte('\\')
+			b.WriteRune(r)
+		case r < 0x20 || r == 0x2028 || r == 0x2029:
+			fmt.Fprintf(&b, "\\u%04x", r)
+		default:
+			b.WriteRune(r)
+		}
+	}
+	b.WriteByte('\'')
+	return b.String()
+}

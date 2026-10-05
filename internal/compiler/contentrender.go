@@ -18,7 +18,7 @@ func renderContentBodies(colls []contentCollection) map[string][]byte {
 	byPkg := map[string][]contentCollection{}
 	var dirs []string
 	for _, coll := range colls {
-		if coll.pkgDir == "" || coll.varName == "" || coll.bare {
+		if coll.pkgDir == "" || coll.varName == "" {
 			continue
 		}
 		if _, ok := byPkg[coll.pkgDir]; !ok {
@@ -41,8 +41,16 @@ func renderContentBodies(colls []contentCollection) map[string][]byte {
 // renderContentFile renders every collection body function of one package.
 func renderContentFile(colls []contentCollection) ([]byte, error) {
 	w := &contentWriter{imports: map[string]string{}}
+	bodies := false
 	for _, coll := range colls {
 		w.coll = coll
+		w.embed(coll)
+		if coll.bare {
+			// A collection with no Components call has no component
+			// tags, so it needs no body function.
+			continue
+		}
+		bodies = true
 		if err := w.collection(coll); err != nil {
 			return nil, err
 		}
@@ -68,7 +76,9 @@ func renderContentFile(colls []contentCollection) ([]byte, error) {
 	}
 	b.WriteString(")\n\n")
 	b.Write(w.buf.Bytes())
-	b.WriteString("\n// gxContentMarkdown renders one prose chunk of a content body.\nfunc gxContentMarkdown(s string) gx.Node {\n\tnode, err := content.Body([]byte(s))\n\tif err != nil {\n\t\treturn gx.Text(\"\")\n\t}\n\treturn node\n}\n")
+	if bodies {
+		b.WriteString("\n// gxContentMarkdown renders one prose chunk of a content body.\nfunc gxContentMarkdown(s string) gx.Node {\n\tnode, err := content.Body([]byte(s))\n\tif err != nil {\n\t\treturn gx.Text(\"\")\n\t}\n\treturn node\n}\n")
+	}
 	src, err := fixImports(contentBodyFile, b.Bytes())
 	if err != nil {
 		return nil, err
@@ -81,6 +91,25 @@ type contentWriter struct {
 	coll    contentCollection
 	buf     bytes.Buffer
 	imports map[string]string // path -> alias
+}
+
+// embed writes the content files of one collection into the package, so
+// the binary serves them with no source tree beside it (NFR-08).
+func (w *contentWriter) embed(coll contentCollection) {
+	fmt.Fprintf(&w.buf, "// The content files of the %s collection are in the binary (NFR-08).\n", coll.varName)
+	fmt.Fprintf(&w.buf, "var _ = %s.Embed(map[string]string{\n", coll.varName)
+	for _, path := range markdownFiles(coll.dir) {
+		src, err := readContent(path, nil)
+		if err != nil {
+			continue
+		}
+		rel, err := filepath.Rel(coll.dir, path)
+		if err != nil {
+			continue
+		}
+		fmt.Fprintf(&w.buf, "\t%q: %q,\n", filepath.ToSlash(rel), string(src))
+	}
+	w.buf.WriteString("})\n\n")
 }
 
 // collection renders one <Var>Body function.

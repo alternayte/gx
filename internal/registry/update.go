@@ -165,7 +165,15 @@ func fileState(target, local string, localOK bool, base, upstream Item) string {
 	u, hasUp := fileOf(upstream, target)
 	switch {
 	case !hasBase && hasUp:
-		return "upstream-added"
+		switch {
+		case !localOK:
+			return "upstream-added"
+		case local == u.Content:
+			return "unchanged"
+		}
+		// The app has its own file at a target that the new version
+		// adds. The update must not replace it silently.
+		return "conflict"
 	case hasBase && !hasUp:
 		if !localOK || local == b.Content {
 			return "upstream-removed"

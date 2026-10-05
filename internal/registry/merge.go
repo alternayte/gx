@@ -104,66 +104,68 @@ func mergeLines(base, local, up []string, localHunks, upHunks []hunk) ([]string,
 	for p := 0; p <= len(base); {
 		l := hunkAt(localHunks, li, p)
 		u := hunkAt(upHunks, ui, p)
-		switch {
-		case l == nil && u == nil:
+		if l == nil && u == nil {
 			if p == len(base) {
 				return out, conflict
 			}
 			out = append(out, base[p])
 			p++
-		case l != nil && u == nil:
-			out = append(out, local[l.otherStart:l.otherEnd]...)
-			p = l.baseEnd
+			continue
+		}
+		// One side or both sides change a region that starts here. Grow
+		// the region until no further hunk on either side overlaps it. A
+		// hunk of the other side can start inside the region
+		// (REQ-REG-03).
+		startL, startU := li, ui
+		end := p
+		if l != nil {
+			end = l.baseEnd
 			li++
-		case u != nil && l == nil:
-			out = append(out, up[u.otherStart:u.otherEnd]...)
-			p = u.baseEnd
-			ui++
-		default:
-			// Both sides change a region. Consume the two hunks and grow
-			// the region until no further hunk on either side overlaps
-			// it (REQ-REG-03).
-			startL, startU := li, ui
-			end := l.baseEnd
+		}
+		if u != nil {
 			if u.baseEnd > end {
 				end = u.baseEnd
 			}
-			li++
 			ui++
-			for {
-				grew := false
-				for li < len(localHunks) && localHunks[li].baseStart < end {
-					if localHunks[li].baseEnd > end {
-						end = localHunks[li].baseEnd
-					}
-					li++
-					grew = true
-				}
-				for ui < len(upHunks) && upHunks[ui].baseStart < end {
-					if upHunks[ui].baseEnd > end {
-						end = upHunks[ui].baseEnd
-					}
-					ui++
-					grew = true
-				}
-				if !grew {
-					break
-				}
-			}
-			localText := regionSide(base, local, localHunks, p, end, startL)
-			upText := regionSide(base, up, upHunks, p, end, startU)
-			if strings.Join(localText, "\n") == strings.Join(upText, "\n") {
-				out = append(out, localText...)
-			} else {
-				conflict = true
-				out = append(out, "<<<<<<< local")
-				out = append(out, localText...)
-				out = append(out, "=======")
-				out = append(out, upText...)
-				out = append(out, ">>>>>>> upstream")
-			}
-			p = end
 		}
+		for {
+			grew := false
+			for li < len(localHunks) && localHunks[li].baseStart < end {
+				if localHunks[li].baseEnd > end {
+					end = localHunks[li].baseEnd
+				}
+				li++
+				grew = true
+			}
+			for ui < len(upHunks) && upHunks[ui].baseStart < end {
+				if upHunks[ui].baseEnd > end {
+					end = upHunks[ui].baseEnd
+				}
+				ui++
+				grew = true
+			}
+			if !grew {
+				break
+			}
+		}
+		localText := regionSide(base, local, localHunks, p, end, startL, li)
+		upText := regionSide(base, up, upHunks, p, end, startU, ui)
+		switch {
+		case ui == startU:
+			out = append(out, localText...)
+		case li == startL:
+			out = append(out, upText...)
+		case strings.Join(localText, "\n") == strings.Join(upText, "\n"):
+			out = append(out, localText...)
+		default:
+			conflict = true
+			out = append(out, "<<<<<<< local")
+			out = append(out, localText...)
+			out = append(out, "=======")
+			out = append(out, upText...)
+			out = append(out, ">>>>>>> upstream")
+		}
+		p = end
 	}
 	return out, conflict
 }
@@ -176,15 +178,14 @@ func hunkAt(hunks []hunk, i, p int) *hunk {
 	return nil
 }
 
-// regionSide renders one side of a conflict region: the side's replacement
-// lines where it changed, and the base lines elsewhere. An insertion at the
-// region start counts even when the base range is empty.
-func regionSide(base, other []string, hunks []hunk, from, to, start int) []string {
+// regionSide renders one side of a region: the replacement lines of the
+// hunks start to stop of that side, and the base lines elsewhere.
+func regionSide(base, other []string, hunks []hunk, from, to, start, stop int) []string {
 	var out []string
 	i := start
 	p := from
-	for p < to || (i < len(hunks) && hunks[i].baseStart == p && hunks[i].baseEnd == p) {
-		if i < len(hunks) && hunks[i].baseStart == p {
+	for p < to || (i < stop && hunks[i].baseStart == p) {
+		if i < stop && hunks[i].baseStart == p {
 			h := hunks[i]
 			out = append(out, other[h.otherStart:h.otherEnd]...)
 			p = h.baseEnd

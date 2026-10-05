@@ -25,6 +25,9 @@ func SetFrontmatterDecoder(fn func([]byte, any) error) { frontmatterDecoder = fn
 type collection[Meta any] struct {
 	dir        string
 	components []any
+	// embedded holds the content files of the build, keyed by the path
+	// below dir. It is nil for a collection with no generated code.
+	embedded map[string]string
 
 	mu      sync.Mutex
 	entries []Entry[Meta]
@@ -57,6 +60,17 @@ func (c *collection[Meta]) Components(components ...any) *collection[Meta] {
 	return c
 }
 
+// Embed gives the collection its content files, keyed by the path below
+// the collection directory. The generated code calls it, so a binary
+// serves the content with no source tree beside it (NFR-08).
+func (c *collection[Meta]) Embed(files map[string]string) *collection[Meta] {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.embedded = files
+	c.loaded = false
+	return c
+}
+
 // Dir returns the collection directory as declared.
 func (c *collection[Meta]) Dir() string { return c.dir }
 
@@ -69,6 +83,10 @@ func (c *collection[Meta]) Load() error {
 		return c.err
 	}
 	c.loaded = true
+	if c.embedded != nil {
+		c.entries, c.err = embeddedEntries[Meta](c.dir, c.embedded)
+		return c.err
+	}
 	c.entries, c.err = loadEntries[Meta](c.dir)
 	return c.err
 }
@@ -137,22 +155,11 @@ func loadEntries[Meta any](dir string) ([]Entry[Meta], error) {
 		if err != nil {
 			return err
 		}
-		slug := strings.TrimSuffix(filepath.ToSlash(rel), ".md")
-		front, body := splitFrontmatter(data)
-		var meta Meta
-		if len(front) > 0 {
-			if frontmatterDecoder == nil {
-				return &ContentError{File: path, Msg: "no frontmatter decoder; import github.com/alternayte/gx/content"}
-			}
-			if err := frontmatterDecoder(front, &meta); err != nil {
-				return &ContentError{File: path, Msg: err.Error()}
-			}
+		entry, err := decodeEntry[Meta](path, filepath.ToSlash(rel), data)
+		if err != nil {
+			return err
 		}
-		if violations := RunAllRulesContext(context.Background(), &meta); len(violations) > 0 {
-			v := violations[0]
-			return &ContentError{File: path, Msg: v.Message}
-		}
-		out = append(out, Entry[Meta]{Slug: slug, File: path, Meta: meta, Body: body})
+		out = append(out, entry)
 		return nil
 	})
 	if err != nil {
@@ -160,6 +167,41 @@ func loadEntries[Meta any](dir string) ([]Entry[Meta], error) {
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Slug < out[j].Slug })
 	return out, nil
+}
+
+// embeddedEntries decodes the content files that the generated code holds.
+func embeddedEntries[Meta any](dir string, files map[string]string) ([]Entry[Meta], error) {
+	out := make([]Entry[Meta], 0, len(files))
+	for rel, data := range files {
+		entry, err := decodeEntry[Meta](filepath.Join(dir, filepath.FromSlash(rel)), rel, []byte(data))
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, entry)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Slug < out[j].Slug })
+	return out, nil
+}
+
+// decodeEntry decodes one content file. rel is its path below the
+// collection directory.
+func decodeEntry[Meta any](path, rel string, data []byte) (Entry[Meta], error) {
+	slug := strings.TrimSuffix(filepath.ToSlash(rel), ".md")
+	front, body := splitFrontmatter(data)
+	var meta Meta
+	if len(front) > 0 {
+		if frontmatterDecoder == nil {
+			return Entry[Meta]{}, &ContentError{File: path, Msg: "no frontmatter decoder; import github.com/alternayte/gx/content"}
+		}
+		if err := frontmatterDecoder(front, &meta); err != nil {
+			return Entry[Meta]{}, &ContentError{File: path, Msg: err.Error()}
+		}
+	}
+	if violations := RunAllRulesContext(context.Background(), &meta); len(violations) > 0 {
+		v := violations[0]
+		return Entry[Meta]{}, &ContentError{File: path, Msg: v.Message}
+	}
+	return Entry[Meta]{Slug: slug, File: path, Meta: meta, Body: body}, nil
 }
 
 // splitFrontmatter returns the YAML frontmatter and the body.

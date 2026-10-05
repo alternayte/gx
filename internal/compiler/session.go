@@ -65,6 +65,7 @@ func (s *Session) Generate(root string) (map[string][]byte, []Diagnostic) {
 	}
 	changed := changedGXFiles(s.stamps, stamps)
 	if len(changed) == 0 {
+		s.refreshContent(s.files)
 		return s.files, s.lastDiags
 	}
 	for path := range changed {
@@ -194,6 +195,7 @@ func (s *Session) incremental(root string, changed map[string]bool, stamps map[s
 	}
 	out[classesFilePath(root)] = classesBytes(collectClasses(s.dirs, s.l, s.res.pkgs))
 	out[galleryFilePath(root)] = renderGallery(root, s.dirs, s.l, s.res.pkgs)
+	s.refreshContent(out)
 	s.files = out
 	s.lastDiags = nil
 	s.stamps = stamps
@@ -367,6 +369,19 @@ func (s sessionImporter) Import(path string) (*types.Package, error) {
 		return p, nil
 	}
 	return nil, fmt.Errorf("gx: no cached package %q", path)
+}
+
+// refreshContent writes the content files of each collection again. A
+// Markdown file is not an input of the analysis, and the generated code
+// holds its text, so each pass reads the content directories (REQ-CNT-12,
+// NFR-08).
+func (s *Session) refreshContent(files map[string][]byte) {
+	if files == nil || s.res == nil {
+		return
+	}
+	for path, src := range renderContentBodies(s.res.collections) {
+		files[path] = src
+	}
 }
 
 // sameFileSet reports whether the two snapshots hold the same paths.

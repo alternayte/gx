@@ -498,7 +498,7 @@ func (f *form[In, P]) invalid(w http.ResponseWriter, r *http.Request, in FormInp
 		}
 		err := adapter.Respond(w, r, &Response{Patches: []Patch{ElementPatch{
 			Mode:   ModeMorph,
-			Target: "#" + id,
+			Target: idSelector(id),
 			Node:   el,
 		}}})
 		if err != nil {
@@ -542,7 +542,7 @@ func (f *form[In, P]) validate(w http.ResponseWriter, r *http.Request, in FormIn
 	// The error element always exists, so the patch morphs it (REQ-FRM-06).
 	patch := ElementPatch{
 		Mode:   ModeMorph,
-		Target: "#" + fieldID + "-error",
+		Target: idSelector(fieldID + "-error"),
 		Node:   FieldErrorNode(fieldID, message),
 	}
 	if err := adapter.Respond(w, r, &Response{Patches: []Patch{patch}}); err != nil {
