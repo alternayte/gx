@@ -64,6 +64,10 @@ func TestREQ_DOC_02_APIReference(t *testing.T) {
 		}
 		files, _ := filepath.Glob(filepath.Join("..", "registry", name, "*.gx"))
 		for _, file := range files {
+			// A local .gx state directory of the compiler matches the glob.
+			if info, err := os.Stat(file); err == nil && info.IsDir() {
+				continue
+			}
 			for prop, doc := range propDescriptions(t, file) {
 				rows++
 				if doc == "" {
