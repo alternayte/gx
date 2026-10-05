@@ -7,7 +7,6 @@
 ((tag_name) @namespace
  (#match? @namespace "\\."))
 (erroneous_end_tag_name) @tag.error
-(doctype) @constant
 (attribute_name) @attribute
 ((attribute_name) @keyword
  (#match? @keyword "^(show|text|key|transition)$"))
@@ -18,13 +17,34 @@
 (fragment_attribute (attribute_name) @function)
 (expression) @embedded
 (go_block) @embedded
+(statement) @embedded
+(package_name) @namespace
+(import_alias) @namespace
 (line_comment) @comment
+(block_comment) @comment
 (go_string) @string
 (comment) @comment
+
+[
+  "package"
+  "import"
+  "props"
+  "signals"
+  "if"
+  "else"
+  "for"
+  "switch"
+  "case"
+  "default"
+] @keyword
 
 [
   "<"
   ">"
   "</"
   "/>"
+  "{"
+  "}"
 ] @punctuation.bracket
+
+"..." @operator
