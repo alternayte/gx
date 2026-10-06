@@ -184,6 +184,24 @@
           "ui/collapsible/Collapsible.gx": "1d609545a0a27c2270918f075dc6538a4a390f5ae7515fee02654667bb821cdd"
         }
       },
+      "combobox": {
+        "version": "0.1.0",
+        "files": {
+          "ui/combobox/Combobox.fixtures.go": "c1c36de7487d3cca670a9dc4cc3e9c89b8c75002f0164ee25fd9a6fd33e79fa2",
+          "ui/combobox/Combobox.gx": "3e8faffb0d4580f5ed7b1e9342cea6bcfdb92e966431a0c5d4736debbeae9c79",
+          "ui/combobox/ComboboxInput.ts": "bea04739d79970fc1833b49e2428b34927de6c4e73b445c2cd7c8040007584ee",
+          "ui/combobox/styles.go": "c7eafa802958e819c012666a774b3fddb822011c5c94dc8e1247207ab7748f33"
+        }
+      },
+      "command": {
+        "version": "0.1.0",
+        "files": {
+          "ui/command/Command.fixtures.go": "fee8944b785c3a33426c6aed24f34c47d1a1a4a76dd35b02e9834d4ff6df85fa",
+          "ui/command/Command.gx": "4f0fc083d300aa1162600ce8c1e9ad46429a9ea9120f19c8195c2ef6efff1479",
+          "ui/command/CommandInput.ts": "c745a23524439079b8d018b7b025df459f54c0feaf02920ead79b202c63a4e26",
+          "ui/command/styles.go": "d5e0371c1a7cb96e31c44b96da238dddd697991edd849a3b91a6da23b0773daa"
+        }
+      },
       "context-menu": {
         "version": "0.1.0",
         "files": {

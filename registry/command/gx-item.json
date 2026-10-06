@@ -1,0 +1,33 @@
+{
+  "name": "command",
+  "version": "0.1.0",
+  "description": "A list of commands with a search input.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Command.gx",
+      "target": "ui/command/Command.gx"
+    },
+    {
+      "path": "Command.fixtures.go",
+      "target": "ui/command/Command.fixtures.go"
+    },
+    {
+      "path": "CommandInput.ts",
+      "target": "ui/command/CommandInput.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/command/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--muted-foreground",
+    "--foreground"
+  ]
+}

@@ -85,6 +85,18 @@
       "kind": "component"
     },
     {
+      "name": "combobox",
+      "version": "0.1.0",
+      "description": "A select with a text filter.",
+      "kind": "component"
+    },
+    {
+      "name": "command",
+      "version": "0.1.0",
+      "description": "A list of commands with a search input.",
+      "kind": "component"
+    },
+    {
       "name": "context-menu",
       "version": "0.1.0",
       "description": "A menu that opens on a right click.",

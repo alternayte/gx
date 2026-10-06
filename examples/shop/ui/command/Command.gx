@@ -1,0 +1,47 @@
+package command
+
+props {
+  // Id is the id of the root element.
+  Id          string
+  // Label is the accessible name of the search input and of the list.
+  Label       string = "Commands"
+  // Placeholder is the text of the empty search input.
+  Placeholder string = "Type a command or search..."
+  // EmptyText is the text that shows when no item matches.
+  EmptyText   string = "No results found."
+  // Groups are the groups of items, in order.
+  Groups      []Group
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
+}
+
+<div id={p.Id} data-slot="command" class={gx.Cx(rootClass, p.Class)} {...p.Attrs}>
+  <CommandInput list={p.listID()} empty={p.emptyID()} label={p.label()} placeholder={p.placeholder()} classes={inputClasses} load="eager" />
+  <div id={p.listID()} role="listbox" aria-label={p.label()} class={listClass}>
+    for gi, g := range p.Groups {
+      <div role="group" aria-labelledby={p.headingID(gi)} data-command-group class={groupClass}>
+        <div id={p.headingID(gi)} role="presentation" class={headingClass}>{g.Heading}</div>
+        for _, it := range g.Items {
+          if it.Href != "" {
+            <a role="option" aria-selected="false" href={it.Href} data-command-item data-value={it.value()} data-label={it.Label} data-keywords={it.Keywords} aria-disabled={it.disabled()} class={itemClass}>
+              <span>{it.Label}</span>
+              if it.Shortcut != "" {
+                <kbd class={shortcutClass}>{it.Shortcut}</kbd>
+              }
+            </a>
+          } else {
+            <button type="button" role="option" aria-selected="false" data-command-item data-value={it.value()} data-label={it.Label} data-keywords={it.Keywords} aria-disabled={it.disabled()} disabled={it.Disabled} class={itemClass}>
+              <span>{it.Label}</span>
+              if it.Shortcut != "" {
+                <kbd class={shortcutClass}>{it.Shortcut}</kbd>
+              }
+            </button>
+          }
+        }
+      </div>
+    }
+  </div>
+  <p id={p.emptyID()} hidden class={emptyClass}>{p.emptyText()}</p>
+</div>

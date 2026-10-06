@@ -1,0 +1,34 @@
+package combobox
+
+props {
+  // Id is the id of the select. A label points at it.
+  Id          string
+  // Name is the form field name. The form sends the value of the chosen option.
+  Name        string = ""
+  // Value is the value of the chosen option of the first render.
+  Value       string = ""
+  // Options are the options, in order.
+  Options     []Option
+  // Placeholder is the text of the input with no chosen option.
+  Placeholder string = "Select an option"
+  // EmptyText is the text of the list when no option matches.
+  EmptyText   string = "No option found."
+  // Label is the accessible name of the control. Leave it empty when a label points at Id.
+  Label       string = ""
+  // Disabled disables the control.
+  Disabled    bool = false
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the select.
+  Attrs       gx.Attrs = nil
+}
+
+<div data-slot="combobox" class={gx.Cx(rootClass, p.Class)}>
+  <select id={p.Id} name={p.Name} aria-label={p.Label} disabled={p.Disabled} class={selectClass} {...p.Attrs}>
+    <option value="" selected={p.Value == ""}>{p.placeholder()}</option>
+    for _, o := range p.Options {
+      <option value={o.Value} selected={o.Value == p.Value} disabled={o.Disabled}>{o.Label}</option>
+    }
+  </select>
+  <ComboboxInput select={p.Id} placeholder={p.placeholder()} emptyText={p.emptyText()} classes={inputClasses} load="eager" />
+</div>

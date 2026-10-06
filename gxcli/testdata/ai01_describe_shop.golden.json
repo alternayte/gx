@@ -1478,6 +1478,148 @@
       ]
     },
     {
+      "name": "Combobox",
+      "package": "github.com/alternayte/gx/examples/shop/ui/combobox",
+      "file": "ui/combobox/Combobox.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the select. A label points at it."
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Name is the form field name. The form sends the value of the chosen option."
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Value is the value of the chosen option of the first render."
+        },
+        {
+          "name": "Options",
+          "type": "[]Option",
+          "required": true,
+          "doc": "Options are the options, in order."
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "required": false,
+          "default": "\"Select an option\"",
+          "doc": "Placeholder is the text of the input with no chosen option."
+        },
+        {
+          "name": "EmptyText",
+          "type": "string",
+          "required": false,
+          "default": "\"No option found.\"",
+          "doc": "EmptyText is the text of the list when no option matches."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Label is the accessible name of the control. Leave it empty when a label points at Id."
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "required": false,
+          "default": "false",
+          "doc": "Disabled disables the control."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the select."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Chosen",
+        "Disabled",
+        "Empty"
+      ]
+    },
+    {
+      "name": "Command",
+      "package": "github.com/alternayte/gx/examples/shop/ui/command",
+      "file": "ui/command/Command.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the root element."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"Commands\"",
+          "doc": "Label is the accessible name of the search input and of the list."
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "required": false,
+          "default": "\"Type a command or search...\"",
+          "doc": "Placeholder is the text of the empty search input."
+        },
+        {
+          "name": "EmptyText",
+          "type": "string",
+          "required": false,
+          "default": "\"No results found.\"",
+          "doc": "EmptyText is the text that shows when no item matches."
+        },
+        {
+          "name": "Groups",
+          "type": "[]Group",
+          "required": true,
+          "doc": "Groups are the groups of items, in order."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default",
+        "OneGroup"
+      ]
+    },
+    {
       "name": "ContextMenu",
       "package": "github.com/alternayte/gx/examples/shop/ui/context-menu",
       "file": "ui/context-menu/ContextMenu.gx",
@@ -9108,6 +9250,65 @@
       ]
     },
     {
+      "name": "ComboboxInput",
+      "package": "github.com/alternayte/gx/examples/shop/ui/combobox",
+      "file": "ui/combobox/ComboboxInput.ts",
+      "props": [
+        {
+          "name": "Select",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "EmptyText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Classes",
+          "type": "InputClasses",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "CommandInput",
+      "package": "github.com/alternayte/gx/examples/shop/ui/command",
+      "file": "ui/command/CommandInput.ts",
+      "props": [
+        {
+          "name": "List",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Empty",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Classes",
+          "type": "InputClasses",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "InputOTPSlots",
       "package": "github.com/alternayte/gx/examples/shop/ui/input-otp",
       "file": "ui/input-otp/InputOTPSlots.ts",
@@ -9376,6 +9577,26 @@
       "files": [
         "ui/collapsible/Collapsible.fixtures.go",
         "ui/collapsible/Collapsible.gx"
+      ]
+    },
+    {
+      "name": "combobox",
+      "version": "0.1.0",
+      "files": [
+        "ui/combobox/Combobox.fixtures.go",
+        "ui/combobox/Combobox.gx",
+        "ui/combobox/ComboboxInput.ts",
+        "ui/combobox/styles.go"
+      ]
+    },
+    {
+      "name": "command",
+      "version": "0.1.0",
+      "files": [
+        "ui/command/Command.fixtures.go",
+        "ui/command/Command.gx",
+        "ui/command/CommandInput.ts",
+        "ui/command/styles.go"
       ]
     },
     {

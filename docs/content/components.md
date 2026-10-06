@@ -22,6 +22,8 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Card" description="A bordered surface for grouped content." href="/components/card/" />
 <docs.LinkCard title="Checkbox" description="A single boolean control with a label." href="/components/checkbox/" />
 <docs.LinkCard title="Collapsible" description="One panel that opens on demand." href="/components/collapsible/" />
+<docs.LinkCard title="Combobox" description="A select with a text filter." href="/components/combobox/" />
+<docs.LinkCard title="Command" description="A list of commands with a search input." href="/components/command/" />
 <docs.LinkCard title="Context Menu" description="A menu that opens on a right click." href="/components/context-menu/" />
 <docs.LinkCard title="Data Table" description="A server-driven table with typed columns, sort headers and paging." href="/components/data-table/" />
 <docs.LinkCard title="Date Picker" description="A button that opens a calendar in a popover." href="/components/date-picker/" />

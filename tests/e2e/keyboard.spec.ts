@@ -761,3 +761,102 @@ test('REQ-REG-14 date-picker closes on Escape and shows the day of the server', 
   await waitClosed('#date-chosen-popover')
   expect(await section.locator('#date-chosen').inputValue()).toBe('2026-10-14')
 })
+
+// activeOption is the text of the option that a combobox input points at.
+const activeOption = (inputSelector: string): Promise<string | null> =>
+  page.evaluate((sel) => {
+    const id = document.querySelector(sel)?.getAttribute('aria-activedescendant')
+    return id ? (document.getElementById(id)?.querySelector('span')?.textContent ?? document.getElementById(id)?.textContent ?? null) : null
+  }, inputSelector)
+
+test('REQ-REG-14 combobox filters, moves with the arrow keys and chooses with Enter', async () => {
+  await islandReady('Combobox-Empty')
+  const section = fixture('Combobox-Empty')
+  const input = section.getByRole('combobox', { name: 'Framework' })
+  const select = section.locator('#combo-empty')
+  expect(await input.getAttribute('placeholder')).toBe('Select a framework')
+  expect(await input.getAttribute('aria-expanded')).toBe('false')
+  await input.focus()
+  await page.keyboard.press('ArrowDown')
+  expect(await input.getAttribute('aria-expanded')).toBe('true')
+  expect(await section.getByRole('option').count()).toBe(6)
+  expect(await activeOption('[data-fixture="Combobox-Empty"] input')).toBe('Gx')
+  // Rails is disabled: the arrow keys go past it.
+  for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowDown')
+  expect(await activeOption('[data-fixture="Combobox-Empty"] input')).toBe('Next.js')
+  await page.keyboard.press('ArrowDown')
+  expect(await activeOption('[data-fixture="Combobox-Empty"] input')).toBe('SvelteKit')
+  await page.keyboard.press('Home')
+  expect(await activeOption('[data-fixture="Combobox-Empty"] input')).toBe('Gx')
+  // Typing filters the list by the label.
+  await page.keyboard.type('mp')
+  expect(await section.getByRole('option').allTextContents()).toEqual(['templ', 'gomponents'])
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
+  expect(await input.getAttribute('aria-expanded')).toBe('false')
+  expect(await input.inputValue()).toBe('gomponents')
+  // The select is the form control and holds the value.
+  expect(await select.inputValue()).toBe('gomponents')
+  expect(await select.getAttribute('name')).toBe('framework')
+})
+
+test('REQ-REG-14 combobox closes on Escape and keeps the chosen option', async () => {
+  await islandReady('Combobox-Chosen')
+  const section = fixture('Combobox-Chosen')
+  const input = section.getByRole('combobox', { name: 'Framework' })
+  expect(await input.inputValue()).toBe('templ')
+  await input.focus()
+  await page.keyboard.press('ArrowDown')
+  // The chosen option is in the list, and the list shows every option.
+  expect(await section.locator('[role=option][aria-selected="true"]').textContent()).toBe('templ')
+  expect(await section.getByRole('option').count()).toBe(6)
+  await input.fill('zzz')
+  expect(await section.getByText('No option found.').isVisible()).toBe(true)
+  await page.keyboard.press('Escape')
+  expect(await input.getAttribute('aria-expanded')).toBe('false')
+  expect(await input.inputValue()).toBe('templ')
+  expect(await section.locator('#combo-chosen').inputValue()).toBe('templ')
+  // A click chooses too.
+  await input.click()
+  await section.getByRole('option', { name: 'Next.js' }).click()
+  expect(await section.locator('#combo-chosen').inputValue()).toBe('next')
+  expect(await input.inputValue()).toBe('Next.js')
+})
+
+test('REQ-REG-14 command filters its items and runs the active one', async () => {
+  await islandReady('Command-Default')
+  const section = fixture('Command-Default')
+  const input = section.getByRole('combobox', { name: 'Commands' })
+  const active = '[data-fixture="Command-Default"] input'
+  await input.focus()
+  expect(await activeOption(active)).toBe('Calendar')
+  await page.keyboard.press('ArrowDown')
+  expect(await activeOption(active)).toBe('Search emoji')
+  // Calculator is disabled: the next item is Profile.
+  await page.keyboard.press('ArrowDown')
+  expect(await activeOption(active)).toBe('Profile')
+  await page.keyboard.press('End')
+  expect(await activeOption(active)).toBe('Settings')
+  await page.keyboard.press('Home')
+  expect(await activeOption(active)).toBe('Calendar')
+  // The search reads the keywords: "smile" finds Search emoji.
+  await page.keyboard.type('smile')
+  expect(await section.locator('[data-command-item]:visible > span').allTextContents()).toEqual(['Search emoji'])
+  expect(await section.locator('[data-command-group]:visible').count()).toBe(1)
+  await input.fill('zzz')
+  expect(await section.getByText('No results found.').isVisible()).toBe(true)
+  expect(await activeOption(active)).toBe(null)
+  // Enter runs the active item: a button sends command-select with its value.
+  await input.fill('sett')
+  await page.evaluate(() => {
+    const w = window as unknown as { ran: string[] }
+    w.ran = []
+    document.querySelector('#command-default')!.addEventListener('command-select', (e) => w.ran.push((e as CustomEvent).detail.value))
+  })
+  await page.keyboard.press('Enter')
+  expect(await page.evaluate(() => (window as unknown as { ran: string[] }).ran)).toEqual(['settings'])
+  // A link item goes to its address.
+  await input.fill('bill')
+  await page.keyboard.press('Enter')
+  await page.waitForFunction(() => location.hash === '#billing')
+})

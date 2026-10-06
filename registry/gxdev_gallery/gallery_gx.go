@@ -20,6 +20,8 @@ import (
 	card "github.com/alternayte/gx/registry/card"
 	checkbox "github.com/alternayte/gx/registry/checkbox"
 	collapsible "github.com/alternayte/gx/registry/collapsible"
+	combobox "github.com/alternayte/gx/registry/combobox"
+	command "github.com/alternayte/gx/registry/command"
 	contextmenu "github.com/alternayte/gx/registry/context-menu"
 	datatablepage "github.com/alternayte/gx/registry/data-table-page"
 	datepicker "github.com/alternayte/gx/registry/date-picker"
@@ -146,6 +148,11 @@ func Fixtures() []gx.Fixture {
 		{Component: "Checkbox", Package: "github.com/alternayte/gx/registry/checkbox", Name: "Unchecked", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Unchecked"]) }},
 		{Component: "Collapsible", Package: "github.com/alternayte/gx/registry/collapsible", Name: "Closed", Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Closed"]) }},
 		{Component: "Collapsible", Package: "github.com/alternayte/gx/registry/collapsible", Name: "Open", Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Open"]) }},
+		{Component: "Combobox", Package: "github.com/alternayte/gx/registry/combobox", Name: "Chosen", Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Chosen"]) }},
+		{Component: "Combobox", Package: "github.com/alternayte/gx/registry/combobox", Name: "Disabled", Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Disabled"]) }},
+		{Component: "Combobox", Package: "github.com/alternayte/gx/registry/combobox", Name: "Empty", Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Empty"]) }},
+		{Component: "Command", Package: "github.com/alternayte/gx/registry/command", Name: "Default", Node: func() gx.Node { return command.Command(command.CommandFixtures["Default"]) }},
+		{Component: "Command", Package: "github.com/alternayte/gx/registry/command", Name: "OneGroup", Node: func() gx.Node { return command.Command(command.CommandFixtures["OneGroup"]) }},
 		{Component: "ContextMenu", Package: "github.com/alternayte/gx/registry/context-menu", Name: "Menu", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Menu"]) }},
 		{Component: "ContextMenu", Package: "github.com/alternayte/gx/registry/context-menu", Name: "Sub", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Sub"]) }},
 		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/registry/context-menu", Name: "Checked", Node: func() gx.Node { return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Checked"])) }},

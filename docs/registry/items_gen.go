@@ -18,6 +18,8 @@ import (
 	card "github.com/alternayte/gx/registry/card"
 	checkbox "github.com/alternayte/gx/registry/checkbox"
 	collapsible "github.com/alternayte/gx/registry/collapsible"
+	combobox "github.com/alternayte/gx/registry/combobox"
+	command "github.com/alternayte/gx/registry/command"
 	contextmenu "github.com/alternayte/gx/registry/context-menu"
 	datatable "github.com/alternayte/gx/registry/data-table"
 	datatablepage "github.com/alternayte/gx/registry/data-table-page"
@@ -266,6 +268,27 @@ var Items = []Item{
 		Examples: []Example{
 			{Name: "collapsible-open", Title: "Open", Component: "Collapsible", Fixtures: []string{"Collapsible/Open"}, Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Open"]) }},
 			{Name: "collapsible-closed", Title: "Closed", Component: "Collapsible", Fixtures: []string{"Collapsible/Closed"}, Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Closed"]) }},
+		},
+	},
+	{
+		Name:        "combobox",
+		Title:       "Combobox",
+		Group:       "Components",
+		Description: "A select with a text filter.",
+		Examples: []Example{
+			{Name: "combobox-empty", Title: "Empty", Component: "Combobox", Fixtures: []string{"Combobox/Empty"}, Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Empty"]) }},
+			{Name: "combobox-chosen", Title: "Chosen", Component: "Combobox", Fixtures: []string{"Combobox/Chosen"}, Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Chosen"]) }},
+			{Name: "combobox-disabled", Title: "Disabled", Component: "Combobox", Fixtures: []string{"Combobox/Disabled"}, Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Disabled"]) }},
+		},
+	},
+	{
+		Name:        "command",
+		Title:       "Command",
+		Group:       "Components",
+		Description: "A list of commands with a search input.",
+		Examples: []Example{
+			{Name: "command-default", Title: "Default", Component: "Command", Fixtures: []string{"Command/Default"}, Node: func() gx.Node { return command.Command(command.CommandFixtures["Default"]) }},
+			{Name: "command-one-group", Title: "One group", Component: "Command", Fixtures: []string{"Command/OneGroup"}, Node: func() gx.Node { return command.Command(command.CommandFixtures["OneGroup"]) }},
 		},
 	},
 	{

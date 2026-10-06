@@ -1,0 +1,34 @@
+{
+  "name": "combobox",
+  "version": "0.1.0",
+  "description": "A select with a text filter.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Combobox.gx",
+      "target": "ui/combobox/Combobox.gx"
+    },
+    {
+      "path": "Combobox.fixtures.go",
+      "target": "ui/combobox/Combobox.fixtures.go"
+    },
+    {
+      "path": "ComboboxInput.ts",
+      "target": "ui/combobox/ComboboxInput.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/combobox/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring",
+    "--border",
+    "--popover",
+    "--popover-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--muted-foreground"
+  ]
+}

@@ -21,6 +21,8 @@ import (
 	card "github.com/alternayte/gx/examples/shop/ui/card"
 	checkbox "github.com/alternayte/gx/examples/shop/ui/checkbox"
 	collapsible "github.com/alternayte/gx/examples/shop/ui/collapsible"
+	combobox "github.com/alternayte/gx/examples/shop/ui/combobox"
+	command "github.com/alternayte/gx/examples/shop/ui/command"
 	contextmenu "github.com/alternayte/gx/examples/shop/ui/context-menu"
 	datatablepage "github.com/alternayte/gx/examples/shop/ui/data-table-page"
 	datepicker "github.com/alternayte/gx/examples/shop/ui/date-picker"
@@ -157,6 +159,11 @@ func Fixtures() []gx.Fixture {
 		{Component: "Checkbox", Package: "github.com/alternayte/gx/examples/shop/ui/checkbox", Name: "Unchecked", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Unchecked"]) }},
 		{Component: "Collapsible", Package: "github.com/alternayte/gx/examples/shop/ui/collapsible", Name: "Closed", Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Closed"]) }},
 		{Component: "Collapsible", Package: "github.com/alternayte/gx/examples/shop/ui/collapsible", Name: "Open", Node: func() gx.Node { return collapsible.Collapsible(collapsible.CollapsibleFixtures["Open"]) }},
+		{Component: "Combobox", Package: "github.com/alternayte/gx/examples/shop/ui/combobox", Name: "Chosen", Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Chosen"]) }},
+		{Component: "Combobox", Package: "github.com/alternayte/gx/examples/shop/ui/combobox", Name: "Disabled", Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Disabled"]) }},
+		{Component: "Combobox", Package: "github.com/alternayte/gx/examples/shop/ui/combobox", Name: "Empty", Node: func() gx.Node { return combobox.Combobox(combobox.ComboboxFixtures["Empty"]) }},
+		{Component: "Command", Package: "github.com/alternayte/gx/examples/shop/ui/command", Name: "Default", Node: func() gx.Node { return command.Command(command.CommandFixtures["Default"]) }},
+		{Component: "Command", Package: "github.com/alternayte/gx/examples/shop/ui/command", Name: "OneGroup", Node: func() gx.Node { return command.Command(command.CommandFixtures["OneGroup"]) }},
 		{Component: "ContextMenu", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Menu", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Menu"]) }},
 		{Component: "ContextMenu", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Sub", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Sub"]) }},
 		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Checked", Node: func() gx.Node { return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Checked"])) }},
