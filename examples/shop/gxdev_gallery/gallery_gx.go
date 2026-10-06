@@ -17,11 +17,13 @@ import (
 	breadcrumb "github.com/alternayte/gx/examples/shop/ui/breadcrumb"
 	button "github.com/alternayte/gx/examples/shop/ui/button"
 	buttongroup "github.com/alternayte/gx/examples/shop/ui/button-group"
+	calendar "github.com/alternayte/gx/examples/shop/ui/calendar"
 	card "github.com/alternayte/gx/examples/shop/ui/card"
 	checkbox "github.com/alternayte/gx/examples/shop/ui/checkbox"
 	collapsible "github.com/alternayte/gx/examples/shop/ui/collapsible"
 	contextmenu "github.com/alternayte/gx/examples/shop/ui/context-menu"
 	datatablepage "github.com/alternayte/gx/examples/shop/ui/data-table-page"
+	datepicker "github.com/alternayte/gx/examples/shop/ui/date-picker"
 	dialog "github.com/alternayte/gx/examples/shop/ui/dialog"
 	drawer "github.com/alternayte/gx/examples/shop/ui/drawer"
 	dropdownmenu "github.com/alternayte/gx/examples/shop/ui/dropdown-menu"
@@ -139,6 +141,11 @@ func Fixtures() []gx.Fixture {
 		{Component: "ButtonGroup", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Vertical", Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Vertical"]) }},
 		{Component: "ButtonGroupSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Default", Node: func() gx.Node { return buttongroup.ButtonGroupSeparatorWrap(buttongroup.ButtonGroupSeparator(buttongroup.ButtonGroupSeparatorFixtures["Default"])) }},
 		{Component: "ButtonGroupText", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Text", Node: func() gx.Node { return buttongroup.ButtonGroupText(buttongroup.ButtonGroupTextFixtures["Text"]) }},
+		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "Chosen", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Chosen"]) }},
+		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "Empty", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Empty"]) }},
+		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "German", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["German"]) }},
+		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "Limited", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Limited"]) }},
+		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "Monday", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Monday"]) }},
 		{Component: "Card", Package: "github.com/alternayte/gx/examples/shop/ui/card", Name: "Action", Node: func() gx.Node { return card.Card(card.CardFixtures["Action"]) }},
 		{Component: "Card", Package: "github.com/alternayte/gx/examples/shop/ui/card", Name: "BodyOnly", Node: func() gx.Node { return card.Card(card.CardFixtures["BodyOnly"]) }},
 		{Component: "Card", Package: "github.com/alternayte/gx/examples/shop/ui/card", Name: "Full", Node: func() gx.Node { return card.Card(card.CardFixtures["Full"]) }},
@@ -176,6 +183,9 @@ func Fixtures() []gx.Fixture {
 		{Component: "ContextMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Default"]) }},
 		{Component: "ContextMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Sub", Node: func() gx.Node { return contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Sub"]) }},
 		{Component: "DataTablePage", Package: "github.com/alternayte/gx/examples/shop/ui/data-table-page", Name: "Default", Node: func() gx.Node { return datatablepage.DataTablePage(datatablepage.DataTablePageFixtures["Default"]) }},
+		{Component: "DatePicker", Package: "github.com/alternayte/gx/examples/shop/ui/date-picker", Name: "Chosen", Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Chosen"]) }},
+		{Component: "DatePicker", Package: "github.com/alternayte/gx/examples/shop/ui/date-picker", Name: "Empty", Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Empty"]) }},
+		{Component: "DatePicker", Package: "github.com/alternayte/gx/examples/shop/ui/date-picker", Name: "Limited", Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Limited"]) }},
 		{Component: "Dialog", Package: "github.com/alternayte/gx/examples/shop/ui/dialog", Name: "Default", Node: func() gx.Node { return dialog.Dialog(dialog.DialogFixtures["Default"]) }},
 		{Component: "Drawer", Package: "github.com/alternayte/gx/examples/shop/ui/drawer", Name: "Default", Node: func() gx.Node { return drawer.Drawer(drawer.DrawerFixtures["Default"]) }},
 		{Component: "DropdownMenu", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "End", Node: func() gx.Node { return dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["End"]) }},

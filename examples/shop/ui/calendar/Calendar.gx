@@ -1,0 +1,35 @@
+package calendar
+
+props {
+  // Id is the id of the date input. A label points at it.
+  Id        string
+  // Name is the form field name. The form sends the day as YYYY-MM-DD.
+  Name      string = ""
+  // Value is the chosen day of the first render, as YYYY-MM-DD.
+  Value     string = ""
+  // Month is the month that the grid shows first, as YYYY-MM. Empty means the month of Value, or the month of today.
+  Month     string = ""
+  // Min is the first day that a user can choose, as YYYY-MM-DD.
+  Min       string = ""
+  // Max is the last day that a user can choose, as YYYY-MM-DD.
+  Max       string = ""
+  // Label is the accessible name of the date input.
+  Label     string = "Date"
+  // WeekStart is the first day of the week: Sunday or Monday.
+  WeekStart WeekStart = Sunday
+  // Locale is the language of the month and day names, as a BCP 47 tag. Empty means the language of the page.
+  Locale    string = ""
+  // Display is the id of an element that shows the chosen day as text. A date picker sets it.
+  Display   string = ""
+  // Popover is the id of a popover that closes when the user chooses a day. A date picker sets it.
+  Popover   string = ""
+  // Class adds classes to the root element.
+  Class     string = ""
+  // Attrs adds HTML attributes to the date input.
+  Attrs     gx.Attrs = nil
+}
+
+<div data-slot="calendar" class={gx.Cx(rootClass, p.Class)}>
+  <input id={p.Id} name={p.Name} type="date" value={p.Value} min={p.Min} max={p.Max} aria-label={p.label()} class={inputClass} {...p.Attrs} />
+  <CalendarGrid input={p.Id} month={p.month()} weekStart={p.weekStart()} locale={p.Locale} display={p.Display} popover={p.Popover} previousLabel="Previous month" nextLabel="Next month" classes={gridClasses} load="eager" />
+</div>

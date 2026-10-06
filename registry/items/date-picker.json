@@ -1,0 +1,34 @@
+{
+  "name": "date-picker",
+  "version": "0.1.0",
+  "description": "A button that opens a calendar in a popover.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "DatePicker.gx",
+      "target": "ui/date-picker/DatePicker.gx",
+      "content": "package datepicker\n\nimport \"github.com/alternayte/gx/registry/calendar\"\nimport \"github.com/alternayte/gx/registry/popover\"\n\nprops {\n  // Id is the id of the date input. A label points at it.\n  Id          string\n  // Name is the form field name. The form sends the day as YYYY-MM-DD.\n  Name        string = \"\"\n  // Value is the chosen day of the first render, as YYYY-MM-DD.\n  Value       string = \"\"\n  // Min is the first day that a user can choose, as YYYY-MM-DD.\n  Min         string = \"\"\n  // Max is the last day that a user can choose, as YYYY-MM-DD.\n  Max         string = \"\"\n  // Placeholder is the text of the trigger with no chosen day.\n  Placeholder string = \"Pick a date\"\n  // Label is the accessible name of the date input.\n  Label       string = \"Date\"\n  // WeekStart is the first day of the week: calendar.Sunday or calendar.Monday.\n  WeekStart   calendar.WeekStart = calendar.Sunday\n  // Locale is the language of the month and day names, as a BCP 47 tag. Empty means the language of the page.\n  Locale      string = \"\"\n  // Class adds classes to the root element.\n  Class       string = \"\"\n  // Attrs adds HTML attributes to the date input.\n  Attrs       gx.Attrs = nil\n}\n\n\u003cdiv data-slot=\"date-picker\" class={gx.Cx(\"inline-block\", p.Class)}\u003e\n  \u003cpopover.PopoverTrigger id={p.popoverID()} class={triggerClass}\u003e\n    \u003cspan id={p.displayID()} data-empty={p.empty()} class={displayClass}\u003e{p.text()}\u003c/span\u003e\n  \u003c/popover.PopoverTrigger\u003e\n  \u003cpopover.Popover id={p.popoverID()} align={popover.Start} class=\"w-auto p-0\"\u003e\n    \u003ccalendar.Calendar id={p.Id} name={p.Name} value={p.Value} min={p.Min} max={p.Max} label={p.Label} weekStart={p.WeekStart} locale={p.Locale} display={p.displayID()} popover={p.popoverID()} class=\"border-0\" attrs={p.Attrs} /\u003e\n  \u003c/popover.Popover\u003e\n\u003c/div\u003e\n",
+      "sha256": "d11e2f9350c63961def5a574f5543a09d9dcd3f97552b6a6ffcc3cd4a9fef107"
+    },
+    {
+      "path": "DatePicker.fixtures.go",
+      "target": "ui/date-picker/DatePicker.fixtures.go",
+      "content": "package datepicker\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/calendar\"\n)\n\nvar DatePickerFixtures = gx.Fixtures[DatePickerProps]{\n\t\"Empty\":   {Id: \"date-empty\", Name: \"day\"},\n\t\"Chosen\":  {Id: \"date-chosen\", Name: \"day\", Value: \"2026-10-14\"},\n\t\"Limited\": {Id: \"date-limited\", Name: \"day\", Value: \"2026-10-14\", Min: \"2026-10-10\", Max: \"2026-10-20\", WeekStart: calendar.Monday},\n}\n",
+      "sha256": "8671cb7ebd4462543a31c13091dda7dc48ece5069fa3a8841d951556c29e6baa"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/date-picker/styles.go",
+      "content": "// Package datepicker is a button that opens a calendar in a popover.\npackage datepicker\n\n// triggerClass is the classes of the trigger button: as wide as a date and\n// with its text at the start.\nconst triggerClass = \"w-64 justify-start font-normal\"\n\n// displayClass is the classes of the text of the trigger. The placeholder\n// is muted.\nconst displayClass = \"truncate data-[empty=true]:text-muted-foreground\"\n\n// popoverID returns the id of the popover.\nfunc (p DatePickerProps) popoverID() string { return p.Id + \"-popover\" }\n\n// displayID returns the id of the element that shows the chosen day.\nfunc (p DatePickerProps) displayID() string { return p.Id + \"-display\" }\n\n// empty reports, as an attribute value, whether no day is chosen.\nfunc (p DatePickerProps) empty() string {\n\tif p.Value == \"\" {\n\t\treturn \"true\"\n\t}\n\treturn \"false\"\n}\n\n// text returns the text of the trigger for the first render: the day as\n// the server has it, or the placeholder. The calendar island writes the day\n// in the language of the user.\nfunc (p DatePickerProps) text() string {\n\tif p.Value != \"\" {\n\t\treturn p.Value\n\t}\n\t// A props value that Go code makes has no default.\n\tif p.Placeholder == \"\" {\n\t\treturn \"Pick a date\"\n\t}\n\treturn p.Placeholder\n}\n",
+      "sha256": "8bae83a1d588841b8600afc37ff9c3f548fe4528fda745c4dfce1654764c738e"
+    }
+  ],
+  "registryDependencies": [
+    "calendar",
+    "popover"
+  ],
+  "requiredTokens": [
+    "--muted-foreground"
+  ],
+  "usage": "# Date Picker\n\nA button that opens a calendar in a popover.\n\n## Usage\n\n```gx\n\u003clabel for=\"due\"\u003eDue date\u003c/label\u003e\n\u003cdatepicker.DatePicker id=\"due\" name=\"due\" value={p.Due} /\u003e\n\u003cdatepicker.DatePicker id=\"start\" name=\"start\" min=\"2026-10-10\" max=\"2026-10-20\" placeholder=\"Start date\" /\u003e\n```\n\nThe component is a popover with a calendar. The calendar holds a native `\u003cinput type=\"date\"\u003e`, so a form sends the day as `YYYY-MM-DD`.\nThe button shows the chosen day in the language of the user. A choice closes the popover.\nWith no script the button opens the popover, and the popover shows the date input of the browser.\n\n## Do\n\n- Give the date picker a `\u003clabel\u003e` for its `Id`.\n- Set `Min` and `Max` for a range of valid days. The server checks the value too.\n- Use a `Placeholder` that names the date, for example \"Start date\".\n\n## Don't\n\n- Do not use a date picker for a date of birth. Use three inputs or one text input.\n- Do not put a date picker in a popover.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves focus to the button. |\n| Enter, Space | Opens the calendar from the button, or chooses the day that has the focus. |\n| Arrow keys | Moves one day or one week in the calendar. |\n| Page Up, Page Down | Moves one month back or forward. |\n| Escape | Closes the calendar and moves focus to the button. |\n"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "calendar",
+  "version": "0.1.0",
+  "description": "A month grid for the choice of one day.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Calendar.gx",
+      "target": "ui/calendar/Calendar.gx"
+    },
+    {
+      "path": "Calendar.fixtures.go",
+      "target": "ui/calendar/Calendar.fixtures.go"
+    },
+    {
+      "path": "CalendarGrid.ts",
+      "target": "ui/calendar/CalendarGrid.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/calendar/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--background",
+    "--foreground",
+    "--border",
+    "--input",
+    "--ring",
+    "--primary",
+    "--primary-foreground",
+    "--accent",
+    "--accent-foreground",
+    "--muted-foreground"
+  ]
+}

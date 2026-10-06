@@ -18,11 +18,13 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Breadcrumb" description="A trail of links to the current page." href="/components/breadcrumb/" />
 <docs.LinkCard title="Button" description="A button with the shadcn variants and sizes." href="/components/button/" />
 <docs.LinkCard title="Button Group" description="A row of related buttons." href="/components/button-group/" />
+<docs.LinkCard title="Calendar" description="A month grid for the choice of one day." href="/components/calendar/" />
 <docs.LinkCard title="Card" description="A bordered surface for grouped content." href="/components/card/" />
 <docs.LinkCard title="Checkbox" description="A single boolean control with a label." href="/components/checkbox/" />
 <docs.LinkCard title="Collapsible" description="One panel that opens on demand." href="/components/collapsible/" />
 <docs.LinkCard title="Context Menu" description="A menu that opens on a right click." href="/components/context-menu/" />
 <docs.LinkCard title="Data Table" description="A server-driven table with typed columns, sort headers and paging." href="/components/data-table/" />
+<docs.LinkCard title="Date Picker" description="A button that opens a calendar in a popover." href="/components/date-picker/" />
 <docs.LinkCard title="Dialog" description="A modal overlay with a trigger." href="/components/dialog/" />
 <docs.LinkCard title="Drawer" description="A bottom panel for a short task." href="/components/drawer/" />
 <docs.LinkCard title="Dropdown Menu" description="A menu of actions behind a trigger." href="/components/dropdown-menu/" />

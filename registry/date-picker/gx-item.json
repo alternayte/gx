@@ -1,0 +1,27 @@
+{
+  "name": "date-picker",
+  "version": "0.1.0",
+  "description": "A button that opens a calendar in a popover.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "DatePicker.gx",
+      "target": "ui/date-picker/DatePicker.gx"
+    },
+    {
+      "path": "DatePicker.fixtures.go",
+      "target": "ui/date-picker/DatePicker.fixtures.go"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/date-picker/styles.go"
+    }
+  ],
+  "registryDependencies": [
+    "calendar",
+    "popover"
+  ],
+  "requiredTokens": [
+    "--muted-foreground"
+  ]
+}

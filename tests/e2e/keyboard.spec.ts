@@ -648,3 +648,116 @@ test('REQ-REG-14 input-otp groups its slots and keeps a value from the server', 
   // The input is the control: a form sends its value.
   expect(await fixture('InputOTP-Filled').locator('#otp-filled').getAttribute('name')).toBe('code')
 })
+
+// dayButton is the button of one day of a calendar fixture.
+const dayButton = (name: string, iso: string) => fixture(name).locator(`button[data-day="${iso}"]`)
+
+// focusedDay is the day that has the focus.
+const focusedDay = (): Promise<string | null> => page.evaluate(() => (document.activeElement as HTMLElement | null)?.dataset.day ?? null)
+
+test('REQ-REG-14 calendar moves by day, week, month and year with the keyboard', async () => {
+  await islandReady('Calendar-Chosen')
+  const section = fixture('Calendar-Chosen')
+  expect(await section.locator('[aria-live]').textContent()).toBe('October 2026')
+  // The chosen day is the one stop of the grid for the Tab key.
+  expect(await section.locator('tbody button[tabindex="0"]').getAttribute('data-day')).toBe('2026-10-14')
+  expect(await section.locator('td[aria-selected="true"] button').getAttribute('data-day')).toBe('2026-10-14')
+  await dayButton('Calendar-Chosen', '2026-10-14').focus()
+  const steps: [string, string][] = [
+    ['ArrowRight', '2026-10-15'],
+    ['ArrowDown', '2026-10-22'],
+    ['ArrowLeft', '2026-10-21'],
+    ['ArrowUp', '2026-10-14'],
+    // The week starts on Sunday: 11 to 17 October.
+    ['Home', '2026-10-11'],
+    ['End', '2026-10-17'],
+    ['PageDown', '2026-11-17'],
+    ['PageUp', '2026-10-17'],
+    ['Shift+PageDown', '2027-10-17'],
+    ['Shift+PageUp', '2026-10-17'],
+  ]
+  for (const [key, want] of steps) {
+    await page.keyboard.press(key)
+    expect(await focusedDay()).toBe(want)
+  }
+  // An arrow key past the end of the month shows the next month.
+  await dayButton('Calendar-Chosen', '2026-10-17').focus()
+  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowDown')
+  expect(await focusedDay()).toBe('2026-10-31')
+  await page.keyboard.press('ArrowRight')
+  expect(await focusedDay()).toBe('2026-11-01')
+  expect(await section.locator('[aria-live]').textContent()).toBe('November 2026')
+})
+
+test('REQ-REG-14 calendar writes the chosen day into its date input', async () => {
+  await islandReady('Calendar-Empty')
+  const section = fixture('Calendar-Empty')
+  const input = section.locator('#cal-empty')
+  expect(await input.inputValue()).toBe('')
+  expect(await section.locator('[aria-live]').textContent()).toBe('February 2026')
+  await page.evaluate(() => {
+    const w = window as unknown as { changes: string[] }
+    w.changes = []
+    document.querySelector('#cal-empty')!.addEventListener('change', (e) => w.changes.push((e.target as HTMLInputElement).value))
+  })
+  await dayButton('Calendar-Empty', '2026-02-01').focus()
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
+  expect(await input.inputValue()).toBe('2026-02-08')
+  expect(await page.evaluate(() => (window as unknown as { changes: string[] }).changes)).toEqual(['2026-02-08'])
+  expect(await section.locator('td[aria-selected="true"] button').getAttribute('data-day')).toBe('2026-02-08')
+  // The focus stays on the chosen day, and the input is the form control.
+  expect(await focusedDay()).toBe('2026-02-08')
+  expect(await input.getAttribute('name')).toBe('day')
+  // The month buttons change the month and keep the choice.
+  await section.getByRole('button', { name: 'Next month' }).click()
+  expect(await section.locator('[aria-live]').textContent()).toBe('March 2026')
+  expect(await input.inputValue()).toBe('2026-02-08')
+})
+
+test('REQ-REG-14 calendar follows the week start, the limits and the language', async () => {
+  await islandReady('Calendar-Monday')
+  expect(await fixture('Calendar-Monday').locator('thead th').first().getAttribute('abbr')).toBe('Monday')
+  await islandReady('Calendar-Limited')
+  expect(await dayButton('Calendar-Limited', '2026-10-09').isDisabled()).toBe(true)
+  expect(await dayButton('Calendar-Limited', '2026-10-10').isDisabled()).toBe(false)
+  expect(await dayButton('Calendar-Limited', '2026-10-21').isDisabled()).toBe(true)
+  await islandReady('Calendar-German')
+  expect(await fixture('Calendar-German').locator('[aria-live]').textContent()).toBe('Oktober 2026')
+})
+
+test('REQ-REG-14 date-picker opens a calendar, takes a day and closes', async () => {
+  await islandReady('DatePicker-Empty')
+  const section = fixture('DatePicker-Empty')
+  const trigger = section.getByRole('button', { name: 'Pick a date' })
+  await trigger.focus()
+  await page.keyboard.press('Enter')
+  await waitOpen('#date-empty-popover')
+  // The focus is in the grid, on the day of today.
+  await page.waitForFunction(() => (document.activeElement as HTMLElement | null)?.dataset.day !== undefined)
+  const first = await focusedDay()
+  await page.keyboard.press('ArrowRight')
+  const next = await focusedDay()
+  expect(next).not.toBe(first)
+  await page.keyboard.press('Enter')
+  await waitClosed('#date-empty-popover')
+  expect(await section.locator('#date-empty').inputValue()).toBe(next!)
+  // The button shows the day as text and takes the focus back.
+  const text = await section.locator('#date-empty-display').textContent()
+  expect(text).not.toBe('Pick a date')
+  expect(text).toContain(String(Number(next!.slice(8))))
+  expect(await section.locator('#date-empty-display').getAttribute('data-empty')).toBe('false')
+  await page.waitForFunction(() => document.activeElement?.getAttribute('popovertarget') === 'date-empty-popover')
+})
+
+test('REQ-REG-14 date-picker closes on Escape and shows the day of the server', async () => {
+  await islandReady('DatePicker-Chosen')
+  const section = fixture('DatePicker-Chosen')
+  expect(await section.locator('#date-chosen-display').textContent()).toBe('Wednesday, October 14, 2026')
+  await section.locator('button[popovertarget="date-chosen-popover"]').click()
+  await waitOpen('#date-chosen-popover')
+  await page.waitForFunction(() => (document.activeElement as HTMLElement | null)?.dataset.day === '2026-10-14')
+  await page.keyboard.press('Escape')
+  await waitClosed('#date-chosen-popover')
+  expect(await section.locator('#date-chosen').inputValue()).toBe('2026-10-14')
+})

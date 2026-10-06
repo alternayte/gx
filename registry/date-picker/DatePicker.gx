@@ -1,0 +1,38 @@
+package datepicker
+
+import "github.com/alternayte/gx/registry/calendar"
+import "github.com/alternayte/gx/registry/popover"
+
+props {
+  // Id is the id of the date input. A label points at it.
+  Id          string
+  // Name is the form field name. The form sends the day as YYYY-MM-DD.
+  Name        string = ""
+  // Value is the chosen day of the first render, as YYYY-MM-DD.
+  Value       string = ""
+  // Min is the first day that a user can choose, as YYYY-MM-DD.
+  Min         string = ""
+  // Max is the last day that a user can choose, as YYYY-MM-DD.
+  Max         string = ""
+  // Placeholder is the text of the trigger with no chosen day.
+  Placeholder string = "Pick a date"
+  // Label is the accessible name of the date input.
+  Label       string = "Date"
+  // WeekStart is the first day of the week: calendar.Sunday or calendar.Monday.
+  WeekStart   calendar.WeekStart = calendar.Sunday
+  // Locale is the language of the month and day names, as a BCP 47 tag. Empty means the language of the page.
+  Locale      string = ""
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the date input.
+  Attrs       gx.Attrs = nil
+}
+
+<div data-slot="date-picker" class={gx.Cx("inline-block", p.Class)}>
+  <popover.PopoverTrigger id={p.popoverID()} class={triggerClass}>
+    <span id={p.displayID()} data-empty={p.empty()} class={displayClass}>{p.text()}</span>
+  </popover.PopoverTrigger>
+  <popover.Popover id={p.popoverID()} align={popover.Start} class="w-auto p-0">
+    <calendar.Calendar id={p.Id} name={p.Name} value={p.Value} min={p.Min} max={p.Max} label={p.Label} weekStart={p.WeekStart} locale={p.Locale} display={p.displayID()} popover={p.popoverID()} class="border-0" attrs={p.Attrs} />
+  </popover.Popover>
+</div>

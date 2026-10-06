@@ -14,12 +14,14 @@ import (
 	breadcrumb "github.com/alternayte/gx/registry/breadcrumb"
 	button "github.com/alternayte/gx/registry/button"
 	buttongroup "github.com/alternayte/gx/registry/button-group"
+	calendar "github.com/alternayte/gx/registry/calendar"
 	card "github.com/alternayte/gx/registry/card"
 	checkbox "github.com/alternayte/gx/registry/checkbox"
 	collapsible "github.com/alternayte/gx/registry/collapsible"
 	contextmenu "github.com/alternayte/gx/registry/context-menu"
 	datatable "github.com/alternayte/gx/registry/data-table"
 	datatablepage "github.com/alternayte/gx/registry/data-table-page"
+	datepicker "github.com/alternayte/gx/registry/date-picker"
 	dialog "github.com/alternayte/gx/registry/dialog"
 	docs "github.com/alternayte/gx/registry/docs"
 	shell "github.com/alternayte/gx/registry/docs-shell"
@@ -219,6 +221,19 @@ var Items = []Item{
 		},
 	},
 	{
+		Name:        "calendar",
+		Title:       "Calendar",
+		Group:       "Components",
+		Description: "A month grid for the choice of one day.",
+		Examples: []Example{
+			{Name: "calendar-chosen", Title: "Chosen", Component: "Calendar", Fixtures: []string{"Calendar/Chosen"}, Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Chosen"]) }},
+			{Name: "calendar-empty", Title: "Empty", Component: "Calendar", Fixtures: []string{"Calendar/Empty"}, Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Empty"]) }},
+			{Name: "calendar-monday", Title: "Monday", Component: "Calendar", Fixtures: []string{"Calendar/Monday"}, Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Monday"]) }},
+			{Name: "calendar-limited", Title: "Limited", Component: "Calendar", Fixtures: []string{"Calendar/Limited"}, Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Limited"]) }},
+			{Name: "calendar-german", Title: "German", Component: "Calendar", Fixtures: []string{"Calendar/German"}, Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["German"]) }},
+		},
+	},
+	{
 		Name:        "card",
 		Title:       "Card",
 		Group:       "Components",
@@ -344,6 +359,17 @@ var Items = []Item{
 		Block:       true,
 		Examples: []Example{
 			{Name: "data-table-page-default", Title: "Default", Component: "DataTablePage", Fixtures: []string{"DataTablePage/Default"}, Node: func() gx.Node { return datatablepage.DataTablePage(datatablepage.DataTablePageFixtures["Default"]) }},
+		},
+	},
+	{
+		Name:        "date-picker",
+		Title:       "Date Picker",
+		Group:       "Components",
+		Description: "A button that opens a calendar in a popover.",
+		Examples: []Example{
+			{Name: "date-picker-empty", Title: "Empty", Component: "DatePicker", Fixtures: []string{"DatePicker/Empty"}, Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Empty"]) }},
+			{Name: "date-picker-chosen", Title: "Chosen", Component: "DatePicker", Fixtures: []string{"DatePicker/Chosen"}, Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Chosen"]) }},
+			{Name: "date-picker-limited", Title: "Limited", Component: "DatePicker", Fixtures: []string{"DatePicker/Limited"}, Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Limited"]) }},
 		},
 	},
 	{

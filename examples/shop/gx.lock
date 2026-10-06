@@ -153,6 +153,15 @@
           "ui/button-group/styles.go": "8f2334e5b2f585f417727561334bf73316a6495c11c0c0aa46f981b5ad44c7c3"
         }
       },
+      "calendar": {
+        "version": "0.1.0",
+        "files": {
+          "ui/calendar/Calendar.fixtures.go": "b380792e2344213caf4f32a8d815045c013c0c50015c197ea57b848107b884e5",
+          "ui/calendar/Calendar.gx": "4318fbff729b1055323183f7d4c801be073bfecce8530f3dd5cb72ef2486f9cf",
+          "ui/calendar/CalendarGrid.ts": "7c38f8b789effd4d411eedc72cf25b2b6c8617de4c721a727b68da5b20c73af2",
+          "ui/calendar/styles.go": "13d315744b12ccb04cda8708c92ea38f8542e109f40cfdb3cbbdc1ba75f04987"
+        }
+      },
       "card": {
         "version": "0.1.0",
         "files": {
@@ -221,6 +230,14 @@
         "files": {
           "ui/data-table-page/DataTablePage.fixtures.go": "29fbc9b3ef8b45aff8713556ce6c93afc3bed3045b025bb57c523da7e3f15abd",
           "ui/data-table-page/DataTablePage.gx": "e92e37b03626197b2097fe227159499a279180a877ece51cffda756a98d35ee5"
+        }
+      },
+      "date-picker": {
+        "version": "0.1.0",
+        "files": {
+          "ui/date-picker/DatePicker.fixtures.go": "4b4dec686c4735d5070eaba1d3d14a28a612b4842da28f743d24d2d7a420b300",
+          "ui/date-picker/DatePicker.gx": "1b1a5f9585facc1d976939edf82a6b3c249833c472c12c2e2378ef9f4a16bfe9",
+          "ui/date-picker/styles.go": "8bae83a1d588841b8600afc37ff9c3f548fe4528fda745c4dfce1654764c738e"
         }
       },
       "dialog": {

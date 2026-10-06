@@ -1190,6 +1190,112 @@
       ]
     },
     {
+      "name": "Calendar",
+      "package": "github.com/alternayte/gx/examples/shop/ui/calendar",
+      "file": "ui/calendar/Calendar.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the date input. A label points at it."
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Name is the form field name. The form sends the day as YYYY-MM-DD."
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Value is the chosen day of the first render, as YYYY-MM-DD."
+        },
+        {
+          "name": "Month",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Month is the month that the grid shows first, as YYYY-MM. Empty means the month of Value, or the month of today."
+        },
+        {
+          "name": "Min",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Min is the first day that a user can choose, as YYYY-MM-DD."
+        },
+        {
+          "name": "Max",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Max is the last day that a user can choose, as YYYY-MM-DD."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"Date\"",
+          "doc": "Label is the accessible name of the date input."
+        },
+        {
+          "name": "WeekStart",
+          "type": "WeekStart",
+          "required": false,
+          "default": "Sunday",
+          "doc": "WeekStart is the first day of the week: Sunday or Monday."
+        },
+        {
+          "name": "Locale",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Locale is the language of the month and day names, as a BCP 47 tag. Empty means the language of the page."
+        },
+        {
+          "name": "Display",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Display is the id of an element that shows the chosen day as text. A date picker sets it."
+        },
+        {
+          "name": "Popover",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Popover is the id of a popover that closes when the user chooses a day. A date picker sets it."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the date input."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Chosen",
+        "Empty",
+        "German",
+        "Limited",
+        "Monday"
+      ]
+    },
+    {
       "name": "Card",
       "package": "github.com/alternayte/gx/examples/shop/ui/card",
       "file": "ui/card/Card.gx",
@@ -1997,6 +2103,96 @@
       "fragments": [],
       "fixtures": [
         "Default"
+      ]
+    },
+    {
+      "name": "DatePicker",
+      "package": "github.com/alternayte/gx/examples/shop/ui/date-picker",
+      "file": "ui/date-picker/DatePicker.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the date input. A label points at it."
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Name is the form field name. The form sends the day as YYYY-MM-DD."
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Value is the chosen day of the first render, as YYYY-MM-DD."
+        },
+        {
+          "name": "Min",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Min is the first day that a user can choose, as YYYY-MM-DD."
+        },
+        {
+          "name": "Max",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Max is the last day that a user can choose, as YYYY-MM-DD."
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "required": false,
+          "default": "\"Pick a date\"",
+          "doc": "Placeholder is the text of the trigger with no chosen day."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"Date\"",
+          "doc": "Label is the accessible name of the date input."
+        },
+        {
+          "name": "WeekStart",
+          "type": "calendar.WeekStart",
+          "required": false,
+          "default": "calendar.Sunday",
+          "doc": "WeekStart is the first day of the week: calendar.Sunday or calendar.Monday."
+        },
+        {
+          "name": "Locale",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Locale is the language of the month and day names, as a BCP 47 tag. Empty means the language of the page."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the date input."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Chosen",
+        "Empty",
+        "Limited"
       ]
     },
     {
@@ -8860,6 +9056,58 @@
       ]
     },
     {
+      "name": "CalendarGrid",
+      "package": "github.com/alternayte/gx/examples/shop/ui/calendar",
+      "file": "ui/calendar/CalendarGrid.ts",
+      "props": [
+        {
+          "name": "Input",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Month",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "WeekStart",
+          "type": "int",
+          "required": false
+        },
+        {
+          "name": "Locale",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Display",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Popover",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "PreviousLabel",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "NextLabel",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Classes",
+          "type": "GridClasses",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "InputOTPSlots",
       "package": "github.com/alternayte/gx/examples/shop/ui/input-otp",
       "file": "ui/input-otp/InputOTPSlots.ts",
@@ -9096,6 +9344,16 @@
       ]
     },
     {
+      "name": "calendar",
+      "version": "0.1.0",
+      "files": [
+        "ui/calendar/Calendar.fixtures.go",
+        "ui/calendar/Calendar.gx",
+        "ui/calendar/CalendarGrid.ts",
+        "ui/calendar/styles.go"
+      ]
+    },
+    {
       "name": "card",
       "version": "0.1.0",
       "files": [
@@ -9169,6 +9427,15 @@
       "files": [
         "ui/data-table-page/DataTablePage.fixtures.go",
         "ui/data-table-page/DataTablePage.gx"
+      ]
+    },
+    {
+      "name": "date-picker",
+      "version": "0.1.0",
+      "files": [
+        "ui/date-picker/DatePicker.fixtures.go",
+        "ui/date-picker/DatePicker.gx",
+        "ui/date-picker/styles.go"
       ]
     },
     {
