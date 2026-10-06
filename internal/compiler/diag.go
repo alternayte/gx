@@ -65,6 +65,7 @@ const (
 	CodeSignalRules         = "GX4008"
 
 	CodeIslandProps = "GX6001"
+	CodeIslandType  = "GX6002"
 )
 
 // Diagnostic is one compiler message.
@@ -124,6 +125,7 @@ var Catalog = []Info{
 	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},
 	{CodeIslandProps, "island has no props struct"},
+	{CodeIslandType, "island prop type has no TypeScript mapping"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},

@@ -56,6 +56,10 @@ func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diag
 	for path, src := range res.routeFiles {
 		out[path] = src
 	}
+	for isl, code := range res.islands {
+		out[isl.goOutputPath()] = code.goSrc
+		out[isl.propsOutputPath()] = code.tsSrc
+	}
 	for path, src := range renderContentBodies(res.collections) {
 		out[path] = src
 	}
@@ -90,18 +94,25 @@ func staleFiles(files map[string][]byte) []Diagnostic {
 	sort.Strings(paths)
 	var out []Diagnostic
 	for _, path := range paths {
-		if !strings.HasSuffix(path, "_gx.go") {
-			continue
+		base, isGo := strings.CutSuffix(path, "_gx.go")
+		if !isGo {
+			var isProps bool
+			if base, isProps = strings.CutSuffix(path, ".props.ts"); !isProps {
+				continue
+			}
 		}
 		if onDisk, err := os.ReadFile(path); err == nil && bytes.Equal(onDisk, files[path]) {
 			continue
 		}
-		// A component file names its .gx source. A route file, the content
-		// renderer and the gallery have no .gx source, so they name the
-		// generated file.
-		source := strings.TrimSuffix(path, "_gx.go") + ".gx"
-		if _, err := os.Stat(source); err != nil {
-			source = path
+		// A component file names its .gx source and the files of an island
+		// name its .ts source. A route file, the content renderer and the
+		// gallery have no such source, so they name the generated file.
+		source := path
+		for _, ext := range []string{".gx", ".ts"} {
+			if _, err := os.Stat(base + ext); err == nil && (isGo || ext == ".ts") {
+				source = base + ext
+				break
+			}
 		}
 		out = append(out, Diagnostic{
 			Code: CodeStale,

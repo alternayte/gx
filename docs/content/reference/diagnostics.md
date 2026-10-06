@@ -76,6 +76,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | Code | Diagnostic |
 | --- | --- |
 | [GX6001](/errors/GX6001/) | Island has no props struct. |
+| [GX6002](/errors/GX6002/) | Island prop type has no TypeScript mapping. |
 
 ## Security
 

@@ -20,6 +20,54 @@ func Action[In any](fn func(*Ctx, In) error) *action[In]
 
 Action registers a handler for a route type of any method. The handler answers with Patch, SetSignals, Redirect, Toast or nothing.
 
+### func AppendJSONBool
+
+```go
+func AppendJSONBool(b []byte, v bool) []byte
+```
+
+AppendJSONBool appends a JSON boolean.
+
+### func AppendJSONFloat
+
+```go
+func AppendJSONFloat(b []byte, f float64) []byte
+```
+
+AppendJSONFloat appends a JSON number in the form encoding/json writes. JSON has no NaN and no infinity: such a value is null, and a panic in dev.
+
+### func AppendJSONInt
+
+```go
+func AppendJSONInt(b []byte, v int64) []byte
+```
+
+AppendJSONInt appends a JSON number. In dev it panics for an integer outside the 53-bit safe range, because the browser rounds it.
+
+### func AppendJSONString
+
+```go
+func AppendJSONString(b []byte, s string) []byte
+```
+
+AppendJSONString appends s as a JSON string. It escapes <, > and & so the text is safe in a script, and writes an invalid UTF-8 byte as U+FFFD.
+
+### func AppendJSONTime
+
+```go
+func AppendJSONTime(b []byte, t time.Time) []byte
+```
+
+AppendJSONTime appends a time as a JSON string in RFC 3339 form, which the Date constructor of JavaScript reads.
+
+### func AppendJSONUint
+
+```go
+func AppendJSONUint(b []byte, v uint64) []byte
+```
+
+AppendJSONUint appends a JSON number. In dev it panics for an integer outside the 53-bit safe range, because the browser rounds it.
+
 ### func BasePath
 
 ```go
@@ -163,6 +211,14 @@ func IsIconBody(body string) bool
 ```
 
 IsIconBody reports whether a string looks like the inner markup of an icon. The icon generator refuses anything else, so a generated icon cannot carry markup that breaks out of the svg.
+
+### func IsZero
+
+```go
+func IsZero[T comparable](v T) bool
+```
+
+IsZero reports whether v is the zero value of its type. The generated encoder of an island calls it for a json omitzero option.
 
 ### func JSON
 
@@ -395,6 +451,14 @@ func Signals(r *http.Request) (map[string]any, error)
 ```
 
 Signals decodes the request signals through the app adapter. It returns nil when no adapter is set.
+
+### func SortedKeys
+
+```go
+func SortedKeys[K ~string, V any](m map[K]V) []K
+```
+
+SortedKeys returns the keys of a map in order, so that the props of an island render the same bytes each time.
 
 ### func StaticInputs
 
@@ -1531,6 +1595,14 @@ func Icon(body string, p IconProps) Node
 ```
 
 Icon renders one icon as an inline svg with currentColor. body is the inner markup of a pinned icon pack, not user input.
+
+#### func Island
+
+```go
+func Island(name, props string) Node
+```
+
+Island returns the element of a TypeScript island. name is the import path of the package and the component name. props is the JSON of the props. The generated component function of an island calls it.
 
 #### func Raw
 

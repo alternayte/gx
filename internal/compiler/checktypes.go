@@ -46,10 +46,11 @@ type typesResult struct {
 	clientBy    map[*Attr]*clientSite
 	clientSites []*clientSite
 	scopedMap   map[*File]bool
-	symbols     map[string][]Symbol // typed identifiers per .gx file (REQ-DEV-08)
-	goFset      *token.FileSet      // the shared file set of the loaded Go packages
-	collections []contentCollection // gx.Collection declarations (REQ-CNT-03)
-	codeFiles   map[any]string      // resolved gx.CodeFile literals (REQ-CNT-05)
+	symbols     map[string][]Symbol    // typed identifiers per .gx file (REQ-DEV-08)
+	goFset      *token.FileSet         // the shared file set of the loaded Go packages
+	collections []contentCollection    // gx.Collection declarations (REQ-CNT-03)
+	codeFiles   map[any]string         // resolved gx.CodeFile literals (REQ-CNT-05)
+	islands     map[*Island]islandCode // generated code of each island (REQ-ISL-02)
 }
 
 // synthRef maps a synthetic probe file name to the .gx position to report.
@@ -123,6 +124,18 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			}
 		}
 	}
+	// The generated file of an island on the disk can be older than its
+	// props struct. The analysis reads the struct only, so the file is empty
+	// here.
+	for _, dir := range dirs {
+		p := l.load(dir)
+		for _, name := range islandNames(p) {
+			isl := p.Islands[name]
+			if isl.file.Package != "" {
+				overlay[isl.goOutputPath()] = []byte("package " + isl.file.Package + "\n")
+			}
+		}
+	}
 	goLoader := &goload.Loader{Dir: root}
 	pkgs, err := goLoader.Load(overlay)
 	if err != nil {
@@ -182,6 +195,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	res.collectActions(pkgs)
 	res.collections = collectCollections(pkgs)
 	diags = append(diags, l.checkCodeFiles(res, dirs)...)
+	diags = append(diags, l.analyzeIslands(res, dirs)...)
 	routes, rdiags := collectRoutes(pkgs, res.actions)
 	res.routes = routes
 	diags = append(diags, rdiags...)
