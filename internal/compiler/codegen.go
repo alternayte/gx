@@ -77,6 +77,12 @@ func Stale(root string) []Diagnostic {
 		// value that cannot render (GX2013), so they are not dropped.
 		return diags
 	}
+	return staleFiles(files)
+}
+
+// staleFiles returns GX1002 for each generated file that differs from the
+// file on the disk.
+func staleFiles(files map[string][]byte) []Diagnostic {
 	paths := make([]string, 0, len(files))
 	for path := range files {
 		paths = append(paths, path)

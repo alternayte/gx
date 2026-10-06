@@ -1,6 +1,7 @@
 package analyze
 
 import (
+	"github.com/alternayte/gx/internal/goload"
 	"sort"
 
 	"golang.org/x/tools/go/analysis"
@@ -24,7 +25,8 @@ func Lint(dir string) ([]Finding, error) {
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
 			packages.NeedTypes | packages.NeedTypesInfo | packages.NeedImports |
 			packages.NeedDeps | packages.NeedModule,
-		Dir: dir,
+		Dir:       dir,
+		ParseFile: goload.ParseFile(dir),
 	}
 	pkgs, err := packages.Load(cfg, "./...")
 	if err != nil {

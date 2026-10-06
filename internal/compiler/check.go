@@ -46,17 +46,32 @@ func CheckWith(root string, opt CheckOptions) []Diagnostic {
 // diagnostic of CheckWith, the diagnostics that only the generator can give,
 // and a GX1002 for each generated file that is missing or stale. A
 // diagnostic that both passes find is reported once.
+//
+// The check and the generator share one analysis: the generator starts with
+// the same steps as CheckWith, so a second analysis finds nothing new and
+// takes as long as the first (NFR-05).
 func CheckApp(root string, opt CheckOptions) []Diagnostic {
-	out := CheckWith(root, opt)
+	files, out, res, _, _ := generate(root, nil)
 	seen := map[Diagnostic]bool{}
 	for _, d := range out {
 		seen[d] = true
 	}
-	for _, d := range Stale(root) {
-		if !seen[d] {
-			seen[d] = true
-			out = append(out, d)
+	add := func(diags []Diagnostic) {
+		for _, d := range diags {
+			if !seen[d] {
+				seen[d] = true
+				out = append(out, d)
+			}
 		}
+	}
+	if res != nil {
+		add(checkContent(absoluteRoot(root), res.collections, nil))
+		if opt.ExternalLinks {
+			add(checkExternalLinks(res.collections, nil, opt.Client))
+		}
+	}
+	if files != nil {
+		add(staleFiles(files))
 	}
 	sortDiags(out)
 	return out

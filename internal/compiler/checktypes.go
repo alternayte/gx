@@ -3,6 +3,7 @@ package compiler
 import (
 	"bytes"
 	"fmt"
+	"github.com/alternayte/gx/internal/goload"
 	"go/ast"
 	"go/token"
 	"go/types"
@@ -125,8 +126,9 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	cfg := &packages.Config{
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
 			packages.NeedTypes | packages.NeedTypesInfo | packages.NeedImports | packages.NeedDeps | packages.NeedModule,
-		Dir:     root,
-		Overlay: overlay,
+		Dir:       root,
+		Overlay:   overlay,
+		ParseFile: goload.ParseFile(root),
 	}
 	pkgs, err := packages.Load(cfg, "./...")
 	if err != nil {
