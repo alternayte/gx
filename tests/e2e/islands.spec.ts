@@ -120,3 +120,99 @@ test('REQ-ISL-04 an island reads and writes a signal of the page', async () => {
     await page.close()
   }
 })
+
+// A server patch of a fragment that holds islands (REQ-ISL-06). The morph
+// keeps what each island put in the page; the props change on the element.
+test('REQ-ISL-06 an island with update keeps its state across a fragment patch', async () => {
+  const { page } = await dashboard()
+  try {
+    await isMounted(page, 'BarChart')
+    await isMounted(page, 'Sparkline')
+    const zoom = page.locator(island('BarChart') + ' [data-zoom]')
+    await zoom.click()
+    await zoom.click()
+    expect(await zoom.getAttribute('data-zoom')).toBe('3')
+    // Mark the nodes, so the test can see that the morph kept them.
+    await page.evaluate((sel) => {
+      const root = document.querySelector(sel + ' [data-gx-island-root]') as HTMLElement & { marked?: boolean }
+      root.marked = true
+      ;(root.querySelector('[data-zoom]') as HTMLElement & { marked?: boolean }).marked = true
+    }, island('BarChart'))
+    expect(await page.textContent(island('BarChart') + ' h2')).toBe('Revenue, round 0')
+    expect(await page.textContent(island('BarChart') + ' [data-bar="Jan"]')).toBe('Jan 10')
+
+    await page.click('#charts-panel > button')
+    await page.waitForFunction((sel) => document.querySelector(sel + ' h2')?.textContent === 'Revenue, round 1', island('BarChart'))
+
+    // New props reached the island through its update export.
+    expect(await page.textContent(island('BarChart') + ' [data-bar="Jan"]')).toBe('Jan 11')
+    expect(await page.getAttribute('#charts-panel', 'data-round')).toBe('1')
+    // The zoom level, the nodes and the mount count are the old ones.
+    expect(await zoom.getAttribute('data-zoom')).toBe('3')
+    expect(
+      await page.evaluate((sel) => {
+        const root = document.querySelector(sel + ' [data-gx-island-root]') as HTMLElement & { marked?: boolean }
+        return [root.marked, (root.querySelector('[data-zoom]') as HTMLElement & { marked?: boolean }).marked, root.getAttribute('data-mounts')]
+      }, island('BarChart')),
+    ).toEqual([true, true, '1'])
+    expect(await page.evaluate((sel) => document.querySelector(sel)!.matches(':state(mounted)'), island('BarChart'))).toBe(true)
+
+    // A second patch works the same way.
+    await page.click('#charts-panel > button')
+    await page.waitForFunction((sel) => document.querySelector(sel + ' h2')?.textContent === 'Revenue, round 2', island('BarChart'))
+    expect(await zoom.getAttribute('data-zoom')).toBe('3')
+  } finally {
+    await page.close()
+  }
+})
+
+test('REQ-ISL-06 an island with no update mounts again with the new props', async () => {
+  const { page } = await dashboard()
+  try {
+    await isMounted(page, 'Sparkline')
+    const root = island('Sparkline') + ' [data-gx-island-root]'
+    expect(await page.getAttribute(root, 'data-mounts')).toBe('1')
+    expect(await page.textContent(island('Sparkline') + ' [data-bar="Apr"]')).toBe('Apr 40')
+    await page.click('#charts-panel > button')
+    await page.waitForFunction((sel) => document.querySelector(sel)?.getAttribute('data-mounts') === '2', root)
+    expect(await page.textContent(island('Sparkline') + ' [data-bar="Apr"]')).toBe('Apr 41')
+    expect(await page.locator(island('Sparkline') + ' [data-bar]').count()).toBe(4)
+  } finally {
+    await page.close()
+  }
+})
+
+test('REQ-ISL-06 a patch that does not change the props leaves an island alone', async () => {
+  const { page } = await dashboard()
+  try {
+    await isMounted(page, 'Stepper')
+    await isMounted(page, 'Sparkline')
+    await page.click(island('Stepper') + ' button')
+    await page.click('#charts-panel > button')
+    await page.waitForFunction(() => document.querySelector('#charts-panel')?.getAttribute('data-round') === '1')
+    // The stepper is outside the patched fragment and keeps its signal.
+    expect(await page.textContent(island('Stepper') + ' button')).toBe('Quantity 2, add one')
+  } finally {
+    await page.close()
+  }
+})
+
+test('REQ-ISL-06 islands unmount and mount across a morph navigation', async () => {
+  const { page, files } = await dashboard()
+  try {
+    await isMounted(page, 'BarChart')
+    await page.evaluate(() => ((window as unknown as { sameDocument: boolean }).sameDocument = true))
+    await page.click('nav a[href="/about"]')
+    await page.waitForFunction(() => document.querySelector('gx-island') === null && location.pathname === '/about')
+    await page.click('nav a[href="/dashboard"]')
+    await isMounted(page, 'BarChart')
+    await isMounted(page, 'Stepper')
+    expect(await page.evaluate(() => (window as unknown as { sameDocument?: boolean }).sameDocument)).toBe(true)
+    expect(await page.textContent(island('BarChart') + ' h2')).toBe('Revenue, round 0')
+    expect(await page.textContent(island('Stepper') + ' button')).toBe('Quantity 1, add one')
+    // The browser keeps the module: the second visit asks for no file again.
+    expect(files.filter((f) => f.includes('/dashboard/BarChart-'))).toHaveLength(1)
+  } finally {
+    await page.close()
+  }
+})

@@ -416,7 +416,8 @@ func fragmentDeclaresKey(el *Element) bool {
 }
 
 // loopNeedsKey reports whether the loop body holds a node that keeps client
-// state: a form control or a component with signals (REQ-AUT-14).
+// state: a form control, a component with signals or an island
+// (REQ-AUT-14).
 func loopNeedsKey(l *loader, p *Package, f *File, ns []Node) bool {
 	needs := false
 	walkElements(ns, func(el *Element) {
@@ -426,7 +427,9 @@ func loopNeedsKey(l *loader, p *Package, f *File, ns []Node) bool {
 			return
 		}
 		if qual, name, ok := componentTag(el.Name); ok {
-			if comp, _, _ := resolveComponent(l, p, f, qual, name); comp != nil && len(comp.File.Signals) > 0 {
+			// An island keeps state in the browser, as a component with
+			// signals does.
+			if comp, _, _ := resolveComponent(l, p, f, qual, name); comp != nil && (len(comp.File.Signals) > 0 || comp.Island != nil) {
 				needs = true
 			}
 		}

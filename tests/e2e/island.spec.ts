@@ -62,12 +62,19 @@ const modules: Record<string, string> = {
 const island = (src: string, props: unknown, attrs = 'load="eager"'): string =>
   `<gx-island id="isl" name="app/x/Island" src="${src}" ${attrs} props='${JSON.stringify(props)}'><div data-gx-island-root data-ignore-morph></div></gx-island>`
 
+const keyed = (key: string, label = key): string =>
+  `<gx-island id="island-${key}" data-gx-key="${key}" name="app/x/Island" src="/mods/updating.js" load="eager" props='${JSON.stringify({ label })}'><div data-gx-island-root data-ignore-morph></div></gx-island>`
+
 const pages: Record<string, string> = {
   '/plain': island('/mods/plain.js', { label: 'one', list: [1, 2] }),
   '/updating': island('/mods/updating.js', { label: 'one' }),
   '/signals':
     `<div data-signals='{"cart":{"qty":2}}'><span id="shown" data-text="$cart.qty"></span></div>` +
     island('/mods/signals.js', { qty: { $signal: ['cart', 'qty'] }, label: 'x' }) +
+    `<script type="module" src="/datastar.js" data-gx-adapter="datastar"></script>`,
+  // Two keyed islands in a list, as a loop with key={...} renders them.
+  '/list':
+    `<div id="list">${keyed('a')}${keyed('b')}</div>` +
     `<script type="module" src="/datastar.js" data-gx-adapter="datastar"></script>`,
   '/slow': island('/mods/slow.js', {}),
   '/nodefault': island('/mods/nodefault.js', {}),
@@ -217,4 +224,33 @@ test('REQ-ISL-04 a load error is reported with the name of the island', async ()
     expect(errors.join('\n')).toContain(want)
     expect(await page.evaluate(() => document.querySelector('#isl')!.matches(':state(mounted)'))).toBe(false)
   }
+})
+
+test('REQ-ISL-06 a morph that reorders keyed islands moves each island with its state', async () => {
+  await open('/list')
+  await page.waitForFunction(() => document.querySelectorAll('gx-island:state(mounted)').length === 2)
+  await page.evaluate(() => {
+    document.querySelector('#island-a i')!.textContent = 'state of a'
+    document.querySelector('#island-b i')!.textContent = 'state of b'
+  })
+  // The server answers with the list in the other order and a new label
+  // for b. The pinned Datastar applies the patch, as it does for an action.
+  const patch = `<div id="list">${keyed('b', 'b2')}${keyed('a')}</div>`
+  await page.evaluate((elements) => {
+    document.dispatchEvent(
+      new CustomEvent('datastar-fetch', {
+        detail: { type: 'datastar-patch-elements', el: document.documentElement, argsRaw: { elements } },
+      }),
+    )
+  }, patch)
+  await page.waitForFunction(() => document.querySelector('#list')!.firstElementChild!.id === 'island-b')
+  await page.waitForTimeout(50)
+  expect(await page.innerHTML('#island-b [data-gx-island-root]')).toBe('<b>b2</b><i>state of b</i>')
+  expect(await page.innerHTML('#island-a [data-gx-island-root]')).toBe('<b>a</b><i>state of a</i>')
+  // Two mounts and one update: no island mounted a second time.
+  expect(await log()).toEqual([
+    ['mount', 'a'],
+    ['mount', 'b'],
+    ['update', 'b2', true, false],
+  ])
 })

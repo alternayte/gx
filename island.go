@@ -17,10 +17,19 @@ import (
 // gx.SetIslands installed (REQ-ISL-03). In dev, an island that the bundle
 // does not hold is a panic, because the browser cannot mount it.
 func Island(name, props string, opts ...IslandOption) Node {
-	attrs := Attrs{
-		{Key: "name", Value: name},
-		{Key: "props", Value: props},
+	var attrs Attrs
+	for _, opt := range opts {
+		if opt.key != "" {
+			// A morph pairs elements by id.
+			base := name[strings.LastIndexByte(name, '/')+1:]
+			attrs = append(attrs,
+				Attr{Key: "id", Value: strings.ToLower(base) + "-" + string(opt.key)},
+				Attr{Key: "data-gx-key", Value: string(opt.key)})
+		}
 	}
+	attrs = append(attrs,
+		Attr{Key: "name", Value: name},
+		Attr{Key: "props", Value: props})
 	for _, opt := range opts {
 		if opt.load != "" {
 			attrs = append(attrs, Attr{Key: "load", Value: opt.load})
@@ -48,7 +57,13 @@ func Island(name, props string, opts ...IslandOption) Node {
 type IslandOption struct {
 	load  string
 	media string
+	key   Key
 }
+
+// IslandKey gives one island of a list its identity (REQ-ISL-06). The
+// element gets an id from the key. A morph then pairs the island with its
+// own row, and the state of the island follows the row.
+func IslandKey(key Key) IslandOption { return IslandOption{key: key} }
 
 // IslandLoad names the time the browser loads the island file: "eager" at
 // once, "idle" when the browser is idle, "visible" when the element comes

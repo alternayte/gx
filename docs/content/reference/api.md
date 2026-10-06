@@ -1431,6 +1431,14 @@ type IslandOption struct {
 
 IslandOption sets how the browser loads an island.
 
+#### func IslandKey
+
+```go
+func IslandKey(key Key) IslandOption
+```
+
+IslandKey gives one island of a list its identity. The element gets an id from the key. A morph then pairs the island with its own row, and the state of the island follows the row.
+
 #### func IslandLoad
 
 ```go

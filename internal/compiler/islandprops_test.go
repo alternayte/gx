@@ -530,3 +530,45 @@ props {
 		t.Fatalf("last diagnostic = %v, want GX2003 on line 12", d)
 	}
 }
+
+// A loop that holds an island needs a key (REQ-AUT-14): the key gives the
+// element an id, so a morph pairs each island with its own data and the
+// state of an island follows its row (REQ-ISL-06).
+func TestREQ_ISL_06_LoopWithIslandNeedsKey(t *testing.T) {
+	files := map[string]string{
+		"go.mod":               moduleWithGx(t),
+		"dash/charts.go":       chartProps,
+		"dash/RevenueChart.ts": chartIsland,
+		"dash/Page.gx":         "package dash\n\nprops {\n  Titles []string\n}\n\n<section>\n  for _, title := range p.Titles {\n    <RevenueChart title={title} />\n  }\n</section>\n",
+		"main.go":              "package main\n\nimport (\n\t\"fmt\"\n\n\t\"app/dash\"\n\tgx \"github.com/alternayte/gx\"\n)\n\nfunc main() {\n\tfmt.Print(gx.String(dash.Page(dash.PageProps{Titles: []string{\"a b\", \"c\"}})))\n}\n",
+	}
+	dir := writeTree(t, files)
+	diags := compiler.Check(dir)
+	d := diagWith(t, diags, compiler.CodeLoopKey)
+	if d.Line != 8 || len(diags) != 1 {
+		t.Fatalf("diagnostics = %v, want one GX2009 on line 8", diags)
+	}
+
+	files["dash/Page.gx"] = strings.Replace(files["dash/Page.gx"], "<RevenueChart title={title} />", "<RevenueChart title={title} key={title} load=\"eager\" />", 1)
+	dir = writeTree(t, files)
+	if diags := compiler.Check(dir); len(diags) != 0 {
+		t.Fatalf("with a key: unexpected diagnostics %v", diags)
+	}
+	writeGenerated(t, dir)
+	cmd := exec.Command("go", "run", ".")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("go run: %v\n%s", err, out)
+	}
+	got := string(out)
+	for _, want := range []string{
+		`<gx-island id="revenuechart-a b" data-gx-key="a b" name="app/dash/RevenueChart"`,
+		`<gx-island id="revenuechart-c" data-gx-key="c" name="app/dash/RevenueChart"`,
+		` load="eager"><div data-gx-island-root data-ignore-morph>`,
+	} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("output lacks %s:\n%s", want, got)
+		}
+	}
+}

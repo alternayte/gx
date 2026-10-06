@@ -968,9 +968,10 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		}
 		if comp.Island != nil && a.Name == islandLoadAttr {
 			if strategy, media, why := islandLoad(a); why == "" {
-				islandOption = ", gx.IslandLoad(" + strconv.Quote(strategy) + ")"
 				if strategy == "media" {
-					islandOption = ", gx.IslandMedia(" + strconv.Quote(media) + ")"
+					islandOption += ", gx.IslandMedia(" + strconv.Quote(media) + ")"
+				} else {
+					islandOption += ", gx.IslandLoad(" + strconv.Quote(strategy) + ")"
 				}
 			}
 			continue
@@ -1024,6 +1025,14 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 	if g.res.componentScoped(g.l, targetPkg, comp.File, comp, map[*File]bool{}) {
 		if key := g.callKeyExpr(el); key != "" {
 			valueFor["GxKey"] = key
+		}
+	}
+
+	if comp.Island != nil {
+		// The key of an island tag is the id of its element, so a morph
+		// pairs the island with its own row (REQ-ISL-06).
+		if key := g.keyAttrValue(el); key != "" {
+			islandOption = ", gx.IslandKey(gx.InstanceKey(" + key + "))" + islandOption
 		}
 	}
 
