@@ -6,6 +6,10 @@
 set -euo pipefail
 tag="${1:?usage: release-binaries.sh <tag> <out-dir>}"
 out="${2:?usage: release-binaries.sh <tag> <out-dir>}"
+# The output directory is relative to the caller, not to the source tree.
+mkdir -p "$out"
+out="$(cd "$out" && pwd)"
+
 # GX_SRC names the source tree to build. The default is this repository. The
 # release workflow sets it to a checkout of the tag, so a tag that is older
 # than this script still builds.
@@ -17,8 +21,6 @@ if [ "v$version" != "$tag" ]; then
   exit 1
 fi
 
-mkdir -p "$out"
-out="$(cd "$out" && pwd)"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 for target in darwin/arm64 linux/amd64 linux/arm64 windows/amd64; do
