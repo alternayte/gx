@@ -31,6 +31,10 @@ beforeAll(async () => {
   // A plain file server: a path is a file, a directory answers its
   // index.html, and anything else is 404.html with status 404.
   server = Bun.serve({
+    // The loopback address only: a port that a different program holds on
+    // 127.0.0.1 can be free on the wildcard address, and the browser would
+    // then reach that program.
+    hostname: '127.0.0.1',
     port: 0,
     fetch: async (req) => {
       let pathname = decodeURIComponent(new URL(req.url).pathname)

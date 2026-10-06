@@ -92,6 +92,10 @@ let errors: string[]
 beforeAll(async () => {
   const js = { 'Content-Type': 'text/javascript' }
   server = Bun.serve({
+    // The loopback address only: a port that a different program holds on
+    // 127.0.0.1 can be free on the wildcard address, and the browser would
+    // then reach that program.
+    hostname: '127.0.0.1',
     port: 0,
     fetch(req) {
       const path = new URL(req.url).pathname
