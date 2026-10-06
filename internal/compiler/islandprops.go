@@ -606,10 +606,10 @@ func (m *islandMapper) goSource(pkgName, id string, root *islandObjectType) []by
 	w := &islandWriter{b: &body, m: m}
 	name := m.island.Name
 	w.line("// %s renders the island of %s (REQ-ISL-01). The browser mounts it", name, filepath.Base(m.island.File))
-	w.line("// with the props as JSON.")
-	w.line("func %s(p %sProps) gx.Node {", name, name)
+	w.line("// with the props as JSON. An option sets the time of the load.")
+	w.line("func %s(p %sProps, opts ...gx.IslandOption) gx.Node {", name, name)
 	w.ind++
-	w.line("return gx.Island(%s, string(%s(make([]byte, 0, 256), p)))", strconv.Quote(id), root.fn)
+	w.line("return gx.Island(%s, string(%s(make([]byte, 0, 256), p)), opts...)", strconv.Quote(id), root.fn)
 	w.ind--
 	w.line("}")
 	for _, obj := range append([]*islandObjectType{root}, m.order...) {

@@ -98,6 +98,60 @@
       ]
     },
     {
+      "name": "Charts",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/Charts.gx",
+      "props": [
+        {
+          "name": "Revenue",
+          "type": "[]Point",
+          "required": true
+        },
+        {
+          "name": "Round",
+          "type": "int",
+          "required": false,
+          "default": "0"
+        }
+      ],
+      "signals": [],
+      "fragments": [
+        {
+          "name": "panel",
+          "func": "ChartsPanel",
+          "params": [
+            {
+              "name": "p",
+              "type": "ChartsProps"
+            }
+          ],
+          "keyed": false
+        }
+      ],
+      "fixtures": []
+    },
+    {
+      "name": "Dashboard",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/Dashboard.gx",
+      "props": [
+        {
+          "name": "Revenue",
+          "type": "[]Point",
+          "required": true
+        }
+      ],
+      "signals": [
+        {
+          "name": "Qty",
+          "type": "int",
+          "default": "1"
+        }
+      ],
+      "fragments": [],
+      "fixtures": []
+    },
+    {
       "name": "SignupView",
       "package": "github.com/alternayte/gx/examples/shop/signup",
       "file": "signup/SignupView.gx",
@@ -8265,6 +8319,37 @@
       ]
     },
     {
+      "type": "github.com/alternayte/gx/examples/shop/dashboard/route.Page",
+      "method": "GET",
+      "pattern": "GET /dashboard",
+      "fields": [],
+      "kind": "page",
+      "handler": "dashboard.DashboardPage",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/dashboard/route.Refresh",
+      "method": "POST",
+      "pattern": "POST /dashboard/refresh",
+      "fields": [
+        {
+          "name": "Round",
+          "type": "int",
+          "source": "query",
+          "key": "round"
+        }
+      ],
+      "kind": "action",
+      "handler": "dashboard.Refresh",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
       "type": "github.com/alternayte/gx/examples/shop/datatable/route.List",
       "method": "GET",
       "pattern": "GET /datatable",
@@ -8542,6 +8627,14 @@
       "external": false
     },
     {
+      "handler": "dashboard.Refresh",
+      "route": "github.com/alternayte/gx/examples/shop/dashboard/route.Refresh",
+      "method": "POST",
+      "pattern": "POST /dashboard/refresh",
+      "signals": [],
+      "external": false
+    },
+    {
       "handler": "signup.AddAddress",
       "route": "github.com/alternayte/gx/examples/shop/signup/route.AddAddress",
       "method": "POST",
@@ -8622,7 +8715,73 @@
       ]
     }
   ],
-  "islands": [],
+  "islands": [
+    {
+      "name": "BarChart",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/BarChart.ts",
+      "props": [
+        {
+          "name": "Round",
+          "type": "int",
+          "required": false
+        },
+        {
+          "name": "Data",
+          "type": "[]Point",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Legend",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/Legend.ts",
+      "props": [
+        {
+          "name": "Labels",
+          "type": "[]string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Sparkline",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/Sparkline.ts",
+      "props": [
+        {
+          "name": "Data",
+          "type": "[]Point",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Stepper",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/Stepper.ts",
+      "props": [
+        {
+          "name": "Qty",
+          "type": "gx.SignalRef[int]",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "WideTable",
+      "package": "github.com/alternayte/gx/examples/shop/dashboard",
+      "file": "dashboard/WideTable.ts",
+      "props": [
+        {
+          "name": "Data",
+          "type": "[]Point",
+          "required": false
+        }
+      ]
+    }
+  ],
   "transitions": [
     {
       "name": "shop.Hero",

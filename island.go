@@ -16,10 +16,18 @@ import (
 // The src attribute names the entry file of the island in the bundle that
 // gx.SetIslands installed (REQ-ISL-03). In dev, an island that the bundle
 // does not hold is a panic, because the browser cannot mount it.
-func Island(name, props string) Node {
+func Island(name, props string, opts ...IslandOption) Node {
 	attrs := Attrs{
 		{Key: "name", Value: name},
 		{Key: "props", Value: props},
+	}
+	for _, opt := range opts {
+		if opt.load != "" {
+			attrs = append(attrs, Attr{Key: "load", Value: opt.load})
+		}
+		if opt.media != "" {
+			attrs = append(attrs, Attr{Key: "media", Value: opt.media})
+		}
 	}
 	if src := islandSrc(name); src != "" {
 		attrs = append(attrs, Attr{Key: "src", Value: src, Kind: AttrURL})
@@ -35,6 +43,21 @@ func Island(name, props string) Node {
 		Bool("data-ignore-morph", true),
 	}))
 }
+
+// IslandOption sets how the browser loads an island (REQ-ISL-05).
+type IslandOption struct {
+	load  string
+	media string
+}
+
+// IslandLoad names the time the browser loads the island file: "eager" at
+// once, "idle" when the browser is idle, "visible" when the element comes
+// near the viewport. With no option the island loads when it is visible.
+func IslandLoad(strategy string) IslandOption { return IslandOption{load: strategy} }
+
+// IslandMedia loads the island when the media query matches, for example
+// "(min-width: 768px)".
+func IslandMedia(query string) IslandOption { return IslandOption{load: "media", media: query} }
 
 // islandElement is the custom element of an island.
 const islandElement = "gx-island"

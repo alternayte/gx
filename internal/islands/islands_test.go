@@ -307,3 +307,25 @@ func main() {
 		t.Fatalf("unknown file = %q, want 404", lines[5])
 	}
 }
+
+// The example shop commits its bundle, and the browser suite builds the
+// shop with the Go tool alone. A bundle that is older than the island
+// files makes that suite test old code.
+func TestREQ_ISL_03_ShopBundleIsCurrent(t *testing.T) {
+	_, file, _, _ := runtime.Caller(0)
+	shop := filepath.Join(filepath.Dir(file), "..", "..", "examples", "shop")
+	b, err := islands.Build(shop, islands.Options{Minify: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	onDisk, err := os.ReadFile(islands.Path(shop))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(onDisk) != string(islands.Generate(b)) {
+		t.Fatal("examples/shop/gxislands/islands_gx.go is stale; run: go run ./cmd/gx build -o /tmp/shop examples/shop")
+	}
+	if len(b.Entries) != 5 {
+		t.Fatalf("the shop has %d islands, want 5", len(b.Entries))
+	}
+}

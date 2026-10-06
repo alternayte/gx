@@ -359,3 +359,33 @@ func Islands(root string) []IslandRef {
 	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })
 	return out
 }
+
+// islandLoadAttr is the attribute of an island tag that names the time the
+// browser loads the island (REQ-ISL-05).
+const islandLoadAttr = "load"
+
+// islandLoad reads a load attribute. strategy is eager, idle, visible or
+// media; media holds the query of the media strategy. why says what is
+// wrong with the value, or is "".
+func islandLoad(a *Attr) (strategy, media, why string) {
+	if a.Kind != AttrString {
+		return "", "", "needs a static value"
+	}
+	v := strings.TrimSpace(a.Value)
+	switch v {
+	case "eager", "idle", "visible":
+		return v, "", ""
+	}
+	if inner, ok := strings.CutPrefix(v, "media("); ok && strings.HasSuffix(inner, ")") {
+		query := strings.TrimSpace(strings.TrimSuffix(inner, ")"))
+		// The query can have quotes, as a call in Go has.
+		if len(query) >= 2 && (query[0] == '"' || query[0] == '\'') && query[len(query)-1] == query[0] {
+			query = strings.TrimSpace(query[1 : len(query)-1])
+		}
+		if query == "" {
+			return "", "", "needs a media query in media(...)"
+		}
+		return "media", query, ""
+	}
+	return "", "", "has the unknown value " + Quoted(a.Value)
+}

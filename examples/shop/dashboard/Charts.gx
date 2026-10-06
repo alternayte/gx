@@ -1,0 +1,14 @@
+package dashboard
+
+import "github.com/alternayte/gx/examples/shop/dashboard/route"
+
+props {
+  Revenue []Point
+  Round   int = 0
+}
+
+<div #panel class="rounded-xl border border-border bg-card p-4 text-card-foreground" data-round={p.Round}>
+  <BarChart round={p.Round} data={p.Revenue} load="eager" />
+  <Sparkline data={p.Revenue} load="idle" />
+  <button class="mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" on:click={route.Refresh{Round: p.Round + 1}}>Refresh</button>
+</div>

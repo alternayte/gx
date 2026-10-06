@@ -66,6 +66,7 @@ const (
 
 	CodeIslandProps = "GX6001"
 	CodeIslandType  = "GX6002"
+	CodeIslandLoad  = "GX6004"
 )
 
 // Diagnostic is one compiler message.
@@ -126,6 +127,7 @@ var Catalog = []Info{
 	{CodeRuntimeClass, "class string is built at runtime"},
 	{CodeIslandProps, "island has no props struct"},
 	{CodeIslandType, "island prop type has no TypeScript mapping"},
+	{CodeIslandLoad, "unknown island load strategy"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},

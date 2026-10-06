@@ -1,0 +1,23 @@
+package dashboard
+
+props {
+  Revenue []Point
+}
+
+signals {
+  Qty int = 1
+}
+
+<gx.Head title="Dashboard" />
+<section class="space-y-6">
+  <h1 class="text-xl font-semibold">Dashboard</h1>
+  <Charts revenue={p.Revenue} />
+  <div class="flex items-center gap-3">
+    <input class="w-20 rounded-md border border-border px-2 py-1" type="number" bind:value={$Qty} />
+    <Stepper qty={$Qty} load="eager" />
+  </div>
+  {/* The legend is far below the first screen, so its island loads late. */}
+  <div class="h-[2400px]"></div>
+  <Legend labels={[]string{"Revenue", "Users"}} />
+  <WideTable data={p.Revenue} load='media("(min-width: 1600px)")' />
+</section>

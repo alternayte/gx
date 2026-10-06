@@ -159,7 +159,7 @@ func TestREQ_AI_01_DescribeShop(t *testing.T) {
 				Rules []string
 			}
 		}
-		Islands     []any
+		Islands     []struct{ Name, Package, File string }
 		Transitions []struct{ Name, Base, Key string }
 		Icons       []struct{ Set, Version string }
 		Registry    []struct {
@@ -258,8 +258,16 @@ func TestREQ_AI_01_DescribeShop(t *testing.T) {
 	if _, ok := rules["addresses[].street"]; !ok {
 		t.Fatalf("the repeated address fields are missing: %+v", rules)
 	}
-	if got.Islands == nil || len(got.Islands) != 0 {
-		t.Fatalf("islands = %v, want an empty list in 0.1.0", got.Islands)
+	// The dashboard slice of the shop holds the islands (REQ-ISL-01).
+	var islandNames []string
+	for _, isl := range got.Islands {
+		islandNames = append(islandNames, isl.Name)
+		if isl.Package != "github.com/alternayte/gx/examples/shop/dashboard" || isl.File != "dashboard/"+isl.Name+".ts" {
+			t.Fatalf("island = %+v", isl)
+		}
+	}
+	if strings.Join(islandNames, " ") != "BarChart Legend Sparkline Stepper WideTable" {
+		t.Fatalf("islands = %v", islandNames)
 	}
 	if len(got.Transitions) == 0 || got.Transitions[0].Base == "" || got.Transitions[0].Key == "" {
 		t.Fatalf("transitions = %+v", got.Transitions)

@@ -959,9 +959,20 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		return "nil"
 	}
 	valueFor := map[string]string{}
+	// islandOption is the load option of an island tag, as a call argument.
+	islandOption := ""
 	for i := range el.Attrs {
 		a := &el.Attrs[i]
 		if a.Kind == AttrFragment || a.Kind == AttrSpread || isDirective(a.Name) {
+			continue
+		}
+		if comp.Island != nil && a.Name == islandLoadAttr {
+			if strategy, media, why := islandLoad(a); why == "" {
+				islandOption = ", gx.IslandLoad(" + strconv.Quote(strategy) + ")"
+				if strategy == "media" {
+					islandOption = ", gx.IslandMedia(" + strconv.Quote(media) + ")"
+				}
+			}
 			continue
 		}
 		prop, ok := findProp(comp, a.Name)
@@ -1051,7 +1062,7 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		sel = alias + "."
 	}
 	props := sel + comp.Name + "Props{" + strings.Join(fields, ", ") + "}"
-	return sel + comp.Name + "(" + props + ")"
+	return sel + comp.Name + "(" + props + islandOption + ")"
 }
 
 // extraImportsMark holds the place of the imports that a call site adds

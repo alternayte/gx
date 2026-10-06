@@ -443,3 +443,90 @@ func TestREQ_ISL_04_SignalRefProp(t *testing.T) {
 		t.Fatalf("the input does not bind the same signal: %s", got)
 	}
 }
+
+// The load attribute of an island tag names the time the browser loads the
+// island file (REQ-ISL-05).
+func TestREQ_ISL_05_LoadAttribute(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":               moduleWithGx(t),
+		"dash/charts.go":       chartProps,
+		"dash/RevenueChart.ts": chartIsland,
+		"dash/Page.gx": `package dash
+
+<section>
+  <RevenueChart title="default" />
+  <RevenueChart title="eager" load="eager" />
+  <RevenueChart title="idle" load="idle" />
+  <RevenueChart title="visible" load="visible" />
+  <RevenueChart title="media" load='media("(min-width: 768px)")' />
+  <RevenueChart title="bare" load="media((min-width: 768px) and (hover: hover))" />
+</section>
+`,
+		"main.go": "package main\n\nimport (\n\t\"fmt\"\n\n\t\"app/dash\"\n\tgx \"github.com/alternayte/gx\"\n)\n\nfunc main() {\n\tfmt.Print(gx.String(dash.Page(dash.PageProps{})))\n\tfmt.Print(gx.String(dash.RevenueChart(dash.RevenueChartProps{Title: \"go\"}, gx.IslandLoad(\"idle\"))))\n}\n",
+	})
+	if diags := compiler.Check(dir); len(diags) != 0 {
+		t.Fatalf("unexpected diagnostics %v", diags)
+	}
+	writeGenerated(t, dir)
+	cmd := exec.Command("go", "run", ".")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("go run: %v\n%s", err, out)
+	}
+	got := html.UnescapeString(string(out))
+	for title, attrs := range map[string]string{
+		"default": ``,
+		"eager":   ` load="eager"`,
+		"idle":    ` load="idle"`,
+		"visible": ` load="visible"`,
+		"media":   ` load="media" media="(min-width: 768px)"`,
+		"bare":    ` load="media" media="(min-width: 768px) and (hover: hover)"`,
+		"go":      ` load="idle"`,
+	} {
+		want := `"title":"` + title + `"}"` + attrs + `><div data-gx-island-root`
+		if !strings.Contains(got, want) {
+			t.Errorf("island %q: output lacks %s\n%s", title, want, got)
+		}
+	}
+}
+
+func TestREQ_ISL_05_UnknownLoadStrategy(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":               moduleWithGx(t),
+		"dash/charts.go":       chartProps,
+		"dash/RevenueChart.ts": chartIsland,
+		"dash/Card.gx":         "package dash\n\n<article>card</article>\n",
+		"dash/Page.gx": `package dash
+
+props {
+  When string
+}
+
+<section>
+  <RevenueChart load="lazy" />
+  <RevenueChart load={p.When} />
+  <RevenueChart load="media()" />
+  <RevenueChart load />
+  <Card load="idle" />
+</section>
+`,
+	})
+	diags := compiler.Check(dir)
+	if len(diags) != 5 {
+		t.Fatalf("diagnostics = %v, want five", diags)
+	}
+	for i, want := range []string{`"lazy"`, "a static value", "a media query", "a static value"} {
+		d := diags[i]
+		if compiler.CodeIslandLoad != "GX6004" || d.Code != compiler.CodeIslandLoad || d.Line != 8+i || !strings.Contains(d.Msg, want) {
+			t.Errorf("diagnostic %d = %v, want GX6004 with %s on line %d", i, d, want, 8+i)
+		}
+		if !strings.Contains(d.Msg, "eager, idle, visible or media(<query>)") {
+			t.Errorf("diagnostic %d does not name the strategies: %s", i, d.Msg)
+		}
+	}
+	// load is an attribute of an island tag only.
+	if d := diags[4]; d.Code != compiler.CodeUnknownAttr || d.Line != 12 {
+		t.Fatalf("last diagnostic = %v, want GX2003 on line 12", d)
+	}
+}

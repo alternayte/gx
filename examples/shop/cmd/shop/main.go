@@ -10,6 +10,7 @@ import (
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/adapters/datastar"
 	"github.com/alternayte/gx/examples/shop"
+	"github.com/alternayte/gx/examples/shop/gxislands"
 	"github.com/alternayte/gx/examples/shop/gxstyles"
 	"github.com/alternayte/gx/examples/shop/ui/toast"
 )
@@ -28,6 +29,7 @@ func main() {
 	flag.Parse()
 	setupGallery()
 	gx.SetStylesheet(gxstyles.CSS())
+	gx.SetIslands(gxislands.Bundle())
 	// The toast item renders every pushed toast, so its classes are in the
 	// app stylesheet.
 	app := gx.New(gx.Config{Adapter: datastar.Adapter(), Toast: toast.Render})

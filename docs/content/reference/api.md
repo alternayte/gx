@@ -1421,6 +1421,32 @@ type IslandBundle struct {
 
 IslandBundle is the built JavaScript of the islands of an app. gx build writes it into the generated package gxislands, and the app's main installs it with gx.SetIslands(gxislands.Bundle()).
 
+### type IslandOption
+
+```go
+type IslandOption struct {
+    // contains filtered or unexported fields
+}
+```
+
+IslandOption sets how the browser loads an island.
+
+#### func IslandLoad
+
+```go
+func IslandLoad(strategy string) IslandOption
+```
+
+IslandLoad names the time the browser loads the island file: "eager" at once, "idle" when the browser is idle, "visible" when the element comes near the viewport. With no option the island loads when it is visible.
+
+#### func IslandMedia
+
+```go
+func IslandMedia(query string) IslandOption
+```
+
+IslandMedia loads the island when the media query matches, for example "(min-width: 768px)".
+
 ### type Key
 
 ```go
@@ -1629,7 +1655,7 @@ Icon renders one icon as an inline svg with currentColor. body is the inner mark
 #### func Island
 
 ```go
-func Island(name, props string) Node
+func Island(name, props string, opts ...IslandOption) Node
 ```
 
 Island returns the element of a TypeScript island. name is the import path of the package and the component name. props is the JSON of the props. The generated component function of an island calls it.

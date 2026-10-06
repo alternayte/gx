@@ -224,6 +224,18 @@ func (l *loader) checkElement(p *Package, file *File, el *Element, diags []Diagn
 		if a.Kind == AttrFragment || isDirective(a.Name) {
 			continue
 		}
+		if comp.Island != nil && a.Name == islandLoadAttr {
+			if _, _, why := islandLoad(&a); why != "" {
+				diags = append(diags, Diagnostic{
+					Code: CodeIslandLoad,
+					File: file.File,
+					Line: a.At.Line,
+					Col:  a.At.Col,
+					Msg:  "the load attribute of <" + el.Name + "> " + why + "; use eager, idle, visible or media(<query>)",
+				})
+			}
+			continue
+		}
 		prop, ok := findProp(comp, a.Name)
 		if !ok {
 			diags = append(diags, Diagnostic{

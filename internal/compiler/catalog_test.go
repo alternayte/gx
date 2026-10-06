@@ -66,6 +66,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX5003 | class string is built at runtime",
 		"GX6001 | island has no props struct",
 		"GX6002 | island prop type has no TypeScript mapping",
+		"GX6004 | unknown island load strategy",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 		"GX7002 | gx.Secret cannot cross to the client",
 		"GX8001 | frontmatter is malformed or unknown",

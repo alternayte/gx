@@ -4,6 +4,7 @@ package shop
 
 import (
 	gx "github.com/alternayte/gx"
+	dashboardroute "github.com/alternayte/gx/examples/shop/dashboard/route"
 	"github.com/alternayte/gx/examples/shop/route"
 	signuproute "github.com/alternayte/gx/examples/shop/signup/route"
 	"github.com/alternayte/gx/examples/shop/ui/toast"
@@ -15,12 +16,12 @@ type ShellProps struct {
 
 func Shell(p ShellProps) gx.Node {
 	var _b gx.Builder
-//line Shell.gx:13:1
+//line Shell.gx:12:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground"}))
-//line Shell.gx:13:70
+//line Shell.gx:12:70
 	_b.Add(gx.Text("\n"))
-//line Shell.gx:14:1
-	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "border-b border-border", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Sign up")), gx.Text("\n  "))), gx.Text("\n"))))
+//line Shell.gx:13:1
+	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "border-b border-border", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Sign up")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: dashboardroute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Dashboard")), gx.Text("\n  "))), gx.Text("\n"))))
 //line Shell.gx:20:10
 	_b.Add(gx.Text("\n"))
 //line Shell.gx:21:1
