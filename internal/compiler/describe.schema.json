@@ -393,7 +393,8 @@
       "required": [
         "name",
         "package",
-        "file"
+        "file",
+        "props"
       ],
       "properties": {
         "name": {
@@ -404,6 +405,12 @@
         },
         "file": {
           "type": "string"
+        },
+        "props": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/prop"
+          }
         }
       }
     },

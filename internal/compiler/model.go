@@ -91,6 +91,21 @@ func (s *Session) Model(root string) (*Model, []Diagnostic) {
 			Name: comp.Name, Dir: dir, PkgPath: pkgPath, File: f, Props: comp.Props,
 		})
 	}
+	// An island is a component for the editor too: its tag completes and
+	// its definition is the .ts file (REQ-DEV-08).
+	for _, dir := range s.dirs {
+		p := s.l.load(dir)
+		for _, name := range islandNames(p) {
+			comp := p.Islands[name].component()
+			pkgPath := ""
+			if p.Module != nil {
+				pkgPath = modulePathOf(p.Module, dir)
+			}
+			m.Components = append(m.Components, ComponentRef{
+				Name: comp.Name, Dir: dir, PkgPath: pkgPath, File: comp.File, Props: comp.Props,
+			})
+		}
+	}
 	sort.Slice(m.Components, func(i, j int) bool {
 		if m.Components[i].PkgPath != m.Components[j].PkgPath {
 			return m.Components[i].PkgPath < m.Components[j].PkgPath

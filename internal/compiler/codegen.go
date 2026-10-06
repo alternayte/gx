@@ -1015,6 +1015,9 @@ func (g *gen) componentCallExpr(el *Element, qual, name string, built map[string
 		if !prop.HasDefault {
 			continue // the checker reports the missing prop
 		}
+		if comp.Island != nil {
+			continue // a field of the props struct keeps its zero value
+		}
 		def := prop.Default
 		if cross && comp.File != nil {
 			if names := g.res.quals[comp.File][idx]; len(names) > 0 {

@@ -3,6 +3,7 @@ package compiler
 import (
 	"io/fs"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -89,6 +90,7 @@ func absoluteRoot(root string) string {
 // collectDirs returns every directory under root that holds a .gx file.
 func collectDirs(root string) []string {
 	dirs := map[string]bool{}
+	islandDirs := map[string]bool{}
 	_ = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
@@ -103,8 +105,31 @@ func collectDirs(root string) []string {
 		if strings.HasSuffix(d.Name(), ".gx") {
 			dirs[filepath.Dir(path)] = true
 		}
+		if isIslandName(d.Name()) {
+			islandDirs[filepath.Dir(path)] = true
+		}
 		return nil
 	})
+	// A directory with an island and no .gx file is a package of the
+	// analysis too: its island needs its checks and its generated code.
+	for dir := range islandDirs {
+		if dirs[dir] {
+			continue
+		}
+		entries, err := os.ReadDir(dir)
+		if err != nil {
+			continue
+		}
+		names := make([]string, 0, len(entries))
+		for _, e := range entries {
+			if !e.IsDir() {
+				names = append(names, e.Name())
+			}
+		}
+		if dirHasIsland(dir, names) {
+			dirs[dir] = true
+		}
+	}
 	sorted := make([]string, 0, len(dirs))
 	for dir := range dirs {
 		sorted = append(sorted, dir)
@@ -117,6 +142,7 @@ func collectDirs(root string) []string {
 func (l *loader) checkDir(dir string) []Diagnostic {
 	p := l.load(dir)
 	out := append([]Diagnostic{}, p.Diags...)
+	out = append(out, checkIslands(p)...)
 	for _, f := range p.Files {
 		for _, s := range f.Signals {
 			if !s.HasDefault {
@@ -324,11 +350,17 @@ func nearestComponent(p *Package, name string) string {
 		return ""
 	}
 	best, bestDist := "", 3
-	for candidate := range p.Files {
+	consider := func(candidate string) {
 		d := levenshtein(name, candidate)
 		if d < bestDist || (d == bestDist && candidate < best) {
 			best, bestDist = candidate, d
 		}
+	}
+	for candidate := range p.Files {
+		consider(candidate)
+	}
+	for candidate := range p.Islands {
+		consider(candidate)
 	}
 	if best == "" || bestDist > 2 {
 		return ""

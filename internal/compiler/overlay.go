@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -61,7 +62,8 @@ func snapshotInputsWith(root string, overlay map[string][]byte) (map[string]file
 		if strings.HasSuffix(name, "_gx.go") {
 			return nil // generated output
 		}
-		if !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && name != "go.mod" && name != "go.sum" {
+		island := isIslandName(name)
+		if !island && !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && name != "go.mod" && name != "go.sum" {
 			return nil
 		}
 		data, err := os.ReadFile(path)
@@ -70,6 +72,12 @@ func snapshotInputsWith(root string, overlay map[string][]byte) (map[string]file
 		}
 		if src, ok := overlay[filepath.Clean(path)]; ok {
 			data = src
+		}
+		if island {
+			// The analysis reads one fact of a .ts file: whether it is an
+			// island. An edit of the mount function keeps the stamp, so it
+			// starts no new analysis (REQ-ISL-01).
+			data = []byte("island " + strconv.FormatBool(hasDefaultExport(data)))
 		}
 		out[path] = fileStamp{hash: sha256.Sum256(data)}
 		return nil

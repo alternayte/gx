@@ -71,6 +71,12 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX5002](/errors/GX5002/) | Duplicate view-transition-name in one template. |
 | [GX5003](/errors/GX5003/) | Class string is built at runtime. |
 
+## Islands
+
+| Code | Diagnostic |
+| --- | --- |
+| [GX6001](/errors/GX6001/) | Island has no props struct. |
+
 ## Security
 
 | Code | Diagnostic |

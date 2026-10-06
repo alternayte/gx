@@ -18,7 +18,10 @@ type Package struct {
 	Dir    string
 	Module *Module
 	Files  map[string]*File // base name without .gx
-	Diags  []Diagnostic
+	// Islands holds the TypeScript islands of the directory by name
+	// (REQ-ISL-01).
+	Islands map[string]*Island
+	Diags   []Diagnostic
 }
 
 // Prop is one component prop, from the props block.
@@ -35,12 +38,18 @@ type Component struct {
 	Name  string
 	File  *File
 	Props []Prop
+	// Island is set when the component is a TypeScript island. File is then
+	// an empty file that names the .ts source.
+	Island *Island
 }
 
 // component returns the component named name in this package.
 func (p *Package) component(name string) (*Component, bool) {
 	f, ok := p.Files[name]
 	if !ok {
+		if isl, ok := p.Islands[name]; ok {
+			return isl.component(), true
+		}
 		return nil, false
 	}
 	c := &Component{Name: name, File: f}
@@ -98,6 +107,7 @@ func (l *loader) load(dir string) *Package {
 			p.Files[strings.TrimSuffix(e.Name(), ".gx")] = f
 		}
 	}
+	l.loadIslands(p, entries)
 	return p
 }
 

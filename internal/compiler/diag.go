@@ -63,6 +63,8 @@ const (
 	CodeEventMod            = "GX4010"
 	CodeActionMethod        = "GX4009"
 	CodeSignalRules         = "GX4008"
+
+	CodeIslandProps = "GX6001"
 )
 
 // Diagnostic is one compiler message.
@@ -121,6 +123,7 @@ var Catalog = []Info{
 	{CodeEnum, "gx.Enum misses a constant of its type"},
 	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},
+	{CodeIslandProps, "island has no props struct"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},

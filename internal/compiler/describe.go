@@ -131,12 +131,13 @@ type FormFieldModel struct {
 	Rules []string `json:"rules"`
 }
 
-// IslandModel is one TypeScript island. Islands arrive with release 0.2.0,
-// so the list is empty until then.
+// IslandModel is one TypeScript island (REQ-ISL-01). Props are the
+// exported fields of its Go props struct.
 type IslandModel struct {
-	Name    string `json:"name"`
-	Package string `json:"package"`
-	File    string `json:"file"`
+	Name    string      `json:"name"`
+	Package string      `json:"package"`
+	File    string      `json:"file"`
+	Props   []PropModel `json:"props"`
 }
 
 // TransitionModel is one gx.Transition value.
@@ -235,6 +236,21 @@ func Describe(root string) (*AppModel, []Diagnostic) {
 		}
 		return m.Components[i].Name < m.Components[j].Name
 	})
+	// The directories are in order and so are the names in each one.
+	for _, dir := range dirs {
+		p := l.load(dir)
+		if p.Module == nil {
+			continue
+		}
+		for _, name := range islandNames(p) {
+			isl := p.Islands[name]
+			im := IslandModel{Name: isl.Name, Package: modulePathOf(p.Module, dir), File: rel(isl.File), Props: []PropModel{}}
+			for _, prop := range isl.Props {
+				im.Props = append(im.Props, PropModel{Name: prop.Name, Type: prop.Type, Doc: prop.Doc})
+			}
+			m.Islands = append(m.Islands, im)
+		}
+	}
 
 	handlers := describeHandlers(res)
 	mounts := mountInfo(res)
