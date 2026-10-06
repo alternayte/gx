@@ -265,3 +265,29 @@ func TestREQ_EXP_02_NavigationFallsBackToLinks(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_EXP_01_OutputDirWithSourceIsRefused: the export removes the
+// output directory first, so it refuses the app directory, a directory
+// above it and a directory that holds a module (G4-C2).
+func TestREQ_EXP_01_OutputDirWithSourceIsRefused(t *testing.T) {
+	app := t.TempDir()
+	keep := filepath.Join(app, "main.go")
+	if err := os.WriteFile(keep, []byte("package main\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	other := t.TempDir()
+	if err := os.WriteFile(filepath.Join(other, "go.mod"), []byte("module other\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for name, out := range map[string]string{"the app": app, "a parent of the app": filepath.Dir(app), "a module": other} {
+		if _, err := exporter.Export(context.Background(), exporter.Options{Dir: app, Out: out}); err == nil {
+			t.Errorf("Export with %s as the output directory gave no error", name)
+		}
+	}
+	if _, err := os.Stat(keep); err != nil {
+		t.Fatalf("the export removed a source file: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(other, "go.mod")); err != nil {
+		t.Fatalf("the export removed the module of a different directory: %v", err)
+	}
+}

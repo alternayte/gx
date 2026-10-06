@@ -578,11 +578,16 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
     else location.href = url
     return
   }
+  // A morph can make the page short for a moment, and the browser then
+  // moves the scroll position to the top. keep puts it back.
+  const left = window.scrollX
+  const top = window.scrollY
   await withViewTransition(async () => {
     // Gx owns scroll: scroll before the morph so an on:visible element of
     // the new page never sees the old scroll position.
     if (!keep) window.scrollTo(0, 0)
     await readFrames(res)
+    if (keep) window.scrollTo(left, top)
     if (push) history.pushState({ gx: true }, '', url)
     updateActive()
   })

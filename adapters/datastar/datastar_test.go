@@ -253,3 +253,33 @@ func TestREQ_PLG_04_ImportsOnlyPublicAPI(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_ACT_10_ActionAnswersWithoutEventStreamAccept: a POST with no
+// Accept: text/event-stream and no Datastar header still gets the patches.
+// The app buffers that response, and the SDK needs a writer that flushes
+// (G4-C3).
+func TestREQ_ACT_10_ActionAnswersWithoutEventStreamAccept(t *testing.T) {
+	h := gx.Action(func(c *gx.Ctx, in actRoute) error {
+		return c.Patch(gx.El("span", gx.Attrs{{Key: "id", Value: "count"}}, gx.Text("2")))
+	})
+	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
+	app.Group("/", gx.Collect(h))
+	rec := httptest.NewRecorder()
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("the action panicked: %v", r)
+			}
+		}()
+		app.ServeHTTP(rec, httptest.NewRequest("POST", "/act", nil))
+	}()
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body %q", rec.Code, rec.Body.String())
+	}
+	if ct := rec.Header().Get("Content-Type"); !strings.HasPrefix(ct, "text/event-stream") {
+		t.Fatalf("Content-Type = %q, want text/event-stream", ct)
+	}
+	if !strings.Contains(rec.Body.String(), `<span id="count">2</span>`) {
+		t.Fatalf("the answer lacks the patch:\n%s", rec.Body.String())
+	}
+}

@@ -35,11 +35,12 @@ build:
 vet:
     go vet ./...
 
+# The MCP tools start Chrome under deadlines, so their package is in this group.
 # The time budgets (NFR-02, NFR-06, NFR-11, REQ-DEV-11) are timings on a quiet
 # machine, so their packages run first, one at a time; the full run then takes
 # their results from the cache.
 test:
-    go test -p 1 ./internal/devserver ./internal/lsp ./internal/exporter
+    go test -timeout 40m -p 1 ./internal/devserver ./internal/lsp ./internal/exporter ./internal/mcpserver
     go test -timeout 40m ./...
     cd docs && go test -timeout 40m ./...
 

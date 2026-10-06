@@ -613,7 +613,10 @@ func sourceSnapshot(dir string) string {
 func (s *Server) tab(ctx context.Context) (context.Context, context.CancelFunc, error) {
 	s.mu.Lock()
 	if s.browser == nil {
-		alloc, cancelAlloc := chromedp.NewExecAllocator(context.Background(), chromedp.DefaultExecAllocatorOptions[:]...)
+		alloc, cancelAlloc := chromedp.NewExecAllocator(context.Background(), append(chromedp.DefaultExecAllocatorOptions[:],
+			// The first start of Chrome on a machine with load can take
+			// longer than the 20 s default.
+			chromedp.WSURLReadTimeout(90*time.Second))...)
 		browser, cancelBrowser := chromedp.NewContext(alloc)
 		if err := chromedp.Run(browser); err != nil {
 			cancelBrowser()

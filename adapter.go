@@ -113,6 +113,11 @@ func (b *bufferedWriter) Write(p []byte) (int, error) {
 	return b.body.Write(p)
 }
 
+// Flush does nothing: the app writes the whole response after the handler
+// returns. An adapter can need a writer that flushes, also for an action
+// call that did not ask for an event stream (REQ-ACT-10).
+func (b *bufferedWriter) Flush() {}
+
 // flush injects the adapter runtime and writes the buffered response.
 func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeeds) {
 	status := b.status

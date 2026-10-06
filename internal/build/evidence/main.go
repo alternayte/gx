@@ -225,6 +225,7 @@ var quietPackages = []string{
 	"github.com/alternayte/gx/internal/devserver",
 	"github.com/alternayte/gx/internal/lsp",
 	"github.com/alternayte/gx/internal/exporter",
+	"github.com/alternayte/gx/internal/mcpserver",
 }
 
 func runGoTests(root string) (map[string]string, error) {

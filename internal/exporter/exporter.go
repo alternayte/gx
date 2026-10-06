@@ -78,6 +78,29 @@ type Result struct {
 	LLMS *gx.LLMSManifest
 }
 
+// checkOutputDir refuses an output directory that holds source. The export
+// removes the output directory before it writes, so the app directory, a
+// directory above it or a directory with a module or a repository in it
+// must not be the output (REQ-EXP-01).
+func checkOutputDir(dir, out string) error {
+	holds := func(parent, child string) bool {
+		rel, err := filepath.Rel(parent, child)
+		return err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator))
+	}
+	if holds(out, dir) {
+		return fmt.Errorf("gx export: the output directory %s holds the app; the export removes the output directory first, so choose a directory of its own, such as dist", out)
+	}
+	if cwd, err := os.Getwd(); err == nil && holds(out, cwd) {
+		return fmt.Errorf("gx export: the output directory %s holds the current directory; choose a directory of its own, such as dist", out)
+	}
+	for _, name := range []string{"go.mod", ".git"} {
+		if _, err := os.Stat(filepath.Join(out, name)); err == nil {
+			return fmt.Errorf("gx export: the output directory %s holds %s; the export removes the output directory first, so choose a directory of its own, such as dist", out, name)
+		}
+	}
+	return nil
+}
+
 // Export builds and renders the app into opt.Out (REQ-EXP-01).
 func Export(ctx context.Context, opt Options) (*Result, error) {
 	if opt.Log == nil {
@@ -92,6 +115,9 @@ func Export(ctx context.Context, opt Options) (*Result, error) {
 	}
 	out, err := filepath.Abs(opt.Out)
 	if err != nil {
+		return nil, err
+	}
+	if err := checkOutputDir(dir, out); err != nil {
 		return nil, err
 	}
 	app, err := apprun.Start(ctx, dir, opt.Main)
