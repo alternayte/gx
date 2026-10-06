@@ -192,6 +192,11 @@ func (a *App) headAssets(needs *runtimeNeeds) []byte {
 	if link := stylesheetLink(); link != "" {
 		b.WriteString(link)
 	}
+	if needs != nil && needs.island {
+		// An island needs no adapter: its loader is its own module
+		// (REQ-ISL-04).
+		b.WriteString(stringNonce(behaviorRuntime("island"), needs.nonce))
+	}
 	if a.adapter != nil && needs != nil {
 		// Signals, actions and server answers need both scripts: the
 		// runtime carries the CSRF wrapper and applies the frames the

@@ -15,6 +15,7 @@ runtime:
     bun build runtime/js/toast.ts --outfile runtime/js/toast.js --target browser --minify
     bun build runtime/js/overlay.ts --outfile runtime/js/overlay.js --target browser --minify
     bun build runtime/js/theme.ts --outfile runtime/js/theme.js --target browser --minify
+    bun build runtime/js/island.ts --outfile runtime/js/island.js --target browser --minify
     bun build runtime/js/dev.ts --outfile internal/devserver/devclient.js --target browser --minify
 
 # Drive the real app in a real browser. The repo's own gate only (G3).

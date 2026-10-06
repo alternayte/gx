@@ -37,6 +37,12 @@ var overlayRuntimeJS []byte
 //go:embed runtime/js/theme.js
 var themeRuntimeJS []byte
 
+// islandRuntimeJS is the built island loader (REQ-ISL-04). A page loads it
+// only when it holds an island.
+//
+//go:embed runtime/js/island.js
+var islandRuntimeJS []byte
+
 // themeRuntime returns the script tag of the theme script. It has no defer
 // and no module type, so the parser runs it before it paints.
 func themeRuntime() Node {
@@ -81,6 +87,8 @@ type runtimeNeeds struct {
 	toast bool
 	// overlay is true when the page has placed content or a sub-menu.
 	overlay bool
+	// island is true when the page holds a TypeScript island.
+	island bool
 	// theme is true when the page has a theme control; the stored theme
 	// then applies before the first paint.
 	theme bool
@@ -134,8 +142,11 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 				needs.core = true
 			}
 		case *elNode:
-			if t.name == "html" {
+			switch t.name {
+			case "html":
 				needs.ownDocument = true
+			case islandElement:
+				needs.island = true
 			}
 			for _, a := range t.attrs {
 				if a.Key == "data-gx-theme" {

@@ -84,7 +84,7 @@ func TestREQ_ISL_02_AppendJSONDevChecks(t *testing.T) {
 
 func TestREQ_ISL_01_IslandElement(t *testing.T) {
 	got := String(Island("app/dash/Chart", `{"a":"<b>"}`))
-	want := `<gx-island name="app/dash/Chart" props="{&#34;a&#34;:&#34;&lt;b&gt;&#34;}"></gx-island>`
+	want := `<gx-island name="app/dash/Chart" props="{&#34;a&#34;:&#34;&lt;b&gt;&#34;}"><div data-gx-island-root data-ignore-morph></div></gx-island>`
 	if got != want {
 		t.Fatalf("island = %s, want %s", got, want)
 	}

@@ -13,7 +13,7 @@ func TestREQ_ISL_03_IslandNamesItsEntryFile(t *testing.T) {
 	})
 	defer SetIslands(IslandBundle{})
 	got := String(Island("app/dash/Chart", `{}`))
-	if want := `<gx-island name="app/dash/Chart" props="{}" src="/_gx/islands/app/dash/Chart-ABCD1234.js"></gx-island>`; got != want {
+	if want := `<gx-island name="app/dash/Chart" props="{}" src="/_gx/islands/app/dash/Chart-ABCD1234.js"><div data-gx-island-root data-ignore-morph></div></gx-island>`; got != want {
 		t.Fatalf("island = %s, want %s", got, want)
 	}
 

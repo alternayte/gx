@@ -276,6 +276,8 @@ func New(cfg Config) *App {
 	a.devRoutes()
 	// The theme script needs no adapter: it only reads the stored theme.
 	a.registerAsset("theme.js", themeRuntimeJS)
+	// An island needs no adapter either (REQ-ISL-04).
+	a.registerAsset("island.js", islandRuntimeJS)
 	if cfg.Adapter != nil {
 		SetAdapter(cfg.Adapter)
 		a.registerAssets(cfg.Adapter)

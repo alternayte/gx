@@ -44,6 +44,14 @@ func AppendJSONInt(b []byte, v int64) []byte
 
 AppendJSONInt appends a JSON number. In dev it panics for an integer outside the 53-bit safe range, because the browser rounds it.
 
+### func AppendJSONSignalRef
+
+```go
+func AppendJSONSignalRef(b []byte, path string) []byte
+```
+
+AppendJSONSignalRef appends a gx.SignalRef prop of an island. The island loader turns the object into a reference that the context of the island resolves.
+
 ### func AppendJSONString
 
 ```go

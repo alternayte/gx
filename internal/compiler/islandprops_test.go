@@ -1,6 +1,7 @@
 package compiler_test
 
 import (
+	"html"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -100,7 +101,7 @@ export interface Props {
   NoTag: number;
   "dash-name": number;
 }
-`
+` + contextTS
 
 func mappingTree(t *testing.T, extra map[string]string) string {
 	t.Helper()
@@ -377,5 +378,68 @@ func TestREQ_ISL_02_StaleCheck(t *testing.T) {
 	}
 	if got := stale(); len(got) != 1 {
 		t.Fatalf("with a new struct field: %v, want one GX1002 at the island", got)
+	}
+}
+
+// contextTS is the fixed part of each props file: the types of the mount
+// function and of its context (REQ-ISL-04).
+const contextTS = `
+/** A gx.SignalRef prop. Give it to ctx.signal to get the signal. */
+export interface SignalRef<T> {
+  readonly path: readonly string[];
+  readonly value?: T;
+}
+
+/** A signal of the page. subscribe calls fn now and after each change. */
+export interface Signal<T> {
+  get(): T;
+  set(value: T): void;
+  subscribe(fn: (value: T) => void): () => void;
+}
+
+/** The context of one mounted island. abort ends when the island leaves the page. */
+export interface Ctx {
+  signal<T>(ref: SignalRef<T>): Signal<T>;
+  readonly abort: AbortSignal;
+}
+
+type Cleanup = void | (() => void);
+
+/** The default export of the island file. */
+export type Mount = (el: HTMLElement, props: Props, ctx: Ctx) => Cleanup | Promise<Cleanup>;
+
+/** The optional update export: new props for a mounted island. */
+export type Update = (props: Props, el: HTMLElement, ctx: Ctx) => void;
+`
+
+// A gx.SignalRef prop of an island takes a signal of the page: the tag
+// passes $Name, the props hold the path, and the TypeScript type holds the
+// type of the value.
+func TestREQ_ISL_04_SignalRefProp(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":          moduleWithGx(t),
+		"cart/props.go":   "package cart\n\nimport gx \"github.com/alternayte/gx\"\n\ntype StepperProps struct {\n\tQty   gx.SignalRef[int]    `json:\"qty\"`\n\tOpen  gx.SignalRef[bool]   `json:\"open,omitempty\"`\n\tLabel string               `json:\"label\"`\n}\n",
+		"cart/Stepper.ts": chartIsland,
+		"cart/Cart.gx":    "package cart\n\nsignals {\n  Qty int = 2\n}\n\n<div>\n  <input type=\"number\" bind:value={$Qty} />\n  <Stepper qty={$Qty} label=\"Quantity\" />\n</div>\n",
+		"main.go":         "package main\n\nimport (\n\t\"fmt\"\n\n\t\"app/cart\"\n\tgx \"github.com/alternayte/gx\"\n)\n\nfunc main() {\n\tfmt.Print(gx.String(cart.Cart(cart.CartProps{})))\n}\n",
+	})
+	files := writeGenerated(t, dir)
+	ts := string(files[filepath.Join(dir, "cart", "Stepper.props.ts")])
+	want := "export interface Props {\n  qty: SignalRef<number>;\n  open?: SignalRef<boolean>;\n  label: string;\n}\n"
+	if !strings.Contains(ts, want) {
+		t.Fatalf("Stepper.props.ts lacks\n%s\ngot\n%s", want, ts)
+	}
+	cmd := exec.Command("go", "run", ".")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("go run: %v\n%s", err, out)
+	}
+	got := html.UnescapeString(string(out))
+	if !strings.Contains(got, `props="{"qty":{"$signal":["cart","Cart","qty"]},"label":"Quantity"}"`) {
+		t.Fatalf("output = %s", got)
+	}
+	if !strings.Contains(got, `data-bind="cart.Cart.qty"`) {
+		t.Fatalf("the input does not bind the same signal: %s", got)
 	}
 }

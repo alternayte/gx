@@ -291,7 +291,7 @@ func main() {
 	if len(lines) != 6 {
 		t.Fatalf("output:\n%s", out)
 	}
-	if !regexp.MustCompile(`<gx-island name="app/dash/RevenueChart" props="[^"]+" src="/_gx/islands/app/dash/RevenueChart-[0-9A-Z]{8}\.js"></gx-island><gx-island name="app/dash/UsersChart" props="[^"]+" src="/_gx/islands/app/dash/UsersChart-[0-9A-Z]{8}\.js">`).MatchString(lines[0]) {
+	if !regexp.MustCompile(`<gx-island name="app/dash/RevenueChart" props="[^"]+" src="/_gx/islands/app/dash/RevenueChart-[0-9A-Z]{8}\.js"><div data-gx-island-root data-ignore-morph></div></gx-island><gx-island name="app/dash/UsersChart" props="[^"]+" src="/_gx/islands/app/dash/UsersChart-[0-9A-Z]{8}\.js">`).MatchString(lines[0]) {
 		t.Fatalf("page = %s", lines[0])
 	}
 	want := "200 text/javascript; charset=utf-8 public, max-age=31536000, immutable true"

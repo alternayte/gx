@@ -4,6 +4,7 @@ import (
 	"math"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 	"unicode/utf8"
 )
@@ -25,8 +26,18 @@ func Island(name, props string) Node {
 	} else if devMode.Load() {
 		panic("gx: the island " + name + " is not in the installed bundle; call gx.SetIslands(gxislands.Bundle()) in main")
 	}
-	return El("gx-island", attrs)
+	// The island renders into the root. A morph skips an element with
+	// data-ignore-morph on both sides, so it keeps what the island put
+	// there, and it still updates the props of the element around it
+	// (REQ-ISL-06).
+	return El(islandElement, attrs, El("div", Attrs{
+		Bool("data-gx-island-root", true),
+		Bool("data-ignore-morph", true),
+	}))
 }
+
+// islandElement is the custom element of an island.
+const islandElement = "gx-island"
 
 // The AppendJSON functions write the props of an island with no reflection
 // (REQ-ISL-02). The generated encoder of an island calls them.
@@ -85,6 +96,32 @@ func AppendJSONString(b []byte, s string) []byte {
 	}
 	b = append(b, s[start:]...)
 	return append(b, '"')
+}
+
+// AppendJSONSignalRef appends a gx.SignalRef prop of an island
+// (REQ-ISL-04). The island loader turns the object into a reference that
+// the context of the island resolves.
+//
+// path is the bracket path of a SignalRef, for example
+// ["cart"]["Cart"]["qty"]; the props hold its parts as a list.
+func AppendJSONSignalRef(b []byte, path string) []byte {
+	b = append(b, `{"$signal":[`...)
+	for i := 0; strings.HasPrefix(path, "["); i++ {
+		quoted, err := strconv.QuotedPrefix(path[1:])
+		if err != nil {
+			break
+		}
+		part, err := strconv.Unquote(quoted)
+		if err != nil {
+			break
+		}
+		if i > 0 {
+			b = append(b, ',')
+		}
+		b = AppendJSONString(b, part)
+		path = strings.TrimPrefix(path[1+len(quoted):], "]")
+	}
+	return append(b, ']', '}')
 }
 
 // AppendJSONBool appends a JSON boolean.

@@ -48,6 +48,12 @@ if ! cmp -s "$tmp/theme.js" runtime/js/theme.js; then
   diff -u runtime/js/theme.js "$tmp/theme.js" >&2 || true
   exit 1
 fi
+bun build runtime/js/island.ts --outfile "$tmp/island.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/island.js" runtime/js/island.js; then
+  echo "rule: runtime/js/island.js is stale; run just runtime" >&2
+  diff -u runtime/js/island.js "$tmp/island.js" >&2 || true
+  exit 1
+fi
 bun build runtime/js/dev.ts --outfile "$tmp/devclient.js" --target browser --minify >/dev/null
 if ! cmp -s "$tmp/devclient.js" internal/devserver/devclient.js; then
   echo "rule: internal/devserver/devclient.js is stale; run just runtime" >&2

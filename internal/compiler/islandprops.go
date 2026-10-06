@@ -32,6 +32,9 @@ const (
 	islandMap
 	islandPointer
 	islandObject
+	// islandSignal is a gx.SignalRef[T] prop: the island reads and writes
+	// the signal through its context (REQ-ISL-04). elem is the shape of T.
+	islandSignal
 )
 
 // islandShape is one mapped type. The Go encoder and the TypeScript type
@@ -334,6 +337,12 @@ func (m *islandMapper) shape(t types.Type, path string) (*islandShape, *islandTy
 				return &islandShape{kind: islandTime, typ: t}, nil
 			case obj.Pkg().Path() == gxPkgPath && obj.Name() == "Secret":
 				return nil, &islandTypeError{path: path, typ: "gx.Secret", secret: true}
+			case obj.Pkg().Path() == gxPkgPath && obj.Name() == "SignalRef" && named.TypeArgs().Len() == 1:
+				elem, err := m.shape(named.TypeArgs().At(0), path)
+				if err != nil {
+					return nil, err
+				}
+				return &islandShape{kind: islandSignal, typ: t, elem: elem}, nil
 			}
 		}
 		for _, method := range []string{"MarshalJSON", "MarshalText"} {
@@ -533,7 +542,7 @@ func hasMethod(named *types.Named, name string) bool {
 // empty, and "false" for a value that is always empty.
 func emptyCheck(s *islandShape, expr string) string {
 	switch s.kind {
-	case islandString, islandEnum:
+	case islandString, islandEnum, islandSignal:
 		return expr + ` != ""`
 	case islandBool:
 		return "bool(" + expr + ")"
@@ -740,6 +749,8 @@ func (w *islandWriter) value(s *islandShape, expr string) {
 		w.line("b = gx.AppendJSONFloat(b, float64(%s))", expr)
 	case islandTime:
 		w.line("b = gx.AppendJSONTime(b, %s)", expr)
+	case islandSignal:
+		w.line("b = gx.AppendJSONSignalRef(b, string(%s))", expr)
 	case islandList:
 		w.n++
 		i := "i" + strconv.Itoa(w.n)
@@ -810,8 +821,42 @@ func (m *islandMapper) tsSource(root *islandObjectType) []byte {
 		}
 		b.WriteString("}\n")
 	}
+	b.WriteString(islandContextTS)
 	return []byte(b.String())
 }
+
+// islandContextTS is the part of a props file that is the same for every
+// island: the types of the mount function and of its context
+// (REQ-ISL-04). The file needs no package, so the type check of an island
+// needs no install step.
+const islandContextTS = `
+/** A gx.SignalRef prop. Give it to ctx.signal to get the signal. */
+export interface SignalRef<T> {
+  readonly path: readonly string[];
+  readonly value?: T;
+}
+
+/** A signal of the page. subscribe calls fn now and after each change. */
+export interface Signal<T> {
+  get(): T;
+  set(value: T): void;
+  subscribe(fn: (value: T) => void): () => void;
+}
+
+/** The context of one mounted island. abort ends when the island leaves the page. */
+export interface Ctx {
+  signal<T>(ref: SignalRef<T>): Signal<T>;
+  readonly abort: AbortSignal;
+}
+
+type Cleanup = void | (() => void);
+
+/** The default export of the island file. */
+export type Mount = (el: HTMLElement, props: Props, ctx: Ctx) => Cleanup | Promise<Cleanup>;
+
+/** The optional update export: new props for a mounted island. */
+export type Update = (props: Props, el: HTMLElement, ctx: Ctx) => void;
+`
 
 var tsIdent = regexp.MustCompile(`^[A-Za-z_$][A-Za-z0-9_$]*$`)
 
@@ -839,6 +884,8 @@ func tsType(s *islandShape) string {
 		return "number"
 	case islandEnum:
 		return s.alias
+	case islandSignal:
+		return "SignalRef<" + tsType(s.elem) + ">"
 	case islandList:
 		elem := tsType(s.elem)
 		if s.elem.kind == islandPointer {
