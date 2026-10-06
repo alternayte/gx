@@ -1,6 +1,7 @@
 package docscheck_test
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/docscheck"
+	"github.com/alternayte/gx/internal/tscheck"
 )
 
 func repoRoot(t *testing.T) string {
@@ -112,6 +114,31 @@ func TestREQ_DOC_03_DiagnosticPages(t *testing.T) {
 						got = append(got, d.String())
 					}
 				}
+			case "gx check after gx generate":
+				// The whole check, as the command runs it: the generated
+				// files are current, so the TypeScript check of the islands
+				// runs too (REQ-ISL-08).
+				generated, gdiags := compiler.Generate(dir)
+				if len(gdiags) != 0 {
+					t.Fatalf("gx generate: %v", gdiags)
+				}
+				for path, src := range generated {
+					if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+						t.Fatal(err)
+					}
+					if err := os.WriteFile(path, src, 0o644); err != nil {
+						t.Fatal(err)
+					}
+				}
+				diags, err := tscheck.App(context.Background(), dir, compiler.CheckOptions{})
+				if err != nil {
+					t.Fatal(err)
+				}
+				for _, d := range diags {
+					if d.Code == info.Code {
+						got = append(got, d.String())
+					}
+				}
 			case "gx lint":
 				findings, err := analyze.Lint(dir)
 				if err != nil {
@@ -123,7 +150,7 @@ func TestREQ_DOC_03_DiagnosticPages(t *testing.T) {
 					}
 				}
 			default:
-				t.Fatalf("the output block names %q; a page uses gx check or gx lint", command)
+				t.Fatalf("the output block names %q; a page uses gx check, gx check after gx generate or gx lint", command)
 			}
 			for i := range got {
 				got[i] = strings.ReplaceAll(filepath.ToSlash(got[i]), filepath.ToSlash(dir)+"/", "")

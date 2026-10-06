@@ -45,7 +45,7 @@ Runs the app with build, restart, page morph and the error overlay.
 gx check [--json] [--external-links] [app]
 ```
 
-Checks each `.gx` file, the routes, the actions, the forms and the content. It fails when a generated file is stale. `--json` prints the diagnostics for a tool. `--external-links` also requests each link to a different site.
+Checks each `.gx` file, the routes, the actions, the forms and the content. It fails when a generated file is stale. It type-checks each island with the pinned TypeScript compiler. `--json` prints the diagnostics for a tool. `--external-links` also requests each link to a different site.
 
 ## gx generate
 
@@ -158,7 +158,7 @@ Stores the bundled ES module of an npm package in `js/vendor`, with each module 
 gx vendor [app]
 ```
 
-Stores the pinned downloads in `.gx/vendor`, for a build with no network.
+Stores the pinned downloads in `.gx/vendor`, for a build with no network: Tailwind, Pagefind, the TypeScript compiler and the icon packs.
 
 ## gx import
 

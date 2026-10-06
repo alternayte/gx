@@ -30,6 +30,7 @@ import (
 	"github.com/alternayte/gx/internal/apprun"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/registry"
+	"github.com/alternayte/gx/internal/tscheck"
 )
 
 // axeSource is axe-core 4.13.0 (MPL-2.0, see axe.LICENSE). The audit runs
@@ -184,7 +185,12 @@ type CheckOutput struct {
 }
 
 func (s *Server) check(ctx context.Context, _ *mcp.CallToolRequest, _ noInput) (*mcp.CallToolResult, CheckOutput, error) {
-	diags := compiler.CheckApp(s.opt.Dir, compiler.CheckOptions{})
+	// The same check as `gx check`, with the TypeScript check of the
+	// islands (REQ-ISL-08).
+	diags, err := tscheck.App(ctx, s.opt.Dir, compiler.CheckOptions{})
+	if err != nil {
+		return nil, CheckOutput{}, err
+	}
 	out := CheckOutput{OK: len(diags) == 0, Diagnostics: []Diagnostic{}}
 	for _, d := range diags {
 		out.Diagnostics = append(out.Diagnostics, Diagnostic{

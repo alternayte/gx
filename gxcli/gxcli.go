@@ -38,6 +38,7 @@ import (
 	"github.com/alternayte/gx/internal/scaffold"
 	"github.com/alternayte/gx/internal/starlight"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
+	"github.com/alternayte/gx/internal/tscheck"
 )
 
 // Version is the Gx release this command line tool belongs to. `gx init`
@@ -312,7 +313,15 @@ func runCheck(args []string) int {
 	if rest := fs.Args(); len(rest) > 0 {
 		dir = rest[0]
 	}
-	diags := compiler.CheckApp(dir, compiler.CheckOptions{ExternalLinks: *external})
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	// The islands are type-checked with the pinned TypeScript compiler
+	// (REQ-ISL-08).
+	diags, err := tscheck.App(ctx, dir, compiler.CheckOptions{ExternalLinks: *external})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx check: %v\n", err)
+		return 1
+	}
 	if *asJSON {
 		return printJSON(diags)
 	}
@@ -921,6 +930,18 @@ func runVendor(args []string) int {
 	if !pagefindpkg.HasLock(dir) {
 		if err := pagefindpkg.SaveLock(dir, pagefindpkg.DefaultLock().Pagefind); err != nil {
 			fmt.Fprintf(os.Stderr, "gx vendor: pagefind lock: %v\n", err)
+			return 1
+		}
+	}
+	tsPath, err := (&tscheck.Manager{Root: dir}).Vendor(ctx)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx vendor: typescript: %v\n", err)
+		return 1
+	}
+	fmt.Println("vendored", tsPath)
+	if !tscheck.HasLock(dir) {
+		if err := tscheck.SaveLock(dir, tscheck.DefaultLock()); err != nil {
+			fmt.Fprintf(os.Stderr, "gx vendor: typescript lock: %v\n", err)
 			return 1
 		}
 	}

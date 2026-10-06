@@ -67,6 +67,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX6001 | island has no props struct",
 		"GX6002 | island prop type has no TypeScript mapping",
 		"GX6004 | unknown island load strategy",
+		"GX6005 | TypeScript error in an island",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 		"GX7002 | gx.Secret cannot cross to the client",
 		"GX8001 | frontmatter is malformed or unknown",
