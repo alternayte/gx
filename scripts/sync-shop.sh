@@ -19,7 +19,8 @@ for dir in registry/*/; do
   names+=("$name")
   rm -rf "examples/shop/ui/$name" "examples/shop/.gx/base/$name@"*
 done
-rm -f examples/shop/gx.lock
+# gx.lock stays: it also holds the pins of gx pin and gx wc pin. gx add
+# writes the entry of each item again.
 for name in "${names[@]}"; do
   "$tmp/gx" add --registry "$tmp/registry" "$name" examples/shop >/dev/null
 done

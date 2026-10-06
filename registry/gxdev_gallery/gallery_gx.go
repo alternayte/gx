@@ -32,6 +32,7 @@ import (
 	icons "github.com/alternayte/gx/registry/icons"
 	input "github.com/alternayte/gx/registry/input"
 	inputgroup "github.com/alternayte/gx/registry/input-group"
+	inputotp "github.com/alternayte/gx/registry/input-otp"
 	item "github.com/alternayte/gx/registry/item"
 	kbd "github.com/alternayte/gx/registry/kbd"
 	label "github.com/alternayte/gx/registry/label"
@@ -308,6 +309,11 @@ func Fixtures() []gx.Fixture {
 		{Component: "InputGroupInput", Package: "github.com/alternayte/gx/registry/input-group", Name: "Placeholder", Node: func() gx.Node { return inputgroup.InputGroupInputWrap(inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"])) }},
 		{Component: "InputGroupText", Package: "github.com/alternayte/gx/registry/input-group", Name: "Text", Node: func() gx.Node { return inputgroup.InputGroupText(inputgroup.InputGroupTextFixtures["Text"]) }},
 		{Component: "InputGroupTextarea", Package: "github.com/alternayte/gx/registry/input-group", Name: "Placeholder", Node: func() gx.Node { return inputgroup.InputGroupTextareaWrap(inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"])) }},
+		{Component: "InputOTP", Package: "github.com/alternayte/gx/registry/input-otp", Name: "Disabled", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Disabled"]) }},
+		{Component: "InputOTP", Package: "github.com/alternayte/gx/registry/input-otp", Name: "Empty", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Empty"]) }},
+		{Component: "InputOTP", Package: "github.com/alternayte/gx/registry/input-otp", Name: "Filled", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Filled"]) }},
+		{Component: "InputOTP", Package: "github.com/alternayte/gx/registry/input-otp", Name: "Four", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Four"]) }},
+		{Component: "InputOTP", Package: "github.com/alternayte/gx/registry/input-otp", Name: "Grouped", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Grouped"]) }},
 		{Component: "Item", Package: "github.com/alternayte/gx/registry/item", Name: "Default", Node: func() gx.Node { return item.Item(item.ItemFixtures["Default"]) }},
 		{Component: "Item", Package: "github.com/alternayte/gx/registry/item", Name: "Full", Node: func() gx.Node { return item.Item(item.ItemFixtures["Full"]) }},
 		{Component: "Item", Package: "github.com/alternayte/gx/registry/item", Name: "HeaderAndFooter", Node: func() gx.Node { return item.Item(item.ItemFixtures["HeaderAndFooter"]) }},

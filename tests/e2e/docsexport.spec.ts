@@ -64,7 +64,15 @@ test('REQ-EXP-01 the docs site exports every page, with hashed assets and 404.ht
   }
   const assets = readdirSync(join(dist, '_gx'))
   expect(assets.length).toBeGreaterThan(3)
-  for (const name of assets) expect(name).toMatch(/^[a-z]+\.[0-9a-f]{8}\.(js|css)$/)
+  for (const name of assets) {
+    if (name === 'islands') continue
+    expect(name).toMatch(/^[a-z]+\.[0-9a-f]{8}\.(js|css)$/)
+  }
+  // The files of the island bundle keep the names of the bundler, which
+  // hold a content hash too (REQ-ISL-03).
+  const islandFiles = readdirSync(join(dist, '_gx', 'islands'), { recursive: true }).map(String).filter((f) => f.endsWith('.js'))
+  expect(islandFiles.length).toBeGreaterThan(0)
+  for (const name of islandFiles) expect(name).toMatch(/-[0-9A-Z]{8}\.js$/)
 
   requests.length = 0
   const page = await open('/components/button/')
@@ -226,4 +234,21 @@ test('REQ-DOC-01 the export of the docs site is ready for its host', async () =>
   for (const file of ['index.html', '404.html', 'llms.txt', 'pagefind/pagefind.js']) {
     expect(existsSync(join(dist, file))).toBe(true)
   }
+})
+
+// The component pages show live fixtures, and the tier 3 components are
+// islands. The export holds the island loader and the island files, so an
+// island runs on a plain file server (REQ-EXP-03, REQ-REG-14).
+test('REQ-EXP-03 an island runs on the static host', async () => {
+  const page = await browser.newPage()
+  const errors = errorsOf(page)
+  // A component page shows each fixture in a frame; this is the page of
+  // one frame.
+  await page.goto(url + '/preview/input-otp/input-otp-empty/', { waitUntil: 'load' })
+  await page.waitForFunction(() => document.querySelector('gx-island')?.matches(':state(mounted)'))
+  expect(await page.locator('gx-island').first().locator('[data-otp-slot]').count()).toBeGreaterThan(3)
+  const scripts = await page.evaluate(() => Array.from(document.scripts, (s) => s.src).filter(Boolean))
+  expect(scripts.some((src) => /\/_gx\/island\.[0-9a-f]{8}\.js$/.test(src))).toBe(true)
+  expect(errors).toEqual([])
+  await page.close()
 })

@@ -4092,6 +4092,84 @@
       ]
     },
     {
+      "name": "InputOTP",
+      "package": "github.com/alternayte/gx/examples/shop/ui/input-otp",
+      "file": "ui/input-otp/InputOTP.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the input. A label points at it."
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Name is the form field name. The form sends the code under this name."
+        },
+        {
+          "name": "Length",
+          "type": "int",
+          "required": false,
+          "default": "6",
+          "doc": "Length is the count of characters of the code. A zero value is 6."
+        },
+        {
+          "name": "Group",
+          "type": "int",
+          "required": false,
+          "default": "0",
+          "doc": "Group is the count of slots before a separator. A zero value is no separator."
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Value is the code of the first render."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Label is the accessible name of the input."
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "required": false,
+          "default": "false",
+          "doc": "Disabled disables the input."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the input."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Disabled",
+        "Empty",
+        "Filled",
+        "Four",
+        "Grouped"
+      ]
+    },
+    {
       "name": "Item",
       "package": "github.com/alternayte/gx/examples/shop/ui/item",
       "file": "ui/item/Item.gx",
@@ -8780,6 +8858,53 @@
           "required": false
         }
       ]
+    },
+    {
+      "name": "InputOTPSlots",
+      "package": "github.com/alternayte/gx/examples/shop/ui/input-otp",
+      "file": "ui/input-otp/InputOTPSlots.ts",
+      "props": [
+        {
+          "name": "Input",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Length",
+          "type": "int",
+          "required": false
+        },
+        {
+          "name": "Group",
+          "type": "int",
+          "required": false
+        },
+        {
+          "name": "SlotClass",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "ActiveClass",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "CaretClass",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "SeparatorClass",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "OverlayClass",
+          "type": "string",
+          "required": false
+        }
+      ]
     }
   ],
   "elements": [
@@ -9213,6 +9338,16 @@
         "ui/input-group/InputGroupTextarea.fixtures.go",
         "ui/input-group/InputGroupTextarea.gx",
         "ui/input-group/styles.go"
+      ]
+    },
+    {
+      "name": "input-otp",
+      "version": "0.1.0",
+      "files": [
+        "ui/input-otp/InputOTP.fixtures.go",
+        "ui/input-otp/InputOTP.gx",
+        "ui/input-otp/InputOTPSlots.ts",
+        "ui/input-otp/styles.go"
       ]
     },
     {

@@ -32,6 +32,19 @@ beforeEach(async () => {
   // Audit settled styles: a running color transition would report the
   // transition start value against the new theme.
   await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' })
+  // An island draws its part in the browser, and an island with the default
+  // load strategy waits until it is near the viewport. The audit reads each
+  // component as a user sees it, so every island mounts first (REQ-REG-14).
+  await page.evaluate(async () => {
+    for (const island of document.querySelectorAll('gx-island')) {
+      island.scrollIntoView()
+      for (let i = 0; i < 200 && !island.matches(':state(mounted)'); i++) {
+        await new Promise((resolve) => setTimeout(resolve, 25))
+      }
+      if (!island.matches(':state(mounted)')) throw new Error(`the island ${island.getAttribute('name')} did not mount`)
+    }
+    scrollTo(0, 0)
+  })
   await page.addScriptTag({ content: axeSource })
 })
 

@@ -18,6 +18,7 @@ import (
 	"github.com/evanw/esbuild/pkg/api"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/jspin"
 )
 
@@ -83,6 +84,25 @@ func Build(root string, opt Options) (*Bundle, error) {
 		root = resolved
 	}
 	refs := compiler.Islands(root)
+	// The islands of the directories that [islands] roots of gx.toml names:
+	// packages that the app imports and that are not under the app.
+	cfg, err := gxconfig.Load(root)
+	if err != nil {
+		return nil, err
+	}
+	for _, extra := range cfg.IslandRoots {
+		dir := extra
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(root, filepath.FromSlash(extra))
+		}
+		if resolved, err := filepath.EvalSymlinks(dir); err == nil {
+			dir = resolved
+		}
+		if _, err := os.Stat(dir); err != nil {
+			return nil, fmt.Errorf("islands: the root %q of gx.toml: %w", extra, err)
+		}
+		refs = append(refs, compiler.Islands(dir)...)
+	}
 	modules := compiler.ElementModules(root)
 	out := &Bundle{Entries: map[string]string{}, Files: map[string][]byte{}}
 	if len(refs) == 0 && len(modules) == 0 {

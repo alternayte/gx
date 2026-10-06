@@ -260,10 +260,15 @@ func TestREQ_AI_01_DescribeShop(t *testing.T) {
 		t.Fatalf("the repeated address fields are missing: %+v", rules)
 	}
 	// The dashboard slice of the shop holds the islands (REQ-ISL-01).
+	// The registry items in ui/ have islands too (REQ-REG-14); this test
+	// reads the ones of the dashboard.
 	var islandNames []string
 	for _, isl := range got.Islands {
+		if isl.Package != "github.com/alternayte/gx/examples/shop/dashboard" {
+			continue
+		}
 		islandNames = append(islandNames, isl.Name)
-		if isl.Package != "github.com/alternayte/gx/examples/shop/dashboard" || isl.File != "dashboard/"+isl.Name+".ts" {
+		if isl.File != "dashboard/"+isl.Name+".ts" {
 			t.Fatalf("island = %+v", isl)
 		}
 	}

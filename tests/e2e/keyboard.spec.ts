@@ -590,3 +590,61 @@ test('REQ-REG-07 scroll area takes focus and the toast stays out', async () => {
   const live = fixture('Toaster-WithToast').locator('#gx-toaster')
   expect(await live.getAttribute('aria-live')).toBe('polite')
 })
+
+// The tier 3 components are islands (REQ-REG-14). A test waits until the
+// island of its fixture runs.
+async function islandReady(name: string): Promise<void> {
+  const section = fixture(name)
+  await section.scrollIntoViewIfNeeded()
+  await page.waitForFunction(
+    (sel) => [...document.querySelectorAll(sel + ' gx-island')].every((el) => el.matches(':state(mounted)')),
+    `section[data-fixture="${name}"]`,
+  )
+}
+
+test('REQ-REG-14 input-otp shows the typed digits in its slots', async () => {
+  await islandReady('InputOTP-Empty')
+  const section = fixture('InputOTP-Empty')
+  const input = section.locator('#otp-empty')
+  const slots = section.locator('[data-otp-slot]')
+  expect(await slots.count()).toBe(6)
+  await input.focus()
+  // The first slot is active and shows the caret.
+  expect(await slots.nth(0).getAttribute('data-active')).toBe('true')
+  await page.keyboard.type('12a3')
+  // A letter is not part of a code.
+  expect(await input.inputValue()).toBe('123')
+  expect(await slots.allTextContents()).toEqual(['1', '2', '3', '', '', ''])
+  expect(await slots.nth(3).getAttribute('data-active')).toBe('true')
+  await page.keyboard.press('Backspace')
+  expect(await slots.allTextContents()).toEqual(['1', '2', '', '', '', ''])
+  expect(await slots.nth(2).getAttribute('data-active')).toBe('true')
+  await page.keyboard.press('ArrowLeft')
+  await page.waitForFunction(() => document.querySelector('#otp-empty')!.parentElement!.querySelector('[data-otp-slot="1"]')!.getAttribute('data-active') === 'true')
+})
+
+test('REQ-REG-14 input-otp takes a paste and stops at its length', async () => {
+  await islandReady('InputOTP-Four')
+  const section = fixture('InputOTP-Four')
+  const input = section.locator('#otp-four')
+  await input.focus()
+  await page.evaluate(() => {
+    const el = document.querySelector('#otp-four') as HTMLInputElement
+    const data = new DataTransfer()
+    data.setData('text/plain', '98-76 54')
+    // The island takes the paste: the browser alone cuts the text at four
+    // characters and loses a digit.
+    el.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }))
+  })
+  expect(await input.inputValue()).toBe('9876')
+  expect(await section.locator('[data-otp-slot]').allTextContents()).toEqual(['9', '8', '7', '6'])
+})
+
+test('REQ-REG-14 input-otp groups its slots and keeps a value from the server', async () => {
+  await islandReady('InputOTP-Grouped')
+  expect(await fixture('InputOTP-Grouped').locator('[data-otp-separator]').count()).toBe(1)
+  await islandReady('InputOTP-Filled')
+  expect(await fixture('InputOTP-Filled').locator('[data-otp-slot]').allTextContents()).toEqual(['1', '2', '3', '', '', ''])
+  // The input is the control: a form sends its value.
+  expect(await fixture('InputOTP-Filled').locator('#otp-filled').getAttribute('name')).toBe('code')
+})

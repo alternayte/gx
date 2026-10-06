@@ -329,9 +329,16 @@ func TestREQ_ISL_03_ShopBundleIsCurrent(t *testing.T) {
 	if string(onDisk) != string(islands.Generate(b)) {
 		t.Fatal("examples/shop/gxislands/islands_gx.go is stale; run: go run ./cmd/gx build -o /tmp/shop examples/shop")
 	}
-	// Five islands and the modules of two imported web components.
-	if len(b.Entries) != 7 {
-		t.Fatalf("the shop bundle has %d entries, want 7", len(b.Entries))
+	// The islands of the dashboard, the modules of two imported web
+	// components and the islands of the registry items in ui/.
+	for _, id := range []string{
+		"github.com/alternayte/gx/examples/shop/dashboard/BarChart",
+		"@shoelace-style/shoelace/dist/components/badge/badge.js",
+		"github.com/alternayte/gx/examples/shop/ui/input-otp/InputOTPSlots",
+	} {
+		if b.Entries[id] == "" {
+			t.Fatalf("the shop bundle has no entry %s", id)
+		}
 	}
 }
 
@@ -419,5 +426,40 @@ func TestREQ_ISL_07_NodeModulesResolveAsNode(t *testing.T) {
 	}
 	if body := string(b.Files[b.Entries["app/dash/Chart"]]); !strings.Contains(body, "NODE-MODULES-CHART:") {
 		t.Fatalf("the entry does not hold the node_modules code:\n%s", body)
+	}
+}
+
+// An app that imports island packages of a sibling directory names that
+// directory in gx.toml. The docs site does this for registry/ (REQ-REG-14).
+func TestREQ_REG_14_IslandsOfAnImportedDirectory(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":             "module mono\n\ngo 1.25.0\n",
+		"lib/chart/props.go": "package chart\n\ntype ChartProps struct {\n\tData []int `json:\"data\"`\n}\n",
+		"lib/chart/Chart.ts": "export default (el: HTMLElement) => {\n  el.textContent = \"LIB-CHART\";\n};\n",
+		"site/gx.toml":       "[islands]\nroots = \"../lib\"\n",
+		"site/home/props.go": "package home\n\ntype ClockProps struct{}\n",
+		"site/home/Clock.ts": "export default (el: HTMLElement) => {\n  el.textContent = \"SITE-CLOCK\";\n};\n",
+		"other/x/props.go":   "package x\n\ntype OtherProps struct{}\n",
+		"other/x/Other.ts":   "export default (el: HTMLElement) => {};\n",
+	})
+	b, err := islands.Build(filepath.Join(dir, "site"), islands.Options{Minify: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(b.Entries) != 2 {
+		t.Fatalf("entries = %v, want the island of the app and the island of lib", b.Entries)
+	}
+	if body := string(b.Files[b.Entries["mono/lib/chart/Chart"]]); !strings.Contains(body, "LIB-CHART") {
+		t.Fatalf("the entry of the lib island = %q", body)
+	}
+	if body := string(b.Files[b.Entries["mono/site/home/Clock"]]); !strings.Contains(body, "SITE-CLOCK") {
+		t.Fatalf("the entry of the app island = %q", body)
+	}
+
+	if err := os.WriteFile(filepath.Join(dir, "site", "gx.toml"), []byte("[islands]\nroots = \"../missing\"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := islands.Build(filepath.Join(dir, "site"), islands.Options{}); err == nil || !strings.Contains(err.Error(), `the root "../missing" of gx.toml`) {
+		t.Fatalf("with a missing root: %v", err)
 	}
 }

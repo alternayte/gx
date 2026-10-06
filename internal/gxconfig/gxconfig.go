@@ -16,6 +16,11 @@ type Config struct {
 	Site       Site
 	Registry   Registry
 	Registries map[string]RegistrySource
+	// IslandRoots are directories outside the app whose islands the app
+	// bundles too, relative to the app: the `roots` key of [islands], with
+	// white space between two directories. An app that imports component
+	// packages of a sibling directory names that directory here.
+	IslandRoots []string
 }
 
 // Registry is the [registry] table of gx.toml (REQ-REG-02). URL is the
@@ -86,6 +91,10 @@ func Load(root string) (Config, error) {
 				cfg.Registry.URL = value
 			case "dir":
 				cfg.Registry.Dir = value
+			}
+		case "islands":
+			if key == "roots" {
+				cfg.IslandRoots = strings.Fields(value)
 			}
 		case "registries":
 			source := cfg.Registries[key]

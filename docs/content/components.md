@@ -31,6 +31,7 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Hover Card" description="A richer preview on hover or focus." href="/components/hover-card/" />
 <docs.LinkCard title="Input" description="A single-line text control." href="/components/input/" />
 <docs.LinkCard title="Input Group" description="An input with an addon or a text prefix." href="/components/input-group/" />
+<docs.LinkCard title="Input OTP" description="A one-time code input with one slot for each character." href="/components/input-otp/" />
 <docs.LinkCard title="Item" description="A row for one entry in a list." href="/components/item/" />
 <docs.LinkCard title="Kbd" description="A key or key combination." href="/components/kbd/" />
 <docs.LinkCard title="Label" description="A caption for a form control." href="/components/label/" />

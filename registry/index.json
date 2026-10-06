@@ -163,6 +163,12 @@
       "kind": "component"
     },
     {
+      "name": "input-otp",
+      "version": "0.1.0",
+      "description": "A one-time code input with one slot for each character.",
+      "kind": "component"
+    },
+    {
       "name": "item",
       "version": "0.1.0",
       "description": "A row for one entry in a list.",

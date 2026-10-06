@@ -1,0 +1,30 @@
+{
+  "name": "input-otp",
+  "version": "0.1.0",
+  "description": "A one-time code input with one slot for each character.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "InputOTP.gx",
+      "target": "ui/input-otp/InputOTP.gx"
+    },
+    {
+      "path": "InputOTP.fixtures.go",
+      "target": "ui/input-otp/InputOTP.fixtures.go"
+    },
+    {
+      "path": "InputOTPSlots.ts",
+      "target": "ui/input-otp/InputOTPSlots.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/input-otp/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--input",
+    "--ring",
+    "--foreground",
+    "--muted-foreground"
+  ]
+}

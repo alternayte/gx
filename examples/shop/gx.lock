@@ -383,6 +383,15 @@
           "ui/input-group/styles.go": "94b0ecbb74b333137485231b3438f8646427f84fd106980f645950490d32d2a9"
         }
       },
+      "input-otp": {
+        "version": "0.1.0",
+        "files": {
+          "ui/input-otp/InputOTP.fixtures.go": "d5451dfd4e60d870b949071128c20c47f3ba015d717503cfd94cecb2f665ccaf",
+          "ui/input-otp/InputOTP.gx": "f6709befd2a8aa3cce0b4c4ff820c472bc292b9da4ce171f1a33b47e3d42425a",
+          "ui/input-otp/InputOTPSlots.ts": "0fda6ba2ad6ccf311fde51004e0097ed4ac4125c432e4a1655c67dbf4d01d967",
+          "ui/input-otp/styles.go": "adcec0943117ed46f4d0548d1abfd6d6e853d5bd0161fb4b7674a1ea58e5c852"
+        }
+      },
       "item": {
         "version": "0.1.0",
         "files": {

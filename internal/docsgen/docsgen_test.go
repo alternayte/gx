@@ -42,7 +42,10 @@ func installRegistry(t *testing.T, reg *registry, dir string) {
 		}
 		for _, e := range entries {
 			name := e.Name()
-			if e.IsDir() || strings.HasSuffix(name, "_gx.go") || strings.HasSuffix(name, "_test.go") || !(strings.HasSuffix(name, ".gx") || strings.HasSuffix(name, ".go")) {
+			// The source files of an item: .gx, .go and the .ts file of
+			// an island. The generated files stay out.
+			island := strings.HasSuffix(name, ".ts") && !strings.HasSuffix(name, ".props.ts")
+			if e.IsDir() || strings.HasSuffix(name, "_gx.go") || strings.HasSuffix(name, "_test.go") || !(strings.HasSuffix(name, ".gx") || strings.HasSuffix(name, ".go") || island) {
 				continue
 			}
 			data, err := os.ReadFile(filepath.Join(it.Dir, name))

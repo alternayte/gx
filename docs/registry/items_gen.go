@@ -31,6 +31,7 @@ import (
 	icons "github.com/alternayte/gx/registry/icons"
 	input "github.com/alternayte/gx/registry/input"
 	inputgroup "github.com/alternayte/gx/registry/input-group"
+	inputotp "github.com/alternayte/gx/registry/input-otp"
 	item "github.com/alternayte/gx/registry/item"
 	kbd "github.com/alternayte/gx/registry/kbd"
 	label "github.com/alternayte/gx/registry/label"
@@ -624,6 +625,19 @@ var Items = []Item{
 			{Name: "input-group-textarea-placeholder", Title: "InputGroupTextarea: Placeholder", Component: "InputGroupTextarea", Fixtures: []string{"InputGroupTextarea/Placeholder"}, Node: func() gx.Node {
 				return inputgroup.InputGroupTextareaWrap(inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"]))
 			}},
+		},
+	},
+	{
+		Name:        "input-otp",
+		Title:       "Input OTP",
+		Group:       "Components",
+		Description: "A one-time code input with one slot for each character.",
+		Examples: []Example{
+			{Name: "input-otp-empty", Title: "Empty", Component: "InputOTP", Fixtures: []string{"InputOTP/Empty"}, Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Empty"]) }},
+			{Name: "input-otp-filled", Title: "Filled", Component: "InputOTP", Fixtures: []string{"InputOTP/Filled"}, Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Filled"]) }},
+			{Name: "input-otp-grouped", Title: "Grouped", Component: "InputOTP", Fixtures: []string{"InputOTP/Grouped"}, Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Grouped"]) }},
+			{Name: "input-otp-four", Title: "Four", Component: "InputOTP", Fixtures: []string{"InputOTP/Four"}, Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Four"]) }},
+			{Name: "input-otp-disabled", Title: "Disabled", Component: "InputOTP", Fixtures: []string{"InputOTP/Disabled"}, Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Disabled"]) }},
 		},
 	},
 	{

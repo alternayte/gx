@@ -1,0 +1,27 @@
+package inputotp
+
+props {
+  // Id is the id of the input. A label points at it.
+  Id       string
+  // Name is the form field name. The form sends the code under this name.
+  Name     string = ""
+  // Length is the count of characters of the code. A zero value is 6.
+  Length   int = 6
+  // Group is the count of slots before a separator. A zero value is no separator.
+  Group    int = 0
+  // Value is the code of the first render.
+  Value    string = ""
+  // Label is the accessible name of the input.
+  Label    string = ""
+  // Disabled disables the input.
+  Disabled bool = false
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Attrs adds HTML attributes to the input.
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="input-otp" class={gx.Cx(rootClass, p.Class)}>
+  <input id={p.Id} name={p.Name} value={p.Value} type="text" inputmode="numeric" pattern={p.pattern()} maxlength={p.length()} autocomplete="one-time-code" aria-label={p.Label} disabled={p.Disabled} class={inputClass} {...p.Attrs} />
+  <InputOTPSlots input={p.Id} length={p.length()} group={p.Group} slotClass={slotClass} activeClass={activeClass} caretClass={caretClass} separatorClass={separatorClass} overlayClass={overlayClass} load="eager" />
+</div>

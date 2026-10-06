@@ -5,3 +5,8 @@ url = "https://gx-docs.pages.dev"
 title = "Gx"
 title_template = "%s | Gx"
 description = "Gx is a Go framework for server-rendered web apps on Datastar."
+
+[islands]
+# The component pages import the packages of the official registry, which
+# is not under this directory. Their islands are part of the docs bundle.
+roots = "../registry"
