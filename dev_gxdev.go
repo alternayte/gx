@@ -44,7 +44,9 @@ func (a *App) devRoutes() {
 	watchParentOnce.Do(watchParent)
 	a.mux.Handle("GET /_gx/dev/info", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"dev":true}`))
+		// The process id tells a test whether a change restarted the app;
+		// swapped is the count of functions that run as interpreted code.
+		_ = json.NewEncoder(w).Encode(map[string]any{"dev": true, "pid": os.Getpid(), "swapped": DevSwapped()})
 	}))
 	// gx dev sends the new generated code of a .gx file here. The answer
 	// says whether the app runs it as interpreted code now, or needs a

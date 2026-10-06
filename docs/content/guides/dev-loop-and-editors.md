@@ -14,12 +14,24 @@ go run ./cmd/gx dev --addr 127.0.0.1:4000
 
 `gx dev` is one command. It watches the files, generates the code, builds the stylesheet, builds the app with the `gxdev` tag, and runs the app behind a proxy. The proxy adds a small dev client to each page.
 
-After a change, the command builds the app again and starts it. The browser then morphs the page: the scroll position, the input values and the signals stay.
+The browser morphs the page after each change: the scroll position, the input values, the signals and the islands stay.
 
 | Change | What happens |
 | --- | --- |
-| A `.gx` file, a `.go` file or a Markdown content file | Generate, build with the Go build cache, start, morph. |
-| `app/theme.css` or a class | Tailwind builds the stylesheet again. |
+| The markup of a `.gx` file | The running app takes the new code and interprets it. No build and no restart. |
+| The props, signals, fragments or imports of a `.gx` file | Generate, build with the Go build cache, start, morph. |
+| A `.go` file, a Markdown content file or an island `.ts` file | Generate, build with the Go build cache, start, morph. |
+| A new class, or `app/theme.css` | Tailwind builds the stylesheet again, and the app starts again. |
+
+### The markup swap
+
+A markup edit is fast because the app does not start again. `gx dev` sends the new generated code of the file to the running app. The app interprets that code with the functions and types that it was built with.
+
+The dev build of an app has a symbol table for this. `gx generate` writes it: a file `gxdev_symbols_gx.go` in each package with `.gx` files, and the package `gxdev_symbols`. The files have the `gxdev` build tag, so a binary from `gx build` does not have them. The dev main of the app installs the table with `gx.SetDevSymbols(gxdev_symbols.Packages())`.
+
+The interpreter covers the Go code of a template: expressions, `if`, `for`, `switch`, calls and closures. For code that it does not cover, `gx dev` builds the app again and prints the reason. A call of a generic function is one example.
+
+The interpreted code and the compiled code give the same HTML. The production binary runs compiled code only.
 
 ## The error overlay
 

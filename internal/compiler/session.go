@@ -466,3 +466,22 @@ func fileSignatureData(path string, src []byte) (string, bool) {
 	}
 	return b.String(), true
 }
+
+// FileSignature returns the part of a .gx file that other code depends on:
+// the package, the imports, the props, the signals and the fragment
+// parameters. A change that keeps it is a change of markup only, which the
+// dev server can swap into the running app (REQ-DEV-02).
+func FileSignature(path string) (string, bool) { return fileSignature(path) }
+
+// PackagePath returns the import path of the Go package in dir, or "".
+func PackagePath(dir string) string {
+	mod := findModule(dir)
+	if mod == nil {
+		return ""
+	}
+	return modulePathOf(mod, dir)
+}
+
+// ClassesPath returns the path of the generated class list of the app at
+// root. The stylesheet build reads it.
+func ClassesPath(root string) string { return classesFilePath(absoluteRoot(root)) }

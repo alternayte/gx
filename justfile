@@ -95,7 +95,7 @@ bench-export:
     go test ./internal/exporter -run TestNFR_11 -v -count=1 -timeout 300s
 
 bench-dev:
-    go test ./internal/devserver -run TestNFR_02 -v
+    go test ./internal/devserver -run "TestNFR_01|TestNFR_02" -count=1 -v
 
 # The Deedbox docs parity checklist (REQ-CNT-14).
 parity-docs:

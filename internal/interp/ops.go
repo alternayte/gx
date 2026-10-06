@@ -5,6 +5,7 @@ import (
 	"go/constant"
 	"go/token"
 	"reflect"
+	"strings"
 	"unsafe"
 )
 
@@ -108,6 +109,19 @@ func (c *compiler) call(call *ast.CallExpr, hint reflect.Type) value {
 	}
 	if _, generic := call.Fun.(*ast.IndexListExpr); generic {
 		c.fail(call, "a call of a generic function is not interpreted")
+	}
+	// gx.Ref[T](path) is a generic function, so the table has no value for
+	// it. It only converts a string to gx.SignalRef[T], and the place that
+	// takes the value gives that type: the generated code of a signal
+	// passed to a child or to an island uses it.
+	if ix, ok := call.Fun.(*ast.IndexExpr); ok && hint != nil && hint.Kind() == reflect.String && len(call.Args) == 1 {
+		if sel, ok := ix.X.(*ast.SelectorExpr); ok && sel.Sel.Name == "Ref" {
+			if id, ok := sel.X.(*ast.Ident); ok {
+				if pkg, ok := c.imports[id.Name]; ok && pkg.Path == "github.com/alternayte/gx" && hint.PkgPath() == pkg.Path && strings.HasPrefix(hint.Name(), "SignalRef[") {
+					return c.conversion(call, hint)
+				}
+			}
+		}
 	}
 	fn := c.expr(call.Fun, nil)
 	if fn.isType != nil {

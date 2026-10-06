@@ -5,6 +5,7 @@ package devserver
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	_ "embed"
 	"encoding/json"
@@ -129,6 +130,12 @@ type server struct {
 	lastErr *Overlay
 	snap    map[string]time.Time
 
+	// sigs holds the signature of each .gx file at the last build, and
+	// classes the class list of that build. A change that keeps both can
+	// swap into the running app (REQ-DEV-02).
+	sigs    map[string]string
+	classes []byte
+
 	// searchMu guards the on-demand Pagefind index (REQ-CNT-07).
 	searchMu   sync.Mutex
 	searchSnap map[string]time.Time
@@ -186,6 +193,11 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 		return false, diagsOverlay(diags)
 	} else {
 		for path, src := range files {
+			// A file that did not change keeps its time: the props file of
+			// an island is a .ts file, and the watcher follows .ts files.
+			if old, err := os.ReadFile(path); err == nil && bytes.Equal(old, src) {
+				continue
+			}
 			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 				return false, &Overlay{Title: "generate failed", Text: err.Error()}
 			}
@@ -193,6 +205,7 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 				return false, &Overlay{Title: "generate failed", Text: err.Error()}
 			}
 		}
+		s.remember(files)
 		if _, err := gxstyles.Build(ctx, s.dir, false); err != nil {
 			return false, &Overlay{Title: "styles failed", Text: err.Error()}
 		}
@@ -428,20 +441,56 @@ func writeEvent(w io.Writer, event string, payload any) {
 // watch polls the app tree and rebuilds on a change (REQ-DEV-03).
 func (s *server) watch(ctx context.Context, bin string) {
 	s.snap = s.snapshot()
-	ticker := time.NewTicker(200 * time.Millisecond)
+	// The loop has two speeds. Every tick it reads the time of each .gx
+	// file it knows, which is cheap, so a markup edit starts its swap in a
+	// few milliseconds (NFR-01). Every tenth tick it walks the whole tree
+	// for every other change, as before.
+	ticker := time.NewTicker(fastTick)
 	defer ticker.Stop()
 	changed := false
 	var quiet time.Time
-	for {
+	var edited map[string]time.Time
+	for tick := 0; ; tick++ {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
 		}
+		if !changed {
+			if edited != nil {
+				// One tick after the edit: the editor has closed the file.
+				for path, at := range edited {
+					s.snap[path] = at
+				}
+				paths := make([]string, 0, len(edited))
+				for path := range edited {
+					paths = append(paths, path)
+				}
+				edited = nil
+				if !s.swap(ctx, paths) {
+					s.rebuild(ctx, bin)
+				}
+				continue
+			}
+			if edited = s.editedTemplates(); edited != nil {
+				continue
+			}
+		}
+		if tick%slowEvery != 0 {
+			continue
+		}
 		now := s.snapshot()
 		if !sameSnapshot(s.snap, now) {
+			// A template can change between the check of the .gx files
+			// and this walk. That is still a markup edit, not a reason to
+			// rebuild.
+			if only := editedOnly(s.snap, now); only != nil && !changed {
+				edited = only
+				continue
+			}
 			s.snap = now
 			changed = true
+			edited = nil
 			quiet = time.Now()
 		}
 		if !changed || time.Since(quiet) < 100*time.Millisecond {
@@ -450,6 +499,160 @@ func (s *server) watch(ctx context.Context, bin string) {
 		changed = false
 		s.rebuild(ctx, bin)
 	}
+}
+
+// fastTick is the period of the check of the .gx files, and slowEvery is
+// the count of ticks between two walks of the whole tree (200 ms).
+const (
+	fastTick  = 20 * time.Millisecond
+	slowEvery = 10
+)
+
+// editedOnly compares two snapshots. When they hold the same files and
+// only .gx files have a new time, it returns those files with the new
+// time; otherwise nil.
+func editedOnly(old, now map[string]time.Time) map[string]time.Time {
+	if len(old) != len(now) {
+		return nil
+	}
+	out := map[string]time.Time{}
+	for path, at := range now {
+		was, ok := old[path]
+		if !ok {
+			return nil
+		}
+		if at.Equal(was) {
+			continue
+		}
+		if !strings.HasSuffix(path, ".gx") {
+			return nil
+		}
+		out[path] = at
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
+}
+
+// editedTemplates returns the .gx files of the last snapshot whose time
+// changed, with the new time. It returns nil when none changed, or when a
+// file is gone: the walk of the tree handles that.
+func (s *server) editedTemplates() map[string]time.Time {
+	var out map[string]time.Time
+	for path, was := range s.snap {
+		if !strings.HasSuffix(path, ".gx") {
+			continue
+		}
+		info, err := os.Stat(path)
+		if err != nil {
+			return nil
+		}
+		if !info.ModTime().Equal(was) {
+			if out == nil {
+				out = map[string]time.Time{}
+			}
+			out[path] = info.ModTime()
+		}
+	}
+	return out
+}
+
+// remember records what the build of the app was made from: the signature
+// of each .gx file and the class list.
+func (s *server) remember(files map[string][]byte) {
+	s.sigs = map[string]string{}
+	for path := range s.snapshot() {
+		if strings.HasSuffix(path, ".gx") {
+			if sig, ok := compiler.FileSignature(path); ok {
+				s.sigs[path] = sig
+			}
+		}
+	}
+	s.classes = files[compiler.ClassesPath(s.dir)]
+}
+
+// swap puts a markup edit into the running app with no rebuild
+// (REQ-DEV-02). It reports false when the change needs the rebuild path: a
+// changed signature, a new class for the stylesheet, or code that the
+// interpreter of the app refuses (REQ-DEV-04). A template with an error is
+// handled here: the browser shows the overlay.
+func (s *server) swap(ctx context.Context, paths []string) bool {
+	start := time.Now()
+	for _, path := range paths {
+		sig, ok := compiler.FileSignature(path)
+		if !ok {
+			continue // a parse error: the generator reports it below
+		}
+		if was, known := s.sigs[path]; !known || was != sig {
+			fmt.Fprintf(s.opt.Log, "gx dev: rebuild: the props, signals, fragments or imports of %s changed\n", filepath.Base(path))
+			return false
+		}
+	}
+	files, diags := s.session.Generate(s.dir)
+	if len(diags) > 0 {
+		ov := diagsOverlay(diags)
+		s.setErr(ov)
+		s.broadcast("overlay", ov)
+		return true
+	}
+	if !bytes.Equal(files[compiler.ClassesPath(s.dir)], s.classes) {
+		fmt.Fprintln(s.opt.Log, "gx dev: rebuild: the stylesheet needs a new class")
+		return false
+	}
+	for _, path := range paths {
+		generated := strings.TrimSuffix(path, ".gx") + "_gx.go"
+		src, ok := files[generated]
+		if !ok {
+			fmt.Fprintf(s.opt.Log, "gx dev: rebuild: no generated code for %s\n", filepath.Base(path))
+			return false
+		}
+		// The generated file on the disk follows the template, so a later
+		// build compiles the same code.
+		if old, err := os.ReadFile(generated); err != nil || !bytes.Equal(old, src) {
+			if err := os.WriteFile(generated, src, 0o644); err != nil {
+				return false
+			}
+		}
+		if reason := s.swapFile(ctx, compiler.PackagePath(filepath.Dir(path)), filepath.Base(generated), src); reason != "" {
+			fmt.Fprintf(s.opt.Log, "gx dev: rebuild: %s\n", reason)
+			return false
+		}
+	}
+	s.setErr(nil)
+	s.broadcast("reload", map[string]any{"swap": true, "ms": time.Since(start).Milliseconds()})
+	return true
+}
+
+// swapFile sends the generated code of one file to the app. It returns ""
+// when the app runs the code now, and the reason when it does not.
+func (s *server) swapFile(ctx context.Context, pkg, file string, src []byte) string {
+	payload, err := json.Marshal(map[string]string{"package": pkg, "file": file, "source": string(src)})
+	if err != nil {
+		return err.Error()
+	}
+	target := "http://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(s.appPort)) + "/_gx/dev/swap"
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target, bytes.NewReader(payload))
+	if err != nil {
+		return err.Error()
+	}
+	req.Header.Set("Content-Type", "application/json")
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err.Error()
+	}
+	defer res.Body.Close()
+	var answer struct {
+		Swapped bool   `json:"swapped"`
+		Reason  string `json:"reason"`
+	}
+	if res.StatusCode == http.StatusOK {
+		return ""
+	}
+	if err := json.NewDecoder(res.Body).Decode(&answer); err != nil || answer.Reason == "" {
+		return "the app answered " + res.Status + " to the swap"
+	}
+	return answer.Reason
 }
 
 // rebuild generates, builds, restarts and tells the browser to morph
@@ -475,7 +678,9 @@ func (s *server) rebuild(ctx context.Context, bin string) {
 // watchPaths are the file kinds the watcher follows.
 func watchFile(path string) bool {
 	base := filepath.Base(path)
-	if strings.HasSuffix(path, "_gx.go") {
+	// Generated code is the result of a build, not a reason for one: the
+	// Go files of the compiler and the props type of an island.
+	if strings.HasSuffix(path, "_gx.go") || strings.HasSuffix(path, ".props.ts") {
 		return false
 	}
 	switch {

@@ -115,13 +115,17 @@ test('REQ-DEV-03 a rebuild morphs the page and keeps the signal, the input value
   })
   expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(60)
 
-  const view = join(dir, 'Home.gx')
-  const original = readFileSync(view, 'utf8')
-  writeFileSync(view, original.replace('Two carts', 'Two carts, edited'))
+  // A change of a Go file takes the rebuild path: the app restarts, and the
+  // browser morphs the page.
+  const goFile = join(dir, 'home.go')
+  const originalGo = readFileSync(goFile, 'utf8')
+  const before = await appInfo()
+  writeFileSync(goFile, originalGo + '\n// An edit of a Go file.\n')
   try {
-    await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Two carts, edited', undefined, {
-      timeout: 30000,
-    })
+    await restarted(before.pid)
+    // The dev client asks for the page again after the restart and morphs
+    // it.
+    await Bun.sleep(800)
     // The page did not load again: it took a patch.
     expect(await page.evaluate(() => (window as unknown as { alive?: number }).alive)).toBe(1)
     // Read the scroll position before the click below: Playwright scrolls a
@@ -139,8 +143,104 @@ test('REQ-DEV-03 a rebuild morphs the page and keeps the signal, the input value
     // The other cart did not get the value of the first one.
     expect(await page.inputValue('[data-label="Beta"] input[type="number"]')).toBe('1')
   } finally {
+    const now = await appInfo()
+    writeFileSync(goFile, originalGo)
+    await restarted(now.pid)
+  }
+}, 120000)
+
+// restarted waits until the app is a different process than pid and
+// answers.
+async function restarted(pid: number): Promise<void> {
+  const deadline = Date.now() + 60000
+  for (;;) {
+    try {
+      if ((await appInfo()).pid !== pid) return
+    } catch {
+      // the app is between two processes
+    }
+    if (Date.now() > deadline) throw new Error('the app did not restart')
+    await Bun.sleep(50)
+  }
+}
+
+// appInfo reads the dev-only info route of the app: its process id and the
+// count of functions that run as interpreted code.
+async function appInfo(): Promise<{ pid: number; swapped: number }> {
+  return (await fetch(url + '/_gx/dev/info')).json() as Promise<{ pid: number; swapped: number }>
+}
+
+test('REQ-DEV-02 a markup edit swaps into the running app and keeps the state of the page', async () => {
+  page = await browser.newPage({ viewport: { width: 900, height: 320 } })
+  await page.goto(url + '/')
+  await page.waitForSelector('[data-gx-instance="cart.Cart.alpha"]')
+  const qty = '[data-label="Alpha"] input[type="number"]'
+  await page.fill(qty, '7')
+  await page.evaluate(() => {
+    ;(window as unknown as { alive?: number }).alive = 1
+    window.scrollTo(0, 120)
+  })
+  const before = await appInfo()
+  const view = join(dir, 'Home.gx')
+  const original = readFileSync(view, 'utf8')
+  const started = Date.now()
+  writeFileSync(view, original.replace('Two carts', 'Two carts, swapped'))
+  try {
+    await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Two carts, swapped', undefined, {
+      timeout: 30000,
+      polling: 5,
+    })
+    const took = Date.now() - started
+    // NFR-01: save to morphed page under 150 ms on the reference machine.
+    // A shared runner is slower (D-110).
+    console.log(`NFR-01: save to morphed page ${took} ms`)
+    expect(took).toBeLessThan(process.env.CI ? 1500 : 150)
+    // The app is the same process: no rebuild and no restart.
+    const after = await appInfo()
+    expect(after.pid).toBe(before.pid)
+    expect(after.swapped).toBeGreaterThan(0)
+    // The page kept its state.
+    expect(await page.evaluate(() => (window as unknown as { alive?: number }).alive)).toBe(1)
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(60)
+    expect(await page.inputValue(qty)).toBe('7')
+    await page.click('[data-label="Alpha"] button:text-is("Add")')
+    await page.waitForFunction(
+      () => document.querySelector('[data-label="Alpha"] span[id^="cart-total"]')?.textContent === '70',
+      undefined,
+      { timeout: 10000 },
+    )
+  } finally {
     writeFileSync(view, original)
     await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Two carts', undefined, {
+      timeout: 30000,
+    })
+  }
+}, 90000)
+
+test('REQ-DEV-02 a markup edit keeps the state of an island', async () => {
+  page = await browser.newPage({ viewport: { width: 1000, height: 700 } })
+  await page.goto(url + '/dashboard')
+  const chart = 'gx-island[name$="/BarChart"]'
+  await page.waitForFunction((sel) => document.querySelector(sel)?.matches(':state(mounted)'), chart)
+  const zoom = page.locator(chart + ' [data-zoom]')
+  await zoom.click()
+  await zoom.click()
+  const before = await appInfo()
+  const view = join(dir, 'dashboard', 'Dashboard.gx')
+  const original = readFileSync(view, 'utf8')
+  writeFileSync(view, original.replace('>Dashboard</h1>', '>Dashboard, swapped</h1>'))
+  try {
+    await page.waitForFunction(() => document.querySelector('main h1')?.textContent === 'Dashboard, swapped', undefined, {
+      timeout: 30000,
+    })
+    expect((await appInfo()).pid).toBe(before.pid)
+    // The island did not mount again: its zoom level is the one from
+    // before the edit.
+    expect(await zoom.getAttribute('data-zoom')).toBe('3')
+    expect(await page.getAttribute(chart + ' [data-gx-island-root]', 'data-mounts')).toBe('1')
+  } finally {
+    writeFileSync(view, original)
+    await page.waitForFunction(() => document.querySelector('main h1')?.textContent === 'Dashboard', undefined, {
       timeout: 30000,
     })
   }
