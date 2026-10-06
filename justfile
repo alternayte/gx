@@ -44,6 +44,12 @@ test:
     go test -timeout 40m ./...
     cd docs && go test -timeout 40m ./...
 
+# The fast packages, for the platform jobs of CI. The packages left out build
+# many apps or start Chrome; the gate runs them.
+test-fast:
+    go test -timeout 40m -p 1 ./internal/devserver ./internal/lsp ./internal/exporter
+    go test -timeout 40m $(go list ./... | grep -v -E '/gxcli$|/internal/(compiler|docscheck|mcpserver)$|/tests/review/')
+
 # Write the component pages of the docs site from registry/, then the
 # generated Go and the stylesheet of the docs app (REQ-DOC-02).
 docs-gen:

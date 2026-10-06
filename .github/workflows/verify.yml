@@ -5,13 +5,46 @@ on:
     branches: [main]
   pull_request:
 
+# A new push stops the run of the older commit.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # The gate: build, vet, runtime, every test, the checks and the browser
+  # suite, on one platform with the latest Go. A release tag needs this job
+  # green.
   verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - uses: extractions/setup-just@v2
+      - uses: oven-sh/setup-bun@v2
+      # Ubuntu 23.10 and later stop the Chrome sandbox: AppArmor denies
+      # user namespaces to a program with no profile. The MCP tools start
+      # headless Chrome with its sandbox on, so the runner allows them.
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - run: just build vet runtime test checks
+      - run: just e2e
+
+  # The other platforms and the older Go release build everything and run
+  # the fast packages. They find path, line-ending and executable-name
+  # defects. The slow packages build many apps and run in the gate job only
+  # (see docs/build/decisions.md).
+  platform:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go: ["1.25", "1.26"]
+        include:
+          - os: macos-latest
+            go: "1.26"
+          - os: windows-latest
+            go: "1.26"
+          - os: ubuntu-latest
+            go: "1.25"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -19,18 +52,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - uses: extractions/setup-just@v2
-      - uses: oven-sh/setup-bun@v2
-      # Ubuntu 23.10 and later stop the Chrome sandbox: AppArmor denies
-      # user namespaces to a program with no profile. The MCP tools start
-      # headless Chrome with its sandbox on, so the runner allows them.
-      - if: runner.os == 'Linux'
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      # Build, vet, runtime, tests and checks run on every platform.
-      - run: just build vet runtime test checks
-      # The browser suite runs on Linux and macOS. Windows runners cannot
-      # drive the example apps reliably (see docs/build/decisions.md).
-      - if: runner.os != 'Windows'
-        run: just e2e
+      - run: just build vet test-fast
 
   # NFR-07: every default user workflow runs with no node tool on the PATH.
   # The golang image holds Go and git, and no node, npm or bun.
