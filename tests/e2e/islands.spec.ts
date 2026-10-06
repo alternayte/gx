@@ -235,3 +235,21 @@ test('REQ-ISL-07 an island runs a pinned npm package', async () => {
     await page.close()
   }
 })
+
+// The first page has no island, so its head has no island loader. The core
+// runtime loads it when the navigation brings the islands in.
+test('REQ-ISL-04 a morph navigation from a page with no island mounts the islands', async () => {
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } })
+  try {
+    await page.goto(shop.url + '/about')
+    expect(await page.evaluate(() => [...document.scripts].some((s) => s.src.endsWith('/_gx/island.js')))).toBe(false)
+    await page.evaluate(() => ((window as unknown as { sameDocument: boolean }).sameDocument = true))
+    await page.click('nav a[href="/dashboard"]')
+    await isMounted(page, 'BarChart')
+    await isMounted(page, 'Stepper')
+    expect(await page.evaluate(() => (window as unknown as { sameDocument?: boolean }).sameDocument)).toBe(true)
+    expect(await page.textContent(island('Stepper') + ' button')).toBe('Quantity 1, add one')
+  } finally {
+    await page.close()
+  }
+})

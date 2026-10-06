@@ -462,6 +462,14 @@ const cookie = (name: string): string => {
 installCSRF()
 
 // adapterPresent reports whether the page loaded a hypermedia adapter.
+// loadIslands loads the island loader when a patch or a morph navigation
+// brings the first island into a page that started with none (REQ-ISL-04).
+// A page that the server renders with an island has the loader in its head.
+const loadIslands = (): void => {
+  if (customElements.get('gx-island') || !document.querySelector('gx-island')) return
+  void import(new URL('./island.js', import.meta.url).href)
+}
+
 const adapterPresent = (): boolean => document.querySelector('script[data-gx-adapter]') !== null
 
 // validateTimers debounces input validation per element (REQ-FRM-06).
@@ -637,6 +645,7 @@ if (typeof document !== 'undefined') {
   new MutationObserver(() => {
     checkInstances()
     installShell()
+    loadIslands()
   }).observe(document.documentElement, {
     subtree: true,
     childList: true,
