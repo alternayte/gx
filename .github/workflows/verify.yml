@@ -20,6 +20,11 @@ jobs:
           go-version: ${{ matrix.go }}
       - uses: extractions/setup-just@v2
       - uses: oven-sh/setup-bun@v2
+      # Ubuntu 23.10 and later stop the Chrome sandbox: AppArmor denies
+      # user namespaces to a program with no profile. The MCP tools start
+      # headless Chrome with its sandbox on, so the runner allows them.
+      - if: runner.os == 'Linux'
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       # Build, vet, runtime, tests and checks run on every platform.
       - run: just build vet runtime test checks
       # The browser suite runs on Linux and macOS. Windows runners cannot
