@@ -17,6 +17,7 @@ import (
 	"github.com/evanw/esbuild/pkg/api"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/jspin"
 )
 
 // Dir and File name the generated package.
@@ -120,6 +121,19 @@ func Build(root string, opt Options) (*Bundle, error) {
 	} else {
 		options.Sourcemap = api.SourceMapLinked
 	}
+	// A bare import is a pinned package of gx.lock (REQ-ISL-07). An app
+	// with package.json and node_modules resolves as node does.
+	lock, err := jspin.LoadLock(root)
+	if err != nil {
+		return nil, err
+	}
+	// A vendored file that differs from gx.lock stops the build (SI-10).
+	if err := jspin.Verify(root, lock); err != nil {
+		return nil, err
+	}
+	if !jspin.UsesNodeModules(root) {
+		options.Plugins = []api.Plugin{pinPlugin(root, lock)}
+	}
 	res := api.Build(options)
 	if len(res.Errors) > 0 {
 		e := &Error{}
@@ -165,6 +179,23 @@ func Build(root string, opt Options) (*Bundle, error) {
 		}
 	}
 	return out, nil
+}
+
+// pinPlugin resolves a bare import to the vendored file of its pin.
+func pinPlugin(root string, lock jspin.Lock) api.Plugin {
+	return api.Plugin{Name: "gx-pins", Setup: func(b api.PluginBuild) {
+		b.OnResolve(api.OnResolveOptions{Filter: `^[^./]`}, func(args api.OnResolveArgs) (api.OnResolveResult, error) {
+			if args.Kind == api.ResolveEntryPoint {
+				return api.OnResolveResult{}, nil
+			}
+			if pin, ok := lock.Pins[args.Path]; ok {
+				return api.OnResolveResult{Path: filepath.Join(root, filepath.FromSlash(pin.File))}, nil
+			}
+			return api.OnResolveResult{Errors: []api.Message{{
+				Text: fmt.Sprintf("the import %q has no pin; run: gx pin %s@<version>", args.Path, args.Path),
+			}}}, nil
+		})
+	}}
 }
 
 // Generate returns the Go source that embeds a bundle.

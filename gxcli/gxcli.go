@@ -30,6 +30,7 @@ import (
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
 	"github.com/alternayte/gx/internal/islands"
+	"github.com/alternayte/gx/internal/jspin"
 	"github.com/alternayte/gx/internal/lsp"
 	"github.com/alternayte/gx/internal/mcpserver"
 	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
@@ -78,6 +79,8 @@ func Main(args []string) int {
 		return runLint(args[1:])
 	case "icons":
 		return runIcons(args[1:])
+	case "pin":
+		return runPin(args[1:])
 	case "vendor":
 		return runVendor(args[1:])
 	case "export":
@@ -120,6 +123,7 @@ Commands:
   mcp       run the dev MCP server on stdio, for a coding agent
   lint      run go vet and the Gx analyzers on a module, with --json
   icons pin pin an icon set and generate one .gx component per icon
+  pin       vendor an npm package for the islands: gx pin <pkg>@<version>
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
   import    convert another tool: gx import starlight --out <dir> <src>
@@ -968,6 +972,34 @@ func runIcons(args []string) int {
 		fmt.Fprintf(os.Stderr, "gx icons: %v\n", err)
 		return 1
 	}
+	return 0
+}
+
+// runPin vendors the pre-bundled ESM build of an npm package (REQ-ISL-07).
+func runPin(args []string) int {
+	fs := flag.NewFlagSet("gx pin", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	cdn := fs.String("cdn", "", "ESM CDN (default the esm mirror of gx.toml, then jsDelivr)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, "usage: gx pin [--cdn <url>] <pkg>@<version> [app]")
+		return 2
+	}
+	dir := "."
+	if len(rest) > 1 {
+		dir = rest[1]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	res, err := jspin.Pin(ctx, jspin.Options{Dir: dir, Spec: rest[0], BaseURL: *cdn})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
+	fmt.Printf("pinned %s@%s: %d files in %s\n", res.Specifier, res.Version, len(res.Files), jspin.VendorDir)
 	return 0
 }
 

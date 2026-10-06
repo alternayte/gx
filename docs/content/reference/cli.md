@@ -144,6 +144,14 @@ gx icons pin <set>@<version> [app]
 
 Pins an icon set and writes one component for each icon.
 
+## gx pin
+
+```sh
+gx pin [--cdn <url>] <package>@<version> [app]
+```
+
+Stores the bundled ES module of an npm package in `js/vendor`, with each module that it imports. `gx.lock` records the hash of each file. An island then imports the package by its name. A changed file stops the build.
+
 ## gx vendor
 
 ```sh

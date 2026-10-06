@@ -1,4 +1,24 @@
 {
+  "js": {
+    "pins": {
+      "d3-scale": {
+        "version": "4.0.2",
+        "file": "js/vendor/d3-scale@4.0.2.js"
+      }
+    },
+    "files": {
+      "js/vendor/d3-array@3.0.0.js": "sha256-Qm+Ka76OqvrkV652dFqb9U/byxN4sQA1zJ80o3VhLdI=",
+      "js/vendor/d3-array@3.0.4.js": "sha256-8fWhZlDhm20pySk6KMRUSLwJm1+xk4qKJzAyI4GdAYw=",
+      "js/vendor/d3-color@3.0.1.js": "sha256-uNXB3S9sdeewRV3/DSCB912RvjCW6j67dAZfYEAqHf0=",
+      "js/vendor/d3-format@3.0.1.js": "sha256-5CPD1CQPK/LhAe9ASaapSG+KbiB7/be+6+my5bx+Fns=",
+      "js/vendor/d3-interpolate@3.0.1.js": "sha256-Y4dyq+L670MXI5YJus3Pba8s2w8POEERMBjWMnwkTJA=",
+      "js/vendor/d3-scale@4.0.2.js": "sha256-2C0aIEQo1Thz6rHHFh/q6dCE1LzU6KzgOWHYRXKiprA=",
+      "js/vendor/d3-time-format@4.0.0.js": "sha256-KS2wp/ZCKX6WiffVC01P16opH/iouV36SuJPV3WByYo=",
+      "js/vendor/d3-time@3.0.0.js": "sha256-sSXxz5TA+tbF/4b5RM7/zNUFnVdjqOGhFaS84ZWfo9w=",
+      "js/vendor/internmap@2.0.0.js": "sha256-89fKzuRwr2HgSWnT5yAZuml/9YCyPxvlaY17s4A3ngQ=",
+      "js/vendor/internmap@2.0.3.js": "sha256-FvvR05wUFzNrOrB3vlUaOiEvDKjSLCQKxnEeknpVX3Y="
+    }
+  },
   "registry": {
     "items": {
       "accordion": {

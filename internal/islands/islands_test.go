@@ -1,6 +1,9 @@
 package islands_test
 
 import (
+	"context"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -11,6 +14,7 @@ import (
 
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/islands"
+	"github.com/alternayte/gx/internal/jspin"
 )
 
 func moduleWithGx(t *testing.T) string {
@@ -327,5 +331,92 @@ func TestREQ_ISL_03_ShopBundleIsCurrent(t *testing.T) {
 	}
 	if len(b.Entries) != 5 {
 		t.Fatalf("the shop has %d islands, want 5", len(b.Entries))
+	}
+}
+
+// pinFixture is an app with one island that imports a bare specifier.
+func pinFixture(t *testing.T) string {
+	return writeTree(t, map[string]string{
+		"go.mod":        moduleWithGx(t),
+		"dash/props.go": "package dash\n\ntype ChartProps struct {\n\tData []int `json:\"data\"`\n}\n",
+		"dash/Chart.ts": "import chart from \"chartlib\";\n\nexport default (el: HTMLElement) => {\n  el.textContent = chart(21);\n};\n",
+	})
+}
+
+// pinServer serves two modules in the form of the ESM CDN.
+func pinServer(t *testing.T) *httptest.Server {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/npm/chartlib@1.2.0/+esm":
+			_, _ = w.Write([]byte("import{scale as s}from\"/npm/scale@2.0.0/+esm\";export default (n)=>\"PINNED-CHART:\"+s(n);\n"))
+		case "/npm/scale@2.0.0/+esm":
+			_, _ = w.Write([]byte("export const scale=(n)=>n*2;\n"))
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	t.Cleanup(srv.Close)
+	return srv
+}
+
+// With no node: a bare import resolves to the file that gx pin vendored.
+func TestREQ_ISL_07_BareImportResolvesToThePin(t *testing.T) {
+	dir := pinFixture(t)
+	_, err := islands.Build(dir, islands.Options{Minify: true})
+	if err == nil || !strings.Contains(err.Error(), `the import "chartlib" has no pin; run: gx pin chartlib@<version>`) {
+		t.Fatalf("with no pin: err = %v", err)
+	}
+	if !strings.Contains(err.Error(), "Chart.ts:1:") {
+		t.Fatalf("the error does not name the import site: %v", err)
+	}
+	srv := pinServer(t)
+	if _, err := jspin.Pin(context.Background(), jspin.Options{Dir: dir, Spec: "chartlib@1.2.0", BaseURL: srv.URL}); err != nil {
+		t.Fatal(err)
+	}
+	srv.Close() // the build needs no network
+	b, err := islands.Build(dir, islands.Options{Minify: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := string(b.Files[b.Entries["app/dash/Chart"]])
+	if !strings.Contains(body, "PINNED-CHART:") || strings.Contains(body, "chartlib") {
+		t.Fatalf("the entry does not hold the vendored code:\n%s", body)
+	}
+
+	// A changed vendored file stops the build (SI-10).
+	file := filepath.Join(dir, "js", "vendor", "scale@2.0.0.js")
+	if err := os.WriteFile(file, []byte("export const scale=(n)=>n*3;\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := islands.Build(dir, islands.Options{}); err == nil || !strings.Contains(err.Error(), "does not match gx.lock") {
+		t.Fatalf("with a changed file: err = %v", err)
+	}
+}
+
+// With package.json and node_modules, the bundler resolves as node does
+// and the pins are not used.
+func TestREQ_ISL_07_NodeModulesResolveAsNode(t *testing.T) {
+	dir := pinFixture(t)
+	for rel, content := range map[string]string{
+		"package.json":                       "{\"private\": true, \"dependencies\": {\"chartlib\": \"1.2.0\"}}\n",
+		"node_modules/chartlib/package.json": "{\"name\": \"chartlib\", \"version\": \"1.2.0\", \"module\": \"esm/index.js\", \"main\": \"cjs/index.js\"}\n",
+		"node_modules/chartlib/esm/index.js": "import { scale } from \"scale\";\nexport default (n) => \"NODE-MODULES-CHART:\" + scale(n);\n",
+		"node_modules/scale/package.json":    "{\"name\": \"scale\", \"version\": \"2.0.0\", \"exports\": {\".\": {\"import\": \"./index.mjs\"}}}\n",
+		"node_modules/scale/index.mjs":       "export const scale = (n) => n * 2;\n",
+	} {
+		p := filepath.Join(dir, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	b, err := islands.Build(dir, islands.Options{Minify: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if body := string(b.Files[b.Entries["app/dash/Chart"]]); !strings.Contains(body, "NODE-MODULES-CHART:") {
+		t.Fatalf("the entry does not hold the node_modules code:\n%s", body)
 	}
 }

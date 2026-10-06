@@ -6,6 +6,9 @@ package gx
 const DefaultThemeCSS = `@import "tailwindcss";
 
 @source "../.gx/classes.txt";
+@source not "../js/vendor";
+@source not "../gxislands";
+@source not "../gxstyles";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

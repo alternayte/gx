@@ -216,3 +216,22 @@ test('REQ-ISL-06 islands unmount and mount across a morph navigation', async () 
     await page.close()
   }
 })
+
+// chartlib.ts imports d3-scale, which `gx pin` vendored into js/vendor/ of
+// the shop. No node tool takes part in the build (REQ-ISL-07).
+test('REQ-ISL-07 an island runs a pinned npm package', async () => {
+  const { page, files } = await dashboard()
+  try {
+    await isMounted(page, 'BarChart')
+    const width = (label: string): Promise<string> =>
+      page.evaluate((sel) => (document.querySelector(sel) as HTMLElement).style.width, `${island('BarChart')} [data-bar="${label}"]`)
+    // scaleLinear maps the largest value, 40, to 200 px.
+    expect(await width('Apr')).toBe('200px')
+    expect(await width('Jan')).toBe('50px')
+    // The package is part of the bundle: the browser asks for no other host.
+    const res = await page.request.get(shop.url + '/_gx/islands/' + files.find((f) => f.startsWith('chunks/')))
+    expect(await res.text()).not.toContain('cdn.jsdelivr.net')
+  } finally {
+    await page.close()
+  }
+})

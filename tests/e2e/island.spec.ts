@@ -247,10 +247,12 @@ test('REQ-ISL-06 a morph that reorders keyed islands moves each island with its 
   await page.waitForTimeout(50)
   expect(await page.innerHTML('#island-b [data-gx-island-root]')).toBe('<b>b2</b><i>state of b</i>')
   expect(await page.innerHTML('#island-a [data-gx-island-root]')).toBe('<b>a</b><i>state of a</i>')
-  // Two mounts and one update: no island mounted a second time.
-  expect(await log()).toEqual([
+  // Two mounts and one update: no island mounted a second time. The two
+  // islands load at the same time, so the order of their mounts is open.
+  const got = await log()
+  expect(got.slice(0, 2).sort()).toEqual([
     ['mount', 'a'],
     ['mount', 'b'],
-    ['update', 'b2', true, false],
   ])
+  expect(got.slice(2)).toEqual([['update', 'b2', true, false]])
 })
