@@ -123,14 +123,8 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 			}
 		}
 	}
-	cfg := &packages.Config{
-		Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
-			packages.NeedTypes | packages.NeedTypesInfo | packages.NeedImports | packages.NeedDeps | packages.NeedModule,
-		Dir:       root,
-		Overlay:   overlay,
-		ParseFile: goload.ParseFile(root),
-	}
-	pkgs, err := packages.Load(cfg, "./...")
+	goLoader := &goload.Loader{Dir: root}
+	pkgs, err := goLoader.Load(overlay)
 	if err != nil {
 		return res, nil
 	}
@@ -142,7 +136,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		for path, src := range renderRouteFiles(firstRoutes) {
 			overlay[path] = src
 		}
-		if pkgs2, err := packages.Load(cfg, "./..."); err == nil {
+		if pkgs2, err := goLoader.Load(overlay); err == nil {
 			pkgs = pkgs2
 		}
 	}

@@ -5,7 +5,6 @@ import (
 	"sort"
 
 	"golang.org/x/tools/go/analysis"
-	"golang.org/x/tools/go/packages"
 )
 
 // Finding is one analyzer result.
@@ -21,14 +20,7 @@ type Finding struct {
 // findings ordered by position (REQ-TLS-03). Generated files are included,
 // so //line directives report .gx positions.
 func Lint(dir string) ([]Finding, error) {
-	cfg := &packages.Config{
-		Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
-			packages.NeedTypes | packages.NeedTypesInfo | packages.NeedImports |
-			packages.NeedDeps | packages.NeedModule,
-		Dir:       dir,
-		ParseFile: goload.ParseFile(dir),
-	}
-	pkgs, err := packages.Load(cfg, "./...")
+	pkgs, err := (&goload.Loader{Dir: dir}).Load(nil)
 	if err != nil {
 		return nil, err
 	}
