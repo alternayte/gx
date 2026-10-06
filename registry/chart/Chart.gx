@@ -1,0 +1,43 @@
+package chart
+
+props {
+  // Id is the id of the root element.
+  Id         string
+  // Title is the caption of the chart and its accessible name.
+  Title      string
+  // Kind sets the drawing: Bar, Line or Area.
+  Kind       Kind = Bar
+  // Categories are the labels of the horizontal axis, in order.
+  Categories []string
+  // Series are the rows of numbers: one value for each category.
+  Series     []Series
+  // Class adds classes to the root element.
+  Class      string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs      gx.Attrs = nil
+}
+
+<figure id={p.Id} data-slot="chart" class={gx.Cx(rootClass, p.Class)} {...p.Attrs}>
+  <figcaption class={captionClass}>{p.Title}</figcaption>
+  <ChartCanvas table={p.tableID()} label={p.Title} kind={string(p.kind())} categories={p.Categories} series={p.Series} classes={canvasClasses} />
+  <table id={p.tableID()} class={tableClass}>
+    <thead>
+      <tr>
+        <th scope="col" class={cellClass}>{p.Title}</th>
+        for _, c := range p.Categories {
+          <th scope="col" class={cellClass}>{c}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      for _, s := range p.Series {
+        <tr>
+          <th scope="row" class={cellClass}>{s.Name}</th>
+          for _, v := range s.Values {
+            <td class={cellClass}>{formatValue(v)}</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</figure>

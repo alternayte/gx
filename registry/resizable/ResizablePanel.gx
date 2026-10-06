@@ -1,0 +1,20 @@
+package resizable
+
+props {
+  // Size is the first size of the panel, in percent of the group. A zero value shares the free space.
+  Size     int = 0
+  // MinSize is the smallest size of the panel, in percent of the group.
+  MinSize  int = 0
+  // MaxSize is the largest size of the panel, in percent of the group. A zero value is 100.
+  MaxSize  int = 0
+  // Class adds classes to the content element inside the panel.
+  Class    string = ""
+  // Children is the content of the panel.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div data-slot="resizable-panel" data-min-size={p.MinSize} data-max-size={p.maxSize()} style={p.style()} class={panelClass} {...p.Attrs}>
+  <div class={gx.Cx(contentClass, p.Class)}>{p.Children}</div>
+</div>

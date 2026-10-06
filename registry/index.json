@@ -73,6 +73,18 @@
       "kind": "component"
     },
     {
+      "name": "carousel",
+      "version": "0.1.0",
+      "description": "A row of slides that the user moves through one at a time.",
+      "kind": "component"
+    },
+    {
+      "name": "chart",
+      "version": "0.1.0",
+      "description": "A bar, line or area chart.",
+      "kind": "component"
+    },
+    {
       "name": "checkbox",
       "version": "0.1.0",
       "description": "A single boolean control with a label.",
@@ -250,6 +262,12 @@
       "name": "radio-group",
       "version": "0.1.0",
       "description": "A group of exclusive choices.",
+      "kind": "component"
+    },
+    {
+      "name": "resizable",
+      "version": "0.1.0",
+      "description": "A group of panels with a handle that changes their sizes.",
       "kind": "component"
     },
     {

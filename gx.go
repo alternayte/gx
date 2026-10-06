@@ -331,6 +331,14 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 				}
 				continue
 			}
+			if strings.HasPrefix(a.Value, bundleRef) {
+				// The file of an island or of a web component module:
+				// the installed bundle names it at render time.
+				a.Value = bundleURL(a.Value[len(bundleRef):])
+				if a.Value == "" {
+					continue
+				}
+			}
 			if a.Kind == AttrText && strings.IndexByte(a.Value, 0) >= 0 {
 				// An action invocation: the adapter writes it
 				// (REQ-PLG-04).

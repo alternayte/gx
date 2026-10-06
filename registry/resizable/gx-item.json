@@ -1,0 +1,44 @@
+{
+  "name": "resizable",
+  "version": "0.1.0",
+  "description": "A group of panels with a handle that changes their sizes.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "ResizablePanelGroup.gx",
+      "target": "ui/resizable/ResizablePanelGroup.gx"
+    },
+    {
+      "path": "ResizablePanel.gx",
+      "target": "ui/resizable/ResizablePanel.gx"
+    },
+    {
+      "path": "ResizableHandle.gx",
+      "target": "ui/resizable/ResizableHandle.gx"
+    },
+    {
+      "path": "ResizablePanelGroup.fixtures.go",
+      "target": "ui/resizable/ResizablePanelGroup.fixtures.go"
+    },
+    {
+      "path": "ResizablePanel.fixtures.go",
+      "target": "ui/resizable/ResizablePanel.fixtures.go"
+    },
+    {
+      "path": "ResizableHandle.fixtures.go",
+      "target": "ui/resizable/ResizableHandle.fixtures.go"
+    },
+    {
+      "path": "ResizableDrag.ts",
+      "target": "ui/resizable/ResizableDrag.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/resizable/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--ring"
+  ]
+}

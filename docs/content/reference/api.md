@@ -146,7 +146,7 @@ DefaultMessage returns the English message of a built-in rule key, or the key it
 func ElementModule(module string) string
 ```
 
-ElementModule returns the URL of the entry file that defines an imported web component. module is the import specifier of gx.lock. The generated code of a web component tag calls it. In dev, a module that the installed bundle does not hold is a panic.
+ElementModule returns the URL of the entry file that defines an imported web component. module is the import specifier of gx.lock. The generated code of a web component tag calls it. The value is a reference that the render turns into the URL.
 
 ### func FieldError
 

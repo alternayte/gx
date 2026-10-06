@@ -1,0 +1,21 @@
+package carousel
+
+props {
+  // Id is the id of the root element.
+  Id          string
+  // Label is the accessible name of the carousel.
+  Label       string = "Carousel"
+  // Orientation sets the direction of the slides: Horizontal or Vertical.
+  Orientation Orientation = Horizontal
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children are the slides: one CarouselItem for each.
+  Children    gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
+}
+
+<section id={p.Id} data-slot="carousel" aria-roledescription="carousel" aria-label={p.label()} data-orientation={p.orientation()} class={gx.Cx(rootClass, p.Class)} {...p.Attrs}>
+  <div id={p.viewportID()} tabindex="0" role="group" aria-label={p.label() + " slides"} class={viewportClass[p.orientation()]}>{p.Children}</div>
+  <CarouselControls viewport={p.viewportID()} orientation={string(p.orientation())} previousLabel="Previous slide" nextLabel="Next slide" statusText={statusText} classes={controlClasses} load="eager" />
+</section>

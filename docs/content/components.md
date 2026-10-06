@@ -20,6 +20,8 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Button Group" description="A row of related buttons." href="/components/button-group/" />
 <docs.LinkCard title="Calendar" description="A month grid for the choice of one day." href="/components/calendar/" />
 <docs.LinkCard title="Card" description="A bordered surface for grouped content." href="/components/card/" />
+<docs.LinkCard title="Carousel" description="A row of slides that the user moves through one at a time." href="/components/carousel/" />
+<docs.LinkCard title="Chart" description="A bar, line or area chart." href="/components/chart/" />
 <docs.LinkCard title="Checkbox" description="A single boolean control with a label." href="/components/checkbox/" />
 <docs.LinkCard title="Collapsible" description="One panel that opens on demand." href="/components/collapsible/" />
 <docs.LinkCard title="Combobox" description="A select with a text filter." href="/components/combobox/" />
@@ -45,6 +47,7 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Popover" description="A small panel anchored to a trigger." href="/components/popover/" />
 <docs.LinkCard title="Progress" description="A bar that shows the completion of a task." href="/components/progress/" />
 <docs.LinkCard title="Radio Group" description="A group of exclusive choices." href="/components/radio-group/" />
+<docs.LinkCard title="Resizable" description="A group of panels with a handle that changes their sizes." href="/components/resizable/" />
 <docs.LinkCard title="Scroll Area" description="A box with a styled scrollbar." href="/components/scroll-area/" />
 <docs.LinkCard title="Select" description="A native list of exclusive choices." href="/components/select/" />
 <docs.LinkCard title="Separator" description="A visual divider between content." href="/components/separator/" />

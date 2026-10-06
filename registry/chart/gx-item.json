@@ -1,0 +1,37 @@
+{
+  "name": "chart",
+  "version": "0.1.0",
+  "description": "A bar, line or area chart.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Chart.gx",
+      "target": "ui/chart/Chart.gx"
+    },
+    {
+      "path": "Chart.fixtures.go",
+      "target": "ui/chart/Chart.fixtures.go"
+    },
+    {
+      "path": "ChartCanvas.ts",
+      "target": "ui/chart/ChartCanvas.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/chart/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--chart-1",
+    "--chart-2",
+    "--chart-3",
+    "--chart-4",
+    "--chart-5",
+    "--border",
+    "--muted",
+    "--muted-foreground",
+    "--popover",
+    "--popover-foreground",
+    "--ring"
+  ]
+}

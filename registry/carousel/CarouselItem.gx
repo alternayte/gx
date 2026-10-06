@@ -1,0 +1,12 @@
+package carousel
+
+props {
+  // Class adds classes to the root element.
+  Class    string = ""
+  // Children is the content of the slide.
+  Children gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs    gx.Attrs = nil
+}
+
+<div role="group" aria-roledescription="slide" data-slot="carousel-item" class={gx.Cx(itemClass, p.Class)} {...p.Attrs}>{p.Children}</div>

@@ -14,8 +14,9 @@ import (
 // of the props. The generated component function of an island calls it.
 //
 // The src attribute names the entry file of the island in the bundle that
-// gx.SetIslands installed (REQ-ISL-03). In dev, an island that the bundle
-// does not hold is a panic, because the browser cannot mount it.
+// gx.SetIslands installed (REQ-ISL-03). The render looks the file up. In
+// dev, an island that the bundle does not hold is a panic at the render,
+// because the browser cannot mount it.
 func Island(name, props string, opts ...IslandOption) Node {
 	var attrs Attrs
 	for _, opt := range opts {
@@ -38,11 +39,9 @@ func Island(name, props string, opts ...IslandOption) Node {
 			attrs = append(attrs, Attr{Key: "media", Value: opt.media})
 		}
 	}
-	if src := islandSrc(name); src != "" {
-		attrs = append(attrs, Attr{Key: "src", Value: src, Kind: AttrURL})
-	} else if devMode.Load() {
-		panic("gx: the island " + name + " is not in the installed bundle; call gx.SetIslands(gxislands.Bundle()) in main")
-	}
+	// The render writes the file name. A node can be made before main
+	// installs the bundle, for example in a package variable of fixtures.
+	attrs = append(attrs, Attr{Key: "src", Value: bundleRef + name, Kind: AttrURL})
 	// The island renders into the root. A morph skips an element with
 	// data-ignore-morph on both sides, so it keeps what the island put
 	// there, and it still updates the props of the element around it

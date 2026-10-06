@@ -56,9 +56,29 @@ func TestREQ_ISL_03_UnknownIslandPanicsInDev(t *testing.T) {
 	defer SetDev(false)
 	defer func() {
 		msg, _ := recover().(string)
-		if !strings.Contains(msg, "gx.SetIslands(gxislands.Bundle())") {
+		if !strings.Contains(msg, "app/dash/Missing is not in the installed island bundle") || !strings.Contains(msg, "gx.SetIslands(gxislands.Bundle())") {
 			t.Fatalf("panic = %q", msg)
 		}
 	}()
-	Island("app/dash/Missing", `{}`)
+	_ = String(Island("app/dash/Missing", `{}`))
+}
+
+// A node of an island can be made before main installs the bundle: a
+// package variable of fixtures is. The render looks the file up, so the
+// element has its src (REQ-REG-14).
+func TestREQ_ISL_03_IslandMadeBeforeTheBundleIsInstalled(t *testing.T) {
+	early := Island("app/dash/Chart", `{}`)
+	module := ElementModule("@acme/ui/button.js")
+	SetIslands(IslandBundle{Entries: map[string]string{
+		"app/dash/Chart":     "app/dash/Chart-ABCD1234.js",
+		"@acme/ui/button.js": "elements/button-ABCD1234.js",
+	}})
+	defer SetIslands(IslandBundle{})
+	if got := String(early); !strings.Contains(got, `src="/_gx/islands/app/dash/Chart-ABCD1234.js"`) {
+		t.Fatalf("island = %s", got)
+	}
+	got := String(El("ui-button", Attrs{{Key: "data-gx-module", Value: module}}))
+	if got != `<ui-button data-gx-module="/_gx/islands/elements/button-ABCD1234.js"></ui-button>` {
+		t.Fatalf("element = %s", got)
+	}
 }

@@ -1,0 +1,20 @@
+package resizable
+
+props {
+  // Id is the id of the handle.
+  Id          string
+  // Label is the accessible name of the handle.
+  Label       string = "Resize panels"
+  // Orientation is the direction of the panel group: Horizontal or Vertical.
+  Orientation Orientation = Horizontal
+  // Step is the size of one arrow key step, in percent of the group. A zero value is 5.
+  Step        int = 5
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
+}
+
+<div id={p.Id} role="separator" tabindex="0" aria-label={p.label()} aria-orientation={p.ariaOrientation()} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" data-slot="resizable-handle" class={gx.Cx(handleClass[p.orientation()], p.Class)} {...p.Attrs}>
+  <ResizableDrag handle={p.Id} step={p.step()} gripClass={gripClass[p.orientation()]} load="eager" />
+</div>

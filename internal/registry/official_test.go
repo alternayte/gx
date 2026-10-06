@@ -68,6 +68,9 @@ func TestREQ_REG_05_OfficialRegistry(t *testing.T) {
 		"context-menu", "menubar", "tooltip", "hover-card", "accordion",
 		"collapsible", "tabs", "toggle", "toggle-group", "navigation-menu",
 		"sidebar", "select", "scroll-area", "slider", "toast",
+		// Tier 3: islands (REQ-REG-14).
+		"calendar", "date-picker", "command", "combobox", "carousel", "chart",
+		"resizable", "input-otp",
 	}
 	for _, name := range tiers {
 		if kind, ok := got[name]; !ok || kind != "component" {
@@ -118,4 +121,55 @@ func componentsOf(t *testing.T, dir string) []string {
 		}
 	}
 	return out
+}
+
+// TestREQ_REG_14_TierThreeItems checks the eight tier 3 items: each is a
+// component item with an island file, fixtures for its components and no
+// npm dependency. TestREQ_REG_06_Lint checks the usage page and the keyboard
+// table of every item.
+func TestREQ_REG_14_TierThreeItems(t *testing.T) {
+	root := filepath.Join("..", "..", "registry")
+	for _, name := range []string{"calendar", "date-picker", "command", "combobox", "carousel", "chart", "resizable", "input-otp"} {
+		data, err := os.ReadFile(filepath.Join(root, name, "gx-item.json"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		var manifest struct {
+			Kind                 string
+			Files                []struct{ Path string }
+			JSPins               []string
+			RegistryDependencies []string
+		}
+		if err := json.Unmarshal(data, &manifest); err != nil {
+			t.Fatal(err)
+		}
+		if manifest.Kind != "component" || len(manifest.JSPins) != 0 {
+			t.Errorf("%s: kind %q, js pins %v; want a component with no npm package", name, manifest.Kind, manifest.JSPins)
+		}
+		islands, fixtures := 0, 0
+		for _, f := range manifest.Files {
+			switch {
+			case strings.HasSuffix(f.Path, ".ts"):
+				islands++
+				src, err := os.ReadFile(filepath.Join(root, name, f.Path))
+				if err != nil || !strings.Contains(string(src), "export default mount") {
+					t.Errorf("%s: %s is not an island file: %v", name, f.Path, err)
+				}
+			case strings.HasSuffix(f.Path, ".fixtures.go"):
+				fixtures++
+			}
+		}
+		// The date picker has no island of its own: it is a popover with a
+		// calendar.
+		wantIslands := 1
+		if name == "date-picker" {
+			wantIslands = 0
+			if strings.Join(manifest.RegistryDependencies, " ") != "calendar popover" {
+				t.Errorf("date-picker depends on %v", manifest.RegistryDependencies)
+			}
+		}
+		if islands != wantIslands || fixtures == 0 {
+			t.Errorf("%s: %d island files (want %d) and %d fixture files", name, islands, wantIslands, fixtures)
+		}
+	}
 }

@@ -169,6 +169,26 @@
           "ui/card/Card.gx": "137fb5e0b870ac3ad746f4fc290fdad59cf0903c6a60165b31e3b03f15009265"
         }
       },
+      "carousel": {
+        "version": "0.1.0",
+        "files": {
+          "ui/carousel/Carousel.fixtures.go": "d6ae12964f2a0fada2fbc2e00168e12734f6f500d9e9ad62e8c5e997c71331c6",
+          "ui/carousel/Carousel.gx": "35c67772684ba0da2616674276b673e2f9faeea04009d4b9edf8ad5564bed50b",
+          "ui/carousel/CarouselControls.ts": "b070e56bd06c6506a72baaec23be81165f8986383f3d3bf3a5ff79298cc0814c",
+          "ui/carousel/CarouselItem.fixtures.go": "b939a99e08a76c59f41cfeab11246226c2a4d41dd50cf6b1344a18948da44aef",
+          "ui/carousel/CarouselItem.gx": "09236a94681ef78316a35d8c72e692f304bb95f520ca2f70d038f8ed5675d225",
+          "ui/carousel/styles.go": "1af338aa19c053d91ca1ab8b7e10a290ada84c87814e39829a20402fe53ebeac"
+        }
+      },
+      "chart": {
+        "version": "0.1.0",
+        "files": {
+          "ui/chart/Chart.fixtures.go": "b822f9f2c52ff8e942712935043330bf222faf3b8485502092014e2701557f44",
+          "ui/chart/Chart.gx": "2f7fa805ac1c4c7fbbed8fb3b1d4fd510bccea486cf1d798444c315ac4cfd58a",
+          "ui/chart/ChartCanvas.ts": "292f3a71f9a3444bdfe9be614aed682008afc856dc9709ea9294930ae53c8c92",
+          "ui/chart/styles.go": "ab5ca55eb2bba7b7cba07e92fde76f76d135bde382e1cf9d89a65c96c53e580f"
+        }
+      },
       "checkbox": {
         "version": "0.1.0",
         "files": {
@@ -579,6 +599,19 @@
           "ui/radio-group/RadioGroupItem.fixtures.go": "b4d957dc1d2ec9975ea9d2349d69d1b4d9f02541580f9b356c63a343f1068f44",
           "ui/radio-group/RadioGroupItem.gx": "14e3bcbedf65fade5d913d43d2730a073a5e9cd24072fc2c3cd8de523db231ed",
           "ui/radio-group/styles.go": "d738bd3dd78db1799f3412aa2db57373e4a33a93dc64768fa1b9f5b0dd9d8260"
+        }
+      },
+      "resizable": {
+        "version": "0.1.0",
+        "files": {
+          "ui/resizable/ResizableDrag.ts": "5b00fed526ede4cb9a22c332b3b080fa9b2561c3021fe5c689b051cb24341f46",
+          "ui/resizable/ResizableHandle.fixtures.go": "aa8d1abceb160a9c12daa2fd468e3e1cf30dc568f1e953c2c57fccb5c8887ac9",
+          "ui/resizable/ResizableHandle.gx": "f531ab5996535c8e8847b046216f5877a9096e4d1419c38c227fa1e22be6ff58",
+          "ui/resizable/ResizablePanel.fixtures.go": "b25c12d016eed26180d125ed86d9cd6b518e72f74a2969f8e5638aa49c815c09",
+          "ui/resizable/ResizablePanel.gx": "12dfb9ff11bfe6ffce8f8a3d88b521870c70fbc865d1e3489b001c260f1d3bed",
+          "ui/resizable/ResizablePanelGroup.fixtures.go": "ff039198a0473671ba7818b412412bfbc4f956a24347676804cac542a270e5a7",
+          "ui/resizable/ResizablePanelGroup.gx": "3d725cdbeb0e244f6c06ff17c8c460a56abbc118e13cd86cf3d353df46477e82",
+          "ui/resizable/styles.go": "08bc33aeb12b34a10abd0de56d617c7268221b373a19efe89c3135834736db17"
         }
       },
       "scroll-area": {

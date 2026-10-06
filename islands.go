@@ -46,14 +46,23 @@ func islandSrc(name string) string {
 
 // ElementModule returns the URL of the entry file that defines an imported
 // web component (REQ-ISL-09). module is the import specifier of gx.lock. The
-// generated code of a web component tag calls it. In dev, a module that the
-// installed bundle does not hold is a panic.
-func ElementModule(module string) string {
-	if src := islandSrc(module); src != "" {
+// generated code of a web component tag calls it. The value is a reference
+// that the render turns into the URL.
+func ElementModule(module string) string { return bundleRef + module }
+
+// bundleRef marks an attribute value that names an entry of the island
+// bundle. The render puts the URL of the entry file in its place. A NUL
+// byte is not part of a real attribute value.
+const bundleRef = "\x00gx-bundle\x00"
+
+// bundleURL returns the URL of an entry of the installed bundle, or "".
+// In dev, an entry that the bundle does not hold is a panic.
+func bundleURL(name string) string {
+	if src := islandSrc(name); src != "" {
 		return src
 	}
 	if devMode.Load() {
-		panic("gx: the module " + module + " of a web component is not in the installed bundle; call gx.SetIslands(gxislands.Bundle()) in main")
+		panic("gx: " + name + " is not in the installed island bundle; call gx.SetIslands(gxislands.Bundle()) in main, and build with gx build or gx dev")
 	}
 	return ""
 }

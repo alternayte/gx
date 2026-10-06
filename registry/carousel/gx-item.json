@@ -1,0 +1,40 @@
+{
+  "name": "carousel",
+  "version": "0.1.0",
+  "description": "A row of slides that the user moves through one at a time.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Carousel.gx",
+      "target": "ui/carousel/Carousel.gx"
+    },
+    {
+      "path": "CarouselItem.gx",
+      "target": "ui/carousel/CarouselItem.gx"
+    },
+    {
+      "path": "Carousel.fixtures.go",
+      "target": "ui/carousel/Carousel.fixtures.go"
+    },
+    {
+      "path": "CarouselItem.fixtures.go",
+      "target": "ui/carousel/CarouselItem.fixtures.go"
+    },
+    {
+      "path": "CarouselControls.ts",
+      "target": "ui/carousel/CarouselControls.ts"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/carousel/styles.go"
+    }
+  ],
+  "requiredTokens": [
+    "--border",
+    "--background",
+    "--accent",
+    "--accent-foreground",
+    "--ring",
+    "--muted-foreground"
+  ]
+}

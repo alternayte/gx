@@ -1,0 +1,14 @@
+package resizable
+
+props {
+  // Orientation sets the direction of the panels: Horizontal or Vertical.
+  Orientation Orientation = Horizontal
+  // Class adds classes to the root element.
+  Class       string = ""
+  // Children are the panels, with one ResizableHandle between two panels.
+  Children    gx.Node
+  // Attrs adds HTML attributes to the root element.
+  Attrs       gx.Attrs = nil
+}
+
+<div data-slot="resizable-panel-group" data-orientation={p.orientation()} class={gx.Cx(groupClass[p.orientation()], p.Class)} {...p.Attrs}>{p.Children}</div>

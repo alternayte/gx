@@ -16,6 +16,8 @@ import (
 	buttongroup "github.com/alternayte/gx/registry/button-group"
 	calendar "github.com/alternayte/gx/registry/calendar"
 	card "github.com/alternayte/gx/registry/card"
+	carousel "github.com/alternayte/gx/registry/carousel"
+	chart "github.com/alternayte/gx/registry/chart"
 	checkbox "github.com/alternayte/gx/registry/checkbox"
 	collapsible "github.com/alternayte/gx/registry/collapsible"
 	combobox "github.com/alternayte/gx/registry/combobox"
@@ -46,6 +48,7 @@ import (
 	popover "github.com/alternayte/gx/registry/popover"
 	progress "github.com/alternayte/gx/registry/progress"
 	radiogroup "github.com/alternayte/gx/registry/radio-group"
+	resizable "github.com/alternayte/gx/registry/resizable"
 	scrollarea "github.com/alternayte/gx/registry/scroll-area"
 	selectbox "github.com/alternayte/gx/registry/select"
 	separator "github.com/alternayte/gx/registry/separator"
@@ -245,6 +248,28 @@ var Items = []Item{
 			{Name: "card-title-only", Title: "Title only", Component: "Card", Fixtures: []string{"Card/TitleOnly"}, Node: func() gx.Node { return card.Card(card.CardFixtures["TitleOnly"]) }},
 			{Name: "card-body-only", Title: "Body only", Component: "Card", Fixtures: []string{"Card/BodyOnly"}, Node: func() gx.Node { return card.Card(card.CardFixtures["BodyOnly"]) }},
 			{Name: "card-action", Title: "Action", Component: "Card", Fixtures: []string{"Card/Action"}, Node: func() gx.Node { return card.Card(card.CardFixtures["Action"]) }},
+		},
+	},
+	{
+		Name:        "carousel",
+		Title:       "Carousel",
+		Group:       "Components",
+		Description: "A row of slides that the user moves through one at a time.",
+		Examples: []Example{
+			{Name: "carousel-default", Title: "Carousel: Default", Component: "Carousel", Fixtures: []string{"Carousel/Default"}, Node: func() gx.Node { return carousel.Carousel(carousel.CarouselFixtures["Default"]) }},
+			{Name: "carousel-vertical", Title: "Carousel: Vertical", Component: "Carousel", Fixtures: []string{"Carousel/Vertical"}, Node: func() gx.Node { return carousel.Carousel(carousel.CarouselFixtures["Vertical"]) }},
+			{Name: "carousel-item-default", Title: "CarouselItem: Default", Component: "CarouselItem", Fixtures: []string{"CarouselItem/Default"}, Node: func() gx.Node { return carousel.CarouselItem(carousel.CarouselItemFixtures["Default"]) }},
+		},
+	},
+	{
+		Name:        "chart",
+		Title:       "Chart",
+		Group:       "Components",
+		Description: "A bar, line or area chart.",
+		Examples: []Example{
+			{Name: "chart-bar", Title: "Bar", Component: "Chart", Fixtures: []string{"Chart/Bar"}, Node: func() gx.Node { return chart.Chart(chart.ChartFixtures["Bar"]) }},
+			{Name: "chart-line", Title: "Line", Component: "Chart", Fixtures: []string{"Chart/Line"}, Node: func() gx.Node { return chart.Chart(chart.ChartFixtures["Line"]) }},
+			{Name: "chart-area", Title: "Area", Component: "Chart", Fixtures: []string{"Chart/Area"}, Node: func() gx.Node { return chart.Chart(chart.ChartFixtures["Area"]) }},
 		},
 	},
 	{
@@ -903,6 +928,24 @@ var Items = []Item{
 			{Name: "radio-group-item-checked", Title: "RadioGroupItem: Checked", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Checked"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Checked"]) }},
 			{Name: "radio-group-item-disabled", Title: "RadioGroupItem: Disabled", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Disabled"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Disabled"]) }},
 			{Name: "radio-group-item-invalid", Title: "RadioGroupItem: Invalid", Component: "RadioGroupItem", Fixtures: []string{"RadioGroupItem/Invalid"}, Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Invalid"]) }},
+		},
+	},
+	{
+		Name:        "resizable",
+		Title:       "Resizable",
+		Group:       "Components",
+		Description: "A group of panels with a handle that changes their sizes.",
+		Examples: []Example{
+			{Name: "resizable-handle-between", Title: "ResizableHandle: Between", Component: "ResizableHandle", Fixtures: []string{"ResizableHandle/Between"}, Node: func() gx.Node {
+				return resizable.ResizableHandleWrap(resizable.ResizableHandle(resizable.ResizableHandleFixtures["Between"]))
+			}},
+			{Name: "resizable-panel-default", Title: "ResizablePanel: Default", Component: "ResizablePanel", Fixtures: []string{"ResizablePanel/Default"}, Node: func() gx.Node { return resizable.ResizablePanel(resizable.ResizablePanelFixtures["Default"]) }},
+			{Name: "resizable-panel-group-horizontal", Title: "ResizablePanelGroup: Horizontal", Component: "ResizablePanelGroup", Fixtures: []string{"ResizablePanelGroup/Horizontal"}, Node: func() gx.Node {
+				return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Horizontal"]))
+			}},
+			{Name: "resizable-panel-group-vertical", Title: "ResizablePanelGroup: Vertical", Component: "ResizablePanelGroup", Fixtures: []string{"ResizablePanelGroup/Vertical"}, Node: func() gx.Node {
+				return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Vertical"]))
+			}},
 		},
 	},
 	{

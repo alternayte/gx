@@ -860,3 +860,132 @@ test('REQ-REG-14 command filters its items and runs the active one', async () =>
   await page.keyboard.press('Enter')
   await page.waitForFunction(() => location.hash === '#billing')
 })
+
+test('REQ-REG-14 carousel moves one slide with its buttons and the arrow keys', async () => {
+  await islandReady('Carousel-Default')
+  const section = fixture('Carousel-Default')
+  const viewport = section.locator('#carousel-default-viewport')
+  const status = section.locator('[aria-live]')
+  const prev = section.getByRole('button', { name: 'Previous slide' })
+  const next = section.getByRole('button', { name: 'Next slide' })
+  const current = (): Promise<string | null> => section.locator('[data-current="true"]').textContent()
+  expect(await status.textContent()).toBe('Slide 1 of 3')
+  expect(await prev.isDisabled()).toBe(true)
+  await next.click()
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Default"] [aria-live]')?.textContent === 'Slide 2 of 3')
+  expect((await current())?.trim()).toBe('2')
+  expect(await prev.isDisabled()).toBe(false)
+  // The arrow keys on the slides move one slide.
+  await viewport.focus()
+  await page.keyboard.press('ArrowRight')
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Default"] [aria-live]')?.textContent === 'Slide 3 of 3')
+  expect(await next.isDisabled()).toBe(true)
+  await page.keyboard.press('Home')
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Default"] [aria-live]')?.textContent === 'Slide 1 of 3')
+  await page.keyboard.press('End')
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Default"] [aria-live]')?.textContent === 'Slide 3 of 3')
+  await page.keyboard.press('ArrowLeft')
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Default"] [aria-live]')?.textContent === 'Slide 2 of 3')
+  // The slides are a named group, and each slide says what it is.
+  expect(await section.locator('section[aria-roledescription="carousel"]').getAttribute('aria-label')).toBe('Numbers')
+  expect(await section.locator('[aria-roledescription="slide"]').count()).toBe(3)
+})
+
+test('REQ-REG-14 a vertical carousel uses the up and down keys', async () => {
+  await islandReady('Carousel-Vertical')
+  const section = fixture('Carousel-Vertical')
+  await section.locator('#carousel-vertical-viewport').focus()
+  await page.keyboard.press('ArrowDown')
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Vertical"] [aria-live]')?.textContent === 'Slide 2 of 3')
+  await page.keyboard.press('ArrowUp')
+  await page.waitForFunction(() => document.querySelector('[data-fixture="Carousel-Vertical"] [aria-live]')?.textContent === 'Slide 1 of 3')
+})
+
+test('REQ-REG-14 resizable changes the panel sizes with the arrow keys inside the limits', async () => {
+  await islandReady('ResizablePanelGroup-Horizontal')
+  const section = fixture('ResizablePanelGroup-Horizontal')
+  const handle = section.locator('#resize-h')
+  const widths = (): Promise<number[]> =>
+    section.locator('[data-slot="resizable-panel"]').evaluateAll((els) => {
+      // A size is a part of the room that the panels share; the handle
+      // takes none of it.
+      const total = els.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0)
+      return els.map((el) => Math.round((el.getBoundingClientRect().width / total) * 100))
+    })
+  expect(await handle.getAttribute('role')).toBe('separator')
+  expect(await handle.getAttribute('aria-valuenow')).toBe('40')
+  expect(await widths()).toEqual([40, 60])
+  await handle.focus()
+  await page.keyboard.press('ArrowRight')
+  expect(await handle.getAttribute('aria-valuenow')).toBe('45')
+  expect(await widths()).toEqual([45, 55])
+  await page.keyboard.press('ArrowLeft')
+  await page.keyboard.press('ArrowLeft')
+  expect(await widths()).toEqual([35, 65])
+  // The first panel has a minimum of 20, and the second one of 30.
+  await page.keyboard.press('Home')
+  expect(await widths()).toEqual([20, 80])
+  expect(await handle.getAttribute('aria-valuemin')).toBe('20')
+  await page.keyboard.press('End')
+  expect(await widths()).toEqual([70, 30])
+  expect(await handle.getAttribute('aria-valuemax')).toBe('70')
+})
+
+test('REQ-REG-14 resizable follows a drag of its handle', async () => {
+  await islandReady('ResizablePanelGroup-Vertical')
+  const section = fixture('ResizablePanelGroup-Vertical')
+  const handle = section.locator('#resize-v')
+  const box = (await handle.boundingBox())!
+  const group = (await section.locator('[data-slot="resizable-panel-group"]').boundingBox())!
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(box.x + box.width / 2, group.y + group.height * 0.25, { steps: 5 })
+  await page.mouse.up()
+  const now = Number(await handle.getAttribute('aria-valuenow'))
+  expect(now).toBeGreaterThan(20)
+  expect(now).toBeLessThan(30)
+  // The arrow keys of a vertical group are up and down.
+  await handle.focus()
+  await page.keyboard.press('ArrowDown')
+  // One step is 5 percent; the value in the attribute is a whole number.
+  const stepped = Number(await handle.getAttribute('aria-valuenow'))
+  expect(stepped).toBeGreaterThanOrEqual(now + 4)
+  expect(stepped).toBeLessThanOrEqual(now + 6)
+})
+
+test('REQ-REG-14 chart draws the data and shows the values of a category with the arrow keys', async () => {
+  await islandReady('Chart-Bar')
+  const section = fixture('Chart-Bar')
+  // Two series of six values: twelve bars, and a legend with both names.
+  expect(await section.locator('svg rect[data-series]').count()).toBe(12)
+  expect(await section.locator('ul li').allTextContents()).toEqual(['Desktop', 'Mobile'])
+  // The largest value, 305, has the tallest bar.
+  const heights = await section.locator('svg rect[data-series="Desktop"]').evaluateAll((els) => els.map((el) => Number(el.getAttribute('height'))))
+  expect(heights.indexOf(Math.max(...heights))).toBe(1)
+  // The data table stays in the page for a screen reader.
+  expect(await section.locator('table#chart-bar-data tbody tr').count()).toBe(2)
+  expect(await section.locator('table#chart-bar-data td').first().textContent()).toBe('186')
+  const figure = section.getByRole('img')
+  expect(await figure.getAttribute('aria-label')).toContain('Visitors')
+  const tooltip = section.getByRole('status')
+  expect(await tooltip.isHidden()).toBe(true)
+  await figure.focus()
+  await page.keyboard.press('ArrowRight')
+  expect(await tooltip.innerText()).toBe('Jan\nDesktop: 186\nMobile: 80')
+  await page.keyboard.press('ArrowRight')
+  expect(await tooltip.innerText()).toBe('Feb\nDesktop: 305\nMobile: 200')
+  await page.keyboard.press('End')
+  expect(await tooltip.innerText()).toBe('Jun\nDesktop: 214\nMobile: 140')
+  await page.keyboard.press('Home')
+  expect(await tooltip.innerText()).toContain('Jan')
+  await page.keyboard.press('Escape')
+  expect(await tooltip.isHidden()).toBe(true)
+})
+
+test('REQ-REG-14 chart draws a line and an area', async () => {
+  await islandReady('Chart-Line')
+  expect(await fixture('Chart-Line').locator('svg polyline').count()).toBe(2)
+  expect(await fixture('Chart-Line').locator('svg circle').count()).toBe(12)
+  await islandReady('Chart-Area')
+  expect(await fixture('Chart-Area').locator('svg polygon').count()).toBe(1)
+})

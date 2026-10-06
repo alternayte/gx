@@ -1360,6 +1360,150 @@
       ]
     },
     {
+      "name": "Carousel",
+      "package": "github.com/alternayte/gx/examples/shop/ui/carousel",
+      "file": "ui/carousel/Carousel.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the root element."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"Carousel\"",
+          "doc": "Label is the accessible name of the carousel."
+        },
+        {
+          "name": "Orientation",
+          "type": "Orientation",
+          "required": false,
+          "default": "Horizontal",
+          "doc": "Orientation sets the direction of the slides: Horizontal or Vertical."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children are the slides: one CarouselItem for each."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default",
+        "Vertical"
+      ]
+    },
+    {
+      "name": "CarouselItem",
+      "package": "github.com/alternayte/gx/examples/shop/ui/carousel",
+      "file": "ui/carousel/CarouselItem.gx",
+      "props": [
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the content of the slide."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default"
+      ]
+    },
+    {
+      "name": "Chart",
+      "package": "github.com/alternayte/gx/examples/shop/ui/chart",
+      "file": "ui/chart/Chart.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the root element."
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "required": true,
+          "doc": "Title is the caption of the chart and its accessible name."
+        },
+        {
+          "name": "Kind",
+          "type": "Kind",
+          "required": false,
+          "default": "Bar",
+          "doc": "Kind sets the drawing: Bar, Line or Area."
+        },
+        {
+          "name": "Categories",
+          "type": "[]string",
+          "required": true,
+          "doc": "Categories are the labels of the horizontal axis, in order."
+        },
+        {
+          "name": "Series",
+          "type": "[]Series",
+          "required": true,
+          "doc": "Series are the rows of numbers: one value for each category."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Area",
+        "Bar",
+        "Line"
+      ]
+    },
+    {
       "name": "Checkbox",
       "package": "github.com/alternayte/gx/examples/shop/ui/checkbox",
       "file": "ui/checkbox/Checkbox.gx",
@@ -6376,6 +6520,152 @@
       ]
     },
     {
+      "name": "ResizableHandle",
+      "package": "github.com/alternayte/gx/examples/shop/ui/resizable",
+      "file": "ui/resizable/ResizableHandle.gx",
+      "props": [
+        {
+          "name": "Id",
+          "type": "string",
+          "required": true,
+          "doc": "Id is the id of the handle."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "default": "\"Resize panels\"",
+          "doc": "Label is the accessible name of the handle."
+        },
+        {
+          "name": "Orientation",
+          "type": "Orientation",
+          "required": false,
+          "default": "Horizontal",
+          "doc": "Orientation is the direction of the panel group: Horizontal or Vertical."
+        },
+        {
+          "name": "Step",
+          "type": "int",
+          "required": false,
+          "default": "5",
+          "doc": "Step is the size of one arrow key step, in percent of the group. A zero value is 5."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Between"
+      ]
+    },
+    {
+      "name": "ResizablePanel",
+      "package": "github.com/alternayte/gx/examples/shop/ui/resizable",
+      "file": "ui/resizable/ResizablePanel.gx",
+      "props": [
+        {
+          "name": "Size",
+          "type": "int",
+          "required": false,
+          "default": "0",
+          "doc": "Size is the first size of the panel, in percent of the group. A zero value shares the free space."
+        },
+        {
+          "name": "MinSize",
+          "type": "int",
+          "required": false,
+          "default": "0",
+          "doc": "MinSize is the smallest size of the panel, in percent of the group."
+        },
+        {
+          "name": "MaxSize",
+          "type": "int",
+          "required": false,
+          "default": "0",
+          "doc": "MaxSize is the largest size of the panel, in percent of the group. A zero value is 100."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the content element inside the panel."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the content of the panel."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default"
+      ]
+    },
+    {
+      "name": "ResizablePanelGroup",
+      "package": "github.com/alternayte/gx/examples/shop/ui/resizable",
+      "file": "ui/resizable/ResizablePanelGroup.gx",
+      "props": [
+        {
+          "name": "Orientation",
+          "type": "Orientation",
+          "required": false,
+          "default": "Horizontal",
+          "doc": "Orientation sets the direction of the panels: Horizontal or Vertical."
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Class adds classes to the root element."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children are the panels, with one ResizableHandle between two panels."
+        },
+        {
+          "name": "Attrs",
+          "type": "gx.Attrs",
+          "required": false,
+          "default": "nil",
+          "doc": "Attrs adds HTML attributes to the root element."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Horizontal",
+        "Vertical"
+      ]
+    },
+    {
       "name": "ScrollArea",
       "package": "github.com/alternayte/gx/examples/shop/ui/scroll-area",
       "file": "ui/scroll-area/ScrollArea.gx",
@@ -9250,6 +9540,80 @@
       ]
     },
     {
+      "name": "CarouselControls",
+      "package": "github.com/alternayte/gx/examples/shop/ui/carousel",
+      "file": "ui/carousel/CarouselControls.ts",
+      "props": [
+        {
+          "name": "Viewport",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Orientation",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "PreviousLabel",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "NextLabel",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "StatusText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Classes",
+          "type": "ControlClasses",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "ChartCanvas",
+      "package": "github.com/alternayte/gx/examples/shop/ui/chart",
+      "file": "ui/chart/ChartCanvas.ts",
+      "props": [
+        {
+          "name": "Table",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Kind",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Categories",
+          "type": "[]string",
+          "required": false
+        },
+        {
+          "name": "Series",
+          "type": "[]Series",
+          "required": false
+        },
+        {
+          "name": "Classes",
+          "type": "CanvasClasses",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "ComboboxInput",
       "package": "github.com/alternayte/gx/examples/shop/ui/combobox",
       "file": "ui/combobox/ComboboxInput.ts",
@@ -9350,6 +9714,28 @@
         },
         {
           "name": "OverlayClass",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "ResizableDrag",
+      "package": "github.com/alternayte/gx/examples/shop/ui/resizable",
+      "file": "ui/resizable/ResizableDrag.ts",
+      "props": [
+        {
+          "name": "Handle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Step",
+          "type": "int",
+          "required": false
+        },
+        {
+          "name": "GripClass",
           "type": "string",
           "required": false
         }
@@ -9560,6 +9946,28 @@
       "files": [
         "ui/card/Card.fixtures.go",
         "ui/card/Card.gx"
+      ]
+    },
+    {
+      "name": "carousel",
+      "version": "0.1.0",
+      "files": [
+        "ui/carousel/Carousel.fixtures.go",
+        "ui/carousel/Carousel.gx",
+        "ui/carousel/CarouselControls.ts",
+        "ui/carousel/CarouselItem.fixtures.go",
+        "ui/carousel/CarouselItem.gx",
+        "ui/carousel/styles.go"
+      ]
+    },
+    {
+      "name": "chart",
+      "version": "0.1.0",
+      "files": [
+        "ui/chart/Chart.fixtures.go",
+        "ui/chart/Chart.gx",
+        "ui/chart/ChartCanvas.ts",
+        "ui/chart/styles.go"
       ]
     },
     {
@@ -10000,6 +10408,20 @@
         "ui/radio-group/RadioGroupItem.fixtures.go",
         "ui/radio-group/RadioGroupItem.gx",
         "ui/radio-group/styles.go"
+      ]
+    },
+    {
+      "name": "resizable",
+      "version": "0.1.0",
+      "files": [
+        "ui/resizable/ResizableDrag.ts",
+        "ui/resizable/ResizableHandle.fixtures.go",
+        "ui/resizable/ResizableHandle.gx",
+        "ui/resizable/ResizablePanel.fixtures.go",
+        "ui/resizable/ResizablePanel.gx",
+        "ui/resizable/ResizablePanelGroup.fixtures.go",
+        "ui/resizable/ResizablePanelGroup.gx",
+        "ui/resizable/styles.go"
       ]
     },
     {

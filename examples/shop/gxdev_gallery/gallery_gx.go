@@ -19,6 +19,8 @@ import (
 	buttongroup "github.com/alternayte/gx/examples/shop/ui/button-group"
 	calendar "github.com/alternayte/gx/examples/shop/ui/calendar"
 	card "github.com/alternayte/gx/examples/shop/ui/card"
+	carousel "github.com/alternayte/gx/examples/shop/ui/carousel"
+	chart "github.com/alternayte/gx/examples/shop/ui/chart"
 	checkbox "github.com/alternayte/gx/examples/shop/ui/checkbox"
 	collapsible "github.com/alternayte/gx/examples/shop/ui/collapsible"
 	combobox "github.com/alternayte/gx/examples/shop/ui/combobox"
@@ -46,6 +48,7 @@ import (
 	popover "github.com/alternayte/gx/examples/shop/ui/popover"
 	progress "github.com/alternayte/gx/examples/shop/ui/progress"
 	radiogroup "github.com/alternayte/gx/examples/shop/ui/radio-group"
+	resizable "github.com/alternayte/gx/examples/shop/ui/resizable"
 	scrollarea "github.com/alternayte/gx/examples/shop/ui/scroll-area"
 	selectbox "github.com/alternayte/gx/examples/shop/ui/select"
 	separator "github.com/alternayte/gx/examples/shop/ui/separator"
@@ -152,6 +155,12 @@ func Fixtures() []gx.Fixture {
 		{Component: "Card", Package: "github.com/alternayte/gx/examples/shop/ui/card", Name: "BodyOnly", Node: func() gx.Node { return card.Card(card.CardFixtures["BodyOnly"]) }},
 		{Component: "Card", Package: "github.com/alternayte/gx/examples/shop/ui/card", Name: "Full", Node: func() gx.Node { return card.Card(card.CardFixtures["Full"]) }},
 		{Component: "Card", Package: "github.com/alternayte/gx/examples/shop/ui/card", Name: "TitleOnly", Node: func() gx.Node { return card.Card(card.CardFixtures["TitleOnly"]) }},
+		{Component: "Carousel", Package: "github.com/alternayte/gx/examples/shop/ui/carousel", Name: "Default", Node: func() gx.Node { return carousel.Carousel(carousel.CarouselFixtures["Default"]) }},
+		{Component: "Carousel", Package: "github.com/alternayte/gx/examples/shop/ui/carousel", Name: "Vertical", Node: func() gx.Node { return carousel.Carousel(carousel.CarouselFixtures["Vertical"]) }},
+		{Component: "CarouselItem", Package: "github.com/alternayte/gx/examples/shop/ui/carousel", Name: "Default", Node: func() gx.Node { return carousel.CarouselItem(carousel.CarouselItemFixtures["Default"]) }},
+		{Component: "Chart", Package: "github.com/alternayte/gx/examples/shop/ui/chart", Name: "Area", Node: func() gx.Node { return chart.Chart(chart.ChartFixtures["Area"]) }},
+		{Component: "Chart", Package: "github.com/alternayte/gx/examples/shop/ui/chart", Name: "Bar", Node: func() gx.Node { return chart.Chart(chart.ChartFixtures["Bar"]) }},
+		{Component: "Chart", Package: "github.com/alternayte/gx/examples/shop/ui/chart", Name: "Line", Node: func() gx.Node { return chart.Chart(chart.ChartFixtures["Line"]) }},
 		{Component: "Checkbox", Package: "github.com/alternayte/gx/examples/shop/ui/checkbox", Name: "Checked", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Checked"]) }},
 		{Component: "Checkbox", Package: "github.com/alternayte/gx/examples/shop/ui/checkbox", Name: "Disabled", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["Disabled"]) }},
 		{Component: "Checkbox", Package: "github.com/alternayte/gx/examples/shop/ui/checkbox", Name: "DisabledChecked", Node: func() gx.Node { return checkbox.Checkbox(checkbox.CheckboxFixtures["DisabledChecked"]) }},
@@ -372,6 +381,10 @@ func Fixtures() []gx.Fixture {
 		{Component: "RadioGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/radio-group", Name: "Disabled", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Disabled"]) }},
 		{Component: "RadioGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/radio-group", Name: "Invalid", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Invalid"]) }},
 		{Component: "RadioGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/radio-group", Name: "Unchecked", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Unchecked"]) }},
+		{Component: "ResizableHandle", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Between", Node: func() gx.Node { return resizable.ResizableHandleWrap(resizable.ResizableHandle(resizable.ResizableHandleFixtures["Between"])) }},
+		{Component: "ResizablePanel", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Default", Node: func() gx.Node { return resizable.ResizablePanel(resizable.ResizablePanelFixtures["Default"]) }},
+		{Component: "ResizablePanelGroup", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Horizontal", Node: func() gx.Node { return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Horizontal"])) }},
+		{Component: "ResizablePanelGroup", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Vertical", Node: func() gx.Node { return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Vertical"])) }},
 		{Component: "ScrollArea", Package: "github.com/alternayte/gx/examples/shop/ui/scroll-area", Name: "Horizontal", Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Horizontal"]) }},
 		{Component: "ScrollArea", Package: "github.com/alternayte/gx/examples/shop/ui/scroll-area", Name: "Vertical", Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"]) }},
 		{Component: "Select", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Disabled", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Disabled"]) }},
