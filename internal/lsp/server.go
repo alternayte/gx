@@ -6,6 +6,7 @@ import (
 	"io"
 	"sort"
 	"sync"
+	"sync/atomic"
 
 	"github.com/alternayte/gx/internal/compiler"
 )
@@ -21,8 +22,10 @@ type Options struct {
 
 // Server is one gx language server.
 type Server struct {
-	mu        sync.Mutex // documents and publish state
-	diagMu    sync.Mutex // one diagnose pass at a time
+	mu     sync.Mutex // documents and publish state
+	diagMu sync.Mutex // one diagnose pass at a time
+	// checked is the fingerprint of the inputs that the last check read.
+	checked   atomic.Value
 	wmu       sync.Mutex // response and notification writes
 	root      string
 	session   *compiler.Session
@@ -278,6 +281,9 @@ func (s *Server) diagnoseLocked() error {
 	if s.root == "" {
 		return nil
 	}
+	// Read the state of the inputs before the check: a change during the
+	// check must start one more check (REQ-DEV-11).
+	s.checked.Store(fingerprint(s.root))
 	s.session.Generate(s.root)
 	diags := append(s.session.Diagnostics(), s.session.Content(s.root)...)
 	byFile := map[string][]lspDiagnostic{}

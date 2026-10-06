@@ -16,7 +16,6 @@ import (
 func (s *Server) watch() {
 	ticker := time.NewTicker(200 * time.Millisecond)
 	defer ticker.Stop()
-	last := ""
 	for {
 		select {
 		case <-s.done:
@@ -29,15 +28,18 @@ func (s *Server) watch() {
 		if root == "" {
 			continue
 		}
+		// The reference is the state that the last check read. A file that
+		// changes between that check and the next poll differs from it, so
+		// the poll never takes a changed state as its start.
 		fp := fingerprint(root)
-		if last == "" {
-			last = fp
+		checked, _ := s.checked.Load().(string)
+		if checked == "" {
+			s.checked.CompareAndSwap(nil, fp)
 			continue
 		}
-		if fp == last {
+		if fp == checked {
 			continue
 		}
-		last = fp
 		_ = s.diagnose()
 	}
 }
