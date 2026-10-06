@@ -24,6 +24,11 @@ type ToggleGroupProps struct {
 }
 
 func ToggleGroup(p ToggleGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/toggle-group", "ToggleGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ToggleGroup.gx:20:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] rounded-md", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.gap()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "data-spacing", Value: gx.TextValue(p.spacing()), Kind: gx.AttrText}}, p.Attrs), p.Children))

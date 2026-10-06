@@ -18,6 +18,11 @@ type DropdownMenuLabelProps struct {
 }
 
 func DropdownMenuLabel(p DropdownMenuLabelProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/dropdown-menu", "DropdownMenuLabel", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line DropdownMenuLabel.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("px-2 py-1.5 text-sm font-medium", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, p.Attrs), p.Children))

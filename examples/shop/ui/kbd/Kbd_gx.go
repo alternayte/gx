@@ -16,6 +16,11 @@ type KbdProps struct {
 }
 
 func Kbd(p KbdProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/kbd", "Kbd", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Kbd.gx:12:1
 	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-foreground select-none [&_svg:not([class*='size-'])]:size-3 [[data-slot=tooltip-content]_&]:bg-background/20 [[data-slot=tooltip-content]_&]:text-background dark:[[data-slot=tooltip-content]_&]:bg-background/10", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -15,6 +15,11 @@ type CircleCheckProps struct {
 }
 
 func CircleCheck(p CircleCheckProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/icons", "CircleCheck", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line CircleCheck.gx:11:1
 	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m16 9l-5.5 5.5L8 12\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))

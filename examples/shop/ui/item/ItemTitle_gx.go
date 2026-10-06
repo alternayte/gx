@@ -16,6 +16,11 @@ type ItemTitleProps struct {
 }
 
 func ItemTitle(p ItemTitleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/item", "ItemTitle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ItemTitle.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-title", Kind: gx.AttrText}}, p.Attrs), p.Children))

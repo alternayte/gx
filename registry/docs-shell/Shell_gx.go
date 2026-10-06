@@ -19,6 +19,11 @@ type ShellProps struct {
 }
 
 func Shell(p ShellProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "Shell", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Shell.gx:15:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground antialiased"}))

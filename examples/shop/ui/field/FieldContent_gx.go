@@ -16,6 +16,11 @@ type FieldContentProps struct {
 }
 
 func FieldContent(p FieldContentProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/field", "FieldContent", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-content flex flex-1 flex-col gap-1.5 leading-snug", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-content", Kind: gx.AttrText}}, p.Attrs), p.Children))

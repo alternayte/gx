@@ -22,6 +22,11 @@ type ResizablePanelProps struct {
 }
 
 func ResizablePanel(p ResizablePanelProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/resizable", "ResizablePanel", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ResizablePanel.gx:18:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: panelClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "resizable-panel", Kind: gx.AttrText}, gx.Attr{Key: "data-min-size", Value: gx.TextValue(p.MinSize), Kind: gx.AttrText}, gx.Attr{Key: "data-max-size", Value: gx.TextValue(p.maxSize()), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(contentClass, p.Class), Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))

@@ -14,6 +14,11 @@ type PageMetaProps struct {
 }
 
 func PageMeta(p PageMetaProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "PageMeta", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PageMeta.gx:10:1
 	var _b1 gx.Builder

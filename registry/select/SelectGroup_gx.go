@@ -16,6 +16,11 @@ type SelectGroupProps struct {
 }
 
 func SelectGroup(p SelectGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/select", "SelectGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SelectGroup.gx:12:1
 	_b.Add(gx.El("optgroup", gx.Attrs{gx.Attr{Key: "label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Children))

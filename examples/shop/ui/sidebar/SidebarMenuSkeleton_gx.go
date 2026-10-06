@@ -18,6 +18,11 @@ type SidebarMenuSkeletonProps struct {
 }
 
 func SidebarMenuSkeleton(p SidebarMenuSkeletonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarMenuSkeleton", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarMenuSkeleton.gx:14:1
 	var _b1 gx.Builder

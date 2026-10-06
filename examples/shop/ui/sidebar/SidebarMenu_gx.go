@@ -16,6 +16,11 @@ type SidebarMenuProps struct {
 }
 
 func SidebarMenu(p SidebarMenuProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarMenu", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarMenu.gx:12:1
 	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full min-w-0 flex-col gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -10,6 +10,11 @@ type ThemeSelectProps struct {
 }
 
 func ThemeSelect(p ThemeSelectProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "ThemeSelect", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ThemeSelect.gx:3:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme inline-flex gap-1 rounded-md border border-border p-0.5", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Theme", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "light", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}, gx.Text("Light")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "dark", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}, gx.Text("Dark")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}, gx.Text("Auto")), gx.Text("\n"))))

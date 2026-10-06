@@ -22,6 +22,11 @@ type SidebarMenuSubButtonProps struct {
 }
 
 func SidebarMenuSubButton(p SidebarMenuSubButtonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarMenuSubButton", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarMenuSubButton.gx:18:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground", subSizeClass[Size(p.size())], subActiveClass[p.Active], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-sub-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-sub-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.attrs()), p.Children))

@@ -20,6 +20,11 @@ type HeroProps struct {
 }
 
 func Hero(p HeroProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Hero", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Hero.gx:16:1
 	var _b1 gx.Builder

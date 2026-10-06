@@ -24,6 +24,11 @@ type InputProps struct {
 }
 
 func Input(p InputProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/input", "Input", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Input.gx:20:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input", Kind: gx.AttrText}}, p.Attrs)))

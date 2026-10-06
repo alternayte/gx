@@ -12,6 +12,11 @@ type PageHeaderProps struct {
 }
 
 func PageHeader(p PageHeaderProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/docs/site", "PageHeader", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PageHeader.gx:8:1
 	var _b1 gx.Builder

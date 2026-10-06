@@ -25,6 +25,11 @@ type SidebarMenuButtonProps struct {
 }
 
 func SidebarMenuButton(p SidebarMenuButtonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarMenuButton", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarMenuButton.gx:21:1
 	if p.Href != "" {

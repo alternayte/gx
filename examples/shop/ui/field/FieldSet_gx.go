@@ -16,6 +16,11 @@ type FieldSetProps struct {
 }
 
 func FieldSet(p FieldSetProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/field", "FieldSet", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldSet.gx:12:1
 	_b.Add(gx.El("fieldset", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-6 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-set", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -25,6 +25,11 @@ type MenubarCheckboxItemProps struct {
 }
 
 func MenubarCheckboxItem(p MenubarCheckboxItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/menubar", "MenubarCheckboxItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line MenubarCheckboxItem.gx:22:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex cursor-default items-center gap-2 rounded-xs py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitemcheckbox", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled))), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible", Kind: gx.AttrText}}, icons.Check(icons.CheckProps{Label: "", Class: "size-4"})), gx.Text("\n  "), p.Children, gx.Text("\n"))))

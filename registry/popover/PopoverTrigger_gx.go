@@ -25,6 +25,11 @@ type PopoverTriggerProps struct {
 }
 
 func PopoverTrigger(p PopoverTriggerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/popover", "PopoverTrigger", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PopoverTrigger.gx:22:1
 	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: p.Size, Type: "button", Class: p.Class, Children: p.Children, Attrs: p.attrs()}))

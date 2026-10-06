@@ -16,6 +16,11 @@ type BreadcrumbListProps struct {
 }
 
 func BreadcrumbList(p BreadcrumbListProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/breadcrumb", "BreadcrumbList", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line BreadcrumbList.gx:12:1
 	_b.Add(gx.El("ol", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-list", Kind: gx.AttrText}}, p.Attrs), p.Children))

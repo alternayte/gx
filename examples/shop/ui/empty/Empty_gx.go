@@ -16,6 +16,11 @@ type EmptyProps struct {
 }
 
 func Empty(p EmptyProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/empty", "Empty", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Empty.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty", Kind: gx.AttrText}}, p.Attrs), p.Children))

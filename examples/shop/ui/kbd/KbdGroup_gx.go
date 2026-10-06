@@ -16,6 +16,11 @@ type KbdGroupProps struct {
 }
 
 func KbdGroup(p KbdGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/kbd", "KbdGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line KbdGroup.gx:12:1
 	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd-group", Kind: gx.AttrText}}, p.Attrs), p.Children))

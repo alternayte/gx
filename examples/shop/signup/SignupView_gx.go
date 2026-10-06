@@ -18,6 +18,11 @@ func (p *SignupViewProps) GxSetForm(v gx.FormValue) {
 }
 
 func SignupView(p SignupViewProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/signup", "SignupView", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SignupView.gx:12:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop signup", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))

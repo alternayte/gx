@@ -30,6 +30,11 @@ parity:
     cd tests/e2e && bun install --frozen-lockfile
     bash tests/e2e/record.sh ./parity.browsers.ts
 
+# The example shop renders the same bytes with compiled templates and with
+# interpreted templates (REQ-DEV-05).
+parity-render:
+    go test -count=1 ./internal/interp ./internal/parityrender
+
 build:
     rm -rf .gx-build; mkdir -p .gx-build; trap 'rm -rf .gx-build' EXIT; go build -o .gx-build ./...
 

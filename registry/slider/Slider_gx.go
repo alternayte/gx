@@ -30,6 +30,11 @@ type SliderProps struct {
 }
 
 func Slider(p SliderProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/slider", "Slider", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Slider.gx:26:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.fill()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "type", Value: "range", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: gx.TextValue(p.min()), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "step", Value: gx.TextValue(p.step()), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-behavior", true)}, p.Attrs)))

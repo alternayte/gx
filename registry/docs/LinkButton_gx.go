@@ -19,6 +19,11 @@ type LinkButtonProps struct {
 }
 
 func LinkButton(p LinkButtonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "LinkButton", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line LinkButton.gx:15:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-link-button my-2 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs), p.Children))

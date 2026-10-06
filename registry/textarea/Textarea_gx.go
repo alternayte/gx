@@ -22,6 +22,11 @@ type TextareaProps struct {
 }
 
 func Textarea(p TextareaProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/textarea", "Textarea", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Textarea.gx:18:1
 	_b.Add(gx.El("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "textarea", Kind: gx.AttrText}}, p.attrs()), gx.Text(p.Value)))

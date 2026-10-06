@@ -3,6 +3,7 @@
 AGENTS.md
 app/Shell.gx
 app/Shell_gx.go
+app/gxdev_symbols_gx.go
 app/layout.go
 app/theme.css
 cmd/app/gallery_gxdev.go
@@ -12,6 +13,7 @@ cmd/gx/main.go
 go.mod
 gx.toml
 gxdev_gallery/gallery_gx.go
+gxdev_symbols/symbols_gx.go
 gxislands/islands_gx.go
 gxstyles/styles_gx.go
 home/Counter.fixtures.go
@@ -19,6 +21,7 @@ home/Counter.gx
 home/Counter_gx.go
 home/Home.gx
 home/Home_gx.go
+home/gxdev_symbols_gx.go
 home/home.go
 home/route/route.go
 home/route/route_gx.go

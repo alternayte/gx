@@ -25,6 +25,11 @@ type InputGroupInputProps struct {
 }
 
 func InputGroupInput(p InputGroupInputProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/input-group", "InputGroupInput", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line InputGroupInput.gx:22:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Control, "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs())))

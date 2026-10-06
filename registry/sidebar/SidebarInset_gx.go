@@ -16,6 +16,11 @@ type SidebarInsetProps struct {
 }
 
 func SidebarInset(p SidebarInsetProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarInset", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarInset.gx:12:1
 	_b.Add(gx.El("main", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full flex-1 flex-col bg-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-inset", Kind: gx.AttrText}}, p.Attrs), p.Children))

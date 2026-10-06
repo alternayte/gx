@@ -31,6 +31,11 @@ type DialogProps struct {
 }
 
 func Dialog(p DialogProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/dialog", "Dialog", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Dialog.gx:28:1
 	var _b1 gx.Builder

@@ -15,6 +15,11 @@ type SidebarProps struct {
 }
 
 func Sidebar(p SidebarProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "Sidebar", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Sidebar.gx:11:1
 	var _b1 gx.Builder

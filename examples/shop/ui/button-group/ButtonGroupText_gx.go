@@ -18,6 +18,11 @@ type ButtonGroupTextProps struct {
 }
 
 func ButtonGroupText(p ButtonGroupTextProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/button-group", "ButtonGroupText", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ButtonGroupText.gx:14:1
 	if p.For != "" {

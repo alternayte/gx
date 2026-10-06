@@ -29,6 +29,11 @@ type RadioGroupItemProps struct {
 }
 
 func RadioGroupItem(p RadioGroupItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/radio-group", "RadioGroupItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line RadioGroupItem.gx:26:1
 	var _b1 gx.Builder

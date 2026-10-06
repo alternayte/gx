@@ -13,6 +13,11 @@ type ChartsProps struct {
 }
 
 func Charts(p ChartsProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/dashboard", "Charts", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Charts.gx:11:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.Text("\n  "), gx.El("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.Attr{Key: "data-gx-module", Value: gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), Kind: gx.AttrText}, gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}, gx.Frag(gx.Text("Round "), gx.Value(p.Round))), gx.Text("\n  "), gx.El("sl-details", gx.Attrs{gx.Attr{Key: "summary", Value: "About these numbers", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-module", Value: gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), Kind: gx.AttrText}, gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}, gx.Text("The numbers follow the round.")), gx.Text("\n  "), BarChart(BarChartProps{Round: p.Round, Data: p.Revenue}, gx.IslandLoad("eager")), gx.Text("\n  "), Sparkline(SparklineProps{Data: p.Revenue}, gx.IslandLoad("idle")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Refresh{Round: p.Round + 1}).URL(), "").Value, Kind: gx.AttrText}}, gx.Text("Refresh")), gx.Text("\n"))))
@@ -23,6 +28,11 @@ func Charts(p ChartsProps) gx.Node {
 
 //line Charts.gx:11:1
 func ChartsPanel(p ChartsProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/dashboard", "ChartsPanel", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Charts.gx:11:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.Text("\n  "), gx.El("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.Attr{Key: "data-gx-module", Value: gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), Kind: gx.AttrText}, gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}, gx.Frag(gx.Text("Round "), gx.Value(p.Round))), gx.Text("\n  "), gx.El("sl-details", gx.Attrs{gx.Attr{Key: "summary", Value: "About these numbers", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-module", Value: gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), Kind: gx.AttrText}, gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}, gx.Text("The numbers follow the round.")), gx.Text("\n  "), BarChart(BarChartProps{Round: p.Round, Data: p.Revenue}, gx.IslandLoad("eager")), gx.Text("\n  "), Sparkline(SparklineProps{Data: p.Revenue}, gx.IslandLoad("idle")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (route.Refresh{Round: p.Round + 1}).URL(), "").Value, Kind: gx.AttrText}}, gx.Text("Refresh")), gx.Text("\n"))))

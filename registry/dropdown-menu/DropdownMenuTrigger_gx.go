@@ -25,6 +25,11 @@ type DropdownMenuTriggerProps struct {
 }
 
 func DropdownMenuTrigger(p DropdownMenuTriggerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/dropdown-menu", "DropdownMenuTrigger", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line DropdownMenuTrigger.gx:22:1
 	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: p.Size, Type: "button", Class: p.Class, Children: p.Children, Attrs: p.attrs()}))

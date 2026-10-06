@@ -12,6 +12,11 @@ type SelectSeparatorProps struct {
 }
 
 func SelectSeparator(p SelectSeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/select", "SelectSeparator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SelectSeparator.gx:8:1
 	_b.Add(gx.El("hr", p.Attrs))

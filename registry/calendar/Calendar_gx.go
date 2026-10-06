@@ -36,6 +36,11 @@ type CalendarProps struct {
 }
 
 func Calendar(p CalendarProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/calendar", "Calendar", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Calendar.gx:32:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "calendar", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: inputClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "date", Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: p.Min, Kind: gx.AttrText}, gx.Attr{Key: "max", Value: p.Max, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}}, p.Attrs)), gx.Text("\n  "), CalendarGrid(CalendarGridProps{Input: p.Id, Month: p.month(), WeekStart: p.weekStart(), Locale: p.Locale, Display: p.Display, Popover: p.Popover, PreviousLabel: "Previous month", NextLabel: "Next month", Classes: gridClasses}, gx.IslandLoad("eager")), gx.Text("\n"))))

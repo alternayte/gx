@@ -19,6 +19,11 @@ type AspectRatioProps struct {
 }
 
 func AspectRatio(p AspectRatioProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/aspect-ratio", "AspectRatio", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line AspectRatio.gx:15:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative w-full overflow-hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("aspect-ratio: " + p.ratio())))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "aspect-ratio", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -26,6 +26,11 @@ type SwitchProps struct {
 }
 
 func Switch(p SwitchProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/switch", "Switch", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Switch.gx:22:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex shrink-0 items-center rounded-full border border-transparent bg-input shadow-xs transition-all outline-none has-[:checked]:bg-primary has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 dark:bg-input/80 dark:has-[:checked]:bg-primary motion-reduce:transition-none", trackClass[p.size()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-size", Value: string(p.size()), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "switch", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none block translate-x-0 rounded-full bg-background ring-0 transition-transform peer-checked:translate-x-[calc(100%-2px)] dark:bg-foreground dark:peer-checked:bg-primary-foreground motion-reduce:transition-none", thumbClass[p.size()]), Kind: gx.AttrText}}), gx.Text("\n"))))

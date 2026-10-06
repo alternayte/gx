@@ -18,6 +18,11 @@ type EmptyMediaProps struct {
 }
 
 func EmptyMedia(p EmptyMediaProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/empty", "EmptyMedia", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line EmptyMedia.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0", variantClass[Variant(p.variant())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-icon", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -16,6 +16,11 @@ type DashboardSignals struct {
 }
 
 func Dashboard(p DashboardProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/dashboard", "Dashboard", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Dashboard.gx:11:2
 	_b.Add(gx.Text("\n\n"))

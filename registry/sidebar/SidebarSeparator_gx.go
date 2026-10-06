@@ -14,6 +14,11 @@ type SidebarSeparatorProps struct {
 }
 
 func SidebarSeparator(p SidebarSeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarSeparator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarSeparator.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-px w-full shrink-0 bg-border", "mx-2 w-auto bg-sidebar-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-separator", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}, p.Attrs)))

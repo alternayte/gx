@@ -15,6 +15,11 @@ type FrameProps struct {
 }
 
 func Frame(p FrameProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/docs/site", "Frame", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Frame.gx:14:37
 	_b.Add(gx.Text("\n"))

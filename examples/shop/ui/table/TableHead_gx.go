@@ -16,6 +16,11 @@ type TableHeadProps struct {
 }
 
 func TableHead(p TableHeadProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/table", "TableHead", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableHead.gx:12:1
 	_b.Add(gx.El("th", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-head", Kind: gx.AttrText}}, p.Attrs), p.Children))

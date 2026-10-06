@@ -16,6 +16,11 @@ type ToastProps struct {
 }
 
 func Toast(p ToastProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/toast", "Toast", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Toast.gx:12:1
 	var _b1 gx.Builder

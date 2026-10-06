@@ -14,6 +14,11 @@ type CardGridProps struct {
 }
 
 func CardGrid(p CardGridProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "CardGrid", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line CardGrid.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-grid my-4 grid gap-4 sm:grid-cols-2", Kind: gx.AttrText}}, p.Attrs), p.Children))

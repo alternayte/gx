@@ -19,6 +19,11 @@ type SidebarTriggerProps struct {
 }
 
 func SidebarTrigger(p SidebarTriggerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarTrigger", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarTrigger.gx:16:1
 	_b.Add(button.Button(button.ButtonProps{Variant: button.Ghost, Size: button.Icon, Type: "button", Class: gx.Cx("size-7", p.Class), Children: gx.Frag(icons.PanelLeft(icons.PanelLeftProps{Label: "", Class: ""}), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("Toggle Sidebar"))), Attrs: p.attrs()}))

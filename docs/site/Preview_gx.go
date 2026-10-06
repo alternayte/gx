@@ -13,6 +13,11 @@ type PreviewProps struct {
 }
 
 func Preview(p PreviewProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/docs/site", "Preview", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Preview.gx:9:1
 	_b.Add(gx.Head(gx.HeadProps{Title: p.Title, Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))

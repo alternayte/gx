@@ -20,6 +20,11 @@ type MenubarMenuProps struct {
 }
 
 func MenubarMenu(p MenubarMenuProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/menubar", "MenubarMenu", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line MenubarMenu.gx:16:1
 	_b.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.triggerStyle()))), Kind: gx.AttrStyle}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "popovertarget", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-roving-item", true)}, gx.Text(p.Label)))

@@ -14,6 +14,11 @@ type FileTreeProps struct {
 }
 
 func FileTree(p FileTreeProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "FileTree", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FileTree.gx:10:1
 	var _b1 gx.Builder

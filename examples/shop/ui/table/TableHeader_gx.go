@@ -16,6 +16,11 @@ type TableHeaderProps struct {
 }
 
 func TableHeader(p TableHeaderProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/table", "TableHeader", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableHeader.gx:12:1
 	_b.Add(gx.El("thead", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr]:border-b", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-header", Kind: gx.AttrText}}, p.Attrs), p.Children))

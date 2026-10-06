@@ -19,6 +19,11 @@ type AppShellProps struct {
 }
 
 func AppShell(p AppShellProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/app-shell", "AppShell", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line AppShell.gx:16:1
 	var _b1 gx.Builder

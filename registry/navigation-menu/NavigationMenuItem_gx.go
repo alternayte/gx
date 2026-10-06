@@ -16,6 +16,11 @@ type NavigationMenuItemProps struct {
 }
 
 func NavigationMenuItem(p NavigationMenuItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/navigation-menu", "NavigationMenuItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line NavigationMenuItem.gx:12:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/navigation-menu-item relative", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -18,6 +18,11 @@ type InputGroupAddonProps struct {
 }
 
 func InputGroupAddon(p InputGroupAddonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/input-group", "InputGroupAddon", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line InputGroupAddon.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4", alignClass[Align(p.align())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-addon", Kind: gx.AttrText}, gx.Attr{Key: "data-align", Value: p.align(), Kind: gx.AttrText}}, p.Attrs), p.Children))

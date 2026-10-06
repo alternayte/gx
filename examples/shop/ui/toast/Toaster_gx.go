@@ -16,6 +16,11 @@ type ToasterProps struct {
 }
 
 func Toaster(p ToasterProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/toast", "Toaster", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Toaster.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed right-4 bottom-4 z-50 flex w-[356px] max-w-[calc(100vw-2rem)] flex-col gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: "gx-toaster", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "region", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Notifications", Kind: gx.AttrText}, gx.Attr{Key: "aria-live", Value: "polite", Kind: gx.AttrText}, gx.Bool("data-gx-toaster", true)}, p.Attrs), p.Children))

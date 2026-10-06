@@ -15,6 +15,11 @@ type CircleProps struct {
 }
 
 func Circle(p CircleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/icons", "Circle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Circle.gx:11:1
 	_b.Add(gx.Icon("<circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))

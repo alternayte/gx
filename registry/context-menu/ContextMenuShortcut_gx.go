@@ -16,6 +16,11 @@ type ContextMenuShortcutProps struct {
 }
 
 func ContextMenuShortcut(p ContextMenuShortcutProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/context-menu", "ContextMenuShortcut", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ContextMenuShortcut.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -15,6 +15,11 @@ type SidebarItemProps struct {
 }
 
 func SidebarItem(p SidebarItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "SidebarItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarItem.gx:11:1
 	var _b1 gx.Builder

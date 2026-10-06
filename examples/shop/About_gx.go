@@ -11,6 +11,11 @@ type AboutProps struct {
 }
 
 func About(p AboutProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop", "About", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line About.gx:5:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop about", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))

@@ -16,6 +16,11 @@ type FieldDescriptionProps struct {
 }
 
 func FieldDescription(p FieldDescriptionProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/field", "FieldDescription", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldDescription.gx:12:1
 	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm leading-normal font-normal text-muted-foreground group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&]:-mt-1.5 [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-description", Kind: gx.AttrText}}, p.Attrs), p.Children))

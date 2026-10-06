@@ -21,6 +21,11 @@ type DataTablePageProps struct {
 }
 
 func DataTablePage(p DataTablePageProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/data-table-page", "DataTablePage", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line DataTablePage.gx:19:1
 	var _b1 gx.Builder

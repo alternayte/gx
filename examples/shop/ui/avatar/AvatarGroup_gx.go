@@ -16,6 +16,11 @@ type AvatarGroupProps struct {
 }
 
 func AvatarGroup(p AvatarGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/avatar", "AvatarGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line AvatarGroup.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-group", Kind: gx.AttrText}}, p.Attrs), p.Children))

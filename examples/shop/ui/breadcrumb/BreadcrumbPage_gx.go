@@ -16,6 +16,11 @@ type BreadcrumbPageProps struct {
 }
 
 func BreadcrumbPage(p BreadcrumbPageProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/breadcrumb", "BreadcrumbPage", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line BreadcrumbPage.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("font-normal text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-page", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "link", Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "aria-current", Value: "page", Kind: gx.AttrText}}, p.Attrs), p.Children))

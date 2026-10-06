@@ -16,6 +16,11 @@ type InputGroupTextProps struct {
 }
 
 func InputGroupText(p InputGroupTextProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/input-group", "InputGroupText", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line InputGroupText.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm text-muted-foreground [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))

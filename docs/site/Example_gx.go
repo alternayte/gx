@@ -16,6 +16,11 @@ type ExampleProps struct {
 }
 
 func Example(p ExampleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/docs/site", "Example", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Example.gx:13:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-example my-6", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), docs.Tabs(docs.TabsProps{Children: gx.Frag(docs.TabItem(docs.TabItemProps{Label: "Preview", Children: Frame(FrameProps{Item: p.Item, Name: p.Name, Label: p.Label, Block: p.Block})}), docs.TabItem(docs.TabItemProps{Label: "Code", Children: gx.El("div", gx.Attrs{{Key: "data-pagefind-ignore", Value: ""}}, p.Children)}))}), gx.Text("\n"))))

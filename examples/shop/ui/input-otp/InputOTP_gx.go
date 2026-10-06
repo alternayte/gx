@@ -28,6 +28,11 @@ type InputOTPProps struct {
 }
 
 func InputOTP(p InputOTPProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/input-otp", "InputOTP", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line InputOTP.gx:24:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-otp", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: inputClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "text", Kind: gx.AttrText}, gx.Attr{Key: "inputmode", Value: "numeric", Kind: gx.AttrText}, gx.Attr{Key: "pattern", Value: p.pattern(), Kind: gx.AttrText}, gx.Attr{Key: "maxlength", Value: gx.TextValue(p.length()), Kind: gx.AttrText}, gx.Attr{Key: "autocomplete", Value: "one-time-code", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs)), gx.Text("\n  "), InputOTPSlots(InputOTPSlotsProps{Input: p.Id, Length: p.length(), Group: p.Group, SlotClass: slotClass, ActiveClass: activeClass, CaretClass: caretClass, SeparatorClass: separatorClass, OverlayClass: overlayClass}, gx.IslandLoad("eager")), gx.Text("\n"))))

@@ -16,6 +16,11 @@ type EmptyContentProps struct {
 }
 
 func EmptyContent(p EmptyContentProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/empty", "EmptyContent", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line EmptyContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-content", Kind: gx.AttrText}}, p.Attrs), p.Children))

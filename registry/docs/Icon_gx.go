@@ -17,6 +17,11 @@ type IconProps struct {
 }
 
 func Icon(p IconProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Icon", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Icon.gx:13:1
 	_b.Add(gx.Icon(string(p.Body), gx.IconProps{Label: p.Label, Class: gx.Cx("inline-block size-5", p.Class)}))

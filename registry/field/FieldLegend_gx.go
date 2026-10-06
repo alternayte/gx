@@ -18,6 +18,11 @@ type FieldLegendProps struct {
 }
 
 func FieldLegend(p FieldLegendProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/field", "FieldLegend", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldLegend.gx:14:1
 	_b.Add(gx.El("legend", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-3 font-medium data-[variant=legend]:text-base data-[variant=label]:text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-legend", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -22,6 +22,11 @@ type CarouselProps struct {
 }
 
 func Carousel(p CarouselProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/carousel", "Carousel", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Carousel.gx:18:1
 	_b.Add(gx.El("section", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "carousel", Kind: gx.AttrText}, gx.Attr{Key: "aria-roledescription", Value: "carousel", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: viewportClass[p.orientation()], Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.viewportID(), Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label() + " slides", Kind: gx.AttrText}}, p.Children), gx.Text("\n  "), CarouselControls(CarouselControlsProps{Viewport: p.viewportID(), Orientation: string(p.orientation()), PreviousLabel: "Previous slide", NextLabel: "Next slide", StatusText: statusText, Classes: controlClasses}, gx.IslandLoad("eager")), gx.Text("\n"))))

@@ -38,6 +38,11 @@ type AlertDialogProps struct {
 }
 
 func AlertDialog(p AlertDialogProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/alert-dialog", "AlertDialog", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line AlertDialog.gx:35:1
 	var _b1 gx.Builder

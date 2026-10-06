@@ -20,6 +20,11 @@ type CollapsibleProps struct {
 }
 
 func Collapsible(p CollapsibleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/collapsible", "Collapsible", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Collapsible.gx:16:1
 	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/collapsible [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}}, p.Summary), gx.Text("\n  "), p.Children, gx.Text("\n"))))

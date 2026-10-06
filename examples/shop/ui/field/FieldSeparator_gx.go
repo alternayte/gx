@@ -16,6 +16,11 @@ type FieldSeparatorProps struct {
 }
 
 func FieldSeparator(p FieldSeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/field", "FieldSeparator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldSeparator.gx:12:1
 	var _b1 gx.Builder

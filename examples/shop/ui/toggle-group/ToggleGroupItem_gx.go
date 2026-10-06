@@ -26,6 +26,11 @@ type ToggleGroupItemProps struct {
 }
 
 func ToggleGroupItem(p ToggleGroupItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/toggle-group", "ToggleGroupItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ToggleGroupItem.gx:22:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex h-9 w-auto min-w-0 shrink-0 items-center justify-center gap-2 rounded-md bg-transparent px-3 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground has-[:focus-visible]:z-10 has-[:focus-visible]:border-ring has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50 has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[size=sm]/toggle-group:h-8 group-data-[size=lg]/toggle-group:h-10 group-data-[variant=outline]/toggle-group:border group-data-[variant=outline]/toggle-group:border-input group-data-[variant=outline]/toggle-group:shadow-xs group-data-[variant=outline]/toggle-group:hover:bg-accent group-data-[variant=outline]/toggle-group:hover:text-accent-foreground group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:first:rounded-l-md group-data-[spacing=0]/toggle-group:last:rounded-r-md group-data-[spacing=0]/toggle-group:group-data-[variant=outline]/toggle-group:border-l-0 group-data-[spacing=0]/toggle-group:group-data-[variant=outline]/toggle-group:shadow-none group-data-[spacing=0]/toggle-group:group-data-[variant=outline]/toggle-group:first:border-l", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}), gx.Text("\n  "), p.Children, gx.Text("\n"))))

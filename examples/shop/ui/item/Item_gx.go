@@ -22,6 +22,11 @@ type ItemProps struct {
 }
 
 func Item(p ItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/item", "Item", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Item.gx:18:1
 	if p.Href != "" {

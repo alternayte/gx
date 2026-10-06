@@ -31,6 +31,11 @@ type SheetProps struct {
 }
 
 func Sheet(p SheetProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sheet", "Sheet", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Sheet.gx:28:1
 	var _b1 gx.Builder

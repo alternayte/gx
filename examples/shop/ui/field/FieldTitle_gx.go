@@ -16,6 +16,11 @@ type FieldTitleProps struct {
 }
 
 func FieldTitle(p FieldTitleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/field", "FieldTitle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldTitle.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-label", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -23,6 +23,11 @@ type SidebarInputProps struct {
 }
 
 func SidebarInput(p SidebarInputProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarInput", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarInput.gx:20:1
 	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Class, "h-8 w-full bg-background shadow-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-input", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "input", Kind: gx.AttrText}}, p.Attrs)))

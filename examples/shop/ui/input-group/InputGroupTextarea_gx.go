@@ -23,6 +23,11 @@ type InputGroupTextareaProps struct {
 }
 
 func InputGroupTextarea(p InputGroupTextareaProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/input-group", "InputGroupTextarea", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line InputGroupTextarea.gx:20:1
 	_b.Add(gx.El("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(textarea.Control, "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs()), gx.Text(p.Value)))

@@ -16,6 +16,11 @@ type TableCaptionProps struct {
 }
 
 func TableCaption(p TableCaptionProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/table", "TableCaption", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableCaption.gx:12:1
 	_b.Add(gx.El("caption", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mt-4 text-sm text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-caption", Kind: gx.AttrText}}, p.Attrs), p.Children))

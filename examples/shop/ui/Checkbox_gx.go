@@ -12,6 +12,11 @@ type CheckboxProps struct {
 }
 
 func Checkbox(p CheckboxProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui", "Checkbox", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Checkbox.gx:8:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("label", nil, gx.Frag(gx.Text("\n    "), gx.El("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}})), gx.Text("\n    "), p.Children, gx.Text("\n  "))), gx.Text("\n  "), gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())), gx.Text("\n"))))

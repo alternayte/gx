@@ -16,6 +16,11 @@ type PaginationItemProps struct {
 }
 
 func PaginationItem(p PaginationItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/pagination", "PaginationItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PaginationItem.gx:12:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-item", Kind: gx.AttrText}}, p.Attrs), p.Children))

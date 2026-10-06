@@ -21,6 +21,11 @@ type SidebarProps struct {
 }
 
 func Sidebar(p SidebarProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "Sidebar", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Sidebar.gx:17:1
 	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true), gx.Attr{Key: "data-slot", Value: "sidebar", Kind: gx.AttrText}, gx.Attr{Key: "data-side", Value: p.side(), Kind: gx.AttrText}}, p.Attrs), p.Children))

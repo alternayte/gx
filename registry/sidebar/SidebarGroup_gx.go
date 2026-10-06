@@ -16,6 +16,11 @@ type SidebarGroupProps struct {
 }
 
 func SidebarGroup(p SidebarGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarGroup.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))

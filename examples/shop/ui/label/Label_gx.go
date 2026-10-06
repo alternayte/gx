@@ -18,6 +18,11 @@ type LabelProps struct {
 }
 
 func Label(p LabelProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/label", "Label", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Label.gx:14:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "label", Kind: gx.AttrText}}, p.attrs()), p.Children))

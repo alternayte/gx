@@ -16,6 +16,11 @@ type TableCellProps struct {
 }
 
 func TableCell(p TableCellProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/table", "TableCell", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableCell.gx:12:1
 	_b.Add(gx.El("td", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("p-2 align-middle whitespace-nowrap [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-cell", Kind: gx.AttrText}}, p.Attrs), p.Children))

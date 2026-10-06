@@ -18,6 +18,11 @@ type ContextMenuGroupProps struct {
 }
 
 func ContextMenuGroup(p ContextMenuGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/context-menu", "ContextMenuGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ContextMenuGroup.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))

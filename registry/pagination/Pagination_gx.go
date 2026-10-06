@@ -16,6 +16,11 @@ type PaginationProps struct {
 }
 
 func Pagination(p PaginationProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/pagination", "Pagination", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Pagination.gx:12:1
 	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mx-auto flex w-full justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "navigation", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "pagination", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -31,6 +31,11 @@ type DrawerProps struct {
 }
 
 func Drawer(p DrawerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/drawer", "Drawer", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Drawer.gx:27:1
 	var _b1 gx.Builder

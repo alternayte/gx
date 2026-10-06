@@ -12,6 +12,11 @@ type FileFieldProps struct {
 }
 
 func FileField(p FileFieldProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui", "FileField", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FileField.gx:8:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}, gx.Text(p.Label)), gx.Text("\n  "), gx.El("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: "file", Kind: gx.AttrText}})), gx.Text("\n  "), gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())), gx.Text("\n"))))

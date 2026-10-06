@@ -16,6 +16,11 @@ type TableBodyProps struct {
 }
 
 func TableBody(p TableBodyProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/table", "TableBody", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableBody.gx:12:1
 	_b.Add(gx.El("tbody", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr:last-child]:border-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-body", Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -16,6 +16,11 @@ type BreadcrumbProps struct {
 }
 
 func Breadcrumb(p BreadcrumbProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/breadcrumb", "Breadcrumb", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Breadcrumb.gx:12:1
 	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: "breadcrumb", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "breadcrumb", Kind: gx.AttrText}}, p.Attrs), p.Children))

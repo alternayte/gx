@@ -63,6 +63,9 @@ func generate(root string, overlay map[string][]byte) (map[string][]byte, []Diag
 	for path, src := range renderContentBodies(res.collections) {
 		out[path] = src
 	}
+	for path, src := range renderSymbols(root, dirs, l, res) {
+		out[path] = src
+	}
 	out[classesFilePath(root)] = classesBytes(collectClasses(dirs, l, res.pkgs))
 	out[galleryFilePath(root)] = renderGallery(root, dirs, l, res.pkgs)
 	if len(diags) > 0 {
@@ -245,6 +248,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 	g.write("")
 	g.write("func %s(p %sProps) gx.Node {", name, name)
 	g.ind++
+	g.devHook(name, []string{"p"})
 	g.write("var _b gx.Builder")
 	g.emitStmts(f.Body, "_b")
 	g.write("return _b.Node()")
@@ -777,12 +781,42 @@ func (g *gen) fragmentFunc(el *Element) {
 	}
 	g.write("func %s(%s) gx.Node {", name, strings.Join(params, ", "))
 	g.ind++
+	var args []string
+	for _, param := range splitParams(strings.Join(params, ", ")) {
+		args = append(args, firstIdent(param))
+	}
+	g.devHook(name, args)
 	savedFrag, savedKey := g.inFragment, g.fragKey
 	g.inFragment, g.fragKey = true, keyParam
 	g.write("var _b gx.Builder")
 	g.emitStmts([]Node{el}, "_b")
 	g.write("return _b.Node()")
 	g.inFragment, g.fragKey = savedFrag, savedKey
+	g.ind--
+	g.write("}")
+}
+
+// devHook writes the first lines of a generated function: in a dev build,
+// a swap can replace the function with interpreted code (REQ-DEV-02).
+// gx.Dev is a constant that is false in a production build, so the
+// compiler removes the lines there.
+func (g *gen) devHook(name string, args []string) {
+	for _, arg := range args {
+		if arg == "" || arg == "_" {
+			return // a parameter with no name cannot be passed on
+		}
+	}
+	pkgPath := ""
+	if g.pkg.Module != nil {
+		pkgPath = modulePathOf(g.pkg.Module, g.pkg.Dir)
+	}
+	g.write("if gx.Dev {")
+	g.ind++
+	g.write("if _n, _ok := gx.DevRender(%s, %s, %s); _ok {", strconv.Quote(pkgPath), strconv.Quote(name), strings.Join(args, ", "))
+	g.ind++
+	g.write("return _n")
+	g.ind--
+	g.write("}")
 	g.ind--
 	g.write("}")
 }

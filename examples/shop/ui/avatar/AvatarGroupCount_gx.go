@@ -16,6 +16,11 @@ type AvatarGroupCountProps struct {
 }
 
 func AvatarGroupCount(p AvatarGroupCountProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/avatar", "AvatarGroupCount", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line AvatarGroupCount.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-foreground ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-group-count", Kind: gx.AttrText}}, p.Attrs), p.Children))

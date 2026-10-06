@@ -24,6 +24,11 @@ type ChartProps struct {
 }
 
 func Chart(p ChartProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/chart", "Chart", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Chart.gx:20:1
 	var _b1 gx.Builder

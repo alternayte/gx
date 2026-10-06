@@ -15,6 +15,11 @@ type CheckProps struct {
 }
 
 func Check(p CheckProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/icons", "Check", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Check.gx:11:1
 	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 6L9 17l-5-5\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))

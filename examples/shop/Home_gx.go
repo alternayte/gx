@@ -13,6 +13,11 @@ type HomeProps struct {
 }
 
 func Home(p HomeProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop", "Home", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Home.gx:8:1
 	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop home", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))

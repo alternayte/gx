@@ -16,6 +16,11 @@ type PopoverDescriptionProps struct {
 }
 
 func PopoverDescription(p PopoverDescriptionProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/popover", "PopoverDescription", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PopoverDescription.gx:12:1
 	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))

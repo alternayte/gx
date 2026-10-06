@@ -24,6 +24,11 @@ type TabsProps struct {
 }
 
 func Tabs(p TabsProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/tabs", "Tabs", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Tabs.gx:20:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tabs flex gap-2 data-[orientation=horizontal]:flex-col", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}, gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))

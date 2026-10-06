@@ -16,6 +16,11 @@ type SidebarMenuSubItemProps struct {
 }
 
 func SidebarMenuSubItem(p SidebarMenuSubItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarMenuSubItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarMenuSubItem.gx:12:1
 	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/menu-sub-item relative", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-sub-item", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-sub-item", Kind: gx.AttrText}}, p.Attrs), p.Children))

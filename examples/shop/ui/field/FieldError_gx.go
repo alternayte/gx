@@ -19,6 +19,11 @@ type FieldErrorProps struct {
 }
 
 func FieldError(p FieldErrorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/field", "FieldError", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FieldError.gx:15:1
 	if p.Children != nil || len(p.messages()) > 0 {

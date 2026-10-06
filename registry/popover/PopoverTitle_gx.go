@@ -16,6 +16,11 @@ type PopoverTitleProps struct {
 }
 
 func PopoverTitle(p PopoverTitleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/popover", "PopoverTitle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PopoverTitle.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("font-medium", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))

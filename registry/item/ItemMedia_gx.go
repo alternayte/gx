@@ -18,6 +18,11 @@ type ItemMediaProps struct {
 }
 
 func ItemMedia(p ItemMediaProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/item", "ItemMedia", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ItemMedia.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none", mediaClass[Media(p.variant())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-media", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))

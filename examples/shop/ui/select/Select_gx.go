@@ -26,6 +26,11 @@ type SelectProps struct {
 }
 
 func Select(p SelectProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/select", "Select", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Select.gx:23:1
 	var _b1 gx.Builder

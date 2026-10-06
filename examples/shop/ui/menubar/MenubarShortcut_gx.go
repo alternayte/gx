@@ -16,6 +16,11 @@ type MenubarShortcutProps struct {
 }
 
 func MenubarShortcut(p MenubarShortcutProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/menubar", "MenubarShortcut", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line MenubarShortcut.gx:12:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))

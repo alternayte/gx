@@ -16,6 +16,11 @@ type CarouselItemProps struct {
 }
 
 func CarouselItem(p CarouselItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/carousel", "CarouselItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line CarouselItem.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(itemClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-roledescription", Value: "slide", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "carousel-item", Kind: gx.AttrText}}, p.Attrs), p.Children))

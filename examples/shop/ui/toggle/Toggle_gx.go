@@ -30,6 +30,11 @@ type ToggleProps struct {
 }
 
 func Toggle(p ToggleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/toggle", "Toggle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Toggle.gx:26:1
 	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Pressed), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}), gx.Text("\n  "), p.Children, gx.Text("\n"))))

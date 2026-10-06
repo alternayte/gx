@@ -15,6 +15,11 @@ type InfoProps struct {
 }
 
 func Info(p InfoProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/icons", "Info", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Info.gx:11:1
 	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 16v-4m0-4h.01\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))

@@ -24,6 +24,11 @@ type AvatarProps struct {
 }
 
 func Avatar(p AvatarProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/avatar", "Avatar", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Avatar.gx:20:1
 	var _b1 gx.Builder

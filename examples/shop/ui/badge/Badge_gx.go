@@ -20,6 +20,11 @@ type BadgeProps struct {
 }
 
 func Badge(p BadgeProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/badge", "Badge", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Badge.gx:16:1
 	if p.Href != "" {

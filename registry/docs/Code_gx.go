@@ -25,6 +25,11 @@ type CodeProps struct {
 }
 
 func Code(p CodeProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Code", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Code.gx:23:1
 	_b.Add(content.Code(p.Code, content.CodeOptions{Title: p.Title, Wrap: p.Wrap, Marks: p.Marks, Ins: p.Ins, Del: p.Del, Words: p.Words}))

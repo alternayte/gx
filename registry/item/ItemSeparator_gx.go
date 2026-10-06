@@ -14,6 +14,11 @@ type ItemSeparatorProps struct {
 }
 
 func ItemSeparator(p ItemSeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/item", "ItemSeparator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ItemSeparator.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-px w-full shrink-0 bg-border my-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}, p.Attrs)))

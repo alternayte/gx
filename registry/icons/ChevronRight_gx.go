@@ -15,6 +15,11 @@ type ChevronRightProps struct {
 }
 
 func ChevronRight(p ChevronRightProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/icons", "ChevronRight", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ChevronRight.gx:11:1
 	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m9 18l6-6l-6-6\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))

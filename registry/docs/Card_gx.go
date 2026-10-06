@@ -18,6 +18,11 @@ type CardProps struct {
 }
 
 func Card(p CardProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Card", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Card.gx:14:1
 	var _b1 gx.Builder

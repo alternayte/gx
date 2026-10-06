@@ -16,6 +16,11 @@ type SidebarHeaderProps struct {
 }
 
 func SidebarHeader(p SidebarHeaderProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarHeader", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarHeader.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-2 p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-header", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "header", Kind: gx.AttrText}}, p.Attrs), p.Children))

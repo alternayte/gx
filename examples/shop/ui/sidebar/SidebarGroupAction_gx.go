@@ -18,6 +18,11 @@ type SidebarGroupActionProps struct {
 }
 
 func SidebarGroupAction(p SidebarGroupActionProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarGroupAction", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarGroupAction.gx:14:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-group-action", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group-action", Kind: gx.AttrText}}, p.Attrs), p.Children))

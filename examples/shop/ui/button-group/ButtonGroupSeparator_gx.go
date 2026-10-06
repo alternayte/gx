@@ -17,6 +17,11 @@ type ButtonGroupSeparatorProps struct {
 }
 
 func ButtonGroupSeparator(p ButtonGroupSeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/button-group", "ButtonGroupSeparator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ButtonGroupSeparator.gx:13:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", separatorClass[Orientation(p.orientation())], "relative m-0! self-stretch bg-input", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "button-group-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.Attrs)))

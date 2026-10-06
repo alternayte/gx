@@ -14,6 +14,11 @@ type SkeletonProps struct {
 }
 
 func Skeleton(p SkeletonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/skeleton", "Skeleton", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Skeleton.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("animate-pulse rounded-md bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}}, p.Attrs)))

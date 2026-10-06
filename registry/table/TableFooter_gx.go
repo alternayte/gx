@@ -16,6 +16,11 @@ type TableFooterProps struct {
 }
 
 func TableFooter(p TableFooterProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/table", "TableFooter", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableFooter.gx:12:1
 	_b.Add(gx.El("tfoot", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-footer", Kind: gx.AttrText}}, p.Attrs), p.Children))

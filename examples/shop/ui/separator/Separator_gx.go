@@ -19,6 +19,11 @@ type SeparatorProps struct {
 }
 
 func Separator(p SeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/separator", "Separator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Separator.gx:15:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs())))

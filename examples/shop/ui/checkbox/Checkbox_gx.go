@@ -27,6 +27,11 @@ type CheckboxProps struct {
 }
 
 func Checkbox(p CheckboxProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/checkbox", "Checkbox", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Checkbox.gx:24:1
 	var _b1 gx.Builder

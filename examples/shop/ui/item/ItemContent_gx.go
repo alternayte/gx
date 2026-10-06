@@ -16,6 +16,11 @@ type ItemContentProps struct {
 }
 
 func ItemContent(p ItemContentProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/item", "ItemContent", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ItemContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-content", Kind: gx.AttrText}}, p.Attrs), p.Children))

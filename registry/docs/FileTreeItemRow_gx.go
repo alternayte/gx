@@ -12,6 +12,11 @@ type FileTreeItemRowProps struct {
 }
 
 func FileTreeItemRow(p FileTreeItemRowProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "FileTreeItemRow", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line FileTreeItemRow.gx:8:1
 	var _b1 gx.Builder

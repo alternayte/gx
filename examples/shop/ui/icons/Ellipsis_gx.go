@@ -15,6 +15,11 @@ type EllipsisProps struct {
 }
 
 func Ellipsis(p EllipsisProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/icons", "Ellipsis", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Ellipsis.gx:11:1
 	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"19\" cy=\"12\" r=\"1\"/><circle cx=\"5\" cy=\"12\" r=\"1\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))

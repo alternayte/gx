@@ -22,6 +22,11 @@ type ResizableHandleProps struct {
 }
 
 func ResizableHandle(p ResizableHandleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/resizable", "ResizableHandle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ResizableHandle.gx:18:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(handleClass[p.orientation()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}, gx.Attr{Key: "aria-orientation", Value: p.ariaOrientation(), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuenow", Value: "50", Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemin", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemax", Value: "100", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "resizable-handle", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), ResizableDrag(ResizableDragProps{Handle: p.Id, Step: p.step(), GripClass: gripClass[p.orientation()]}, gx.IslandLoad("eager")), gx.Text("\n"))))

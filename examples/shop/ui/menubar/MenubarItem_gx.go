@@ -22,6 +22,11 @@ type MenubarItemProps struct {
 }
 
 func MenubarItem(p MenubarItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/menubar", "MenubarItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line MenubarItem.gx:18:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-close", true)}, rovingItem(p.Disabled), p.Attrs), p.Children))

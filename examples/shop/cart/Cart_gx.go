@@ -18,6 +18,11 @@ type CartSignals struct {
 }
 
 func Cart(p CartProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/cart", "Cart", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Cart.gx:15:2
 	_b.Add(gx.Text("\n\n"))
@@ -69,6 +74,11 @@ func Cart(p CartProps) gx.Node {
 
 //line Cart.gx:19:23
 func CartTotal(key gx.Key, total int) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/cart", "CartTotal", key, total); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Cart.gx:19:23
 	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("cart", "total", key), Kind: gx.AttrText}}, gx.Value(total)))

@@ -18,6 +18,11 @@ type SelectOptionProps struct {
 }
 
 func SelectOption(p SelectOptionProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/select", "SelectOption", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SelectOption.gx:14:1
 	_b.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("selected", p.Selected), gx.Bool("disabled", p.Disabled)}, p.Children))

@@ -18,6 +18,11 @@ type BreadcrumbLinkProps struct {
 }
 
 func BreadcrumbLink(p BreadcrumbLinkProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/breadcrumb", "BreadcrumbLink", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line BreadcrumbLink.gx:14:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("transition-colors hover:text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "breadcrumb-link", Kind: gx.AttrText}}, p.Attrs), p.Children))

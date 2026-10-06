@@ -16,6 +16,11 @@ type TabItemProps struct {
 }
 
 func TabItem(p TabItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "TabItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TabItem.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab", Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tab-item", true)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab-button -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[selected=true]:border-foreground data-[selected=true]:text-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}}, gx.Text(p.Label)), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-tab-panel pt-4", Kind: gx.AttrText}, gx.Bool("data-gx-tab-panel", true)}, p.Children), gx.Text("\n"))))

@@ -17,6 +17,11 @@ type BadgeProps struct {
 }
 
 func Badge(p BadgeProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Badge", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Badge.gx:13:1
 	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium", badgeClass[p.Variant]), Kind: gx.AttrText}}, p.Attrs), gx.Text(p.Label)))

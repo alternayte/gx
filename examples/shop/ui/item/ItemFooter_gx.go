@@ -16,6 +16,11 @@ type ItemFooterProps struct {
 }
 
 func ItemFooter(p ItemFooterProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/item", "ItemFooter", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ItemFooter.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex basis-full items-center justify-between gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-footer", Kind: gx.AttrText}}, p.Attrs), p.Children))

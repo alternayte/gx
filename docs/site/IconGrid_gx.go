@@ -11,6 +11,11 @@ type IconGridProps struct {
 }
 
 func IconGrid(p IconGridProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/docs/site", "IconGrid", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line IconGrid.gx:7:1
 	var _b1 gx.Builder

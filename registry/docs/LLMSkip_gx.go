@@ -13,6 +13,11 @@ type LLMSkipProps struct {
 }
 
 func LLMSkip(p LLMSkipProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "LLMSkip", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 	return _b.Node()
 }

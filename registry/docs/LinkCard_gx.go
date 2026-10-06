@@ -20,6 +20,11 @@ type LinkCardProps struct {
 }
 
 func LinkCard(p LinkCardProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "LinkCard", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line LinkCard.gx:16:1
 	var _b1 gx.Builder

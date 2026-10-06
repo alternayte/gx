@@ -13,6 +13,11 @@ type ToastDemoProps struct {
 }
 
 func ToastDemo(p ToastDemoProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/docs/site", "ToastDemo", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ToastDemo.gx:13:80
 	_b.Add(gx.Text("\n"))

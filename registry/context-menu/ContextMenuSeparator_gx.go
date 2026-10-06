@@ -14,6 +14,11 @@ type ContextMenuSeparatorProps struct {
 }
 
 func ContextMenuSeparator(p ContextMenuSeparatorProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/context-menu", "ContextMenuSeparator", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ContextMenuSeparator.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("-mx-1 my-1 h-px bg-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}}, p.Attrs)))

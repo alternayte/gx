@@ -18,6 +18,11 @@ type SplashProps struct {
 }
 
 func Splash(p SplashProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "Splash", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Splash.gx:14:1
 	var _b1 gx.Builder

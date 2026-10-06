@@ -15,6 +15,11 @@ type LoaderCircleProps struct {
 }
 
 func LoaderCircle(p LoaderCircleProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/icons", "LoaderCircle", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line LoaderCircle.gx:11:1
 	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M21 12a9 9 0 1 1-6.219-8.56\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))

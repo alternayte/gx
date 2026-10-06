@@ -21,6 +21,11 @@ type TabsTriggerProps struct {
 }
 
 func TabsTrigger(p TabsTriggerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/tabs", "TabsTrigger", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TabsTrigger.gx:17:1
 	var _b1 gx.Builder

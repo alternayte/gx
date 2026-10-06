@@ -19,6 +19,11 @@ type TabsProps struct {
 }
 
 func Tabs(p TabsProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Tabs", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Tabs.gx:15:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-tabs my-4", Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))

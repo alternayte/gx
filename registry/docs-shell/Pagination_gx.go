@@ -14,6 +14,11 @@ type PaginationProps struct {
 }
 
 func Pagination(p PaginationProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "Pagination", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Pagination.gx:10:1
 	if p.Prev != nil || p.Next != nil {

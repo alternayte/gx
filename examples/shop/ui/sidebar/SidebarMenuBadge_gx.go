@@ -16,6 +16,11 @@ type SidebarMenuBadgeProps struct {
 }
 
 func SidebarMenuBadge(p SidebarMenuBadgeProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarMenuBadge", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarMenuBadge.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-badge", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-badge", Kind: gx.AttrText}}, p.Attrs), p.Children))

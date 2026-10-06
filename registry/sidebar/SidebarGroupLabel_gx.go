@@ -16,6 +16,11 @@ type SidebarGroupLabelProps struct {
 }
 
 func SidebarGroupLabel(p SidebarGroupLabelProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/sidebar", "SidebarGroupLabel", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarGroupLabel.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear motion-reduce:transition-none focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group-label", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group-label", Kind: gx.AttrText}}, p.Attrs), p.Children))

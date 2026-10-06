@@ -1620,6 +1620,14 @@ var ViewTransition Node = transitionNode{}
 
 ViewTransition wraps the following patches in startViewTransition.
 
+#### func DevRender
+
+```go
+func DevRender(pkgPath, name string, args ...any) (Node, bool)
+```
+
+DevRender is the dev hook of a generated function. A production build never calls it.
+
 #### func EachRow
 
 ```go
@@ -2366,6 +2374,14 @@ const DefaultThemeCSS = `@import "tailwindcss";
 ```
 
 DefaultThemeCSS is the Tailwind v4 theme file that `gx init` writes to app/theme.css. Token names match shadcn. Dark mode follows a .dark class, and a system preference when no class is set.
+
+### Dev
+
+```go
+const Dev = false
+```
+
+Dev is false in a production build. Generated code asks it before it calls DevRender, so the compiler removes that call and the binary holds no part of the dev interpreter.
 
 ### Email
 

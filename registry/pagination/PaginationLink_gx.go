@@ -24,6 +24,11 @@ type PaginationLinkProps struct {
 }
 
 func PaginationLink(p PaginationLinkProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/pagination", "PaginationLink", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PaginationLink.gx:21:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "pagination-link", Kind: gx.AttrText}}, p.attrs()), p.Children))

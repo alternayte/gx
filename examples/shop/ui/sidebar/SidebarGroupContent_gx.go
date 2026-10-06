@@ -16,6 +16,11 @@ type SidebarGroupContentProps struct {
 }
 
 func SidebarGroupContent(p SidebarGroupContentProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarGroupContent", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarGroupContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group-content", Kind: gx.AttrText}}, p.Attrs), p.Children))

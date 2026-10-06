@@ -26,6 +26,11 @@ type AccordionItemProps struct {
 }
 
 func AccordionItem(p AccordionItemProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/accordion", "AccordionItem", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line AccordionItem.gx:23:1
 	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/accordion-item border-border border-b last:border-b-0 [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 inert:pointer-events-none inert:opacity-50 [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}, gx.Bool("inert", p.Disabled)}, gx.Frag(gx.Text("\n    "), gx.Text(p.Title), gx.Text("\n    "), icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-open/accordion-item:rotate-180 motion-reduce:transition-none"}), gx.Text("\n  "))), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "pt-0 pb-4 text-sm", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))

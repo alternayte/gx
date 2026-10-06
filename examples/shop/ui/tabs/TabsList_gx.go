@@ -20,6 +20,11 @@ type TabsListProps struct {
 }
 
 func TabsList(p TabsListProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/tabs", "TabsList", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TabsList.gx:16:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-9 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col", variantClass[p.variant()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "tablist", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: string(p.variant()), Kind: gx.AttrText}}, p.Attrs), p.Children))

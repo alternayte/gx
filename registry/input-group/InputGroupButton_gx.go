@@ -24,6 +24,11 @@ type InputGroupButtonProps struct {
 }
 
 func InputGroupButton(p InputGroupButtonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/input-group", "InputGroupButton", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line InputGroupButton.gx:21:1
 	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: buttonSize[p.size()], Type: p.Type, Class: gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class), Children: p.Children, Attrs: p.Attrs}))

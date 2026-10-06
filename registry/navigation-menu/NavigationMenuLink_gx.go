@@ -23,6 +23,11 @@ type NavigationMenuLinkProps struct {
 }
 
 func NavigationMenuLink(p NavigationMenuLinkProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/navigation-menu", "NavigationMenuLink", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line NavigationMenuLink.gx:19:1
 	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-1 rounded-sm p-2 text-sm no-underline transition-all outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], activeClass[p.Active], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "aria-current", Value: p.current(), Kind: gx.AttrText}}, p.Attrs), p.Children))

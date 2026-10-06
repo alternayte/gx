@@ -16,6 +16,11 @@ type ItemActionsProps struct {
 }
 
 func ItemActions(p ItemActionsProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/item", "ItemActions", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ItemActions.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-actions", Kind: gx.AttrText}}, p.Attrs), p.Children))

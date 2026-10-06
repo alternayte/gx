@@ -14,6 +14,11 @@ type StepsProps struct {
 }
 
 func Steps(p StepsProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs", "Steps", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Steps.gx:10:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-steps my-4 [&>ol]:m-0 [&>ol]:list-none [&>ol]:space-y-4 [&>ol]:p-0 [&>ol>li]:border-l-2 [&>ol>li]:border-border [&>ol>li]:pl-4", Kind: gx.AttrText}}, p.Attrs), p.Children))

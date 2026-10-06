@@ -18,6 +18,11 @@ type NavigationMenuProps struct {
 }
 
 func NavigationMenu(p NavigationMenuProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/navigation-menu", "NavigationMenu", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line NavigationMenu.gx:14:1
 	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-center justify-center gap-1", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))

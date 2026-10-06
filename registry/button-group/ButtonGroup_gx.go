@@ -18,6 +18,11 @@ type ButtonGroupProps struct {
 }
 
 func ButtonGroup(p ButtonGroupProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/button-group", "ButtonGroup", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line ButtonGroup.gx:14:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "button-group", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.Attrs), p.Children))

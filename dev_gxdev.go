@@ -46,6 +46,27 @@ func (a *App) devRoutes() {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"dev":true}`))
 	}))
+	// gx dev sends the new generated code of a .gx file here. The answer
+	// says whether the app runs it as interpreted code now, or needs a
+	// rebuild (REQ-DEV-02).
+	a.mux.Handle("POST /_gx/dev/swap", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Package string `json:"package"`
+			File    string `json:"file"`
+			Source  string `json:"source"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		if err := DevSwap(in.Package, in.File, []byte(in.Source)); err != nil {
+			w.WriteHeader(http.StatusConflict)
+			_ = json.NewEncoder(w).Encode(map[string]any{"swapped": false, "reason": err.Error()})
+			return
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"swapped": true, "functions": DevSwapped()})
+	}))
 	a.mux.Handle("GET /_gx/gallery", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_ = RenderRequest(w, r, galleryPageHTML())

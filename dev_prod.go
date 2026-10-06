@@ -4,6 +4,15 @@ package gx
 
 import "net/http"
 
+// Dev is false in a production build. Generated code asks it before it
+// calls DevRender, so the compiler removes that call and the binary holds
+// no part of the dev interpreter (SI-08).
+const Dev = false
+
+// DevRender is the dev hook of a generated function. A production build
+// never calls it.
+func DevRender(pkgPath, name string, args ...any) (Node, bool) { return nil, false }
+
 // devRoutes is empty in a production build (REQ-DEV-07, SI-08).
 func (a *App) devRoutes() {}
 

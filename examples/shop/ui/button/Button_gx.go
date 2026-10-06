@@ -22,6 +22,11 @@ type ButtonProps struct {
 }
 
 func Button(p ButtonProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/button", "Button", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Button.gx:18:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: Class(p.Variant, p.Size, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.typeAttr(), Kind: gx.AttrText}}, p.Attrs), p.Children))

@@ -16,6 +16,11 @@ type TableRowProps struct {
 }
 
 func TableRow(p TableRowProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/table", "TableRow", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line TableRow.gx:12:1
 	_b.Add(gx.El("tr", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-row", Kind: gx.AttrText}}, p.Attrs), p.Children))

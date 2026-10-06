@@ -12,6 +12,11 @@ type TocProps struct {
 }
 
 func Toc(p TocProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/docs-shell", "Toc", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line Toc.gx:8:1
 	if len(p.Headings) > 0 {

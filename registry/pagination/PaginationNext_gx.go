@@ -18,6 +18,11 @@ type PaginationNextProps struct {
 }
 
 func PaginationNext(p PaginationNextProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/pagination", "PaginationNext", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line PaginationNext.gx:15:1
 	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class), Children: gx.Frag(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "hidden sm:block", Kind: gx.AttrText}}, gx.Text("Next")), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""})), Attrs: p.attrs()}))

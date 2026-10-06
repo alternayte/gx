@@ -17,6 +17,11 @@ type NavigationMenuTriggerProps struct {
 }
 
 func NavigationMenuTrigger(p NavigationMenuTriggerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/navigation-menu", "NavigationMenuTrigger", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line NavigationMenuTrigger.gx:14:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(triggerClass, "group-hover/navigation-menu-item:bg-accent/50 group-hover/navigation-menu-item:text-accent-foreground group-hover/navigation-menu-item:hover:bg-accent group-hover/navigation-menu-item:focus:bg-accent group-focus-within/navigation-menu-item:bg-accent/50 group-focus-within/navigation-menu-item:text-accent-foreground group-focus-within/navigation-menu-item:hover:bg-accent group-focus-within/navigation-menu-item:focus:bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "true", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), p.Children, gx.Text("\n  "), icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "relative top-[1px] ml-1 size-3 transition duration-300 group-hover/navigation-menu-item:rotate-180 group-focus-within/navigation-menu-item:rotate-180 motion-reduce:transition-none"}), gx.Text("\n"))))

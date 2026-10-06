@@ -16,6 +16,11 @@ type SidebarContentProps struct {
 }
 
 func SidebarContent(p SidebarContentProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/ui/sidebar", "SidebarContent", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line SidebarContent.gx:12:1
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-h-0 flex-1 flex-col gap-2 overflow-auto", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "content", Kind: gx.AttrText}}, p.Attrs), p.Children))

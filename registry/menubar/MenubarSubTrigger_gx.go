@@ -21,6 +21,11 @@ type MenubarSubTriggerProps struct {
 }
 
 func MenubarSubTrigger(p MenubarSubTriggerProps) gx.Node {
+	if gx.Dev {
+		if _n, _ok := gx.DevRender("github.com/alternayte/gx/registry/menubar", "MenubarSubTrigger", p); _ok {
+			return _n
+		}
+	}
 	var _b gx.Builder
 //line MenubarSubTrigger.gx:18:1
 	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled), p.Attrs), gx.Frag(gx.Text("\n  "), p.Children, gx.Text("\n  "), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: "ml-auto h-4 w-4"}), gx.Text("\n"))))
