@@ -124,6 +124,10 @@ test('REQ-DEV-03 a rebuild morphs the page and keeps the signal, the input value
     })
     // The page did not load again: it took a patch.
     expect(await page.evaluate(() => (window as unknown as { alive?: number }).alive)).toBe(1)
+    // Read the scroll position before the click below: Playwright scrolls a
+    // button into view before it clicks, and that moves the page when the
+    // button is above the viewport.
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(60)
     expect(await page.inputValue(qty)).toBe('7')
     // The signal holds 7 too: a client expression of the cart reads it.
     await page.click('[data-label="Alpha"] button:text-is("Add")')
@@ -134,7 +138,6 @@ test('REQ-DEV-03 a rebuild morphs the page and keeps the signal, the input value
     )
     // The other cart did not get the value of the first one.
     expect(await page.inputValue('[data-label="Beta"] input[type="number"]')).toBe('1')
-    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(60)
   } finally {
     writeFileSync(view, original)
     await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Two carts', undefined, {
