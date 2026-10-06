@@ -12,6 +12,7 @@ cmd/gx/main.go
 go.mod
 gx.toml
 gxdev_gallery/gallery_gx.go
+gxislands/islands_gx.go
 gxstyles/styles_gx.go
 home/Counter.fixtures.go
 home/Counter.gx

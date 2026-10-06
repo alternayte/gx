@@ -277,7 +277,9 @@ func writeAssets(ctx context.Context, base, out string, assets []string) (assetN
 			continue
 		}
 		target := asset
-		if i := strings.LastIndex(asset, "/_gx/"); i >= 0 {
+		// An island file has the hash of its content in its name, and the
+		// files of the bundle import each other by name (REQ-ISL-03).
+		if i := strings.LastIndex(asset, "/_gx/"); i >= 0 && !strings.Contains(asset, "/_gx/islands/") {
 			sum := sha256.Sum256(body)
 			ext := filepath.Ext(asset)
 			target = strings.TrimSuffix(asset, ext) + "." + hex.EncodeToString(sum[:])[:8] + ext

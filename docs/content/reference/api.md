@@ -396,6 +396,14 @@ func SetGallery(fixtures []Fixture)
 
 SetGallery installs the fixture list of the dev gallery. The generated gxdev_gallery package supplies it; the scaffold's main calls this with gxdev.
 
+### func SetIslands
+
+```go
+func SetIslands(b IslandBundle)
+```
+
+SetIslands installs the island bundle of the app.
+
 ### func SetStylesheet
 
 ```go
@@ -1390,6 +1398,20 @@ type IconProps struct {
 ```
 
 IconProps are the props of a generated icon component.
+
+### type IslandBundle
+
+```go
+type IslandBundle struct {
+    // Entries maps the name of an island to its file.
+    Entries map[string]string
+    // Files maps a file name to its content. Each name holds the hash of
+    // the content.
+    Files map[string]string
+}
+```
+
+IslandBundle is the built JavaScript of the islands of an app. gx build writes it into the generated package gxislands, and the app's main installs it with gx.SetIslands(gxislands.Bundle()).
 
 ### type Key
 

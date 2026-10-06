@@ -18,6 +18,7 @@ import (
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/gxstyles"
+	"github.com/alternayte/gx/internal/islands"
 )
 
 // App is one running dev build of an app.
@@ -103,6 +104,9 @@ func build(ctx context.Context, dir, mainPkg, bin string) error {
 		}
 	}
 	if _, err := gxstyles.Build(ctx, dir, true); err != nil {
+		return err
+	}
+	if _, err := islands.Write(dir, islands.Options{Minify: true}); err != nil {
 		return err
 	}
 	cmd := exec.CommandContext(ctx, "go", "build", "-tags", "gxdev", "-o", bin, mainPkg)

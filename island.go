@@ -11,11 +11,21 @@ import (
 // Island returns the element of a TypeScript island (REQ-ISL-01). name is
 // the import path of the package and the component name. props is the JSON
 // of the props. The generated component function of an island calls it.
+//
+// The src attribute names the entry file of the island in the bundle that
+// gx.SetIslands installed (REQ-ISL-03). In dev, an island that the bundle
+// does not hold is a panic, because the browser cannot mount it.
 func Island(name, props string) Node {
-	return El("gx-island", Attrs{
+	attrs := Attrs{
 		{Key: "name", Value: name},
 		{Key: "props", Value: props},
-	})
+	}
+	if src := islandSrc(name); src != "" {
+		attrs = append(attrs, Attr{Key: "src", Value: src, Kind: AttrURL})
+	} else if devMode.Load() {
+		panic("gx: the island " + name + " is not in the installed bundle; call gx.SetIslands(gxislands.Bundle()) in main")
+	}
+	return El("gx-island", attrs)
 }
 
 // The AppendJSON functions write the props of an island with no reflection

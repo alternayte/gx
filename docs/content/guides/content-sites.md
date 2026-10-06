@@ -109,6 +109,7 @@ import (
 	"github.com/alternayte/gx/adapters/datastar"
 	"github.com/alternayte/gx/content"
 	"acme/app"
+	"acme/gxislands"
 	"acme/gxstyles"
 	"acme/home"
 	"acme/notes"
@@ -118,6 +119,7 @@ func main() {
 	setupGallery()
 	content.Install()
 	gx.SetStylesheet(gxstyles.CSS())
+	gx.SetIslands(gxislands.Bundle())
 	server := gx.New(gx.Config{Adapter: datastar.Adapter()})
 	server.Group("/", app.Layout, gx.Nav(gx.MorphNavigation), home.Routes)
 	server.Group("/notes", app.Layout, notes.Routes)

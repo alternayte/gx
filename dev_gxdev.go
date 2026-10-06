@@ -133,6 +133,7 @@ func (a *App) serveExportList(w http.ResponseWriter, r *http.Request) {
 	if len(Stylesheet()) > 0 {
 		assets = append(assets, "/_gx/app.css")
 	}
+	assets = append(assets, islandFiles()...)
 	if a.public != nil {
 		// The app's own files export with the Gx assets (NFR-08).
 		_ = fs.WalkDir(a.public, ".", func(name string, d fs.DirEntry, err error) error {

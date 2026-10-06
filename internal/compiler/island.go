@@ -325,3 +325,37 @@ func dirHasIsland(dir string, names []string) bool {
 	}
 	return false
 }
+
+// IslandRef is one island of a module (REQ-ISL-03).
+type IslandRef struct {
+	// ID is the name the server and the browser use: the import path of the
+	// package and the component name.
+	ID   string
+	Name string
+	// File is the path of the .ts file.
+	File string
+}
+
+// Islands returns every island under root, in the order of their IDs. It
+// reads the file names and the default exports only, so the bundler can
+// call it with no type analysis.
+func Islands(root string) []IslandRef {
+	root = absoluteRoot(root)
+	l := newLoader()
+	var out []IslandRef
+	for _, dir := range collectDirs(root) {
+		p := l.load(dir)
+		if p.Module == nil {
+			continue
+		}
+		for _, name := range islandNames(p) {
+			out = append(out, IslandRef{
+				ID:   islandID(modulePathOf(p.Module, dir), name),
+				Name: name,
+				File: p.Islands[name].File,
+			})
+		}
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })
+	return out
+}

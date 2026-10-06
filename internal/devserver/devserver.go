@@ -29,6 +29,7 @@ import (
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/gxstyles"
+	"github.com/alternayte/gx/internal/islands"
 )
 
 //go:embed devclient.js
@@ -194,6 +195,10 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 		}
 		if _, err := gxstyles.Build(ctx, s.dir, false); err != nil {
 			return false, &Overlay{Title: "styles failed", Text: err.Error()}
+		}
+		// The dev bundle keeps names and has source maps (REQ-ISL-03).
+		if _, err := islands.Write(s.dir, islands.Options{}); err != nil {
+			return false, islandsOverlay(err)
 		}
 	}
 	cmd := exec.CommandContext(ctx, "go", "build", "-tags", "gxdev", "-o", bin, s.opt.Main)
@@ -555,6 +560,19 @@ func buildOverlay(text, dir string) *Overlay {
 }
 
 // diagsOverlay turns gx diagnostics into an overlay (REQ-DEV-06).
+// islandsOverlay shows the first error of a failed island bundle.
+func islandsOverlay(err error) *Overlay {
+	ov := &Overlay{Title: "islands failed", Text: err.Error()}
+	var berr *islands.Error
+	if errors.As(err, &berr) && len(berr.Messages) > 0 && berr.Messages[0].File != "" {
+		m := berr.Messages[0]
+		ov.File, ov.Line, ov.Col = m.File, m.Line, m.Col
+		ov.Text = withExcerpt(ov.Text, "", m.File, m.Line)
+		ov.Link = editorLink("", m.File, m.Line, m.Col)
+	}
+	return ov
+}
+
 func diagsOverlay(diags []compiler.Diagnostic) *Overlay {
 	var b strings.Builder
 	for _, d := range diags {

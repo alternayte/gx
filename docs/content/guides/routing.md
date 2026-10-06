@@ -116,6 +116,7 @@ import (
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/adapters/datastar"
 	"acme/app"
+	"acme/gxislands"
 	"acme/gxstyles"
 	"acme/home"
 	"acme/shop"
@@ -132,6 +133,7 @@ func noStore(next http.Handler) http.Handler {
 func main() {
 	setupGallery()
 	gx.SetStylesheet(gxstyles.CSS())
+	gx.SetIslands(gxislands.Bundle())
 	server := gx.New(gx.Config{Adapter: datastar.Adapter()})
 	server.Group("/", app.Layout, gx.Nav(gx.MorphNavigation), noStore, home.Routes, shop.Routes)
 

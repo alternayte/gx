@@ -29,6 +29,7 @@ import (
 	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
+	"github.com/alternayte/gx/internal/islands"
 	"github.com/alternayte/gx/internal/lsp"
 	"github.com/alternayte/gx/internal/mcpserver"
 	pagefindpkg "github.com/alternayte/gx/internal/pagefind"
@@ -512,6 +513,10 @@ func runBuild(args []string) int {
 		}
 	}
 	if _, err := gxstyles.Build(context.Background(), dir, true); err != nil {
+		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
+		return 1
+	}
+	if _, err := islands.Write(dir, islands.Options{Minify: true}); err != nil {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
 		return 1
 	}

@@ -272,6 +272,7 @@ func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
 	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast, public: cfg.Public}
 	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
+	a.mux.Handle("GET "+islandsPath+"{file...}", http.HandlerFunc(serveIsland))
 	a.devRoutes()
 	// The theme script needs no adapter: it only reads the stored theme.
 	a.registerAsset("theme.js", themeRuntimeJS)

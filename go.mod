@@ -7,6 +7,7 @@ require (
 	github.com/alecthomas/chroma/v2 v2.27.0
 	github.com/chromedp/cdproto v0.0.0-20250724212937-08a3db8b4327
 	github.com/chromedp/chromedp v0.14.2
+	github.com/evanw/esbuild v0.28.2
 	github.com/golangci/plugin-module-register v0.1.1
 	github.com/modelcontextprotocol/go-sdk v1.8.0
 	github.com/starfederation/datastar-go v1.2.2
