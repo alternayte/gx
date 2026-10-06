@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -61,29 +62,47 @@ type slowRoute struct{}
 func (slowRoute) Pattern() string          { return "GET /slow" }
 func (slowRoute) Bind(*http.Request) error { return nil }
 
+// TestREQ_RTE_08_ConcurrentLoaders proves that the page loader and the
+// layout loaders run at the same time. Each loader waits until all three
+// run. Loaders that run one after the other never meet, and the wait ends
+// with a timeout. The proof does not depend on the speed of the machine.
 func TestREQ_RTE_08_ConcurrentLoaders(t *testing.T) {
-	sleep := func() { time.Sleep(50 * time.Millisecond) }
-	outer := gx.Layout(func(c *gx.Ctx) (int, error) { sleep(); return 1, nil },
+	started := make(chan struct{}, 3)
+	together := make(chan struct{})
+	go func() {
+		for i := 0; i < 3; i++ {
+			<-started
+		}
+		close(together)
+	}()
+	var alone atomic.Int32
+	meet := func() {
+		started <- struct{}{}
+		select {
+		case <-together:
+		case <-time.After(5 * time.Second):
+			alone.Add(1)
+		}
+	}
+	outer := gx.Layout(func(c *gx.Ctx) (int, error) { meet(); return 1, nil },
 		func(_ int, children gx.Node) gx.Node { return gx.El("main", nil, children) })
-	inner := gx.Layout(func(c *gx.Ctx) (int, error) { sleep(); return 2, nil },
+	inner := gx.Layout(func(c *gx.Ctx) (int, error) { meet(); return 2, nil },
 		func(_ int, children gx.Node) gx.Node { return gx.El("section", nil, children) })
-	pg := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) { sleep(); return 3, nil },
+	pg := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) { meet(); return 3, nil },
 		func(v int) gx.Node { return gx.Text("ok") })
 
 	app := gx.New(gx.Config{})
 	app.Group("/", outer, inner, gx.Collect(pg))
-	start := time.Now()
 	rec := httptest.NewRecorder()
 	app.ServeHTTP(rec, httptest.NewRequest("GET", "/slow", nil))
-	elapsed := time.Since(start)
 	if rec.Code != 200 {
 		t.Fatalf("status %d: %s", rec.Code, rec.Body.String())
 	}
 	if got, want := rec.Body.String(), shell("<main><section>ok</section></main>"); got != want {
 		t.Fatalf("body = %q, want %q", got, want)
 	}
-	if elapsed > 80*time.Millisecond {
-		t.Fatalf("three 50ms loaders took %v, want under 80ms", elapsed)
+	if n := alone.Load(); n > 0 {
+		t.Fatalf("%d of 3 loaders did not run at the same time as the others", n)
 	}
 }
 
