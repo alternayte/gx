@@ -93,13 +93,24 @@ test('REQ-ISL-03 two islands load their shared chunk one time', async () => {
     await isMounted(page, 'Sparkline')
     expect(await page.locator(island('BarChart') + ' [data-bars="bar"] [data-bar]').count()).toBe(4)
     expect(await page.locator(island('Sparkline') + ' [data-bars="spark"] [data-bar]').count()).toBe(4)
-    const chunks = files.filter((f) => f.startsWith('chunks/'))
-    expect(chunks).toHaveLength(1)
-    // Each file name holds a content hash, and the server lets the browser
-    // keep the file.
-    const res = await page.request.get(shop.url + '/_gx/islands/' + chunks[0])
-    expect(res.headers()['cache-control']).toContain('immutable')
-    expect(await res.text()).toContain('data-bars')
+    // The browser asks for each file one time.
+    expect(new Set(files).size).toBe(files.length)
+    // One chunk holds the drawing code of chartlib.ts, and both charts
+    // import it. (The two web components of the page share a second chunk.)
+    const chunks = [...new Set(files.filter((f) => f.startsWith('chunks/')))]
+    const holders: string[] = []
+    for (const chunk of chunks) {
+      const res = await page.request.get(shop.url + '/_gx/islands/' + chunk)
+      // Each file name holds a content hash, and the server lets the
+      // browser keep the file.
+      expect(res.headers()['cache-control']).toContain('immutable')
+      if ((await res.text()).includes('data-bars')) holders.push(chunk)
+    }
+    expect(holders).toHaveLength(1)
+    for (const name of ['BarChart', 'Sparkline']) {
+      const entry = await page.request.get(shop.url + '/_gx/islands/' + files[requested(files, name)])
+      expect(await entry.text()).toContain(holders[0].replace('chunks/', ''))
+    }
     for (const f of files) expect(f).toMatch(/-[0-9A-Z]{8}\.js$/)
   } finally {
     await page.close()
@@ -229,8 +240,10 @@ test('REQ-ISL-07 an island runs a pinned npm package', async () => {
     expect(await width('Apr')).toBe('200px')
     expect(await width('Jan')).toBe('50px')
     // The package is part of the bundle: the browser asks for no other host.
-    const res = await page.request.get(shop.url + '/_gx/islands/' + files.find((f) => f.startsWith('chunks/')))
-    expect(await res.text()).not.toContain('cdn.jsdelivr.net')
+    for (const f of files) {
+      const res = await page.request.get(shop.url + '/_gx/islands/' + f)
+      expect(await res.text()).not.toContain('cdn.jsdelivr.net')
+    }
   } finally {
     await page.close()
   }
@@ -249,6 +262,69 @@ test('REQ-ISL-04 a morph navigation from a page with no island mounts the island
     await isMounted(page, 'Stepper')
     expect(await page.evaluate(() => (window as unknown as { sameDocument?: boolean }).sameDocument)).toBe(true)
     expect(await page.textContent(island('Stepper') + ' button')).toBe('Quantity 1, add one')
+  } finally {
+    await page.close()
+  }
+})
+
+// Two elements of Shoelace, imported with `gx wc pin` (REQ-ISL-09). The page
+// loads the module of each element, with no node in the build.
+test('REQ-ISL-09 an imported web component loads its module and renders', async () => {
+  const { page, files } = await dashboard()
+  try {
+    await page.waitForFunction(() => customElements.get('sl-badge') && customElements.get('sl-details'))
+    const badge = page.locator('#charts-panel sl-badge')
+    expect(await badge.getAttribute('variant')).toBe('primary')
+    expect(await badge.getAttribute('pill')).toBe('')
+    expect(await badge.textContent()).toBe('Round 0')
+    expect(await page.evaluate(() => document.querySelector('sl-badge')!.shadowRoot !== null)).toBe(true)
+    // One entry file for each element in use, under elements/.
+    expect(files.filter((f) => f.startsWith('elements/')).length).toBe(2)
+  } finally {
+    await page.close()
+  }
+})
+
+test('REQ-ISL-09 a custom event of an imported element runs a signal statement', async () => {
+  const { page } = await dashboard()
+  try {
+    await page.waitForFunction(() => customElements.get('sl-details'))
+    await isMounted(page, 'Stepper')
+    // The element sends sl-show when it opens.
+    await page.evaluate(() => (document.querySelector('#ten') as HTMLElement & { show(): Promise<void> }).show())
+    await page.waitForFunction(() => document.querySelector<HTMLInputElement>('input[type=number]')!.value === '10')
+    expect(await page.textContent(island('Stepper') + ' button')).toBe('Quantity 10, add one')
+  } finally {
+    await page.close()
+  }
+})
+
+test('REQ-ISL-09 an imported element is morph-safe', async () => {
+  const { page } = await dashboard()
+  try {
+    await page.waitForFunction(() => customElements.get('sl-details'))
+    await isMounted(page, 'BarChart')
+    const details = '#charts-panel sl-details'
+    // The user opens the element: it sets its own open attribute, which
+    // the server did not write.
+    await page.evaluate((sel) => {
+      const el = document.querySelector(sel) as HTMLElement & { marked?: boolean; open: boolean }
+      el.marked = true
+      el.open = true
+    }, details)
+    await page.waitForFunction((sel) => document.querySelector(sel)!.hasAttribute('open'), details)
+
+    await page.click('#charts-panel > button')
+    await page.waitForFunction(() => document.querySelector('#charts-panel sl-badge')?.textContent === 'Round 1')
+
+    // The patch changed the content of the badge. The details element is
+    // the same node and is still open.
+    expect(
+      await page.evaluate((sel) => {
+        const el = document.querySelector(sel) as HTMLElement & { marked?: boolean; open: boolean }
+        return [el.marked, el.hasAttribute('open'), el.open, el.getAttribute('summary')]
+      }, details),
+    ).toEqual([true, true, true, 'About these numbers'])
   } finally {
     await page.close()
   }

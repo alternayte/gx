@@ -278,6 +278,24 @@ class GxIsland extends HTMLElement {
   }
 }
 
-if (!customElements.get('gx-island')) customElements.define('gx-island', GxIsland)
+// An imported web component carries the URL of the module that defines it
+// (REQ-ISL-09). The loader imports each module one time, for the elements
+// of the first page and for the ones a patch brings in.
+const modules = new Set<string>()
+
+const loadElementModules = (): void => {
+  for (const el of document.querySelectorAll('[data-gx-module]')) {
+    const src = el.getAttribute('data-gx-module')
+    if (!src || modules.has(src)) continue
+    modules.add(src)
+    import(src).catch((err) => console.error(`gx: web component <${el.localName}>:`, err))
+  }
+}
+
+if (!customElements.get('gx-island')) {
+  customElements.define('gx-island', GxIsland)
+  loadElementModules()
+  new MutationObserver(loadElementModules).observe(document.documentElement, { subtree: true, childList: true })
+}
 
 export {}

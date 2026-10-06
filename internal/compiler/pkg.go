@@ -3,6 +3,7 @@ package compiler
 import (
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -21,7 +22,10 @@ type Package struct {
 	// Islands holds the TypeScript islands of the directory by name
 	// (REQ-ISL-01).
 	Islands map[string]*Island
-	Diags   []Diagnostic
+	// Elements holds the imported web components of the directory by name
+	// (REQ-ISL-09).
+	Elements map[string]*ElementDef
+	Diags    []Diagnostic
 }
 
 // Prop is one component prop, from the props block.
@@ -108,7 +112,20 @@ func (l *loader) load(dir string) *Package {
 		}
 	}
 	l.loadIslands(p, entries)
+	l.loadElements(p)
+	for _, name := range sortedFileNames(p.Files) {
+		p.Diags = append(p.Diags, l.lowerElements(p, p.Files[name])...)
+	}
 	return p
+}
+
+func sortedFileNames(files map[string]*File) []string {
+	names := make([]string, 0, len(files))
+	for name := range files {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
 // importedPackage resolves a qualifier in function file to a package.

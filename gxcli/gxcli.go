@@ -39,6 +39,7 @@ import (
 	"github.com/alternayte/gx/internal/starlight"
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 	"github.com/alternayte/gx/internal/tscheck"
+	"github.com/alternayte/gx/internal/wcpin"
 )
 
 // Version is the Gx release this command line tool belongs to. `gx init`
@@ -82,6 +83,8 @@ func Main(args []string) int {
 		return runIcons(args[1:])
 	case "pin":
 		return runPin(args[1:])
+	case "wc":
+		return runWC(args[1:])
 	case "vendor":
 		return runVendor(args[1:])
 	case "export":
@@ -125,6 +128,7 @@ Commands:
   lint      run go vet and the Gx analyzers on a module, with --json
   icons pin pin an icon set and generate one .gx component per icon
   pin       vendor an npm package for the islands: gx pin <pkg>@<version>
+  wc pin    import the web components of an npm package as typed tags
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
   import    convert another tool: gx import starlight --out <dir> <src>
@@ -467,6 +471,7 @@ func runDescribe(args []string) int {
 	fmt.Println("actions    ", len(model.Actions))
 	fmt.Println("forms      ", len(model.Forms))
 	fmt.Println("islands    ", len(model.Islands))
+	fmt.Println("elements   ", len(model.Elements))
 	fmt.Println("transitions", len(model.Transitions))
 	for _, t := range model.Transitions {
 		fmt.Printf("  %s  %s[%s]\n", t.Name, t.Base, t.Key)
@@ -1021,6 +1026,49 @@ func runPin(args []string) int {
 		return 1
 	}
 	fmt.Printf("pinned %s@%s: %d files in %s\n", res.Specifier, res.Version, len(res.Files), jspin.VendorDir)
+	return 0
+}
+
+// stringList is a flag that the command line can give more than once.
+type stringList []string
+
+func (l *stringList) String() string     { return strings.Join(*l, ",") }
+func (l *stringList) Set(v string) error { *l = append(*l, v); return nil }
+
+// runWC imports the web components of an npm package (REQ-ISL-09).
+func runWC(args []string) int {
+	const usageLine = "usage: gx wc pin [--as <name>] [--out <dir>] [--element <tag>]... [--cdn <url>] <pkg>@<version> [app]"
+	if len(args) == 0 || args[0] != "pin" {
+		fmt.Fprintln(os.Stderr, usageLine)
+		return 2
+	}
+	fs := flag.NewFlagSet("gx wc pin", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	as := fs.String("as", "", "Go package name of the tags (default the prefix of the tag names)")
+	out := fs.String("out", "", "parent directory of the package (default ui)")
+	cdn := fs.String("cdn", "", "ESM CDN (default the esm mirror of gx.toml, then jsDelivr)")
+	var elements stringList
+	fs.Var(&elements, "element", "import this tag only; give the flag again for more tags")
+	if err := fs.Parse(args[1:]); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) == 0 {
+		fmt.Fprintln(os.Stderr, usageLine)
+		return 2
+	}
+	dir := "."
+	if len(rest) > 1 {
+		dir = rest[1]
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	res, err := wcpin.Pin(ctx, wcpin.Options{Dir: dir, Spec: rest[0], As: *as, Out: *out, Elements: elements, BaseURL: *cdn})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
+	fmt.Printf("imported %d elements of %s into %s: %s\n", len(res.Tags), rest[0], res.Package, strings.Join(res.Tags, ", "))
 	return 0
 }
 

@@ -643,7 +643,7 @@ func (g *gen) attrsExpr(el *Element) string {
 				target = rest
 			}
 			value := strings.TrimSpace(a.Value)
-			if isBoolAttr(target) && g.isBoolType(a) && !strings.Contains(value, "$") {
+			if (isBoolAttr(target) || el.boolAttrs[target]) && g.isBoolType(a) && !strings.Contains(value, "$") {
 				static = append(static, fmt.Sprintf("gx.Bool(%s, %s)", strconv.Quote(target), value))
 				continue
 			}

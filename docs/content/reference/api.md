@@ -140,6 +140,14 @@ func DefaultMessage(key string) string
 
 DefaultMessage returns the English message of a built-in rule key, or the key itself when the key has no default.
 
+### func ElementModule
+
+```go
+func ElementModule(module string) string
+```
+
+ElementModule returns the URL of the entry file that defines an imported web component. module is the import specifier of gx.lock. The generated code of a web component tag calls it. In dev, a module that the installed bundle does not hold is a panic.
+
 ### func FieldError
 
 ```go

@@ -160,6 +160,7 @@ func TestREQ_AI_01_DescribeShop(t *testing.T) {
 			}
 		}
 		Islands     []struct{ Name, Package, File string }
+		Elements    []struct{ Name, Package, Tag string }
 		Transitions []struct{ Name, Base, Key string }
 		Icons       []struct{ Set, Version string }
 		Registry    []struct {
@@ -268,6 +269,11 @@ func TestREQ_AI_01_DescribeShop(t *testing.T) {
 	}
 	if strings.Join(islandNames, " ") != "BarChart Legend Sparkline Stepper WideTable" {
 		t.Fatalf("islands = %v", islandNames)
+	}
+	// The dashboard uses two imported web components (REQ-ISL-09).
+	if len(got.Elements) != 2 || got.Elements[0].Tag != "sl-badge" || got.Elements[1].Tag != "sl-details" ||
+		got.Elements[0].Package != "github.com/alternayte/gx/examples/shop/ui/sl" {
+		t.Fatalf("elements = %+v", got.Elements)
 	}
 	if len(got.Transitions) == 0 || got.Transitions[0].Base == "" || got.Transitions[0].Key == "" {
 		t.Fatalf("transitions = %+v", got.Transitions)

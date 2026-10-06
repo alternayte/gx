@@ -152,6 +152,14 @@ gx pin [--cdn <url>] <package>@<version> [app]
 
 Stores the bundled ES module of an npm package in `js/vendor`, with each module that it imports. `gx.lock` records the hash of each file. An island then imports the package by its name. A changed file stops the build.
 
+## gx wc
+
+```sh
+gx wc pin [--as <name>] [--out <dir>] [--element <tag>] [--cdn <url>] <package>@<version> [app]
+```
+
+Reads the custom elements manifest of an npm package and writes a Go package with one typed tag for each element. It pins the module of each element as `gx pin` does. `--element` limits the import to one tag; give it again for more tags.
+
 ## gx vendor
 
 ```sh

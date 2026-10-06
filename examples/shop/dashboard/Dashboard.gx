@@ -1,5 +1,7 @@
 package dashboard
 
+import "github.com/alternayte/gx/examples/shop/ui/sl"
+
 props {
   Revenue []Point
 }
@@ -16,6 +18,8 @@ signals {
     <input class="w-20 rounded-md border border-border px-2 py-1" type="number" bind:value={$Qty} />
     <Stepper qty={$Qty} load="eager" />
   </div>
+  {/* A custom event of a web component runs a signal statement. */}
+  <sl.Details id="ten" summary="Set the quantity to ten" on:sl-show={$Qty = 10}>Open me.</sl.Details>
   {/* The legend is far below the first screen, so its island loads late. */}
   <div class="h-[2400px]"></div>
   <Legend labels={[]string{"Revenue", "Users"}} />

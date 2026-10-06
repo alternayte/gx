@@ -2,4 +2,6 @@
 //
 // A pinned package is a pre-bundled build with no type declarations, so
 // its exports have the type any.
+declare module "@shoelace-style/shoelace/dist/components/badge/badge.js";
+declare module "@shoelace-style/shoelace/dist/components/details/details.js";
 declare module "d3-scale";

@@ -63,7 +63,7 @@ func snapshotInputsWith(root string, overlay map[string][]byte) (map[string]file
 			return nil // generated output
 		}
 		island := isIslandName(name)
-		if !island && !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && name != "go.mod" && name != "go.sum" {
+		if !island && !strings.HasSuffix(name, ".gx") && !strings.HasSuffix(name, ".go") && name != "go.mod" && name != "go.sum" && name != ElementsFile {
 			return nil
 		}
 		data, err := os.ReadFile(path)

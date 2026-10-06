@@ -21,6 +21,7 @@ import (
 	"github.com/alternayte/gx/internal/docscheck"
 	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/exporter"
+	"github.com/alternayte/gx/internal/islands"
 	"github.com/alternayte/gx/internal/registry"
 	"github.com/alternayte/gx/internal/scaffold"
 )
@@ -291,6 +292,10 @@ func applyPage(t *testing.T, repo, dir string, p docscheck.Page) {
 	}
 	if _, err := scaffold.Generate(dir); err != nil {
 		t.Fatalf("%s: the samples do not generate: %v", p.Slug, err)
+	}
+	// gx build bundles the islands of the app (REQ-ISL-03).
+	if _, err := islands.Write(dir, islands.Options{Minify: true}); err != nil {
+		t.Fatalf("%s: the islands of the samples do not bundle: %v", p.Slug, err)
 	}
 	if diags := compiler.CheckApp(dir, compiler.CheckOptions{}); len(diags) > 0 {
 		lines := make([]string, 0, len(diags))

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://gx.dev/schema/describe.schema.json",
   "title": "Gx app model",
-  "description": "The output of `gx describe --json`: every component, route, action, form, island, transition, icon set and registry item of one app.",
+  "description": "The output of `gx describe --json`: every component, route, action, form, island, imported web component, transition, icon set and registry item of one app.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,6 +12,7 @@
     "actions",
     "forms",
     "islands",
+    "elements",
     "transitions",
     "icons",
     "registry"
@@ -48,6 +49,12 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/island"
+      }
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/element"
       }
     },
     "transitions": {
@@ -410,6 +417,79 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/prop"
+          }
+        }
+      }
+    },
+    "element": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "package",
+        "tag",
+        "module",
+        "attributes",
+        "events",
+        "slots"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "package": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "kind"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "bool",
+                  "number",
+                  "enum"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "doc": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }

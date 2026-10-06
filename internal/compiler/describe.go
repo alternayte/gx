@@ -23,6 +23,7 @@ type AppModel struct {
 	Actions     []ActionModel     `json:"actions"`
 	Forms       []FormModel       `json:"forms"`
 	Islands     []IslandModel     `json:"islands"`
+	Elements    []ElementModel    `json:"elements"`
 	Transitions []TransitionModel `json:"transitions"`
 	Icons       []IconSetModel    `json:"icons"`
 	Registry    []RegistryModel   `json:"registry"`
@@ -140,6 +141,20 @@ type IslandModel struct {
 	Props   []PropModel `json:"props"`
 }
 
+// ElementModel is one imported web component (REQ-ISL-09): the typed tag
+// <package name>.<Name> renders the custom element Tag.
+type ElementModel struct {
+	Name    string `json:"name"`
+	Package string `json:"package"`
+	Tag     string `json:"tag"`
+	// Module is the import specifier of the module that defines the
+	// element.
+	Module     string        `json:"module"`
+	Attributes []ElementAttr `json:"attributes"`
+	Events     []string      `json:"events"`
+	Slots      []string      `json:"slots"`
+}
+
 // TransitionModel is one gx.Transition value.
 type TransitionModel struct {
 	// Name is the package-level value.
@@ -195,6 +210,7 @@ func Describe(root string) (*AppModel, []Diagnostic) {
 		Actions:     []ActionModel{},
 		Forms:       []FormModel{},
 		Islands:     []IslandModel{},
+		Elements:    []ElementModel{},
 		Transitions: []TransitionModel{},
 		Icons:       []IconSetModel{},
 		Registry:    []RegistryModel{},
@@ -251,6 +267,33 @@ func Describe(root string) (*AppModel, []Diagnostic) {
 			m.Islands = append(m.Islands, im)
 		}
 	}
+
+	// The imported web components of each package that a .gx file imports.
+	for dir, p := range l.pkgs {
+		if p.Module == nil {
+			continue
+		}
+		for _, def := range p.Elements {
+			em := ElementModel{Name: def.Name, Package: modulePathOf(p.Module, dir), Tag: def.Tag, Module: def.Module,
+				Attributes: def.Attributes, Events: def.Events, Slots: def.Slots}
+			if em.Attributes == nil {
+				em.Attributes = []ElementAttr{}
+			}
+			if em.Events == nil {
+				em.Events = []string{}
+			}
+			if em.Slots == nil {
+				em.Slots = []string{}
+			}
+			m.Elements = append(m.Elements, em)
+		}
+	}
+	sort.Slice(m.Elements, func(i, j int) bool {
+		if m.Elements[i].Package != m.Elements[j].Package {
+			return m.Elements[i].Package < m.Elements[j].Package
+		}
+		return m.Elements[i].Name < m.Elements[j].Name
+	})
 
 	handlers := describeHandlers(res)
 	mounts := mountInfo(res)

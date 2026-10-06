@@ -152,6 +152,11 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 				if a.Key == "data-gx-theme" {
 					needs.theme = true
 				}
+				// The island loader also loads the module of an imported
+				// web component (REQ-ISL-09).
+				if a.Key == "data-gx-module" {
+					needs.island = true
+				}
 				switch {
 				case adapterMarker(a.Key):
 					needs.adapter = true

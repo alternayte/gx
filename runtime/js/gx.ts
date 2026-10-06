@@ -466,7 +466,7 @@ installCSRF()
 // brings the first island into a page that started with none (REQ-ISL-04).
 // A page that the server renders with an island has the loader in its head.
 const loadIslands = (): void => {
-  if (customElements.get('gx-island') || !document.querySelector('gx-island')) return
+  if (customElements.get('gx-island') || !document.querySelector('gx-island, [data-gx-module]')) return
   void import(new URL('./island.js', import.meta.url).href)
 }
 

@@ -10,6 +10,7 @@ import (
 	"go/format"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -82,19 +83,38 @@ func Build(root string, opt Options) (*Bundle, error) {
 		root = resolved
 	}
 	refs := compiler.Islands(root)
+	modules := compiler.ElementModules(root)
 	out := &Bundle{Entries: map[string]string{}, Files: map[string][]byte{}}
-	if len(refs) == 0 {
+	if len(refs) == 0 && len(modules) == 0 {
 		return out, nil
 	}
-	entries := make([]api.EntryPoint, len(refs))
-	byInput := map[string]string{}
-	for i, ref := range refs {
-		rel, err := filepath.Rel(root, ref.File)
-		if err != nil {
-			return nil, err
+	lock, err := jspin.LoadLock(root)
+	if err != nil {
+		return nil, err
+	}
+	nodeModules := jspin.UsesNodeModules(root)
+	entries := make([]api.EntryPoint, 0, len(refs)+len(modules))
+	// byOutput maps the output name of an entry, with no hash and no
+	// extension, to its name in the bundle.
+	byOutput := map[string]string{}
+	for _, ref := range refs {
+		entries = append(entries, api.EntryPoint{InputPath: ref.File, OutputPath: ref.ID})
+		byOutput[ref.ID] = ref.ID
+	}
+	// The module of each imported web component in use is an entry too
+	// (REQ-ISL-09). Its name in the bundle is its import specifier.
+	for _, module := range modules {
+		input := module
+		if !nodeModules {
+			pin, ok := lock.Pins[module]
+			if !ok {
+				return nil, fmt.Errorf("islands: the web component module %q has no pin; run gx wc pin again", module)
+			}
+			input = filepath.Join(root, filepath.FromSlash(pin.File))
 		}
-		entries[i] = api.EntryPoint{InputPath: ref.File, OutputPath: ref.ID}
-		byInput[filepath.ToSlash(rel)] = ref.ID
+		output := "elements/" + elementOutput(module)
+		entries = append(entries, api.EntryPoint{InputPath: input, OutputPath: output})
+		byOutput[output] = module
 	}
 	outdir := filepath.Join(root, ".gx", "islands")
 	options := api.BuildOptions{
@@ -123,15 +143,11 @@ func Build(root string, opt Options) (*Bundle, error) {
 	}
 	// A bare import is a pinned package of gx.lock (REQ-ISL-07). An app
 	// with package.json and node_modules resolves as node does.
-	lock, err := jspin.LoadLock(root)
-	if err != nil {
-		return nil, err
-	}
 	// A vendored file that differs from gx.lock stops the build (SI-10).
 	if err := jspin.Verify(root, lock); err != nil {
 		return nil, err
 	}
-	if !jspin.UsesNodeModules(root) {
+	if !nodeModules {
 		options.Plugins = []api.Plugin{pinPlugin(root, lock)}
 	}
 	res := api.Build(options)
@@ -169,17 +185,36 @@ func Build(root string, opt Options) (*Bundle, error) {
 	}
 	prefix := filepath.ToSlash(outRel) + "/"
 	for path, o := range meta.Outputs {
-		if id, ok := byInput[o.EntryPoint]; ok {
-			out.Entries[id] = strings.TrimPrefix(path, prefix)
+		if o.EntryPoint == "" {
+			continue
+		}
+		// An entry file is <output name>-<hash>.js.
+		file := strings.TrimPrefix(path, prefix)
+		if m := entryFile.FindStringSubmatch(file); m != nil {
+			if id, ok := byOutput[m[1]]; ok {
+				out.Entries[id] = file
+			}
 		}
 	}
-	for _, ref := range refs {
-		if _, ok := out.Entries[ref.ID]; !ok {
-			return nil, fmt.Errorf("islands: the bundle has no entry for %s", ref.ID)
+	for _, id := range byOutput {
+		if _, ok := out.Entries[id]; !ok {
+			return nil, fmt.Errorf("islands: the bundle has no entry for %s", id)
 		}
 	}
 	return out, nil
 }
+
+// entryFile splits the name of an entry file into its output name and its
+// content hash.
+var entryFile = regexp.MustCompile(`^(.+)-[0-9A-Z]{8}\.js$`)
+
+// elementOutput makes a file name from the import specifier of a module.
+func elementOutput(module string) string {
+	name := strings.TrimSuffix(strings.TrimSuffix(module, ".js"), ".mjs")
+	return strings.Trim(notFileChar.ReplaceAllString(name, "-"), "-")
+}
+
+var notFileChar = regexp.MustCompile(`[^A-Za-z0-9_]+`)
 
 // pinPlugin resolves a bare import to the vendored file of its pin.
 func pinPlugin(root string, lock jspin.Lock) api.Plugin {

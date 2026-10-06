@@ -556,6 +556,20 @@ func (l *loader) checkAttributes(res *typesResult, dirs []string) []Diagnostic {
 						}
 						continue
 					}
+					// A boolean attribute of an imported element is present
+					// or absent, so its expression is a bool (REQ-ISL-09).
+					if el.boolAttrs[a.Name] && !strings.Contains(a.Value, "$") {
+						if t := res.types[a]; t != nil && !isNamedUnderlying(t, types.Bool) && t.String() != "bool" {
+							out = append(out, Diagnostic{
+								Code: CodeType,
+								File: f.File,
+								Line: a.At.Line,
+								Col:  a.At.Col,
+								Msg:  "attribute " + Quoted(a.Name) + " of <" + el.elementTag + "> needs a bool expression, got " + t.String(),
+							})
+						}
+						continue
+					}
 					// A browser reads an attribute name in any letter case.
 					name := strings.ToLower(a.Name)
 					if target, ok := strings.CutPrefix(name, "attr:"); ok {

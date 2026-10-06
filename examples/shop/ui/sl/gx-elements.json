@@ -1,0 +1,72 @@
+{
+  "package": "@shoelace-style/shoelace",
+  "version": "2.20.1",
+  "elements": [
+    {
+      "name": "Badge",
+      "tag": "sl-badge",
+      "doc": "Badges are used to draw attention and display statuses or counts.",
+      "module": "@shoelace-style/shoelace/dist/components/badge/badge.js",
+      "attributes": [
+        {
+          "name": "variant",
+          "kind": "enum",
+          "values": [
+            "primary",
+            "success",
+            "neutral",
+            "warning",
+            "danger"
+          ],
+          "doc": "The badge's theme variant."
+        },
+        {
+          "name": "pill",
+          "kind": "bool",
+          "doc": "Draws a pill-style badge with rounded edges."
+        },
+        {
+          "name": "pulse",
+          "kind": "bool",
+          "doc": "Makes the badge pulsate to draw attention."
+        }
+      ],
+      "events": [],
+      "slots": []
+    },
+    {
+      "name": "Details",
+      "tag": "sl-details",
+      "doc": "Details show a brief summary and expand to show additional content.",
+      "module": "@shoelace-style/shoelace/dist/components/details/details.js",
+      "attributes": [
+        {
+          "name": "open",
+          "kind": "bool",
+          "doc": "Indicates whether or not the details is open. You can toggle this attribute to show and hide the details, or you"
+        },
+        {
+          "name": "summary",
+          "kind": "string",
+          "doc": "The summary to show in the header. If you need to display HTML, use the `summary` slot instead."
+        },
+        {
+          "name": "disabled",
+          "kind": "bool",
+          "doc": "Disables the details so it can't be toggled."
+        }
+      ],
+      "events": [
+        "sl-show",
+        "sl-after-show",
+        "sl-hide",
+        "sl-after-hide"
+      ],
+      "slots": [
+        "summary",
+        "expand-icon",
+        "collapse-icon"
+      ]
+    }
+  ]
+}

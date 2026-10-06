@@ -329,8 +329,9 @@ func TestREQ_ISL_03_ShopBundleIsCurrent(t *testing.T) {
 	if string(onDisk) != string(islands.Generate(b)) {
 		t.Fatal("examples/shop/gxislands/islands_gx.go is stale; run: go run ./cmd/gx build -o /tmp/shop examples/shop")
 	}
-	if len(b.Entries) != 5 {
-		t.Fatalf("the shop has %d islands, want 5", len(b.Entries))
+	// Five islands and the modules of two imported web components.
+	if len(b.Entries) != 7 {
+		t.Fatalf("the shop bundle has %d entries, want 7", len(b.Entries))
 	}
 }
 

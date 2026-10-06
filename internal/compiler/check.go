@@ -374,6 +374,9 @@ func nearestComponent(p *Package, name string) string {
 	for candidate := range p.Islands {
 		consider(candidate)
 	}
+	for candidate := range p.Elements {
+		consider(candidate)
+	}
 	if best == "" || bestDist > 2 {
 		return ""
 	}

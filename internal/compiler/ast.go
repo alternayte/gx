@@ -81,6 +81,13 @@ type Element struct {
 	RawText   string
 	HasRaw    bool
 	SelfClose bool
+
+	// element is set when the tag was an imported web component
+	// (REQ-ISL-09). Name is then the custom element, elementTag is the tag
+	// as written and boolAttrs holds its boolean attributes.
+	element    *ElementDef
+	elementTag string
+	boolAttrs  map[string]bool
 }
 
 // Control is an if, for or switch block.

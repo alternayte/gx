@@ -53,6 +53,7 @@ func TestREQ_DOC_02_PageInventory(t *testing.T) {
 		"guides/content-sites":        "Guides", // content collections
 		"guides/static-export":        "Guides", // static export
 		"guides/security":             "Guides", // the security rules
+		"guides/islands":              "Guides", // islands and web components
 
 		"reference/api":         "Reference",
 		"reference/cli":         "Reference",

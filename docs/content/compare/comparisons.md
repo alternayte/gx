@@ -11,7 +11,7 @@ Gx is new. Release 0.1.0 is the first release. Each tool on this page is older, 
 
 - A stable 1.0 API. A 0.x release can change an API.
 - A second adapter. Release 0.1.0 has Datastar only. The htmx adapter comes with release 0.2.0.
-- Client components. TypeScript islands and the React, Vue or Svelte ecosystems are not in release 0.1.0.
+- A client component tree. Gx has TypeScript islands from release 0.2.0. It has no React, Vue or Svelte component tree.
 - A data layer. Gx is the web layer. It has no ORM, no auth, no jobs and no mailer.
 - A build with no code generation. Each `.gx` file has a generated Go file that you commit.
 - A strict Content Security Policy with Datastar. Datastar needs `unsafe-eval`.

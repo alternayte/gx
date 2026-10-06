@@ -1,12 +1,33 @@
 {
   "js": {
     "pins": {
+      "@shoelace-style/shoelace/dist/components/badge/badge.js": {
+        "version": "2.20.1",
+        "file": "js/vendor/@shoelace-style/shoelace@2.20.1/dist/components/badge/badge.js.js"
+      },
+      "@shoelace-style/shoelace/dist/components/details/details.js": {
+        "version": "2.20.1",
+        "file": "js/vendor/@shoelace-style/shoelace@2.20.1/dist/components/details/details.js.js"
+      },
       "d3-scale": {
         "version": "4.0.2",
         "file": "js/vendor/d3-scale@4.0.2.js"
       }
     },
     "files": {
+      "js/vendor/@lit/reactive-element@2.0.4.js": "sha256-xxGhHAIMB1QXQweQOu+T1AjVccw/mbHegW5JMeke5vg=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/custom-element.js.js": "sha256-hQK/IQaLx273kWpXdS+lP0TEK/MMcwIRjuVtKT2UjeU=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/event-options.js.js": "sha256-eLagvKRLNnAlqyouA10x0Z1EFgiUoWOTe1590yVBeEE=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/property.js.js": "sha256-l16Q6T7lWu2uih3BNAv81g4+OLBvvG0kWgwyKnBjc4o=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/query-all.js.js": "sha256-GepkszBuTTtwDMZarCOLCWGqn2J+h40Z4dZ51q6YdME=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/query-assigned-elements.js.js": "sha256-RiOHKUrvC3b1yZuyUwFnVQtxdd09rF97OczJtkKpAPI=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/query-assigned-nodes.js.js": "sha256-0XFJSWZ3QA80CE8tGL5UX/g3wZoXmR5lYlEzD6mOSDg=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/query-async.js.js": "sha256-gCJzSVCEcz8ZtTunNXuJK/k9JmpnStlAibLcBjFkCQQ=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/query.js.js": "sha256-xApdlXSg3sbgU0ZJzjw+UMPRpYyo9C0xJIffWvoM7dw=",
+      "js/vendor/@lit/reactive-element@2.0.4/decorators/state.js.js": "sha256-qhgwGyA5gzRUwdsXoY3sTiml+po66+siZIAb+fX6U8A=",
+      "js/vendor/@shoelace-style/localize@3.2.1.js": "sha256-9s0AUIMDp/C0m0PwjDHvCvHS2Xb4aHUdH2Lae/BUNG8=",
+      "js/vendor/@shoelace-style/shoelace@2.20.1/dist/components/badge/badge.js.js": "sha256-K/oVHwWqX1QhhVwzcNVSddH37hnB0r45niR28HTa+jw=",
+      "js/vendor/@shoelace-style/shoelace@2.20.1/dist/components/details/details.js.js": "sha256-PjWOo0/CKFsbN+gEhoRnv/Lp155JJRYIeN5ca+yRUFo=",
       "js/vendor/d3-array@3.0.0.js": "sha256-Qm+Ka76OqvrkV652dFqb9U/byxN4sQA1zJ80o3VhLdI=",
       "js/vendor/d3-array@3.0.4.js": "sha256-8fWhZlDhm20pySk6KMRUSLwJm1+xk4qKJzAyI4GdAYw=",
       "js/vendor/d3-color@3.0.1.js": "sha256-uNXB3S9sdeewRV3/DSCB912RvjCW6j67dAZfYEAqHf0=",
@@ -16,7 +37,17 @@
       "js/vendor/d3-time-format@4.0.0.js": "sha256-KS2wp/ZCKX6WiffVC01P16opH/iouV36SuJPV3WByYo=",
       "js/vendor/d3-time@3.0.0.js": "sha256-sSXxz5TA+tbF/4b5RM7/zNUFnVdjqOGhFaS84ZWfo9w=",
       "js/vendor/internmap@2.0.0.js": "sha256-89fKzuRwr2HgSWnT5yAZuml/9YCyPxvlaY17s4A3ngQ=",
-      "js/vendor/internmap@2.0.3.js": "sha256-FvvR05wUFzNrOrB3vlUaOiEvDKjSLCQKxnEeknpVX3Y="
+      "js/vendor/internmap@2.0.3.js": "sha256-FvvR05wUFzNrOrB3vlUaOiEvDKjSLCQKxnEeknpVX3Y=",
+      "js/vendor/lit-element@4.1.0/lit-element.js.js": "sha256-cq2L1DYybNJ8PzDJ2lMX8+g/fIY+nj2bv01XpEFpmQ0=",
+      "js/vendor/lit-html@3.2.0.js": "sha256-waewLo56tHTG7Ozt6MRHQZbM7/IwW0MIVYxtdekr/xY=",
+      "js/vendor/lit-html@3.2.0/directive-helpers.js.js": "sha256-/mgC2VX9sYXutfR9J0pIgxyzLZO0AaP59oKhKt4NO3g=",
+      "js/vendor/lit-html@3.2.0/directives/class-map.js.js": "sha256-v1FfpB2fxspt08BCIz9TpFmxBXR5baEVIvcH+UCWn7M=",
+      "js/vendor/lit-html@3.2.0/is-server.js.js": "sha256-2dAa00wllmBIrFmkD/td4De846NqurrZlwJJv31rx+M=",
+      "js/vendor/lit-html@3.3.3.js": "sha256-yTi5xRqzkGNoFoKmm6o9U5EtNSNTxmbHBSppT5O/g2w=",
+      "js/vendor/lit@3.2.1.js": "sha256-U52Ff8FV1v8e7cR93626OylkAh0bGK45M9hrtD+OGzE=",
+      "js/vendor/lit@3.2.1/decorators.js.js": "sha256-RVyvvjkro4529prUb5nD+6uE9+gPh0KoPHmDTr4Ru40=",
+      "js/vendor/lit@3.2.1/directive-helpers.js.js": "sha256-LeV+09GihbgWE5tm+akVRNWczQuhRXuUk+AesrslUoI=",
+      "js/vendor/lit@3.2.1/directives/class-map.js.js": "sha256-LzGErJGpXS/8UdQsb2CSgu5NRw04Q0S2zll3itsFX1s="
     }
   },
   "registry": {

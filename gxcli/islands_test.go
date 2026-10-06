@@ -92,3 +92,51 @@ func TestREQ_ISL_07_PinCommand(t *testing.T) {
 		t.Fatalf("gx pin of a missing package = %d, want 1", code)
 	}
 }
+
+// `gx wc pin` imports the elements of a package, and a tag of the new
+// package passes `gx check` (REQ-ISL-09).
+func TestREQ_ISL_09_WCPinCommand(t *testing.T) {
+	manifest := `{"modules": [{"path": "badge.js", "declarations": [{"kind": "class", "name": "Badge", "tagName": "x-badge", "customElement": true,
+		"attributes": [{"name": "variant", "type": {"text": "'info' | 'alert'"}}]}]}]}`
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/npm/xui@1.0.0/package.json":
+			_, _ = w.Write([]byte(`{"name": "xui"}`))
+		case "/npm/xui@1.0.0/custom-elements.json":
+			_, _ = w.Write([]byte(manifest))
+		case "/npm/xui@1.0.0/badge.js/+esm":
+			_, _ = w.Write([]byte("customElements.define(\"x-badge\",class extends HTMLElement{});\n"))
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer srv.Close()
+	dir := islandApp(t, "export default (el: HTMLElement) => {\n  el.textContent = \"x\";\n};\n")
+	if code := gxcli.Main([]string{"wc", "check", dir}); code != 2 {
+		t.Fatalf("gx wc check = %d, want the usage error 2", code)
+	}
+	out, code := captureStdout(t, func() int {
+		return gxcli.Main([]string{"wc", "pin", "--cdn", srv.URL, "--as", "xui", "xui@1.0.0", dir})
+	})
+	if code != 0 || !strings.Contains(out, "imported 1 elements of xui@1.0.0 into ui/xui: x-badge") {
+		t.Fatalf("gx wc pin = %d\n%s", code, out)
+	}
+	page := "package dash\n\nimport \"app/ui/xui\"\n\n<main><xui.XBadge variant=\"%s\">1</xui.XBadge></main>\n"
+	write := func(variant string) {
+		if err := os.WriteFile(filepath.Join(dir, "dash", "Page.gx"), []byte(strings.Replace(page, "%s", variant, 1)), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		if code := gxcli.Main([]string{"generate", dir}); code != 0 && variant == "info" {
+			t.Fatalf("gx generate = %d", code)
+		}
+	}
+	write("info")
+	if code := gxcli.Main([]string{"check", dir}); code != 0 {
+		t.Fatalf("gx check with a valid variant = %d", code)
+	}
+	write("warn")
+	out, code = captureStdout(t, func() int { return gxcli.Main([]string{"check", "--json", dir}) })
+	if code != 1 || !strings.Contains(out, "GX2004") || !strings.Contains(out, "the values are info, alert") {
+		t.Fatalf("gx check with a wrong variant = %d\n%s", code, out)
+	}
+}
