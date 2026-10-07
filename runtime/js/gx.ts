@@ -610,7 +610,10 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
     if (!keep) window.scrollTo(0, 0)
     await applyAnswer(res)
     if (keep) window.scrollTo(left, top)
-    if (push) history.pushState({ gx: true }, '', url)
+    if (push) {
+      history.pushState({ gx: true }, '', url)
+      ;(gx as typeof gx & { shownPage?: (url: string) => void }).shownPage?.(url)
+    }
     updateActive()
   })
 }
@@ -638,9 +641,20 @@ if (typeof document !== 'undefined') {
     e.preventDefault()
     void navigate(url.pathname + url.search + url.hash, true)
   })
+  // The browser sends popstate for a link to a fragment of the same page
+  // too. Only a change of the path or of the query is a navigation: a
+  // fragment link must not load the page again.
+  let shown = location.pathname + location.search
   window.addEventListener('popstate', () => {
-    void navigate(location.pathname + location.search, false)
+    const next = location.pathname + location.search
+    if (next === shown) return
+    shown = next
+    void navigate(next, false)
   })
+  ;(gx as typeof gx & { shownPage?: (url: string) => void }).shownPage = (url: string) => {
+    const u = new URL(url, location.href)
+    shown = u.pathname + u.search
+  }
   document.addEventListener('submit', (e) => {
     if (!adapterPresent()) return
     const form = (e.target as Element | null)?.closest?.('form[data-gx-form]') as HTMLFormElement | null

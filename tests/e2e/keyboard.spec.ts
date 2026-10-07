@@ -855,10 +855,17 @@ test('REQ-REG-14 command filters its items and runs the active one', async () =>
   })
   await page.keyboard.press('Enter')
   expect(await page.evaluate(() => (window as unknown as { ran: string[] }).ran)).toEqual(['settings'])
-  // A link item goes to its address.
+  // A link item goes to its address. A link to a fragment of the page does
+  // not load the page again: the mark on the window stays.
   await input.fill('bill')
+  await page.evaluate(() => {
+    ;(window as unknown as { stay: boolean }).stay = true
+  })
   await page.keyboard.press('Enter')
   await page.waitForFunction(() => location.hash === '#billing')
+  await Bun.sleep(500)
+  expect(await page.evaluate(() => (window as unknown as { stay?: boolean }).stay)).toBe(true)
+  expect(await page.evaluate(() => location.hash)).toBe('#billing')
 })
 
 test('REQ-REG-14 carousel moves one slide with its buttons and the arrow keys', async () => {
