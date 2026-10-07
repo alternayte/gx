@@ -2,7 +2,7 @@
 
 Gx is a Go framework for server-rendered web apps. It types the full loop of a page: the template, the route, the link, the action, the form and the signal in the browser. It runs on `net/http` and Datastar, and no default workflow needs node.
 
-**Status: version 0.1.1 is the current release.** The API of a 0.x release can change. Read the [docs](https://gx-docs.pages.dev) and the [comparisons](https://gx-docs.pages.dev/compare/comparisons/) before you choose Gx.
+**Status: version 0.2.0 is the current release.** The API of a 0.x release can change. Read the [docs](https://gx-docs.pages.dev) and the [comparisons](https://gx-docs.pages.dev/compare/comparisons/) before you choose Gx.
 
 ## Quick start
 
