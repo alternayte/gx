@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/alternayte/gx"
-	"github.com/alternayte/gx/adapters/datastar"
+	"github.com/alternayte/gx/adapters/«.Adapter»"
 	"github.com/alternayte/gx/content"
 	"«.Module»/gxstyles"
 	"«.Module»/site"
@@ -20,7 +20,7 @@ func main() {
 	content.Install()
 	// The code frames take their colours from the content stylesheet.
 	gx.SetStylesheet(append(gxstyles.CSS(), content.CodeCSS()...))
-	server := gx.New(gx.Config{Adapter: datastar.Adapter()})
+	server := gx.New(gx.Config{Adapter: «.Adapter».Adapter()})
 	notFound := func(c *gx.Ctx) gx.Node {
 		return shell.NotFound(shell.NotFoundProps{
 			Title:   "Page not found",

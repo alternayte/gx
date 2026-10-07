@@ -40,7 +40,7 @@ func Home(p HomeProps) gx.Node {
 //line Home.gx:12:16
 	_b.Add(gx.Text("\n"))
 //line Home.gx:13:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "data-on-intersect", Value: gx.Invoke("GET", (cartroute.Lazy{}).URL(), gx.ScopeString("shop.Home", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: "lazy-slot", Kind: gx.AttrText}}, gx.Text("waiting")), gx.Text("\n"))))
+	_b.Add(gx.El("div", gx.Attrs{gx.On("visible", "GET", (cartroute.Lazy{}).URL(), gx.ScopeString("shop.Home", p.GxKey))}, gx.Frag(gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: "lazy-slot", Kind: gx.AttrText}}, gx.Text("waiting")), gx.Text("\n"))))
 //line Home.gx:15:7
 	_b.Add(gx.Text("\n"))
 //line Home.gx:16:1
@@ -48,7 +48,7 @@ func Home(p HomeProps) gx.Node {
 //line Home.gx:16:224
 	_b.Add(gx.Text("\n"))
 //line Home.gx:17:1
-	_b.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (cartroute.Transition{}).URL(), gx.ScopeString("shop.Home", p.GxKey)).Value, Kind: gx.AttrText}}, gx.Text("Transition")))
+	_b.Add(gx.El("button", gx.Attrs{gx.On("click", "POST", (cartroute.Transition{}).URL(), gx.ScopeString("shop.Home", p.GxKey))}, gx.Text("Transition")))
 //line Home.gx:17:62
 	_b.Add(gx.Text("\n"))
 //line Home.gx:18:1

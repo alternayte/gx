@@ -226,6 +226,7 @@ func (a *captureAdapter) Runtime() gx.Node                      { return nil }
 func (a *captureAdapter) Assets() map[string][]byte             { return nil }
 func (a *captureAdapter) ReadSignals(*http.Request, any) error  { return nil }
 func (a *captureAdapter) Invoke(string, string, string) gx.Attr { return gx.Attr{} }
+func (a *captureAdapter) On(gx.Invocation) []gx.Attr            { return nil }
 func (a *captureAdapter) Respond(_ http.ResponseWriter, _ *http.Request, res *gx.Response) error {
 	a.patches = append(a.patches, res.Patches...)
 	return nil

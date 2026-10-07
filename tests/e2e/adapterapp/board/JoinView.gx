@@ -1,0 +1,16 @@
+package board
+
+import "adapterapp/board/route"
+
+props {
+  F route.JoinForm
+}
+
+<gx.Head title="Join the board" />
+<h1 id="join">Join</h1>
+<form {...p.F.Attrs()} novalidate>
+  <label for={p.F.Name.FieldID()}>Name</label>
+  <input {...gx.FieldControlAttrs(p.F.Name)} type="text" data-gx-validate="blur" />
+  <p id={p.F.Name.FieldID() + "-error"} role="alert">{p.F.Name.FieldError()}</p>
+  <button id="join-submit" type="submit">Join</button>
+</form>

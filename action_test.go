@@ -45,6 +45,11 @@ func (f *fakeAdapter) Invoke(method, url, scope string) gx.Attr {
 	return gx.Attr{Key: "data-fake-on", Value: "fake(" + method + " " + url + " " + scope + ")"}
 }
 
+// On writes the event and the URL in a made-up syntax.
+func (f *fakeAdapter) On(inv gx.Invocation) []gx.Attr {
+	return []gx.Attr{{Key: "data-fake-on-" + inv.Event, Value: inv.Method + " " + inv.URL}}
+}
+
 // actRoute is a hand-written action input for unit tests. Generated route
 // types provide the same Pattern and Bind methods.
 type actRoute struct{}

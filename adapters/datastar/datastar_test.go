@@ -283,3 +283,28 @@ func TestREQ_ACT_10_ActionAnswersWithoutEventStreamAccept(t *testing.T) {
 		t.Fatalf("the answer lacks the patch:\n%s", rec.Body.String())
 	}
 }
+
+// TestREQ_ACT_08_DatastarOn checks the attribute of an action invocation for
+// each event modifier and each special event.
+func TestREQ_ACT_08_DatastarOn(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	defer gx.SetAdapter(old)
+	gx.SetAdapter(datastar.Adapter())
+	for _, tc := range []struct{ spec, want string }{
+		{"click", `data-on:click="@post(&#39;/act&#39;)"`},
+		{"click.prevent", `data-on:click__prevent="@post(&#39;/act&#39;)"`},
+		{"click.stop.once", `data-on:click__stop__once="@post(&#39;/act&#39;)"`},
+		{"click.outside", `data-on:click__outside="@post(&#39;/act&#39;)"`},
+		{"keydown.window", `data-on:keydown__window="@post(&#39;/act&#39;)"`},
+		{"input.debounce(300ms)", `data-on:input__debounce.300ms="@post(&#39;/act&#39;)"`},
+		{"scroll.throttle(1s)", `data-on:scroll__throttle.1s="@post(&#39;/act&#39;)"`},
+		{"load", `data-init="@post(&#39;/act&#39;)"`},
+		{"visible", `data-on-intersect="@post(&#39;/act&#39;)"`},
+		{"interval(5s)", `data-on-interval__duration.5s="@post(&#39;/act&#39;)"`},
+	} {
+		got := gx.String(gx.El("i", gx.Attrs{gx.On(tc.spec, "POST", "/act", "")}))
+		if want := "<i " + tc.want + "></i>"; got != want {
+			t.Errorf("on:%s = %s, want %s", tc.spec, got, want)
+		}
+	}
+}

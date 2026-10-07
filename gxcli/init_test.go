@@ -211,8 +211,8 @@ func withStdin(t *testing.T, text string, fn func()) {
 }
 
 // TestREQ_DEV_10_InitAsksForAdapter covers the adapter question: an empty
-// answer takes Datastar, and htmx is refused until release 0.2.0
-// (REQ-DEV-10, DR-04).
+// answer takes Datastar, htmx gives an htmx app, and an unknown adapter is
+// refused with no file written (REQ-DEV-10, REQ-ACT-09).
 func TestREQ_DEV_10_InitAsksForAdapter(t *testing.T) {
 	t.Setenv("GOFLAGS", "-mod=mod")
 	parent := t.TempDir()
@@ -230,18 +230,124 @@ func TestREQ_DEV_10_InitAsksForAdapter(t *testing.T) {
 	if err != nil || !strings.Contains(string(main), "datastar.Adapter()") {
 		t.Fatalf("the scaffold does not use Datastar: %v\n%s", err, main)
 	}
+	toml, err := os.ReadFile(filepath.Join(parent, "asked", "gx.toml"))
+	if err != nil || !strings.Contains(string(toml), "adapter = \"datastar\"\n") {
+		t.Fatalf("gx.toml does not name Datastar: %v\n%s", err, toml)
+	}
 
 	var stderr string
-	withStdin(t, "htmx\n", func() {
+	withStdin(t, "alpine\n", func() {
 		stderr = captureStderr(t, func() {
 			_, code = captureStdout(t, func() int { return gxcli.Main(append(base, filepath.Join(parent, "later"))) })
 		})
 	})
-	if code == 0 || !strings.Contains(stderr, "0.2.0") {
-		t.Fatalf("gx init with htmx: exit %d\n%s", code, stderr)
+	if code == 0 || !strings.Contains(stderr, `unknown adapter "alpine"; the adapters are datastar and htmx`) {
+		t.Fatalf("gx init with an unknown adapter: exit %d\n%s", code, stderr)
 	}
 	if _, err := os.Stat(filepath.Join(parent, "later")); err == nil {
 		t.Fatal("a refused init wrote files")
+	}
+}
+
+// TestREQ_ACT_09_InitHtmx covers the htmx scaffold: the app names htmx in
+// gx.toml and in its main, has no signal, passes gx check and builds, and
+// its page invokes the action with hx- attributes.
+func TestREQ_ACT_09_InitHtmx(t *testing.T) {
+	t.Setenv("GOFLAGS", "-mod=mod")
+	dir := filepath.Join(t.TempDir(), "plain")
+	var code int
+	withStdin(t, "htmx\n", func() {
+		_, code = captureStdout(t, func() int {
+			return gxcli.Main([]string{"init", "--module", "example.com/plain", "--replace", thisRepo(t), dir})
+		})
+	})
+	if code != 0 {
+		t.Fatalf("gx init with htmx: exit %d", code)
+	}
+	read := func(rel string) string {
+		t.Helper()
+		data, err := os.ReadFile(filepath.Join(dir, filepath.FromSlash(rel)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		return string(data)
+	}
+	if toml := read("gx.toml"); !strings.Contains(toml, "adapter = \"htmx\"\n") {
+		t.Fatalf("gx.toml does not name htmx:\n%s", toml)
+	}
+	if main := read("cmd/app/main.go"); !strings.Contains(main, "htmx.Adapter()") || strings.Contains(main, "datastar") {
+		t.Fatalf("the main does not use htmx alone:\n%s", main)
+	}
+	if counter := read("home/Counter.gx"); strings.Contains(counter, "signals") || strings.Contains(counter, "$") {
+		t.Fatalf("the htmx counter has a signal:\n%s", counter)
+	}
+	if agents := read("AGENTS.md"); !strings.Contains(agents, "on htmx.") || strings.Contains(agents, "`signals` block") {
+		t.Fatalf("AGENTS.md does not describe an htmx app:\n%s", agents)
+	}
+	if out, code := captureStdout(t, func() int { return gxcli.Main([]string{"check", dir}) }); code != 0 {
+		t.Fatalf("gx check: exit %d\n%s", code, out)
+	}
+	if out, code := captureStdout(t, func() int { return gxcli.Main([]string{"new", "action", "home/Reset", dir}) }); code != 0 {
+		t.Fatalf("gx new action: exit %d\n%s", code, out)
+	}
+	if action := read("home/reset_action.go"); strings.Contains(action, "SetSignals") {
+		t.Fatalf("a new action of an htmx app names SetSignals:\n%s", action)
+	}
+	bin := filepath.Join(t.TempDir(), "app")
+	build := exec.Command("go", "build", "-o", bin, "./cmd/app")
+	build.Dir = dir
+	if out, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build: %v\n%s", err, out)
+	}
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	addr := l.Addr().String()
+	_ = l.Close()
+	run := exec.Command(bin)
+	run.Dir = dir
+	run.Env = append(os.Environ(), "GX_DEV_ADDR="+addr)
+	if err := run.Start(); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		_ = run.Process.Kill()
+		_, _ = run.Process.Wait()
+	}()
+	var page string
+	for deadline := time.Now().Add(20 * time.Second); ; time.Sleep(50 * time.Millisecond) {
+		resp, err := http.Get("http://" + addr + "/")
+		if err == nil {
+			body, _ := io.ReadAll(resp.Body)
+			_ = resp.Body.Close()
+			page = string(body)
+			break
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("GET /: %v", err)
+		}
+	}
+	for _, want := range []string{`hx-post="/add" hx-trigger="click"`, `src="/_gx/htmx.js"`} {
+		if !strings.Contains(page, want) {
+			t.Fatalf("the page lacks %s:\n%s", want, page)
+		}
+	}
+	req, err := http.NewRequest("POST", "http://"+addr+"/add", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// htmx sends these headers from the page.
+	req.Header.Set("HX-Request", "true")
+	req.Header.Set("Sec-Fetch-Site", "same-origin")
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, _ := io.ReadAll(res.Body)
+	_ = res.Body.Close()
+	if !strings.Contains(string(body), `hx-swap-oob="gx-morph:#`) || !strings.Contains(string(body), ">1</span>") {
+		t.Fatalf("the action answer = %d %s", res.StatusCode, body)
 	}
 }
 

@@ -54,6 +54,7 @@ func TestREQ_DOC_02_PageInventory(t *testing.T) {
 		"guides/static-export":        "Guides", // static export
 		"guides/security":             "Guides", // the security rules
 		"guides/islands":              "Guides", // islands and web components
+		"guides/adapters":             "Guides", // Datastar and htmx
 
 		"reference/api":         "Reference",
 		"reference/cli":         "Reference",

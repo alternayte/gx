@@ -689,6 +689,12 @@ func (g *gen) attrsExpr(el *Element) string {
 				continue
 			}
 			if site := g.res.clientBy[a]; site != nil {
+				if v, ok, isAction := g.actionAttr(a, site); isAction {
+					if ok {
+						static = append(static, v)
+					}
+					continue
+				}
 				name, ok := g.clientAttrName(a)
 				if !ok {
 					continue
@@ -1235,6 +1241,39 @@ func (g *gen) clientAttrName(a *Attr) (string, bool) {
 		return "", false
 	}
 	return name, true
+}
+
+// actionAttr returns the gx.On call of an on: handler that is one route
+// literal. isAction is false for every other client expression.
+func (g *gen) actionAttr(a *Attr, site *clientSite) (v string, ok, isAction bool) {
+	spec, isOn := strings.CutPrefix(a.Name, "on:")
+	if !isOn || site.block {
+		return "", false, false
+	}
+	expr, isExpr := site.node.(ast.Expr)
+	if !isExpr {
+		return "", false, false
+	}
+	key := namedTypeKey(g.res.exprTypes[expr])
+	if key == "" || !g.res.routeKeys[key] {
+		return "", false, false
+	}
+	if _, good := g.clientAttrName(a); !good {
+		return "", false, true
+	}
+	t := &transpiler{
+		res:       g.res,
+		file:      g.file,
+		scopeBase: g.file.Package + "." + g.name,
+		keyExpr:   g.keyExpr(),
+		scoped:    g.scoped,
+	}
+	v, err := t.actionAttr(spec, expr, key)
+	if err != nil {
+		g.fail(a, CodeClientType, "client expression", "%s", err)
+		return "", false, true
+	}
+	return v, true, true
 }
 
 // clientAttrValue returns the Go expression of the adapter attribute of one

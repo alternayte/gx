@@ -58,6 +58,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX4003](/errors/GX4003/) | No signal is declared for a signal-bound field. |
 | [GX4004](/errors/GX4004/) | Signal type does not match the action field. |
 | [GX4005](/errors/GX4005/) | Call is not allowed in a client expression. |
+| [GX4006](/errors/GX4006/) | Signal or client expression under an adapter with no signals. |
 | [GX4007](/errors/GX4007/) | Value or operator is not allowed in a client expression. |
 | [GX4008](/errors/GX4008/) | Signal-bound fields need rules or gx.Unchecked. |
 | [GX4009](/errors/GX4009/) | Action method cannot be invoked from the client. |

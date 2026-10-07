@@ -31,6 +31,10 @@ type Adapter interface {
 	// (REQ-ACT-03). It returns the zero Attr for a method the client
 	// cannot invoke.
 	Invoke(method, url, scope string) Attr
+	// On returns the attributes that make an element invoke an action
+	// on an event, with the event modifiers (REQ-ACT-08). It returns
+	// nil for an invocation that the adapter cannot express.
+	On(inv Invocation) []Attr
 }
 
 var adapterMu sync.RWMutex
@@ -72,7 +76,7 @@ func (a *App) withAdapter(h http.Handler) http.Handler {
 // wantsEventStream reports whether the request asks for patches rather than
 // a page (request lifecycle step 7).
 func wantsEventStream(r *http.Request) bool {
-	if r.Header.Get("Datastar-Request") != "" {
+	if r.Header.Get("Datastar-Request") != "" || r.Header.Get("HX-Request") != "" {
 		return true
 	}
 	return strings.Contains(r.Header.Get("Accept"), "text/event-stream")

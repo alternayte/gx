@@ -339,6 +339,18 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 					continue
 				}
 			}
+			if a.Key == onKey {
+				// An action invocation on an event: the adapter
+				// writes its own attributes (REQ-PLG-04).
+				for _, out := range st.resolveOn(a.Value) {
+					b.WriteByte(' ')
+					b.WriteString(out.Key)
+					b.WriteString(`="`)
+					b.WriteString(escapeAttr(out.Value))
+					b.WriteByte('"')
+				}
+				continue
+			}
 			if a.Kind == AttrText && strings.IndexByte(a.Value, 0) >= 0 {
 				// An action invocation: the adapter writes it
 				// (REQ-PLG-04).

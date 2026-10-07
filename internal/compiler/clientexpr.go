@@ -147,6 +147,17 @@ func (r *typesResult) checkSignalFields(f *File, a *Attr, def *routeDef) []Diagn
 		if fld.signal == "" {
 			continue
 		}
+		if !adapters[r.adapter].signals {
+			out = append(out, Diagnostic{
+				Code: CodeAdapterSignals,
+				File: f.File,
+				Line: a.At.Line,
+				Col:  a.At.Col,
+				Msg:  "the " + r.adapter + " adapter has no signals: field " + Quoted(fld.name) + " of the action reads signal " + Quoted(fld.signal),
+				Fix:  "send the value in the path, the query or a form field",
+			})
+			continue
+		}
 		sigType := r.sigTypes[f][lowerFirst(fld.name)]
 		if sigType == nil {
 			out = append(out, Diagnostic{

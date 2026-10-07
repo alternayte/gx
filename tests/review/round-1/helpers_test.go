@@ -171,6 +171,11 @@ func (fakeAdapter) Invoke(method, url, scope string) gx.Attr {
 	return gx.Attr{Key: "data-fake-on", Value: method + " " + url}
 }
 
+// On writes the event and the URL in a made-up syntax.
+func (fakeAdapter) On(inv gx.Invocation) []gx.Attr {
+	return []gx.Attr{{Key: "data-fake-on-" + inv.Event, Value: inv.Method + " " + inv.URL}}
+}
+
 func (fakeAdapter) Respond(w http.ResponseWriter, _ *http.Request, res *gx.Response) error {
 	for _, p := range res.Patches {
 		if ep, ok := p.(gx.ElementPatch); ok {

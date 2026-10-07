@@ -73,6 +73,8 @@ func (p *Package) component(name string) (*Component, bool) {
 type loader struct {
 	pkgs    map[string]*Package
 	overlay map[string][]byte
+	// adapter overrides the adapter key of gx.toml when it is not empty.
+	adapter string
 }
 
 func newLoader() *loader {

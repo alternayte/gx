@@ -187,7 +187,7 @@ func adapterAttrName(name string) (string, error) {
 	out := "data-on:" + event
 	switch {
 	case event == "load":
-		out = "data-on-init"
+		out = "data-init"
 	case event == "visible":
 		out = "data-on-intersect"
 	case event == "interval" || strings.HasPrefix(event, "interval("):
@@ -517,6 +517,22 @@ func (t *transpiler) actionValue(call ast.Expr, key string) (string, error) {
 		scope = "gx.ScopeString(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ")"
 	}
 	return "gx.Invoke(" + strconv.Quote(method) + ", (" + printNode(call) + ").URL(), " + scope + ").Value", nil
+}
+
+// actionAttr returns the Go expression of the attribute of an on: handler
+// that is one route literal. spec is the text after "on:". The adapter
+// writes its own attributes when the node renders, so the generated code is
+// the same for each adapter (REQ-ACT-09, REQ-PLG-04).
+func (t *transpiler) actionAttr(spec string, call ast.Expr, key string) (string, error) {
+	method := t.res.routeMeth[key]
+	if !clientInvocable(method) {
+		return "", fmt.Errorf("method %s cannot be invoked from the client", method)
+	}
+	scope := strconv.Quote("")
+	if t.scoped {
+		scope = "gx.ScopeString(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ")"
+	}
+	return "gx.On(" + strconv.Quote(spec) + ", " + strconv.Quote(method) + ", (" + printNode(call) + ").URL(), " + scope + ")", nil
 }
 
 // binary transpiles an operator expression (REQ-ACT-13).

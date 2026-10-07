@@ -10,7 +10,7 @@ Run the command of the project with `go run ./cmd/gx <command>`. It uses the Gx 
 ## gx init
 
 ```sh
-gx init [--template app|docs] [--adapter datastar] [--module <path>] [dir]
+gx init [--template app|docs] [--adapter datastar|htmx] [--module <path>] [dir]
 ```
 
 Writes a new app into `dir`. It asks for the adapter when you give no `--adapter`. It does not write into a directory that has a `go.mod` or a `gx.toml`.
@@ -18,6 +18,7 @@ Writes a new app into `dir`. It asks for the adapter when you give no `--adapter
 | Flag | Meaning |
 | --- | --- |
 | `--template` | `app` is an app with one example slice. `docs` is a docs site with the docs shell and the docs kit. |
+| `--adapter` | `datastar` is the default. `htmx` gives an app with no signals. Read [Adapters](/guides/adapters/). |
 | `--module` | The Go module path. The default is the directory name. |
 | `--registry` | The component registry for `gx.toml`. |
 

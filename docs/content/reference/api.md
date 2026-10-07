@@ -598,6 +598,10 @@ type Adapter interface {
     // (REQ-ACT-03). It returns the zero Attr for a method the client
     // cannot invoke.
     Invoke(method, url, scope string) Attr
+    // On returns the attributes that make an element invoke an action
+    // on an event, with the event modifiers (REQ-ACT-08). It returns
+    // nil for an invocation that the adapter cannot express.
+    On(inv Invocation) []Attr
 }
 ```
 
@@ -681,6 +685,14 @@ func Invoke(method, url, scope string) Attr
 ```
 
 Invoke returns the attribute that invokes the action at url with the HTTP method. A non-empty scope names the invoking component instance. Generated code puts the Value in the attribute of an on: handler. The adapter of the request, or the process default, writes the attribute when the node renders.
+
+#### func On
+
+```go
+func On(spec, method, url, scope string) Attr
+```
+
+On returns the attribute that invokes an action on an event. Generated code calls it for an on: handler that is one route literal. spec is the text after "on:", for example "click.debounce(300ms)". The adapter of the request, or the process default, writes its own attributes when the node renders.
 
 ### type AttrKind
 
@@ -1415,6 +1427,28 @@ type IconProps struct {
 
 IconProps are the props of a generated icon component.
 
+### type Invocation
+
+```go
+type Invocation struct {
+    // Method is the HTTP method and URL is the address of the action.
+    Method string
+    URL    string
+    // Scope names the invoking component instance, or is empty
+    // (REQ-ACT-03).
+    Scope string
+    // Event is the name of a DOM event, or "load", "visible" or
+    // "interval".
+    Event string
+    // Every is the period of an interval event, for example "5s".
+    Every string
+    // Mods are the event modifiers in source order.
+    Mods []Modifier
+}
+```
+
+Invocation is one client call of an action on an event.
+
 ### type IslandBundle
 
 ```go
@@ -1562,6 +1596,25 @@ type Meta struct {
 ```
 
 Meta is one meta tag in the head.
+
+### type Modifier
+
+```go
+type Modifier struct {
+    Name  string
+    Value string
+}
+```
+
+Modifier is one event modifier of an Invocation. Value is the text in its parentheses, for example "300ms" for debounce(300ms).
+
+#### func ParseOn
+
+```go
+func ParseOn(spec string) (event, every string, mods []Modifier)
+```
+
+ParseOn splits the text after "on:" into an event, the period of an interval event and the modifiers. A dot inside parentheses does not start a modifier.
 
 ### type Navigation
 

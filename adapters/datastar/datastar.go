@@ -156,6 +156,34 @@ func (adapter) Invoke(method, url, scope string) gx.Attr {
 	return gx.Attr{Key: "data-on:click", Value: value}
 }
 
+// On returns the data-on attribute of an action invocation on an event,
+// with the Datastar modifiers (REQ-ACT-08).
+func (a adapter) On(inv gx.Invocation) []gx.Attr {
+	call := a.Invoke(inv.Method, inv.URL, inv.Scope)
+	if call.Key == "" {
+		return nil
+	}
+	key := "data-on:" + inv.Event
+	switch inv.Event {
+	case "load":
+		key = "data-init"
+	case "visible":
+		key = "data-on-intersect"
+	case "interval":
+		key = "data-on-interval"
+		if inv.Every != "" {
+			key += "__duration." + inv.Every
+		}
+	}
+	for _, mod := range inv.Mods {
+		key += "__" + mod.Name
+		if mod.Value != "" {
+			key += "." + mod.Value
+		}
+	}
+	return []gx.Attr{{Key: key, Value: call.Value}}
+}
+
 // ReadSignals decodes the request signals, adapter-native, into dst.
 func (adapter) ReadSignals(r *http.Request, dst any) error {
 	return sdk.ReadSignals(r, dst)

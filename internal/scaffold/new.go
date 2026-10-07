@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/alternayte/gx/internal/gxconfig"
 	"golang.org/x/tools/go/ast/astutil"
 )
 
@@ -33,7 +34,11 @@ func New(dir, kind, target string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	d := data{Module: module}
+	cfg, err := gxconfig.Load(dir)
+	if err != nil {
+		return nil, err
+	}
+	d := data{Module: module, Htmx: cfg.Adapter == gxconfig.AdapterHtmx}
 	var changed []string
 	switch kind {
 	case "slice":
@@ -410,8 +415,9 @@ import (
 	"«.Module»/«.Slice»/route"
 )
 
-// «.Type» is the «.Label» action. Answer with c.Patch, c.SetSignals,
-// c.Redirect or c.Toast; nil answers 204.
+«if .Htmx»// «.Type» is the «.Label» action. Answer with c.Patch, c.Redirect or
+// c.Toast; nil answers 204.«else»// «.Type» is the «.Label» action. Answer with c.Patch, c.SetSignals,
+// c.Redirect or c.Toast; nil answers 204.«end»
 var «.Type» = gx.Action(func(c *gx.Ctx, in route.«.Type») error {
 	return nil
 })

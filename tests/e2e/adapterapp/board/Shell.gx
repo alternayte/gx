@@ -1,0 +1,16 @@
+package board
+
+import "adapterapp/board/route"
+
+props {
+  Children gx.Node
+}
+
+<gx.Head title="Board" />
+<nav>
+  <a id="nav-home" href={route.Home{}}>Home</a>
+  <a id="nav-about" href={route.About{}}>About</a>
+  <a id="nav-join" href={route.JoinPage{}}>Join</a>
+</nav>
+<main>{p.Children}</main>
+{gx.Toaster()}

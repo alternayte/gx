@@ -85,7 +85,7 @@ Hello, Ada
 2. Move one leaf component to a `.gx` file. Run `gx generate`.
 3. Call it from a templ component as a Go function, or render it with `gx.Render(w, r, node)`.
 4. Move a page after you move its components. Give each page a route type and a loader.
-5. Change each `hx-` attribute to an action and a fragment when you want the typed loop. The htmx adapter comes with release 0.2.0. Until then, an action uses Datastar.
+5. Change each `hx-` attribute to an action and a fragment when you want the typed loop. An app can keep htmx: release 0.2.0 has an htmx adapter. Read [Adapters](/guides/adapters/).
 
 ## Differences to know
 

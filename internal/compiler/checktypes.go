@@ -7,6 +7,7 @@ import (
 	"go/ast"
 	"go/token"
 	"go/types"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -16,8 +17,10 @@ import (
 
 // typesResult holds the Go types of .gx expressions from one analysis pass.
 type typesResult struct {
-	types map[any]types.Type
-	quals map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
+	// adapter is the adapter name of the app (REQ-ACT-09).
+	adapter string
+	types   map[any]types.Type
+	quals   map[*File]map[int]map[string]bool // default identifiers owned by the declaring package
 	// qualPkgs maps the package qualifiers of a default expression to
 	// their import paths, so a call site in another package can import
 	// them.
@@ -94,6 +97,10 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 		clientBy:   map[*Attr]*clientSite{},
 		scopedMap:  map[*File]bool{},
 		symbols:    map[string][]Symbol{},
+		adapter:    l.adapter,
+	}
+	if res.adapter == "" {
+		res.adapter = adapterOf(root)
 	}
 	if findModule(root) == nil {
 		return res, nil
@@ -145,8 +152,19 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	// generated form type type-checks in the second pass (REQ-FRM-03).
 	first := &typesResult{actions: map[string][]token.Position{}}
 	first.collectActions(pkgs)
-	if firstRoutes, _ := collectRoutes(pkgs, first.actions); hasFormRoute(firstRoutes) {
-		for path, src := range renderRouteFiles(firstRoutes) {
+	// A route file on the disk can be older than its route types, too. The
+	// second pass then reads the new file, so the dev symbol table lists
+	// the types that this generate writes (REQ-DEV-04).
+	firstRoutes, _ := collectRoutes(pkgs, first.actions)
+	routeFiles := renderRouteFiles(firstRoutes)
+	reload := hasFormRoute(firstRoutes)
+	for path, src := range routeFiles {
+		if onDisk, err := os.ReadFile(path); err != nil || !bytes.Equal(onDisk, src) {
+			reload = true
+		}
+	}
+	if reload {
+		for path, src := range routeFiles {
 			overlay[path] = src
 		}
 		if pkgs2, err := goLoader.Load(overlay); err == nil {
@@ -190,6 +208,10 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 				diags = append(diags, d)
 				res.typeDiags[pr.file.File] = append(res.typeDiags[pr.file.File], d)
 			}
+		}
+		for _, d := range res.adapterDiags(pr) {
+			diags = append(diags, d)
+			res.typeDiags[pr.file.File] = append(res.typeDiags[pr.file.File], d)
 		}
 	}
 	res.collectActions(pkgs)

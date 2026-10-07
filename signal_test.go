@@ -22,6 +22,7 @@ func (a *signalAdapter) Respond(http.ResponseWriter, *http.Request, *gx.Response
 }
 
 func (a *signalAdapter) Invoke(string, string, string) gx.Attr { return gx.Attr{} }
+func (a *signalAdapter) On(gx.Invocation) []gx.Attr            { return nil }
 
 func (a *signalAdapter) ReadSignals(r *http.Request, dst any) error {
 	if a.body == nil {

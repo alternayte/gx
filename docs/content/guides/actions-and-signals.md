@@ -54,7 +54,7 @@ type Count struct {
 
 The `signals` block declares each signal with a type and a first value. Inside the markup, `$Name` is the signal.
 
-An attribute that reads a signal is a client expression. Gx changes it into the syntax of the adapter. A client expression is a small part of Go: literals, signals, values from the server, operators, and the functions of package `gxc`.
+An attribute that reads a signal is a client expression. Gx changes it into the syntax of the adapter. Signals and client expressions need the Datastar adapter: read [Adapters](/guides/adapters/). A client expression is a small part of Go: literals, signals, values from the server, operators, and the functions of package `gxc`.
 
 | Directive | Example | Meaning |
 | --- | --- | --- |

@@ -57,6 +57,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4003 | no signal is declared for a signal-bound field",
 		"GX4004 | signal type does not match the action field",
 		"GX4005 | call is not allowed in a client expression",
+		"GX4006 | signal or client expression under an adapter with no signals",
 		"GX4007 | value or operator is not allowed in a client expression",
 		"GX4008 | signal-bound fields need rules or gx.Unchecked",
 		"GX4009 | action method cannot be invoked from the client",

@@ -74,6 +74,8 @@ type runtimeNeeds struct {
 	// adapter is true when the page uses signals, actions or client
 	// expressions.
 	adapter bool
+	// signals is true when a component of the page declares signals.
+	signals bool
 	// core is true when the page uses a form, layout-aware navigation or
 	// a page-shell behaviour.
 	core bool
@@ -152,6 +154,9 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 				if a.Key == "data-gx-theme" {
 					needs.theme = true
 				}
+				if a.Key == "data-signals" {
+					needs.signals = true
+				}
 				// The island loader also loads the module of an imported
 				// web component (REQ-ISL-09).
 				if a.Key == "data-gx-module" {
@@ -190,7 +195,7 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 // (REQ-ACT-07).
 func adapterMarker(key string) bool {
 	switch key {
-	case "data-signals", "data-bind", "data-show", "data-text", invokeKey:
+	case "data-signals", "data-bind", "data-show", "data-text", "data-init", invokeKey, onKey:
 		return true
 	}
 	for _, prefix := range []string{"data-on", "data-attr:", "data-class:"} {

@@ -56,6 +56,7 @@ const (
 	CodeActionMissingSignal = "GX4003"
 	CodeSignalTypeMismatch  = "GX4004"
 	CodeClientCall          = "GX4005"
+	CodeAdapterSignals      = "GX4006"
 	CodeClientType          = "GX4007"
 	CodeInstanceKey         = "GX2012"
 	CodeSignalDefault       = "GX2014"
@@ -121,6 +122,7 @@ var Catalog = []Info{
 	{CodeActionMissingSignal, "no signal is declared for a signal-bound field"},
 	{CodeSignalTypeMismatch, "signal type does not match the action field"},
 	{CodeClientCall, "call is not allowed in a client expression"},
+	{CodeAdapterSignals, "signal or client expression under an adapter with no signals"},
 	{CodeClientType, "value or operator is not allowed in a client expression"},
 	{CodeSignalRules, "signal-bound fields need rules or gx.Unchecked"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},

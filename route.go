@@ -398,6 +398,15 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 	r, needs := withRuntimeNeeds(r)
 	b := newBufferedWriter()
 	a.mux.ServeHTTP(b, r)
+	if needs.signals && a.adapter != nil && !a.adapter.Signals() {
+		// gx.toml and Config.Adapter name different adapters, so the
+		// compiler did not report the signals (REQ-ACT-09). The page
+		// cannot work: say why.
+		name := a.adapter.Name()
+		http.Error(w, "gx: this page declares signals, and the "+name+" adapter has none. Set adapter = \""+name+
+			"\" in gx.toml: the compiler then reports each signal (GX4006).", http.StatusInternalServerError)
+		return
+	}
 	if needs.nonce == "" {
 		// A policy around the whole app, or a page that wrote its own
 		// response.

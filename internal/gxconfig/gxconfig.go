@@ -5,13 +5,25 @@
 package gxconfig
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
+// The adapter names of gx.toml (REQ-ACT-09).
+const (
+	AdapterDatastar = "datastar"
+	AdapterHtmx     = "htmx"
+)
+
 // Config is the parsed gx.toml.
 type Config struct {
+	// Adapter is the adapter key at the top of the file: "datastar" or
+	// "htmx". Empty means Datastar. The compiler reads it, because signals
+	// and client expressions are compile errors under htmx (REQ-ACT-09).
+	// It must name the adapter that gx.Config.Adapter holds.
+	Adapter    string
 	Mirrors    map[string]string
 	Site       Site
 	Registry   Registry
@@ -83,6 +95,13 @@ func Load(root string) (Config, error) {
 			value = unquoted
 		}
 		switch section {
+		case "":
+			if key == "adapter" {
+				if value != AdapterDatastar && value != AdapterHtmx {
+					return cfg, fmt.Errorf("gx.toml: unknown adapter %q; the adapters are %q and %q", value, AdapterDatastar, AdapterHtmx)
+				}
+				cfg.Adapter = value
+			}
 		case "mirrors":
 			cfg.Mirrors[key] = value
 		case "registry":

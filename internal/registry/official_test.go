@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/registry"
 )
 
@@ -171,5 +172,14 @@ func TestREQ_REG_14_TierThreeItems(t *testing.T) {
 		if islands != wantIslands || fixtures == 0 {
 			t.Errorf("%s: %d island files (want %d) and %d fixture files", name, islands, wantIslands, fixtures)
 		}
+	}
+}
+
+// TestREQ_ACT_09_RegistryCompilesUnderHtmx checks that no official registry
+// item needs signals: every item compiles for the htmx adapter too.
+func TestREQ_ACT_09_RegistryCompilesUnderHtmx(t *testing.T) {
+	src := filepath.Join(repoRoot(t), "registry")
+	for _, d := range compiler.CheckWith(src, compiler.CheckOptions{Adapter: "htmx"}) {
+		t.Errorf("%s", d)
 	}
 }

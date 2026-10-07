@@ -1,0 +1,4 @@
+# The app has no signals, so it compiles for the htmx adapter (REQ-ACT-09).
+# The same build runs under Datastar too: the adapter writes its attributes
+# when a page renders.
+adapter = "htmx"

@@ -176,7 +176,7 @@ func TestREQ_ACT_02_ActionCodegen(t *testing.T) {
 	})
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "cart/Button_gx.go")])
-	want := `gx.Attr{Key: "data-on:click", Value: gx.Invoke("POST", (Add{ID: 1}).URL(), "").Value, Kind: gx.AttrText}`
+	want := `gx.On("click", "POST", (Add{ID: 1}).URL(), "")`
 	if !strings.Contains(src, want) {
 		t.Fatalf("Button_gx.go lacks the action attribute:\n%s", src)
 	}
@@ -216,7 +216,7 @@ func TestREQ_ACT_03_SignalBinding(t *testing.T) {
 	}
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "cart/Cart_gx.go")])
-	want := `gx.Invoke("POST", (Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)).Value`
+	want := `gx.On("click", "POST", (Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))`
 	if !strings.Contains(src, want) {
 		t.Fatalf("Cart_gx.go lacks the scoped action attribute:\n%s", src)
 	}

@@ -3,7 +3,7 @@
 // bundler for the core runtime.
 import { installCSRF } from './csrf'
 //
-// It owns the parts Datastar does not: layout-aware navigation (REQ-RTE-12),
+// It owns the parts an adapter does not: layout-aware navigation (REQ-RTE-12),
 // active links (REQ-RTE-13), the dev duplicate-scope check (REQ-ACT-06) and
 // the JavaScript halves of the gxc helpers (REQ-ACT-13).
 
@@ -451,6 +451,21 @@ const readFrames = async (res: Response): Promise<void> => {
   }
 }
 
+// An adapter that does not answer with an event stream sets __gxAdapter:
+// apply puts the answer of the server in the page (REQ-ACT-09).
+type AnswerAdapter = { apply: (res: Response) => Promise<void> }
+
+const isStream = (res: Response): boolean => (res.headers.get('Content-Type') ?? '').includes('text/event-stream')
+
+// hasPatches reports whether an answer holds patches, not a page.
+const hasPatches = (res: Response): boolean => isStream(res) || res.headers.get('Gx-Answer') === 'patches'
+
+// applyAnswer applies the patches of one answer through the adapter.
+const applyAnswer = async (res: Response): Promise<void> => {
+  if (isStream(res)) return readFrames(res)
+  await (globalThis as { __gxAdapter?: AnswerAdapter }).__gxAdapter?.apply(res)
+}
+
 // cookie reads one cookie value.
 const cookie = (name: string): string => {
   const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
@@ -500,7 +515,7 @@ const validateField = async (el: HTMLInputElement | HTMLSelectElement | HTMLText
     body,
   })
   if (!res.ok || !res.body) return
-  await readFrames(res)
+  await applyAnswer(res)
 }
 
 // watchValidation wires blur and input validation (REQ-FRM-06).
@@ -553,7 +568,7 @@ const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null):
     form.submit()
     return
   }
-  await readFrames(res)
+  await applyAnswer(res)
   // Datastar morphs the patched form a moment later. Focus the error
   // summary once it lands (REQ-FRM-11).
   for (let i = 0; i < 20; i++) {
@@ -580,8 +595,7 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
   if (keep) headers['Gx-Dev-Reload'] = '1'
   const res = await fetch(url, { headers, credentials: 'same-origin' })
   // A page with no layout slot answers HTML, not patches: load it in full.
-  const patches = (res.headers.get('Content-Type') ?? '').includes('text/event-stream')
-  if (!res.ok || !res.body || !patches || res.headers.get('Gx-Nav') === 'full') {
+  if (!res.ok || !res.body || !hasPatches(res) || res.headers.get('Gx-Nav') === 'full') {
     if (keep) location.reload()
     else location.href = url
     return
@@ -594,7 +608,7 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
     // Gx owns scroll: scroll before the morph so an on:visible element of
     // the new page never sees the old scroll position.
     if (!keep) window.scrollTo(0, 0)
-    await readFrames(res)
+    await applyAnswer(res)
     if (keep) window.scrollTo(left, top)
     if (push) history.pushState({ gx: true }, '', url)
     updateActive()
@@ -604,6 +618,9 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
 // The dev client morphs the page through navigate after a rebuild
 // (REQ-DEV-03).
 ;(gx as typeof gx & { navigate?: typeof navigate }).navigate = navigate
+// An adapter with an HTML answer hands the head of a navigation to the
+// runtime (REQ-ACT-09).
+;(gx as typeof gx & { mergeHead?: typeof mergeHead }).mergeHead = mergeHead
 
 if (typeof document !== 'undefined') {
   document.addEventListener('click', (e) => {

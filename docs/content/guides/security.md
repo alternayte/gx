@@ -90,6 +90,8 @@ Gx writes the nonce on each `<script>` element of a `.gx` file, on its own scrip
 
 If the app has its own policy middleware, give its nonce to Gx with `gx.WithNonce(r, nonce)`.
 
+The htmx adapter needs no `'unsafe-eval'`. An htmx app uses `gx.CSP(gx.CSPOptions{})`. The adapter turns off the parts of htmx that evaluate text as code.
+
 ## Production builds
 
 A binary from `gx build` has no dev route, no gallery and no dev client. The registry installer checks the hash of each file, and each download has its hash in `gx.lock`.

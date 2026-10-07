@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/alternayte/gx/internal/gxconfig"
 )
 
 // The managed section of AGENTS.md sits between these two lines. `gx agents
@@ -17,7 +19,7 @@ const (
 // never-list for app code.
 const agentsManaged = `## Gx
 
-This app uses Gx: typed server-rendered pages in Go, on Datastar.
+This app uses Gx: typed server-rendered pages in Go, on «adapter».
 
 ### Commands
 
@@ -43,7 +45,7 @@ This app uses Gx: typed server-rendered pages in Go, on Datastar.
 - Put every page, action and form in the ` + "`gx.Collect`" + ` call of its slice. Put every slice in the ` + "`Group`" + ` call in ` + "`cmd/app/main.go`" + `.
 - Props have names. A prop with no default is required.
 - A loader does the IO and returns props. A component renders from its props only.
-- Client state is a signal in the ` + "`signals`" + ` block. ` + "`$Name`" + ` works only in a client expression.
+«state»
 - A class is a static string. ` + "`gx.Cx`" + ` merges classes and ` + "`gx.Enum`" + ` holds variants.
 - A component has a ` + "`<Name>.fixtures.go`" + ` file. The dev gallery at ` + "`/_gx/gallery`" + ` shows each fixture.
 
@@ -53,21 +55,40 @@ This app uses Gx: typed server-rendered pages in Go, on Datastar.
 - Never put a dynamic string in ` + "`href`, `src`, `action` or `formaction`" + `. Use a route value or ` + "`gx.URL`" + `.
 - Never build a class string at runtime.
 - Never convert a non-constant string to ` + "`gx.SafeHTML`" + ` without ` + "`//gx:trusted <reason>`" + ` on the same line.
-- Never put a ` + "`gx.Secret`" + ` value in a signal or a client expression.
-- Never trust a signal value. Give the action input ` + "`Rules()`" + `.
-- Never do IO in a ` + "`.gx`" + ` file.
+«never»- Never do IO in a ` + "`.gx`" + ` file.
 - Never register a route or a component in ` + "`init()`" + `.
 - Never add node or npm for a default workflow.
 `
 
-// agentsBlock returns the managed section with its marker lines.
-func agentsBlock() string {
-	return agentsStart + "\n" + agentsManaged + agentsEnd + "\n"
+// The lines of the managed section that depend on the adapter
+// (REQ-ACT-09). htmx has no signals, so its lines name the server state.
+var agentsLines = map[string][3]string{
+	gxconfig.AdapterDatastar: {
+		"Datastar",
+		"- Client state is a signal in the `signals` block. `$Name` works only in a client expression.",
+		"- Never put a `gx.Secret` value in a signal or a client expression.\n- Never trust a signal value. Give the action input `Rules()`.\n",
+	},
+	gxconfig.AdapterHtmx: {
+		"htmx",
+		"- State lives on the server. The htmx adapter has no signals and no client expressions (GX4006). An action patches a fragment.",
+		"- Never trust a request value. Give the action input `Rules()`.\n",
+	},
 }
 
-// Agents returns the AGENTS.md of a new app (REQ-AI-05).
-func Agents(name string) string {
-	return "# " + name + "\n\n" + agentsBlock() + "\n## Project notes\n\nWrite the rules of this project here. `gx agents --update` keeps this part.\n"
+// agentsBlock returns the managed section with its marker lines, for the
+// adapter of the app.
+func agentsBlock(adapter string) string {
+	lines, ok := agentsLines[adapter]
+	if !ok {
+		lines = agentsLines[gxconfig.AdapterDatastar]
+	}
+	managed := strings.NewReplacer("«adapter»", lines[0], "«state»", lines[1], "«never»", lines[2]).Replace(agentsManaged)
+	return agentsStart + "\n" + managed + agentsEnd + "\n"
+}
+
+// Agents returns the AGENTS.md of a new app with the adapter (REQ-AI-05).
+func Agents(name, adapter string) string {
+	return "# " + name + "\n\n" + agentsBlock(adapter) + "\n## Project notes\n\nWrite the rules of this project here. `gx agents --update` keeps this part.\n"
 }
 
 // UpdateAgents rewrites the managed section of AGENTS.md in dir and leaves
@@ -76,13 +97,18 @@ func Agents(name string) string {
 // written new.
 func UpdateAgents(dir string) (bool, error) {
 	path := filepath.Join(dir, "AGENTS.md")
+	cfg, err := gxconfig.Load(dir)
+	if err != nil {
+		return false, err
+	}
+	adapter := cfg.Adapter
 	data, err := os.ReadFile(path)
 	if os.IsNotExist(err) {
 		abs, absErr := filepath.Abs(dir)
 		if absErr != nil {
 			return false, absErr
 		}
-		return true, os.WriteFile(path, []byte(Agents(appName(filepath.Base(abs)))), 0o644)
+		return true, os.WriteFile(path, []byte(Agents(appName(filepath.Base(abs)), adapter)), 0o644)
 	}
 	if err != nil {
 		return false, err
@@ -95,11 +121,11 @@ func UpdateAgents(dir string) (bool, error) {
 	case start >= 0 && end > start:
 		tail := old[end+len(agentsEnd):]
 		tail = strings.TrimPrefix(strings.TrimPrefix(tail, "\r"), "\n")
-		next = old[:start] + agentsBlock() + tail
+		next = old[:start] + agentsBlock(adapter) + tail
 	default:
-		next = strings.TrimRight(old, "\n") + "\n\n" + agentsBlock()
+		next = strings.TrimRight(old, "\n") + "\n\n" + agentsBlock(adapter)
 		if strings.TrimSpace(old) == "" {
-			next = agentsBlock()
+			next = agentsBlock(adapter)
 		}
 	}
 	if next == old {

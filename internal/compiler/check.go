@@ -22,12 +22,17 @@ type CheckOptions struct {
 	ExternalLinks bool
 	// Client is the HTTP client of the external check.
 	Client *http.Client
+	// Adapter checks the files for this adapter and not for the adapter
+	// key of gx.toml (REQ-ACT-09). The registry has no gx.toml, and its
+	// items must compile for each adapter.
+	Adapter string
 }
 
 // CheckWith checks a module with options (REQ-CNT-10).
 func CheckWith(root string, opt CheckOptions) []Diagnostic {
 	root = absoluteRoot(root)
 	l := newLoader()
+	l.adapter = opt.Adapter
 	dirs := collectDirs(root)
 	var out []Diagnostic
 	for _, dir := range dirs {

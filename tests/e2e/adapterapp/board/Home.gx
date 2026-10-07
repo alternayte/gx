@@ -1,0 +1,59 @@
+package board
+
+import "adapterapp/board/route"
+
+props {
+  Inc int
+}
+
+<gx.Head title="Board" />
+<h1 id="home">Board</h1>
+
+<section>
+  {value("inc-value", p.Inc)}
+  <button id="inc" type="button" on:click={route.Inc{}}>Add one</button>
+</section>
+
+<section>
+  <div id="items" data-list><p>start</p></div>
+  <button id="last" type="button" on:click={route.AddLast{}}>Add last</button>
+  <button id="first" type="button" on:click={route.AddFirst{}}>Add first</button>
+</section>
+
+<section>
+  {swapped("old")}
+  <button id="swap-it" type="button" on:click={route.Swap{}}>Swap</button>
+  {gone()}
+  <button id="drop" type="button" on:click={route.Drop{}}>Drop</button>
+</section>
+
+<section>
+  <button id="leave" type="button" on:click={route.Leave{}}>Leave</button>
+  <button id="notify" type="button" on:click={route.Notify{}}>Notify</button>
+  <button id="fail" type="button" on:click={route.Fail{}}>Fail</button>
+  <button id="quiet" type="button" on:click={route.Quiet{}}>Quiet</button>
+  {value("fade-value", 0)}
+  <button id="fade" type="button" on:click={route.Fade{}}>Fade</button>
+</section>
+
+<section>
+  <div on:load={route.Lazy{}}>{value("lazy-value", 0)}</div>
+  <div on:interval(200ms)={route.Tick{}}>{value("tick-value", 0)}</div>
+  {value("once-value", 0)}
+  <button id="once" type="button" on:click.once={route.Count{Name: "once"}}>Once</button>
+  {value("slow-value", 0)}
+  <button id="slow" type="button" on:click.debounce(300ms)={route.Count{Name: "slow"}}>Slow</button>
+  {value("fast-value", 0)}
+  <button id="fast" type="button" on:click.throttle(2s)={route.Count{Name: "fast"}}>Fast</button>
+  {value("key-value", 0)}
+  <div on:keydown.window={route.Count{Name: "key"}}></div>
+  {value("outer-value", 0)}
+  {value("inner-value", 0)}
+  <div id="outer" style="padding: 24px" on:click={route.Count{Name: "outer"}}>
+    <button id="inner" type="button" on:click.stop={route.Count{Name: "inner"}}>Inner</button>
+  </div>
+</section>
+
+<section style="margin-top: 300vh">
+  <div on:visible={route.Seen{}}>{value("seen-value", 0)}</div>
+</section>

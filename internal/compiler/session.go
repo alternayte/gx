@@ -55,6 +55,11 @@ func (s *Session) Generate(root string) (map[string][]byte, []Diagnostic) {
 	if s.root != "" && s.root != root {
 		s.reset()
 	}
+	if s.res != nil && s.res.adapter != adapterOf(root) {
+		// The adapter key of gx.toml changed: every file is checked
+		// again (REQ-ACT-09).
+		s.reset()
+	}
 	stamps, err := snapshotInputsWith(root, s.overlay)
 	if err != nil {
 		files, diags, _, _, _ := generate(root, s.overlay)
@@ -295,6 +300,7 @@ func (s *Session) recheck(path string) {
 		s.res.clientSites = append(s.res.clientSites, site)
 		tds = append(tds, s.res.checkClientSite(site)...)
 	}
+	tds = append(tds, s.res.adapterDiags(pr)...)
 	s.res.typeDiags[path] = tds
 }
 

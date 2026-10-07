@@ -143,7 +143,7 @@ Commands:
 func runInit(args []string) int {
 	fs := flag.NewFlagSet("gx init", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
-	adapter := fs.String("adapter", "", "hypermedia adapter (datastar); gx init asks when the flag is absent")
+	adapter := fs.String("adapter", "", "hypermedia adapter: datastar or htmx; gx init asks when the flag is absent")
 	module := fs.String("module", "", "Go module path (default: the directory name)")
 	replace := fs.String("replace", "", "use a local checkout of Gx, for work on Gx itself")
 	registrySource := fs.String("registry", "", "component registry URL or directory for gx.toml")

@@ -88,3 +88,24 @@ func TestREQ_PLG_04_InvokeLoadsTheAdapter(t *testing.T) {
 		t.Fatalf("page lacks the adapter runtime:\n%s", body)
 	}
 }
+
+// TestREQ_ACT_09_OnUsesTheAdapter checks that the adapter writes the
+// attributes of an action invocation on an event, so generated code is the
+// same for each adapter.
+func TestREQ_ACT_09_OnUsesTheAdapter(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	defer gx.SetAdapter(old)
+	button := gx.El("button", gx.Attrs{{Key: "type", Value: "button"}, gx.On("click.debounce(300ms)", "POST", "/act", "")}, gx.Text("Add"))
+	gx.SetAdapter(&fakeAdapter{})
+	if got, want := gx.String(button), `<button type="button" data-fake-on-click="POST /act">Add</button>`; got != want {
+		t.Fatalf("got %s, want %s", got, want)
+	}
+	gx.SetAdapter(nil)
+	if got, want := gx.String(button), `<button type="button">Add</button>`; got != want {
+		t.Fatalf("no adapter: got %s, want %s", got, want)
+	}
+	event, every, mods := gx.ParseOn("interval(1.5s).once.debounce(300ms)")
+	if event != "interval" || every != "1.5s" || len(mods) != 2 || mods[0] != (gx.Modifier{Name: "once"}) || mods[1] != (gx.Modifier{Name: "debounce", Value: "300ms"}) {
+		t.Fatalf("ParseOn = %q %q %v", event, every, mods)
+	}
+}

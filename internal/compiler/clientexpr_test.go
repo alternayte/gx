@@ -168,7 +168,7 @@ func TestREQ_ACT_08_EventMapping(t *testing.T) {
 		{"on:keydown.window={$Qty++}", "data-on:keydown__window"},
 		{"on:input.debounce(300ms)={$Qty++}", "data-on:input__debounce.300ms"},
 		{"on:scroll.throttle(1s)={$Qty++}", "data-on:scroll__throttle.1s"},
-		{"on:load={$Qty++}", "data-on-init"},
+		{"on:load={$Qty++}", "data-init"},
 		{"on:visible={$Qty++}", "data-on-intersect"},
 		{"on:interval(5s)={$Qty++}", "data-on-interval__duration.5s"},
 	}
