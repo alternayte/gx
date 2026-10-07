@@ -63,6 +63,9 @@ go run ./cmd/gx lsp
 | --- | --- |
 | VS Code, Cursor, VSCodium | The Gx extension in `editors/vscode`. It starts `gx lsp`, formats on save and has a `gx dev` task. |
 | Neovim | The files in `editors/nvim`: the tree-sitter grammar, the filetype and the language server entry. Then `vim.lsp.enable("gx")`. |
+| GoLand and other JetBrains IDEs | The Gx plugin in `editors/jetbrains`, from release 0.2.0. It highlights `.gx` files, starts `gx lsp` and has a `Gx dev` run configuration. |
+
+To install the JetBrains plugin, run `./gradlew buildPlugin` in `editors/jetbrains`. Then install the zip file of `build/distributions` with "Install Plugin from Disk". The language server needs an IDE with the LSP API: version 2025.3 or later, or an earlier version with a subscription.
 
 ## Format
 

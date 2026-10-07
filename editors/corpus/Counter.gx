@@ -1,0 +1,24 @@
+package corpus
+
+import "example.com/app/corpus/route"
+
+props {
+  Label string
+}
+
+signals {
+  // Count lives in the browser.
+  Count int = 0
+  Open  bool = false
+}
+
+<section>
+  saved := 0
+  <p>{p.Label}: <span text={$Count}>0</span></p>
+  <input type="number" bind:value={$Count} />
+  <button on:click={$Count++} disabled>Add one</button>
+  <button on:click.debounce(300ms)={route.Save{}} attr:aria-expanded={$Open}>Save</button>
+  <div show={$Open && $Count > 2} class:ring-2={$Open} transition="fade">More than two</div>
+  <div on:interval(5s)={route.Poll{ID: 7}}></div>
+  <p #saved(saved int) class="text-sm">Saved: {saved}</p>
+</section>

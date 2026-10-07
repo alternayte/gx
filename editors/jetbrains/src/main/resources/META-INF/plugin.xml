@@ -1,0 +1,31 @@
+<idea-plugin>
+  <id>dev.alternayte.gx</id>
+  <name>Gx</name>
+  <vendor url="https://github.com/alternayte/gx">alternayte</vendor>
+  <description><![CDATA[
+    Gx language support for GoLand and the other JetBrains IDEs: diagnostics,
+    completion, hover, go to definition, rename and formatting from
+    <code>gx lsp</code>, highlighting of <code>.gx</code> files, and a run
+    configuration for <code>gx dev</code>.
+  ]]></description>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>org.jetbrains.plugins.textmate</depends>
+  <!-- The language server needs the LSP API of the IDE. An IDE before
+       2025.3 has it with the module "ultimate"; a later IDE has the module
+       "lsp", also with no subscription. Highlighting and the run
+       configuration work with no LSP API. -->
+  <depends optional="true" config-file="gx-lsp-ultimate.xml">com.intellij.modules.ultimate</depends>
+  <depends optional="true" config-file="gx-lsp-module.xml">com.intellij.modules.lsp</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <configurationType implementation="dev.alternayte.gx.GxDevConfigurationType"/>
+    <applicationService serviceImplementation="dev.alternayte.gx.GxSettings"/>
+    <applicationConfigurable parentId="tools" id="dev.alternayte.gx.settings" displayName="Gx"
+                             instance="dev.alternayte.gx.GxConfigurable"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij.textmate">
+    <bundleProvider implementation="dev.alternayte.gx.GxTextMateBundleProvider"/>
+  </extensions>
+</idea-plugin>

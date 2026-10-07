@@ -1,0 +1,34 @@
+package corpus
+
+import "example.com/app/ui/icons"
+import "strings"
+
+props {
+  // Title is the heading of the card.
+  Title    string
+  Variant  string = "flat"
+  Items    []string
+  Children gx.Node
+}
+
+{/* A card with a list. */}
+<!-- An HTML comment stays in the source. -->
+<article class="rounded-xl border p-4" class:shadow-md={p.Variant == "raised"} data-variant={p.Variant}>
+  <h3 class="font-semibold">{strings.ToUpper(p.Title)}</h3>
+  if len(p.Items) == 0 {
+    <p class="text-sm">No items.</p>
+  } else {
+    <ul>
+      for i, item := range p.Items {
+        <li key={i}>{item}</li>
+      }
+    </ul>
+  }
+  switch p.Variant {
+    case "raised":
+      <icons.Star size={16} />
+    default:
+      <hr>
+  }
+  {p.Children}
+</article>

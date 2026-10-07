@@ -1,0 +1,33 @@
+package corpus
+
+import "example.com/app/corpus/route"
+import "example.com/app/ui/button"
+
+props {
+  Products []Product
+}
+
+<gx.Head title="Products" description="Every product of the shop." />
+<nav>
+  <a href={route.Home{}} active="section">Home</a>
+  <a href="https://example.com" target="_blank">Docs</a>
+</nav>
+<main>
+  for _, product := range p.Products {
+    <Card title={product.Name} variant="raised" items={product.Tags}>
+      <button.Button variant={button.Primary} {...product.Attrs}>Buy</button.Button>
+    </Card>
+  }
+  <RevenueChart points={[]float64{1, 2.5, 4}} load="visible" />
+  <wa.Button variant="brand">A web component</wa.Button>
+  <sl-rating value="4" readonly></sl-rating>
+</main>
+<style>
+  .price { color: var(--primary); }
+</style>
+<script>
+  console.log("plain script")
+</script>
+<script lang="ts">
+  const total: number = 1 + 2
+</script>

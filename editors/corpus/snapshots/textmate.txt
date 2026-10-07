@@ -1,0 +1,423 @@
+== Card.gx
+1:1 "package corpus" meta.embedded.block.go
+3:1 "import " meta.embedded.block.go
+3:8 "\"example.com/app/ui/icons\"" meta.embedded.block.go string.quoted.double.go
+4:1 "import " meta.embedded.block.go
+4:8 "\"strings\"" meta.embedded.block.go string.quoted.double.go
+6:1 "props" meta.embedded.block.go keyword.other.gx
+6:6 " {" meta.embedded.block.go
+7:3 "// Title is the heading of the card." meta.embedded.block.go comment.line.double-slash.gx
+8:1 "  Title    string" meta.embedded.block.go
+9:1 "  Variant  string = " meta.embedded.block.go
+9:21 "\"" meta.embedded.block.go string.quoted.double.go
+9:22 "flat" meta.embedded.block.go string.quoted.double.go
+9:26 "\"" meta.embedded.block.go string.quoted.double.go
+10:1 "  Items    []string" meta.embedded.block.go
+11:1 "  Children gx.Node" meta.embedded.block.go
+12:1 "}" meta.embedded.block.go
+14:1 "{/*" comment.block.gx
+14:4 " A card with a list. " comment.block.gx
+14:25 "*/}" comment.block.gx
+15:1 "<!--" comment.block.html.gx
+15:5 " An HTML comment stays in the source. " comment.block.html.gx
+15:43 "-->" comment.block.html.gx
+16:1 "<" meta.tag.gx punctuation.definition.tag.begin.html
+16:2 "article" meta.tag.gx entity.name.tag.gx
+16:10 "class" meta.tag.gx entity.other.attribute-name.gx
+16:15 "=" meta.tag.gx
+16:16 "\"" meta.tag.gx string.quoted.double.gx
+16:17 "rounded-xl border p-4" meta.tag.gx string.quoted.double.gx
+16:38 "\"" meta.tag.gx string.quoted.double.gx
+16:40 "class:shadow-md" meta.tag.gx keyword.control.directive.gx
+16:55 "=" meta.tag.gx
+16:56 "{" meta.tag.gx meta.embedded.block.go
+16:57 "p.Variant == " meta.tag.gx meta.embedded.block.go
+16:70 "\"" meta.tag.gx meta.embedded.block.go string.quoted.double.go
+16:71 "raised" meta.tag.gx meta.embedded.block.go string.quoted.double.go
+16:77 "\"" meta.tag.gx meta.embedded.block.go string.quoted.double.go
+16:78 "}" meta.tag.gx meta.embedded.block.go
+16:80 "data-variant" meta.tag.gx entity.other.attribute-name.gx
+16:92 "=" meta.tag.gx
+16:93 "{" meta.tag.gx meta.embedded.block.go
+16:94 "p.Variant" meta.tag.gx meta.embedded.block.go
+16:103 "}" meta.tag.gx meta.embedded.block.go
+16:104 ">" meta.tag.gx punctuation.definition.tag.end.html
+17:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+17:4 "h3" meta.tag.gx entity.name.tag.gx
+17:7 "class" meta.tag.gx entity.other.attribute-name.gx
+17:12 "=" meta.tag.gx
+17:13 "\"" meta.tag.gx string.quoted.double.gx
+17:14 "font-semibold" meta.tag.gx string.quoted.double.gx
+17:27 "\"" meta.tag.gx string.quoted.double.gx
+17:28 ">" meta.tag.gx punctuation.definition.tag.end.html
+17:29 "{" meta.embedded.block.go
+17:30 "strings.ToUpper(p.Title)" meta.embedded.block.go
+17:54 "}" meta.embedded.block.go
+17:55 "</" meta.tag.gx punctuation.definition.tag.begin.html
+17:57 "h3" meta.tag.gx entity.name.tag.gx
+17:59 ">" meta.tag.gx punctuation.definition.tag.end.html
+18:3 "if len(p.Items) == 0 {" meta.embedded.block.go
+19:5 "<" meta.tag.gx punctuation.definition.tag.begin.html
+19:6 "p" meta.tag.gx entity.name.tag.gx
+19:8 "class" meta.tag.gx entity.other.attribute-name.gx
+19:13 "=" meta.tag.gx
+19:14 "\"" meta.tag.gx string.quoted.double.gx
+19:15 "text-sm" meta.tag.gx string.quoted.double.gx
+19:22 "\"" meta.tag.gx string.quoted.double.gx
+19:23 ">" meta.tag.gx punctuation.definition.tag.end.html
+19:24 "No items." -
+19:33 "</" meta.tag.gx punctuation.definition.tag.begin.html
+19:35 "p" meta.tag.gx entity.name.tag.gx
+19:36 ">" meta.tag.gx punctuation.definition.tag.end.html
+20:3 "} else {" meta.embedded.block.go
+21:5 "<" meta.tag.gx punctuation.definition.tag.begin.html
+21:6 "ul" meta.tag.gx entity.name.tag.gx
+21:8 ">" meta.tag.gx punctuation.definition.tag.end.html
+22:7 "for i, item := range p.Items {" meta.embedded.block.go
+23:9 "<" meta.tag.gx punctuation.definition.tag.begin.html
+23:10 "li" meta.tag.gx entity.name.tag.gx
+23:13 "key" meta.tag.gx keyword.control.directive.gx
+23:16 "=" meta.tag.gx
+23:17 "{" meta.tag.gx meta.embedded.block.go
+23:18 "i" meta.tag.gx meta.embedded.block.go
+23:19 "}" meta.tag.gx meta.embedded.block.go
+23:20 ">" meta.tag.gx punctuation.definition.tag.end.html
+23:21 "{" meta.embedded.block.go
+23:22 "item" meta.embedded.block.go
+23:26 "}" meta.embedded.block.go
+23:27 "</" meta.tag.gx punctuation.definition.tag.begin.html
+23:29 "li" meta.tag.gx entity.name.tag.gx
+23:31 ">" meta.tag.gx punctuation.definition.tag.end.html
+24:7 "}" meta.embedded.block.go
+25:5 "</" meta.tag.gx punctuation.definition.tag.begin.html
+25:7 "ul" meta.tag.gx entity.name.tag.gx
+25:9 ">" meta.tag.gx punctuation.definition.tag.end.html
+26:3 "}" meta.embedded.block.go
+27:3 "switch p.Variant {" meta.embedded.block.go
+28:5 "case " meta.embedded.block.go
+28:10 "\"raised\"" meta.embedded.block.go string.quoted.double.go
+28:18 ":" meta.embedded.block.go
+29:7 "<" meta.tag.component.gx punctuation.definition.tag.begin.html
+29:8 "icons.Star" meta.tag.component.gx entity.name.tag.component.gx
+29:19 "size" meta.tag.component.gx entity.other.attribute-name.gx
+29:23 "=" meta.tag.component.gx
+29:24 "{" meta.tag.component.gx meta.embedded.block.go
+29:25 "16" meta.tag.component.gx meta.embedded.block.go
+29:27 "}" meta.tag.component.gx meta.embedded.block.go
+29:29 "/>" meta.tag.component.gx punctuation.definition.tag.end.html
+30:5 "default:" meta.embedded.block.go
+31:7 "<" meta.tag.gx punctuation.definition.tag.begin.html
+31:8 "hr" meta.tag.gx entity.name.tag.gx
+31:10 ">" meta.tag.gx punctuation.definition.tag.end.html
+32:3 "}" meta.embedded.block.go
+33:3 "{" meta.embedded.block.go
+33:4 "p.Children" meta.embedded.block.go
+33:14 "}" meta.embedded.block.go
+34:1 "</" meta.tag.gx punctuation.definition.tag.begin.html
+34:3 "article" meta.tag.gx entity.name.tag.gx
+34:10 ">" meta.tag.gx punctuation.definition.tag.end.html
+== Counter.gx
+1:1 "package corpus" meta.embedded.block.go
+3:1 "import " meta.embedded.block.go
+3:8 "\"example.com/app/corpus/route\"" meta.embedded.block.go string.quoted.double.go
+5:1 "props" meta.embedded.block.go keyword.other.gx
+5:6 " {" meta.embedded.block.go
+6:1 "  Label string" meta.embedded.block.go
+7:1 "}" meta.embedded.block.go
+9:1 "signals" meta.embedded.block.go keyword.other.gx
+9:8 " {" meta.embedded.block.go
+10:3 "// Count lives in the browser." meta.embedded.block.go comment.line.double-slash.gx
+11:1 "  Count int = 0" meta.embedded.block.go
+12:1 "  Open  bool = false" meta.embedded.block.go
+13:1 "}" meta.embedded.block.go
+15:1 "<" meta.tag.gx punctuation.definition.tag.begin.html
+15:2 "section" meta.tag.gx entity.name.tag.gx
+15:9 ">" meta.tag.gx punctuation.definition.tag.end.html
+16:3 "saved := 0" meta.embedded.block.go
+17:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+17:4 "p" meta.tag.gx entity.name.tag.gx
+17:5 ">" meta.tag.gx punctuation.definition.tag.end.html
+17:6 "{" meta.embedded.block.go
+17:7 "p.Label" meta.embedded.block.go
+17:14 "}" meta.embedded.block.go
+17:15 ": " -
+17:17 "<" meta.tag.gx punctuation.definition.tag.begin.html
+17:18 "span" meta.tag.gx entity.name.tag.gx
+17:23 "text" meta.tag.gx keyword.control.directive.gx
+17:27 "=" meta.tag.gx
+17:28 "{" meta.tag.gx meta.embedded.block.go
+17:29 "$Count" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+17:35 "}" meta.tag.gx meta.embedded.block.go
+17:36 ">" meta.tag.gx punctuation.definition.tag.end.html
+17:37 "0" -
+17:38 "</" meta.tag.gx punctuation.definition.tag.begin.html
+17:40 "span" meta.tag.gx entity.name.tag.gx
+17:44 ">" meta.tag.gx punctuation.definition.tag.end.html
+17:45 "</" meta.tag.gx punctuation.definition.tag.begin.html
+17:47 "p" meta.tag.gx entity.name.tag.gx
+17:48 ">" meta.tag.gx punctuation.definition.tag.end.html
+18:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+18:4 "input" meta.tag.gx entity.name.tag.gx
+18:10 "type" meta.tag.gx entity.other.attribute-name.gx
+18:14 "=" meta.tag.gx
+18:15 "\"" meta.tag.gx string.quoted.double.gx
+18:16 "number" meta.tag.gx string.quoted.double.gx
+18:22 "\"" meta.tag.gx string.quoted.double.gx
+18:24 "bind:value" meta.tag.gx keyword.control.directive.gx
+18:34 "=" meta.tag.gx
+18:35 "{" meta.tag.gx meta.embedded.block.go
+18:36 "$Count" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+18:42 "}" meta.tag.gx meta.embedded.block.go
+18:44 "/>" meta.tag.gx punctuation.definition.tag.end.html
+19:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+19:4 "button" meta.tag.gx entity.name.tag.gx
+19:11 "on:click" meta.tag.gx keyword.control.directive.gx
+19:19 "=" meta.tag.gx
+19:20 "{" meta.tag.gx meta.embedded.block.go
+19:21 "$Count" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+19:27 "++" meta.tag.gx meta.embedded.block.go
+19:29 "}" meta.tag.gx meta.embedded.block.go
+19:31 "disabled" meta.tag.gx entity.other.attribute-name.gx
+19:39 ">" meta.tag.gx punctuation.definition.tag.end.html
+19:40 "Add one" -
+19:47 "</" meta.tag.gx punctuation.definition.tag.begin.html
+19:49 "button" meta.tag.gx entity.name.tag.gx
+19:55 ">" meta.tag.gx punctuation.definition.tag.end.html
+20:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+20:4 "button" meta.tag.gx entity.name.tag.gx
+20:11 "on:click.debounce(300ms)" meta.tag.gx keyword.control.directive.gx
+20:35 "=" meta.tag.gx
+20:36 "{" meta.tag.gx meta.embedded.block.go
+20:37 "route.Save" meta.tag.gx meta.embedded.block.go
+20:47 "{" meta.tag.gx meta.embedded.block.go
+20:48 "}" meta.tag.gx meta.embedded.block.go
+20:49 "}" meta.tag.gx meta.embedded.block.go
+20:51 "attr:aria-expanded" meta.tag.gx keyword.control.directive.gx
+20:69 "=" meta.tag.gx
+20:70 "{" meta.tag.gx meta.embedded.block.go
+20:71 "$Open" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+20:76 "}" meta.tag.gx meta.embedded.block.go
+20:77 ">" meta.tag.gx punctuation.definition.tag.end.html
+20:78 "Save" -
+20:82 "</" meta.tag.gx punctuation.definition.tag.begin.html
+20:84 "button" meta.tag.gx entity.name.tag.gx
+20:90 ">" meta.tag.gx punctuation.definition.tag.end.html
+21:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+21:4 "div" meta.tag.gx entity.name.tag.gx
+21:8 "show" meta.tag.gx keyword.control.directive.gx
+21:12 "=" meta.tag.gx
+21:13 "{" meta.tag.gx meta.embedded.block.go
+21:14 "$Open" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+21:19 " && " meta.tag.gx meta.embedded.block.go
+21:23 "$Count" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+21:29 " > 2" meta.tag.gx meta.embedded.block.go
+21:33 "}" meta.tag.gx meta.embedded.block.go
+21:35 "class:ring-2" meta.tag.gx keyword.control.directive.gx
+21:47 "=" meta.tag.gx
+21:48 "{" meta.tag.gx meta.embedded.block.go
+21:49 "$Open" meta.tag.gx meta.embedded.block.go variable.other.signal.gx
+21:54 "}" meta.tag.gx meta.embedded.block.go
+21:56 "transition" meta.tag.gx keyword.control.directive.gx
+21:66 "=" meta.tag.gx
+21:67 "\"" meta.tag.gx string.quoted.double.gx
+21:68 "fade" meta.tag.gx string.quoted.double.gx
+21:72 "\"" meta.tag.gx string.quoted.double.gx
+21:73 ">" meta.tag.gx punctuation.definition.tag.end.html
+21:74 "More than two" -
+21:87 "</" meta.tag.gx punctuation.definition.tag.begin.html
+21:89 "div" meta.tag.gx entity.name.tag.gx
+21:92 ">" meta.tag.gx punctuation.definition.tag.end.html
+22:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+22:4 "div" meta.tag.gx entity.name.tag.gx
+22:8 "on:interval(5s)" meta.tag.gx keyword.control.directive.gx
+22:23 "=" meta.tag.gx
+22:24 "{" meta.tag.gx meta.embedded.block.go
+22:25 "route.Poll" meta.tag.gx meta.embedded.block.go
+22:35 "{" meta.tag.gx meta.embedded.block.go
+22:36 "ID: 7" meta.tag.gx meta.embedded.block.go
+22:41 "}" meta.tag.gx meta.embedded.block.go
+22:42 "}" meta.tag.gx meta.embedded.block.go
+22:43 ">" meta.tag.gx punctuation.definition.tag.end.html
+22:44 "</" meta.tag.gx punctuation.definition.tag.begin.html
+22:46 "div" meta.tag.gx entity.name.tag.gx
+22:49 ">" meta.tag.gx punctuation.definition.tag.end.html
+23:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+23:4 "p" meta.tag.gx entity.name.tag.gx
+23:6 "#saved" meta.tag.gx entity.name.function.fragment.gx
+23:12 "(" meta.tag.gx
+23:13 "saved int" meta.tag.gx meta.embedded.block.go
+23:22 ")" meta.tag.gx
+23:24 "class" meta.tag.gx entity.other.attribute-name.gx
+23:29 "=" meta.tag.gx
+23:30 "\"" meta.tag.gx string.quoted.double.gx
+23:31 "text-sm" meta.tag.gx string.quoted.double.gx
+23:38 "\"" meta.tag.gx string.quoted.double.gx
+23:39 ">" meta.tag.gx punctuation.definition.tag.end.html
+23:40 "Saved: " -
+23:47 "{" meta.embedded.block.go
+23:48 "saved" meta.embedded.block.go
+23:53 "}" meta.embedded.block.go
+23:54 "</" meta.tag.gx punctuation.definition.tag.begin.html
+23:56 "p" meta.tag.gx entity.name.tag.gx
+23:57 ">" meta.tag.gx punctuation.definition.tag.end.html
+24:1 "</" meta.tag.gx punctuation.definition.tag.begin.html
+24:3 "section" meta.tag.gx entity.name.tag.gx
+24:10 ">" meta.tag.gx punctuation.definition.tag.end.html
+== Page.gx
+1:1 "package corpus" meta.embedded.block.go
+3:1 "import " meta.embedded.block.go
+3:8 "\"example.com/app/corpus/route\"" meta.embedded.block.go string.quoted.double.go
+4:1 "import " meta.embedded.block.go
+4:8 "\"example.com/app/ui/button\"" meta.embedded.block.go string.quoted.double.go
+6:1 "props" meta.embedded.block.go keyword.other.gx
+6:6 " {" meta.embedded.block.go
+7:1 "  Products []Product" meta.embedded.block.go
+8:1 "}" meta.embedded.block.go
+10:1 "<" meta.tag.component.gx punctuation.definition.tag.begin.html
+10:2 "gx.Head" meta.tag.component.gx entity.name.tag.component.gx
+10:10 "title" meta.tag.component.gx entity.other.attribute-name.gx
+10:15 "=" meta.tag.component.gx
+10:16 "\"" meta.tag.component.gx string.quoted.double.gx
+10:17 "Products" meta.tag.component.gx string.quoted.double.gx
+10:25 "\"" meta.tag.component.gx string.quoted.double.gx
+10:27 "description" meta.tag.component.gx entity.other.attribute-name.gx
+10:38 "=" meta.tag.component.gx
+10:39 "\"" meta.tag.component.gx string.quoted.double.gx
+10:40 "Every product of the shop." meta.tag.component.gx string.quoted.double.gx
+10:66 "\"" meta.tag.component.gx string.quoted.double.gx
+10:68 "/>" meta.tag.component.gx punctuation.definition.tag.end.html
+11:1 "<" meta.tag.gx punctuation.definition.tag.begin.html
+11:2 "nav" meta.tag.gx entity.name.tag.gx
+11:5 ">" meta.tag.gx punctuation.definition.tag.end.html
+12:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+12:4 "a" meta.tag.gx entity.name.tag.gx
+12:6 "href" meta.tag.gx entity.other.attribute-name.gx
+12:10 "=" meta.tag.gx
+12:11 "{" meta.tag.gx meta.embedded.block.go
+12:12 "route.Home" meta.tag.gx meta.embedded.block.go
+12:22 "{" meta.tag.gx meta.embedded.block.go
+12:23 "}" meta.tag.gx meta.embedded.block.go
+12:24 "}" meta.tag.gx meta.embedded.block.go
+12:26 "active" meta.tag.gx keyword.control.directive.gx
+12:32 "=" meta.tag.gx
+12:33 "\"" meta.tag.gx string.quoted.double.gx
+12:34 "section" meta.tag.gx string.quoted.double.gx
+12:41 "\"" meta.tag.gx string.quoted.double.gx
+12:42 ">" meta.tag.gx punctuation.definition.tag.end.html
+12:43 "Home" -
+12:47 "</" meta.tag.gx punctuation.definition.tag.begin.html
+12:49 "a" meta.tag.gx entity.name.tag.gx
+12:50 ">" meta.tag.gx punctuation.definition.tag.end.html
+13:3 "<" meta.tag.gx punctuation.definition.tag.begin.html
+13:4 "a" meta.tag.gx entity.name.tag.gx
+13:6 "href" meta.tag.gx entity.other.attribute-name.gx
+13:10 "=" meta.tag.gx
+13:11 "\"" meta.tag.gx string.quoted.double.gx
+13:12 "https://example.com" meta.tag.gx string.quoted.double.gx
+13:31 "\"" meta.tag.gx string.quoted.double.gx
+13:33 "target" meta.tag.gx entity.other.attribute-name.gx
+13:39 "=" meta.tag.gx
+13:40 "\"" meta.tag.gx string.quoted.double.gx
+13:41 "_blank" meta.tag.gx string.quoted.double.gx
+13:47 "\"" meta.tag.gx string.quoted.double.gx
+13:48 ">" meta.tag.gx punctuation.definition.tag.end.html
+13:49 "Docs" -
+13:53 "</" meta.tag.gx punctuation.definition.tag.begin.html
+13:55 "a" meta.tag.gx entity.name.tag.gx
+13:56 ">" meta.tag.gx punctuation.definition.tag.end.html
+14:1 "</" meta.tag.gx punctuation.definition.tag.begin.html
+14:3 "nav" meta.tag.gx entity.name.tag.gx
+14:6 ">" meta.tag.gx punctuation.definition.tag.end.html
+15:1 "<" meta.tag.gx punctuation.definition.tag.begin.html
+15:2 "main" meta.tag.gx entity.name.tag.gx
+15:6 ">" meta.tag.gx punctuation.definition.tag.end.html
+16:3 "for _, product := range p.Products {" meta.embedded.block.go
+17:5 "<" meta.tag.component.gx punctuation.definition.tag.begin.html
+17:6 "Card" meta.tag.component.gx entity.name.tag.component.gx
+17:11 "title" meta.tag.component.gx entity.other.attribute-name.gx
+17:16 "=" meta.tag.component.gx
+17:17 "{" meta.tag.component.gx meta.embedded.block.go
+17:18 "product.Name" meta.tag.component.gx meta.embedded.block.go
+17:30 "}" meta.tag.component.gx meta.embedded.block.go
+17:32 "variant" meta.tag.component.gx entity.other.attribute-name.gx
+17:39 "=" meta.tag.component.gx
+17:40 "\"" meta.tag.component.gx string.quoted.double.gx
+17:41 "raised" meta.tag.component.gx string.quoted.double.gx
+17:47 "\"" meta.tag.component.gx string.quoted.double.gx
+17:49 "items" meta.tag.component.gx entity.other.attribute-name.gx
+17:54 "=" meta.tag.component.gx
+17:55 "{" meta.tag.component.gx meta.embedded.block.go
+17:56 "product.Tags" meta.tag.component.gx meta.embedded.block.go
+17:68 "}" meta.tag.component.gx meta.embedded.block.go
+17:69 ">" meta.tag.component.gx punctuation.definition.tag.end.html
+18:7 "<" meta.tag.component.gx punctuation.definition.tag.begin.html
+18:8 "button.Button" meta.tag.component.gx entity.name.tag.component.gx
+18:22 "variant" meta.tag.component.gx entity.other.attribute-name.gx
+18:29 "=" meta.tag.component.gx
+18:30 "{" meta.tag.component.gx meta.embedded.block.go
+18:31 "button.Primary" meta.tag.component.gx meta.embedded.block.go
+18:45 "}" meta.tag.component.gx meta.embedded.block.go
+18:47 "{" meta.tag.component.gx meta.embedded.block.go
+18:48 "...product.Attrs" meta.tag.component.gx meta.embedded.block.go
+18:64 "}" meta.tag.component.gx meta.embedded.block.go
+18:65 ">" meta.tag.component.gx punctuation.definition.tag.end.html
+18:66 "Buy" -
+18:69 "</" meta.tag.component.gx punctuation.definition.tag.begin.html
+18:71 "button.Button" meta.tag.component.gx entity.name.tag.component.gx
+18:84 ">" meta.tag.component.gx punctuation.definition.tag.end.html
+19:5 "</" meta.tag.component.gx punctuation.definition.tag.begin.html
+19:7 "Card" meta.tag.component.gx entity.name.tag.component.gx
+19:11 ">" meta.tag.component.gx punctuation.definition.tag.end.html
+20:3 "}" meta.embedded.block.go
+21:3 "<" meta.tag.component.gx punctuation.definition.tag.begin.html
+21:4 "RevenueChart" meta.tag.component.gx entity.name.tag.component.gx
+21:17 "points" meta.tag.component.gx entity.other.attribute-name.gx
+21:23 "=" meta.tag.component.gx
+21:24 "{" meta.tag.component.gx meta.embedded.block.go
+21:25 "[]float64" meta.tag.component.gx meta.embedded.block.go
+21:34 "{" meta.tag.component.gx meta.embedded.block.go
+21:35 "1, 2.5, 4" meta.tag.component.gx meta.embedded.block.go
+21:44 "}" meta.tag.component.gx meta.embedded.block.go
+21:45 "}" meta.tag.component.gx meta.embedded.block.go
+21:47 "load" meta.tag.component.gx entity.other.attribute-name.gx
+21:51 "=" meta.tag.component.gx
+21:52 "\"" meta.tag.component.gx string.quoted.double.gx
+21:53 "visible" meta.tag.component.gx string.quoted.double.gx
+21:60 "\"" meta.tag.component.gx string.quoted.double.gx
+21:62 "/>" meta.tag.component.gx punctuation.definition.tag.end.html
+22:3 "<" meta.tag.component.gx punctuation.definition.tag.begin.html
+22:4 "wa.Button" meta.tag.component.gx entity.name.tag.component.gx
+22:14 "variant" meta.tag.component.gx entity.other.attribute-name.gx
+22:21 "=" meta.tag.component.gx
+22:22 "\"" meta.tag.component.gx string.quoted.double.gx
+22:23 "brand" meta.tag.component.gx string.quoted.double.gx
+22:28 "\"" meta.tag.component.gx string.quoted.double.gx
+22:29 ">" meta.tag.component.gx punctuation.definition.tag.end.html
+22:30 "A web component" -
+22:45 "</" meta.tag.component.gx punctuation.definition.tag.begin.html
+22:47 "wa.Button" meta.tag.component.gx entity.name.tag.component.gx
+22:56 ">" meta.tag.component.gx punctuation.definition.tag.end.html
+23:3 "<" meta.tag.custom.gx punctuation.definition.tag.begin.html
+23:4 "sl-rating" meta.tag.custom.gx entity.name.tag.custom.gx
+23:14 "value" meta.tag.custom.gx entity.other.attribute-name.gx
+23:19 "=" meta.tag.custom.gx
+23:20 "\"" meta.tag.custom.gx string.quoted.double.gx
+23:21 "4" meta.tag.custom.gx string.quoted.double.gx
+23:22 "\"" meta.tag.custom.gx string.quoted.double.gx
+23:24 "readonly" meta.tag.custom.gx entity.other.attribute-name.gx
+23:32 ">" meta.tag.custom.gx punctuation.definition.tag.end.html
+23:33 "</" meta.tag.custom.gx punctuation.definition.tag.begin.html
+23:35 "sl-rating" meta.tag.custom.gx entity.name.tag.custom.gx
+23:44 ">" meta.tag.custom.gx punctuation.definition.tag.end.html
+24:1 "</" meta.tag.gx punctuation.definition.tag.begin.html
+24:3 "main" meta.tag.gx entity.name.tag.gx
+24:7 ">" meta.tag.gx punctuation.definition.tag.end.html
+25:1 "<style>" meta.embedded.block.css punctuation.definition.tag.begin.html
+26:1 "  .price { color: var(--primary); }" meta.embedded.block.css
+27:1 "</style>" meta.embedded.block.css punctuation.definition.tag.end.html
+28:1 "<script>" meta.embedded.block.javascript punctuation.definition.tag.begin.html
+29:1 "  console.log(\"plain script\")" meta.embedded.block.javascript
+30:1 "</script>" meta.embedded.block.javascript punctuation.definition.tag.end.html
+31:1 "<script lang=\"ts\">" meta.embedded.block.typescript punctuation.definition.tag.begin.html
+32:1 "  const total: number = 1 + 2" meta.embedded.block.typescript
+33:1 "</script>" meta.embedded.block.typescript punctuation.definition.tag.end.html

@@ -113,6 +113,11 @@ vscode-smoke:
 nvim-smoke:
     "scripts/nvim-smoke.sh"
 
+# The JetBrains plugin UI smoke test (REQ-TLS-07). Needs a JDK and a desktop
+# session. GX_IDE_PATH names an installed IDE; without it Gradle downloads one.
+jetbrains-smoke:
+    "scripts/jetbrains-smoke.sh"
+
 # The Delve breakpoint test (REQ-TLS-08). Needs dlv.
 delve-smoke:
     "scripts/delve-smoke.sh"

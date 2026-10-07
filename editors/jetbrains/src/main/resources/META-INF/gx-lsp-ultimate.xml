@@ -1,0 +1,6 @@
+<idea-plugin>
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceImplementation="dev.alternayte.gx.GxUltimateLsp"/>
+    <platform.lsp.serverSupportProvider implementation="dev.alternayte.gx.GxLspServerSupportProvider"/>
+  </extensions>
+</idea-plugin>

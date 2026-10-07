@@ -2,17 +2,28 @@
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Gx",
   "scopeName": "source.gx",
-  "fileTypes": ["gx"],
+  "fileTypes": [
+    "gx"
+  ],
   "patterns": [
-    { "include": "#comments" },
-    { "include": "#goBlocks" },
-    { "include": "#rawScripts" },
-    { "include": "#tags" },
-    { "include": "#directives" },
-    { "include": "#signals" },
-    { "include": "#fragments" },
-    { "include": "#controlFlow" },
-    { "include": "#keywords" }
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#header"
+    },
+    {
+      "include": "#rawScripts"
+    },
+    {
+      "include": "#tags"
+    },
+    {
+      "include": "#statements"
+    },
+    {
+      "include": "#goExpr"
+    }
   ],
   "repository": {
     "comments": {
@@ -28,40 +39,53 @@
           "end": "-->"
         },
         {
-          "name": "comment.line.double-slash.go",
-          "match": "//.*$"
+          "name": "comment.line.double-slash.gx",
+          "match": "^\\s*//.*$"
         }
       ]
     },
-    "goBlocks": {
+    "header": {
       "patterns": [
         {
           "name": "meta.embedded.block.go",
-          "begin": "\\{",
-          "end": "\\}",
-          "patterns": [{ "include": "source.go" }]
+          "begin": "^\\s*(?=import\\s*\\(\\s*$)",
+          "end": "^\\s*\\)",
+          "patterns": [
+            {
+              "include": "#goCode"
+            }
+          ]
         },
         {
-          "name": "meta.embedded.block.go",
-          "begin": "^\\s*(package|import)\\b",
-          "end": "$",
-          "patterns": [{ "include": "source.go" }]
+          "match": "^\\s*((?:package|import)\\b.*)$",
+          "captures": {
+            "1": {
+              "name": "meta.embedded.block.go",
+              "patterns": [
+                {
+                  "include": "#goLine"
+                }
+              ]
+            }
+          }
         },
         {
           "name": "meta.embedded.block.go",
           "begin": "^\\s*(props|signals)\\s*\\{",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.other.gx"
+            }
+          },
           "end": "^\\s*\\}",
           "patterns": [
-            {
-              "name": "string.quoted.double.go",
-              "begin": "\"",
-              "end": "\"|$"
-            },
             {
               "name": "comment.line.double-slash.gx",
               "match": "//.*$"
             },
-            { "include": "source.go" }
+            {
+              "include": "#goCode"
+            }
           ]
         }
       ]
@@ -71,26 +95,62 @@
         {
           "name": "meta.embedded.block.typescript",
           "begin": "(<script\\b[^>]*\\blang=[\"']ts[\"'][^>]*>)",
-          "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.html" } },
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            }
+          },
           "end": "(</script>)",
-          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
-          "patterns": [{ "include": "source.ts" }]
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.html"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.ts"
+            }
+          ]
         },
         {
           "name": "meta.embedded.block.javascript",
           "begin": "(<script\\b[^>]*>)",
-          "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.html" } },
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            }
+          },
           "end": "(</script>)",
-          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
-          "patterns": [{ "include": "source.js" }]
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.html"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.js"
+            }
+          ]
         },
         {
           "name": "meta.embedded.block.css",
           "begin": "(<style\\b[^>]*>)",
-          "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.html" } },
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            }
+          },
           "end": "(</style>)",
-          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
-          "patterns": [{ "include": "source.css" }]
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.html"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.css"
+            }
+          ]
         }
       ]
     },
@@ -98,66 +158,114 @@
       "patterns": [
         {
           "name": "meta.tag.component.gx",
-          "begin": "(</?)([A-Z][A-Za-z0-9_]*(?:\\.[A-Z][A-Za-z0-9_]*)?)",
+          "begin": "(</?)((?:[a-z][A-Za-z0-9_]*\\.)?[A-Z][A-Za-z0-9_]*)",
           "beginCaptures": {
-            "1": { "name": "punctuation.definition.tag.begin.html" },
-            "2": { "name": "entity.name.tag.component.gx" }
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            },
+            "2": {
+              "name": "entity.name.tag.component.gx"
+            }
           },
           "end": "(/?>)",
-          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
-          "patterns": [{ "include": "#attributes" }]
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.html"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#attributes"
+            }
+          ]
         },
         {
           "name": "meta.tag.custom.gx",
           "begin": "(</?)([a-z][a-z0-9]*-[a-z0-9-]*)",
           "beginCaptures": {
-            "1": { "name": "punctuation.definition.tag.begin.html" },
-            "2": { "name": "entity.name.tag.custom.gx" }
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            },
+            "2": {
+              "name": "entity.name.tag.custom.gx"
+            }
           },
           "end": "(/?>)",
-          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
-          "patterns": [{ "include": "#attributes" }]
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.html"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#attributes"
+            }
+          ]
         },
         {
           "name": "meta.tag.gx",
           "begin": "(</?)([a-z][a-z0-9]*)",
           "beginCaptures": {
-            "1": { "name": "punctuation.definition.tag.begin.html" },
-            "2": { "name": "entity.name.tag.gx" }
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            },
+            "2": {
+              "name": "entity.name.tag.gx"
+            }
           },
           "end": "(/?>)",
-          "endCaptures": { "1": { "name": "punctuation.definition.tag.end.html" } },
-          "patterns": [{ "include": "#attributes" }]
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.html"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#attributes"
+            }
+          ]
         },
         {
           "name": "meta.tag.slot.gx",
           "match": "(</?)(:[a-zA-Z][A-Za-z0-9_]*)(\\s*/?>)",
           "captures": {
-            "1": { "name": "punctuation.definition.tag.begin.html" },
-            "2": { "name": "entity.name.tag.slot.gx" },
-            "3": { "name": "punctuation.definition.tag.end.html" }
+            "1": {
+              "name": "punctuation.definition.tag.begin.html"
+            },
+            "2": {
+              "name": "entity.name.tag.slot.gx"
+            },
+            "3": {
+              "name": "punctuation.definition.tag.end.html"
+            }
           }
         }
       ]
     },
     "attributes": {
       "patterns": [
-        { "include": "#directives" },
+        {
+          "include": "#fragments"
+        },
+        {
+          "include": "#directives"
+        },
         {
           "name": "entity.other.attribute-name.gx",
-          "match": "\\b([a-zA-Z_:][-a-zA-Z0-9_:.]*)(?=\\s*=)"
+          "match": "[a-zA-Z_:@][-a-zA-Z0-9_:.]*"
+        },
+        {
+          "include": "#goExpr"
         },
         {
           "name": "string.quoted.double.gx",
           "begin": "\"",
-          "end": "\"",
-          "patterns": [{ "include": "#goBlocks" }]
+          "end": "\""
         },
         {
           "name": "string.quoted.single.gx",
           "begin": "'",
-          "end": "'",
-          "patterns": [{ "include": "#goBlocks" }]
+          "end": "'"
         }
       ]
     },
@@ -165,15 +273,134 @@
       "patterns": [
         {
           "name": "keyword.control.directive.gx",
-          "match": "\\b(show|text|key|transition)\\b(?=\\s*=)"
+          "match": "\\b(show|text|key|transition|active)\\b(?=\\s*=)"
         },
         {
           "name": "keyword.control.directive.gx",
-          "match": "\\b(bind|class|attr):[a-zA-Z-]+"
+          "match": "\\b(bind|class|attr):[^\\s=/>]+"
         },
         {
           "name": "keyword.control.directive.gx",
-          "match": "\\bon:[a-z]+(?:\\.[a-z]+(?:\\([^)]*\\))?)*"
+          "match": "\\bon:[a-z-]+(?:\\([^)]*\\))?(?:\\.[a-z]+(?:\\([^)]*\\))?)*"
+        }
+      ]
+    },
+    "fragments": {
+      "patterns": [
+        {
+          "begin": "(#[A-Za-z_][A-Za-z0-9_]*)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.fragment.gx"
+            }
+          },
+          "end": "\\)",
+          "contentName": "meta.embedded.block.go",
+          "patterns": [
+            {
+              "include": "#goCode"
+            }
+          ]
+        },
+        {
+          "name": "entity.name.function.fragment.gx",
+          "match": "#[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "statements": {
+      "patterns": [
+        {
+          "match": "^\\s*((?:\\}\\s*else\\b|if\\b|for\\b|switch\\b).*\\{)\\s*$",
+          "captures": {
+            "1": {
+              "name": "meta.embedded.block.go",
+              "patterns": [
+                {
+                  "include": "#goLine"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "match": "^\\s*((?:case\\b.*|default\\s*):)\\s*$",
+          "captures": {
+            "1": {
+              "name": "meta.embedded.block.go",
+              "patterns": [
+                {
+                  "include": "#goLine"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "match": "^\\s*([A-Za-z_][A-Za-z0-9_, ]*:=.*)$",
+          "captures": {
+            "1": {
+              "name": "meta.embedded.block.go",
+              "patterns": [
+                {
+                  "include": "#goLine"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "match": "^\\s*(\\})\\s*$",
+          "captures": {
+            "1": {
+              "name": "meta.embedded.block.go"
+            }
+          }
+        }
+      ]
+    },
+    "goExpr": {
+      "name": "meta.embedded.block.go",
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "#goCode"
+        }
+      ]
+    },
+    "goCode": {
+      "patterns": [
+        {
+          "include": "#signals"
+        },
+        {
+          "name": "string.quoted.double.go",
+          "begin": "\"",
+          "end": "\"|$",
+          "patterns": [
+            {
+              "name": "constant.character.escape.go",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.raw.go",
+          "begin": "`",
+          "end": "`"
+        },
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [
+            {
+              "include": "#goCode"
+            }
+          ]
+        },
+        {
+          "include": "source.go"
         }
       ]
     },
@@ -185,29 +412,21 @@
         }
       ]
     },
-    "fragments": {
+    "goLine": {
       "patterns": [
         {
-          "name": "entity.name.function.fragment.gx",
-          "match": "#[A-Za-z_][A-Za-z0-9_]*(?=\\s*[({])"
-        }
-      ]
-    },
-    "controlFlow": {
-      "patterns": [
+          "include": "#signals"
+        },
         {
-          "name": "meta.embedded.block.go",
-          "begin": "^\\s*(if|else|for|switch|case|default)\\b.*\\{\\s*$",
-          "end": "^\\s*\\}",
-          "patterns": [{ "include": "source.go" }]
-        }
-      ]
-    },
-    "keywords": {
-      "patterns": [
+          "name": "string.quoted.double.go",
+          "match": "\"(?:[^\"\\\\]|\\\\.)*\""
+        },
         {
-          "name": "keyword.other.gx",
-          "match": "\\b(let|slot)\\b"
+          "name": "string.quoted.raw.go",
+          "match": "`[^`]*`"
+        },
+        {
+          "include": "source.go"
         }
       ]
     }

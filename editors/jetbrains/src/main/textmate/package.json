@@ -1,0 +1,28 @@
+{
+  "name": "gx",
+  "displayName": "Gx",
+  "version": "0.2.0",
+  "contributes": {
+    "languages": [
+      {
+        "id": "gx",
+        "aliases": ["Gx", "gx"],
+        "extensions": [".gx"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "gx",
+        "scopeName": "source.gx",
+        "path": "./syntaxes/gx.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.go": "go",
+          "meta.embedded.block.css": "css",
+          "meta.embedded.block.javascript": "javascript",
+          "meta.embedded.block.typescript": "typescript"
+        }
+      }
+    ]
+  }
+}
