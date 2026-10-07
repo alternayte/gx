@@ -16,6 +16,7 @@ import (
 	"go/constant"
 	"go/token"
 	"reflect"
+	"strings"
 )
 
 // Package is the symbols of one Go package, as the generated symbol table
@@ -94,11 +95,30 @@ func (t *Table) method(typ reflect.Type, name string) (fn reflect.Value, pointer
 
 // Int, Float, String and Bool make the untyped constants of a generated
 // symbol table from their Go text.
-func Int(lit string) constant.Value   { return constant.MakeFromLiteral(lit, token.INT, 0) }
-func Float(lit string) constant.Value { return constant.MakeFromLiteral(lit, token.FLOAT, 0) }
-func String(s string) constant.Value  { return constant.MakeString(s) }
-func Bool(b bool) constant.Value      { return constant.MakeBool(b) }
-func Rune(lit string) constant.Value  { return constant.MakeFromLiteral(lit, token.CHAR, 0) }
+func Int(lit string) constant.Value  { return constant.MakeFromLiteral(lit, token.INT, 0) }
+func String(s string) constant.Value { return constant.MakeString(s) }
+func Bool(b bool) constant.Value     { return constant.MakeBool(b) }
+
+// Float makes a float constant from a literal or from an exact fraction
+// "a/b". A constant such as 1.0 / 3 has no exact decimal form, and Go keeps
+// it exact until a use gives it a type.
+func Float(lit string) constant.Value {
+	if num, den, ok := strings.Cut(lit, "/"); ok {
+		n := constant.MakeFromLiteral(num, token.INT, 0)
+		d := constant.MakeFromLiteral(den, token.INT, 0)
+		return constant.BinaryOp(constant.ToFloat(n), token.QUO, constant.ToFloat(d))
+	}
+	return constant.ToFloat(constant.MakeFromLiteral(lit, token.FLOAT, 0))
+}
+
+// Rune makes an untyped rune constant from its literal, for example "'/'".
+// Its default type is rune, not int.
+func Rune(lit string) constant.Value {
+	return RuneConst{constant.MakeFromLiteral(lit, token.CHAR, 0)}
+}
+
+// RuneConst marks a constant of a table as an untyped rune constant.
+type RuneConst struct{ constant.Value }
 
 // Unsupported is the error of Compile for code outside the part of Go that
 // the interpreter covers, or for a name that the table does not hold. The

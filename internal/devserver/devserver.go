@@ -133,8 +133,12 @@ type server struct {
 	// sigs holds the signature of each .gx file at the last build, and
 	// classes the class list of that build. A change that keeps both can
 	// swap into the running app (REQ-DEV-02).
-	sigs    map[string]string
-	classes []byte
+	sigs map[string]string
+	// generated holds the generated Go files of the last build.
+	generated map[string][]byte
+	// buildFailed is true while the last build of the app failed.
+	buildFailed bool
+	classes     []byte
 
 	// searchMu guards the on-demand Pagefind index (REQ-CNT-07).
 	searchMu   sync.Mutex
@@ -148,6 +152,7 @@ func (s *server) run(ctx context.Context) error {
 		return err
 	}
 	if ok, ov := s.build(ctx, bin); !ok {
+		s.buildFailed = true
 		s.setErr(ov)
 		fmt.Fprintf(s.opt.Log, "gx dev: %s: %s\n", ov.Title, ov.Text)
 	}
@@ -570,6 +575,14 @@ func (s *server) remember(files map[string][]byte) {
 		}
 	}
 	s.classes = files[compiler.ClassesPath(s.dir)]
+	// The generated Go code that the last build wrote. A swap compares
+	// against it in memory: a read of each file costs time on every save.
+	s.generated = make(map[string][]byte, len(files))
+	for path, src := range files {
+		if strings.HasSuffix(path, "_gx.go") {
+			s.generated[path] = src
+		}
+	}
 }
 
 // swap puts a markup edit into the running app with no rebuild
@@ -579,6 +592,13 @@ func (s *server) remember(files map[string][]byte) {
 // handled here: the browser shows the overlay.
 func (s *server) swap(ctx context.Context, paths []string) bool {
 	start := time.Now()
+	if s.buildFailed {
+		// The running app is older than the tree, and the error of the
+		// build is still in the files. A build shows it or clears it
+		// (REQ-DEV-06).
+		fmt.Fprintln(s.opt.Log, "gx dev: rebuild: the last build failed")
+		return false
+	}
 	for _, path := range paths {
 		sig, ok := compiler.FileSignature(path)
 		if !ok {
@@ -599,6 +619,22 @@ func (s *server) swap(ctx context.Context, paths []string) bool {
 	if !bytes.Equal(files[compiler.ClassesPath(s.dir)], s.classes) {
 		fmt.Fprintln(s.opt.Log, "gx dev: rebuild: the stylesheet needs a new class")
 		return false
+	}
+	// A swap changes the code of the edited templates only. When the
+	// generator writes different code for any other file, the compiled app
+	// is older than the tree: build it (REQ-DEV-03).
+	edited := map[string]bool{}
+	for _, path := range paths {
+		edited[strings.TrimSuffix(path, ".gx")+"_gx.go"] = true
+	}
+	for generated, src := range files {
+		if edited[generated] || !strings.HasSuffix(generated, "_gx.go") {
+			continue
+		}
+		if old, ok := s.generated[generated]; !ok || !bytes.Equal(old, src) {
+			fmt.Fprintf(s.opt.Log, "gx dev: rebuild: the generated code of %s changed\n", filepath.Base(generated))
+			return false
+		}
 	}
 	for _, path := range paths {
 		generated := strings.TrimSuffix(path, ".gx") + "_gx.go"
@@ -659,6 +695,7 @@ func (s *server) swapFile(ctx context.Context, pkg, file string, src []byte) str
 // (REQ-DEV-03).
 func (s *server) rebuild(ctx context.Context, bin string) {
 	ok, ov := s.build(ctx, bin)
+	s.buildFailed = !ok
 	if !ok {
 		s.setErr(ov)
 		s.broadcast("overlay", ov)

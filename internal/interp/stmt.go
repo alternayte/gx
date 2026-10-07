@@ -80,8 +80,9 @@ func (c *compiler) stmt(s ast.Stmt) stmt {
 		if t.Tok == token.DEC {
 			op = token.SUB
 		}
-		return c.assign(&ast.AssignStmt{Lhs: []ast.Expr{t.X}, Tok: token.ASSIGN, TokPos: t.TokPos,
-			Rhs: []ast.Expr{&ast.BinaryExpr{X: t.X, Op: op, OpPos: t.TokPos, Y: &ast.BasicLit{Kind: token.INT, Value: "1", ValuePos: t.TokPos}}}})
+		// x++ is x += 1: the operands of x are evaluated one time.
+		return c.opAssign(&ast.AssignStmt{Lhs: []ast.Expr{t.X}, Tok: token.ADD_ASSIGN, TokPos: t.TokPos,
+			Rhs: []ast.Expr{&ast.BasicLit{Kind: token.INT, Value: "1", ValuePos: t.TokPos}}}, op)
 	case *ast.IfStmt:
 		return c.ifStmt(t)
 	case *ast.ForStmt:
@@ -213,8 +214,7 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 		if !ok || len(a.Lhs) != 1 || len(a.Rhs) != 1 {
 			c.fail(a, "the assignment %s is not interpreted", a.Tok)
 		}
-		return c.assign(&ast.AssignStmt{Lhs: a.Lhs, Tok: token.ASSIGN, TokPos: a.TokPos,
-			Rhs: []ast.Expr{&ast.BinaryExpr{X: a.Lhs[0], Op: op, OpPos: a.TokPos, Y: a.Rhs[0]}}})
+		return c.opAssign(a, op)
 	}
 	define := a.Tok == token.DEFINE
 
@@ -303,6 +303,54 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 		}
 		return ctlNext
 	}
+}
+
+// opAssign compiles x op= y. Go evaluates the operands of x one time, so a
+// call in an index runs one time. A name is read and written directly. An
+// element of a map is read and written through one copy of the map and of
+// the key. Every other left side is read and written through its address.
+func (c *compiler) opAssign(a *ast.AssignStmt, op token.Token) stmt {
+	pos := a.TokPos
+	set := func(lhs ast.Expr) *ast.AssignStmt {
+		return &ast.AssignStmt{Lhs: []ast.Expr{lhs}, Tok: token.ASSIGN, TokPos: pos,
+			Rhs: []ast.Expr{&ast.BinaryExpr{X: lhs, Op: op, OpPos: pos, Y: a.Rhs[0]}}}
+	}
+	define := func(name string, x ast.Expr) ast.Stmt {
+		return &ast.AssignStmt{Lhs: []ast.Expr{&ast.Ident{Name: name, NamePos: pos}}, Tok: token.DEFINE, TokPos: pos, Rhs: []ast.Expr{x}}
+	}
+	lhs := a.Lhs[0]
+	for {
+		p, ok := lhs.(*ast.ParenExpr)
+		if !ok {
+			break
+		}
+		lhs = p.X
+	}
+	if _, ok := lhs.(*ast.Ident); ok {
+		return c.assign(set(lhs))
+	}
+	// The hidden names have a space, so no name of the source is equal.
+	const mapName, keyName, ptrName = "gx map", "gx key", "gx ptr"
+	if ix, ok := lhs.(*ast.IndexExpr); ok {
+		if m := c.expr(ix.X, nil); m.eval != nil && m.typ != nil && m.typ.Kind() == reflect.Map {
+			list := []ast.Stmt{define(mapName, ix.X)}
+			var key ast.Expr = ix.Index
+			switch ix.Index.(type) {
+			case *ast.BasicLit, *ast.Ident:
+				// A read of a literal or of a name has no effect, and a
+				// constant keeps the key type of the map.
+			default:
+				list = append(list, define(keyName, ix.Index))
+				key = &ast.Ident{Name: keyName, NamePos: pos}
+			}
+			list = append(list, set(&ast.IndexExpr{X: &ast.Ident{Name: mapName, NamePos: pos}, Lbrack: pos, Index: key, Rbrack: pos}))
+			return c.stmt(&ast.BlockStmt{Lbrace: pos, List: list, Rbrace: pos})
+		}
+	}
+	return c.stmt(&ast.BlockStmt{Lbrace: pos, Rbrace: pos, List: []ast.Stmt{
+		define(ptrName, &ast.UnaryExpr{Op: token.AND, OpPos: pos, X: lhs}),
+		set(&ast.StarExpr{Star: pos, X: &ast.Ident{Name: ptrName, NamePos: pos}}),
+	}})
 }
 
 // lhsType returns the type of the left side of =, as the hint for the

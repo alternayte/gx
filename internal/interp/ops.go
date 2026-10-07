@@ -334,13 +334,30 @@ func (c *compiler) pick(node ast.Node, op token.Token, a, b value) value {
 	a, b = c.operands(node, a, b)
 	less := c.compare(node, op, a.typ)
 	ae, be := a.eval, b.eval
+	float := a.typ.Kind() == reflect.Float32 || a.typ.Kind() == reflect.Float64
 	return value{typ: a.typ, eval: func(fr *frame) reflect.Value {
 		x, y := ae(fr), be(fr)
+		if float {
+			// min and max give NaN when one value is NaN.
+			if f := x.Float(); f != f {
+				return x
+			}
+			if f := y.Float(); f != f {
+				return y
+			}
+		}
 		if less(y, x) {
 			return y
 		}
 		return x
 	}}
+}
+
+// runeResult reports whether an operation on two untyped constants gives an
+// untyped rune constant: one operand is a rune and no operand is a float.
+// The default type of the result is then rune ('a' + 1).
+func runeResult(a, b value, typ reflect.Type) bool {
+	return typ == nil && (a.isRune || b.isRune) && a.cst.Kind() == constant.Int && b.cst.Kind() == constant.Int
 }
 
 // operands gives two operands one type: a constant takes the type of the
@@ -389,7 +406,17 @@ func (c *compiler) compare(node ast.Node, op token.Token, typ reflect.Type) func
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		cmp = func(a, b reflect.Value) int { return sign(a.Uint() < b.Uint(), a.Uint() > b.Uint()) }
 	case reflect.Float32, reflect.Float64:
-		cmp = func(a, b reflect.Value) int { return sign(a.Float() < b.Float(), a.Float() > b.Float()) }
+		// Every order comparison with NaN is false, so <= is not "not >".
+		switch op {
+		case token.LSS:
+			return func(a, b reflect.Value) bool { return a.Float() < b.Float() }
+		case token.LEQ:
+			return func(a, b reflect.Value) bool { return a.Float() <= b.Float() }
+		case token.GTR:
+			return func(a, b reflect.Value) bool { return a.Float() > b.Float() }
+		default:
+			return func(a, b reflect.Value) bool { return a.Float() >= b.Float() }
+		}
 	case reflect.String:
 		cmp = func(a, b reflect.Value) int { return sign(a.String() < b.String(), a.String() > b.String()) }
 	default:
@@ -457,21 +484,25 @@ func (c *compiler) binary(e *ast.BinaryExpr, hint reflect.Type) value {
 			return value{cst: constant.BinaryOp(a.cst, e.Op, b.cst)}
 		case token.SHL, token.SHR:
 			n, _ := constant.Uint64Val(constant.ToInt(b.cst))
-			return value{typ: typ, cst: constant.Shift(constant.ToInt(a.cst), e.Op, uint(n))}
+			return value{typ: typ, cst: constant.Shift(constant.ToInt(a.cst), e.Op, uint(n)), isRune: a.isRune && typ == nil}
 		case token.QUO:
 			if constant.Sign(b.cst) == 0 {
 				c.fail(e, "division by zero")
 			}
 			op := e.Op
-			if a.cst.Kind() == constant.Int && b.cst.Kind() == constant.Int {
-				op = token.QUO_ASSIGN // integer division of two integer constants
+			// The type of a constant decides the division: float64(1) / 2
+			// is 0.5. Two integer constants with no float type divide as
+			// integers.
+			floatType := typ != nil && (typ.Kind() == reflect.Float32 || typ.Kind() == reflect.Float64)
+			if a.cst.Kind() == constant.Int && b.cst.Kind() == constant.Int && !floatType {
+				op = token.QUO_ASSIGN
 			}
-			return value{typ: typ, cst: constant.BinaryOp(a.cst, op, b.cst)}
+			return value{typ: typ, cst: constant.BinaryOp(a.cst, op, b.cst), isRune: runeResult(a, b, typ)}
 		case token.ADD, token.SUB, token.MUL, token.REM, token.AND, token.OR, token.XOR, token.AND_NOT:
 			if e.Op == token.REM && constant.Sign(b.cst) == 0 {
 				c.fail(e, "division by zero")
 			}
-			return value{typ: typ, cst: constant.BinaryOp(a.cst, e.Op, b.cst)}
+			return value{typ: typ, cst: constant.BinaryOp(a.cst, e.Op, b.cst), isRune: runeResult(a, b, typ)}
 		}
 	}
 	switch e.Op {
@@ -674,7 +705,7 @@ func (c *compiler) unary(e *ast.UnaryExpr, hint reflect.Type) value {
 				return value{typ: x.typ, cst: constant.MakeBool(!constant.BoolVal(x.cst))}
 			}
 		case token.SUB, token.ADD, token.XOR:
-			return value{typ: x.typ, cst: constant.UnaryOp(e.Op, x.cst, 0)}
+			return value{typ: x.typ, cst: constant.UnaryOp(e.Op, x.cst, 0), isRune: x.isRune}
 		}
 	}
 	x = c.typed(e.X, x, nil)

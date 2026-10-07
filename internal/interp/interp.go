@@ -657,7 +657,7 @@ func (c *compiler) ident(id *ast.Ident) value {
 		return symbolValue(v)
 	}
 	if cst, ok := c.own.Consts[id.Name]; ok {
-		return value{cst: cst}
+		return constValue(cst)
 	}
 	if typ, ok := c.own.Types[id.Name]; ok {
 		return value{isType: typ}
@@ -697,7 +697,7 @@ func (c *compiler) selector(sel *ast.SelectorExpr) value {
 					return symbolValue(v)
 				}
 				if cst, ok := pkg.Consts[name]; ok {
-					return value{cst: cst}
+					return constValue(cst)
 				}
 				if typ, ok := pkg.Types[name]; ok {
 					return value{isType: typ}
@@ -803,4 +803,13 @@ func (c *compiler) addressOf(node ast.Node, x value) func(fr *frame) reflect.Val
 	}
 	c.fail(node, "the value has no address")
 	return nil
+}
+
+// constValue returns the value of a constant of the symbol table. A rune
+// constant keeps its mark.
+func constValue(cst constant.Value) value {
+	if r, ok := cst.(RuneConst); ok {
+		return value{cst: r.Value, isRune: true}
+	}
+	return value{cst: cst}
 }

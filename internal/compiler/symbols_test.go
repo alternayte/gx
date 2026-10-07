@@ -3,6 +3,7 @@ package compiler_test
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/alternayte/gx/internal/compiler"
@@ -44,5 +45,23 @@ func TestREQ_DEV_04_SymbolTableFollowsRouteTypes(t *testing.T) {
 	write()
 	if diags := compiler.Stale(dir); len(diags) != 0 {
 		t.Fatalf("stale after one generate of the changed route: %v", diags)
+	}
+}
+
+// TestREQ_DEV_04_SymbolTableKeepsExactConstants checks the text of the
+// untyped constants in the dev symbol table: a float constant with no exact
+// decimal form is a fraction, and a rune constant is a rune, so the
+// interpreter gives the results of compiled code (REQ-DEV-05).
+func TestREQ_DEV_04_SymbolTableKeepsExactConstants(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"cart/consts.go": "package cart\n\nconst Third = 1.0 / 3\n\nconst Sep = '/'\n\nconst Half = 0.5\n",
+		"cart/Cart.gx":   "package cart\n\n<p>cart</p>\n",
+	})
+	table := string(generateFiles(t, dir)[filepath.Join(dir, "cart/gxdev_symbols_gx.go")])
+	for _, want := range []string{`"Third": gx.DevFloat("1/3")`, `"Sep":   gx.DevRune("'/'")`, `"Half":  gx.DevFloat("1/2")`} {
+		if !strings.Contains(table, want) {
+			t.Fatalf("the symbol table lacks %s:\n%s", want, table)
+		}
 	}
 }

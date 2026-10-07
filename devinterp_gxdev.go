@@ -26,6 +26,9 @@ func DevFloat(lit string) constant.Value { return interp.Float(lit) }
 func DevString(s string) constant.Value  { return interp.String(s) }
 func DevBool(b bool) constant.Value      { return interp.Bool(b) }
 
+// DevRune makes an untyped rune constant from its literal.
+func DevRune(lit string) constant.Value { return interp.Rune(lit) }
+
 // devState holds the symbol table of the app and the functions that a swap
 // replaced (REQ-DEV-02).
 var devState struct {

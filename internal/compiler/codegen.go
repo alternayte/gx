@@ -138,6 +138,8 @@ type gen struct {
 	ind   int
 	nest  int
 	diags []Diagnostic
+	// sites numbers the component calls of the file (callSite).
+	sites map[*Element]int
 
 	// extra holds the imports that a prop default of another package
 	// needs at a call site: qualifier to import path.
@@ -1418,11 +1420,32 @@ func (g *gen) callKeyExpr(el *Element) string {
 	if own := g.keyAttrValue(el); own != "" {
 		return "gx.InstanceKey(" + own + ")"
 	}
-	site := el.At.Line*1000 + el.At.Col
+	site := g.callSite(el)
 	if parent := g.parentKeyExpr(); parent != "" {
 		return fmt.Sprintf("gx.ChildKey(%s, %d)", parent, site)
 	}
 	return fmt.Sprintf("gx.ChildKey(\"\", %d)", site)
+}
+
+// callSite returns the number of a component call in its file: the place of
+// the tag among the component tags of the file, from 1. The number does
+// not hold a line or a column, so an edit of the markup around the tag
+// keeps the signal namespace of the instance (REQ-DEV-02).
+func (g *gen) callSite(el *Element) int {
+	if g.sites == nil {
+		g.sites = map[*Element]int{}
+		walkElements(g.file.Body, func(e *Element) {
+			if _, _, ok := componentTag(e.Name); ok || e.elementTag != "" {
+				g.sites[e] = len(g.sites) + 1
+			}
+		})
+	}
+	if n, ok := g.sites[el]; ok {
+		return n
+	}
+	// An element that the walk did not reach keeps a number of its own.
+	g.sites[el] = len(g.sites) + 1
+	return g.sites[el]
 }
 
 // fragmentID returns the Go expression of the id of one fragment instance

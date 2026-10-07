@@ -71,8 +71,9 @@ func constantExpr(gx string, v constant.Value) (string, bool) {
 	case constant.Int:
 		return gx + "DevInt(" + strconv.Quote(v.ExactString()) + ")", true
 	case constant.Float:
-		f, _ := constant.Float64Val(v)
-		return gx + "DevFloat(" + strconv.Quote(strconv.FormatFloat(f, 'g', -1, 64)) + ")", true
+		// The exact value, as a fraction when it has no exact decimal
+		// form: 1.0 / 3 stays one third (REQ-DEV-05).
+		return gx + "DevFloat(" + strconv.Quote(v.ExactString()) + ")", true
 	}
 	return "", false
 }
@@ -100,6 +101,12 @@ func (s *symbolSet) addObject(obj types.Object, qual, gx string, unexported bool
 		s.values = append(s.values, key+"reflect.ValueOf(&"+qual+name+").Elem()")
 	case *types.Const:
 		if basic, ok := o.Type().(*types.Basic); ok && basic.Info()&types.IsUntyped != 0 {
+			if basic.Kind() == types.UntypedRune {
+				if r, exact := constant.Int64Val(o.Val()); exact {
+					s.consts = append(s.consts, key+gx+"DevRune("+strconv.Quote(strconv.QuoteRune(rune(r)))+")")
+					break
+				}
+			}
 			if expr, ok := constantExpr(gx, o.Val()); ok {
 				s.consts = append(s.consts, key+expr)
 			}

@@ -470,6 +470,25 @@ func fileSignatureData(path string, src []byte) (string, bool) {
 			}
 		}
 	}
+	// The components that the file renders decide whether the file has a
+	// signal scope, and so the props struct that its callers fill
+	// (REQ-ACT-06). A new or a removed component tag is a change that the
+	// callers see.
+	tags := map[string]bool{}
+	walkElements(f.Body, func(el *Element) {
+		if _, _, ok := componentTag(el.Name); ok {
+			tags[el.Name] = true
+		}
+	})
+	names := make([]string, 0, len(tags))
+	for name := range tags {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		b.WriteString("<" + name + ">")
+		b.WriteByte(0)
+	}
 	return b.String(), true
 }
 
