@@ -1,4 +1,4 @@
-package editors
+package highlight
 
 import (
 	"bytes"
@@ -7,10 +7,20 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"strings"
 	"testing"
 )
+
+func repoRoot(t *testing.T) string {
+	t.Helper()
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	return filepath.Clean(filepath.Join(filepath.Dir(file), "..", "..", ".."))
+}
 
 // corpusFiles returns the .gx files of the highlight corpus, in name order.
 func corpusFiles(t *testing.T, root string) []string {
@@ -134,11 +144,13 @@ func TestREQ_DEV_09_TreeSitterHighlighting(t *testing.T) {
 			t.Fatalf("tree-sitter query %s: %v\n%s", filepath.Base(file), err, stderr.String())
 		}
 		fmt.Fprintf(&b, "== %s\n", filepath.Base(file))
+		captures := 0
 		for _, line := range strings.Split(string(out), "\n") {
 			m := captureLine.FindStringSubmatch(line)
 			if m == nil {
 				continue
 			}
+			captures++
 			// Rows and columns start at 1, as in an editor.
 			var row, col int
 			fmt.Sscan(m[2], &row)
@@ -148,6 +160,11 @@ func TestREQ_DEV_09_TreeSitterHighlighting(t *testing.T) {
 				text = "(to " + m[4] + ":" + m[5] + ")"
 			}
 			fmt.Fprintf(&b, "%d:%d %s %q\n", row+1, col+1, m[1], text)
+		}
+		// npx gives exit code 0 when the parser stops with a signal, so
+		// an empty answer is the sign of a crash (seen on Linux, D-250).
+		if captures == 0 {
+			t.Fatalf("tree-sitter query gave no capture for %s; the parser did not run:\n%s%s", filepath.Base(file), out, stderr.String())
 		}
 	}
 	got := b.String()

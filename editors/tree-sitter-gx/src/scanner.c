@@ -3,7 +3,7 @@
 // open element stack, raw text, and the constructs that depend on the line
 // (control lines, statement lines, the closing brace of a block, text).
 
-#include "tree_sitter/array.h"
+#include "tree_sitter/alloc.h"
 #include "tree_sitter/parser.h"
 
 #include <string.h>
@@ -43,7 +43,15 @@ typedef enum {
     STYLE,
 } TagKind;
 
-typedef Array(char) String;
+// The scanner has its own growable arrays. The array macros of tree-sitter
+// reach an array through a pointer of a different struct type. With strict
+// aliasing (gcc -O2) the compiler then reads fields that it thinks no one
+// wrote, and the parser stopped with a bad free on Linux.
+typedef struct {
+    char *contents;
+    uint32_t size;
+    uint32_t capacity;
+} String;
 
 // A tag name keeps its case: <Input> and <input> are different elements,
 // and a closing tag must match its opening tag exactly.
@@ -53,8 +61,58 @@ typedef struct {
 } Tag;
 
 typedef struct {
-    Array(Tag) tags;
+    Tag *contents;
+    uint32_t size;
+    uint32_t capacity;
+} Tags;
+
+typedef struct {
+    Tags tags;
 } Scanner;
+
+static String string_new(void) {
+    String s = {NULL, 0, 0};
+    return s;
+}
+
+static void string_reserve(String *s, uint32_t capacity) {
+    if (capacity > s->capacity) {
+        s->contents = (char *)ts_realloc(s->contents, capacity);
+        s->capacity = capacity;
+    }
+}
+
+static void string_push(String *s, char c) {
+    if (s->size == s->capacity) {
+        string_reserve(s, s->capacity == 0 ? 8 : s->capacity * 2);
+    }
+    s->contents[s->size++] = c;
+}
+
+static void string_free(String *s) {
+    if (s->contents != NULL) {
+        ts_free(s->contents);
+    }
+    s->contents = NULL;
+    s->size = 0;
+    s->capacity = 0;
+}
+
+static void tags_reserve(Tags *tags, uint32_t capacity) {
+    if (capacity > tags->capacity) {
+        tags->contents = (Tag *)ts_realloc(tags->contents, capacity * sizeof(Tag));
+        tags->capacity = capacity;
+    }
+}
+
+static void tags_push(Tags *tags, Tag tag) {
+    if (tags->size == tags->capacity) {
+        tags_reserve(tags, tags->capacity == 0 ? 8 : tags->capacity * 2);
+    }
+    tags->contents[tags->size++] = tag;
+}
+
+static Tag *tags_back(Tags *tags) { return &tags->contents[tags->size - 1]; }
 
 static const char *const VOID_TAGS[] = {
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr",
@@ -118,15 +176,15 @@ static bool name_eq(const String *a, const String *b) {
 }
 
 static void pop_tag(Scanner *scanner) {
-    Tag popped_tag = array_pop(&scanner->tags);
-    array_delete(&popped_tag.name);
+    scanner->tags.size--;
+    string_free(&scanner->tags.contents[scanner->tags.size].name);
 }
 
 static void clear_tags(Scanner *scanner) {
     for (unsigned i = 0; i < scanner->tags.size; i++) {
-        array_delete(&scanner->tags.contents[i].name);
+        string_free(&scanner->tags.contents[i].name);
     }
-    array_clear(&scanner->tags);
+    scanner->tags.size = 0;
 }
 
 static unsigned serialize(Scanner *scanner, char *buffer) {
@@ -172,23 +230,25 @@ static void deserialize(Scanner *scanner, const char *buffer, unsigned length) {
         memcpy(&tag_count, &buffer[size], sizeof(tag_count));
         size += sizeof(tag_count);
 
-        array_reserve(&scanner->tags, tag_count);
+        tags_reserve(&scanner->tags, tag_count);
         unsigned iter = 0;
         for (iter = 0; iter < serialized_tag_count; iter++) {
-            Tag tag = {NORMAL, array_new()};
+            Tag tag = {NORMAL, string_new()};
             tag.kind = (TagKind)buffer[size++];
             uint8_t name_length = (uint8_t)buffer[size++];
             if (name_length > 0) {
-                array_extend(&tag.name, name_length, &buffer[size]);
+                string_reserve(&tag.name, name_length);
+                memcpy(tag.name.contents, &buffer[size], name_length);
+                tag.name.size = name_length;
             }
             size += name_length;
-            array_push(&scanner->tags, tag);
+            tags_push(&scanner->tags, tag);
         }
         // add unnamed tags if we didn't read enough, this is because the
         // buffer had no more room but we held more tags.
         for (; iter < tag_count; iter++) {
-            Tag tag = {NORMAL, array_new()};
-            array_push(&scanner->tags, tag);
+            Tag tag = {NORMAL, string_new()};
+            tags_push(&scanner->tags, tag);
         }
     }
 }
@@ -196,13 +256,13 @@ static void deserialize(Scanner *scanner, const char *buffer, unsigned length) {
 // scan_tag_name reads a tag name: <div>, <Button>, <ui.Card>, <wa-button>
 // and <:slot>.
 static String scan_tag_name(TSLexer *lexer) {
-    String tag_name = array_new();
+    String tag_name = string_new();
     if (lexer->lookahead == ':') {
-        array_push(&tag_name, ':');
+        string_push(&tag_name, ':');
         advance(lexer);
     }
     while (is_tag_char(lexer->lookahead)) {
-        array_push(&tag_name, (char)lexer->lookahead);
+        string_push(&tag_name, (char)lexer->lookahead);
         advance(lexer);
     }
     return tag_name;
@@ -239,7 +299,7 @@ static bool scan_raw_text(Scanner *scanner, TSLexer *lexer) {
     if (scanner->tags.size == 0) {
         return false;
     }
-    const String *name = &array_back(&scanner->tags)->name;
+    const String *name = &tags_back(&scanner->tags)->name;
 
     lexer->mark_end(lexer);
 
@@ -436,7 +496,7 @@ static bool scan_start_tag_name(Scanner *scanner, TSLexer *lexer) {
     }
     Tag tag = {NORMAL, scan_tag_name(lexer)};
     tag.kind = kind_for_name(&tag.name);
-    array_push(&scanner->tags, tag);
+    tags_push(&scanner->tags, tag);
     switch (tag.kind) {
         case SCRIPT:
             lexer->result_symbol = SCRIPT_START_TAG_NAME;
@@ -454,18 +514,18 @@ static bool scan_start_tag_name(Scanner *scanner, TSLexer *lexer) {
 static bool scan_end_tag_name(Scanner *scanner, TSLexer *lexer) {
     String tag_name = scan_tag_name(lexer);
     if (tag_name.size == 0) {
-        array_delete(&tag_name);
+        string_free(&tag_name);
         return false;
     }
 
-    if (scanner->tags.size > 0 && name_eq(&array_back(&scanner->tags)->name, &tag_name)) {
+    if (scanner->tags.size > 0 && name_eq(&tags_back(&scanner->tags)->name, &tag_name)) {
         pop_tag(scanner);
         lexer->result_symbol = END_TAG_NAME;
     } else {
         lexer->result_symbol = ERRONEOUS_END_TAG_NAME;
     }
 
-    array_delete(&tag_name);
+    string_free(&tag_name);
     return true;
 }
 
@@ -490,7 +550,7 @@ static bool scan_unmatched_end_tag(Scanner *scanner, TSLexer *lexer) {
     advance(lexer);
     String tag_name = scan_tag_name(lexer);
     bool implicit = false;
-    if (scanner->tags.size > 0 && !name_eq(&array_back(&scanner->tags)->name, &tag_name)) {
+    if (scanner->tags.size > 0 && !name_eq(&tags_back(&scanner->tags)->name, &tag_name)) {
         for (unsigned i = scanner->tags.size - 1; i > 0; i--) {
             if (name_eq(&scanner->tags.contents[i - 1].name, &tag_name)) {
                 implicit = true;
@@ -498,7 +558,7 @@ static bool scan_unmatched_end_tag(Scanner *scanner, TSLexer *lexer) {
             }
         }
     }
-    array_delete(&tag_name);
+    string_free(&tag_name);
     if (!implicit) {
         return false;
     }
@@ -661,7 +721,7 @@ static bool scan_statement(TSLexer *lexer) {
 // scan_content reads one token where a body node can start.
 static bool scan_content(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
     // A void element has no children and no closing tag.
-    if (valid_symbols[IMPLICIT_END_TAG] && scanner->tags.size > 0 && array_back(&scanner->tags)->kind == VOID) {
+    if (valid_symbols[IMPLICIT_END_TAG] && scanner->tags.size > 0 && tags_back(&scanner->tags)->kind == VOID) {
         pop_tag(scanner);
         return emit(lexer, IMPLICIT_END_TAG);
     }
@@ -949,6 +1009,8 @@ void tree_sitter_gx_external_scanner_deserialize(void *payload, const char *buff
 void tree_sitter_gx_external_scanner_destroy(void *payload) {
     Scanner *scanner = (Scanner *)payload;
     clear_tags(scanner);
-    array_delete(&scanner->tags);
+    if (scanner->tags.contents != NULL) {
+        ts_free(scanner->tags.contents);
+    }
     ts_free(scanner);
 }

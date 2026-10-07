@@ -38,6 +38,14 @@ done
 git ls-files -z '*.gx' | while IFS= read -r -d '' f; do
   printf '%s\n' "$root/$f"
 done >"$tmp/paths"
+# npx gives exit code 0 when the parser stops with a signal, and a quiet
+# parse then prints nothing. One parse with output proves that the parser
+# runs: its tree starts with the document node.
+first="$(head -n 1 "$tmp/paths")"
+if ! (cd "$grammar" && TREE_SITTER_LIBDIR="$tmp/lib" ts parse "$first") 2>/dev/null | grep -q '^(document'; then
+  echo "rule: the tree-sitter parser gives no tree for $first; it did not run or it crashed" >&2
+  exit 1
+fi
 if ! (cd "$grammar" && TREE_SITTER_LIBDIR="$tmp/lib" ts parse --quiet --paths "$tmp/paths") >"$tmp/parse.log" 2>&1; then
   grep -E 'ERROR|MISSING' "$tmp/parse.log" | sed "s|^$root/||" >&2 || cat "$tmp/parse.log" >&2
   echo "rule: the tree-sitter grammar must parse every .gx file the compiler accepts; fix $grammar/grammar.js or $grammar/src/scanner.c" >&2

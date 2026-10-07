@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -144,7 +145,9 @@ func TestREQ_TLS_07_JetBrainsPlugin(t *testing.T) {
 			t.Fatalf("the UI smoke test lacks %q", want)
 		}
 	}
-	if info, err := os.Stat(filepath.Join(root, "scripts", "jetbrains-smoke.sh")); err != nil || info.Mode()&0o111 == 0 {
+	// Windows has no executable bit in the file mode.
+	info, err := os.Stat(filepath.Join(root, "scripts", "jetbrains-smoke.sh"))
+	if err != nil || (runtime.GOOS != "windows" && info.Mode()&0o111 == 0) {
 		t.Fatalf("scripts/jetbrains-smoke.sh is not an executable file: %v", err)
 	}
 }
