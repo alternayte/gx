@@ -213,6 +213,31 @@ for (const adapter of adapters) {
     expect(problems).toEqual([])
   })
 
+  test(`REQ-ACT-10 ${adapter}: an error answer that is not from the adapter changes nothing`, async () => {
+    await open(adapter, '/')
+    const before = await number('#inc-value')
+    // The first section holds no timer, so its content is stable.
+    const html = await page.innerHTML('main section')
+    // The app answers a write with a plain 403, as the CSRF check does.
+    await page.evaluate(() => {
+      document.cookie = 'refuse=1; path=/'
+    })
+    const [res] = await Promise.all([page.waitForResponse((r) => r.url().endsWith('/inc')), page.click('#inc')])
+    expect(res.status()).toBe(403)
+    expect(res.headers()['gx-answer']).toBeUndefined()
+    await Bun.sleep(200)
+    // The body of the answer is not in the element of the request.
+    expect((await page.textContent('#inc')) ?? '').toBe('Add one')
+    expect(await page.innerHTML('main section')).toBe(html)
+    // The page works after the refused request.
+    await page.evaluate(() => {
+      document.cookie = 'refuse=; path=/; max-age=0'
+    })
+    await page.click('#inc')
+    await waitForText('#inc-value', String(before + 1))
+    expect(problems).toEqual([`403 ${urls[adapter]}/inc`])
+  })
+
   test(`REQ-ACT-09 ${adapter}: an action with no answer changes nothing`, async () => {
     await open(adapter, '/')
     // The first sections hold no timer, so their content is stable.

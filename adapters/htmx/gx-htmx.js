@@ -18,6 +18,15 @@
     { code: '.*', swap: true },
   ]
 
+  // An answer of the adapter names itself. An error answer from a different
+  // source, for example the 403 of the CSRF check or the error page of a
+  // proxy, holds no patches: its body does not go into the element of the
+  // request (REQ-ACT-10).
+  document.addEventListener('htmx:beforeSwap', function (e) {
+    var xhr = e.detail.xhr
+    if (xhr && xhr.status >= 400 && xhr.getResponseHeader('Gx-Answer') !== 'patches') e.detail.shouldSwap = false
+  })
+
   // A morph keeps the content that an island wrote (REQ-ISL-04).
   var callbacks = {
     beforeNodeMorphed: function (from) {

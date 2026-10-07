@@ -24,5 +24,18 @@ func main() {
 	}
 	app := gx.New(gx.Config{Adapter: adapter})
 	app.Group("/", board.Layout, gx.Nav(gx.MorphNavigation), board.Routes)
-	log.Fatal(http.ListenAndServe("127.0.0.1:"+os.Getenv("PORT"), gx.CSP(policy)(app)))
+	log.Fatal(http.ListenAndServe("127.0.0.1:"+os.Getenv("PORT"), refuse(gx.CSP(policy)(app))))
+}
+
+// refuse answers a write with the 403 of the CSRF check when the browser
+// holds the cookie "refuse". The answer does not come from the adapter, as
+// the answer of a failed CSRF check or of a proxy does not (REQ-ACT-10).
+func refuse(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if _, err := r.Cookie("refuse"); err == nil && r.Method != http.MethodGet {
+			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
