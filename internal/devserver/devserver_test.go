@@ -2,6 +2,7 @@ package devserver_test
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"io"
 	"net"
@@ -332,20 +333,151 @@ func TestREQ_DEV_07_DevRoutes(t *testing.T) {
 	}
 }
 
-// TestSI_08_ProdBinary scans a production app binary for dev-only symbols
-// (SI-08).
-func TestSI_08_ProdBinary(t *testing.T) {
-	bin := buildGxApp(t, "")
+// The dev-only parts that SI-08 names. A symbol of the binary that holds
+// one of devSymbols belongs to the dev symbol table of the app, to the
+// interpreter, or to the part of package gx that installs and runs them. A
+// string of devStrings is the path of a dev-only route.
+var (
+	devSymbols = []string{
+		"/gxdev_symbols.",
+		"/gxdev_gallery.",
+		"github.com/alternayte/gx/internal/interp.",
+		"github.com/alternayte/gx.SetDevSymbols",
+		"github.com/alternayte/gx.DevSwap",
+		"github.com/alternayte/gx.devSwapAllowed",
+		"github.com/alternayte/gx.watchParent",
+	}
+	devStrings = []string{
+		"/_gx/dev/swap",
+		"/_gx/dev/info",
+		"/_gx/gallery",
+		"/_gx/export",
+	}
+)
+
+// buildShop builds the example shop and returns the binary. The shop has
+// templates, a generated symbol table and the dev and production pair of
+// main files that the scaffold writes.
+func buildShop(t *testing.T, tags string) string {
+	t.Helper()
+	bin := execname.Name(filepath.Join(t.TempDir(), "shop"))
+	args := []string{"build", "-o", bin}
+	if tags != "" {
+		args = append(args, "-tags", tags)
+	}
+	cmd := exec.Command("go", append(args, "./cmd/shop")...)
+	cmd.Dir = filepath.Join(repoRoot(t), "examples", "shop")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("build the shop with tags %q: %v\n%s", tags, err, out)
+	}
+	return bin
+}
+
+// devParts returns the dev-only symbols and strings that a binary holds.
+func devParts(t *testing.T, bin string) (symbols, strs []string) {
+	t.Helper()
+	out, err := exec.Command("go", "tool", "nm", bin).Output()
+	if err != nil {
+		t.Fatalf("go tool nm: %v", err)
+	}
+	if lines := bytes.Count(out, []byte("\n")); lines < 1000 {
+		t.Fatalf("go tool nm lists %d symbols; the binary has no symbol table to scan", lines)
+	}
+	for _, marker := range devSymbols {
+		if bytes.Contains(out, []byte(marker)) {
+			symbols = append(symbols, marker)
+		}
+	}
 	data, err := os.ReadFile(bin)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, marker := range []string{
-		"/_gx/dev/info",
-		"gx-dev-overlay",
+	for _, marker := range devStrings {
+		if bytes.Contains(data, []byte(marker)) {
+			strs = append(strs, marker)
+		}
+	}
+	return symbols, strs
+}
+
+// TestSI_08_ProdBinary proves that a production binary of an app holds no
+// dev symbol table, no interpreter and no dev-only route (SI-08). It scans
+// the symbols and the strings of the binary, and it sends requests to the
+// dev-only routes of the running app. The same scan of a dev build finds
+// each part, so a scan that finds none is a real result.
+func TestSI_08_ProdBinary(t *testing.T) {
+	prod := buildShop(t, "")
+	symbols, strs := devParts(t, prod)
+	if len(symbols) != 0 {
+		t.Errorf("the production binary holds the dev symbols %q", symbols)
+	}
+	if len(strs) != 0 {
+		t.Errorf("the production binary holds the dev strings %q", strs)
+	}
+
+	dev := buildShop(t, "gxdev")
+	symbols, strs = devParts(t, dev)
+	if len(symbols) != len(devSymbols) {
+		t.Errorf("the scan of the dev binary finds the symbols %q, want each of %q", symbols, devSymbols)
+	}
+	if len(strs) != len(devStrings) {
+		t.Errorf("the scan of the dev binary finds the strings %q, want each of %q", strs, devStrings)
+	}
+
+	// The routes: a production build of an app answers 404 on each dev-only
+	// route, and a dev build of the same app has the route. The app has no
+	// route of its own, so the answer comes from the framework.
+	start := func(tags string) string {
+		t.Helper()
+		addr := freeAddr(t)
+		ctx, cancel := context.WithCancel(context.Background())
+		cmd := exec.CommandContext(ctx, buildGxApp(t, tags))
+		// A secret of a gx dev does not make the swap route exist.
+		cmd.Env = append(os.Environ(), "GX_DEV_ADDR="+addr, "GX_DEV_SECRET=0123456789abcdef")
+		if err := cmd.Start(); err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() {
+			cancel()
+			_ = cmd.Wait()
+		})
+		for deadline := time.Now().Add(15 * time.Second); ; time.Sleep(50 * time.Millisecond) {
+			if conn, err := net.Dial("tcp", addr); err == nil {
+				_ = conn.Close()
+				return "http://" + addr
+			}
+			if time.Now().After(deadline) {
+				t.Fatalf("the app with tags %q did not start", tags)
+			}
+		}
+	}
+	status := func(method, url string) int {
+		t.Helper()
+		req, err := http.NewRequest(method, url, strings.NewReader(`{"package":"x","file":"x_gx.go","source":"package x"}`))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Gx-Dev-Secret", "0123456789abcdef")
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_ = res.Body.Close()
+		return res.StatusCode
+	}
+	prodApp, devApp := start(""), start("gxdev")
+	for _, route := range []struct{ method, path string }{
+		{http.MethodPost, "/_gx/dev/swap"},
+		{http.MethodGet, "/_gx/dev/info"},
+		{http.MethodGet, "/_gx/gallery"},
+		{http.MethodGet, "/_gx/export"},
 	} {
-		if strings.Contains(string(data), marker) {
-			t.Fatalf("production binary holds the dev symbol %q", marker)
+		if got := status(route.method, prodApp+route.path); got != http.StatusNotFound {
+			t.Errorf("%s %s of the production build = %d, want 404", route.method, route.path, got)
+		}
+		if got := status(route.method, devApp+route.path); got == http.StatusNotFound || got == http.StatusMethodNotAllowed {
+			t.Errorf("%s %s of the dev build = %d, want the route", route.method, route.path, got)
 		}
 	}
 }
