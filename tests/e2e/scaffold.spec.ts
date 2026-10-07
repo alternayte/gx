@@ -2,7 +2,7 @@
 // and the patch of the example slice work as written (REQ-DEV-10).
 import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { type Browser } from 'playwright-core'
-import { launchBrowser } from './harness'
+import { freePort, launchBrowser } from './harness'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -30,7 +30,7 @@ beforeAll(async () => {
   await run(['go', 'run', './cmd/gx', 'new', 'slice', 'shop', app], repo)
   const bin = join(parent, process.platform === 'win32' ? 'acme.exe' : 'acme-bin')
   await run(['go', 'build', '-o', bin, './cmd/app'], app)
-  const port = 23000 + Math.floor(Math.random() * 1500)
+  const port = await freePort()
   url = `http://127.0.0.1:${port}`
   server = spawn([bin], { cwd: app, env: { ...process.env, GX_DEV_ADDR: `127.0.0.1:${port}` }, stdout: 'ignore', stderr: 'ignore' })
   const deadline = Date.now() + 20000

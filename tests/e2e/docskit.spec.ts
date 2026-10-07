@@ -2,7 +2,7 @@
 // build-time code frames (REQ-CNT-05).
 import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { type Browser, type Page } from 'playwright-core'
-import { launchBrowser } from './harness'
+import { freePort, launchBrowser } from './harness'
 import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -126,7 +126,7 @@ beforeAll(async () => {
   await run(['go', 'run', './cmd/gx', 'generate', dir], repo)
   const kitBin = join(dir, process.platform === 'win32' ? 'kitapp.exe' : 'kitapp')
   await run(['go', 'build', '-o', kitBin, '.'], dir)
-  const port = 19000 + Math.floor(Math.random() * 1500)
+  const port = await freePort()
   url = `http://127.0.0.1:${port}`
   app = spawn([kitBin], {
     cwd: dir,

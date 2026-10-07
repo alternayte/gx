@@ -3,7 +3,7 @@
 // strict Content-Security-Policy with no 'unsafe-eval' (SI-11).
 import { afterAll, afterEach, beforeAll, expect, test } from 'bun:test'
 import { type Browser, type Page } from 'playwright-core'
-import { launchBrowser } from './harness'
+import { freePort, launchBrowser } from './harness'
 import { cpSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -54,13 +54,13 @@ beforeAll(async () => {
   // gx.toml names htmx, so the compiler would report a signal (GX4006).
   await run(['go', 'run', './cmd/gx', 'generate', dir], repo)
   await run(['go', 'build', '-o', 'app', '.'], dir)
-  const base = 21500 + Math.floor(Math.random() * 1500)
-  for (const [i, adapter] of adapters.entries()) {
-    urls[adapter] = `http://127.0.0.1:${base + i}`
+  for (const adapter of adapters) {
+    const port = await freePort()
+    urls[adapter] = `http://127.0.0.1:${port}`
     apps.push(
       spawn([join(dir, 'app')], {
         cwd: dir,
-        env: { ...process.env, ADAPTER: adapter, PORT: String(base + i) },
+        env: { ...process.env, ADAPTER: adapter, PORT: String(port) },
         stdout: 'ignore',
         stderr: 'ignore',
       }),

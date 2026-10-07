@@ -3,6 +3,7 @@
 import { spawn } from 'bun'
 import { chromium, type Browser } from 'playwright-core'
 import { mkdtempSync } from 'node:fs'
+import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
@@ -44,7 +45,7 @@ export async function startShop(opts: ShopOptions = {}): Promise<Shop> {
     const err = await new Response(build.stderr).text()
     throw new Error(`go build failed: ${err}`)
   }
-  const port = 18000 + Math.floor(Math.random() * 2000)
+  const port = await freePort()
   const url = `http://127.0.0.1:${port}`
   const run = [bin, '-addr', `127.0.0.1:${port}`]
   if (opts.csp) run.push('-csp')
@@ -58,6 +59,22 @@ export async function startShop(opts: ShopOptions = {}): Promise<Shop> {
     url,
     stop: () => server.kill(),
   }
+}
+
+// freePort asks the system for a port that no program holds on the loopback
+// address. A random port can be the port of a different program of the
+// machine: the wait for the app then succeeds against that program, and
+// every test of the file fails.
+export function freePort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const server = createServer()
+    server.once('error', reject)
+    server.listen(0, '127.0.0.1', () => {
+      const address = server.address()
+      const port = typeof address === 'object' && address ? address.port : 0
+      server.close(() => resolve(port))
+    })
+  })
 }
 
 async function waitFor(url: string): Promise<void> {

@@ -2,7 +2,7 @@
 // size, so the page does not shift (REQ-CNT-11).
 import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { type Browser, type Page } from 'playwright-core'
-import { launchBrowser } from './harness'
+import { freePort, launchBrowser } from './harness'
 import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -51,7 +51,7 @@ beforeAll(async () => {
   await run(['go', 'mod', 'tidy'], dir)
   dist = join(dir, 'dist')
   await run(['go', 'run', './cmd/gx', 'export', '-main', '.', '--out', dist, dir], repo)
-  const port = 21000 + Math.floor(Math.random() * 1500)
+  const port = await freePort()
   url = `http://127.0.0.1:${port}`
   server = Bun.serve({
     port,

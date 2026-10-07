@@ -3,7 +3,7 @@
 // client behaviours.
 import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { type Browser, type Page } from 'playwright-core'
-import { launchBrowser } from './harness'
+import { freePort, launchBrowser } from './harness'
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { spawn, type Subprocess } from 'bun'
@@ -57,7 +57,7 @@ beforeAll(async () => {
     writeFileSync(join(dir, 'ui', 'shell', name), await Bun.file(join(shellSrc, name)).text())
   }
   await run(['go', 'mod', 'tidy'], dir)
-  const port = 20000 + Math.floor(Math.random() * 1500)
+  const port = await freePort()
   url = `http://127.0.0.1:${port}`
   app = spawn(['go', 'run', './cmd/gx', 'dev', '-addr', `127.0.0.1:${port}`, '-main', '.', dir], {
     cwd: repo,
