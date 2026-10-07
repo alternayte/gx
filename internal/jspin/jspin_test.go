@@ -24,6 +24,10 @@ func cdn(t *testing.T) (*httptest.Server, *[]string) {
 		"/npm/@acme/theme@0.3.1/+esm":      "import{scale}from\"/npm/scale@2.0.0/+esm\";globalThis.themed=scale(1);\n",
 		"/npm/@acme/theme@0.3.1/dark/+esm": "export const palette=[\"#000\"];export const load=()=>import(\"/npm/scale@2.0.0/+esm\");\n",
 		"/npm/chartlib@1.2.0/core/+esm":    "export const core=\"core\";\n",
+		// The next version of chartlib: a new scale, the same theme, and no
+		// import of the dark palette.
+		"/npm/chartlib@1.3.0/+esm": "import{scale as s}from\"/npm/scale@2.1.0/+esm\";import\"/npm/@acme/theme@0.3.1/+esm\";export const chart=(n)=>\"chart3:\"+s(n);export default chart;\n",
+		"/npm/scale@2.1.0/+esm":    "export const scale=(n)=>n*3;\n",
 	}
 	var mu sync.Mutex
 	var hits []string
@@ -192,5 +196,111 @@ func TestREQ_ISL_07_MirrorFromConfig(t *testing.T) {
 	}
 	if len(*hits) != 1 || (*hits)[0] != "/npm/scale@2.0.0/+esm" {
 		t.Fatalf("requests = %v", *hits)
+	}
+}
+
+func exists(dir, rel string) bool {
+	_, err := os.Stat(filepath.Join(dir, filepath.FromSlash(rel)))
+	return err == nil
+}
+
+// A pin of a new version of a package removes the files of the old version
+// and their entries of gx.lock. A file that a different pin still uses
+// stays (F-54).
+func TestREQ_ISL_07_NewVersionRemovesTheOldVersion(t *testing.T) {
+	srv, _ := cdn(t)
+	dir := t.TempDir()
+	pin := func(spec string) {
+		t.Helper()
+		if _, err := jspin.Pin(context.Background(), jspin.Options{Dir: dir, Spec: spec, BaseURL: srv.URL}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pin("chartlib@1.2.0")
+	pin("chartlib@1.2.0/core")
+	pin("chartlib@1.3.0")
+
+	lock, err := jspin.LoadLock(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := lock.Pins["chartlib"]; got.Version != "1.3.0" || got.File != "js/vendor/chartlib@1.3.0.js" {
+		t.Fatalf("pin = %+v", got)
+	}
+	want := map[string]bool{
+		// The new version and its imports.
+		"js/vendor/chartlib@1.3.0.js":    true,
+		"js/vendor/scale@2.1.0.js":       true,
+		"js/vendor/@acme/theme@0.3.1.js": true,
+		// The theme imports the old scale.
+		"js/vendor/scale@2.0.0.js": true,
+		// The pin of the subpath keeps its version.
+		"js/vendor/chartlib@1.2.0/core.js": true,
+		// Only the old version used these.
+		"js/vendor/chartlib@1.2.0.js":         false,
+		"js/vendor/@acme/theme@0.3.1/dark.js": false,
+	}
+	for file, keep := range want {
+		if _, inLock := lock.Files[file]; inLock != keep {
+			t.Errorf("gx.lock holds %s = %v, want %v", file, inLock, keep)
+		}
+		if exists(dir, file) != keep {
+			t.Errorf("%s is on the disk = %v, want %v", file, exists(dir, file), keep)
+		}
+	}
+	if len(lock.Files) != 5 {
+		t.Errorf("files of gx.lock = %v", lock.Files)
+	}
+	// A directory with no file left is gone; a directory with a file stays.
+	if exists(dir, "js/vendor/@acme/theme@0.3.1") {
+		t.Error("the empty directory of the old subpath module stays")
+	}
+	if !exists(dir, "js/vendor/chartlib@1.2.0") {
+		t.Error("the directory of the pinned subpath is gone")
+	}
+	if err := jspin.Verify(dir, lock); err != nil {
+		t.Fatal(err)
+	}
+
+	// A new version of scale as a pin of its own: the theme still imports
+	// the old file, so it stays.
+	pin("scale@2.0.0")
+	pin("scale@2.1.0")
+	lock, _ = jspin.LoadLock(dir)
+	if _, ok := lock.Files["js/vendor/scale@2.0.0.js"]; !ok || !exists(dir, "js/vendor/scale@2.0.0.js") {
+		t.Error("the old scale is gone, and the theme imports it")
+	}
+	if err := jspin.Verify(dir, lock); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// The verify step checks the entry file of each pin: a pin whose file has
+// no hash in gx.lock stops the build, because the bundle would hold a file
+// that no hash covers (SI-10, F-54).
+func TestSI_10_VerifyChecksTheEntryFileOfEachPin(t *testing.T) {
+	srv, _ := cdn(t)
+	dir := t.TempDir()
+	if _, err := jspin.Pin(context.Background(), jspin.Options{Dir: dir, Spec: "chartlib@1.2.0", BaseURL: srv.URL}); err != nil {
+		t.Fatal(err)
+	}
+	lock, _ := jspin.LoadLock(dir)
+	if err := jspin.Verify(dir, lock); err != nil {
+		t.Fatal(err)
+	}
+	// The entry file is on the disk, and the lock has no hash for it.
+	delete(lock.Files, "js/vendor/chartlib@1.2.0.js")
+	err := jspin.Verify(dir, lock)
+	if err == nil || !strings.Contains(err.Error(), `the pin "chartlib"`) || !strings.Contains(err.Error(), "js/vendor/chartlib@1.2.0.js") {
+		t.Fatalf("Verify with an entry file that has no hash = %v", err)
+	}
+	// A pin that names a file outside the vendored files.
+	lock, _ = jspin.LoadLock(dir)
+	if err := os.WriteFile(filepath.Join(dir, "js", "other.js"), []byte("export default 1\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	lock.Pins["other"] = jspin.Entry{Version: "1.0.0", File: "js/other.js"}
+	if err := jspin.Verify(dir, lock); err == nil || !strings.Contains(err.Error(), `the pin "other"`) {
+		t.Fatalf("Verify with a pin of an unknown file = %v", err)
 	}
 }

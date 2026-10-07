@@ -209,6 +209,8 @@ gx pin d3-scale@4.0.2
 
 An island then imports the package by its name: `import { scaleLinear } from "d3-scale"`. `gx.lock` records the hash of each file, and a changed file stops the build. A pinned package has the type `any` in TypeScript.
 
+To change the version of a package, pin the new version. `gx pin` then removes each file in `js/vendor` that no pin uses.
+
 An app with a `package.json` and a `node_modules` directory does not use the pins. The bundler then finds each package as node does.
 
 ## The type check

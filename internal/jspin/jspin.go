@@ -141,6 +141,9 @@ type Result struct {
 	Version   string
 	// Files lists the vendored files of the pin, relative to the app.
 	Files []string
+	// Removed lists the vendored files that no pin uses after this pin:
+	// the files of the version that the pin replaced.
+	Removed []string
 }
 
 // Pin fetches a package and every module it imports, stores them and
@@ -235,13 +238,83 @@ func Pin(ctx context.Context, opt Options) (*Result, error) {
 		lock.Files[file] = integrity(contents[file])
 	}
 	lock.Pins[root.specifier()] = Entry{Version: root.version, File: root.file()}
+	// A pin of a new version leaves the files of the old version with no
+	// user. They go out of gx.lock first, then off the disk, so a failure
+	// between the two leaves a spare file and not a missing one.
+	res.Removed = unused(opt.Dir, lock)
+	for _, file := range res.Removed {
+		delete(lock.Files, file)
+	}
 	if err := SaveLock(opt.Dir, lock); err != nil {
+		return nil, err
+	}
+	if err := removeFiles(opt.Dir, res.Removed); err != nil {
 		return nil, err
 	}
 	if err := writeTypes(opt.Dir, lock); err != nil {
 		return nil, err
 	}
 	return res, nil
+}
+
+// vendorImport matches the import of one vendored file by another, in the
+// form that Pin writes: a relative path in a string literal.
+var vendorImport = regexp.MustCompile(`["'](\.\.?/[^"']+\.js)["']`)
+
+// unused returns the files of gx.lock that no pin uses: a file is in use
+// when it is the entry file of a pin, or when a file in use imports it. A
+// string that looks like an import keeps a file, so the result holds no
+// file that the bundle needs. When a file in use cannot be read, the result
+// is empty: Verify reports that file.
+func unused(dir string, lock Lock) []string {
+	used := map[string]bool{}
+	var queue []string
+	use := func(file string) {
+		if _, ok := lock.Files[file]; ok && !used[file] {
+			used[file] = true
+			queue = append(queue, file)
+		}
+	}
+	for _, pin := range lock.Pins {
+		use(pin.File)
+	}
+	for len(queue) > 0 {
+		file := queue[0]
+		queue = queue[1:]
+		data, err := os.ReadFile(filepath.Join(dir, filepath.FromSlash(file)))
+		if err != nil {
+			return nil
+		}
+		for _, m := range vendorImport.FindAllSubmatch(data, -1) {
+			use(path.Join(path.Dir(file), string(m[1])))
+		}
+	}
+	var out []string
+	for _, file := range sortedKeys(lock.Files) {
+		if !used[file] {
+			out = append(out, file)
+		}
+	}
+	return out
+}
+
+// removeFiles removes vendored files, and each directory under the vendor
+// directory that then holds no file.
+func removeFiles(dir string, files []string) error {
+	vendor := filepath.Join(dir, filepath.FromSlash(VendorDir))
+	for _, file := range files {
+		full := filepath.Join(dir, filepath.FromSlash(file))
+		if !strings.HasPrefix(full, vendor+string(filepath.Separator)) {
+			return fmt.Errorf("gx pin: %s is outside %s", file, VendorDir)
+		}
+		if err := os.Remove(full); err != nil && !os.IsNotExist(err) {
+			return err
+		}
+		// Remove fails for a directory that holds a file.
+		for parent := filepath.Dir(full); parent != vendor && os.Remove(parent) == nil; parent = filepath.Dir(parent) {
+		}
+	}
+	return nil
 }
 
 func fetch(ctx context.Context, client *http.Client, url string) ([]byte, error) {
@@ -345,8 +418,16 @@ func SaveLock(root string, lock Lock) error {
 }
 
 // Verify checks every vendored file against gx.lock (SI-10). A missing or
-// changed file is an error that stops the build.
+// changed file, or a pin whose entry file has no hash, is an error that
+// stops the build.
 func Verify(root string, lock Lock) error {
+	// The bundle starts at the entry file of each pin, so each entry file
+	// needs a hash.
+	for _, spec := range sortedKeys(lock.Pins) {
+		if file := lock.Pins[spec].File; lock.Files[file] == "" {
+			return fmt.Errorf("gx: the pin %q names the file %s, and gx.lock has no hash for that file; run gx pin %s@%s again", spec, file, spec, lock.Pins[spec].Version)
+		}
+	}
 	for _, file := range sortedKeys(lock.Files) {
 		data, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(file)))
 		if err != nil {

@@ -1026,6 +1026,9 @@ func runPin(args []string) int {
 		return 1
 	}
 	fmt.Printf("pinned %s@%s: %d files in %s\n", res.Specifier, res.Version, len(res.Files), jspin.VendorDir)
+	if len(res.Removed) > 0 {
+		fmt.Printf("removed %d files that no pin uses\n", len(res.Removed))
+	}
 	return 0
 }
 
