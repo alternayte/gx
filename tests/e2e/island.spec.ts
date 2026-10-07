@@ -48,6 +48,18 @@ const modules: Record<string, string> = {
         window.log.push(['not a ref', String(err.message)])
       }
     }`,
+  // An island whose props hold user data with the key of a signal reference.
+  '/mods/userdata.js': `
+    export default (el, props, ctx) => {
+      window.log.push(['props', JSON.parse(JSON.stringify(props.lists)), Object.getPrototypeOf(props.lists) === Object.prototype])
+      for (const value of [props.lists, props.old]) {
+        try {
+          window.log.push(['signal', ctx.signal(value).get()])
+        } catch (err) {
+          window.log.push(['not a ref', String(err.message)])
+        }
+      }
+    }`,
   // An island that mounts after a wait.
   '/mods/slow.js': `
     export default async (el) => {
@@ -70,7 +82,17 @@ const pages: Record<string, string> = {
   '/updating': island('/mods/updating.js', { label: 'one' }),
   '/signals':
     `<div data-signals='{"cart":{"qty":2}}'><span id="shown" data-text="$cart.qty"></span></div>` +
-    island('/mods/signals.js', { qty: { $signal: ['cart', 'qty'] }, label: 'x' }) +
+    island('/mods/signals.js', { qty: { $signal: ['cart', 'qty'], $gx: true }, label: 'x' }) +
+    `<script type="module" src="/datastar.js" data-gx-adapter="datastar"></script>`,
+  // The JSON of a map[string][]string prop from user data, and of a map
+  // with the two keys of a reference: its values have one type.
+  '/userdata':
+    `<div data-signals='{"cart":{"qty":2}}'></div>` +
+    island('/mods/userdata.js', {
+      lists: { $signal: ['cart', 'qty'] },
+      old: { $signal: ['cart', 'qty'], $gx: ['true'] },
+      ref: { $signal: ['cart', 'qty'], $gx: true },
+    }) +
     `<script type="module" src="/datastar.js" data-gx-adapter="datastar"></script>`,
   // Two keyed islands in a list, as a loop with key={...} renders them.
   '/list':
@@ -200,6 +222,16 @@ test('REQ-ISL-04 the context reads, writes and follows a gx.SignalRef prop', asy
   await page.click('#isl button')
   await page.waitForFunction(() => document.querySelector('#shown')?.textContent === '4')
   expect((await log()).at(-1)).toEqual(['seen', 3])
+})
+
+test('REQ-ISL-04 a props object with the key $signal from user data stays an object', async () => {
+  await open('/userdata')
+  await mounted()
+  expect(await log()).toEqual([
+    ['props', { $signal: ['cart', 'qty'] }, true],
+    ['not a ref', 'the value is not a gx.SignalRef prop'],
+    ['not a ref', 'the value is not a gx.SignalRef prop'],
+  ])
 })
 
 test('REQ-ISL-04 an island that leaves during an async mount is cleaned up', async () => {

@@ -59,6 +59,16 @@ type RevenueChartProps struct {
 	Maybe []*Point ` + "`json:\"maybe\"`" + `
 	NoTag int
 	Dash  int ` + "`json:\"dash-name\"`" + `
+	// A float32 has its own text in JSON.
+	Ratio  float32   ` + "`json:\"ratio\"`" + `
+	Ratios []float32 ` + "`json:\"ratios\"`" + `
+	// encoding/json rejects these names and uses the name of the field. The
+	// options of the tag still hold.
+	Apostrophe int    ` + "`json:\"it's\"`" + `
+	Quoted     string ` + "`json:\"a\\\"b,omitempty\"`" + `
+	Backslash  int    ` + "`json:\"a\\\\b\"`" + `
+	// User data with the key of a signal reference.
+	Lists map[string][]string ` + "`json:\"lists\"`" + `
 }
 `
 
@@ -100,6 +110,12 @@ export interface Props {
   maybe: (Point | null)[];
   NoTag: number;
   "dash-name": number;
+  ratio: number;
+  ratios: number[];
+  Apostrophe: number;
+  Quoted?: string;
+  Backslash: number;
+  lists: Record<string, string[]>;
 }
 ` + contextTS
 
@@ -177,6 +193,12 @@ func main() {
 		Maybe:   []*dash.Point{{Label: &label, Tags: []string{"y"}}},
 		NoTag:   7,
 		Dash:    8,
+		Ratio:   0.1,
+		Ratios:  []float32{1.1, 16777216, 1e-7, 3.4e38, -0.3},
+		Apostrophe: 9,
+		Quoted:     "q",
+		Backslash:  10,
+		Lists:      map[string][]string{"$signal": {"cart", "Cart", "qty"}},
 	}
 	p.Inline.A = 5
 	want, err := json.Marshal(p)
@@ -207,7 +229,7 @@ func main() {
 	}
 	// A nil slice is [], a nil map is {}, a nil pointer in a field is an
 	// absent key and a nil pointer in a list is null.
-	zero := `{"data":[],"title":"","kind":"","stacked":false,"count":0,"totals":{},"tree":{"name":"","children":[]},"pairs":[0,0],"inline":{"a":0},"maybe":[null],"NoTag":0,"dash-name":0}`
+	zero := `{"data":[],"title":"","kind":"","stacked":false,"count":0,"totals":{},"tree":{"name":"","children":[]},"pairs":[0,0],"inline":{"a":0},"maybe":[null],"NoTag":0,"dash-name":0,"ratio":0,"ratios":[],"Apostrophe":0,"Backslash":0,"lists":{}}`
 	if lines[1] != zero {
 		t.Fatalf("zero props =\n%s\nwant\n%s", lines[1], zero)
 	}
@@ -436,7 +458,9 @@ func TestREQ_ISL_04_SignalRefProp(t *testing.T) {
 		t.Fatalf("go run: %v\n%s", err, out)
 	}
 	got := html.UnescapeString(string(out))
-	if !strings.Contains(got, `props="{"qty":{"$signal":["cart","Cart","qty"]},"label":"Quantity"}"`) {
+	// The second key marks a reference: a map of user data has values of one
+	// type, so it cannot hold a list and a boolean.
+	if !strings.Contains(got, `props="{"qty":{"$signal":["cart","Cart","qty"],"$gx":true},"label":"Quantity"}"`) {
 		t.Fatalf("output = %s", got)
 	}
 	if !strings.Contains(got, `data-bind="cart.Cart.qty"`) {

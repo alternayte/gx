@@ -45,6 +45,21 @@ func TestREQ_ISL_02_AppendJSONMatchesEncodingJSON(t *testing.T) {
 			t.Fatalf("AppendJSONFloat(%v) = %s, want %s", f, got, want)
 		}
 	}
+	// A float32 has the text of encoding/json for a float32: the shortest
+	// text that gives the same float32, not the text of its float64 value.
+	float32s := []float32{0, float32(math.Copysign(0, -1)), 0.1, 1.1, -2.5, 1e-6, 9.99e-7, 1e-7, 1e20, 1e21, 3.4e38, 1e-45, math.MaxFloat32, 16777216, 0.3}
+	for i := 0; i < 2000; i++ {
+		float32s = append(float32s, math.Float32frombits(rng.Uint32()))
+	}
+	for _, f := range float32s {
+		if math.IsNaN(float64(f)) || math.IsInf(float64(f), 0) {
+			continue
+		}
+		want, _ := json.Marshal(f)
+		if got := AppendJSONFloat32(nil, f); string(got) != string(want) {
+			t.Fatalf("AppendJSONFloat32(%v) = %s, want %s", f, got, want)
+		}
+	}
 	for _, tm := range []time.Time{{}, time.Unix(0, 0).UTC(), time.Date(2026, 10, 6, 1, 2, 3, 456, time.FixedZone("x", -5*3600))} {
 		want, _ := json.Marshal(tm)
 		if got := AppendJSONTime(nil, tm); string(got) != string(want) {
@@ -65,10 +80,11 @@ func TestREQ_ISL_02_AppendJSONDevChecks(t *testing.T) {
 	SetDev(true)
 	defer SetDev(false)
 	for name, fn := range map[string]func(){
-		"NaN":  func() { AppendJSONFloat(nil, math.NaN()) },
-		"Inf":  func() { AppendJSONFloat(nil, math.Inf(1)) },
-		"int":  func() { AppendJSONInt(nil, 1<<53) },
-		"uint": func() { AppendJSONUint(nil, 1<<53) },
+		"NaN":   func() { AppendJSONFloat(nil, math.NaN()) },
+		"NaN32": func() { AppendJSONFloat32(nil, float32(math.NaN())) },
+		"Inf":   func() { AppendJSONFloat(nil, math.Inf(1)) },
+		"int":   func() { AppendJSONInt(nil, 1<<53) },
+		"uint":  func() { AppendJSONUint(nil, 1<<53) },
 	} {
 		func() {
 			defer func() {

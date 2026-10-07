@@ -45,6 +45,7 @@ func Packages() []gx.DevPackage {
 				"Append":                reflect.ValueOf(&gx.Append).Elem(),
 				"AppendJSONBool":        reflect.ValueOf(gx.AppendJSONBool),
 				"AppendJSONFloat":       reflect.ValueOf(gx.AppendJSONFloat),
+				"AppendJSONFloat32":     reflect.ValueOf(gx.AppendJSONFloat32),
 				"AppendJSONInt":         reflect.ValueOf(gx.AppendJSONInt),
 				"AppendJSONSignalRef":   reflect.ValueOf(gx.AppendJSONSignalRef),
 				"AppendJSONString":      reflect.ValueOf(gx.AppendJSONString),

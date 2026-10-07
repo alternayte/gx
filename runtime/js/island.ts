@@ -36,9 +36,13 @@ type SignalStore = {
   effect(fn: () => void): () => void
 }
 
-// The server writes a gx.SignalRef prop as {"$signal": ["cart", "Cart", "qty"]}:
-// the parts of the signal path.
+// The server writes a gx.SignalRef prop as
+// {"$signal": ["cart", "Cart", "qty"], "$gx": true}: the parts of the signal
+// path, and a mark. A map prop holds user data, and its values have one type,
+// so its JSON cannot have a list and true as values. An object with the key
+// $signal only is such a map, not a reference.
 const refKey = '$signal'
+const markKey = '$gx'
 
 class SignalRef {
   constructor(readonly path: string[]) {}
@@ -79,7 +83,13 @@ const patchFor = (parts: string[], value: unknown): Record<string, unknown> => {
 const parseProps = (text: string | null): { props: unknown; signals: boolean } => {
   let signals = false
   const props = JSON.parse(text || '{}', (_key, value) => {
-    if (value && typeof value === 'object' && Array.isArray(value[refKey]) && Object.keys(value).length === 1) {
+    if (
+      value &&
+      typeof value === 'object' &&
+      Array.isArray(value[refKey]) &&
+      value[markKey] === true &&
+      Object.keys(value).length === 2
+    ) {
       signals = true
       return new SignalRef(value[refKey])
     }

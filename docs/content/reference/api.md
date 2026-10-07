@@ -36,6 +36,14 @@ func AppendJSONFloat(b []byte, f float64) []byte
 
 AppendJSONFloat appends a JSON number in the form encoding/json writes. JSON has no NaN and no infinity: such a value is null, and a panic in dev.
 
+### func AppendJSONFloat32
+
+```go
+func AppendJSONFloat32(b []byte, f float32) []byte
+```
+
+AppendJSONFloat32 appends a float32 as a JSON number in the form encoding/json writes for a float32: the shortest text that gives the same float32. The text of the float64 value has more digits, for example 0.10000000149011612 for 0.1.
+
 ### func AppendJSONInt
 
 ```go

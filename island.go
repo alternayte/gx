@@ -158,7 +158,10 @@ func AppendJSONSignalRef(b []byte, path string) []byte {
 		b = AppendJSONString(b, part)
 		path = strings.TrimPrefix(path[1+len(quoted):], "]")
 	}
-	return append(b, ']', '}')
+	// The second key marks the object as a reference. A map of user data
+	// cannot have this form: its values have one type, and here one value is
+	// a list and one is a boolean.
+	return append(b, `],"$gx":true}`...)
 }
 
 // AppendJSONBool appends a JSON boolean.
@@ -184,19 +187,31 @@ func AppendJSONUint(b []byte, v uint64) []byte {
 
 // AppendJSONFloat appends a JSON number in the form encoding/json writes.
 // JSON has no NaN and no infinity: such a value is null, and a panic in dev.
-func AppendJSONFloat(b []byte, f float64) []byte {
+func AppendJSONFloat(b []byte, f float64) []byte { return appendJSONFloat(b, f, 64) }
+
+// AppendJSONFloat32 appends a float32 as a JSON number in the form
+// encoding/json writes for a float32: the shortest text that gives the same
+// float32. The text of the float64 value has more digits, for example
+// 0.10000000149011612 for 0.1.
+func AppendJSONFloat32(b []byte, f float32) []byte { return appendJSONFloat(b, float64(f), 32) }
+
+func appendJSONFloat(b []byte, f float64, bits int) []byte {
 	if math.IsNaN(f) || math.IsInf(f, 0) {
 		if devMode.Load() {
-			panic("gx: an island prop holds " + strconv.FormatFloat(f, 'g', -1, 64) + ", which JSON cannot hold")
+			panic("gx: an island prop holds " + strconv.FormatFloat(f, 'g', -1, bits) + ", which JSON cannot hold")
 		}
 		return append(b, "null"...)
 	}
+	// The limits of the exponent form are the limits of ES6, in the size of
+	// the value.
 	abs := math.Abs(f)
 	format := byte('f')
-	if abs != 0 && (abs < 1e-6 || abs >= 1e21) {
-		format = 'e'
+	if abs != 0 {
+		if bits == 64 && (abs < 1e-6 || abs >= 1e21) || bits == 32 && (float32(abs) < 1e-6 || float32(abs) >= 1e21) {
+			format = 'e'
+		}
 	}
-	b = strconv.AppendFloat(b, f, format, -1, 64)
+	b = strconv.AppendFloat(b, f, format, -1, bits)
 	if format == 'e' {
 		// e-09 becomes e-9, as ES6 writes it.
 		if n := len(b); n >= 4 && b[n-4] == 'e' && b[n-3] == '-' && b[n-2] == '0' {

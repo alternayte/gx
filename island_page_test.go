@@ -39,10 +39,10 @@ func TestREQ_ISL_04_PageWithIslandLoadsTheLoader(t *testing.T) {
 
 func TestREQ_ISL_04_SignalRefPropIsAListOfPathParts(t *testing.T) {
 	ref := gx.Ref[int](gx.SignalRefPath("cart.Cart", gx.Key("42"), "qty"))
-	if got := string(gx.AppendJSONSignalRef(nil, string(ref))); got != `{"$signal":["cart","Cart","42","qty"]}` {
+	if got := string(gx.AppendJSONSignalRef(nil, string(ref))); got != `{"$signal":["cart","Cart","42","qty"],"$gx":true}` {
 		t.Fatalf("signal ref = %s", got)
 	}
-	if got := string(gx.AppendJSONSignalRef(nil, "")); got != `{"$signal":[]}` {
+	if got := string(gx.AppendJSONSignalRef(nil, "")); got != `{"$signal":[],"$gx":true}` {
 		t.Fatalf("empty ref = %s", got)
 	}
 }

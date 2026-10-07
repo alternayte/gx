@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"golang.org/x/tools/go/packages"
 )
@@ -247,6 +248,11 @@ func (m *islandMapper) field(st *types.Struct, i int, path string, seen map[stri
 		return islandField{}, false, nil
 	}
 	name, opts, _ := strings.Cut(tag, ",")
+	if !validJSONName(name) {
+		// encoding/json does not use such a name: the key is the name of
+		// the field. The options of the tag still hold.
+		name = ""
+	}
 	fieldPath := path + v.Name()
 	typ := types.TypeString(v.Type(), m.display)
 	if v.Embedded() && (!tagged || name == "") {
@@ -303,6 +309,22 @@ func (m *islandMapper) field(st *types.Struct, i int, path string, seen map[stri
 		}
 	}
 	return f, true, nil
+}
+
+// validJSONName reports whether encoding/json takes name as the key of a
+// field: letters, digits and the punctuation of its isValidTag function.
+func validJSONName(name string) bool {
+	if name == "" {
+		return false
+	}
+	for _, c := range name {
+		switch {
+		case strings.ContainsRune("!#$%&()*+-./:;<=>?@[]^_{|}~ ", c):
+		case !unicode.IsLetter(c) && !unicode.IsDigit(c):
+			return false
+		}
+	}
+	return true
 }
 
 // display writes a package by its name in a message.
@@ -751,6 +773,10 @@ func (w *islandWriter) value(s *islandShape, expr string) {
 	case islandUint:
 		w.line("b = gx.AppendJSONUint(b, uint64(%s))", expr)
 	case islandFloat:
+		if b, ok := s.typ.Underlying().(*types.Basic); ok && b.Kind() == types.Float32 {
+			w.line("b = gx.AppendJSONFloat32(b, float32(%s))", expr)
+			return
+		}
 		w.line("b = gx.AppendJSONFloat(b, float64(%s))", expr)
 	case islandTime:
 		w.line("b = gx.AppendJSONTime(b, %s)", expr)
