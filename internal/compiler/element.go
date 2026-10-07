@@ -278,8 +278,8 @@ func lowerElement(f *File, el *Element, def *ElementDef) []Diagnostic {
 	el.elementTag = tag
 	el.boolAttrs = bools
 	// The page loads the module of the element by this attribute.
-	el.Attrs = append(el.Attrs, Attr{At: el.At, Kind: AttrExpr, Name: elementModuleAttr,
-		Value: "gx.ElementModule(" + strconv.Quote(def.Module) + ")", ValueAt: el.At})
+	el.Attrs = append(el.Attrs, Attr{At: el.At, Kind: AttrModule, Name: elementModuleAttr,
+		Value: def.Module, ValueAt: el.At})
 	// An element can set its own attributes, for example open or checked.
 	// A morph leaves alone each attribute that this tag does not set, so
 	// the element keeps that state (REQ-ISL-09).

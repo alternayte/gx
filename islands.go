@@ -44,16 +44,13 @@ func islandSrc(name string) string {
 	return BasePath() + islandsPath + file
 }
 
-// ElementModule returns the URL of the entry file that defines an imported
-// web component (REQ-ISL-09). module is the import specifier of gx.lock. The
-// generated code of a web component tag calls it. The value is a reference
-// that the render turns into the URL.
-func ElementModule(module string) string { return bundleRef + module }
-
-// bundleRef marks an attribute value that names an entry of the island
-// bundle. The render puts the URL of the entry file in its place. A NUL
-// byte is not part of a real attribute value.
-const bundleRef = "\x00gx-bundle\x00"
+// ElementModule returns the attribute that names the entry file of an
+// imported web component (REQ-ISL-09). module is the import specifier of
+// gx.lock. The generated code of a web component tag calls it. The render
+// puts the URL of the entry file in the attribute.
+func ElementModule(module string) Attr {
+	return Attr{Key: "data-gx-module", Value: module, Kind: attrBundle}
+}
 
 // bundleURL returns the URL of an entry of the installed bundle, or "".
 // In dev, an entry that the bundle does not hold is a panic.

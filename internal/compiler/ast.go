@@ -126,6 +126,10 @@ const (
 	AttrExpr
 	AttrSpread
 	AttrFragment
+	// AttrModule is the attribute that names the module of an imported
+	// web component. The compiler adds it; a template cannot write it.
+	// Value is the import specifier of the module.
+	AttrModule
 )
 
 func (a *Attr) Position() Pos        { return a.At }

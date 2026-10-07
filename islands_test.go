@@ -77,8 +77,35 @@ func TestREQ_ISL_03_IslandMadeBeforeTheBundleIsInstalled(t *testing.T) {
 	if got := String(early); !strings.Contains(got, `src="/_gx/islands/app/dash/Chart-ABCD1234.js"`) {
 		t.Fatalf("island = %s", got)
 	}
-	got := String(El("ui-button", Attrs{{Key: "data-gx-module", Value: module}}))
+	got := String(El("ui-button", Attrs{module}))
 	if got != `<ui-button data-gx-module="/_gx/islands/elements/button-ABCD1234.js"></ui-button>` {
 		t.Fatalf("element = %s", got)
+	}
+}
+
+// An attribute value from user data that starts with the bytes of the old
+// bundle placeholder is text: the render does not read it as a reference to
+// a file of the island bundle (SI-01, F-50).
+func TestSI_01_BundlePlaceholderFromUserData(t *testing.T) {
+	SetIslands(IslandBundle{Entries: map[string]string{
+		"app/dash/Chart":     "app/dash/Chart-ABCD1234.js",
+		"@acme/ui/button.js": "elements/button-ABCD1234.js",
+	}})
+	defer SetIslands(IslandBundle{})
+	for _, name := range []string{"app/dash/Chart", "@acme/ui/button.js", "no/such/entry"} {
+		user := "\x00gx-bundle\x00" + name
+		for _, a := range []Attr{
+			{Key: "title", Value: user},
+			{Key: "href", Value: user, Kind: AttrURL},
+			{Key: "data-gx-module", Value: user},
+		} {
+			got := String(El("a", Attrs{a}))
+			if strings.Contains(got, "/_gx/islands/") {
+				t.Errorf("%s: user data became a bundle URL: %q", a.Key, got)
+			}
+			if !strings.Contains(got, " "+a.Key+`="`) {
+				t.Errorf("%s: the attribute of the user data is not in the output: %q", a.Key, got)
+			}
+		}
 	}
 }

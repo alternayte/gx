@@ -41,7 +41,7 @@ func Island(name, props string, opts ...IslandOption) Node {
 	}
 	// The render writes the file name. A node can be made before main
 	// installs the bundle, for example in a package variable of fixtures.
-	attrs = append(attrs, Attr{Key: "src", Value: bundleRef + name, Kind: AttrURL})
+	attrs = append(attrs, Attr{Key: "src", Value: name, Kind: attrBundle})
 	// The island renders into the root. A morph skips an element with
 	// data-ignore-morph on both sides, so it keeps what the island put
 	// there, and it still updates the props of the element around it

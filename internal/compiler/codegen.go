@@ -643,6 +643,10 @@ func (g *gen) attrsExpr(el *Element) string {
 				strconv.Quote(a.Name), strconv.Quote(a.Value), kind))
 		case AttrBool:
 			static = append(static, fmt.Sprintf("gx.Bool(%s, true)", strconv.Quote(a.Name)))
+		case AttrModule:
+			// The render names the file of the module. The value is not
+			// a string that user data can equal (SI-01).
+			static = append(static, "gx.ElementModule("+strconv.Quote(a.Value)+")")
 		case AttrExpr:
 			target := a.Name
 			if rest, ok := strings.CutPrefix(target, "attr:"); ok {

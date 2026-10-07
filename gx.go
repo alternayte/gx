@@ -225,6 +225,11 @@ const (
 	AttrBool
 	// AttrStyle is a style attribute value.
 	AttrStyle
+	// attrBundle is an attribute whose value names an entry of the island
+	// bundle. The render writes the URL of the entry file. Only this
+	// package sets the kind, so a value from user data cannot name an
+	// entry (SI-01).
+	attrBundle
 )
 
 // Attr is one attribute of an element. Active marks a typed link for the
@@ -331,10 +336,10 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 				}
 				continue
 			}
-			if strings.HasPrefix(a.Value, bundleRef) {
+			if a.Kind == attrBundle {
 				// The file of an island or of a web component module:
 				// the installed bundle names it at render time.
-				a.Value = bundleURL(a.Value[len(bundleRef):])
+				a.Value, a.Kind = bundleURL(a.Value), AttrURL
 				if a.Value == "" {
 					continue
 				}
