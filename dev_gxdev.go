@@ -3,9 +3,11 @@
 package gx
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"io"
 	"io/fs"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -38,6 +40,35 @@ func watchParent() {
 	}()
 }
 
+// The secret between gx dev and the app. gx dev makes a new one for each
+// run, gives it to the app in devSecretEnv and sends it in devSecretHeader
+// with each swap (internal/devserver).
+const (
+	devSecretEnv    = "GX_DEV_SECRET"
+	devSecretHeader = "Gx-Dev-Secret"
+)
+
+// devSwapAllowed reports whether a swap request comes from the gx dev that
+// started this app. The request runs new code in the app, so it needs the
+// secret of that gx dev. An app started by hand has no secret and takes no
+// swap. The Host header names the loopback interface: after DNS rebinding,
+// the request of a page of a different site carries the name of that site.
+func devSwapAllowed(r *http.Request) bool {
+	secret := os.Getenv(devSecretEnv)
+	if secret == "" || subtle.ConstantTimeCompare([]byte(r.Header.Get(devSecretHeader)), []byte(secret)) != 1 {
+		return false
+	}
+	host := r.Host
+	if h, _, err := net.SplitHostPort(r.Host); err == nil {
+		host = h
+	}
+	if host == "localhost" {
+		return true
+	}
+	ip := net.ParseIP(strings.Trim(host, "[]"))
+	return ip != nil && ip.IsLoopback()
+}
+
 // devRoutes registers the routes that exist only in a dev build
 // (REQ-DEV-07).
 func (a *App) devRoutes() {
@@ -56,6 +87,10 @@ func (a *App) devRoutes() {
 			Package string `json:"package"`
 			File    string `json:"file"`
 			Source  string `json:"source"`
+		}
+		if !devSwapAllowed(r) {
+			http.Error(w, "gx: a swap needs the secret of the gx dev that started the app", http.StatusForbidden)
+			return
 		}
 		if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)

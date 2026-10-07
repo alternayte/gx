@@ -30,8 +30,18 @@ func repoRoot(t *testing.T) string {
 	return filepath.Clean(filepath.Join(filepath.Dir(file), "..", ".."))
 }
 
-// startDevApp builds the app of dir with the gxdev tag and runs it.
+// devSecret is the secret between the test and the app, as between gx dev
+// and the app.
+const devSecret = "0123456789abcdef0123456789abcdef"
+
+// startDevApp builds the app of dir with the gxdev tag and runs it with the
+// secret of the test.
 func startDevApp(t *testing.T, dir, mainPkg string) string {
+	t.Helper()
+	return startDevAppEnv(t, dir, mainPkg, "GX_DEV_SECRET="+devSecret)
+}
+
+func startDevAppEnv(t *testing.T, dir, mainPkg string, env ...string) string {
 	t.Helper()
 	bin := execname.Name(filepath.Join(t.TempDir(), "app"))
 	build := exec.Command("go", "build", "-tags", "gxdev", "-o", bin, mainPkg)
@@ -48,7 +58,14 @@ func startDevApp(t *testing.T, dir, mainPkg string) string {
 	ctx, cancel := context.WithCancel(context.Background())
 	app := exec.CommandContext(ctx, bin, "-addr", addr)
 	app.Dir = dir
-	app.Env = append(os.Environ(), "GX_DEV_ADDR="+addr)
+	// The environment of the test has no secret of a gx dev.
+	for _, kv := range os.Environ() {
+		if !strings.HasPrefix(kv, "GX_DEV_SECRET=") {
+			app.Env = append(app.Env, kv)
+		}
+	}
+	app.Env = append(app.Env, "GX_DEV_ADDR="+addr)
+	app.Env = append(app.Env, env...)
 	if err := app.Start(); err != nil {
 		t.Fatal(err)
 	}
@@ -199,10 +216,7 @@ func firstDifference(a, b []byte) string {
 func swap(t *testing.T, base, pkg, file string, src []byte) (bool, string) {
 	t.Helper()
 	payload, _ := json.Marshal(map[string]string{"package": pkg, "file": file, "source": string(src)})
-	res, err := http.Post(base+"/_gx/dev/swap", "application/json", bytes.NewReader(payload))
-	if err != nil {
-		t.Fatal(err)
-	}
+	res := postSwap(t, base, payload, devSecret, "")
 	defer res.Body.Close()
 	var answer struct {
 		Swapped bool
@@ -212,6 +226,96 @@ func swap(t *testing.T, base, pkg, file string, src []byte) (bool, string) {
 		t.Fatal(err)
 	}
 	return answer.Swapped, answer.Reason
+}
+
+// postSwap sends one swap request. An empty secret sends no secret header;
+// a non-empty host is the Host header of the request.
+func postSwap(t *testing.T, base string, payload []byte, secret, host string) *http.Response {
+	t.Helper()
+	req, err := http.NewRequest(http.MethodPost, base+"/_gx/dev/swap", bytes.NewReader(payload))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if secret != "" {
+		req.Header.Set("Gx-Dev-Secret", secret)
+	}
+	if host != "" {
+		req.Host = host
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return res
+}
+
+// TestREQ_DEV_02_SwapOnlyFromGxDev proves that the app runs new code only
+// for gx dev: a swap request needs the secret that gx dev gave the app, and
+// a Host header of the loopback interface (F-51). A page of a different
+// site cannot send either: it does not know the secret, and after DNS
+// rebinding its requests carry the name of its own host.
+func TestREQ_DEV_02_SwapOnlyFromGxDev(t *testing.T) {
+	shop := filepath.Join(repoRoot(t), "examples", "shop")
+	const pkg = "github.com/alternayte/gx/examples/shop"
+	src, err := os.ReadFile(filepath.Join(shop, "About_gx.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	i := bytes.Index(src, []byte(`gx.Text("`))
+	if i < 0 {
+		t.Fatal("About_gx.go has no text node")
+	}
+	edited := append(append(append([]byte{}, src[:i]...), []byte(`gx.Text("FOREIGN-CODE`)...), src[i+len(`gx.Text("`):]...)
+	payload, _ := json.Marshal(map[string]string{"package": pkg, "file": "About_gx.go", "source": string(edited)})
+
+	base := startDevApp(t, shop, "./cmd/shop")
+	port := base[strings.LastIndex(base, ":"):]
+	refused := []struct{ name, secret, host string }{
+		{"no secret", "", ""},
+		{"a wrong secret", "ffffffffffffffffffffffffffffffff", ""},
+		{"a prefix of the secret", devSecret[:16], ""},
+		{"the secret with the host of a different site", devSecret, "attacker.example" + port},
+		{"the secret with a host that starts with the loopback address", devSecret, "127.0.0.1.attacker.example" + port},
+	}
+	for _, c := range refused {
+		res := postSwap(t, base, payload, c.secret, c.host)
+		_ = res.Body.Close()
+		if res.StatusCode != http.StatusForbidden {
+			t.Errorf("%s: status = %d, want 403", c.name, res.StatusCode)
+		}
+	}
+	if _, body := get(t, base+"/about"); bytes.Contains(body, []byte("FOREIGN-CODE")) {
+		t.Fatal("a refused request changed the code of the app")
+	}
+	for _, host := range []string{"", "localhost" + port, "[::1]" + port} {
+		res := postSwap(t, base, payload, devSecret, host)
+		_ = res.Body.Close()
+		if res.StatusCode != http.StatusOK {
+			t.Errorf("the secret with the host %q: status = %d, want 200", host, res.StatusCode)
+		}
+	}
+
+	// An app that gx dev did not start has no secret. It refuses each swap,
+	// also one with an empty secret header.
+	alone := startDevAppEnv(t, shop, "./cmd/shop")
+	for _, secret := range []string{"", devSecret} {
+		res := postSwap(t, alone, payload, secret, "")
+		_ = res.Body.Close()
+		if res.StatusCode != http.StatusForbidden {
+			t.Errorf("an app with no secret, header %q: status = %d, want 403", secret, res.StatusCode)
+		}
+	}
+	req, _ := http.NewRequest(http.MethodPost, alone+"/_gx/dev/swap", bytes.NewReader(payload))
+	req.Header.Set("Gx-Dev-Secret", "")
+	if res, err := http.DefaultClient.Do(req); err != nil {
+		t.Fatal(err)
+	} else {
+		_ = res.Body.Close()
+		if res.StatusCode != http.StatusForbidden {
+			t.Errorf("an app with no secret, empty header: status = %d, want 403", res.StatusCode)
+		}
+	}
 }
 
 // TestREQ_DEV_05_SwappedCodeIsWhatRenders proves that the parity test

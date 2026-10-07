@@ -7,7 +7,9 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"crypto/rand"
 	_ "embed"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -81,7 +83,12 @@ func Run(ctx context.Context, opt Options) error {
 			return err
 		}
 	}
-	s := &server{opt: opt, dir: dir, session: compiler.NewSession(), clients: map[chan []byte]bool{}}
+	secret := make([]byte, 32)
+	if _, err := rand.Read(secret); err != nil {
+		return err
+	}
+	s := &server{opt: opt, dir: dir, session: compiler.NewSession(), clients: map[chan []byte]bool{},
+		secret: hex.EncodeToString(secret)}
 	return s.run(ctx)
 }
 
@@ -124,6 +131,8 @@ type server struct {
 	// appParent is the write end of the pipe that tells the app that gx
 	// dev is alive.
 	appParent *os.File
+	// secret is the secret of this run between gx dev and the app.
+	secret string
 
 	mu      sync.Mutex
 	clients map[chan []byte]bool
@@ -233,6 +242,14 @@ func (s *server) build(ctx context.Context, bin string) (bool, *Overlay) {
 // gxdev build of package gx reads the same name.
 const parentPipeEnv = "GX_DEV_PARENT_FD"
 
+// The secret between gx dev and the app. The app runs the code of a swap
+// request, so it takes one only with the secret of this run. The gxdev build
+// of package gx reads the same names.
+const (
+	devSecretEnv    = "GX_DEV_SECRET"
+	devSecretHeader = "Gx-Dev-Secret"
+)
+
 // startApp runs the built binary. It reads GX_DEV_ADDR for its listen
 // address (REQ-DEV-01).
 func (s *server) startApp(ctx context.Context, bin string) error {
@@ -241,6 +258,7 @@ func (s *server) startApp(ctx context.Context, bin string) error {
 	cmd.Env = append(os.Environ(),
 		"GX_DEV_ADDR="+net.JoinHostPort("127.0.0.1", strconv.Itoa(s.appPort)),
 		"GX_DEV=1",
+		devSecretEnv+"="+s.secret,
 	)
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
@@ -673,6 +691,7 @@ func (s *server) swapFile(ctx context.Context, pkg, file string, src []byte) str
 		return err.Error()
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(devSecretHeader, s.secret)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err.Error()
