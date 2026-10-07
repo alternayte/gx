@@ -44,7 +44,7 @@ import (
 
 // Version is the Gx release this command line tool belongs to. `gx init`
 // writes it into the go.mod of a new app.
-const Version = "0.2.0"
+const Version = "0.2.1"
 
 // Main runs the gx command with the given arguments and returns an exit code.
 func Main(args []string) int {
