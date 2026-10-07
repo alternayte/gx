@@ -35,7 +35,9 @@ func TestREQ_DEV_05_InterpretedGoMatchesCompiledGo(t *testing.T) {
 		"Arithmetic": interptest.Arithmetic, "Strings": interptest.Strings, "Control": interptest.Control,
 		"Ranges": interptest.Ranges, "Literals": interptest.Literals, "Methods": interptest.Methods,
 		"Closures": interptest.Closures, "Calls": interptest.Calls, "Variables": interptest.Variables,
-		"Conversions": interptest.Conversions,
+		"Conversions": interptest.Conversions, "Assignments": interptest.Assignments,
+		"Places": interptest.Places,
+		"Makes":  interptest.Makes,
 	}
 	for name, compiled := range samples {
 		t.Run(name, func(t *testing.T) {

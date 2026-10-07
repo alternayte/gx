@@ -274,9 +274,20 @@ func (c *compiler) builtin(name string, call *ast.CallExpr, hint reflect.Type) (
 			if len(sizes) == 0 {
 				c.fail(call, "make of a slice needs a length")
 			}
+			hasCap := len(sizes) > 1
 			return value{typ: typ, eval: func(fr *frame) reflect.Value {
+				// A size out of range is a panic with the text of Go.
 				n := size(fr, 0)
-				return reflect.MakeSlice(typ, n, max(n, size(fr, 1)))
+				if n < 0 {
+					panic("makeslice: len out of range")
+				}
+				capacity := n
+				if hasCap {
+					if capacity = size(fr, 1); capacity < n {
+						panic("makeslice: cap out of range")
+					}
+				}
+				return reflect.MakeSlice(typ, n, capacity)
 			}}, true
 		case reflect.Map:
 			return value{typ: typ, eval: func(fr *frame) reflect.Value { return reflect.MakeMapWithSize(typ, size(fr, 0)) }}, true
@@ -778,18 +789,7 @@ func (c *compiler) index(e *ast.IndexExpr) value {
 			return v
 		}}
 	case reflect.Slice, reflect.Array, reflect.String:
-		i := c.typed(e.Index, c.expr(e.Index, typeInt), nil)
-		if k := i.typ.Kind(); k < reflect.Int || k > reflect.Uintptr {
-			c.fail(e.Index, "an index is an integer")
-		}
-		iEval := i.eval
-		at := func(fr *frame) int {
-			v := iEval(fr)
-			if v.CanInt() {
-				return int(v.Int())
-			}
-			return int(v.Uint())
-		}
+		at := c.indexAt(e.Index)
 		if typ.Kind() == reflect.String {
 			return value{typ: reflect.TypeOf(byte(0)), eval: func(fr *frame) reflect.Value {
 				return reflect.ValueOf(eval(fr).String()[at(fr)])
@@ -808,6 +808,22 @@ func (c *compiler) index(e *ast.IndexExpr) value {
 	}
 	c.fail(e, "a value of type %s has no index", typ)
 	return value{}
+}
+
+// indexAt compiles the index of a slice, an array or a string.
+func (c *compiler) indexAt(e ast.Expr) func(fr *frame) int {
+	i := c.typed(e, c.expr(e, typeInt), nil)
+	if k := i.typ.Kind(); k < reflect.Int || k > reflect.Uintptr {
+		c.fail(e, "an index is an integer")
+	}
+	eval := i.eval
+	return func(fr *frame) int {
+		v := eval(fr)
+		if v.CanInt() {
+			return int(v.Int())
+		}
+		return int(v.Uint())
+	}
 }
 
 func (c *compiler) slice(e *ast.SliceExpr) value {

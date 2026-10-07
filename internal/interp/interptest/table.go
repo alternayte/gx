@@ -24,7 +24,11 @@ func Table() *interp.Table {
 			"Literals": reflect.ValueOf(Literals), "Methods": reflect.ValueOf(Methods),
 			"Closures": reflect.ValueOf(Closures), "Calls": reflect.ValueOf(Calls),
 			"Variables": reflect.ValueOf(Variables), "Conversions": reflect.ValueOf(Conversions),
-			"join": reflect.ValueOf(join), "pair": reflect.ValueOf(pair), "apply": reflect.ValueOf(apply),
+			"Assignments": reflect.ValueOf(Assignments),
+			"Places":      reflect.ValueOf(Places),
+			"Makes":       reflect.ValueOf(Makes),
+			"join":        reflect.ValueOf(join), "pair": reflect.ValueOf(pair), "apply": reflect.ValueOf(apply),
+			"try":     reflect.ValueOf(try),
 			"items":   reflect.ValueOf(items),
 			"Counter": reflect.ValueOf(&Counter).Elem(),
 			"Small":   reflect.ValueOf(Small), "Large": reflect.ValueOf(Large), "Scale": reflect.ValueOf(Scale),
@@ -33,6 +37,7 @@ func Table() *interp.Table {
 		Types: map[string]reflect.Type{
 			"Item": reflect.TypeFor[Item](), "Kind": reflect.TypeFor[Kind](), "Render": reflect.TypeFor[Render](),
 			"Builder": reflect.TypeFor[Builder](), "Shape": reflect.TypeFor[Shape](), "Square": reflect.TypeFor[Square](),
+			"Wrapped": reflect.TypeFor[Wrapped](),
 		},
 		Methods: map[string]reflect.Value{
 			"Item.secret": reflect.ValueOf(Item.secret),
@@ -46,4 +51,16 @@ func Table() *interp.Table {
 		&interp.Package{Path: "strings", Name: "strings", Values: map[string]reflect.Value{
 			"Join": reflect.ValueOf(strings.Join), "ToUpper": reflect.ValueOf(strings.ToUpper), "Repeat": reflect.ValueOf(strings.Repeat)}},
 	)
+}
+
+// try runs f and returns "panic" when f panics. It is in this file because
+// the interpreter has no defer: the samples call it as compiled code.
+func try(f func()) (out string) {
+	defer func() {
+		if recover() != nil {
+			out = "panic"
+		}
+	}()
+	f()
+	return "ok"
 }

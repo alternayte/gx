@@ -152,15 +152,30 @@ func (c *compiler) decl(d *ast.DeclStmt) stmt {
 
 // target is the left side of an assignment.
 type target struct {
-	// define declares a new variable in slot; otherwise set stores.
+	// define declares a new variable in slot; otherwise open and set store.
 	define bool
 	slot   int
 	typ    reflect.Type
-	set    func(fr *frame, v reflect.Value)
-	// ref reads the operands of the left side (an index, a map, a
-	// pointer) and returns the store. Go reads them before it writes any
-	// value of the statement. nil means that set has no operand to read.
-	ref func(fr *frame) func(v reflect.Value)
+	// open reads the operands of the left side: the slice and the index of
+	// an index expression, the map and the key, the pointer of an
+	// indirection. Go reads them before the right side of the statement.
+	open func(fr *frame) access
+	// set is open and store in one step, for a statement with no right
+	// side of its own.
+	set func(fr *frame, v reflect.Value)
+}
+
+// access is the left side of an assignment after its operands are read.
+// load and store find the variable. A bad index or a nil pointer is a panic
+// there, as in Go: after the right side has run, and after the stores to
+// the left of it.
+type access struct {
+	load  func() reflect.Value
+	store func(v reflect.Value)
+}
+
+func newTarget(typ reflect.Type, open func(fr *frame) access) target {
+	return target{typ: typ, open: open, set: func(fr *frame, v reflect.Value) { open(fr).store(v) }}
 }
 
 // detach returns a copy of a value that is a variable or a part of one, so
@@ -178,31 +193,174 @@ func detach(v reflect.Value) reflect.Value {
 // lhs compiles the left side of = for a value of a known type.
 func (c *compiler) lhs(e ast.Expr) target {
 	if id, ok := e.(*ast.Ident); ok && id.Name == "_" {
-		return target{set: func(*frame, reflect.Value) {}}
+		return newTarget(nil, func(*frame) access {
+			return access{load: func() reflect.Value { return reflect.Value{} }, store: func(reflect.Value) {}}
+		})
 	}
 	// A map element has no address; it is set through the map.
-	if ix, ok := e.(*ast.IndexExpr); ok {
+	if ix, ok := unparen(e).(*ast.IndexExpr); ok {
 		m := c.expr(ix.X, nil)
 		if m.eval != nil && m.typ != nil && m.typ.Kind() == reflect.Map {
 			key := c.typed(ix.Index, c.expr(ix.Index, m.typ.Key()), m.typ.Key())
-			mEval, kEval := m.eval, key.eval
-			ref := func(fr *frame) func(reflect.Value) {
-				mv, kv := mEval(fr), detach(kEval(fr))
-				return func(v reflect.Value) { mv.SetMapIndex(kv, v) }
-			}
-			return target{typ: m.typ.Elem(), ref: ref, set: func(fr *frame, v reflect.Value) { ref(fr)(v) }}
+			mEval, kEval, elem := m.eval, key.eval, m.typ.Elem()
+			return newTarget(elem, func(fr *frame) access {
+				mv, kv := detach(mEval(fr)), detach(kEval(fr))
+				return access{
+					load: func() reflect.Value {
+						if v := mv.MapIndex(kv); v.IsValid() {
+							return v
+						}
+						return reflect.Zero(elem)
+					},
+					store: func(v reflect.Value) { mv.SetMapIndex(kv, v) },
+				}
+			})
 		}
 	}
+	typ, place := c.place(e)
+	return newTarget(typ, func(fr *frame) access {
+		at := place(fr)
+		return access{load: func() reflect.Value { return at() }, store: func(v reflect.Value) { at().Set(v) }}
+	})
+}
+
+func unparen(e ast.Expr) ast.Expr {
+	for {
+		p, ok := e.(*ast.ParenExpr)
+		if !ok {
+			return e
+		}
+		e = p.X
+	}
+}
+
+// place compiles an expression that names a variable: the left side of an
+// assignment. The first function reads the operands and the second
+// function finds the variable. Go reads the operands of an index
+// expression and of a pointer indirection first, also the pointer that a
+// selector goes through. It then runs the right side, and it indexes and
+// follows the pointer only when it stores.
+func (c *compiler) place(e ast.Expr) (reflect.Type, func(fr *frame) func() reflect.Value) {
+	e = unparen(e)
+	switch t := e.(type) {
+	case *ast.StarExpr:
+		x := c.typed(t.X, c.expr(t.X, nil), nil)
+		if x.typ.Kind() != reflect.Pointer {
+			c.fail(e, "* needs a pointer, not %s", x.typ)
+		}
+		eval := x.eval
+		return x.typ.Elem(), func(fr *frame) func() reflect.Value {
+			ptr := detach(eval(fr))
+			return func() reflect.Value { return follow(ptr) }
+		}
+	case *ast.IndexExpr:
+		x := c.expr(t.X, nil)
+		if x.isType != nil || (x.eval == nil && x.cst == nil) {
+			c.fail(e, "a generic type or function is not interpreted")
+		}
+		x = c.typed(t.X, x, nil)
+		typ := x.typ
+		switch {
+		case typ.Kind() == reflect.Slice:
+			eval, at := x.eval, c.indexAt(t.Index)
+			return typ.Elem(), func(fr *frame) func() reflect.Value {
+				list, i := detach(eval(fr)), at(fr)
+				return func() reflect.Value { return list.Index(i) }
+			}
+		case typ.Kind() == reflect.Pointer && typ.Elem().Kind() == reflect.Array:
+			eval, at := x.eval, c.indexAt(t.Index)
+			return typ.Elem().Elem(), func(fr *frame) func() reflect.Value {
+				ptr, i := detach(eval(fr)), at(fr)
+				return func() reflect.Value { return follow(ptr).Index(i) }
+			}
+		case typ.Kind() == reflect.Array:
+			// The array is a variable too: its own operands come first.
+			_, array := c.place(t.X)
+			at := c.indexAt(t.Index)
+			return typ.Elem(), func(fr *frame) func() reflect.Value {
+				inner, i := array(fr), at(fr)
+				return func() reflect.Value { return inner().Index(i) }
+			}
+		}
+	case *ast.SelectorExpr:
+		if typ, place, ok := c.fieldPlace(t); ok {
+			return typ, place
+		}
+	}
+	// A name, or a variable of a package: no operand to read.
 	x := c.expr(e, nil)
 	if x.addr == nil {
 		c.fail(e, "the left side of = has no address")
 	}
 	addr := x.addr
-	ref := func(fr *frame) func(reflect.Value) {
-		at := addr(fr)
-		return func(v reflect.Value) { at.Set(v) }
+	return x.typ, func(fr *frame) func() reflect.Value {
+		return func() reflect.Value { return addr(fr) }
 	}
-	return target{typ: x.typ, ref: ref, set: func(fr *frame, v reflect.Value) { addr(fr).Set(v) }}
+}
+
+// follow returns the variable that a pointer points to. A nil pointer is a
+// panic with the text of Go.
+func follow(ptr reflect.Value) reflect.Value {
+	if ptr.IsNil() {
+		panic("invalid memory address or nil pointer dereference")
+	}
+	return ptr.Elem()
+}
+
+// fieldPlace compiles x.f as the left side of an assignment, when f is a
+// field. The last pointer on the way to the field is an operand: x itself,
+// or an embedded pointer. With no pointer on the way, x is a variable and
+// the field is a part of it.
+func (c *compiler) fieldPlace(sel *ast.SelectorExpr) (reflect.Type, func(fr *frame) func() reflect.Value, bool) {
+	if id, ok := sel.X.(*ast.Ident); ok {
+		if _, _, local := c.lookup(id.Name); !local {
+			if _, ok := c.imports[id.Name]; ok {
+				return nil, nil, false // a variable of a package
+			}
+		}
+	}
+	x := c.expr(sel.X, nil)
+	if x.isType != nil {
+		c.fail(sel, "a method expression is not interpreted")
+	}
+	x = c.typed(sel.X, x, nil)
+	base := x.typ
+	if base.Kind() == reflect.Pointer {
+		base = base.Elem()
+	}
+	if base.Kind() != reflect.Struct {
+		return nil, nil, false
+	}
+	field, ok := base.FieldByName(sel.Sel.Name)
+	if !ok {
+		return nil, nil, false
+	}
+	// head is the count of index steps that end at the last pointer.
+	index, head := field.Index, 0
+	for i, at := 0, base; i < len(index)-1; i++ {
+		at = at.Field(index[i]).Type
+		if at.Kind() == reflect.Pointer {
+			head, at = i+1, at.Elem()
+		}
+	}
+	if x.typ.Kind() != reflect.Pointer && head == 0 {
+		_, outer := c.place(sel.X)
+		return field.Type, func(fr *frame) func() reflect.Value {
+			inner := outer(fr)
+			return func() reflect.Value { return fieldByIndex(inner(), index) }
+		}, true
+	}
+	eval := x.eval
+	return field.Type, func(fr *frame) func() reflect.Value {
+		ptr := eval(fr)
+		if head > 0 {
+			// The read of an embedded pointer goes through the pointers
+			// before it, as the read of any field does.
+			ptr = fieldByIndex(ptr, index[:head])
+		}
+		ptr = detach(ptr)
+		return func() reflect.Value { return fieldByIndex(follow(ptr), index[head:]) }
+	}, true
 }
 
 func (c *compiler) assign(a *ast.AssignStmt) stmt {
@@ -265,7 +423,9 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 			// when := has one new name at least.
 			if v, ok := c.fn.blocks[len(c.fn.blocks)-1][id.Name]; ok && id.Name != "_" {
 				slot := v.slot
-				targets[i] = target{typ: v.typ, set: func(fr *frame, val reflect.Value) { fr.vars[slot].Set(val) }}
+				targets[i] = newTarget(v.typ, func(fr *frame) access {
+					return access{load: func() reflect.Value { return fr.vars[slot] }, store: func(val reflect.Value) { fr.vars[slot].Set(val) }}
+				})
 				continue
 			}
 			targets[i] = target{define: true, slot: c.declare(id.Name, types[i]), typ: types[i]}
@@ -279,10 +439,10 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 	return func(fr *frame, _ *result) ctl {
 		// The order of Go: the operands of the left side, then the right
 		// side, then the stores from left to right.
-		stores := make([]func(reflect.Value), len(targets))
+		opened := make([]access, len(targets))
 		for i, t := range targets {
-			if !t.define && t.ref != nil {
-				stores[i] = t.ref(fr)
+			if !t.define {
+				opened[i] = t.open(fr)
 			}
 		}
 		values := evalAll(fr)
@@ -295,62 +455,56 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 			if t.typ != nil && v.Type() != t.typ && t.typ.Kind() != reflect.Interface {
 				v = v.Convert(t.typ)
 			}
-			if stores[i] != nil {
-				stores[i](v)
-				continue
-			}
-			t.set(fr, v)
+			opened[i].store(v)
 		}
 		return ctlNext
 	}
 }
 
 // opAssign compiles x op= y. Go evaluates the operands of x one time, so a
-// call in an index runs one time. A name is read and written directly. An
-// element of a map is read and written through one copy of the map and of
-// the key. Every other left side is read and written through its address.
+// call in an index runs one time. The order is the order of the compiler of
+// Go: the operands of x, then y, then the read of x, the operation and the
+// store. A bad index of x is a panic after the calls of y.
 func (c *compiler) opAssign(a *ast.AssignStmt, op token.Token) stmt {
 	pos := a.TokPos
-	set := func(lhs ast.Expr) *ast.AssignStmt {
-		return &ast.AssignStmt{Lhs: []ast.Expr{lhs}, Tok: token.ASSIGN, TokPos: pos,
-			Rhs: []ast.Expr{&ast.BinaryExpr{X: lhs, Op: op, OpPos: pos, Y: a.Rhs[0]}}}
-	}
-	define := func(name string, x ast.Expr) ast.Stmt {
-		return &ast.AssignStmt{Lhs: []ast.Expr{&ast.Ident{Name: name, NamePos: pos}}, Tok: token.DEFINE, TokPos: pos, Rhs: []ast.Expr{x}}
-	}
-	lhs := a.Lhs[0]
-	for {
-		p, ok := lhs.(*ast.ParenExpr)
-		if !ok {
-			break
-		}
-		lhs = p.X
-	}
+	lhs := unparen(a.Lhs[0])
 	if _, ok := lhs.(*ast.Ident); ok {
-		return c.assign(set(lhs))
+		return c.assign(&ast.AssignStmt{Lhs: []ast.Expr{lhs}, Tok: token.ASSIGN, TokPos: pos,
+			Rhs: []ast.Expr{&ast.BinaryExpr{X: lhs, Op: op, OpPos: pos, Y: a.Rhs[0]}}})
 	}
-	// The hidden names have a space, so no name of the source is equal.
-	const mapName, keyName, ptrName = "gx map", "gx key", "gx ptr"
-	if ix, ok := lhs.(*ast.IndexExpr); ok {
-		if m := c.expr(ix.X, nil); m.eval != nil && m.typ != nil && m.typ.Kind() == reflect.Map {
-			list := []ast.Stmt{define(mapName, ix.X)}
-			var key ast.Expr = ix.Index
-			switch ix.Index.(type) {
-			case *ast.BasicLit, *ast.Ident:
-				// A read of a literal or of a name has no effect, and a
-				// constant keeps the key type of the map.
-			default:
-				list = append(list, define(keyName, ix.Index))
-				key = &ast.Ident{Name: keyName, NamePos: pos}
-			}
-			list = append(list, set(&ast.IndexExpr{X: &ast.Ident{Name: mapName, NamePos: pos}, Lbrack: pos, Index: key, Rbrack: pos}))
-			return c.stmt(&ast.BlockStmt{Lbrace: pos, List: list, Rbrace: pos})
+	t := c.lhs(lhs)
+	// The operation reads x and y from two hidden variables. The names
+	// have a space, so no name of the source is equal. A constant y stays
+	// in the expression: it has no effect, and it takes the type of x.
+	const curName, rhsName = "gx cur", "gx rhs"
+	y := c.expr(a.Rhs[0], nil)
+	var rhs func(fr *frame) reflect.Value
+	rhsSlot, rhsType := 0, reflect.Type(nil)
+	c.push()
+	defer c.pop()
+	curSlot := c.declare(curName, t.typ)
+	var operand ast.Expr = a.Rhs[0]
+	if y.cst == nil {
+		y = c.typed(a.Rhs[0], y, nil)
+		rhs, rhsType = y.eval, y.typ
+		rhsSlot = c.declare(rhsName, rhsType)
+		operand = &ast.Ident{Name: rhsName, NamePos: pos}
+	}
+	bin := &ast.BinaryExpr{X: &ast.Ident{Name: curName, NamePos: pos}, Op: op, OpPos: pos, Y: operand}
+	out := c.typed(bin, c.expr(bin, t.typ), t.typ)
+	if !out.typ.AssignableTo(t.typ) {
+		c.fail(a, "a value of type %s is not assignable to %s", out.typ, t.typ)
+	}
+	compute, typ := out.eval, t.typ
+	return func(fr *frame, _ *result) ctl {
+		at := t.open(fr)
+		if rhs != nil {
+			newVar(fr, rhsSlot, rhsType, rhs(fr))
 		}
+		newVar(fr, curSlot, typ, at.load())
+		at.store(compute(fr))
+		return ctlNext
 	}
-	return c.stmt(&ast.BlockStmt{Lbrace: pos, Rbrace: pos, List: []ast.Stmt{
-		define(ptrName, &ast.UnaryExpr{Op: token.AND, OpPos: pos, X: lhs}),
-		set(&ast.StarExpr{Star: pos, X: &ast.Ident{Name: ptrName, NamePos: pos}}),
-	}})
 }
 
 // lhsType returns the type of the left side of =, as the hint for the
