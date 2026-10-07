@@ -96,7 +96,24 @@ func parseSpec(spec string) (module, error) {
 	if m == nil {
 		return module{}, fmt.Errorf("gx pin: %q is not <pkg>@<version>, for example echarts@5.5.1", spec)
 	}
-	return module{name: m[1], version: m[2], subpath: strings.TrimPrefix(m[3], "/")}, nil
+	mod := module{name: m[1], version: m[2], subpath: strings.TrimPrefix(m[3], "/")}
+	if err := mod.check(); err != nil {
+		return module{}, err
+	}
+	return mod, nil
+}
+
+// check refuses a module whose file would be outside the vendor directory:
+// a name, a version or a subpath with a "." or ".." part, or with a
+// backslash. The text of a fetched module names its imports, so each
+// import gets this check too.
+func (m module) check() error {
+	for _, part := range strings.Split(m.name+"/"+m.version+"/"+m.subpath, "/") {
+		if part == "." || part == ".." || strings.ContainsAny(part, `\:`) {
+			return fmt.Errorf("gx pin: the module path %q has a part that leaves the vendor directory", m.name+"@"+m.version+"/"+m.subpath)
+		}
+	}
+	return nil
 }
 
 // cdnImport matches the address of a module of the CDN in a string literal.
@@ -169,9 +186,14 @@ func Pin(ctx context.Context, opt Options) (*Result, error) {
 		}
 		body = sourceMapLine.ReplaceAll(body, nil)
 		from := m.file()
+		var bad error
 		body = cdnImport.ReplaceAllFunc(body, func(match []byte) []byte {
 			parts := cdnImport.FindSubmatch(match)
 			dep := module{name: string(parts[2]), version: string(parts[3]), subpath: strings.TrimPrefix(string(parts[4]), "/")}
+			if err := dep.check(); err != nil {
+				bad = err
+				return match
+			}
 			if !seen[dep.file()] {
 				seen[dep.file()] = true
 				queue = append(queue, dep)
@@ -186,6 +208,9 @@ func Pin(ctx context.Context, opt Options) (*Result, error) {
 			}
 			return []byte(string(parts[1]) + rel + string(parts[5]))
 		})
+		if bad != nil {
+			return nil, bad
+		}
 		contents[from] = body
 	}
 
@@ -196,6 +221,11 @@ func Pin(ctx context.Context, opt Options) (*Result, error) {
 	sort.Strings(res.Files)
 	for _, file := range res.Files {
 		full := filepath.Join(opt.Dir, filepath.FromSlash(file))
+		// A second guard after module.check: no file leaves the vendor
+		// directory.
+		if vendor := filepath.Join(opt.Dir, filepath.FromSlash(VendorDir)) + string(filepath.Separator); !strings.HasPrefix(full, vendor) {
+			return nil, fmt.Errorf("gx pin: %s is outside %s", file, VendorDir)
+		}
 		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
 			return nil, err
 		}

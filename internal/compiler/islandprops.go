@@ -214,6 +214,11 @@ func (m *islandMapper) root(t types.Type, st *types.Struct) (*islandObjectType, 
 	key := types.TypeString(t, nil)
 	m.objects[key] = obj
 	m.tsNames["Props"] = key
+	// The fixed part of a props file declares these names, so a Go type
+	// with one of them gets a different TypeScript name.
+	for _, name := range islandReservedTS {
+		m.tsNames[name] = "gx:" + name
+	}
 	var errs []islandFieldError
 	seen := map[string]bool{}
 	for i := 0; i < st.NumFields(); i++ {
@@ -824,6 +829,9 @@ func (m *islandMapper) tsSource(root *islandObjectType) []byte {
 	b.WriteString(islandContextTS)
 	return []byte(b.String())
 }
+
+// islandReservedTS are the names that islandContextTS declares.
+var islandReservedTS = []string{"SignalRef", "Signal", "Ctx", "Cleanup", "Mount", "Update"}
 
 // islandContextTS is the part of a props file that is the same for every
 // island: the types of the mount function and of its context

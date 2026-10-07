@@ -754,7 +754,8 @@ func (c *compiler) member(node ast.Node, x value, name string) value {
 			} else {
 				mtyp = methodType(m.Type)
 			}
-			return value{typ: mtyp, eval: func(fr *frame) reflect.Value { return eval(fr).MethodByName(name) }}
+			// A method value copies its receiver when it is made.
+			return value{typ: mtyp, eval: func(fr *frame) reflect.Value { return detach(eval(fr)).MethodByName(name) }}
 		}
 		if typ.Kind() != reflect.Pointer && typ.Kind() != reflect.Interface {
 			if m, ok := reflect.PointerTo(typ).MethodByName(name); ok {

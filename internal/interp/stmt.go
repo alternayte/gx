@@ -156,6 +156,22 @@ type target struct {
 	slot   int
 	typ    reflect.Type
 	set    func(fr *frame, v reflect.Value)
+	// ref reads the operands of the left side (an index, a map, a
+	// pointer) and returns the store. Go reads them before it writes any
+	// value of the statement. nil means that set has no operand to read.
+	ref func(fr *frame) func(v reflect.Value)
+}
+
+// detach returns a copy of a value that is a variable or a part of one, so
+// a later write to the variable does not change the value that the
+// statement has read.
+func detach(v reflect.Value) reflect.Value {
+	if !v.IsValid() || !v.CanAddr() {
+		return v
+	}
+	out := reflect.New(v.Type()).Elem()
+	out.Set(v)
+	return out
 }
 
 // lhs compiles the left side of = for a value of a known type.
@@ -169,7 +185,11 @@ func (c *compiler) lhs(e ast.Expr) target {
 		if m.eval != nil && m.typ != nil && m.typ.Kind() == reflect.Map {
 			key := c.typed(ix.Index, c.expr(ix.Index, m.typ.Key()), m.typ.Key())
 			mEval, kEval := m.eval, key.eval
-			return target{typ: m.typ.Elem(), set: func(fr *frame, v reflect.Value) { mEval(fr).SetMapIndex(kEval(fr), v) }}
+			ref := func(fr *frame) func(reflect.Value) {
+				mv, kv := mEval(fr), detach(kEval(fr))
+				return func(v reflect.Value) { mv.SetMapIndex(kv, v) }
+			}
+			return target{typ: m.typ.Elem(), ref: ref, set: func(fr *frame, v reflect.Value) { ref(fr)(v) }}
 		}
 	}
 	x := c.expr(e, nil)
@@ -177,7 +197,11 @@ func (c *compiler) lhs(e ast.Expr) target {
 		c.fail(e, "the left side of = has no address")
 	}
 	addr := x.addr
-	return target{typ: x.typ, set: func(fr *frame, v reflect.Value) { addr(fr).Set(v) }}
+	ref := func(fr *frame) func(reflect.Value) {
+		at := addr(fr)
+		return func(v reflect.Value) { at.Set(v) }
+	}
+	return target{typ: x.typ, ref: ref, set: func(fr *frame, v reflect.Value) { addr(fr).Set(v) }}
 }
 
 func (c *compiler) assign(a *ast.AssignStmt) stmt {
@@ -218,9 +242,11 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 			types = append(types, v.typ)
 		}
 		evalAll = func(fr *frame) []reflect.Value {
+			// Each value is a copy: a, b = b, a reads both names before
+			// it writes one.
 			out := make([]reflect.Value, len(evals))
 			for i, e := range evals {
-				out[i] = e(fr)
+				out[i] = detach(e(fr))
 			}
 			return out
 		}
@@ -251,6 +277,14 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 		}
 	}
 	return func(fr *frame, _ *result) ctl {
+		// The order of Go: the operands of the left side, then the right
+		// side, then the stores from left to right.
+		stores := make([]func(reflect.Value), len(targets))
+		for i, t := range targets {
+			if !t.define && t.ref != nil {
+				stores[i] = t.ref(fr)
+			}
+		}
 		values := evalAll(fr)
 		for i, t := range targets {
 			if t.define {
@@ -260,6 +294,10 @@ func (c *compiler) assign(a *ast.AssignStmt) stmt {
 			v := values[i]
 			if t.typ != nil && v.Type() != t.typ && t.typ.Kind() != reflect.Interface {
 				v = v.Convert(t.typ)
+			}
+			if stores[i] != nil {
+				stores[i](v)
+				continue
 			}
 			t.set(fr, v)
 		}
@@ -478,7 +516,9 @@ func (c *compiler) rangeStmt(s *ast.RangeStmt) stmt {
 	}
 	kind := x.typ.Kind()
 	return func(fr *frame, res *result) ctl {
-		v := eval(fr)
+		// Go reads the operand one time: a range over an array reads a
+		// copy, and a range over a slice keeps the slice of the start.
+		v := detach(eval(fr))
 		step := func(k, e reflect.Value) (stop bool, how ctl) {
 			store(fr, key, k)
 			store(fr, val, e)

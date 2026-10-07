@@ -56,7 +56,10 @@ func (r *typesResult) needsSignals(site *clientSite) string {
 	if site.block || strings.Contains(site.attr.Value, "$") {
 		return "this on: handler holds signal statements"
 	}
-	_, mods := splitOnSpec(spec)
+	event, mods := splitOnSpec(spec)
+	if event == "interval" {
+		return "it has no interval event with no period; write on:interval(5s)"
+	}
 	for _, mod := range mods {
 		label, _ := splitMod(mod)
 		if !traits.mods[label] {
@@ -96,6 +99,28 @@ func (r *typesResult) adapterDiags(pr *probe) []Diagnostic {
 			Code: CodeAdapterSignals, File: pr.file.File, Line: at.Line, Col: at.Col,
 			Msg: msg,
 			Fix: fix,
+		})
+	}
+	// One element makes one request under such an adapter: its attributes
+	// name one action and one trigger. A second on: handler would be a
+	// second attribute of the same name, which a browser drops.
+	if adapters[r.adapter].mods != nil {
+		walkElements(pr.file.Body, func(el *Element) {
+			handlers := 0
+			for i := range el.Attrs {
+				a := &el.Attrs[i]
+				if a.Kind != AttrExpr || !strings.HasPrefix(a.Name, "on:") {
+					continue
+				}
+				handlers++
+				if handlers > 1 {
+					out = append(out, Diagnostic{
+						Code: CodeAdapterSignals, File: pr.file.File, Line: a.At.Line, Col: a.At.Col,
+						Msg: "the " + r.adapter + " adapter cannot write this event: an element invokes one action, and this element has a second on: handler",
+						Fix: "put the second handler on a child element or a parent element",
+					})
+				}
+			}
 		})
 	}
 	return out
