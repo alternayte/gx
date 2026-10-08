@@ -5,6 +5,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"log"
@@ -13,6 +14,7 @@ import (
 	"sync/atomic"
 
 	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/widgetelement"
 )
 
@@ -58,12 +60,16 @@ func cartView(p cartProps) gx.Node {
 		gx.El("p", gx.Attrs{{Key: "id", Value: "line"}}, gx.Text("2 items in "+p.Currency)),
 		gx.El("p", gx.Attrs{{Key: "id", Value: "loads"}}, gx.Text(strconv.FormatInt(p.Loads, 10))),
 		gx.El("input", gx.Attrs{{Key: "id", Value: "note"}, {Key: "aria-label", Value: "Note"}}),
+		// The classes of this box are the class list of the widget in
+		// the Tailwind test.
+		gx.El("div", gx.Attrs{{Key: "id", Value: "box"}, {Key: "class", Value: "p-4 shadow-lg rounded-xl bg-primary dark:bg-foreground"}}, gx.Text("Box")),
 	)
 }
 
 func main() {
 	api := flag.String("api", "127.0.0.1:8080", "address of the Gx app")
 	host := flag.String("host", "127.0.0.1:8081", "address of the host pages")
+	styles := flag.String("styles", "", "root of an app whose widget stylesheet Tailwind builds")
 	flag.Parse()
 
 	var loads atomic.Int64
@@ -74,6 +80,21 @@ func main() {
 		}
 		return cartProps{Currency: in.Currency, Compact: in.Compact, Loads: loads.Add(1)}, nil
 	}, cartView).Tag("acme-cart")
+
+	// The stylesheet of the widget: the Tailwind build of the app at
+	// -styles, as gx build makes it, and three rules of this test app.
+	sheet := []byte(":host{--brand:rgb(1, 2, 3);display:block}#line{color:var(--brand);margin:0}#loads{color:rgb(9, 9, 9)}")
+	if *styles != "" {
+		built, err := gxstyles.BuildWidgets(context.Background(), *styles)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if len(built["acme-cart"]) == 0 {
+			log.Fatal("no stylesheet for acme-cart in " + *styles)
+		}
+		sheet = append(built["acme-cart"], sheet...)
+	}
+	gx.SetWidgetStylesheets(map[string][]byte{"acme-cart": sheet})
 
 	app := gx.New(gx.Config{})
 	app.Group("/widgets", gx.AllowOrigins("http://"+*host), gx.Collect(widget))
@@ -118,6 +139,13 @@ func main() {
 		}
 	}
 	pages.HandleFunc("GET /{$}", page("/acme-cart.js", `<acme-cart currency="USD"><p id="fallback">Loading your cart</p></acme-cart>`))
+	// A host with its own styles and its own value for a token of the
+	// widget.
+	pages.HandleFunc("GET /themed", page("/acme-cart.js", `<style>p { color: rgb(200, 0, 0); margin: 40px } acme-cart.brand { --brand: rgb(0, 0, 250) }</style>
+<p id="hostline">Text of the host</p>
+<acme-cart id="plain"></acme-cart><acme-cart id="branded" class="brand"></acme-cart>`))
+	pages.HandleFunc("GET /tailwind", page("/acme-cart.js", `<acme-cart id="light"></acme-cart><acme-cart id="dark" class="dark"></acme-cart>
+<div id="hostbox" class="p-4 shadow-lg">A box of the host with the same class names</div>`))
 	pages.HandleFunc("GET /down", page("/down/acme-cart.js", `<acme-cart currency="USD"><p id="fallback">Loading your cart</p></acme-cart>`))
 	pages.HandleFunc("GET /bad", page("/acme-cart.js", `<acme-cart currency="GBP"><p id="fallback">Loading your cart</p></acme-cart>`))
 	pages.HandleFunc("GET /refused", page("/acme-cart.js", `<acme-cart currency="SEK"><p id="fallback">Loading your cart</p></acme-cart>`))

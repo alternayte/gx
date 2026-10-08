@@ -87,6 +87,7 @@ func (wd *widget[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Tag:    wd.tag,
 		HTML:   StringRequest(r, wd.view(props)),
 		Script: BasePath() + "/_gx/" + name,
+		Style:  widgetStylePath(wd.tag),
 		Build:  buildID(),
 	})
 }
@@ -97,6 +98,9 @@ type widgetAnswer struct {
 	HTML string `json:"html,omitempty"`
 	// Script is the path of the widget script of this build.
 	Script string `json:"script,omitempty"`
+	// Style is the path of the stylesheet of the widget, when the app
+	// installed one.
+	Style string `json:"style,omitempty"`
 	// Build names the build of the server.
 	Build string       `json:"build,omitempty"`
 	Error *widgetError `json:"error,omitempty"`

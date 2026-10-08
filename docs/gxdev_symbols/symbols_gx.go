@@ -147,6 +147,7 @@ func Packages() []gx.DevPackage {
 				"SetIslands":            reflect.ValueOf(gx.SetIslands),
 				"SetStylesheet":         reflect.ValueOf(gx.SetStylesheet),
 				"SetTranslator":         reflect.ValueOf(gx.SetTranslator),
+				"SetWidgetStylesheets":  reflect.ValueOf(gx.SetWidgetStylesheets),
 				"SignalJSON":            reflect.ValueOf(gx.SignalJSON),
 				"SignalName":            reflect.ValueOf(gx.SignalName),
 				"SignalPath":            reflect.ValueOf(gx.SignalPath),

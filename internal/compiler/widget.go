@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"encoding/json"
 	"go/ast"
 	"go/constant"
 	"go/token"
@@ -429,9 +430,15 @@ func actionCall(pkg *packages.Package, expr ast.Expr) *ast.CallExpr {
 	}
 }
 
-// invokedRoutes returns the route types that the component of a widget
-// invokes with on:, in the component and in each component that it uses.
-func (l *loader) invokedRoutes(res *typesResult, module *Module, view types.Object) []string {
+// treeFile is one .gx file of a component tree, with its package.
+type treeFile struct {
+	p *Package
+	f *File
+}
+
+// componentTree returns the .gx file of a component function and the file
+// of each component that it uses, in the module.
+func (l *loader) componentTree(module *Module, view types.Object) []treeFile {
 	if view == nil || view.Pkg() == nil || module == nil {
 		return nil
 	}
@@ -444,26 +451,16 @@ func (l *loader) invokedRoutes(res *typesResult, module *Module, view types.Obje
 	if f == nil {
 		return nil
 	}
-	var out []string
+	var out []treeFile
 	seen := map[*File]bool{}
-	routes := map[string]bool{}
 	var visit func(p *Package, f *File)
 	visit = func(p *Package, f *File) {
 		if seen[f] {
 			return
 		}
 		seen[f] = true
+		out = append(out, treeFile{p: p, f: f})
 		walkElements(f.Body, func(el *Element) {
-			for i := range el.Attrs {
-				a := &el.Attrs[i]
-				if a.Kind != AttrExpr || !strings.HasPrefix(a.Name, "on:") {
-					continue
-				}
-				if key := namedTypeKey(res.types[a]); key != "" && res.routeKeys[key] && !routes[key] {
-					routes[key] = true
-					out = append(out, key)
-				}
-			}
 			qual, name, ok := componentTag(el.Name)
 			if !ok {
 				return
@@ -483,6 +480,97 @@ func (l *loader) invokedRoutes(res *typesResult, module *Module, view types.Obje
 	}
 	visit(p, f)
 	return out
+}
+
+// invokedRoutes returns the route types that the component of a widget
+// invokes with on:, in the component and in each component that it uses.
+func (l *loader) invokedRoutes(res *typesResult, module *Module, view types.Object) []string {
+	var out []string
+	routes := map[string]bool{}
+	for _, tf := range l.componentTree(module, view) {
+		walkElements(tf.f.Body, func(el *Element) {
+			for i := range el.Attrs {
+				a := &el.Attrs[i]
+				if a.Kind != AttrExpr || !strings.HasPrefix(a.Name, "on:") {
+					continue
+				}
+				if key := namedTypeKey(res.types[a]); key != "" && res.routeKeys[key] && !routes[key] {
+					routes[key] = true
+					out = append(out, key)
+				}
+			}
+		})
+	}
+	return out
+}
+
+// widgetClassesPath is the file with the class list of each widget. The
+// stylesheet build makes one stylesheet for each list (REQ-ISL-11).
+const widgetClassesPath = ".gx/widget-classes.json"
+
+// widgetClasses returns, for the tag of each widget, the classes that the
+// widget uses: the classes of its component tree and the string literals of
+// the Go files in the packages of the tree. The rule is the rule of the app
+// class list (REQ-STY-02), for the packages of one widget.
+func (l *loader) widgetClasses(res *typesResult, root string) map[string][]string {
+	out := map[string][]string{}
+	if res == nil {
+		return out
+	}
+	module := findModule(root)
+	for _, w := range collectWidgets(res.pkgs) {
+		if w.tag == "" || elementname.Problem(w.tag) != "" {
+			continue
+		}
+		seen := map[string]bool{}
+		add := func(text string) {
+			for _, class := range strings.Fields(text) {
+				seen[class] = true
+			}
+		}
+		dirs := map[string]bool{}
+		for _, tf := range l.componentTree(module, w.view) {
+			collectFileClasses(tf.f.Body, add)
+			dirs[filepath.Clean(tf.p.Dir)] = true
+		}
+		for _, pkg := range res.pkgs {
+			for _, file := range pkg.Syntax {
+				path := pkg.Fset.Position(file.Pos()).Filename
+				if !dirs[filepath.Clean(filepath.Dir(path))] || strings.HasSuffix(path, "_gx.go") || strings.HasSuffix(path, "_test.go") {
+					continue
+				}
+				ast.Inspect(file, func(n ast.Node) bool {
+					if lit, ok := n.(*ast.BasicLit); ok && lit.Kind == token.STRING {
+						if s, ok := unquoteGo(lit.Value); ok {
+							add(s)
+						}
+					}
+					return true
+				})
+			}
+		}
+		classes := make([]string, 0, len(seen))
+		for class := range seen {
+			classes = append(classes, class)
+		}
+		sort.Strings(classes)
+		out[w.tag] = classes
+	}
+	return out
+}
+
+// widgetClassesBytes renders the class lists of the widgets as JSON, with
+// the tags in order. An app with no widget gets an empty file, as it gets an
+// empty class list: the file of an earlier widget must not stay.
+func widgetClassesBytes(lists map[string][]string) []byte {
+	if len(lists) == 0 {
+		return []byte{}
+	}
+	b, err := json.MarshalIndent(lists, "", "  ")
+	if err != nil {
+		return []byte("{}\n")
+	}
+	return append(b, '\n')
 }
 
 // moduleDir returns the directory of a package of the module.

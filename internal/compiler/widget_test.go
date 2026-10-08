@@ -1,6 +1,8 @@
 package compiler_test
 
 import (
+	"encoding/json"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -137,4 +139,56 @@ func TestREQ_ISL_22_WidgetNeedsOrigins(t *testing.T) {
 			t.Fatalf("diagnostics = %v, want one GX6008 at the action", diags)
 		}
 	})
+}
+
+// TestREQ_ISL_11_WidgetClassList checks the class list of a widget: the
+// classes of its component, of each component that it uses, and of the Go
+// files of their packages. A class of a different part of the app is not in
+// the list.
+func TestREQ_ISL_11_WidgetClassList(t *testing.T) {
+	cartGx := "package cart\n\nimport (\n  \"app/cart/route\"\n  \"app/ui/badge\"\n)\n\nprops {\n  Currency string\n}\n\n" +
+		"<section class=\"p-4 font-bold\" class:ring-2={p.Currency == \"USD\"}>\n  <badge.Badge label={p.Currency} />\n  <button class={tone()} on:click={route.Add{}}>Add</button>\n</section>\n"
+	dir := writeTree(t, map[string]string{
+		"go.mod":              moduleWithGx(t),
+		"cart/route/route.go": widgetRoutes,
+		"cart/Cart.gx":        cartGx,
+		"cart/cart.go":        widgetGo(`.Tag("acme-cart")`),
+		"cart/styles.go":      "package cart\n\nfunc tone() string { return \"bg-primary text-white\" }\n",
+		"ui/badge/Badge.gx":   "package badge\n\nprops {\n  Label string\n}\n\n<span class=\"rounded-full\">{p.Label}</span>\n",
+		"other/Page.gx":       "package other\n\n<p class=\"underline\">Other</p>\n",
+		"other/styles.go":     "package other\n\nconst tone = \"italic\"\n",
+		"main.go":             widgetMain("\tapp.Group(\"/\", gx.AllowOrigins(\"https://shop.example.com\"), cart.Routes)\n"),
+	})
+	files, diags := compiler.Generate(dir)
+	if len(diags) != 0 {
+		t.Fatalf("diagnostics: %v", diags)
+	}
+	var got string
+	for path, src := range files {
+		if strings.HasSuffix(filepath.ToSlash(path), ".gx/widget-classes.json") {
+			got = string(src)
+		}
+	}
+	var lists map[string][]string
+	if err := json.Unmarshal([]byte(got), &lists); err != nil {
+		t.Fatalf("no class lists of the widgets, or not JSON: %v\n%s", err, got)
+	}
+	want := []string{"bg-primary", "font-bold", "p-4", "ring-2", "rounded-full", "text-white"}
+	have := map[string]bool{}
+	for _, c := range lists["acme-cart"] {
+		have[c] = true
+	}
+	for _, c := range want {
+		if !have[c] {
+			t.Errorf("the class list of acme-cart has no %q: %v", c, lists["acme-cart"])
+		}
+	}
+	for _, c := range []string{"underline", "italic"} {
+		if have[c] {
+			t.Errorf("the class list of acme-cart holds %q, a class of a different part of the app", c)
+		}
+	}
+	if len(lists) != 1 {
+		t.Errorf("class lists = %v, want one widget", lists)
+	}
 }

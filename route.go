@@ -484,6 +484,7 @@ func (a *App) Group(prefix string, parts ...any) *App {
 				// The first widget of the app: serve the widget
 				// script. An app with no widget has no such route.
 				a.serveWidgetScript()
+				a.serveWidgetStyles()
 			}
 			a.widgetTags[tag] = true
 		}

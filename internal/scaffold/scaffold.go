@@ -405,6 +405,7 @@ import (
 func main() {
 	setupGallery()
 	gx.SetStylesheet(gxstyles.CSS())
+	gx.SetWidgetStylesheets(gxstyles.Widgets())
 	gx.SetIslands(gxislands.Bundle())
 	server := gx.New(gx.Config{Adapter: «.Adapter».Adapter()})
 	// Mount every slice here. gx new slice adds its routes to this call.

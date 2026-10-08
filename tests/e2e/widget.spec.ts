@@ -5,7 +5,7 @@ import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { spawn, type Subprocess } from 'bun'
 import { type Browser, type Page, type Request } from 'playwright-core'
 import { freePort, launchBrowser } from './harness'
-import { mkdtempSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
@@ -26,8 +26,20 @@ beforeAll(async () => {
   const hostAddr = `127.0.0.1:${await freePort()}`
   api = 'http://' + apiAddr
   host = 'http://' + hostAddr
-  server = spawn([bin, '-api', apiAddr, '-host', hostAddr], { stdout: 'ignore', stderr: 'inherit' })
-  const deadline = Date.now() + 20000
+  // An app root for the stylesheet build: the default theme of gx init, the
+  // Tailwind pin of the shop, and the class list that the compiler writes
+  // for the widget.
+  const root = join(dir, 'app-root')
+  mkdirSync(join(root, 'app'), { recursive: true })
+  mkdirSync(join(root, '.gx'), { recursive: true })
+  writeFileSync(join(root, 'app', 'theme.css'), readFileSync(join(repo, 'examples', 'shop', 'app', 'theme.css')))
+  writeFileSync(join(root, 'gx.lock'), readFileSync(join(repo, 'examples', 'shop', 'gx.lock')))
+  writeFileSync(
+    join(root, '.gx', 'widget-classes.json'),
+    JSON.stringify({ 'acme-cart': ['p-4', 'shadow-lg', 'rounded-xl', 'bg-primary', 'dark:bg-foreground'] }),
+  )
+  server = spawn([bin, '-api', apiAddr, '-host', hostAddr, '-styles', root], { stdout: 'ignore', stderr: 'inherit' })
+  const deadline = Date.now() + 120000
   for (;;) {
     try {
       if ((await fetch(host + '/')).ok && (await fetch(api + '/widgets/cart')).ok) break
@@ -178,4 +190,88 @@ test('SI-14 the element sends no cookie to an origin that it does not share', as
     expect((await r.allHeaders())['cookie']).toBeUndefined()
   }
   await context.close()
+})
+
+test('REQ-ISL-11 the stylesheet of the widget is in its shadow root; the styles of the host stay out', async () => {
+  const page = await browser.newPage()
+  const requests: Request[] = []
+  page.on('request', (r) => requests.push(r))
+  await page.goto(host + '/themed')
+  await page.waitForFunction(() => [...document.querySelectorAll('acme-cart')].every((el) => el.getAttribute('data-gx-state') === 'ready'))
+  const styles = await page.evaluate(() => {
+    const color = (el: Element | null) => getComputedStyle(el!).color
+    const plain = document.querySelector('#plain')!.shadowRoot!
+    const branded = document.querySelector('#branded')!.shadowRoot!
+    return {
+      // The rule of the widget stylesheet, with the token of the widget.
+      line: color(plain.querySelector('#line')),
+      // The p rule of the host does not reach into the widget.
+      loads: color(plain.querySelector('#loads')),
+      margin: getComputedStyle(plain.querySelector('#line')!).marginTop,
+      // The host gives a token of the widget its own value on the element.
+      branded: color(branded.querySelector('#line')),
+      // The stylesheet of the widget does not reach the host page.
+      host: color(document.querySelector('#hostline')),
+      // Two widgets of one tag share one stylesheet object.
+      shared: plain.adoptedStyleSheets.length === 1 && plain.adoptedStyleSheets[0] === branded.adoptedStyleSheets[0],
+      links: plain.querySelectorAll('link, style').length,
+    }
+  })
+  expect(styles).toEqual({
+    line: 'rgb(1, 2, 3)',
+    loads: 'rgb(9, 9, 9)',
+    margin: '0px',
+    branded: 'rgb(0, 0, 250)',
+    host: 'rgb(200, 0, 0)',
+    shared: true,
+    links: 0,
+  })
+  // The server serves the stylesheet one time, with a hash in its name.
+  const sheets = requests.map((r) => r.url()).filter((u) => u.endsWith('.css'))
+  expect(sheets.length).toBe(1)
+  expect(sheets[0]).toMatch(new RegExp('^' + api.replaceAll('.', '\\.') + '/_gx/widgets/acme-cart\\.[0-9a-f]{12}\\.css$'))
+  await page.close()
+})
+
+test('REQ-ISL-11 a Tailwind build works in the shadow root: shadows, theme tokens and dark mode', async () => {
+  const page = await open('/tailwind')
+  await page.waitForFunction(() => [...document.querySelectorAll('acme-cart')].every((el) => el.getAttribute('data-gx-state') === 'ready'))
+  const seen = await page.evaluate(() => {
+    const box = (id: string) => getComputedStyle(document.querySelector('#' + id)!.shadowRoot!.querySelector('#box')!)
+    const light = box('light')
+    const dark = box('dark')
+    const hostbox = getComputedStyle(document.querySelector('#hostbox')!)
+    return {
+      padding: light.paddingTop,
+      // A shadow needs the start values of the Tailwind variables, which a
+      // browser does not take from @property in a shadow root.
+      shadow: light.boxShadow !== 'none' && light.boxShadow !== '',
+      radius: parseFloat(light.borderTopLeftRadius) > 0,
+      // The token of the theme has a value on the host element.
+      lightBackground: light.backgroundColor,
+      // The class dark of the host element turns on dark: classes and the
+      // dark tokens.
+      darkBackground: dark.backgroundColor,
+      // The classes of the widget give the host page no styles.
+      hostPadding: hostbox.paddingTop,
+      hostShadow: hostbox.boxShadow,
+    }
+  })
+  expect(seen.padding).toBe('16px')
+  expect(seen.shadow).toBe(true)
+  expect(seen.radius).toBe(true)
+  expect(seen.lightBackground).not.toBe('rgba(0, 0, 0, 0)')
+  expect(seen.darkBackground).not.toBe('rgba(0, 0, 0, 0)')
+  expect(seen.darkBackground).not.toBe(seen.lightBackground)
+  expect(seen.hostPadding).toBe('0px')
+  expect(seen.hostShadow).toBe('none')
+  // The stylesheet holds the classes of the widget and no other class of
+  // Tailwind.
+  const answer = (await (await fetch(api + '/widgets/cart')).json()) as { style: string }
+  const css = await (await fetch(api + answer.style)).text()
+  expect(css).toContain('.shadow-lg{')
+  expect(css).not.toContain('.underline')
+  // The start values of the Tailwind variables hold with no condition.
+  expect(css).toContain('@layer properties{*,:before,:after,::backdrop{--tw-shadow:0 0 #0000;')
+  await page.close()
 })

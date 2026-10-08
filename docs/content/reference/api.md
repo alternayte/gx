@@ -452,6 +452,14 @@ func SetTranslator(t Translator)
 
 SetTranslator sets the message translator of the process.
 
+### func SetWidgetStylesheets
+
+```go
+func SetWidgetStylesheets(sheets map[string][]byte)
+```
+
+SetWidgetStylesheets installs the stylesheet of each widget, by the tag of the widget. The main of an app calls it with gxstyles.Widgets(). The stylesheet of a widget holds only the classes that the widget uses, and lives in the shadow root of the element.
+
 ### func SignalJSON
 
 ```go

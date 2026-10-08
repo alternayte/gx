@@ -89,3 +89,66 @@ func buildID() string {
 	})
 	return s.id
 }
+
+var widgetStyleState struct {
+	mu     sync.RWMutex
+	sheets map[string]widgetStyle
+}
+
+// widgetStyle is the stylesheet of one widget and the name of its file.
+type widgetStyle struct {
+	name string
+	css  []byte
+}
+
+// SetWidgetStylesheets installs the stylesheet of each widget, by the tag of
+// the widget (REQ-ISL-11). The main of an app calls it with
+// gxstyles.Widgets(). The stylesheet of a widget holds only the classes that
+// the widget uses, and lives in the shadow root of the element.
+func SetWidgetStylesheets(sheets map[string][]byte) {
+	next := make(map[string]widgetStyle, len(sheets))
+	for tag, css := range sheets {
+		sum := sha256.Sum256(css)
+		next[tag] = widgetStyle{name: tag + "." + hex.EncodeToString(sum[:6]) + ".css", css: append([]byte(nil), css...)}
+	}
+	widgetStyleState.mu.Lock()
+	defer widgetStyleState.mu.Unlock()
+	widgetStyleState.sheets = next
+}
+
+// widgetStylePath returns the path of the stylesheet of a widget, or "".
+func widgetStylePath(tag string) string {
+	widgetStyleState.mu.RLock()
+	defer widgetStyleState.mu.RUnlock()
+	style, ok := widgetStyleState.sheets[tag]
+	if !ok {
+		return ""
+	}
+	return BasePath() + "/_gx/widgets/" + style.name
+}
+
+// serveWidgetStyles serves the stylesheet of each widget to each origin. The
+// name holds a hash of the content.
+func (a *App) serveWidgetStyles() {
+	a.mux.Handle("GET /_gx/widgets/{name}", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		name := r.PathValue("name")
+		widgetStyleState.mu.RLock()
+		var css []byte
+		for _, style := range widgetStyleState.sheets {
+			if style.name == name {
+				css = style.css
+				break
+			}
+		}
+		widgetStyleState.mu.RUnlock()
+		if css == nil {
+			http.NotFound(w, r)
+			return
+		}
+		h := w.Header()
+		h.Set("Content-Type", "text/css; charset=utf-8")
+		h.Set("Access-Control-Allow-Origin", "*")
+		h.Set("Cache-Control", "public, max-age=31536000, immutable")
+		_, _ = w.Write(css)
+	}))
+}

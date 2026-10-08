@@ -4,6 +4,7 @@
 package tailwind
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -337,6 +338,24 @@ func (m *Manager) Build(ctx context.Context, themePath string, minify bool) ([]b
 	}
 	cmd := exec.CommandContext(ctx, bin, args...)
 	cmd.Dir = m.Root
+	if combined, err := cmd.CombinedOutput(); err != nil {
+		return nil, fmt.Errorf("tailwind: %v: %w\n%s", args, err, combined)
+	}
+	return os.ReadFile(out)
+}
+
+// BuildInput runs the pinned binary on a stylesheet that it gets on the
+// standard input, with dir as the working directory, and returns the
+// minified CSS (REQ-ISL-11). The relative paths of the input start at dir.
+func (m *Manager) BuildInput(ctx context.Context, input []byte, dir, out string) ([]byte, error) {
+	bin, err := m.Ensure(ctx)
+	if err != nil {
+		return nil, err
+	}
+	args := []string{"-i", "-", "-o", out, "--minify"}
+	cmd := exec.CommandContext(ctx, bin, args...)
+	cmd.Dir = dir
+	cmd.Stdin = bytes.NewReader(input)
 	if combined, err := cmd.CombinedOutput(); err != nil {
 		return nil, fmt.Errorf("tailwind: %v: %w\n%s", args, err, combined)
 	}

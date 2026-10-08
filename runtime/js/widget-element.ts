@@ -33,7 +33,7 @@ type Mounted = {
 }
 
 type Runtime = {
-  mount: (root: ShadowRoot, answer: Answer) => Mounted
+  mount: (root: ShadowRoot, answer: Answer, server: string) => Promise<Mounted>
 }
 
 declare const __GX_WIDGET_CONFIG__: Config
@@ -131,8 +131,16 @@ class WidgetElement extends HTMLElement {
       }
       const runtime = (await import(server + answer.script)) as Runtime
       if (turn !== this.#turn) return
-      if (this.#mounted) this.#mounted.update(answer)
-      else this.#mounted = runtime.mount(this.#root, answer)
+      if (this.#mounted) {
+        this.#mounted.update(answer)
+      } else {
+        const mounted = await runtime.mount(this.#root, answer, server)
+        if (turn !== this.#turn) {
+          mounted.destroy()
+          return
+        }
+        this.#mounted = mounted
+      }
       this.#state('ready')
       if (!this.#ready) {
         this.#ready = true
