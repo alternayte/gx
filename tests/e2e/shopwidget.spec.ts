@@ -33,6 +33,10 @@ for (const name of ['gx-ready', 'gx-error', 'gx-navigate', 'cart-changed', 'comp
 <script type="module" src="/widgets/shop-composer.js"></script></head>
 <body><main><h1>Partner mail</h1><button id="host-button">A button of the host</button>
 <shop-composer to="pat@example.com"></shop-composer></main></body></html>`,
+  '/react': `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>React partner</title>
+<script type="module" src="/widgets/shop-cart.js"></script>
+<script type="module" src="/react/app.js"></script></head>
+<body><div id="root"></div></body></html>`,
 }
 
 beforeAll(async () => {
@@ -43,6 +47,11 @@ beforeAll(async () => {
   files = mkdtempSync(join(tmpdir(), 'gx-shopwidget-'))
   const build = spawn(['go', 'run', './cmd/gx', 'wc', 'build', '--server', shop.url, '--out', files, 'examples/shop'], { cwd: repo, stdout: 'pipe', stderr: 'pipe' })
   if ((await build.exited) !== 0) throw new Error('gx wc build failed: ' + (await new Response(build.stderr).text()))
+  // The React host: one bundle of the app in widgethost/, with React from
+  // the dev dependencies of this suite.
+  const bundle = await Bun.build({ entrypoints: [fileURLToPath(new URL('./widgethost/app.tsx', import.meta.url))], target: 'browser', minify: true })
+  if (!bundle.success) throw new Error('the React host did not build: ' + bundle.logs.join('\n'))
+  pages['/react/app.js'] = await bundle.outputs[0].text()
   server = Bun.serve({
     hostname: '127.0.0.1',
     port,
@@ -386,5 +395,34 @@ test('REQ-ISL-20 the composer widget has no serious axe violation, with its dial
   await page.locator('shop-composer button', { hasText: /^Discard$/ }).click()
   await waitComposer(page, `root.querySelector('#composer-discard').open`)
   expect(await audit()).toEqual([])
+  await page.close()
+})
+
+test('REQ-ISL-16 a React host renders the widget and gets its events from the props of the tag', async () => {
+  const page = await browser.newPage()
+  page.on('pageerror', (err) => {
+    throw err
+  })
+  await page.goto(host + '/react')
+  // gx-ready reaches the handler of the React component.
+  await page.waitForFunction(() => document.querySelector('#state')?.textContent === 'ready')
+  expect(await page.locator('shop-cart').getAttribute('data-gx-state')).toBe('ready')
+  expect(await inCart<string>(page, `root.querySelector('p').textContent`)).toBe('React cart total: 10')
+  expect(await page.locator('#fallback').isVisible()).toBe(false)
+  // A domain event of the shop sets state of the React component.
+  await page.locator('shop-cart input[type=number]').fill('3')
+  await page.locator('shop-cart button', { hasText: 'Add' }).click()
+  await page.waitForFunction(() => document.querySelector('#total')?.textContent === '30')
+  // React renders the tag again with a new attribute: the widget loads
+  // again and morphs, and its signal keeps its value.
+  await page.locator('#relabel').click()
+  await page.waitForFunction(() => document.querySelector('shop-cart')!.shadowRoot!.querySelector('p')!.textContent!.startsWith('Second label total:'))
+  expect(await inCart<string>(page, `root.querySelector('input[type=number]').value`)).toBe('3')
+  // The render of React did not touch the shadow root of the element.
+  expect(await page.evaluate(() => document.querySelector('#state')!.textContent)).toBe('ready')
+  // An action that fails reaches the gx-error handler, with no text of the
+  // shop.
+  await page.locator('shop-cart button', { hasText: 'Fail' }).click()
+  await page.waitForFunction(() => document.querySelector('#state')?.textContent === 'error 500 gx.error')
   await page.close()
 })
