@@ -100,6 +100,12 @@ async function open(adapter: Adapter, path: string): Promise<void> {
   page.on('pageerror', (e) => problems.push(String(e)))
   await page.addInitScript(() => {
     document.addEventListener('securitypolicyviolation', (e) => console.error(`csp: ${e.violatedDirective} ${e.blockedURI}`))
+    // The domain events that reach the document (REQ-ISL-17).
+    ;(window as any).boardEvents = []
+    document.addEventListener('board-changed', (e) => {
+      const detail = (e as CustomEvent).detail
+      ;(window as any).boardEvents.push({ count: detail.count, note: detail.note, bubbles: e.bubbles })
+    })
   })
   await page.goto(urls[adapter] + path)
   // The adapter is ready when the load action has run.
@@ -202,6 +208,18 @@ for (const adapter of adapters) {
     expect((await page.textContent('#gx-toaster [data-gx-toast]')) ?? '').toContain('Saved')
     await page.click('#notify')
     await waitFor('the second toast', async () => (await page.$$('#gx-toaster [data-gx-toast]')).length === 2)
+    expect(problems).toEqual([])
+  })
+
+  test(`REQ-ISL-17 ${adapter}: an action dispatches a domain event on the page`, async () => {
+    await open(adapter, '/')
+    await page.click('#emit')
+    await waitFor('the event', async () => (await page.evaluate(() => (window as any).boardEvents.length)) === 1)
+    expect(await page.evaluate(() => (window as any).boardEvents)).toEqual([{ count: 3, note: "$qty @post('/x') wörld <b>", bubbles: true }])
+    // A second click is a second event, and the answer left no element.
+    await page.click('#emit')
+    await waitFor('the second event', async () => (await page.evaluate(() => (window as any).boardEvents.length)) === 2)
+    expect(await page.evaluate(() => document.querySelectorAll('span[hidden][data-init]').length)).toBe(0)
     expect(problems).toEqual([])
   })
 

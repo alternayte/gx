@@ -43,6 +43,11 @@ type Leave struct {
 	gx.Route `POST /leave`
 }
 
+// Emit answers with a domain event.
+type Emit struct {
+	gx.Route `POST /emit`
+}
+
 // Notify answers with a toast.
 type Notify struct {
 	gx.Route `POST /notify`

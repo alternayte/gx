@@ -203,7 +203,7 @@ func widgetInvoke(value string) (Attr, bool) {
 
 // widgetOp is one step of the answer to a widget (D-264).
 type widgetOp struct {
-	// Op is "patch", "signals", "redirect" or "toast".
+	// Op is "patch", "signals", "redirect", "toast" or "event".
 	Op         string `json:"op"`
 	Mode       string `json:"mode,omitempty"`
 	Target     string `json:"target,omitempty"`
@@ -212,6 +212,8 @@ type widgetOp struct {
 	Scope      string `json:"scope,omitempty"`
 	Values     any    `json:"values,omitempty"`
 	URL        string `json:"url,omitempty"`
+	Name       string `json:"name,omitempty"`
+	Detail     any    `json:"detail,omitempty"`
 }
 
 // widgetOps is the answer of an action to a widget. It does not go through
@@ -244,6 +246,8 @@ func respondWidget(w http.ResponseWriter, r *http.Request, res *Response) {
 			out.Ops = append(out.Ops, widgetOp{Op: "redirect", URL: t.URL})
 		case ToastPatch:
 			out.Ops = append(out.Ops, widgetOp{Op: "toast", HTML: StringRequest(r, RenderToast(r, t))})
+		case EventPatch:
+			out.Ops = append(out.Ops, widgetOp{Op: "event", Name: t.Name, Detail: t.Detail})
 		}
 	}
 	if res.Err != nil {

@@ -1,6 +1,7 @@
 package htmx_test
 
 import (
+	"encoding/json"
 	"go/parser"
 	"go/token"
 	"net/http"
@@ -244,5 +245,44 @@ func TestREQ_PLG_04_HtmxImportsOnlyPublicAPI(t *testing.T) {
 			}
 			t.Errorf("%s imports %s", e.Name(), path)
 		}
+	}
+}
+
+// TestREQ_ISL_17_HtmxEvent checks the wire of a domain event: the HX-Trigger
+// header, which htmx dispatches on the element of the request. A header
+// value is ASCII.
+func TestREQ_ISL_17_HtmxEvent(t *testing.T) {
+	type detail struct {
+		Count int    `json:"count"`
+		Note  string `json:"note"`
+	}
+	changed := gx.Event[detail]("cart-changed")
+	sent := gx.Event[detail]("composer-sent")
+	h := gx.Action(func(c *gx.Ctx, in actRoute) error {
+		c.Emit(changed(detail{Count: 3, Note: "wörld 日本 😀"}))
+		c.Emit(sent(detail{Count: 1}))
+		return nil
+	})
+	rec := serve(t, h, httptest.NewRequest("POST", "/act", nil))
+	got := rec.Header().Get("HX-Trigger")
+	for _, r := range got {
+		if r >= 0x80 {
+			t.Fatalf("HX-Trigger is not ASCII: %q", got)
+		}
+	}
+	var events map[string]struct {
+		Count int    `json:"count"`
+		Note  string `json:"note"`
+	}
+	if err := json.Unmarshal([]byte(got), &events); err != nil {
+		t.Fatalf("HX-Trigger is not JSON: %v: %s", err, got)
+	}
+	if len(events) != 2 || events["cart-changed"].Count != 3 || events["cart-changed"].Note != "wörld 日本 😀" || events["composer-sent"].Count != 1 {
+		t.Fatalf("HX-Trigger = %s", got)
+	}
+	// An answer with no event has no such header.
+	quiet := gx.Action(func(c *gx.Ctx, in actRoute) error { return c.Toast("Saved") })
+	if got := serve(t, quiet, httptest.NewRequest("POST", "/act", nil)).Header().Get("HX-Trigger"); got != "" {
+		t.Fatalf("HX-Trigger = %q for an answer with no event", got)
 	}
 }

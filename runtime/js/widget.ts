@@ -23,13 +23,16 @@ type Answer = {
 
 // One step of the answer of an action.
 type Op = {
-  op: 'patch' | 'signals' | 'redirect' | 'toast'
+  op: 'patch' | 'signals' | 'redirect' | 'toast' | 'event'
   mode?: 'morph' | 'inner' | 'append' | 'prepend' | 'replace' | 'remove'
   target?: string
   html?: string
   scope?: string
   values?: Record<string, unknown>
   url?: string
+  // The name and the detail of a domain event.
+  name?: string
+  detail?: unknown
 }
 
 type ActionAnswer = { build?: string; ops?: Op[]; error?: WidgetError }
@@ -297,6 +300,11 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     switch (op.op) {
       case 'signals':
         store.merge(op.values ?? {}, false, (op.scope ?? '').split('.').filter((part) => part !== ''))
+        return
+      case 'event':
+        // A domain event of the server: the host page gets it from the
+        // element (REQ-ISL-17).
+        if (op.name) host.event(op.name, op.detail ?? null)
         return
       case 'redirect':
         // The host owns its navigation: it gets the URL in an event, and

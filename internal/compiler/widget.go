@@ -583,3 +583,74 @@ func moduleDir(m *Module, pkgPath string) (string, bool) {
 	}
 	return "", false
 }
+
+// checkEventSecrets reports a gx.Event whose detail type holds a gx.Secret
+// (GX7002, SI-04). The detail of a domain event goes to the browser as
+// JSON (REQ-ISL-17).
+func checkEventSecrets(pkgs []*packages.Package) []Diagnostic {
+	var out []Diagnostic
+	sourceFiles(pkgs, func(pkg *packages.Package, file *ast.File) {
+		ast.Inspect(file, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok || !isGxFuncExpr(pkg, call.Fun, "Event") {
+				return true
+			}
+			index, ok := call.Fun.(*ast.IndexExpr)
+			if !ok {
+				return true
+			}
+			detail := pkg.TypesInfo.TypeOf(index.Index)
+			path := secretPath(detail, map[types.Type]bool{})
+			if path == nil {
+				return true
+			}
+			name := "event"
+			if len(call.Args) == 1 {
+				if tv, ok := pkg.TypesInfo.Types[call.Args[0]]; ok && tv.Value != nil && tv.Value.Kind() == constant.String {
+					name = "event " + constant.StringVal(tv.Value)
+				}
+			}
+			at := pkg.Fset.Position(call.Pos())
+			where := "its detail"
+			if len(path) > 0 {
+				where = "the detail field " + Quoted(strings.Join(path, "."))
+			}
+			out = append(out, Diagnostic{
+				Code: CodeSecret, File: at.Filename, Line: at.Line, Col: at.Column,
+				Msg: name + ": " + where + " has type gx.Secret; a secret cannot cross to the client",
+			})
+			return true
+		})
+	})
+	return out
+}
+
+// secretPath returns the field path to a gx.Secret inside a type, or nil
+// when the type holds none. A type that is a secret itself has an empty
+// path.
+func secretPath(t types.Type, seen map[types.Type]bool) []string {
+	if t == nil || seen[t] {
+		return nil
+	}
+	seen[t] = true
+	if isSecretType(t) {
+		return []string{}
+	}
+	switch u := t.Underlying().(type) {
+	case *types.Pointer:
+		return secretPath(u.Elem(), seen)
+	case *types.Slice:
+		return secretPath(u.Elem(), seen)
+	case *types.Array:
+		return secretPath(u.Elem(), seen)
+	case *types.Map:
+		return secretPath(u.Elem(), seen)
+	case *types.Struct:
+		for i := 0; i < u.NumFields(); i++ {
+			if path := secretPath(u.Field(i).Type(), seen); path != nil {
+				return append([]string{u.Field(i).Name()}, path...)
+			}
+		}
+	}
+	return nil
+}

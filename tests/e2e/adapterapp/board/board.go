@@ -94,6 +94,21 @@ var leave = gx.Action(func(c *gx.Ctx, in route.Leave) error {
 	return c.Redirect(route.About{})
 })
 
+// ChangedDetail is the detail of the event of the board.
+type ChangedDetail struct {
+	Count int    `json:"count"`
+	Note  string `json:"note"`
+}
+
+// Changed is the domain event of the board (REQ-ISL-17). The note has the
+// signs that an adapter reads in its own text.
+var Changed = gx.Event[ChangedDetail]("board-changed")
+
+var emit = gx.Action(func(c *gx.Ctx, in route.Emit) error {
+	c.Emit(Changed(ChangedDetail{Count: 3, Note: "$qty @post('/x') wörld <b>"}))
+	return nil
+})
+
 var notify = gx.Action(func(c *gx.Ctx, in route.Notify) error {
 	return c.Toast("Saved", gx.ToastSuccess)
 })
@@ -144,5 +159,5 @@ var join = gx.Form(func(c *gx.Ctx, in *route.Join) error {
 }, JoinView)
 
 // Routes lists every page, action and form of the slice.
-var Routes = gx.Collect(homePage, aboutPage, inc, addLast, addFirst, swap, drop, leave, notify, fail, quiet,
+var Routes = gx.Collect(homePage, aboutPage, inc, addLast, addFirst, swap, drop, leave, notify, emit, fail, quiet,
 	fade, lazy, seen, tick, count, joinPage, join)

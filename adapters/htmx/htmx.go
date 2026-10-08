@@ -13,9 +13,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"net/http"
 	"strings"
+	"unicode/utf16"
 
 	"github.com/alternayte/gx"
 )
@@ -98,8 +100,14 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 	var b strings.Builder
 	redirect := ""
 	transition := false
+	events := map[string]any{}
 	for _, p := range res.Patches {
 		switch t := p.(type) {
+		case gx.EventPatch:
+			// htmx dispatches each name of HX-Trigger on the element
+			// that sent the request, with the value as the detail
+			// (REQ-ISL-17). The event bubbles through the component.
+			events[t.Name] = t.Detail
 		case gx.ElementPatch:
 			content := ""
 			if t.Mode != gx.ModeRemove {
@@ -142,6 +150,13 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 	h.Set("HX-Reswap", reswap)
 	if redirect != "" {
 		h.Set("HX-Redirect", redirect)
+	}
+	if len(events) > 0 {
+		data, err := json.Marshal(events)
+		if err != nil {
+			return err
+		}
+		h.Set("HX-Trigger", asciiJSON(data))
 	}
 	if res.Status != 0 {
 		w.WriteHeader(res.Status)
@@ -260,3 +275,21 @@ func (a adapter) On(inv gx.Invocation) []gx.Attr {
 func (adapter) ReadSignals(*http.Request, any) error { return errSignals }
 
 var _ gx.Adapter = adapter{}
+
+// asciiJSON writes each character of JSON text that is not ASCII as a
+// \u escape, because a header value is ASCII.
+func asciiJSON(data []byte) string {
+	var b strings.Builder
+	for _, r := range string(data) {
+		switch {
+		case r < 0x80:
+			b.WriteRune(r)
+		case r > 0xFFFF:
+			hi, lo := utf16.EncodeRune(r)
+			fmt.Fprintf(&b, `\u%04x\u%04x`, hi, lo)
+		default:
+			fmt.Fprintf(&b, `\u%04x`, r)
+		}
+	}
+	return b.String()
+}

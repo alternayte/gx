@@ -308,3 +308,42 @@ func TestREQ_ACT_08_DatastarOn(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_ISL_17_DatastarEvent checks the wire of a domain event: one hidden
+// element whose load expression dispatches the event on the root element of
+// the invoking component. A dollar sign and an at sign of the detail do not
+// reach Datastar as characters, so Datastar reads no signal and no action in
+// the data.
+func TestREQ_ISL_17_DatastarEvent(t *testing.T) {
+	type detail struct {
+		Count int    `json:"count"`
+		Note  string `json:"note"`
+	}
+	changed := gx.Event[detail]("cart-changed")
+	h := gx.Action(func(c *gx.Ctx, in actRoute) error {
+		c.Emit(changed(detail{Count: 3, Note: `$qty @post('/x') "q" <b>`}))
+		return nil
+	})
+	req := httptest.NewRequest("POST", "/act", nil)
+	req.Header.Set("Gx-Scope", "cart.Cart.42")
+	body := serve(t, h, req).Body.String()
+	for _, want := range []string{
+		"event: datastar-patch-elements",
+		"selector body",
+		"mode append",
+		`<span hidden data-init="(document.querySelector(&#39;[data-gx-instance=&#34;cart.Cart.42&#34;]&#39;)||document).dispatchEvent(new CustomEvent(&#39;cart-changed&#39;,{bubbles:true,detail:{&#34;count&#34;:3,&#34;note&#34;:&#34;\u0024qty \u0040post(&#39;/x&#39;) \&#34;q\&#34; \u003cb\u003e&#34;}}));el.remove()"></span>`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("the answer has no %s\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "$") || strings.Contains(body, "@") {
+		t.Errorf("the answer holds a dollar sign or an at sign as a character:\n%s", body)
+	}
+
+	// With no scope the event goes to the document.
+	body = serve(t, h, httptest.NewRequest("POST", "/act", nil)).Body.String()
+	if !strings.Contains(body, `data-init="document.dispatchEvent(new CustomEvent(`) {
+		t.Errorf("the answer with no scope:\n%s", body)
+	}
+}

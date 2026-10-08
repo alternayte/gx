@@ -547,6 +547,23 @@ test('SI-14 with gx-credentials the element sends the cookies, for an origin of 
   await context.close()
 })
 
+test('REQ-ISL-17 an action of the widget dispatches a typed domain event on the element of the host', async () => {
+  const page = await open('/two')
+  await page.waitForFunction(() => [...document.querySelectorAll('acme-cart')].every((el) => el.getAttribute('data-gx-state') === 'ready'))
+  await page.evaluate(() => {
+    ;(window as any).targets = []
+    document.addEventListener('cart-changed', (e) => (window as any).targets.push((e.target as Element).id))
+  })
+  await page.locator('#second #qty').fill('6')
+  await page.locator('#second #add').click()
+  await page.waitForFunction(() => (window as any).log.some((e: unknown[]) => e[0] === 'cart-changed'))
+  // The detail is the JSON of the Go struct, with its text as data.
+  expect((await log(page)).filter((e) => e[0] === 'cart-changed')).toEqual([['cart-changed', 'ACME-CART', { count: 6, note: '$qty <b>' }]])
+  // The event comes from the element of the widget that sent the action.
+  expect(await page.evaluate(() => (window as any).targets)).toEqual(['second'])
+  await page.close()
+})
+
 test('REQ-ISL-19 a new build of the server gives an open widget a fresh first render at its next action', async () => {
   const page = await open('/')
   await waitState(page, 'ready')

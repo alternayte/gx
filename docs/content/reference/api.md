@@ -164,6 +164,14 @@ func DefaultMessage(key string) string
 
 DefaultMessage returns the English message of a built-in rule key, or the key itself when the key has no default.
 
+### func Event
+
+```go
+func Event[D any](name string) func(D) EventValue
+```
+
+Event returns a typed domain event. Call it with a detail to make the value that Ctx.Emit sends:
+
 ### func ExprCall
 
 ```go
@@ -1067,6 +1075,14 @@ type Ctx struct {
 
 Ctx is the per-request context.
 
+#### func (Ctx) Emit
+
+```go
+func (c *Ctx) Emit(e EventValue)
+```
+
+Emit sends a domain event with the answer of an action or a form. The server knows that a change is real. An event is thus a call of the server and not of the template.
+
 #### func (Ctx) Patch
 
 ```go
@@ -1136,6 +1152,30 @@ type Enum[T comparable] map[T]string
 ```
 
 Enum[T] is a class map for the constants of T. The analyzer requires an entry for every constant of T.
+
+### type EventPatch
+
+```go
+type EventPatch struct {
+    Name   string
+    Detail any
+    // Scope names the component instance that invoked the action.
+    Scope string
+}
+```
+
+EventPatch is a domain event in the answer of an action. An adapter dispatches it in the browser as a CustomEvent.
+
+### type EventValue
+
+```go
+type EventValue struct {
+    Name   string
+    Detail any
+}
+```
+
+EventValue is one domain event with its detail, ready for Ctx.Emit.
 
 ### type FieldView
 

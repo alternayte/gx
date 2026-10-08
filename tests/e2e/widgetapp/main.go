@@ -130,6 +130,14 @@ type checkout struct{}
 
 func (checkout) URL() string { return "/checkout?step=1" }
 
+// changedDetail is the detail of the domain event of the cart.
+type changedDetail struct {
+	Count int    `json:"count"`
+	Note  string `json:"note"`
+}
+
+var cartChanged = gx.Event[changedDetail]("cart-changed")
+
 type userKey struct{}
 
 // userOf returns the user that the auth middleware found, or "anonymous".
@@ -196,6 +204,8 @@ func main() {
 	gx.SetWidgetStylesheets(map[string][]byte{"acme-cart": sheet})
 
 	add := gx.Action(func(c *gx.Ctx, in addIn) error {
+		// The host page learns that the cart changed.
+		c.Emit(cartChanged(changedDetail{Count: in.Qty, Note: "$qty <b>"}))
 		// The total of the widget, and the quantity back at 1.
 		if err := c.Patch(gx.El("span", gx.Attrs{{Key: "id", Value: "total"}}, gx.Text(strconv.Itoa(in.Qty*10)))); err != nil {
 			return err
@@ -235,7 +245,7 @@ func main() {
 	// The log of a host page: the events of the widget, the changes of its
 	// state attribute, and each refusal of the policy of the page.
 	pages.HandleFunc("GET /log.js", script([]byte(`window.log = []
-for (const name of ['gx-ready', 'gx-error', 'gx-navigate']) {
+for (const name of ['gx-ready', 'gx-error', 'gx-navigate', 'cart-changed']) {
   document.addEventListener(name, (e) => window.log.push([name, e.target.tagName, e.detail ?? null]))
 }
 document.addEventListener('securitypolicyviolation', (e) => window.log.push(['csp', e.violatedDirective, e.blockedURI]))

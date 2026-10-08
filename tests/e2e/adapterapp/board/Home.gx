@@ -30,6 +30,7 @@ props {
 <section>
   <button id="leave" type="button" on:click={route.Leave{}}>Leave</button>
   <button id="notify" type="button" on:click={route.Notify{}}>Notify</button>
+  <button id="emit" type="button" on:click={route.Emit{}}>Emit</button>
   <button id="fail" type="button" on:click={route.Fail{}}>Fail</button>
   <button id="quiet" type="button" on:click={route.Quiet{}}>Quiet</button>
   {value("fade-value", 0)}

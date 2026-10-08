@@ -192,3 +192,35 @@ func TestREQ_ISL_11_WidgetClassList(t *testing.T) {
 		t.Errorf("class lists = %v, want one widget", lists)
 	}
 }
+
+// TestREQ_ISL_17_SecretInEventDetail covers GX7002 for a domain event: the
+// detail goes to the browser, so its type holds no gx.Secret (SI-04).
+func TestREQ_ISL_17_SecretInEventDetail(t *testing.T) {
+	events := func(detail string) string {
+		return "package cart\n\nimport \"github.com/alternayte/gx\"\n\ntype Line struct {\n\tSKU  string\n\tCard gx.Secret\n}\n\n" +
+			"type Detail struct {\n" + detail + "}\n\nvar Changed = gx.Event[Detail](\"cart-changed\")\n"
+	}
+	for name, detail := range map[string]string{
+		"a field":             "\tToken gx.Secret\n",
+		"a field of a struct": "\tLine Line\n",
+		"a list":              "\tLines []Line\n",
+		"a map and a pointer": "\tByID map[string]*Line\n",
+	} {
+		t.Run(name, func(t *testing.T) {
+			diags := codesOf(checkDir(t, writeTree(t, map[string]string{
+				"go.mod":         moduleWithGx(t),
+				"cart/events.go": events(detail),
+			})), compiler.CodeSecret)
+			if len(diags) != 1 || !strings.HasSuffix(diags[0].File, "events.go") || diags[0].Line != 14 || !strings.Contains(diags[0].Msg, "cart-changed") {
+				t.Fatalf("diagnostics = %v, want one GX7002 at the event", diags)
+			}
+		})
+	}
+	clean := checkDir(t, writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"cart/events.go": events("\tCount int\n\tNote  string\n\tNext  *Detail\n"),
+	}))
+	if len(clean) != 0 {
+		t.Fatalf("a detail with no secret: %v", clean)
+	}
+}

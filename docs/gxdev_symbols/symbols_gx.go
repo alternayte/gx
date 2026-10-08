@@ -214,6 +214,8 @@ func Packages() []gx.DevPackage {
 				"ContentPage":    reflect.TypeFor[gx.ContentPage](),
 				"Ctx":            reflect.TypeFor[gx.Ctx](),
 				"ElementPatch":   reflect.TypeFor[gx.ElementPatch](),
+				"EventPatch":     reflect.TypeFor[gx.EventPatch](),
+				"EventValue":     reflect.TypeFor[gx.EventValue](),
 				"FieldView":      reflect.TypeFor[gx.FieldView](),
 				"FieldViolation": reflect.TypeFor[gx.FieldViolation](),
 				"File":           reflect.TypeFor[gx.File](),

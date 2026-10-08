@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 	"strings"
 
@@ -88,6 +89,17 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 				opts = append(opts, sdk.WithViewTransitions())
 			}
 			if err := sse.PatchElements(gx.StringRequest(r, t.Node), opts...); err != nil {
+				return err
+			}
+		case gx.EventPatch:
+			// A domain event (REQ-ISL-17). Datastar has no event of the
+			// server, so the answer adds one hidden element whose load
+			// expression dispatches the event and removes the element.
+			el, err := eventElement(t)
+			if err != nil {
+				return err
+			}
+			if err := sse.PatchElements(el, sdk.WithSelector("body"), sdk.WithModeAppend()); err != nil {
 				return err
 			}
 		case gx.SignalPatch:
@@ -228,4 +240,26 @@ func jsString(s string) string {
 	}
 	b.WriteByte('\'')
 	return b.String()
+}
+
+// eventElement returns the element that dispatches a domain event. The
+// event goes to the root element of the component instance that invoked the
+// action, or to the document when the component has no instance scope. It
+// bubbles.
+func eventElement(p gx.EventPatch) (string, error) {
+	detail, err := json.Marshal(p.Detail)
+	if err != nil {
+		return "", err
+	}
+	target := "document"
+	if p.Scope != "" {
+		selector := `[data-gx-instance="` + strings.NewReplacer(`\`, `\\`, `"`, `\"`).Replace(p.Scope) + `"]`
+		target = "(document.querySelector(" + jsString(selector) + ")||document)"
+	}
+	expr := target + ".dispatchEvent(new CustomEvent(" + jsString(p.Name) + ",{bubbles:true,detail:" + string(detail) + "}));el.remove()"
+	// Datastar reads $name as a signal and @name( as an action in the
+	// text of an expression. The detail is data: neither sign stays in it
+	// as a character.
+	expr = strings.NewReplacer("$", `\u0024`, "@", `\u0040`).Replace(expr)
+	return `<span hidden data-init="` + html.EscapeString(expr) + `"></span>`, nil
 }
