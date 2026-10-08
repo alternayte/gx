@@ -13,7 +13,12 @@ var (
 	previewJS string
 	//go:embed toast.js
 	toastJS string
+	//go:embed chartdemo.js
+	chartDemoJS string
 )
+
+// chartDemoScript gives the button of the chart demo its click.
+func chartDemoScript() gx.Node { return inlineScript(chartDemoJS) }
 
 // previewScript sets the height of the frame around a preview.
 func previewScript() gx.Node { return inlineScript(previewJS) }

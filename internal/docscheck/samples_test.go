@@ -22,6 +22,7 @@ import (
 	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/exporter"
 	"github.com/alternayte/gx/internal/islands"
+	"github.com/alternayte/gx/internal/jspin"
 	"github.com/alternayte/gx/internal/registry"
 	"github.com/alternayte/gx/internal/scaffold"
 )
@@ -264,6 +265,15 @@ func applyPage(t *testing.T, repo, dir string, p docscheck.Page) {
 						t.Fatalf("%s: gx %s: want a kind and a name", p.Slug, strings.Join(args, " "))
 					}
 					if _, err := scaffold.New(dir, args[1], args[2]); err != nil {
+						t.Fatalf("%s: gx %s: %v", p.Slug, strings.Join(args, " "), err)
+					}
+				case "pin":
+					// gx pin takes the package from the CDN, as the
+					// reader does.
+					if len(args) != 2 {
+						t.Fatalf("%s: gx %s: want one package", p.Slug, strings.Join(args, " "))
+					}
+					if _, err := jspin.Pin(context.Background(), jspin.Options{Dir: dir, Spec: args[1]}); err != nil {
 						t.Fatalf("%s: gx %s: %v", p.Slug, strings.Join(args, " "), err)
 					}
 				case "add":

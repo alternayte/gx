@@ -8,7 +8,10 @@ root="$(git rev-parse --show-toplevel)"
 cd "$root"
 fail=0
 
-files="$(find . -path ./.git -prune -o -path '*/node_modules' -prune -o -type f \( -name '*.go' -o -name '*.ts' -o -name '*.tsx' -o -name '*.gx' -o -name '*.js' \) -print)"
+# The files of gx pin are code of a different project, pinned by hash in
+# gx.lock, and the island bundle of an app embeds them. Their words are not
+# stub markers of this repo.
+files="$(find . -path ./.git -prune -o -path '*/node_modules' -prune -o -path '*/js/vendor' -prune -o -path '*/gxislands/islands_gx.go' -prune -o -type f \( -name '*.go' -o -name '*.ts' -o -name '*.tsx' -o -name '*.gx' -o -name '*.js' \) -print)"
 while IFS= read -r word; do
   case "$word" in ''|\#*) continue ;; esac
   hits="$(printf '%s\n' "$files" | xargs grep -Fn -- "$word" 2>/dev/null || true)"

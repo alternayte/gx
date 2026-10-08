@@ -256,3 +256,62 @@ test('REQ-EXP-03 an island runs on the static host', async () => {
   expect(errors).toEqual([])
   await page.close()
 })
+
+// inked counts the pixels of the chart canvas that are not transparent, and
+// the pixels with the blue of the bars.
+const inked = (page: Page): Promise<{ any: number; bars: number }> =>
+  page.evaluate(() => {
+    const canvas = document.querySelector('gx-island canvas') as HTMLCanvasElement
+    const data = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data
+    let any = 0
+    let bars = 0
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i + 3] !== 0) any++
+      if (data[i] === 0x25 && data[i + 1] === 0x63 && data[i + 2] === 0xeb && data[i + 3] === 255) bars++
+    }
+    return { any, bars }
+  })
+
+test('REQ-EXP-03 the Chart.js island of the guide draws on the static host, and new props move its bars', async () => {
+  const page = await browser.newPage()
+  const errors = errorsOf(page)
+  await page.goto(url + '/guides/chart-js/', { waitUntil: 'load' })
+  await page.locator('[data-chart-demo]').scrollIntoViewIfNeeded()
+  await page.waitForFunction(() => document.querySelector('gx-island')?.matches(':state(mounted)'))
+  // The entry animation ends with the bars at their full height.
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('gx-island canvas') as HTMLCanvasElement | null
+    return canvas !== null && canvas.width > 0
+  })
+  await Bun.sleep(1200)
+  const first = await inked(page)
+  expect(first.any).toBeGreaterThan(1000)
+  expect(first.bars).toBeGreaterThan(1000)
+  // The button gives the island new props. The update export keeps the
+  // canvas and draws other bars.
+  await page.evaluate(() => ((window as any).chartCanvas = document.querySelector('gx-island canvas')))
+  await page.locator('[data-chart-next]').click()
+  await Bun.sleep(1200)
+  const second = await inked(page)
+  expect(second.bars).toBeGreaterThan(1000)
+  expect(second.bars).not.toBe(first.bars)
+  expect(await page.evaluate(() => (window as any).chartCanvas === document.querySelector('gx-island canvas'))).toBe(true)
+  expect(errors).toEqual([])
+  await page.close()
+})
+
+test('REQ-STY-10 the Chart.js island of the guide has no animation under reduced motion', async () => {
+  const context = await browser.newContext({ reducedMotion: 'reduce' })
+  const page = await context.newPage()
+  await page.goto(url + '/guides/chart-js/', { waitUntil: 'load' })
+  await page.locator('[data-chart-demo]').scrollIntoViewIfNeeded()
+  await page.waitForFunction(() => document.querySelector('gx-island canvas') !== null)
+  // With no animation the first frame holds the full bars.
+  await page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))))
+  const still = await inked(page)
+  await Bun.sleep(900)
+  const later = await inked(page)
+  expect(still.bars).toBeGreaterThan(1000)
+  expect(later.bars).toBe(still.bars)
+  await context.close()
+})

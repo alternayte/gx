@@ -1,0 +1,14 @@
+{
+  "js": {
+    "pins": {
+      "chart.js/auto": {
+        "version": "4.5.1",
+        "file": "js/vendor/chart.js@4.5.1/auto.js"
+      }
+    },
+    "files": {
+      "js/vendor/@kurkle/color@0.3.4.js": "sha256-SG00Rhilp0ug9JMtu721LN8Vxwr9A1NzsqZGcua2mjI=",
+      "js/vendor/chart.js@4.5.1/auto.js": "sha256-CFkMyc4vWfuCyg6mVR4PjHXO/xihWificbzXGiTUGBY="
+    }
+  }
+}

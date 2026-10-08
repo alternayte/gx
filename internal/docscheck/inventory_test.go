@@ -53,6 +53,7 @@ func TestREQ_DOC_02_PageInventory(t *testing.T) {
 		"guides/content-sites":        "Guides", // content collections
 		"guides/static-export":        "Guides", // static export
 		"guides/widgets":              "Guides", // widgets for a host page
+		"guides/chart-js":             "Guides", // an npm chart library in an island
 		"guides/security":             "Guides", // the security rules
 		"guides/islands":              "Guides", // islands and web components
 		"guides/adapters":             "Guides", // Datastar and htmx

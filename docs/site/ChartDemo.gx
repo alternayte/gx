@@ -1,0 +1,7 @@
+package site
+
+<div class="gx-chart-demo my-6 rounded-lg border border-border p-4" data-chart-demo data-sets={chartSetsJSON}>
+  <SalesChart title={chartTitle} data={chartSets[0]} load="visible" />
+  <button type="button" class="mt-4 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent" data-chart-next>Load new numbers</button>
+  {chartDemoScript()}
+</div>

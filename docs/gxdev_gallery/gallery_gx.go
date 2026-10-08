@@ -12,6 +12,7 @@ import (
 // (REQ-AI-03).
 func Fixtures() []gx.Fixture {
 	return []gx.Fixture{
+		{Component: "ChartDemo", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "Example", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "Frame", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "IconGrid", Package: "github.com/alternayte/gx/docs/site", Missing: true},

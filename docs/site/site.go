@@ -44,7 +44,7 @@ var sections = []string{"Start", "Tutorial", "Guides", "Reference", "Compare", "
 // Pages is the content collection of the site.
 var Pages = gx.Collection[Meta]("content").Components(
 	docs.Aside, docs.Tabs, docs.TabItem, docs.Card, docs.CardGrid, docs.LinkCard,
-	Example, IconGrid,
+	Example, IconGrid, ChartDemo,
 )
 
 // Site is the shell configuration.
