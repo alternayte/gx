@@ -33,6 +33,13 @@ type WidgetBuild struct {
 	Attributes []WidgetAttribute
 	// Events are the domain events of the package of the widget, by name.
 	Events []WidgetEvent
+	// Classes are the classes that the widget uses, as the class list of
+	// the widget has them (REQ-ISL-11).
+	Classes []string
+	// CSSVariables are the tokens of the theme that the stylesheet of the
+	// widget reads. The compiler does not build a stylesheet: the caller
+	// sets them, and WidgetManifest writes them.
+	CSSVariables []string
 	// DTS is the type file of the element, and ReactDTS the JSX types of
 	// the element for a React host.
 	DTS      []byte
@@ -52,6 +59,18 @@ type WidgetEvent struct {
 	Name string
 	// Detail is the TypeScript type of the detail.
 	Detail string
+	// Fields are the fields of a detail that is an object, with the fields
+	// of each object below it.
+	Fields []WidgetField
+}
+
+// WidgetField is one field of the detail of an event. The name of a field
+// of an object in the detail has the path to it: "item.sku", and
+// "items[].sku" for the objects of a list.
+type WidgetField struct {
+	Name     string
+	Type     string
+	Optional bool
 }
 
 // Widgets returns the widgets of the module under root, by tag. It returns
@@ -69,6 +88,7 @@ func Widgets(root string) ([]WidgetBuild, []Diagnostic) {
 		return nil, nil
 	}
 	mounts := collectMounts(res.pkgs)
+	classes := l.widgetClasses(res, root)
 	var out []WidgetBuild
 	for _, w := range collectWidgets(res.pkgs) {
 		if w.tag == "" || elementname.Problem(w.tag) != "" || w.input == nil || w.input.Obj().Pkg() == nil {
@@ -78,7 +98,7 @@ func Widgets(root string) ([]WidgetBuild, []Diagnostic) {
 		if def == nil {
 			continue
 		}
-		b := WidgetBuild{Tag: w.tag, Class: widgetClassName(w.tag), Dir: filepath.Dir(w.at.Filename)}
+		b := WidgetBuild{Tag: w.tag, Class: widgetClassName(w.tag), Dir: filepath.Dir(w.at.Filename), Classes: classes[w.tag]}
 		_, path, _ := strings.Cut(def.pattern, " ")
 		prefix, known := "", w.varKey == ""
 		for _, m := range mounts[w.varKey] {
@@ -218,7 +238,9 @@ func widgetEvents(w *widgetDecl, b *WidgetBuild) (string, []WidgetEvent, []Diagn
 						})
 						continue
 					}
-					events = append(events, WidgetEvent{Name: name, Detail: tsType(shape)})
+					e := WidgetEvent{Name: name, Detail: tsType(shape)}
+					detailFields(shape, "", map[*islandObjectType]bool{}, &e.Fields)
+					events = append(events, e)
 				}
 			}
 		}
@@ -241,6 +263,34 @@ func widgetEvents(w *widgetDecl, b *WidgetBuild) (string, []WidgetEvent, []Diagn
 		decls.WriteString("}\n\n")
 	}
 	return decls.String(), events, diags
+}
+
+// detailFields lists the fields of each object in the detail of an event,
+// for the contract check of `gx wc check` (REQ-ISL-13).
+func detailFields(s *islandShape, path string, open map[*islandObjectType]bool, out *[]WidgetField) {
+	switch s.kind {
+	case islandPointer:
+		detailFields(s.elem, path, open, out)
+	case islandList:
+		detailFields(s.elem, path+"[]", open, out)
+	case islandMap:
+		detailFields(s.elem, path+"{}", open, out)
+	case islandObject:
+		// A type that holds itself is listed one time.
+		if open[s.object] {
+			return
+		}
+		open[s.object] = true
+		defer delete(open, s.object)
+		for _, f := range s.object.fields {
+			name := f.jsonName
+			if path != "" {
+				name = path + "." + name
+			}
+			*out = append(*out, WidgetField{Name: name, Type: tsType(f.shape), Optional: f.absent != ""})
+			detailFields(f.shape, name, open, out)
+		}
+	}
 }
 
 // lifecycleEvents are the events of each widget element (REQ-ISL-16,
@@ -327,9 +377,21 @@ func WidgetManifest(widgets []WidgetBuild) ([]byte, error) {
 		Type    typ    `json:"type"`
 		Default string `json:"default,omitempty"`
 	}
+	// detail is a field of Gx in the manifest: the fields of the detail of
+	// an event. The schema has no place for them, and a tool that does not
+	// know the key ignores it.
+	type detail struct {
+		Name     string `json:"name"`
+		Type     typ    `json:"type"`
+		Optional bool   `json:"optional,omitempty"`
+	}
 	type event struct {
+		Name   string   `json:"name"`
+		Type   typ      `json:"type"`
+		Detail []detail `json:"detail,omitempty"`
+	}
+	type cssProperty struct {
 		Name string `json:"name"`
-		Type typ    `json:"type"`
 	}
 	type member struct {
 		Kind string `json:"kind"`
@@ -337,13 +399,14 @@ func WidgetManifest(widgets []WidgetBuild) ([]byte, error) {
 		Type typ    `json:"type"`
 	}
 	type declaration struct {
-		Kind          string      `json:"kind"`
-		Name          string      `json:"name"`
-		TagName       string      `json:"tagName"`
-		CustomElement bool        `json:"customElement"`
-		Attributes    []attribute `json:"attributes"`
-		Events        []event     `json:"events"`
-		Members       []member    `json:"members"`
+		Kind          string        `json:"kind"`
+		Name          string        `json:"name"`
+		TagName       string        `json:"tagName"`
+		CustomElement bool          `json:"customElement"`
+		Attributes    []attribute   `json:"attributes"`
+		Events        []event       `json:"events"`
+		CSSProperties []cssProperty `json:"cssProperties,omitempty"`
+		Members       []member      `json:"members"`
 	}
 	type ref struct {
 		Name   string `json:"name"`
@@ -372,7 +435,14 @@ func WidgetManifest(widgets []WidgetBuild) ([]byte, error) {
 			d.Attributes = append(d.Attributes, attribute{Name: a.Name, Type: typ{Text: a.Type}, Default: a.Default})
 		}
 		for _, e := range append(append([]WidgetEvent{}, w.Events...), lifecycleEvents...) {
-			d.Events = append(d.Events, event{Name: e.Name, Type: typ{Text: "CustomEvent<" + e.Detail + ">"}})
+			ev := event{Name: e.Name, Type: typ{Text: "CustomEvent<" + e.Detail + ">"}}
+			for _, f := range e.Fields {
+				ev.Detail = append(ev.Detail, detail{Name: f.Name, Type: typ{Text: f.Type}, Optional: f.Optional})
+			}
+			d.Events = append(d.Events, ev)
+		}
+		for _, name := range w.CSSVariables {
+			d.CSSProperties = append(d.CSSProperties, cssProperty{Name: name})
 		}
 		file := w.Tag + ".js"
 		manifest.Modules = append(manifest.Modules, module{

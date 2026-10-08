@@ -40,7 +40,6 @@ import (
 	tailwindpkg "github.com/alternayte/gx/internal/tailwind"
 	"github.com/alternayte/gx/internal/tscheck"
 	"github.com/alternayte/gx/internal/wcpin"
-	"github.com/alternayte/gx/internal/widgetelement"
 )
 
 // Version is the Gx release this command line tool belongs to. `gx init`
@@ -131,6 +130,9 @@ Commands:
   pin       vendor an npm package for the islands: gx pin <pkg>@<version>
   wc pin    import the web components of an npm package as typed tags
   wc build  write the element file and the types of each widget for a host page
+  wc check  compare the contract of the widgets with the last published baseline
+  wc pack   write the npm tarball of the widgets
+  wc publish  publish the npm package of the widgets, with no node
   vendor    store the pinned downloads in .gx/vendor for offline builds
   export    render every GET page to static files with --out <dir>
   import    convert another tool: gx import starlight --out <dir> <src>
@@ -1043,12 +1045,22 @@ func (l *stringList) Set(v string) error { *l = append(*l, v); return nil }
 // runWC imports the web components of an npm package (REQ-ISL-09).
 func runWC(args []string) int {
 	const usageLine = "usage: gx wc pin [--as <name>] [--out <dir>] [--element <tag>]... [--cdn <url>] <pkg>@<version> [app]"
-	if len(args) > 0 && args[0] == "build" {
-		return runWCBuild(args[1:])
+	if len(args) > 0 {
+		switch args[0] {
+		case "build":
+			return runWCBuild(args[1:])
+		case "check":
+			return runWCCheck(args[1:])
+		case "pack":
+			return runWCPack(args[1:])
+		case "publish":
+			return runWCPublish(args[1:])
+		}
 	}
 	if len(args) == 0 || args[0] != "pin" {
-		fmt.Fprintln(os.Stderr, usageLine)
-		fmt.Fprintln(os.Stderr, wcBuildUsage)
+		for _, line := range []string{usageLine, wcBuildUsage, wcCheckUsage, wcPackUsage, wcPublishUsage} {
+			fmt.Fprintln(os.Stderr, line)
+		}
 		return 2
 	}
 	fs := flag.NewFlagSet("gx wc pin", flag.ContinueOnError)
@@ -1078,107 +1090,6 @@ func runWC(args []string) int {
 		return 1
 	}
 	fmt.Printf("imported %d elements of %s into %s: %s\n", len(res.Tags), rest[0], res.Package, strings.Join(res.Tags, ", "))
-	return 0
-}
-
-const wcBuildUsage = "usage: gx wc build [--server <origin>] [--base <path>] [--out <dir>] [app or package]"
-
-// runWCBuild writes the files of each widget for a host page (REQ-ISL-10):
-// the element file, a type file, the JSX types for React, and one custom
-// elements manifest. The directory is the app, or one package of it.
-func runWCBuild(args []string) int {
-	fs := flag.NewFlagSet("gx wc build", flag.ContinueOnError)
-	fs.SetOutput(os.Stderr)
-	server := fs.String("server", "", "origin of the Gx server, for example https://api.acme.dev (default the origin of the host page)")
-	base := fs.String("base", "", "base path of the app on the server, as Config.BasePath")
-	out := fs.String("out", "", "directory of the files (default dist/widgets in the app)")
-	if err := fs.Parse(args); err != nil {
-		return 2
-	}
-	dir := "."
-	if rest := fs.Args(); len(rest) > 1 {
-		fmt.Fprintln(os.Stderr, wcBuildUsage)
-		return 2
-	} else if len(rest) == 1 {
-		dir = rest[0]
-	}
-	dir, err := filepath.Abs(dir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "gx wc build: %v\n", err)
-		return 1
-	}
-	root := moduleRootOf(dir)
-	if root == "" {
-		fmt.Fprintf(os.Stderr, "gx wc build: %s is not in a Go module\n", dir)
-		return 1
-	}
-	if diags := compiler.CheckApp(root, compiler.CheckOptions{}); len(diags) > 0 {
-		printDiags(diags)
-		return 1
-	}
-	all, diags := compiler.Widgets(root)
-	if len(diags) > 0 {
-		printDiags(diags)
-		return 1
-	}
-	var widgets []compiler.WidgetBuild
-	for _, w := range all {
-		if rel, err := filepath.Rel(dir, w.Dir); err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
-			widgets = append(widgets, w)
-		}
-	}
-	if len(widgets) == 0 {
-		fmt.Fprintf(os.Stderr, "gx wc build: %s has no widget. Declare one with gx.Widget(load, view).Tag(\"acme-name\").\n", dir)
-		return 1
-	}
-	if *out == "" {
-		*out = filepath.Join(root, "dist", "widgets")
-	}
-	if err := os.MkdirAll(*out, 0o755); err != nil {
-		fmt.Fprintf(os.Stderr, "gx wc build: %v\n", err)
-		return 1
-	}
-	basePath := strings.TrimSuffix(*base, "/")
-	if basePath != "" && !strings.HasPrefix(basePath, "/") {
-		basePath = "/" + basePath
-	}
-	write := func(name string, data []byte) bool {
-		if err := os.WriteFile(filepath.Join(*out, name), data, 0o644); err != nil {
-			fmt.Fprintf(os.Stderr, "gx wc build: %v\n", err)
-			return false
-		}
-		return true
-	}
-	for _, w := range widgets {
-		attrs := make([]string, len(w.Attributes))
-		for i, a := range w.Attributes {
-			attrs[i] = a.Name
-		}
-		element, err := widgetelement.File(widgetelement.Config{Tag: w.Tag, Attrs: attrs, Server: *server, Path: basePath + w.Path})
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "gx wc build: %v\n", err)
-			return 1
-		}
-		if !write(w.Tag+".js", element) || !write(w.Tag+".d.ts", w.DTS) || !write(w.Tag+".react.d.ts", w.ReactDTS) {
-			return 1
-		}
-	}
-	manifest, err := compiler.WidgetManifest(widgets)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "gx wc build: %v\n", err)
-		return 1
-	}
-	if !write("custom-elements.json", manifest) {
-		return 1
-	}
-	tags := make([]string, len(widgets))
-	for i, w := range widgets {
-		tags[i] = w.Tag
-	}
-	fmt.Printf("wrote %d widgets to %s: %s\n", len(widgets), *out, strings.Join(tags, ", "))
-	if *server == "" {
-		fmt.Println("no --server: each element calls the origin of its host page")
-	}
 	return 0
 }
 

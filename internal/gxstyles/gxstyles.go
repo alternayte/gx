@@ -89,6 +89,12 @@ func BuildWidgets(ctx context.Context, root string) (map[string][]byte, error) {
 	if err := json.Unmarshal(data, &lists); err != nil {
 		return nil, errors.New("gxstyles: " + WidgetClassesPath(root) + " is not the class list of the widgets; run gx generate")
 	}
+	return BuildWidgetLists(ctx, root, lists)
+}
+
+// BuildWidgetLists builds the stylesheet of each widget from its class
+// list, by the tag of the widget.
+func BuildWidgetLists(ctx context.Context, root string, lists map[string][]string) (map[string][]byte, error) {
 	if len(lists) == 0 {
 		return nil, nil
 	}

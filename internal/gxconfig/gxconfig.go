@@ -33,6 +33,26 @@ type Config struct {
 	// white space between two directories. An app that imports component
 	// packages of a sibling directory names that directory here.
 	IslandRoots []string
+	Widgets     Widgets
+}
+
+// Widgets is the [widgets] table of gx.toml: the npm package of the widgets
+// of the app (REQ-ISL-13, REQ-ISL-14).
+type Widgets struct {
+	// Name is the name of the npm package, for example "@acme/widgets".
+	Name string
+	// Version is the version of the contract of the widgets with a host.
+	// `gx wc check` compares it with the version of the baseline.
+	Version string
+	// Server is the origin of the Gx server, and Base the base path of the
+	// app on it. The element files of the package call them.
+	Server string
+	Base   string
+	// Registry is the URL of the npm registry. Empty is the public one.
+	Registry string
+	// Access is "public" or "restricted". Empty is the rule of the
+	// registry.
+	Access string
 }
 
 // Registry is the [registry] table of gx.toml (REQ-REG-02). URL is the
@@ -110,6 +130,21 @@ func Load(root string) (Config, error) {
 				cfg.Registry.URL = value
 			case "dir":
 				cfg.Registry.Dir = value
+			}
+		case "widgets":
+			switch key {
+			case "name":
+				cfg.Widgets.Name = value
+			case "version":
+				cfg.Widgets.Version = value
+			case "server":
+				cfg.Widgets.Server = value
+			case "base":
+				cfg.Widgets.Base = value
+			case "registry":
+				cfg.Widgets.Registry = value
+			case "access":
+				cfg.Widgets.Access = value
 			}
 		case "islands":
 			if key == "roots" {

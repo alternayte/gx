@@ -112,8 +112,8 @@ func TestREQ_ISL_09_WCPinCommand(t *testing.T) {
 	}))
 	defer srv.Close()
 	dir := islandApp(t, "export default (el: HTMLElement) => {\n  el.textContent = \"x\";\n};\n")
-	if code := gxcli.Main([]string{"wc", "check", dir}); code != 2 {
-		t.Fatalf("gx wc check = %d, want the usage error 2", code)
+	if code := gxcli.Main([]string{"wc", "nothing", dir}); code != 2 {
+		t.Fatalf("gx wc nothing = %d, want the usage error 2", code)
 	}
 	out, code := captureStdout(t, func() int {
 		return gxcli.Main([]string{"wc", "pin", "--cdn", srv.URL, "--as", "xui", "xui@1.0.0", dir})

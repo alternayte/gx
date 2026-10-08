@@ -42,7 +42,11 @@ done >"$tmp/paths"
 # parse then prints nothing. One parse with output proves that the parser
 # runs: its tree starts with the document node.
 first="$(head -n 1 "$tmp/paths")"
-if ! (cd "$grammar" && TREE_SITTER_LIBDIR="$tmp/lib" ts parse "$first") 2>/dev/null | grep -q '^(document'; then
+(cd "$grammar" && TREE_SITTER_LIBDIR="$tmp/lib" ts parse "$first") >"$tmp/first.out" 2>"$tmp/first.err" || true
+if ! grep -q '^(document' "$tmp/first.out"; then
+  # The output of the parse says why: a compile error of the parser, or
+  # nothing for a parser that a signal stopped.
+  head -c 2000 "$tmp/first.out" "$tmp/first.err" >&2 || true
   echo "rule: the tree-sitter parser gives no tree for $first; it did not run or it crashed" >&2
   exit 1
 fi

@@ -161,6 +161,30 @@ gx wc pin [--as <name>] [--out <dir>] [--element <tag>] [--cdn <url>] <package>@
 
 Reads the custom elements manifest of an npm package and writes a Go package with one typed tag for each element. It pins the module of each element as `gx pin` does. `--element` limits the import to one tag; give it again for more tags.
 
+```sh
+gx wc build [--server <origin>] [--base <path>] [--out <dir>] [app or package]
+```
+
+Writes the files of each widget for a host page into `dist/widgets`: the element file, a `.d.ts` file, a file with the JSX types for React, and one `custom-elements.json`. With a package directory it writes the widgets of that package only. `--server` is the origin of the Gx server and `--base` the base path of the app; each has the key of the same name in `[widgets]` of `gx.toml` as its default. With no server the element calls the origin of its host page.
+
+```sh
+gx wc check [--update] [app]
+```
+
+Compares the contract of the widgets with the baseline in `.gx/base/widgets.json`, and prints each change. A removed or retyped attribute, event, event detail field or CSS variable needs a major bump of the `version` in `[widgets]`. An addition needs a minor bump. The command fails when the version does not have the bump. With no baseline each version passes. `--update` records the contract of now as the baseline after the check passes.
+
+```sh
+gx wc pack [--server <origin>] [--base <path>] [--out <dir>] [app]
+```
+
+Writes the npm tarball of the widgets into `dist/widgets`: the files of `gx wc build` and a `package.json`. `[widgets]` of `gx.toml` gives the `name` and the `version` of the package.
+
+```sh
+gx wc publish [--server <origin>] [--base <path>] [--registry <url>] [--tag <name>] [app]
+```
+
+Runs the check of `gx wc check`, then publishes the package through the HTTP API of the npm registry. The environment variable `NPM_TOKEN` holds the token of the registry. The keys `registry` and `access` of `[widgets]` set the registry and `public` or `restricted`. After the registry takes the version, the command writes the baseline. No node runs.
+
 ## gx vendor
 
 ```sh
