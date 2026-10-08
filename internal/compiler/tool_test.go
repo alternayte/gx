@@ -130,3 +130,58 @@ func TestREQ_AI_09_ToolDiagnostic(t *testing.T) {
 		t.Errorf("a tool with a file field: %v", diags)
 	}
 }
+
+// TestREQ_AI_07_FormAndActionAsTools runs a generated app: an action and a
+// form with .Tool() are tools of the app, a call binds the arguments through
+// the generated binder, and the rules of the form answer a bad call.
+func TestREQ_AI_07_FormAndActionAsTools(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod": moduleWithGx(t),
+		"account/route/route.go": "package route\n\nimport \"github.com/alternayte/gx\"\n\n" +
+			"type Address struct {\n\tCity string\n}\n\n" +
+			"type Signup struct {\n\tgx.Route `POST /signup`\n\tEmail string\n\tAge int\n\tHome Address\n\tTags []string\n}\n\n" +
+			"func (s *Signup) Rules() gx.Rules {\n\treturn gx.Rules{gx.Field(&s.Email, gx.Required, gx.Email), gx.Field(&s.Age, gx.Min(18))}\n}\n\n" +
+			"type Done struct {\n\tgx.Route `GET /done`\n}\n\n" +
+			"type Rename struct {\n\tgx.Route `POST /users/{id}/name`\n\tID int64\n\tName string\n\tLoud bool `query:\"loud\"`\n}\n",
+		"account/SignupView.gx": "package account\n\nimport \"app/account/route\"\n\nprops {\n  F route.SignupForm\n}\n\n<form {...p.F.Attrs()}><input {...p.F.Email.Attrs()} /><button type=\"submit\">Go</button></form>\n",
+		"account/account.go": "package account\n\nimport (\n\t\"strconv\"\n\n\t\"app/account/route\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n" +
+			"var Seen []route.Signup\n\n" +
+			"// Makes an account for a new user.\nvar signup = gx.Form(func(c *gx.Ctx, in *route.Signup) error {\n\tSeen = append(Seen, *in)\n\tif in.Email == \"taken@x.example\" {\n\t\treturn gx.FieldError(&in.Email, \"email.taken\")\n\t}\n\treturn c.Redirect(route.Done{})\n}, SignupView).Tool()\n\n" +
+			"// Gives a user a new name.\nvar rename = gx.Action(func(c *gx.Ctx, in route.Rename) error {\n\tgx.ToolResult(c, map[string]string{\"name\": in.Name, \"id\": strconv.FormatInt(in.ID, 10), \"loud\": strconv.FormatBool(in.Loud)})\n\treturn nil\n}).Tool(gx.Confirm)\n\n" +
+			"var Routes = gx.Collect(signup, rename)\n",
+		"account/account_test.go": "package account\n\nimport (\n\t\"context\"\n\t\"encoding/json\"\n\t\"strings\"\n\t\"testing\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n" +
+			"func TestTools(t *testing.T) {\n\tapp := gx.New(gx.Config{})\n\tapp.Group(\"/\", Routes)\n" +
+			"\tvar names []string\n\tfor _, info := range app.Tools() {\n\t\tnames = append(names, info.Name+\": \"+info.Description)\n\t}\n" +
+			"\tif got := strings.Join(names, \"; \"); got != \"account_rename: Gives a user a new name.; account_signup: Makes an account for a new user.\" {\n\t\tt.Fatalf(\"tools = %s\", got)\n\t}\n" +
+			"\tcall := func(name, args string) gx.ToolAnswer {\n\t\treturn app.CallTool(context.Background(), nil, name, json.RawMessage(args))\n\t}\n" +
+			"\ta := call(\"account_signup\", `{\"email\":\"a@b.example\",\"age\":30,\"home\":{\"city\":\"Oslo\"},\"tags\":[\"x\",\"y\"]}`)\n" +
+			"\tif a.IsError || a.Text != \"redirect to /done\" || len(Seen) != 1 || Seen[0].Email != \"a@b.example\" || Seen[0].Age != 30 || Seen[0].Home.City != \"Oslo\" || strings.Join(Seen[0].Tags, \",\") != \"x,y\" {\n\t\tt.Fatalf(\"signup: %+v, seen %+v\", a, Seen)\n\t}\n" +
+			"\ta = call(\"account_signup\", `{\"email\":\"nope\",\"age\":12}`)\n" +
+			"\tif !a.IsError || len(Seen) != 1 || !strings.Contains(a.Text, \"field email\") || !strings.Contains(a.Text, \"field age\") {\n\t\tt.Fatalf(\"a call that breaks two rules: %+v\", a)\n\t}\n" +
+			"\ta = call(\"account_signup\", `{\"email\":\"taken@x.example\",\"age\":30}`)\n" +
+			"\tif !a.IsError || !strings.Contains(a.Text, \"email.taken\") {\n\t\tt.Fatalf(\"a field error of the handler: %+v\", a)\n\t}\n" +
+			"\ta = call(\"account_signup\", `{\"email\":\"a@b.example\",\"age\":\"old\"}`)\n" +
+			"\tif !a.IsError || len(Seen) != 2 {\n\t\tt.Fatalf(\"an argument of the wrong type: %+v, seen %d\", a, len(Seen))\n\t}\n" +
+			"\ta = call(\"account_rename\", `{\"id\":7,\"name\":\"Ada & Bo\",\"loud\":true}`)\n" +
+			"\tif a.IsError || string(a.Structured) != `{\"id\":\"7\",\"loud\":\"true\",\"name\":\"Ada \\u0026 Bo\"}` {\n\t\tt.Fatalf(\"rename: %+v\", a)\n\t}\n" +
+			"\tif a = call(\"account_nothing\", `{}`); !a.IsError {\n\t\tt.Fatalf(\"a name with no tool: %+v\", a)\n\t}\n}\n",
+	})
+	buildGenerated(t, dir, "test", "./...")
+}
+
+// TestREQ_AI_08_SecretInToolResult checks GX7002 for a gx.Secret in the
+// value of gx.ToolResult: the result goes to an agent (SI-04).
+func TestREQ_AI_08_SecretInToolResult(t *testing.T) {
+	src := "package products\n\nimport (\n\t\"app/products/route\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n" +
+		"type result struct {\n\tName string `json:\"name\"`\n\tKey gx.Secret `json:\"key\"`\n}\n\n" +
+		"// Does a thing.\nvar plain = gx.Action(func(c *gx.Ctx, in route.Plain) error {\n\tgx.ToolResult(c, result{Name: \"a\"})\n\treturn nil\n}).Tool()\n\n" +
+		"var Routes = gx.Collect(plain)\n"
+	diags := checkDir(t, writeTree(t, map[string]string{
+		"go.mod":                  moduleWithGx(t),
+		"products/route/route.go": toolRoutes,
+		"products/products.go":    src,
+	}))
+	if got := codesOf(diags, "GX7002"); len(got) != 1 || !strings.Contains(got[0].Msg, "Key") {
+		t.Errorf("a secret in a tool result: %v", diags)
+	}
+}

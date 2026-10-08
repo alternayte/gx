@@ -441,3 +441,33 @@ func checkTools(defs []*routeDef) []Diagnostic {
 	}
 	return out
 }
+
+// checkToolResultSecrets reports a gx.ToolResult call whose value holds a
+// gx.Secret (GX7002, SI-04). The result of a tool goes to an agent as JSON
+// (REQ-AI-08).
+func checkToolResultSecrets(pkgs []*packages.Package) []Diagnostic {
+	var out []Diagnostic
+	sourceFiles(pkgs, func(pkg *packages.Package, file *ast.File) {
+		ast.Inspect(file, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok || !isGxFuncExpr(pkg, call.Fun, "ToolResult") || len(call.Args) != 2 {
+				return true
+			}
+			path := secretPath(pkg.TypesInfo.TypeOf(call.Args[1]), map[types.Type]bool{})
+			if path == nil {
+				return true
+			}
+			at := pkg.Fset.Position(call.Args[1].Pos())
+			where := "the value"
+			if len(path) > 0 {
+				where = "the field " + Quoted(strings.Join(path, "."))
+			}
+			out = append(out, Diagnostic{
+				Code: CodeSecret, File: at.Filename, Line: at.Line, Col: at.Column,
+				Msg: "tool result: " + where + " has type gx.Secret; a secret cannot cross to an agent",
+			})
+			return true
+		})
+	})
+	return out
+}

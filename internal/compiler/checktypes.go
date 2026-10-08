@@ -252,6 +252,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	diags = append(diags, checkRoutePackages(pkgs)...)
 	diags = append(diags, l.checkWidgets(res, pkgs, root)...)
 	diags = append(diags, checkEventSecrets(pkgs)...)
+	diags = append(diags, checkToolResultSecrets(pkgs)...)
 	res.resolveContentMounts()
 	return res, diags
 }

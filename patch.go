@@ -66,6 +66,9 @@ type Response struct {
 	Navigate bool
 	// Head is the merged head of a partial navigation (REQ-RTE-12).
 	Head *HeadProps
+	// tool is the structured output that ToolResult set (REQ-AI-08).
+	tool    any
+	hasTool bool
 }
 
 // patchModeNode marks the mode of the patches that follow it in Ctx.Patch.

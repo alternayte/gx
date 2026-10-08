@@ -267,6 +267,8 @@ type App struct {
 	// widgetTags holds, for the element name of each mounted widget, the
 	// configuration of its element file (REQ-ISL-10).
 	widgetTags map[string]widgetelement.Config
+	// tools holds each mounted tool by its name (REQ-AI-06, SI-07).
+	tools map[string]mountedTool
 }
 
 // appRoute is one mounted route as registered.
@@ -500,6 +502,9 @@ func (a *App) Group(prefix string, parts ...any) *App {
 			}
 			_, mounted, _ := strings.Cut(pattern, " ")
 			a.widgetTags[tag] = widgetelement.Config{Tag: tag, Attrs: wd.widgetAttrs(), Self: true, Path: mounted}
+		}
+		if t, ok := h.(interface{ toolDef() *toolDef }); ok && t.toolDef() != nil {
+			a.addTool(t.toolDef(), pattern)
 		}
 		a.patterns[pattern] = true
 		a.routes = append(a.routes, appRoute{pattern: pattern, handler: h})

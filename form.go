@@ -387,6 +387,10 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !sameOrigin(w, r) {
 		return
 	}
+	tc := toolCallOf(r)
+	if tc != nil {
+		tc.done = true
+	}
 	in := f.newIn()
 	if mu, ok := in.(interface{ GxMaxUpload() int64 }); ok {
 		if n := mu.GxMaxUpload(); n > 0 {
@@ -412,10 +416,14 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	errs, err := in.GxBindForm(r)
 	if err != nil {
+		if tc != nil {
+			tc.bad = true
+			return
+		}
 		formBindError(w, r, err)
 		return
 	}
-	if field := validateField(r); field != "" {
+	if field := validateField(r); field != "" && tc == nil {
 		f.validate(w, r, in, field)
 		return
 	}
@@ -440,6 +448,11 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			} else {
 				var re *redirectError
 				if errors.As(err, &re) {
+					if tc != nil {
+						// The redirect of a form is its answer.
+						tc.res = &Response{Patches: []Patch{RedirectPatch{URL: re.url}}, tool: ctx.res.tool, hasTool: ctx.res.hasTool}
+						return
+					}
 					f.redirect(w, r, re.url)
 					return
 				}
@@ -447,6 +460,19 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: err.Error(), Kind: ToastError})
 			}
 		}
+	}
+	if tc != nil {
+		// The answer of a tool call is data for the agent: the field
+		// errors, or the answer of the handler.
+		if len(errs) > 0 {
+			tc.errs = errs
+			return
+		}
+		if ctx.res.Err != nil {
+			ctx.res.Patches = ctx.res.Patches[:len(ctx.res.Patches)-1]
+		}
+		tc.res = ctx.res
+		return
 	}
 	if len(errs) > 0 {
 		f.invalid(w, r, in, errs)

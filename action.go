@@ -57,8 +57,16 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !sameOrigin(w, r) {
 		return
 	}
+	tc := toolCallOf(r)
+	if tc != nil {
+		tc.done = true
+	}
 	in, err := a.bind(r)
 	if err != nil {
+		if tc != nil {
+			tc.bad = true
+			return
+		}
 		if isWidgetRequest(r) {
 			writeWidgetError(w, http.StatusBadRequest, "gx.bad_input", "")
 			return
@@ -67,6 +75,10 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if violation := RunRules(&in); violation != nil {
+		if tc != nil {
+			tc.errs = map[string]string{violation.Field: violation.Key}
+			return
+		}
 		if isWidgetRequest(r) {
 			writeWidgetError(w, http.StatusUnprocessableEntity, violation.Key, violation.Field)
 			return
@@ -85,6 +97,14 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// error for the dev overlay.
 		ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: handlerErr.Error(), Kind: ToastError})
 		ctx.res.Err = handlerErr
+	}
+	if tc != nil {
+		// The answer of a tool call is data for the agent.
+		if handlerErr != nil {
+			ctx.res.Patches = ctx.res.Patches[:len(ctx.res.Patches)-1]
+		}
+		tc.res = ctx.res
+		return
 	}
 	if len(ctx.res.Patches) == 0 {
 		// An action with no answer answers 204 (REQ-ACT-10).

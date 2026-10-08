@@ -136,6 +136,10 @@ func FragmentID(component, name string, key Key) string {
 // (REQ-ACT-03). It returns nil when no adapter is set. The signals of a
 // widget request come in the wire form of a widget.
 func Signals(r *http.Request) (map[string]any, error) {
+	if tc := toolCallOf(r); tc != nil {
+		// A tool call has its signal arguments by name, with no scope.
+		return tc.signals, nil
+	}
 	if isWidgetRequest(r) {
 		// A widget has one wire form under each adapter (D-264).
 		return widgetSignals(r)

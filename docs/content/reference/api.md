@@ -612,6 +612,14 @@ func TextValue(v any) string
 
 TextValue returns the text form of a renderable value.
 
+### func ToolResult
+
+```go
+func ToolResult(c *Ctx, v any)
+```
+
+ToolResult sets the structured output of the tool call that runs the action. An agent gets v as JSON. With no ToolResult the agent gets a summary of the patches of the action. For a request of a browser it does nothing.
+
 ### func Transition
 
 ```go
@@ -729,6 +737,14 @@ func New(cfg Config) *App
 
 New returns an empty app.
 
+#### func (App) CallTool
+
+```go
+func (a *App) CallTool(ctx context.Context, header http.Header, name string, args json.RawMessage) ToolAnswer
+```
+
+CallTool runs the tool with the given name for an agent. args is the JSON object of the arguments. header holds the headers of the request of the agent: the request of the action gets them, so the middleware of the group of the action sees the caller as it sees a user. The caller of CallTool makes the cross-origin check of the request of the agent; a handler that the app mounts has it.
+
 #### func (App) Errors
 
 ```go
@@ -752,6 +768,14 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request)
 ```
 
 ServeHTTP serves the app with cross-origin protection. A page response is buffered so the adapter runtime can join it; action responses stream through (request lifecycle step 6 and 7) .
+
+#### func (App) Tools
+
+```go
+func (a *App) Tools() []ToolInfo
+```
+
+Tools returns the description of each tool of the app, by name. A tool is a mounted action or form with Tool; no other route is a tool.
 
 ### type Attr
 
@@ -1994,6 +2018,7 @@ type Response struct {
     Navigate bool
     // Head is the merged head of a partial navigation (REQ-RTE-12).
     Head *HeadProps
+    // contains filtered or unexported fields
 }
 ```
 
@@ -2362,6 +2387,22 @@ func (p ToastPatch) Timeout() time.Duration
 ```
 
 Timeout returns the time before the toast leaves on its own. It is 0 for a sticky toast and for a loading toast: they never leave on their own.
+
+### type ToolAnswer
+
+```go
+type ToolAnswer struct {
+    // Text says what the call did. For a typed result it is the JSON of
+    // the result.
+    Text string
+    // Structured is the JSON of the value that ToolResult set, or nil.
+    Structured json.RawMessage
+    // IsError is true when the call did not run the action to its end.
+    IsError bool
+}
+```
+
+ToolAnswer is the answer of one tool call for an agent.
 
 ### type ToolField
 
