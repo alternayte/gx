@@ -385,7 +385,10 @@ const first = result()
 // The app owner deploys a new build. Its stylesheet has a new content hash.
 answer = { ...answer, html: '<p class="new-class">cart</p>', style: '/cart.b2.css', build: 'b2' }
 el.setAttribute('currency', 'USD')
-await tick()
+// The element mounts again for the new build: it imports the script and
+// waits for the stylesheet. The wait ends when the stylesheets changed, or
+// after two seconds; the check below is the same for each case.
+for (let i = 0; i < 400 && JSON.stringify(result().styles) === JSON.stringify(first.styles); i++) await tick()
 await tick()
 console.log(JSON.stringify({ first: first.styles, state: el.getAttribute('data-gx-state'), styles: result().styles }))
 `)
