@@ -27,6 +27,9 @@ type routeDef struct {
 	pos        token.Position
 	action     bool
 	hasSignals bool
+	// widget marks the input of a gx.Widget: its query fields are the
+	// attributes of the element (REQ-ISL-15).
+	widget bool
 	// form marks a route struct with Rules(), the input of a gx.Form
 	// (REQ-FRM-01).
 	form bool
@@ -68,8 +71,9 @@ var pathVarRe = regexp.MustCompile(`\{([A-Za-z_][A-Za-z0-9_]*)(\.\.\.)?\}`)
 
 // collectRoutes finds every route struct in the loaded packages and checks
 // its pattern against its fields (REQ-RTE-02). An action input type also
-// binds untagged fields from form fields (REQ-ACT-03).
-func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position) ([]*routeDef, []Diagnostic) {
+// binds untagged fields from form fields (REQ-ACT-03). widgets names the
+// input type of each gx.Widget.
+func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position, widgets map[string]bool) ([]*routeDef, []Diagnostic) {
 	var defs []*routeDef
 	var diags []Diagnostic
 	for _, pkg := range pkgs {
@@ -128,6 +132,7 @@ func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position
 						pos:     pkg.Fset.Position(ts.Pos()),
 					}
 					def.action = len(actions[def.pkg.PkgPath+"."+def.name]) > 0
+					def.widget = widgets[def.pkg.PkgPath+"."+def.name]
 					def.form = hasFormRules(named)
 					if def.form {
 						def.formRules = parseFormRules(pkg, rulesMethods[def.name])
@@ -887,6 +892,9 @@ func renderRouteFile(defs []*routeDef) []byte {
 		if d.form {
 			renderFormValue(&body, d)
 		}
+		if d.widget {
+			renderWidgetAttrs(&body, d)
+		}
 	}
 	// The body decides the imports: a guess from the field kinds left an
 	// unused import for some mixes of routes.
@@ -904,6 +912,20 @@ func renderRouteFile(defs []*routeDef) []byte {
 		return b.Bytes()
 	}
 	return src
+}
+
+// renderWidgetAttrs writes the attribute list of a widget input: the names
+// of its query tags, in the order of the struct. The app reads it for the
+// element file that it serves (REQ-ISL-10).
+func renderWidgetAttrs(b *bytes.Buffer, d *routeDef) {
+	names := make([]string, 0, len(d.fields))
+	for _, f := range d.fields {
+		if f.query != "" {
+			names = append(names, strconv.Quote(f.query))
+		}
+	}
+	b.WriteString("// GxWidgetAttrs returns the attributes of the widget element of " + d.name + ".\n")
+	b.WriteString("func (" + d.name + ") GxWidgetAttrs() []string { return []string{" + strings.Join(names, ", ") + "} }\n\n")
 }
 
 // bindNameExpr appends one form name segment to a Go string expression.

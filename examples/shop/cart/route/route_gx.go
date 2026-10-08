@@ -235,3 +235,6 @@ func (in Widget) URL() string {
 	}
 	return gx.BasePath() + b.String()
 }
+
+// GxWidgetAttrs returns the attributes of the widget element of Widget.
+func (Widget) GxWidgetAttrs() []string { return []string{"label"} }

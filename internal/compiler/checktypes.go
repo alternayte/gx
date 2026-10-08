@@ -155,7 +155,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	// A route file on the disk can be older than its route types, too. The
 	// second pass then reads the new file, so the dev symbol table lists
 	// the types that this generate writes (REQ-DEV-04).
-	firstRoutes, _ := collectRoutes(pkgs, first.actions)
+	firstRoutes, _ := collectRoutes(pkgs, first.actions, widgetInputs(pkgs))
 	routeFiles := renderRouteFiles(firstRoutes)
 	reload := hasFormRoute(firstRoutes)
 	for path, src := range routeFiles {
@@ -218,7 +218,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	res.collections = collectCollections(pkgs)
 	diags = append(diags, l.checkCodeFiles(res, dirs)...)
 	diags = append(diags, l.analyzeIslands(res, dirs)...)
-	routes, rdiags := collectRoutes(pkgs, res.actions)
+	routes, rdiags := collectRoutes(pkgs, res.actions, widgetInputs(pkgs))
 	res.routes = routes
 	diags = append(diags, rdiags...)
 	for _, d := range routes {

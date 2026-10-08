@@ -14,6 +14,8 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
+
+	"github.com/alternayte/gx/internal/widgetelement"
 )
 
 // Route is embedded in a route input struct. The tag carries the method and
@@ -262,9 +264,9 @@ type App struct {
 	// origins holds, for each mounted pattern of a group with
 	// AllowOrigins, the origins that can call it (REQ-ISL-22).
 	origins map[string]*originPolicy
-	// widgetTags holds the element name of each mounted widget
-	// (REQ-ISL-10).
-	widgetTags map[string]bool
+	// widgetTags holds, for the element name of each mounted widget, the
+	// configuration of its element file (REQ-ISL-10).
+	widgetTags map[string]widgetelement.Config
 }
 
 // appRoute is one mounted route as registered.
@@ -474,26 +476,30 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		if m, ok := h.(interface{ mountPrefix(string) }); ok {
 			m.mountPrefix(prefix)
 		}
-		if wd, ok := h.(interface{ widgetTag() string }); ok {
+		pattern := joinPattern(prefix, h.Pattern())
+		if a.patterns[pattern] {
+			panic("gx: duplicate route " + pattern)
+		}
+		if wd, ok := h.(interface {
+			widgetTag() string
+			widgetAttrs() []string
+		}); ok {
 			tag := wd.widgetTag()
 			if tag == "" {
 				panic("gx: the widget " + h.Pattern() + " has no tag. Add .Tag(\"acme-name\") to gx.Widget.")
 			}
-			if a.widgetTags[tag] {
+			if _, ok := a.widgetTags[tag]; ok {
 				panic("gx: two widgets have the tag " + tag)
 			}
 			if a.widgetTags == nil {
-				a.widgetTags = map[string]bool{}
+				a.widgetTags = map[string]widgetelement.Config{}
 				// The first widget of the app: serve the widget
 				// script. An app with no widget has no such route.
 				a.serveWidgetScript()
-				a.serveWidgetStyles()
+				a.serveWidgetFiles()
 			}
-			a.widgetTags[tag] = true
-		}
-		pattern := joinPattern(prefix, h.Pattern())
-		if a.patterns[pattern] {
-			panic("gx: duplicate route " + pattern)
+			_, mounted, _ := strings.Cut(pattern, " ")
+			a.widgetTags[tag] = widgetelement.Config{Tag: tag, Attrs: wd.widgetAttrs(), Self: true, Path: mounted}
 		}
 		a.patterns[pattern] = true
 		a.routes = append(a.routes, appRoute{pattern: pattern, handler: h})

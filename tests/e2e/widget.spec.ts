@@ -114,6 +114,30 @@ test('REQ-ISL-10 a plain page on a second origin shows the widget as the server 
   await page.close()
 })
 
+test('REQ-ISL-10 a host page loads the element file from the Gx server with one script tag', async () => {
+  const page = await browser.newPage()
+  const requests: Request[] = []
+  page.on('request', (r) => requests.push(r))
+  await page.goto(host + '/served')
+  await waitState(page, 'ready')
+  // The host serves no element file: the file and the widget come from the
+  // Gx server, and the file takes the origin of the server from its own URL.
+  const scripts = requests.map((r) => r.url()).filter((u) => u.endsWith('.js') && !u.endsWith('/log.js'))
+  expect(scripts[0]).toBe(api + '/_gx/widgets/acme-cart.js')
+  expect(scripts.every((u) => u.startsWith(api + '/'))).toBe(true)
+  expect(await page.evaluate(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#line')!.textContent)).toBe('2 items in USD')
+  // An attribute of the element reaches the server.
+  await page.evaluate(() => document.querySelector('acme-cart')!.setAttribute('currency', 'EUR'))
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#line')!.textContent === '2 items in EUR')
+  // The browser asks again at each load, and the server answers 304 for
+  // the same file.
+  const first = await fetch(api + '/_gx/widgets/acme-cart.js')
+  expect(first.headers.get('cache-control')).toBe('no-cache')
+  const again = await fetch(api + '/_gx/widgets/acme-cart.js', { headers: { 'If-None-Match': first.headers.get('etag')! } })
+  expect(again.status).toBe(304)
+  await page.close()
+})
+
 test('REQ-ISL-16 the element has a state attribute and fires gx-ready one time', async () => {
   const page = await open('/')
   await waitState(page, 'ready')

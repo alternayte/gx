@@ -21,6 +21,8 @@ type widgetIn struct {
 
 func (widgetIn) Pattern() string { return "GET /cart" }
 
+func (widgetIn) GxWidgetAttrs() []string { return []string{"currency", "compact"} }
+
 func (in *widgetIn) Bind(r *http.Request) error {
 	q := r.URL.Query()
 	in.Currency = "EUR"
@@ -210,3 +212,67 @@ func TestREQ_ISL_15_WidgetAttributes(t *testing.T) {
 		}
 	})
 }
+
+// TestREQ_ISL_10_ElementFileEndpoint checks that the app serves the element
+// file of a widget to each origin, with no package: the file names the tag,
+// the attributes and the path of the route, takes the origin of the server
+// from its own URL, and has an ETag for a conditional request.
+func TestREQ_ISL_10_ElementFileEndpoint(t *testing.T) {
+	app := gx.New(gx.Config{Adapter: &fakeAdapter{}})
+	app.Group("/widgets", gx.AllowOrigins("https://shop.example.com"), gx.Collect(cartWidget(nil)))
+	get := func(target, etag string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("GET", "https://api.acme.dev"+target, nil)
+		if etag != "" {
+			req.Header.Set("If-None-Match", etag)
+		}
+		rec := httptest.NewRecorder()
+		app.ServeHTTP(rec, req)
+		return rec
+	}
+	rec := get("/_gx/widgets/acme-cart.js", "")
+	if rec.Code != 200 {
+		t.Fatalf("status %d: %s", rec.Code, rec.Body.String())
+	}
+	h := rec.Header()
+	if ct := h.Get("Content-Type"); !strings.HasPrefix(ct, "text/javascript") {
+		t.Errorf("Content-Type = %q", ct)
+	}
+	if h.Get("Access-Control-Allow-Origin") != "*" || h.Get("Cache-Control") != "no-cache" {
+		t.Errorf("headers = %v", h)
+	}
+	body := rec.Body.String()
+	if !strings.Contains(body, `{"tag":"acme-cart","attrs":["currency","compact"],"server":"","path":"/widgets/cart","self":true}`) {
+		t.Errorf("the element file has no configuration of the widget:\n%.300s", body)
+	}
+	if !strings.Contains(body, "customElements.define") || !strings.Contains(body, "import.meta.url") {
+		t.Errorf("the element file is not the loader, or does not read its own URL")
+	}
+	etag := h.Get("ETag")
+	if etag == "" {
+		t.Fatal("no ETag")
+	}
+	if again := get("/_gx/widgets/acme-cart.js", etag); again.Code != http.StatusNotModified || again.Body.Len() != 0 {
+		t.Errorf("a request with the ETag: status %d, %d bytes", again.Code, again.Body.Len())
+	}
+	if missing := get("/_gx/widgets/acme-none.js", ""); missing.Code != http.StatusNotFound {
+		t.Errorf("the element file of no widget: status %d", missing.Code)
+	}
+}
+
+// TestREQ_ISL_10_WidgetInputNeedsAttrs checks that a widget input with no
+// generated attribute list stops the app at its start.
+func TestREQ_ISL_10_WidgetInputNeedsAttrs(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("no panic")
+		}
+	}()
+	gx.Widget(func(c *gx.Ctx, in bareIn) (cartProps, error) { return cartProps{}, nil }, cartView)
+}
+
+// bareIn is a route input with the code of an older generate: it has no
+// attribute list.
+type bareIn struct{}
+
+func (bareIn) Pattern() string           { return "GET /bare" }
+func (*bareIn) Bind(*http.Request) error { return nil }

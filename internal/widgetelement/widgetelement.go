@@ -1,6 +1,6 @@
 // Package widgetelement writes the element file of a widget (REQ-ISL-19): the
 // small loader that a host page loads. `gx wc build`, the dev host page and
-// the tests of the repo use it.
+// the app, which serves it at /_gx/widgets/<tag>.js, use it.
 package widgetelement
 
 import (
@@ -33,6 +33,9 @@ type Config struct {
 	Server string `json:"server"`
 	// Path is the path of the GET route of the widget.
 	Path string `json:"path"`
+	// Self marks a file that the Gx server serves: the origin of the
+	// server is then the origin of the URL of the file.
+	Self bool `json:"self,omitempty"`
 }
 
 // File returns the element file of one widget.

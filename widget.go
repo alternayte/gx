@@ -12,6 +12,7 @@ import (
 type widget[In any, P any] struct {
 	pattern string
 	tag     string
+	attrs   []string
 	bind    func(*http.Request) (In, error)
 	load    func(*Ctx, In) (P, error)
 	view    func(P) Node
@@ -34,6 +35,10 @@ func Widget[In any, P any](load func(*Ctx, In) (P, error), view func(P) Node) *w
 	if !ok {
 		panic("gx: Widget input type needs generated Pattern and Bind methods")
 	}
+	a, ok := any(zero).(interface{ GxWidgetAttrs() []string })
+	if !ok {
+		panic("gx: Widget input type needs a generated GxWidgetAttrs method; run gx generate")
+	}
 	pattern := b.Pattern()
 	if method, _, _ := strings.Cut(pattern, " "); method != http.MethodGet {
 		panic("gx: Widget input type needs a GET route; " + pattern + " is not one")
@@ -43,7 +48,7 @@ func Widget[In any, P any](load func(*Ctx, In) (P, error), view func(P) Node) *w
 		err := any(&in).(Binder).Bind(r)
 		return in, err
 	}
-	return &widget[In, P]{pattern: pattern, bind: bind, load: load, view: view}
+	return &widget[In, P]{pattern: pattern, attrs: a.GxWidgetAttrs(), bind: bind, load: load, view: view}
 }
 
 // Tag sets the name of the custom element, for example "acme-cart". It
@@ -61,6 +66,9 @@ func (wd *widget[In, P]) Pattern() string { return wd.pattern }
 
 // widgetTag returns the element name of the widget, for the mount check.
 func (wd *widget[In, P]) widgetTag() string { return wd.tag }
+
+// widgetAttrs returns the attributes of the element, for its element file.
+func (wd *widget[In, P]) widgetAttrs() []string { return wd.attrs }
 
 // ServeHTTP binds the attributes, checks the rules, runs the loader and
 // answers with the HTML of the view as JSON.

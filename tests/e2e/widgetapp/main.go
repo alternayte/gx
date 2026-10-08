@@ -29,6 +29,8 @@ type cartIn struct {
 
 func (cartIn) Pattern() string { return "GET /cart" }
 
+func (cartIn) GxWidgetAttrs() []string { return []string{"currency", "compact"} }
+
 func (in *cartIn) Bind(r *http.Request) error {
 	q := r.URL.Query()
 	in.Currency = "EUR"
@@ -298,6 +300,9 @@ document.querySelector('acme-cart').token = async () => (++window.tokenCalls ===
 <acme-cart id="plain"></acme-cart><acme-cart id="branded" class="brand"></acme-cart>`))
 	pages.HandleFunc("GET /tailwind", page("/acme-cart.js", `<acme-cart id="light"></acme-cart><acme-cart id="dark" class="dark"></acme-cart>
 <div id="hostbox" class="p-4 shadow-lg">A box of the host with the same class names</div>`))
+	// A host that loads the element file from the Gx server, with one
+	// script tag and no file of its own.
+	pages.HandleFunc("GET /served", page("http://"+*api+"/_gx/widgets/acme-cart.js", `<acme-cart currency="USD"><p id="fallback">Loading your cart</p></acme-cart>`))
 	pages.HandleFunc("GET /down", page("/down/acme-cart.js", `<acme-cart currency="USD"><p id="fallback">Loading your cart</p></acme-cart>`))
 	pages.HandleFunc("GET /bad", page("/acme-cart.js", `<acme-cart currency="GBP"><p id="fallback">Loading your cart</p></acme-cart>`))
 	pages.HandleFunc("GET /refused", page("/acme-cart.js", `<acme-cart currency="SEK"><p id="fallback">Loading your cart</p></acme-cart>`))

@@ -35,6 +35,16 @@ func TestREQ_ISL_10_WCBuildCommand(t *testing.T) {
 	if code := gxcli.Main([]string{"generate", dir}); code != 0 {
 		t.Fatalf("gx generate = %d", code)
 	}
+	// The generated code of a widget input has the attribute list, for the
+	// element file that the app serves.
+	for file, want := range map[string]string{
+		"cart/route/route_gx.go": `func (Widget) GxWidgetAttrs() []string { return []string{"currency", "compact"} }`,
+		"mail/route/route_gx.go": `func (Widget) GxWidgetAttrs() []string { return []string{} }`,
+	} {
+		if src, err := os.ReadFile(filepath.Join(dir, file)); err != nil || !strings.Contains(string(src), want) {
+			t.Errorf("%s has no %s (%v)", file, want, err)
+		}
+	}
 	out := filepath.Join(t.TempDir(), "widgets")
 	if code := gxcli.Main([]string{"wc", "build", "--server", "https://api.acme.dev/", "--base", "/shop", "--out", out, dir}); code != 0 {
 		t.Fatalf("gx wc build = %d", code)

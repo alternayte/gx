@@ -8,8 +8,11 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
+
+	"github.com/alternayte/gx/internal/widgetelement"
 )
 
 // widgetRuntimeJS is the built widget script. `just runtime` rebuilds it from
@@ -143,11 +146,17 @@ func widgetStylePath(tag string) string {
 	return BasePath() + "/_gx/widgets/" + style.name
 }
 
-// serveWidgetStyles serves the stylesheet of each widget to each origin. The
-// name holds a hash of the content.
-func (a *App) serveWidgetStyles() {
+// serveWidgetFiles serves, to each origin, the stylesheet and the element
+// file of each widget. The name of a stylesheet holds a hash of its content.
+// The name of an element file is the tag: a host page names it in a script
+// tag, so the file has an ETag and the browser asks again at each load.
+func (a *App) serveWidgetFiles() {
 	a.mux.Handle("GET /_gx/widgets/{name}", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.PathValue("name")
+		if tag, ok := strings.CutSuffix(name, ".js"); ok {
+			a.serveWidgetElement(w, r, tag)
+			return
+		}
 		widgetStyleState.mu.RLock()
 		var css []byte
 		for _, style := range widgetStyleState.sheets {
@@ -167,4 +176,33 @@ func (a *App) serveWidgetStyles() {
 		h.Set("Cache-Control", "public, max-age=31536000, immutable")
 		_, _ = w.Write(css)
 	}))
+}
+
+// serveWidgetElement serves the element file of one widget (REQ-ISL-10). The
+// file takes the origin of this server from its own URL, so a host page
+// needs one script tag and no package.
+func (a *App) serveWidgetElement(w http.ResponseWriter, r *http.Request, tag string) {
+	cfg, ok := a.widgetTags[tag]
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	cfg.Path = BasePath() + cfg.Path
+	file, err := widgetelement.File(cfg)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	sum := sha256.Sum256(file)
+	etag := `"` + hex.EncodeToString(sum[:8]) + `"`
+	h := w.Header()
+	h.Set("Content-Type", "text/javascript; charset=utf-8")
+	h.Set("Access-Control-Allow-Origin", "*")
+	h.Set("Cache-Control", "no-cache")
+	h.Set("ETag", etag)
+	if match := r.Header.Get("If-None-Match"); match == etag || match == "W/"+etag {
+		w.WriteHeader(http.StatusNotModified)
+		return
+	}
+	_, _ = w.Write(file)
 }

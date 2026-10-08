@@ -3,8 +3,9 @@
 // and gives the answer to the widget script of that server. It holds no
 // runtime, so a new build of the server needs no new copy of this file.
 //
-// `gx wc build` writes the file: it puts the configuration of one widget in
-// the place of __GX_WIDGET_CONFIG__.
+// `gx wc build` writes the file, and the Gx server serves it at
+// /_gx/widgets/<tag>.js: each puts the configuration of one widget in the
+// place of __GX_WIDGET_CONFIG__.
 
 type Config = {
   // The element name, for example "acme-cart".
@@ -15,6 +16,9 @@ type Config = {
   server: string
   // The path of the GET route of the widget.
   path: string
+  // True for a file that the Gx server serves: the origin of the server is
+  // the origin of the URL of this file.
+  self?: boolean
 }
 
 type WidgetError = { status: number; key: string; field?: string }
@@ -52,7 +56,7 @@ type Runtime = {
 declare const __GX_WIDGET_CONFIG__: Config
 
 const config: Config = __GX_WIDGET_CONFIG__
-const server = config.server || location.origin
+const server = config.self ? new URL(import.meta.url).origin : config.server || location.origin
 
 // The children of the element are its fallback content. They show through
 // this slot until the first render is in the shadow root (REQ-ISL-11).

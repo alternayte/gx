@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/alternayte/gx/internal/compiler"
-	"github.com/alternayte/gx/internal/widgetelement"
 )
 
 // The dev host pages of the widgets (REQ-ISL-23). `gx dev` answers on the
@@ -32,16 +31,17 @@ func otherOrigin(host string) string {
 	return "http://" + net.JoinHostPort(other, port)
 }
 
-// serveWidgets serves the list of the widgets, the dev host page of one
-// widget and its element file. Each other path below /_gx/widgets/ is a
-// file of the app.
+// serveWidgets serves the list of the widgets and the dev host page of one
+// widget. Each other path below /_gx/widgets/ is a file of the app: the
+// page loads the element file from the app under the other loopback name.
 func (s *server) serveWidgets(app http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		name := strings.TrimPrefix(r.URL.Path, "/_gx/widgets")
 		name = strings.TrimPrefix(name, "/")
-		tag, isScript := strings.CutSuffix(name, ".js")
+		tag := name
 		if strings.Contains(tag, ".") || strings.Contains(tag, "/") {
-			// The stylesheet of a widget, from the app.
+			// The stylesheet or the element file of a widget, from the
+			// app.
 			app.ServeHTTP(w, r)
 			return
 		}
@@ -57,21 +57,6 @@ func (s *server) serveWidgets(app http.Handler) http.HandlerFunc {
 		for _, wd := range widgets {
 			if wd.Tag != tag {
 				continue
-			}
-			if isScript {
-				attrs := make([]string, len(wd.Attributes))
-				for i, a := range wd.Attributes {
-					attrs[i] = a.Name
-				}
-				file, err := widgetelement.File(widgetelement.Config{Tag: wd.Tag, Attrs: attrs, Server: otherOrigin(r.Host), Path: wd.Path})
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-				w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
-				w.Header().Set("Cache-Control", "no-store")
-				_, _ = w.Write(file)
-				return
 			}
 			writeWidgetPage(w, r, wd)
 			return
@@ -119,7 +104,7 @@ func writeWidgetPage(w http.ResponseWriter, r *http.Request, wd compiler.WidgetB
 	names, _ := json.Marshal(events)
 	var b strings.Builder
 	b.WriteString(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Widget ` + tag + `</title>` + widgetPageStyle)
-	b.WriteString(`<script type="module" src="/_gx/widgets/` + tag + `.js"></script></head><body><main>`)
+	b.WriteString(`<script type="module" src="` + html.EscapeString(otherOrigin(r.Host)) + `/_gx/widgets/` + tag + `.js"></script></head><body><main>`)
 	b.WriteString(`<h1>&lt;` + tag + `&gt;</h1>`)
 	b.WriteString(`<p id="origins">This page is at <code>http://` + html.EscapeString(r.Host) + `</code>. The widget calls <code>` + html.EscapeString(otherOrigin(r.Host)) +
 		`</code>, which is a different origin for the browser.</p>`)

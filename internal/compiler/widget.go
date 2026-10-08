@@ -308,6 +308,18 @@ func collectWidgets(pkgs []*packages.Package) []*widgetDecl {
 	return out
 }
 
+// widgetInputs returns the input type of each gx.Widget call, by package
+// path and name.
+func widgetInputs(pkgs []*packages.Package) map[string]bool {
+	out := map[string]bool{}
+	for _, w := range collectWidgets(pkgs) {
+		if w.input != nil && w.input.Obj().Pkg() != nil {
+			out[w.input.Obj().Pkg().Path()+"."+w.input.Obj().Name()] = true
+		}
+	}
+	return out
+}
+
 // collectMounts reads each Group call of the module. It returns, for each
 // handler variable that a Group call names directly or through a
 // gx.Collect variable, the mounts of the handler.
