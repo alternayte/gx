@@ -112,6 +112,8 @@ gx add [--registry <source>] [--dir <dir>] <item>[@version] [app]
 
 Installs a registry item and the items that it needs. `@name/item` reads from a named registry.
 
+`gx add theme:<name>` writes a theme of a plugin of the project as `app/theme.css`. When the app changed its theme, the command writes `app/theme.<name>.css` and leaves the theme of the app.
+
 ## gx diff
 
 ```sh

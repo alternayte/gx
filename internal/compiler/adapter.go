@@ -27,6 +27,44 @@ var adapters = map[string]adapterTraits{
 	}},
 }
 
+// builtinAdapters are the names of the adapters of Gx.
+var builtinAdapters = map[string]bool{gxconfig.AdapterDatastar: true, gxconfig.AdapterHtmx: true}
+
+// PluginAdapter is an adapter that a plugin of the project adds
+// (REQ-PLG-01): its name in gx.toml and what the compiler must know of it.
+type PluginAdapter struct {
+	Name string
+	// Signals reports whether the adapter has client signals and client
+	// expressions.
+	Signals bool
+	// Modifiers are the event modifiers that an adapter with no signals
+	// can express.
+	Modifiers []string
+}
+
+// SetPluginAdapters gives the compiler the adapters of the plugins of the
+// project. It replaces the adapters of an earlier call.
+func SetPluginAdapters(list []PluginAdapter) {
+	for name := range adapters {
+		if !builtinAdapters[name] {
+			delete(adapters, name)
+		}
+	}
+	names := make([]string, 0, len(list))
+	for _, a := range list {
+		traits := adapterTraits{signals: a.Signals}
+		if !a.Signals {
+			traits.mods = map[string]bool{}
+			for _, mod := range a.Modifiers {
+				traits.mods[mod] = true
+			}
+		}
+		adapters[a.Name] = traits
+		names = append(names, a.Name)
+	}
+	gxconfig.SetPluginAdapters(names)
+}
+
 // adapterOf returns the adapter name of the app at root: the adapter key of
 // its gx.toml, or Datastar. gxconfig.Load refuses an unknown name, and the
 // commands report that error, so an unreadable file is Datastar here.

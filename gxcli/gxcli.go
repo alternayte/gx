@@ -46,11 +46,19 @@ import (
 // writes it into the go.mod of a new app.
 const Version = "0.2.1"
 
-// Main runs the gx command with the given arguments and returns an exit code.
-func Main(args []string) int {
+// Main runs the gx command with the given arguments and returns an exit
+// code. The cmd/gx/main.go of a project gives its plugins with WithPlugins
+// (REQ-PLG-02).
+func Main(args []string, opts ...Option) int {
+	if !start(opts) {
+		return 1
+	}
 	if len(args) == 0 {
 		usage(os.Stderr)
 		return 2
+	}
+	if cmd, ok := active.commands[args[0]]; ok {
+		return cmd.Run(args[1:])
 	}
 	switch args[0] {
 	case "init":
@@ -110,6 +118,7 @@ func Main(args []string) int {
 }
 
 func usage(w io.Writer) {
+	defer active.usage(w)
 	fmt.Fprint(w, `usage: gx <command> [arguments]
 
 Commands:
@@ -542,6 +551,13 @@ func runBuild(args []string) int {
 		fmt.Fprintf(os.Stderr, "gx build: %v\n", err)
 		return 1
 	}
+	// The build steps of the plugins of the project (REQ-PLG-01).
+	for _, step := range active.steps {
+		if err := step.Run(context.Background(), BuildInfo{Root: dir}); err != nil {
+			fmt.Fprintf(os.Stderr, "gx build: the step %s of the plugin %s: %v\n", step.Name, step.plugin, err)
+			return 1
+		}
+	}
 	bin := *out
 	if bin == "" {
 		// The app directory holds app/theme.css, so the binary cannot be
@@ -639,6 +655,13 @@ func appInstaller(root, source, dir, namespace string) (registry.Installer, erro
 	}
 	src := source
 	var headers []string
+	// A registry of a plugin has a name as a registry of gx.toml has. The
+	// file of the project goes first (REQ-PLG-01).
+	for name, reg := range active.registries {
+		if _, ok := cfg.Registries[name]; !ok {
+			cfg.Registries[name] = gxconfig.RegistrySource{URL: reg.URL, Headers: reg.Headers}
+		}
+	}
 	if src == "" && namespace != "" {
 		named, ok := cfg.Registries[namespace]
 		if !ok {
@@ -683,6 +706,7 @@ func runMCP(args []string) int {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 	err := mcpserver.Run(ctx, mcpserver.Options{
+		Extra:   active.tools,
 		Dir:     dir,
 		Main:    *mainPkg,
 		Version: Version,
@@ -715,6 +739,10 @@ func runAdd(args []string) int {
 	root := "."
 	if len(rest) > 1 {
 		root = rest[1]
+	}
+	if theme, ok := strings.CutPrefix(rest[0], "theme:"); ok {
+		// A theme preset of a plugin (REQ-PLG-01).
+		return addTheme(root, theme)
 	}
 	inst, code := registryInstaller(root, *source, *dir, namespace)
 	if code != 0 {

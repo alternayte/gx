@@ -61,7 +61,25 @@ type Options struct {
 	Version string
 	// Installer returns the registry installer of the app, from gx.toml.
 	Installer func() (registry.Installer, error)
+	// Extra are the tools that the plugins of the project add
+	// (REQ-PLG-01).
+	Extra []ExtraTool
 }
+
+// ExtraTool is one tool of a plugin in the dev MCP server.
+type ExtraTool struct {
+	Name        string
+	Description string
+	// InputSchema is the JSON Schema of the arguments: an object schema.
+	InputSchema json.RawMessage
+	// Call gets the JSON object of the arguments and returns the text of
+	// the answer.
+	Call func(ctx context.Context, args json.RawMessage) (string, error)
+}
+
+// ToolNames are the names of the tools of the dev MCP server. A plugin
+// cannot take one.
+var ToolNames = []string{"describe", "check", "routes", "render_fixture", "screenshot_route", "a11y_audit", "registry_search", "registry_add"}
 
 // Server holds the state the tools share: one running dev build of the app
 // and one headless Chrome. Both start on the first tool call that needs
@@ -116,6 +134,20 @@ func New(opt Options) *Server {
 		Name:        "registry_add",
 		Description: "Install one registry item and its dependencies into the app, like `gx add`. The files are copied into the app; an existing file with other content stops the install.",
 	}, s.registryAdd)
+	for _, extra := range opt.Extra {
+		s.mcp.AddTool(&mcp.Tool{Name: extra.Name, Description: extra.Description, InputSchema: extra.InputSchema},
+			func(ctx context.Context, req *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				var args json.RawMessage
+				if req.Params != nil {
+					args = req.Params.Arguments
+				}
+				text, err := extra.Call(ctx, args)
+				if err != nil {
+					return &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: err.Error()}}}, nil
+				}
+				return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: text}}}, nil
+			})
+	}
 	return s
 }
 

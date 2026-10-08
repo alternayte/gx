@@ -125,7 +125,19 @@ func Build(root string, opt Options) (*Bundle, error) {
 	// (REQ-ISL-09). Its name in the bundle is its import specifier.
 	for _, module := range modules {
 		input := module
-		if !nodeModules {
+		if behavior, ok := compiler.DirectiveBehavior(module); ok {
+			// The behaviour of a plugin directive is a file of the
+			// plugin, not of a package (REQ-PLG-03).
+			input = filepath.Join(root, ".gx", "directives", filepath.FromSlash(module)+".js")
+			if err := os.MkdirAll(filepath.Dir(input), 0o755); err != nil {
+				return nil, err
+			}
+			if err := os.WriteFile(input, behavior, 0o644); err != nil {
+				return nil, err
+			}
+		} else if strings.HasPrefix(module, "gx-directive/") {
+			return nil, fmt.Errorf("islands: a .gx file uses the directive of the module %q, and no plugin of this command has it; run the cmd/gx of the project", module)
+		} else if !nodeModules {
 			pin, ok := lock.Pins[module]
 			if !ok {
 				return nil, fmt.Errorf("islands: the web component module %q has no pin; run gx wc pin again", module)

@@ -110,6 +110,7 @@ func (l *loader) lowerElements(p *Package, f *File) []Diagnostic {
 					lower(t.Children)
 				}
 				diags = append(diags, l.lowerTag(p, f, t)...)
+				diags = append(diags, lowerDirectives(f, t)...)
 			case *Control:
 				lower(t.Body)
 				lower(t.Else)
@@ -354,6 +355,13 @@ func ElementModules(root string) []string {
 			walkElements(f.Body, func(el *Element) {
 				if el.element != nil {
 					seen[el.element.Module] = true
+				}
+				// The behaviour module of a plugin directive
+				// (REQ-PLG-03).
+				for _, a := range el.Attrs {
+					if a.Kind == AttrModule && strings.HasPrefix(a.Value, directiveModulePrefix) {
+						seen[a.Value] = true
+					}
 				}
 			})
 		}

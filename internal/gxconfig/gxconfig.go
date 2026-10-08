@@ -85,6 +85,20 @@ type Site struct {
 	Description string
 }
 
+// pluginAdapters are the adapter names that the plugins of the project add
+// (REQ-PLG-01). The gx command sets them before a command runs.
+var pluginAdapters = map[string]bool{}
+
+// SetPluginAdapters gives the adapter names of the plugins of the project.
+// It replaces the names of an earlier call.
+func SetPluginAdapters(names []string) {
+	next := make(map[string]bool, len(names))
+	for _, name := range names {
+		next[name] = true
+	}
+	pluginAdapters = next
+}
+
 // Load reads root/gx.toml. A missing file is an empty config.
 func Load(root string) (Config, error) {
 	cfg := Config{Mirrors: map[string]string{}, Registries: map[string]RegistrySource{}}
@@ -117,7 +131,7 @@ func Load(root string) (Config, error) {
 		switch section {
 		case "":
 			if key == "adapter" {
-				if value != AdapterDatastar && value != AdapterHtmx {
+				if value != AdapterDatastar && value != AdapterHtmx && !pluginAdapters[value] {
 					return cfg, fmt.Errorf("gx.toml: unknown adapter %q; the adapters are %q and %q", value, AdapterDatastar, AdapterHtmx)
 				}
 				cfg.Adapter = value
