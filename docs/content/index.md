@@ -22,3 +22,7 @@ Gx types the full loop of a web page: the template, the route, the link, the act
 - **No node.** The `gx` command and the Go toolchain run each default workflow.
 - **One binary.** `gx build` puts the pages, the scripts and the stylesheet in one file.
 - **Components that you own.** `gx add` copies a component into the app, and `gx update` merges a later release.
+- **Islands.** A TypeScript file is a component with typed props from Go, for the part of a page that needs client code.
+- **Widgets.** A component of your app is a custom element on a page of a different site. Your server renders it. Read [Widgets](/guides/widgets/).
+- **Tools for agents.** An action with `.Tool()` is a tool that the agent of a user calls, in the browser and over MCP. Read [Actions as tools for agents](/guides/app-tools/).
+- **Plugins.** A typed Go value adds directives, commands and build steps to the `gx` command of a project. Read [Plugins](/guides/plugins/).

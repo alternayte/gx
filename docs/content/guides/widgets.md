@@ -202,7 +202,9 @@ The token is a property and never an attribute, so it is in no markup. Gx does n
 
 ## Styles
 
-Each widget has its own stylesheet in its shadow root. The stylesheet holds only the classes that the widget uses. The CSS of the host does not change the widget.
+Each widget has its own stylesheet in its shadow root. The stylesheet holds only the classes that the widget uses. A rule of the host page does not select an element in the widget.
+
+Two things of the host do reach the widget. An inherited property that the widget does not set, such as the text colour or the font, comes from the element of the host. A size in `rem` follows the font size of the `html` element of the host. Set the text colour and the font in your component when the widget must look the same on each host.
 
 The tokens of your theme are CSS variables on the element, so the host can set them:
 

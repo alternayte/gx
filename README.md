@@ -107,6 +107,10 @@ Rename `Qty`, the route or the fragment, and the build stops at each place that 
 - **A component registry.** `gx add` copies a component into the app. `gx update` merges a later release with your changes.
 - **Content sites.** Markdown collections with typed frontmatter, components, search and a static export.
 - **Tools.** A language server, a formatter, a linter, the app model as JSON and a dev MCP server.
+- **Islands.** A TypeScript file is a component with typed props from Go.
+- **Widgets.** A component of your app is a custom element on a page of a different site. Your server renders it.
+- **Tools for agents.** An action with `.Tool()` is a tool that the agent of a user calls, in the browser and over MCP.
+- **Plugins.** A typed Go value adds directives, commands and build steps to the `gx` command of a project.
 - **One binary.** `gx build` puts the pages, the scripts and the stylesheet in one file.
 
 ## This repository
