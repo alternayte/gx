@@ -193,11 +193,14 @@ func main() {
 
 The middleware of `gxmcp.Mount` runs before each MCP request. A request with no auth gets no tool list and no call.
 
+An MCP server cannot ask the user. A tool with `gx.Confirm` has the annotation `destructiveHint` in the tool list, so the client of the agent asks. A tool whose action has the method GET has `readOnlyHint`.
+
 ## The security rules of a tool call
 
 A tool call is not a second way into the app. It runs the request of its action through the routes of the app, with the headers of the MCP request.
 
 - The middleware of the group of the action runs for the call. A user that the group refuses cannot run the tool.
-- The cross-origin check of the app applies to the MCP endpoint and to the tool routes of a page. A page of a different site cannot call a tool with the cookies of the user.
+- The cross-origin check of the app applies to the MCP endpoint and to the tool routes of a page. A page of a different site cannot call a tool with the cookies of the user. The tool route of a page takes its arguments only as `application/json`, which a form of a different site cannot send.
+- The description of a tool goes only to a caller that the middleware of the group lets pass.
 - The binder fills only the declared fields, and the rules run before the handler.
 - A value of type `gx.Secret` in a tool result is [GX7002](/errors/GX7002/). A secret that the compiler cannot see is `[redacted]` in the JSON. A secret as the key of a map has no redacted form, so the agent gets an error answer and no result.

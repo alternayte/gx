@@ -32,7 +32,7 @@ func main() {
 }
 ```
 
-Run the command of the project with `go run ./cmd/gx <command>`. A `gx` command that you installed for your user does the same: in a project with a `cmd/gx`, it builds that command and runs it. Each developer then has the plugins and the Gx version of the project.
+Run a command with `gx <command>`. In a project with a `cmd/gx`, the `gx` command that you installed builds that command and runs it. `go run ./cmd/gx <command>` does the same with no installed command. Each developer then has the plugins and the Gx version of the project.
 
 ## Write a plugin
 

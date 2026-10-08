@@ -172,3 +172,128 @@ func TestREQ_AI_06_PageToolRoutes(t *testing.T) {
 		t.Errorf("an app with no tool serves the tool module: status %d", out.Code)
 	}
 }
+
+// toolFixture is an app with the cart_add tool in a group with a guard, and
+// a page with no tool.
+func toolFixture(t *testing.T, guard func(http.Handler) http.Handler, opts ...gx.ToolOption) (app *gx.App, seen *[]pageToolIn) {
+	t.Helper()
+	seen = &[]pageToolIn{}
+	add := gx.Action(func(c *gx.Ctx, in pageToolIn) error {
+		*seen = append(*seen, in)
+		return nil
+	}).Tool(opts...)
+	app = gx.New(gx.Config{Adapter: &fakeAdapter{}})
+	if guard != nil {
+		app.Group("/", guard, gx.Collect(add))
+	} else {
+		app.Group("/", gx.Collect(add))
+	}
+	return app, seen
+}
+
+// TestSI_03_PageToolCallNeedsJSON checks that the tool route of a page takes
+// its arguments only as application/json. A form of a different site can
+// send text/plain with no preflight; a browser with no Fetch Metadata and no
+// Origin header then gives no sign of the other site.
+func TestSI_03_PageToolCallNeedsJSON(t *testing.T) {
+	app, seen := toolFixture(t, nil)
+	send := func(contentType string) int {
+		req := httptest.NewRequest("POST", "https://app.example/_gx/tools/cart_add", strings.NewReader(`{"id":7,"qty":3}`))
+		if contentType != "" {
+			req.Header.Set("Content-Type", contentType)
+		}
+		rec := httptest.NewRecorder()
+		app.ServeHTTP(rec, req)
+		return rec.Code
+	}
+	for _, ct := range []string{"text/plain", "text/plain;charset=UTF-8", "", "application/x-www-form-urlencoded", "multipart/form-data; boundary=x"} {
+		if code := send(ct); code < 400 || len(*seen) != 0 {
+			t.Errorf("a tool call with the Content-Type %q: status %d, handler runs %d", ct, code, len(*seen))
+		}
+	}
+	if code := send("application/json"); code >= 400 || len(*seen) != 1 {
+		t.Errorf("a tool call with application/json: status %d, handler runs %d", code, len(*seen))
+	}
+	if code := send("application/json; charset=utf-8"); code >= 400 || len(*seen) != 2 {
+		t.Errorf("a tool call with application/json and a charset: status %d, handler runs %d", code, len(*seen))
+	}
+}
+
+// TestSI_03_TextPlainFormNeedsTheToken checks the token rule for a browser
+// with no Fetch Metadata: a POST with the form encoding text/plain is a form
+// of a page, as the two other form encodings are, so it needs the token.
+func TestSI_03_TextPlainFormNeedsTheToken(t *testing.T) {
+	ran := 0
+	h := gx.CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { ran++ }))
+	for _, ct := range []string{"text/plain", "application/x-www-form-urlencoded", "multipart/form-data; boundary=x"} {
+		req := httptest.NewRequest("POST", "https://app.example/cart/clear", strings.NewReader("a=b"))
+		req.Header.Set("Content-Type", ct)
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		if rec.Code != http.StatusForbidden {
+			t.Errorf("a POST with the form encoding %q, no Fetch Metadata and no token: status %d", ct, rec.Code)
+		}
+	}
+	if ran != 0 {
+		t.Errorf("the handler ran %d times", ran)
+	}
+	// A client that is not a browser sends JSON with no token.
+	req := httptest.NewRequest("POST", "https://app.example/cart/clear", strings.NewReader("{}"))
+	req.Header.Set("Content-Type", "application/json")
+	h.ServeHTTP(httptest.NewRecorder(), req)
+	if ran != 1 {
+		t.Errorf("a JSON request of a client with no browser shape ran the handler %d times", ran)
+	}
+}
+
+// TestSI_07_ToolDescriptionPassesTheGroup checks that the description of a
+// tool goes only to a caller that the middleware of the group of the tool
+// lets pass: the name, the description and the schema of a tool say what the
+// app can do for a user with that access.
+func TestSI_07_ToolDescriptionPassesTheGroup(t *testing.T) {
+	guard := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.Header.Get("Authorization") != "Bearer token-of-admin" {
+				http.Error(w, "sign in first", http.StatusUnauthorized)
+				return
+			}
+			next.ServeHTTP(w, r)
+		})
+	}
+	app, seen := toolFixture(t, guard)
+	get := func(auth string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest("GET", "https://app.example/_gx/tools/cart_add", nil)
+		if auth != "" {
+			req.Header.Set("Authorization", auth)
+		}
+		rec := httptest.NewRecorder()
+		app.ServeHTTP(rec, req)
+		return rec
+	}
+	rec := get("")
+	if rec.Code != http.StatusUnauthorized || strings.Contains(rec.Body.String(), "Adds a product") || strings.Contains(rec.Body.String(), "inputSchema") {
+		t.Errorf("the description for a caller with no auth: status %d, body %q", rec.Code, rec.Body.String())
+	}
+	rec = get("Bearer token-of-admin")
+	if rec.Code != 200 || !strings.Contains(rec.Body.String(), "Adds a product to the cart.") {
+		t.Errorf("the description for a caller with auth: status %d, body %q", rec.Code, rec.Body.String())
+	}
+	// A read of the description does not run the action.
+	if len(*seen) != 0 {
+		t.Errorf("a read of the description ran the action %d times", len(*seen))
+	}
+}
+
+// TestREQ_AI_07_ToolsSayConfirm checks that the tool list of the app says
+// which tool has gx.Confirm and which is read-only, so a server for agents
+// can tell its clients.
+func TestREQ_AI_07_ToolsSayConfirm(t *testing.T) {
+	plain, _ := toolFixture(t, nil)
+	if tools := plain.Tools(); len(tools) != 1 || tools[0].Confirm || tools[0].ReadOnly {
+		t.Errorf("a tool with no option = %+v", tools)
+	}
+	confirm, _ := toolFixture(t, nil, gx.Confirm)
+	if tools := confirm.Tools(); len(tools) != 1 || !tools[0].Confirm {
+		t.Errorf("a tool with gx.Confirm = %+v", tools)
+	}
+}

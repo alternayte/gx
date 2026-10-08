@@ -11,7 +11,7 @@ This step adds a buy box to the product page. The amount is a signal in the brow
 ## Make the action
 
 ```sh
-go run ./cmd/gx new action shop/Add
+gx new action shop/Add
 ```
 
 ## The input of the action

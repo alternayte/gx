@@ -10,8 +10,8 @@ A coding agent reads and changes a Gx app through the same typed model that the 
 ## The app model
 
 ```sh
-go run ./cmd/gx describe --json
-go run ./cmd/gx describe --schema
+gx describe --json
+gx describe --schema
 ```
 
 `gx describe --json` prints one object.
@@ -29,8 +29,8 @@ go run ./cmd/gx describe --schema
 ## Diagnostics for a tool
 
 ```sh
-go run ./cmd/gx check --json
-go run ./cmd/gx lint --json
+gx check --json
+gx lint --json
 ```
 
 Each diagnostic has a code, a file, a line, a column, a message, a link to its page and, where Gx knows one, a fix. The [diagnostics index](/reference/diagnostics/) lists each code.
@@ -56,7 +56,7 @@ The gallery is in a dev build only. A production binary has no `/_gx/gallery` ro
 ## The dev MCP server
 
 ```sh
-go run ./cmd/gx mcp
+gx mcp
 ```
 
 `gx mcp` serves the Model Context Protocol on standard input and output. Add the command to the MCP settings of your agent.
@@ -79,7 +79,7 @@ The screenshot and audit tools build the app, run it, and open it in headless Ch
 `gx init` writes `AGENTS.md` with the commands, the conventions and the rules for app code.
 
 ```sh
-go run ./cmd/gx agents --update
+gx agents --update
 ```
 
 `gx agents --update` writes the current text into the managed section. The section is between two marker comments. The text that you write outside the section stays.

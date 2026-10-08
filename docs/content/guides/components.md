@@ -182,8 +182,8 @@ A fragment can use its parameters and `p` only. A different local is the diagnos
 ## Format
 
 ```sh
-go run ./cmd/gx fmt home/Home.gx
-go run ./cmd/gx fmt --check home/Home.gx
+gx fmt home/Home.gx
+gx fmt --check home/Home.gx
 ```
 
 `gx fmt` gives one form for each file. It formats the Go parts as `gofmt` does. It does not change the output of the component.

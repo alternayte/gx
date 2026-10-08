@@ -9,8 +9,8 @@ sample: tutorial
 ## Check the app
 
 ```sh
-go run ./cmd/gx check
-go run ./cmd/gx lint
+gx check
+gx lint
 ```
 
 `gx check` reads each `.gx` file, the routes, the actions and the forms. It also fails when a generated file is stale. Run it before each commit.
@@ -20,8 +20,8 @@ go run ./cmd/gx lint
 ## See the app as data
 
 ```sh
-go run ./cmd/gx routes
-go run ./cmd/gx describe --json
+gx routes
+gx describe --json
 ```
 
 `gx routes` lists each route with its page, its layouts and its fields. `gx describe --json` prints the full model of the app: components, props, signals, fragments, routes, actions and forms with their rules. A coding agent reads this output.
@@ -29,7 +29,7 @@ go run ./cmd/gx describe --json
 ## Build one binary
 
 ```sh
-go run ./cmd/gx build
+gx build
 ./bin/app
 ```
 

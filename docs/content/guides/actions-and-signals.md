@@ -10,7 +10,7 @@ An action is a route type and a handler. A template invokes it with a struct lit
 A signal is a value in the browser. It belongs to one component instance.
 
 ```sh
-go run ./cmd/gx new slice todo
+gx new slice todo
 ```
 
 ## Routes of the example

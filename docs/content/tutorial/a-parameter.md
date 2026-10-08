@@ -11,7 +11,7 @@ This step adds a page for one product.
 ## Make the page
 
 ```sh
-go run ./cmd/gx new page shop/Detail
+gx new page shop/Detail
 ```
 
 The command adds the route type `Detail`, writes `shop/detail_page.go` and `shop/DetailView.gx`, and adds `DetailPage` to the route list.

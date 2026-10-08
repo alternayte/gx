@@ -8,8 +8,8 @@ order: 10
 `gx export` renders an app to static files. Use it for a site that needs no server: a docs site, a landing page or a blog.
 
 ```sh
-go run ./cmd/gx export --out dist
-go run ./cmd/gx export --out dist --site https://docs.example.com
+gx export --out dist
+gx export --out dist --site https://docs.example.com
 ```
 
 ## What the export writes
@@ -29,7 +29,7 @@ go run ./cmd/gx export --out dist --site https://docs.example.com
 The export cannot know the values of a path variable. `.Static(fn)` gives it the list of inputs.
 
 ```sh
-go run ./cmd/gx new slice catalog
+gx new slice catalog
 ```
 
 ```go title="catalog/route/route.go"

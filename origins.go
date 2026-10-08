@@ -202,7 +202,18 @@ func (a *App) serveListedOrigin(w http.ResponseWriter, r *http.Request) bool {
 	// The answer of the route depends on the origin of the request.
 	w.Header().Add("Vary", "Origin")
 	origin := r.Header.Get("Origin")
-	if origin == "" || !crossOriginRequest(r, origin) {
+	if origin == "" {
+		// A no-cors request of a different site, such as an image tag,
+		// names no origin. The server cannot tell whether the origin can
+		// send cookies, so the request has none (SI-14). The browser
+		// says with Fetch Metadata that the request is of a different
+		// site.
+		if site := r.Header.Get("Sec-Fetch-Site"); site == "cross-site" || site == "same-site" {
+			r.Header.Del("Cookie")
+		}
+		return false
+	}
+	if !crossOriginRequest(r, origin) {
 		return false
 	}
 	ok, credentials := policy.match(origin)

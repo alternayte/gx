@@ -8,8 +8,8 @@ order: 8
 ## gx dev
 
 ```sh
-go run ./cmd/gx dev
-go run ./cmd/gx dev --addr 127.0.0.1:4000
+gx dev
+gx dev --addr 127.0.0.1:4000
 ```
 
 `gx dev` is one command. It watches the files, generates the code, builds the stylesheet, builds the app with the `gxdev` tag, and runs the app behind a proxy. The proxy adds a small dev client to each page.
@@ -44,7 +44,7 @@ Each dev route is below `/_gx/`: the gallery, the export list and the dev channe
 ## The language server
 
 ```sh
-go run ./cmd/gx lsp
+gx lsp
 ```
 
 `gx lsp` speaks the Language Server Protocol on standard input and output, with no editor extension of its own.
@@ -70,8 +70,8 @@ To install the JetBrains plugin, run `./gradlew buildPlugin` in `editors/jetbrai
 ## Format
 
 ```sh
-go run ./cmd/gx fmt home/Home.gx
-go run ./cmd/gx fmt --check home/Home.gx
+gx fmt home/Home.gx
+gx fmt --check home/Home.gx
 ```
 
 `gx fmt` gives one form for each file. It formats the Go parts as `gofmt` does and sorts the imports. `--check` fails on a file that is not formatted.
@@ -81,7 +81,7 @@ go run ./cmd/gx fmt --check home/Home.gx
 The generated Go has `//line` comments that point at the `.gx` file. Each Go tool then reports a `.gx` position: the compiler, `go vet`, a panic, a stack trace and a coverage report.
 
 ```sh
-go run ./cmd/gx lint
+gx lint
 ```
 
 `gx lint` runs `go vet` and the Gx analyzers on each package. The analyzers are also a golangci-lint module plugin, in the package `github.com/alternayte/gx/lintplugin`.

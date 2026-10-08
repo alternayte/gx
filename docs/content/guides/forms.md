@@ -8,8 +8,8 @@ order: 4
 A form input is a route type with a `Rules` method. The same rules give four checks: the browser constraints, the live validation of one field, the submit, and the form with no JavaScript.
 
 ```sh
-go run ./cmd/gx new slice account
-go run ./cmd/gx new form account/Signup
+gx new slice account
+gx new form account/Signup
 ```
 
 ## The input and its rules

@@ -46,13 +46,16 @@ func CSRF(next http.Handler) http.Handler {
 }
 
 // browserShaped reports whether a request looks like a browser request: it
-// names an Origin, or it carries a form body.
+// names an Origin, or it carries a form body. An HTML form has one of three
+// encodings, and a form of a different site sends each one with no
+// preflight.
 func browserShaped(r *http.Request) bool {
 	if r.Header.Get("Origin") != "" || r.Header.Get("Referer") != "" {
 		return true
 	}
 	ct := r.Header.Get("Content-Type")
-	return strings.HasPrefix(ct, "application/x-www-form-urlencoded") || strings.HasPrefix(ct, "multipart/form-data")
+	return strings.HasPrefix(ct, "application/x-www-form-urlencoded") || strings.HasPrefix(ct, "multipart/form-data") ||
+		strings.HasPrefix(ct, "text/plain")
 }
 
 // sameOrigin applies the cross-origin protection to a handler that no CSRF

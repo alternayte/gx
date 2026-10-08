@@ -96,7 +96,7 @@ The third tag has `px-4` and no `px-2`: the class of the caller replaced it.
 ## Icons
 
 ```sh
-go run ./cmd/gx icons pin lucide@1.0.0
+gx icons pin lucide@1.0.0
 ```
 
 `gx icons pin <set>@<version>` reads an Iconify pack and writes one `.gx` component for each icon to `ui/icons/<set>/`. An icon is an inline SVG that uses `currentColor`. It has `aria-hidden="true"`, and a `label` prop gives it `role="img"` and a name.

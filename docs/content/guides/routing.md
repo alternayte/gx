@@ -10,7 +10,7 @@ A route is a Go struct type. It embeds `gx.Route`, and its tag holds the method 
 A route type lives in the `route` package of its slice. That package holds only route types, so each slice can link to each other slice with no import cycle.
 
 ```sh
-go run ./cmd/gx new slice shop
+gx new slice shop
 ```
 
 ## Path and query values
@@ -248,6 +248,6 @@ A router that does not fill `r.PathValue` needs `gx.Params`, which tells Gx how 
 ## List the routes
 
 ```sh
-go run ./cmd/gx routes
-go run ./cmd/gx routes --json
+gx routes
+gx routes --json
 ```

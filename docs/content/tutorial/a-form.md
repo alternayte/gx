@@ -11,7 +11,7 @@ This step adds an order form. The form input is a route type with rules.
 ## Make the form
 
 ```sh
-go run ./cmd/gx new form shop/Order
+gx new form shop/Order
 ```
 
 The command adds two route types: `OrderPage` shows the form and `Order` receives it. It writes `shop/order_form.go` and `shop/OrderView.gx`.

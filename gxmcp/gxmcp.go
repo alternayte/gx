@@ -44,10 +44,15 @@ func Mount(app *gx.App, path string, middleware ...func(http.Handler) http.Handl
 		server = mcp.NewServer(&mcp.Implementation{Name: "gx-app", Version: "1"}, nil)
 		for _, info := range app.Tools() {
 			name := info.Name
+			// A stateless MCP server cannot ask the user. The annotation
+			// tells the client that a tool with gx.Confirm changes what
+			// the user cannot get back, so the client asks.
+			destructive := info.Confirm
 			server.AddTool(&mcp.Tool{
 				Name:        name,
 				Description: info.Description,
 				InputSchema: json.RawMessage(info.Schema),
+				Annotations: &mcp.ToolAnnotations{ReadOnlyHint: info.ReadOnly, DestructiveHint: &destructive},
 			}, func(ctx context.Context, req *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 				if req.Params == nil {
 					return nil, errors.New("gxmcp: a tool call with no params")

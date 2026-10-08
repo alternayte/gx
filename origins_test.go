@@ -341,3 +341,47 @@ func TestREQ_ISL_23_ProductionRefusesTheDevOrigin(t *testing.T) {
 		}
 	}
 }
+
+// originProbe is a route that reports the cookie that it gets.
+type originProbe struct{}
+
+func (originProbe) Pattern() string           { return "GET /w/me" }
+func (*originProbe) Bind(*http.Request) error { return nil }
+
+// TestSI_14_CrossSiteGetWithNoOriginHasNoCookie checks a cross-site GET with
+// no Origin header to a route of a group with origins: an image tag or a
+// no-cors fetch of a different site sends none. The server cannot tell which
+// origin asks, so the request reaches the middleware with no cookie.
+func TestSI_14_CrossSiteGetWithNoOriginHasNoCookie(t *testing.T) {
+	var cookies []string
+	probe := gx.Action(func(c *gx.Ctx, in originProbe) error {
+		cookies = append(cookies, c.R.Header.Get("Cookie"))
+		return nil
+	})
+	app := gx.New(gx.Config{Adapter: &fakeAdapter{}})
+	app.Group("/", gx.AllowOrigins("https://shop.example.com"), gx.AllowCredentials("https://app.acme.dev"), gx.Collect(probe))
+	send := func(site string) {
+		req := httptest.NewRequest("GET", "https://api.acme.dev/w/me", nil)
+		req.Header.Set("Cookie", "session=alice")
+		if site != "" {
+			req.Header.Set("Sec-Fetch-Site", site)
+			req.Header.Set("Sec-Fetch-Mode", "no-cors")
+		}
+		app.ServeHTTP(httptest.NewRecorder(), req)
+	}
+	send("cross-site")
+	send("same-site")
+	send("same-origin")
+	send("none")
+	if len(cookies) != 4 {
+		t.Fatalf("the route ran %d times", len(cookies))
+	}
+	if cookies[0] != "" || cookies[1] != "" {
+		t.Errorf("a GET of a different site with no Origin header reached the route with the cookies %q and %q", cookies[0], cookies[1])
+	}
+	// The page of the app itself, and a navigation of the user, keep the
+	// session.
+	if cookies[2] != "session=alice" || cookies[3] != "session=alice" {
+		t.Errorf("a same-origin GET and a navigation got the cookies %q and %q", cookies[2], cookies[3])
+	}
+}

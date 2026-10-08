@@ -399,6 +399,11 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if tc != nil {
 		tc.done = true
 	}
+	if tc != nil && tc.describe {
+		// A read of the description of the tool: the middleware of the
+		// group let the caller pass, and the action does not run.
+		return
+	}
 	if isWidgetRequest(r) {
 		setWidgetBuild(w)
 	}

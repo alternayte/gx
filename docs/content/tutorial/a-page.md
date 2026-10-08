@@ -13,7 +13,7 @@ A slice is one feature package. It owns its routes, its handlers and its views.
 ## Make the slice
 
 ```sh
-go run ./cmd/gx new slice shop
+gx new slice shop
 ```
 
 The command writes three files and mounts the slice in `cmd/app/main.go`.

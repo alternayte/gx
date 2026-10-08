@@ -5,7 +5,7 @@ section: Reference
 order: 2
 ---
 
-Run the command of the project with `go run ./cmd/gx <command>`. It uses the Gx version in `go.mod`. A command that takes an app directory uses the current directory when you give none.
+Run a command with `gx <command>`. In a project with a `cmd/gx`, the installed `gx` builds that command and runs it. The command then has the Gx version of `go.mod` and the plugins of the project. `go run ./cmd/gx <command>` does the same with no installed command. A command that takes an app directory uses the current directory when you give none.
 
 ## gx init
 

@@ -27,7 +27,7 @@ The command writes these files.
 | File | Content |
 | --- | --- |
 | `cmd/app/main.go` | The app. It mounts each slice. |
-| `cmd/gx/main.go` | The Gx command of this project. `go run ./cmd/gx` uses the Gx version in `go.mod`. |
+| `cmd/gx/main.go` | The Gx command of this project, with the Gx version of `go.mod`. In the project, `gx` runs it. |
 | `app/Shell.gx`, `app/layout.go` | The layout that wraps each page. |
 | `app/theme.css` | The Tailwind theme with the colour tokens. |
 | `home/` | An example slice: a page, a component with a signal, and an action. |
@@ -37,8 +37,10 @@ The command writes these files.
 ## Run the app
 
 ```sh
-go run ./cmd/gx dev
+gx dev
 ```
+
+In a project, the `gx` command that you installed builds `cmd/gx` of the project and runs it. Each developer then has the Gx version of `go.mod`, and the plugins of the project. `go run ./cmd/gx dev` does the same with no installed command.
 
 Open `http://127.0.0.1:3333`. The page shows a counter. **Add one** changes a signal in the browser. **Save** sends the signal to an action on the server.
 
@@ -64,8 +66,8 @@ package home
 ## Check and build
 
 ```sh
-go run ./cmd/gx check
-go run ./cmd/gx build
+gx check
+gx build
 ./bin/app
 ```
 

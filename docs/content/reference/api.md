@@ -2436,6 +2436,11 @@ type ToolInfo struct {
     Schema string
     // Fields are the top-level arguments, in the order of the struct.
     Fields []ToolField
+    // Confirm is true for a tool with gx.Confirm: a client asks the user
+    // before an agent runs it. ReadOnly is true for a tool whose action has
+    // the method GET. App.Tools sets the two; generated code does not.
+    Confirm  bool
+    ReadOnly bool
 }
 ```
 

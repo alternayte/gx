@@ -402,3 +402,37 @@ func TestSI_07_OnlyToolsAreTools(t *testing.T) {
 	app.Group("/a", gx.Collect(one))
 	app.Group("/b", gx.Collect(gx.Action(func(c *gx.Ctx, in toolAdd) error { return nil }).Tool()))
 }
+
+// TestREQ_AI_07_ConfirmIsAnAnnotation checks what an MCP client learns of a
+// tool with gx.Confirm. The server keeps no session and cannot ask the user,
+// so the tool has the annotation that makes the client ask.
+func TestREQ_AI_07_ConfirmIsAnAnnotation(t *testing.T) {
+	list := func(opts ...gx.ToolOption) *mcp.Tool {
+		t.Helper()
+		add := gx.Action(func(c *gx.Ctx, in toolAdd) error { return nil }).Tool(opts...)
+		app := gx.New(gx.Config{Adapter: datastar.Adapter()})
+		app.Group("/shop", gx.Collect(add))
+		gxmcp.Mount(app, "/mcp")
+		srv := httptest.NewServer(app)
+		t.Cleanup(srv.Close)
+		client := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "1"}, nil)
+		session, err := client.Connect(context.Background(), &mcp.StreamableClientTransport{Endpoint: srv.URL + "/mcp"}, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { _ = session.Close() })
+		res, err := session.ListTools(context.Background(), nil)
+		if err != nil || len(res.Tools) != 1 {
+			t.Fatalf("tools: %v, %d", err, len(res.Tools))
+		}
+		return res.Tools[0]
+	}
+	plain := list()
+	if plain.Annotations == nil || plain.Annotations.DestructiveHint == nil || *plain.Annotations.DestructiveHint || plain.Annotations.ReadOnlyHint {
+		t.Errorf("a tool with no option has the annotations %+v", plain.Annotations)
+	}
+	confirm := list(gx.Confirm)
+	if confirm.Annotations == nil || confirm.Annotations.DestructiveHint == nil || !*confirm.Annotations.DestructiveHint {
+		t.Errorf("a tool with gx.Confirm has the annotations %+v", confirm.Annotations)
+	}
+}

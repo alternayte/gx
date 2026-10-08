@@ -11,7 +11,7 @@ The registry holds components with the names and the look of shadcn/ui. `gx add`
 ## Add the button
 
 ```sh
-go run ./cmd/gx add button
+gx add button
 ```
 
 The command writes `ui/button/` and records the item in `gx.lock`. It also stores a snapshot in `.gx/base/`, so `gx update` can merge a later release with your changes.
@@ -67,8 +67,8 @@ Each class is a full static string in the source. Tailwind reads the source file
 ## Keep a component up to date
 
 ```sh
-go run ./cmd/gx diff button
-go run ./cmd/gx update button
+gx diff button
+gx update button
 ```
 
 `gx diff` shows what changed in your copy and in the registry. `gx update` merges the two. A conflict gets conflict marks in the file, and the command reports it.

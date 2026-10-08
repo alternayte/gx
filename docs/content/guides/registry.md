@@ -12,7 +12,7 @@ The registry holds the components of Gx. They have the names, the look and the t
 ## Add an item
 
 ```sh
-go run ./cmd/gx add badge
+gx add badge
 ```
 
 The command does these steps.
@@ -67,7 +67,7 @@ A page loads only the behaviour modules that its components use. A page with mar
 ## See what changed
 
 ```sh
-go run ./cmd/gx diff badge
+gx diff badge
 ```
 
 `gx diff` compares three versions: your copy, the snapshot, and the registry. It prints one status for each file: `unchanged`, `local`, `upstream`, `merged`, `conflict`, `upstream-added`, `upstream-removed` or `local-removed`.
@@ -75,7 +75,7 @@ go run ./cmd/gx diff badge
 ## Merge a later release
 
 ```sh
-go run ./cmd/gx update badge
+gx update badge
 ```
 
 `gx update` does a three-way merge of each file. A conflict gets conflict marks in the file, and the command reports it. The command does not replace a file with no notice.
@@ -101,8 +101,8 @@ headers = "Authorization: Bearer TOKEN"
 A registry is static files: `index.json` and `items/<name>.json`. Any static host can serve it.
 
 ```sh
-go run ./cmd/gx registry lint ./items
-go run ./cmd/gx registry build --out ./public ./items
+gx registry lint ./items
+gx registry build --out ./public ./items
 ```
 
 The source of an item is a directory with a `gx-item.json` file, the component files and a `USAGE.md` file. `gx registry lint` fails an item that lacks fixtures, usage sections, a keyboard table or a prop description. `gx registry build` writes the index, the items with their hashes, and the JSON Schema.

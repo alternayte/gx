@@ -53,21 +53,40 @@ func (a *App) serveToolInfo(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	// The description says what the app can do for a caller with the
+	// access of the group of the tool. The request goes through the
+	// middleware of that group, and stops before the action: a caller that
+	// the group refuses gets the answer of the middleware (SI-07).
+	probe, tc := t.toolRequest(r.Context(), r, r.Header, nil, false)
+	tc.describe = true
+	rec := &statusRecorder{header: http.Header{}}
+	t.handler.ServeHTTP(rec, probe.WithContext(context.WithValue(probe.Context(), csrfCheckedKey{}, true)))
+	if !tc.done {
+		http.Error(w, http.StatusText(rec.status()), rec.status())
+		return
+	}
 	data, err := json.Marshal(struct {
 		Name        string          `json:"name"`
 		Description string          `json:"description"`
 		InputSchema json.RawMessage `json:"inputSchema"`
 		Confirm     bool            `json:"confirm,omitempty"`
 		ReadOnly    bool            `json:"readOnly,omitempty"`
-	}{t.def.info.Name, t.def.info.Description, json.RawMessage(t.def.info.Schema), t.def.confirm, t.method == http.MethodGet})
+	}{t.def.info.Name, t.def.info.Description, json.RawMessage(t.def.info.Schema), t.def.confirm, t.readOnly()})
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 	h := w.Header()
 	h.Set("Content-Type", "application/json; charset=utf-8")
-	h.Set("Cache-Control", "no-cache")
+	// The answer depends on the caller.
+	h.Set("Cache-Control", "no-store")
 	_, _ = w.Write(data)
+}
+
+// readOnly reports whether the tool reads and does not change: its action
+// has the method GET.
+func (t mountedTool) readOnly() bool {
+	return t.method == http.MethodGet || t.method == http.MethodHead
 }
 
 // servePageTool runs one tool for the tool module of a page (REQ-AI-06).
@@ -80,6 +99,13 @@ func (a *App) servePageTool(w http.ResponseWriter, r *http.Request) {
 	t, ok := a.tools[r.PathValue("name")]
 	if !ok {
 		http.NotFound(w, r)
+		return
+	}
+	// A page of a different site cannot send application/json with no
+	// preflight. Each form encoding, text/plain too, is refused here, also
+	// for a browser with no Fetch Metadata and no Origin header (SI-03).
+	if ct, _, _ := strings.Cut(r.Header.Get("Content-Type"), ";"); !strings.EqualFold(strings.TrimSpace(ct), "application/json") {
+		http.Error(w, "gx: the arguments of a tool are application/json", http.StatusUnsupportedMediaType)
 		return
 	}
 	body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 1<<20))
@@ -109,6 +135,10 @@ type toolCall struct {
 	bad bool
 	// errs holds the field errors of the rules, by field name.
 	errs map[string]string
+	// describe is true for a read of the description of the tool: the
+	// request goes through the middleware of the group and stops before
+	// the action.
+	describe bool
 	// browser is true for a call of the tool module of a page. The handler
 	// then writes its answer for the page as for a click, and the answer
 	// for the agent goes into a header (REQ-AI-06).
@@ -418,7 +448,10 @@ func toolAnswer(tc *toolCall, rec *statusRecorder) ToolAnswer {
 func (a *App) Tools() []ToolInfo {
 	out := make([]ToolInfo, 0, len(a.tools))
 	for _, t := range a.tools {
-		out = append(out, t.def.info)
+		info := t.def.info
+		info.Confirm = t.def.confirm
+		info.ReadOnly = t.readOnly()
+		out = append(out, info)
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
 	return out
