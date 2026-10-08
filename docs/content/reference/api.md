@@ -2363,6 +2363,42 @@ func (p ToastPatch) Timeout() time.Duration
 
 Timeout returns the time before the toast leaves on its own. It is 0 for a sticky toast and for a loading toast: they never leave on their own.
 
+### type ToolField
+
+```go
+type ToolField struct {
+    Name string
+    In   string
+}
+```
+
+ToolField is one top-level argument of a tool. In names the part of the request that the binder reads it from: "path", "query", "form" or "signal".
+
+### type ToolInfo
+
+```go
+type ToolInfo struct {
+    Name        string
+    Description string
+    // Schema is the JSON Schema of the arguments.
+    Schema string
+    // Fields are the top-level arguments, in the order of the struct.
+    Fields []ToolField
+}
+```
+
+ToolInfo describes one tool: an action or a form that an agent can call. Generated code makes it from the input type. The name comes from the type, and the description from the doc comment of the action. The JSON Schema comes from the fields and the rules of the input.
+
+### type ToolOption
+
+```go
+type ToolOption struct {
+    // contains filtered or unexported fields
+}
+```
+
+ToolOption changes how an agent can call a tool.
+
 ### type TransitionName
 
 ```go
@@ -2415,6 +2451,14 @@ const AnyOrigin = "*"
 ```
 
 AnyOrigin lists each origin in AllowOrigins. Use it for a public widget. AllowCredentials does not take it.
+
+### Confirm
+
+```go
+var Confirm = ToolOption{/* contains filtered or unexported fields */}
+```
+
+Confirm makes the browser ask the user before an agent runs the tool. Use it for an action that the user cannot undo.
 
 ### DefaultThemeCSS
 

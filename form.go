@@ -334,6 +334,8 @@ type form[In any, P any] struct {
 	fn      func(*Ctx, In) error
 	view    func(P) Node
 	newIn   func() FormInput
+	// tool is set by Tool: the form is a tool for an agent (REQ-AI-06).
+	tool *toolDef
 }
 
 // Form registers a form action for a route type (REQ-FRM-02). In is a

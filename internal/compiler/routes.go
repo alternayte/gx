@@ -30,6 +30,9 @@ type routeDef struct {
 	// widget marks the input of a gx.Widget: its query fields are the
 	// attributes of the element (REQ-ISL-15).
 	widget bool
+	// tool is set for the input of an action or a form with .Tool()
+	// (REQ-AI-06).
+	tool *toolDecl
 	// form marks a route struct with Rules(), the input of a gx.Form
 	// (REQ-FRM-01).
 	form bool
@@ -72,8 +75,8 @@ var pathVarRe = regexp.MustCompile(`\{([A-Za-z_][A-Za-z0-9_]*)(\.\.\.)?\}`)
 // collectRoutes finds every route struct in the loaded packages and checks
 // its pattern against its fields (REQ-RTE-02). An action input type also
 // binds untagged fields from form fields (REQ-ACT-03). widgets names the
-// input type of each gx.Widget.
-func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position, widgets map[string]bool) ([]*routeDef, []Diagnostic) {
+// input type of each gx.Widget, and tools the input type of each tool.
+func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position, widgets map[string]bool, tools map[string]*toolDecl) ([]*routeDef, []Diagnostic) {
 	var defs []*routeDef
 	var diags []Diagnostic
 	for _, pkg := range pkgs {
@@ -133,6 +136,7 @@ func collectRoutes(pkgs []*packages.Package, actions map[string][]token.Position
 					}
 					def.action = len(actions[def.pkg.PkgPath+"."+def.name]) > 0
 					def.widget = widgets[def.pkg.PkgPath+"."+def.name]
+					def.tool = tools[def.pkg.PkgPath+"."+def.name]
 					def.form = hasFormRules(named)
 					if def.form {
 						def.formRules = parseFormRules(pkg, rulesMethods[def.name])
@@ -894,6 +898,9 @@ func renderRouteFile(defs []*routeDef) []byte {
 		}
 		if d.widget {
 			renderWidgetAttrs(&body, d)
+		}
+		if d.tool != nil {
+			renderToolInfo(&body, d)
 		}
 	}
 	// The body decides the imports: a guess from the field kinds left an

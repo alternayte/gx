@@ -12,6 +12,8 @@ type action[In any] struct {
 	// external is the base URL of the server that answers the action,
 	// or "" when this app answers it (REQ-EXP-02).
 	external string
+	// tool is set by Tool: the action is a tool for an agent (REQ-AI-06).
+	tool *toolDef
 }
 
 // Action registers a handler for a route type of any method. The handler

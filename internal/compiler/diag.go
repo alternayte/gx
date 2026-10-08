@@ -62,8 +62,11 @@ const (
 	CodeSignalDefault       = "GX2014"
 	CodeSignalRoot          = "GX2015"
 	CodeEventMod            = "GX4010"
-	CodeActionMethod        = "GX4009"
-	CodeSignalRules         = "GX4008"
+	// CodeTool is a tool with no description, or with an input field that
+	// a JSON value cannot fill (REQ-AI-06, REQ-AI-09).
+	CodeTool         = "GX4011"
+	CodeActionMethod = "GX4009"
+	CodeSignalRules  = "GX4008"
 
 	CodeIslandProps = "GX6001"
 	CodeIslandType  = "GX6002"
@@ -143,6 +146,7 @@ var Catalog = []Info{
 	{CodeSignalRules, "signal-bound fields need rules or gx.Unchecked"},
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeEventMod, "unknown event modifier or special event"},
+	{CodeTool, "tool has no description or an input with no JSON form"},
 	{CodeEnum, "gx.Enum misses a constant of its type"},
 	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},

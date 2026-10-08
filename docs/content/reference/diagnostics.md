@@ -63,6 +63,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX4008](/errors/GX4008/) | Signal-bound fields need rules or gx.Unchecked. |
 | [GX4009](/errors/GX4009/) | Action method cannot be invoked from the client. |
 | [GX4010](/errors/GX4010/) | Unknown event modifier or special event. |
+| [GX4011](/errors/GX4011/) | Tool has no description, or an input with no JSON form. |
 
 ## Styles and transitions
 

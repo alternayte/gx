@@ -155,7 +155,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	// A route file on the disk can be older than its route types, too. The
 	// second pass then reads the new file, so the dev symbol table lists
 	// the types that this generate writes (REQ-DEV-04).
-	firstRoutes, _ := collectRoutes(pkgs, first.actions, widgetInputs(pkgs))
+	firstRoutes, _ := collectRoutes(pkgs, first.actions, widgetInputs(pkgs), collectTools(pkgs))
 	routeFiles := renderRouteFiles(firstRoutes)
 	reload := hasFormRoute(firstRoutes)
 	for path, src := range routeFiles {
@@ -218,7 +218,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	res.collections = collectCollections(pkgs)
 	diags = append(diags, l.checkCodeFiles(res, dirs)...)
 	diags = append(diags, l.analyzeIslands(res, dirs)...)
-	routes, rdiags := collectRoutes(pkgs, res.actions, widgetInputs(pkgs))
+	routes, rdiags := collectRoutes(pkgs, res.actions, widgetInputs(pkgs), collectTools(pkgs))
 	res.routes = routes
 	diags = append(diags, rdiags...)
 	for _, d := range routes {
@@ -237,6 +237,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	res.routeFiles = renderRouteFiles(routes)
 	diags = append(diags, res.checkMounted(pkgs)...)
 	diags = append(diags, checkDuplicatePatterns(routes)...)
+	diags = append(diags, checkTools(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)
 	diags = append(diags, l.checkActionInvocations(res, dirs)...)
 	diags = append(diags, res.checkToastActions(pkgs)...)
