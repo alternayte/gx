@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync/atomic"
 
 	"github.com/alternayte/gx"
@@ -52,6 +53,10 @@ type cartProps struct {
 	Currency string
 	Compact  bool
 	Loads    int64
+	// User is the user of the bearer token, and Session the value of the
+	// session cookie, as the app sees them.
+	User    string
+	Session string
 }
 
 // cartView is the component of the widget. The note field has no value from
@@ -85,6 +90,8 @@ func cartView(p cartProps) gx.Node {
 		gx.El("button", gx.Attrs{{Key: "id", Value: "fail"}, gx.On("click", "POST", "/widgets/cart/fail", base)}, gx.Text("Fail")),
 		gx.El("p", gx.Attrs{{Key: "id", Value: "line"}}, gx.Text("2 items in "+p.Currency)),
 		gx.El("p", gx.Attrs{{Key: "id", Value: "loads"}}, gx.Text(strconv.FormatInt(p.Loads, 10))),
+		gx.El("p", gx.Attrs{{Key: "id", Value: "user"}}, gx.Text(p.User)),
+		gx.El("p", gx.Attrs{{Key: "id", Value: "session"}}, gx.Text(p.Session)),
 		gx.El("input", gx.Attrs{{Key: "id", Value: "note"}, {Key: "aria-label", Value: "Note"}}),
 		// The classes of this box are the class list of the widget in
 		// the Tailwind test.
@@ -123,6 +130,33 @@ type checkout struct{}
 
 func (checkout) URL() string { return "/checkout?step=1" }
 
+type userKey struct{}
+
+// userOf returns the user that the auth middleware found, or "anonymous".
+func userOf(r *http.Request) string {
+	if user, ok := r.Context().Value(userKey{}).(string); ok {
+		return user
+	}
+	return "anonymous"
+}
+
+// auth is the auth middleware of this app. Gx does not check tokens: the
+// app does. A token "token-of-<name>" names a user, and the token "stale"
+// is a token that is not valid any more.
+func auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token, ok := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer ")
+		switch {
+		case !ok:
+			next.ServeHTTP(w, r)
+		case strings.HasPrefix(token, "token-of-"):
+			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), userKey{}, strings.TrimPrefix(token, "token-of-"))))
+		default:
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		}
+	})
+}
+
 // stamp makes a second build of this program a different file, so a test
 // can run a new build of the server.
 var stamp = "1"
@@ -139,7 +173,11 @@ func main() {
 		if in.Currency == "SEK" {
 			return cartProps{}, gx.Forbidden()
 		}
-		return cartProps{Currency: in.Currency, Compact: in.Compact, Loads: loads.Add(1)}, nil
+		props := cartProps{Currency: in.Currency, Compact: in.Compact, Loads: loads.Add(1), User: userOf(c.R)}
+		if cookie, err := c.R.Cookie("session"); err == nil {
+			props.Session = cookie.Value
+		}
+		return props, nil
 	}, cartView).Tag("acme-cart")
 
 	// The stylesheet of the widget: the Tailwind build of the app at
@@ -170,7 +208,9 @@ func main() {
 	fail := gx.Action(func(c *gx.Ctx, in failIn) error { return errors.New("the stock service is down, build " + stamp) })
 
 	app := gx.New(gx.Config{})
-	app.Group("/widgets", gx.AllowOrigins("http://"+*host), gx.Collect(widget, add, goTo, fail))
+	// The host origin can send the cookies of the user, when the element
+	// asks for it. The auth middleware of the app reads the bearer token.
+	app.Group("/widgets", gx.AllowCredentials("http://"+*host), auth, gx.Collect(widget, add, goTo, fail))
 	go func() { log.Fatal(http.ListenAndServe(*api, app)) }()
 
 	element := func(server string) []byte {
@@ -219,6 +259,17 @@ new MutationObserver((records) => {
 <body><h1>Host page</h1>` + tag + `</body></html>`))
 		}
 	}
+	// Hosts that give the widget a token. The script of the host runs
+	// before the element file, so the property is set on an element that
+	// is not defined yet.
+	pages.HandleFunc("GET /token-string.js", script([]byte(`document.querySelector('acme-cart').token = 'token-of-alice'`)))
+	pages.HandleFunc("GET /token-function.js", script([]byte(`window.tokenCalls = 0
+document.querySelector('acme-cart').token = async () => (++window.tokenCalls === 1 ? 'stale' : 'token-of-bob')`)))
+	pages.HandleFunc("GET /token-stale.js", script([]byte(`document.querySelector('acme-cart').token = 'stale'`)))
+	pages.HandleFunc("GET /token", page("/acme-cart.js", `<acme-cart></acme-cart><script src="/token-string.js"></script>`))
+	pages.HandleFunc("GET /token-function", page("/acme-cart.js", `<acme-cart></acme-cart><script src="/token-function.js"></script>`))
+	pages.HandleFunc("GET /token-stale", page("/acme-cart.js", `<acme-cart><p id="fallback">Sign in</p></acme-cart><script src="/token-stale.js"></script>`))
+	pages.HandleFunc("GET /credentials", page("/acme-cart.js", `<acme-cart gx-credentials></acme-cart>`))
 	// A host with a strict policy: scripts of the host and of the Gx
 	// server only, requests to the Gx server only, and no eval, no inline
 	// script and no stylesheet of a different origin.

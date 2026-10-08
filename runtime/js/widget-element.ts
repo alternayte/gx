@@ -27,6 +27,10 @@ type Answer = {
   error?: WidgetError
 }
 
+// The token of the host for this widget: text, or a function that gives the
+// text now. A function gives a fresh token after the old one stops.
+type Token = string | (() => string | Promise<string>) | undefined
+
 type Mounted = {
   update: (answer: Answer) => void
   destroy: () => void
@@ -64,6 +68,7 @@ class WidgetElement extends HTMLElement {
   #turn = 0
   #queued = false
   #ready = false
+  #token: Token
 
   constructor() {
     super()
@@ -72,7 +77,43 @@ class WidgetElement extends HTMLElement {
   }
 
   connectedCallback(): void {
+    // A host can set the token before this file defines the element. The
+    // value is then a plain property of the node: take it, so the setter of
+    // the class gets it.
+    if (Object.prototype.hasOwnProperty.call(this, 'token')) {
+      const early = (this as unknown as { token: Token }).token
+      delete (this as unknown as { token?: Token }).token
+      this.#token = early
+    }
     this.#queue()
+  }
+
+  // token is the token of the host for this widget (REQ-ISL-18). The element
+  // sends it as a bearer header on each request to the Gx server. It is a
+  // property and never an attribute, so it is in no markup.
+  get token(): Token {
+    return this.#token
+  }
+
+  set token(value: Token) {
+    if (value === this.#token) return
+    this.#token = value
+    // The widget of a different user is a different render.
+    if (this.isConnected) this.#queue()
+  }
+
+  // #send sends one request of this widget to the Gx server.
+  async #send(url: string, init: RequestInit): Promise<Response> {
+    const once = async (): Promise<Response> => {
+      const token = typeof this.#token === 'function' ? await this.#token() : this.#token
+      const headers: Record<string, string> = { ...(init.headers as Record<string, string>), 'Gx-Widget': config.tag }
+      if (token) headers.Authorization = 'Bearer ' + token
+      return fetch(url, { ...init, headers, credentials: this.#credentials() })
+    }
+    const res = await once()
+    // The token stopped. A token function gives a fresh one, one time.
+    if (res.status === 401 && typeof this.#token === 'function') return once()
+    return res
   }
 
   disconnectedCallback(): void {
@@ -102,12 +143,7 @@ class WidgetElement extends HTMLElement {
   #host(): Host {
     return {
       server,
-      request: (path, init) =>
-        fetch(server + path, {
-          ...init,
-          headers: { ...(init.headers as Record<string, string>), 'Gx-Widget': config.tag },
-          credentials: this.#credentials(),
-        }),
+      request: (path, init) => this.#send(server + path, init),
       fail: (error) => this.#fail(error),
       event: (name, detail) => this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, cancelable: true, detail })),
       reload: () => this.#fresh(),
@@ -147,11 +183,7 @@ class WidgetElement extends HTMLElement {
     const abort = (this.#abort = new AbortController())
     if (!this.#mounted) this.#state('loading')
     try {
-      const res = await fetch(this.#url(), {
-        headers: { 'Gx-Widget': config.tag, Accept: 'application/json' },
-        credentials: this.#credentials(),
-        signal: abort.signal,
-      })
+      const res = await this.#send(this.#url(), { headers: { Accept: 'application/json' }, signal: abort.signal })
       let answer: Answer = {}
       try {
         answer = (await res.json()) as Answer
@@ -160,7 +192,7 @@ class WidgetElement extends HTMLElement {
       }
       if (turn !== this.#turn) return
       if (!res.ok || answer.error || typeof answer.html !== 'string' || typeof answer.script !== 'string') {
-        this.#fail(answer.error ?? { status: res.ok ? 0 : res.status, key: 'gx.error' })
+        this.#fail(answer.error ?? { status: res.ok ? 0 : res.status, key: res.status === 401 ? 'gx.unauthorized' : 'gx.error' })
         return
       }
       const runtime = (await import(server + answer.script)) as Runtime

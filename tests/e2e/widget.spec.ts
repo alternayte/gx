@@ -469,6 +469,84 @@ test('SI-15 the widget script has no eval and no Function constructor, and the r
   expect(answer.html).not.toContain('data-on:')
 })
 
+
+const text = (page: Page, id: string): Promise<string> => shadow<string>(page, 'acme-cart', `root.querySelector('#${id}').textContent`)
+
+test('REQ-ISL-18 the element sends the token of the host as a bearer header, and the markup never holds it', async () => {
+  const page = await browser.newPage()
+  const requests: Request[] = []
+  page.on('request', (r) => requests.push(r))
+  await page.goto(host + '/token')
+  await waitState(page, 'ready')
+  // The auth middleware of the app saw the token.
+  expect(await text(page, 'user')).toBe('alice')
+  // An action of the widget carries it too.
+  await page.locator('acme-cart #add').click()
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#total')!.textContent === '10')
+  const toAPI = requests.filter((r) => r.url().startsWith(api + '/widgets/') && r.method() !== 'OPTIONS')
+  expect(toAPI.length).toBe(2)
+  for (const r of toAPI) expect((await r.allHeaders())['authorization']).toBe('Bearer token-of-alice')
+  // The stylesheet and the script are public files: no token goes with them.
+  for (const r of requests.filter((r) => r.url().startsWith(api + '/_gx/'))) {
+    expect((await r.allHeaders())['authorization']).toBeUndefined()
+  }
+  // The token is a property. It is in no attribute and in no markup.
+  const markup = await page.evaluate(() => document.documentElement.outerHTML + document.querySelector('acme-cart')!.shadowRoot!.innerHTML)
+  expect(markup).not.toContain('token-of-alice')
+  expect(await page.evaluate(() => (document.querySelector('acme-cart') as any).token)).toBe('token-of-alice')
+  await page.close()
+})
+
+test('REQ-ISL-18 with no token the request has no Authorization header', async () => {
+  const page = await browser.newPage()
+  const requests: Request[] = []
+  page.on('request', (r) => requests.push(r))
+  await page.goto(host + '/')
+  await waitState(page, 'ready')
+  expect(await text(page, 'user')).toBe('anonymous')
+  for (const r of requests.filter((r) => r.url().startsWith(api))) {
+    expect((await r.allHeaders())['authorization']).toBeUndefined()
+  }
+  await page.close()
+})
+
+test('REQ-ISL-18 after a 401 the element asks the token function one more time', async () => {
+  const page = await browser.newPage()
+  const loads: Request[] = []
+  page.on('request', (r) => {
+    if (r.url().startsWith(api + '/widgets/cart') && r.method() === 'GET') loads.push(r)
+  })
+  await page.goto(host + '/token-function')
+  await waitState(page, 'ready')
+  expect(await text(page, 'user')).toBe('bob')
+  expect(await page.evaluate(() => (window as any).tokenCalls)).toBe(2)
+  expect(await Promise.all(loads.map(async (r) => (await r.allHeaders())['authorization']))).toEqual(['Bearer stale', 'Bearer token-of-bob'])
+  expect((await log(page)).filter((e) => e[0] === 'gx-error')).toEqual([])
+  await page.close()
+})
+
+test('REQ-ISL-18 a token that the app refuses gives gx-error with status 401', async () => {
+  const page = await open('/token-stale')
+  await waitState(page, 'error')
+  expect((await log(page)).filter((e) => e[0] === 'gx-error')).toEqual([['gx-error', 'ACME-CART', { status: 401, key: 'gx.unauthorized' }]])
+  expect(await page.locator('#fallback').isVisible()).toBe(true)
+  await page.close()
+})
+
+test('SI-14 with gx-credentials the element sends the cookies, for an origin of AllowCredentials', async () => {
+  const context = await browser.newContext()
+  await context.addCookies([{ name: 'session', value: 'carol', url: api, sameSite: 'Lax' }])
+  const page = await context.newPage()
+  await page.goto(host + '/credentials')
+  await waitState(page, 'ready')
+  expect(await text(page, 'session')).toBe('carol')
+  // The same user on a host page with no gx-credentials has no session.
+  await page.goto(host + '/')
+  await waitState(page, 'ready')
+  expect(await text(page, 'session')).toBe('')
+  await context.close()
+})
+
 test('REQ-ISL-19 a new build of the server gives an open widget a fresh first render at its next action', async () => {
   const page = await open('/')
   await waitState(page, 'ready')
