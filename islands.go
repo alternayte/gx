@@ -93,5 +93,8 @@ func serveIsland(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", contentType)
 	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+	// The file of an island is a public file. An island of a widget loads
+	// it from the page of a different origin (REQ-ISL-20).
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	_, _ = w.Write([]byte(body))
 }

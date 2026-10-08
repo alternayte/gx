@@ -12,6 +12,7 @@ import (
 	"github.com/alternayte/gx/adapters/datastar"
 	"github.com/alternayte/gx/examples/shop"
 	"github.com/alternayte/gx/examples/shop/cart"
+	"github.com/alternayte/gx/examples/shop/composer"
 	"github.com/alternayte/gx/examples/shop/gxislands"
 	"github.com/alternayte/gx/examples/shop/gxstyles"
 	"github.com/alternayte/gx/examples/shop/ui/toast"
@@ -38,9 +39,9 @@ func main() {
 	// app stylesheet.
 	app := gx.New(gx.Config{Adapter: datastar.Adapter(), Toast: toast.Render})
 	app.Group("/", shop.ShellLayout, gx.Nav(gx.MorphNavigation), shop.Routes)
-	// The cart widget and its actions. A host page of a listed origin can
-	// call them; the pages of the shop call the same actions.
-	app.Group("/", gx.AllowOrigins(strings.Split(*widgetOrigins, ",")...), cart.WidgetRoutes)
+	// The widgets with their actions and forms. A host page of a listed
+	// origin can call them; the pages of the shop call the same actions.
+	app.Group("/", gx.AllowOrigins(strings.Split(*widgetOrigins, ",")...), cart.WidgetRoutes, composer.Routes)
 	var handler http.Handler = app
 	if *csp {
 		// Datastar evaluates client expressions at runtime, so the

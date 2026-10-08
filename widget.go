@@ -93,8 +93,12 @@ func (wd *widget[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Tag:    wd.tag,
 		HTML:   StringRequest(r, wd.view(props)),
 		Script: BasePath() + "/_gx/" + name,
-		Style:  widgetStylePath(wd.tag),
-		Build:  buildID(),
+		// The widget script loads the bundle when the HTML has a marker
+		// of a behaviour module, or when a toast comes.
+		Behaviors: BasePath() + "/_gx/" + widgetBehaviors(),
+		Islands:   BasePath() + "/_gx/island.js",
+		Style:     widgetStylePath(wd.tag),
+		Build:     buildID(),
 	})
 }
 
@@ -104,6 +108,11 @@ type widgetAnswer struct {
 	HTML string `json:"html,omitempty"`
 	// Script is the path of the widget script of this build.
 	Script string `json:"script,omitempty"`
+	// Behaviors is the path of the bundle of the behaviour modules.
+	Behaviors string `json:"behaviors,omitempty"`
+	// Islands is the path of the island loader. The widget script loads it
+	// when the HTML has an island.
+	Islands string `json:"islands,omitempty"`
 	// Style is the path of the stylesheet of the widget, when the app
 	// installed one.
 	Style string `json:"style,omitempty"`

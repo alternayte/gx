@@ -1,0 +1,55 @@
+package composer
+
+import "github.com/alternayte/gx/examples/shop/composer/route"
+import shoproute "github.com/alternayte/gx/examples/shop/route"
+import "github.com/alternayte/gx/examples/shop/ui"
+import "github.com/alternayte/gx/examples/shop/ui/button"
+import "github.com/alternayte/gx/examples/shop/ui/dialog"
+import selectbox "github.com/alternayte/gx/examples/shop/ui/select"
+import "github.com/alternayte/gx/examples/shop/ui/toast"
+
+props {
+  F route.SendForm
+}
+
+signals {
+  Note string = ""
+}
+
+<section class="grid gap-4 rounded-xl border border-border bg-card p-4 text-card-foreground">
+  <h2 class="text-lg font-semibold">New message</h2>
+  <form {...p.F.Attrs()} novalidate class="grid gap-3">
+    if p.F.To.Error != "" || p.F.Subject.Error != "" || p.F.Body.Error != "" || p.F.Priority.Error != "" || p.F.Attachment.Error != "" {
+      <div id="composer-errors" data-gx-error-summary tabindex="-1" role="alert">
+        <p>Fix the errors below.</p>
+      </div>
+    }
+    <ui.TextField label="To" field={p.F.To} type="email" validate="blur" />
+    <ui.TextField label="Subject" field={p.F.Subject} validate="input" />
+    <ui.TextField label="Message" field={p.F.Body} />
+    <selectbox.Select name={p.F.Priority.Name} label="Priority" class="w-48">
+      <selectbox.SelectOption value="low" selected={p.F.Priority.Value == "low"}>Low</selectbox.SelectOption>
+      <selectbox.SelectOption value="normal" selected={p.F.Priority.Value == "normal"}>Normal</selectbox.SelectOption>
+      <selectbox.SelectOption value="high" selected={p.F.Priority.Value == "high"}>High</selectbox.SelectOption>
+    </selectbox.Select>
+    <ui.FileField label="Attachment" field={p.F.Attachment} />
+    <div class="flex gap-2">
+      <button.Button type="submit">Send</button.Button>
+      <dialog.Dialog id="composer-discard" title="Discard the draft?" description="The text of the message is lost.">
+        <:trigger>
+          <button.Button variant={button.Outline}>Discard</button.Button>
+        </:trigger>
+        <:footer>
+          <button type="button" data-gx-close class="rounded-md border border-border px-3 py-1.5 text-sm" on:click={route.Discard{}}>Discard the draft</button>
+        </:footer>
+      </dialog.Dialog>
+    </div>
+  </form>
+  <div class="flex items-center gap-2 text-sm">
+    <label for="composer-note">Note to self</label>
+    <input id="composer-note" class="rounded-md border border-input px-2 py-1" bind:value={$Note} />
+    <NoteCount note={$Note} limit={40} load="eager" />
+  </div>
+  <a id="composer-help" href={shoproute.About{}} class="text-sm underline">How the shop works</a>
+  <toast.Toaster />
+</section>

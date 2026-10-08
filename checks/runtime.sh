@@ -72,3 +72,10 @@ if ! cmp -s "$tmp/element.js" internal/widgetelement/element.js; then
   diff -u internal/widgetelement/element.js "$tmp/element.js" >&2 || true
   exit 1
 fi
+bun build runtime/js/widget-behaviors.ts --outfile "$tmp/widget-behaviors.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/widget-behaviors.js" runtime/js/widget-behaviors.js; then
+  echo "rule: runtime/js/widget-behaviors.js is stale; run just runtime" >&2
+  diff -u runtime/js/widget-behaviors.js "$tmp/widget-behaviors.js" >&2 || true
+  exit 1
+fi
+

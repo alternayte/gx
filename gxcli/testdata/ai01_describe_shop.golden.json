@@ -98,6 +98,27 @@
       ]
     },
     {
+      "name": "Composer",
+      "package": "github.com/alternayte/gx/examples/shop/composer",
+      "file": "composer/Composer.gx",
+      "props": [
+        {
+          "name": "F",
+          "type": "route.SendForm",
+          "required": true
+        }
+      ],
+      "signals": [
+        {
+          "name": "Note",
+          "type": "string",
+          "default": "\"\""
+        }
+      ],
+      "fragments": [],
+      "fixtures": []
+    },
+    {
       "name": "Charts",
       "package": "github.com/alternayte/gx/examples/shop/dashboard",
       "file": "dashboard/Charts.gx",
@@ -9022,6 +9043,69 @@
       "kind": "none"
     },
     {
+      "type": "github.com/alternayte/gx/examples/shop/composer/route.Discard",
+      "method": "POST",
+      "pattern": "POST /widgets/composer/discard",
+      "fields": [],
+      "kind": "action",
+      "handler": "composer.Discard",
+      "prefix": "/"
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/composer/route.Send",
+      "method": "POST",
+      "pattern": "POST /widgets/composer/send",
+      "fields": [
+        {
+          "name": "To",
+          "type": "string",
+          "source": "form",
+          "key": "to"
+        },
+        {
+          "name": "Subject",
+          "type": "string",
+          "source": "form",
+          "key": "subject"
+        },
+        {
+          "name": "Body",
+          "type": "string",
+          "source": "form",
+          "key": "body"
+        },
+        {
+          "name": "Priority",
+          "type": "string",
+          "source": "form",
+          "key": "priority"
+        },
+        {
+          "name": "Attachment",
+          "type": "gx.File",
+          "source": "form",
+          "key": "attachment"
+        }
+      ],
+      "kind": "form",
+      "handler": "composer.Send",
+      "prefix": "/"
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/composer/route.Widget",
+      "method": "GET",
+      "pattern": "GET /widgets/composer",
+      "fields": [
+        {
+          "name": "To",
+          "type": "string",
+          "source": "query",
+          "key": "to"
+        }
+      ],
+      "kind": "none"
+    },
+    {
       "type": "github.com/alternayte/gx/examples/shop/dashboard/route.Page",
       "method": "GET",
       "pattern": "GET /dashboard",
@@ -9330,6 +9414,14 @@
       "external": false
     },
     {
+      "handler": "composer.Discard",
+      "route": "github.com/alternayte/gx/examples/shop/composer/route.Discard",
+      "method": "POST",
+      "pattern": "POST /widgets/composer/discard",
+      "signals": [],
+      "external": false
+    },
+    {
       "handler": "dashboard.Refresh",
       "route": "github.com/alternayte/gx/examples/shop/dashboard/route.Refresh",
       "method": "POST",
@@ -9355,6 +9447,53 @@
     }
   ],
   "forms": [
+    {
+      "handler": "composer.Send",
+      "route": "github.com/alternayte/gx/examples/shop/composer/route.Send",
+      "method": "POST",
+      "pattern": "POST /widgets/composer/send",
+      "fields": [
+        {
+          "name": "to",
+          "type": "string",
+          "rules": [
+            "gx.Required",
+            "gx.Email"
+          ]
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "rules": [
+            "gx.Required",
+            "gx.MaxLen(80)"
+          ]
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "rules": [
+            "gx.Required",
+            "gx.MinLen(10)"
+          ]
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "rules": [
+            "gx.OneOf(\"low\", \"normal\", \"high\")"
+          ]
+        },
+        {
+          "name": "attachment",
+          "type": "gx.File",
+          "rules": [
+            "gx.MaxSize(64 \u003c\u003c 10)",
+            "gx.Accept(\"text/*\")"
+          ]
+        }
+      ]
+    },
     {
       "handler": "signup.Create",
       "route": "github.com/alternayte/gx/examples/shop/signup/route.Signup",
@@ -9419,6 +9558,23 @@
     }
   ],
   "islands": [
+    {
+      "name": "NoteCount",
+      "package": "github.com/alternayte/gx/examples/shop/composer",
+      "file": "composer/NoteCount.ts",
+      "props": [
+        {
+          "name": "Note",
+          "type": "gx.SignalRef[string]",
+          "required": false
+        },
+        {
+          "name": "Limit",
+          "type": "int",
+          "required": false
+        }
+      ]
+    },
     {
       "name": "BarChart",
       "package": "github.com/alternayte/gx/examples/shop/dashboard",

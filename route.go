@@ -314,6 +314,9 @@ func (a *App) registerAsset(name string, body []byte) {
 	a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", assetType(name))
 		w.Header().Set("Cache-Control", "public, max-age=3600")
+		// A script of the runtime is a public file. A widget loads the
+		// island loader from the page of a different origin (REQ-ISL-20).
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		_, _ = w.Write(body)
 	}))
 }

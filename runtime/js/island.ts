@@ -52,7 +52,11 @@ let store: Promise<SignalStore> | undefined
 
 // signalStore loads the adapter runtime of the page. The page already runs
 // that module, so the import gives the same instance and its signals.
-const signalStore = (): Promise<SignalStore> => {
+const signalStore = (el: Element): Promise<SignalStore> => {
+  // An island in a widget has the signals of that widget: the widget
+  // script gives its store to the shadow root (REQ-ISL-20).
+  const local = (el.getRootNode() as { gxSignals?: SignalStore }).gxSignals
+  if (local) return Promise.resolve(local)
   if (store) return store
   const script = document.querySelector<HTMLScriptElement>('script[data-gx-adapter]')
   if (!script) return Promise.reject(new Error('the page has no adapter with signals'))
@@ -225,7 +229,7 @@ class GxIsland extends HTMLElement {
       const { props, signals } = parseProps(this.getAttribute('props'))
       const [module, signalsOfPage] = await Promise.all([
         import(src) as Promise<IslandModule>,
-        signals ? signalStore() : undefined,
+        signals ? signalStore(this) : undefined,
       ])
       if (run !== this.#run || !this.isConnected) return
       if (typeof module.default !== 'function') throw new Error('the file has no default export')

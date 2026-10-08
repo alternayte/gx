@@ -246,11 +246,22 @@ func TestREQ_AI_01_DescribeShop(t *testing.T) {
 	if !add || !signalAction {
 		t.Fatalf("actions = %+v", got.Actions)
 	}
-	if len(got.Forms) != 1 || got.Forms[0].Handler != "signup.Create" {
+	// The shop has two forms: the signup form, and the form of the
+	// composer widget (REQ-ISL-20).
+	formAt := map[string]int{}
+	for i, f := range got.Forms {
+		formAt[f.Handler] = i
+	}
+	signupAt, hasSignup := formAt["signup.Create"]
+	composerAt, hasComposer := formAt["composer.Send"]
+	if len(got.Forms) != 2 || !hasSignup || !hasComposer {
 		t.Fatalf("forms = %+v", got.Forms)
 	}
+	if fields := got.Forms[composerAt].Fields; len(fields) != 5 || fields[0].Name != "to" || strings.Join(fields[0].Rules, " ") != "gx.Required gx.Email" {
+		t.Fatalf("composer form = %+v", got.Forms[composerAt])
+	}
 	rules := map[string][]string{}
-	for _, f := range got.Forms[0].Fields {
+	for _, f := range got.Forms[signupAt].Fields {
 		rules[f.Name] = f.Rules
 	}
 	if strings.Join(rules["email"], " ") != "gx.Required gx.Email gx.MaxLen(254)" || len(rules["address.street"]) != 1 {

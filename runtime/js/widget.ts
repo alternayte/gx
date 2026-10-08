@@ -19,6 +19,10 @@ type Answer = {
   style?: string
   // The build of the server that made the answer.
   build?: string
+  // The path of the bundle of the behaviour modules on the server.
+  behaviors?: string
+  // The path of the island loader on the server.
+  islands?: string
 }
 
 // One step of the answer of an action.
@@ -60,6 +64,7 @@ type Mounted = {
 type MorphOptions = {
   morphStyle: 'innerHTML' | 'outerHTML'
   callbacks: {
+    beforeNodeAdded: (node: Node) => boolean
     beforeNodeMorphed: (from: Node, to: Node) => boolean
     beforeAttributeUpdated: (name: string, node: Node, kind: string) => boolean
   }
@@ -75,8 +80,49 @@ declare const Idiomorph: {
 // When the new render has a different value, the value of the server wins.
 const userState = new WeakMap<Node, Set<string>>()
 
-const morphCallbacks: MorphOptions['callbacks'] = {
+// absolute makes the path of a link or of a file an absolute URL of the Gx
+// server (REQ-ISL-20). A path of the widget HTML starts at the origin of the
+// server; on a host page the same text starts at the origin of the host.
+const absolute = (el: Element, server: string): void => {
+  for (const name of ['href', 'src']) {
+    const value = el.getAttribute(name)
+    if (value && value.startsWith('/') && !value.startsWith('//')) el.setAttribute(name, server + value)
+  }
+  const set = el.getAttribute('srcset')
+  if (set) {
+    const next = set
+      .split(',')
+      .map((part) => {
+        const text = part.trim()
+        return text.startsWith('/') && !text.startsWith('//') ? server + text : text
+      })
+      .join(', ')
+    if (next !== set) el.setAttribute('srcset', next)
+  }
+}
+
+const absoluteAll = (root: ParentNode, server: string): void => {
+  for (const el of root.querySelectorAll('[href],[src],[srcset]')) absolute(el, server)
+}
+
+// morphCallbacks are the rules of a morph in a widget. The new node gets
+// absolute URLs before the morph compares it, so a link that did not change
+// is not written two times.
+const morphCallbacks = (server: string): MorphOptions['callbacks'] => ({
+  // A new node has its absolute URLs before it is in the page, so an island
+  // loads its file from the server of its widget.
+  beforeNodeAdded: (node) => {
+    if (node instanceof Element) {
+      absolute(node, server)
+      absoluteAll(node, server)
+    }
+    return true
+  },
   beforeNodeMorphed: (from, to) => {
+    // The root of an island holds what the island drew. A morph leaves it
+    // and its children alone, as on a page (REQ-ISL-06).
+    if (from instanceof Element && from.hasAttribute('data-ignore-morph')) return false
+    if (to instanceof Element) absolute(to, server)
     const same = new Set<string>()
     if (from instanceof HTMLInputElement && to instanceof HTMLInputElement) {
       if (from.getAttribute('value') === to.getAttribute('value')) same.add('value')
@@ -91,7 +137,7 @@ const morphCallbacks: MorphOptions['callbacks'] = {
     return true
   },
   beforeAttributeUpdated: (name, node) => !userState.get(node)?.has(name),
-}
+})
 
 // sheets holds one stylesheet object for each stylesheet URL, so each
 // instance of a widget on the page shares it.
@@ -202,6 +248,11 @@ const timed = (run: (e?: Event) => void, mods: Mods): ((e?: Event) => void) => {
   return fn
 }
 
+// behaviorMarkers are the attributes of the registry components that need a
+// behaviour module (REQ-REG-07).
+const behaviorMarkers =
+  '[data-gx-behavior],[data-gx-roving],[data-gx-trap],[data-gx-dismiss],[data-gx-open],[data-gx-close],[data-gx-tabs],[data-gx-toaster],[data-gx-place],[data-gx-sub],[data-gx-contextmenu]'
+
 // A binding is one client attribute of one element, in use.
 type Binding = { value: string; dispose: () => void }
 
@@ -216,6 +267,17 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
   box.setAttribute('data-gx-widget', answer.tag ?? '')
   box.style.display = 'contents'
   const build = answer.build
+  const callbacks = morphCallbacks(host.server)
+  // life ends the listeners of this mount.
+  const life = new AbortController()
+
+  // behaviors loads the behaviour modules of the server for this shadow
+  // root, one time: the dialogs, menus, tabs and toasts of the registry.
+  let behaviorsLoad: Promise<void> | undefined
+  const behaviors = (): Promise<void> =>
+    (behaviorsLoad ??= answer.behaviors
+      ? (import(host.server + answer.behaviors) as Promise<{ install: (root: ShadowRoot) => void }>).then((m) => m.install(root))
+      : Promise.resolve())
 
   // effects are the functions that put the value of an expression into the
   // DOM. Each runs again after a signal changes.
@@ -257,17 +319,8 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     }
   }
 
-  // call invokes an action of the server and applies its answer (D-264).
-  const call = async (method: string, url: string, scope: string): Promise<void> => {
-    const headers: Record<string, string> = { 'Gx-Scope': scope, Accept: 'application/json' }
-    const init: RequestInit = { method, headers }
-    let path = url
-    if (method === 'GET' || method === 'DELETE') {
-      path += (url.includes('?') ? '&' : '?') + 'gx-signals=' + encodeURIComponent(JSON.stringify(store.root))
-    } else {
-      headers['Content-Type'] = 'application/json'
-      init.body = JSON.stringify({ signals: store.root })
-    }
+  // send sends one request of the widget and applies the answer (D-264).
+  const send = async (path: string, init: RequestInit): Promise<void> => {
     let res: Response
     try {
       res = await host.request(path, init)
@@ -295,6 +348,47 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     else if (!res.ok) host.fail({ status: res.status, key: 'gx.error' })
   }
 
+  // call invokes an action of the server with the signals of the widget.
+  const call = (method: string, url: string, scope: string): Promise<void> => {
+    const headers: Record<string, string> = { 'Gx-Scope': scope, Accept: 'application/json' }
+    const init: RequestInit = { method, headers }
+    let path = url
+    if (method === 'GET' || method === 'DELETE') {
+      path += (url.includes('?') ? '&' : '?') + 'gx-signals=' + encodeURIComponent(JSON.stringify(store.root))
+    } else {
+      headers['Content-Type'] = 'application/json'
+      init.body = JSON.stringify({ signals: store.root })
+    }
+    return send(path, init)
+  }
+
+  // submit sends a form of the widget to its action (REQ-ISL-20). The
+  // answer morphs the form with its errors, or is a step for the host.
+  const submit = async (form: HTMLFormElement, submitter: HTMLElement | null): Promise<void> => {
+    const data = new FormData(form)
+    const path = submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? ''
+    const init: RequestInit = { method: (form.getAttribute('method') ?? 'post').toUpperCase(), headers: { Accept: 'application/json' } }
+    if (form.enctype === 'multipart/form-data') {
+      // The browser writes the content type with its boundary.
+      init.body = data
+    } else {
+      const params = new URLSearchParams()
+      for (const [name, value] of data) if (typeof value === 'string') params.append(name, value)
+      init.body = params
+    }
+    await send(path, init)
+    // A form that came back with errors has a summary: it takes the focus.
+    root.querySelector<HTMLElement>('[data-gx-error-summary]')?.focus()
+  }
+
+  // validate checks one field on the server and patches its error.
+  const validate = (el: HTMLInputElement): Promise<void> | undefined => {
+    const path = el.getAttribute('data-gx-validate-url')
+    if (!path) return undefined
+    const value = el.type === 'checkbox' ? (el.checked ? el.value || 'on' : '') : el.value
+    return send(path, { method: 'POST', headers: { Accept: 'application/json' }, body: new URLSearchParams([[el.name, value]]) })
+  }
+
   // apply does one step of the answer of an action.
   const apply = (op: Op): void => {
     switch (op.op) {
@@ -306,6 +400,22 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
         // element (REQ-ISL-17).
         if (op.name) host.event(op.name, op.detail ?? null)
         return
+      case 'toast': {
+        // A toast of the server shows inside the widget, in the toaster
+        // region of the view. A view with no region gets a plain one.
+        let region = root.querySelector('[data-gx-toaster]')
+        if (!region) {
+          region = document.createElement('div')
+          region.id = 'gx-toaster'
+          region.setAttribute('role', 'region')
+          region.setAttribute('aria-label', 'Notifications')
+          region.setAttribute('aria-live', 'polite')
+          region.setAttribute('data-gx-toaster', '')
+          root.append(region)
+        }
+        region.insertAdjacentHTML('beforeend', op.html ?? '')
+        return
+      }
       case 'redirect':
         // The host owns its navigation: it gets the URL in an event, and
         // the page does not move.
@@ -329,10 +439,10 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
             target.outerHTML = html
             return
           case 'inner':
-            Idiomorph.morph(target, html, { morphStyle: 'innerHTML', callbacks: morphCallbacks })
+            Idiomorph.morph(target, html, { morphStyle: 'innerHTML', callbacks })
             return
           default:
-            Idiomorph.morph(target, html, { morphStyle: 'outerHTML', callbacks: morphCallbacks })
+            Idiomorph.morph(target, html, { morphStyle: 'outerHTML', callbacks })
         }
       }
     }
@@ -457,7 +567,14 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
   // scan reads the client attributes of the widget after its HTML changed.
   // A binding whose element and text did not change stays, with its timers.
   const scan = (): void => {
-    const elements = [...box.querySelectorAll('*')]
+    absoluteAll(root, host.server)
+    // The toaster region of a widget with no region of its own is beside
+    // the box, so the scan reads the whole shadow root.
+    const elements = [...root.querySelectorAll('*')]
+    if (root.querySelector(behaviorMarkers)) void behaviors()
+    // An island is a custom element of the page. The island loader of the
+    // server defines it, one time for the page.
+    if (answer.islands && root.querySelector('gx-island,[data-gx-module]')) void import(host.server + answer.islands)
     // The first values of the signals come before the expressions that
     // read them. A signal that has a value keeps it.
     for (const el of elements) {
@@ -497,7 +614,54 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     for (const effect of [...effects]) effect()
   }
 
+  // A submit does not leave a shadow root, so the widget takes it here.
+  root.addEventListener(
+    'submit',
+    (e) => {
+      const form = (e.target as Element | null)?.closest?.('form[data-gx-form]') as HTMLFormElement | null
+      if (!form) return
+      e.preventDefault()
+      void submit(form, (e as SubmitEvent).submitter)
+    },
+    { signal: life.signal },
+  )
+  // Live validation of a field (REQ-FRM-06): at blur, or after the user
+  // stops typing.
+  const typing = new WeakMap<Element, ReturnType<typeof setTimeout>>()
+  root.addEventListener(
+    'blur',
+    (e) => {
+      const el = e.target as HTMLInputElement | null
+      if (el?.getAttribute?.('data-gx-validate') === 'blur') void validate(el)
+    },
+    { capture: true, signal: life.signal },
+  )
+  root.addEventListener(
+    'input',
+    (e) => {
+      const el = e.target as HTMLInputElement | null
+      if (el?.getAttribute?.('data-gx-validate') !== 'input') return
+      clearTimeout(typing.get(el))
+      typing.set(el, setTimeout(() => void validate(el), 300))
+    },
+    { capture: true, signal: life.signal },
+  )
+
+  // An island of the widget reads and writes the signals of the widget
+  // through this store, as an island of a page uses the adapter.
+  ;(root as unknown as { gxSignals: unknown }).gxSignals = {
+    getPath: (path: string): unknown => store.get(path.split('.')),
+    mergePatch: (patch: Record<string, unknown>): void => store.merge(patch, false),
+    effect: (fn: () => void): (() => void) => {
+      effects.add(fn)
+      fn()
+      return () => effects.delete(fn)
+    },
+  }
+
   box.innerHTML = answer.html ?? ''
+  // The URLs are absolute before the HTML is in the page.
+  absoluteAll(box, host.server)
   root.replaceChildren(box)
   scan()
   return {
@@ -505,11 +669,14 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     // stay, with the value that the user typed and with the focus. Each
     // signal keeps its value.
     update: (next: Answer): void => {
-      Idiomorph.morph(box, next.html ?? '', { morphStyle: 'innerHTML', callbacks: morphCallbacks })
+      Idiomorph.morph(box, next.html ?? '', { morphStyle: 'innerHTML', callbacks })
       scan()
     },
     destroy: (): void => {
       alive = false
+      life.abort()
+      // The toaster region that this mount made is beside the box.
+      for (const el of [...root.children]) if (el !== box) el.remove()
       for (const byName of bindings.values()) for (const binding of byName.values()) binding.dispose()
       bindings.clear()
       effects.clear()

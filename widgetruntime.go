@@ -24,6 +24,20 @@ var widgetRuntimeJS []byte
 //go:embed adapters/htmx/idiomorph.js
 var widgetMorphJS []byte
 
+// widgetBehaviorsJS is the built bundle of the behaviour modules for a
+// widget (REQ-ISL-20): the code of behavior.js, tabs.js, toast.js and
+// overlay.js, for a shadow root.
+//
+//go:embed runtime/js/widget-behaviors.js
+var widgetBehaviorsJS []byte
+
+// widgetBehaviors returns the name of the behaviour bundle below /_gx/. The
+// name holds a hash of the content.
+var widgetBehaviors = sync.OnceValue(func() string {
+	sum := sha256.Sum256(widgetBehaviorsJS)
+	return "widget-behaviors." + hex.EncodeToString(sum[:6]) + ".js"
+})
+
 var widgetScriptState struct {
 	once sync.Once
 	name string
@@ -51,13 +65,15 @@ func widgetScript() (name string, body []byte) {
 // with this header.
 func (a *App) serveWidgetScript() {
 	name, body := widgetScript()
-	a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h := w.Header()
-		h.Set("Content-Type", "text/javascript; charset=utf-8")
-		h.Set("Access-Control-Allow-Origin", "*")
-		h.Set("Cache-Control", "public, max-age=31536000, immutable")
-		_, _ = w.Write(body)
-	}))
+	for name, body := range map[string][]byte{name: body, widgetBehaviors(): widgetBehaviorsJS} {
+		a.mux.Handle("GET /_gx/"+name, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			h := w.Header()
+			h.Set("Content-Type", "text/javascript; charset=utf-8")
+			h.Set("Access-Control-Allow-Origin", "*")
+			h.Set("Cache-Control", "public, max-age=31536000, immutable")
+			_, _ = w.Write(body)
+		}))
+	}
 }
 
 var buildIDState struct {
