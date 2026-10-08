@@ -37,3 +37,5 @@ The spec is `docs/SDD.md`; it and the build state in `docs/build/` stay local an
 - action: a route type plus a handler that answers with typed patches.
 - registry: the component source `gx add` copies into an app.
 - document shell: the doctype, html, head and body that the framework writes around a page. Avoid: document wrapper, page skeleton.
+- widget: a component that a Gx server renders into a custom element on a page of a different site. Avoid: exported element, exported web component, embed.
+- host: the page of a different site that uses a widget; it is not a Gx app. Avoid: consumer, embedder, parent page.
