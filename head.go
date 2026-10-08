@@ -59,6 +59,10 @@ type renderState struct {
 	// of the signals then do not replace the values in the browser
 	// (REQ-DEV-03).
 	keepSignals bool
+	// widget is true when the render is for a widget: a client attribute
+	// is then data and not the text of the adapter (SI-15).
+	widget    bool
+	widgetSet bool
 }
 
 // HeadOf returns the merged head of a node tree (REQ-RTE-11, REQ-RTE-12).

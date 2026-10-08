@@ -16,14 +16,19 @@ let browser: Browser
 let server: Subprocess
 let api = ''
 let host = ''
+let apiAddr = ''
+let hostAddr = ''
+let workDir = ''
+let stylesRoot = ''
 
 beforeAll(async () => {
   const dir = mkdtempSync(join(tmpdir(), 'gx-widget-'))
   const bin = join(dir, process.platform === 'win32' ? 'widgetapp.exe' : 'widgetapp')
   const build = spawn(['go', 'build', '-o', bin, './tests/e2e/widgetapp'], { cwd: repo, stderr: 'pipe' })
   if ((await build.exited) !== 0) throw new Error('go build failed: ' + (await new Response(build.stderr).text()))
-  const apiAddr = `127.0.0.1:${await freePort()}`
-  const hostAddr = `127.0.0.1:${await freePort()}`
+  apiAddr = `127.0.0.1:${await freePort()}`
+  hostAddr = `127.0.0.1:${await freePort()}`
+  workDir = dir
   api = 'http://' + apiAddr
   host = 'http://' + hostAddr
   // An app root for the stylesheet build: the default theme of gx init, the
@@ -38,19 +43,25 @@ beforeAll(async () => {
     join(root, '.gx', 'widget-classes.json'),
     JSON.stringify({ 'acme-cart': ['p-4', 'shadow-lg', 'rounded-xl', 'bg-primary', 'dark:bg-foreground'] }),
   )
+  stylesRoot = root
   server = spawn([bin, '-api', apiAddr, '-host', hostAddr, '-styles', root], { stdout: 'ignore', stderr: 'inherit' })
+  await up()
+  browser = await launchBrowser()
+})
+
+// up waits for the two servers of widgetapp.
+const up = async (): Promise<void> => {
   const deadline = Date.now() + 120000
   for (;;) {
     try {
-      if ((await fetch(host + '/')).ok && (await fetch(api + '/widgets/cart')).ok) break
+      if ((await fetch(host + '/')).ok && (await fetch(api + '/widgets/cart')).ok) return
     } catch {
       // not up yet
     }
     if (Date.now() > deadline) throw new Error('widgetapp did not start')
     await Bun.sleep(100)
   }
-  browser = await launchBrowser()
-})
+}
 
 afterAll(() => {
   server?.kill()
@@ -76,8 +87,25 @@ test('REQ-ISL-10 a plain page on a second origin shows the widget as the server 
   // The server renders the component. The shadow root holds that HTML.
   const answer = (await (await fetch(api + '/widgets/cart?currency=USD')).json()) as { html: string; tag: string }
   expect(answer.tag).toBe('acme-cart')
-  const shown = await page.evaluate(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('[data-gx-widget]')!.innerHTML)
-  expect(shown.replace(/<p id="loads">\d+<\/p>/, '')).toBe(answer.html.replace(/<p id="loads">\d+<\/p>/, ''))
+  // The elements of the render are the elements of the shadow root, in
+  // order. A part with no client expression has the same HTML.
+  const compare = await page.evaluate((html) => {
+    const rendered = document.createElement('template')
+    rendered.innerHTML = html
+    const box = document.querySelector('acme-cart')!.shadowRoot!.querySelector('[data-gx-widget]')!
+    const names = (root: ParentNode) => [...root.querySelectorAll('*')].map((el) => el.tagName + '#' + el.id)
+    const part = (root: ParentNode, id: string) => root.querySelector('#' + id)!.outerHTML
+    return {
+      rendered: names(rendered.content),
+      shown: names(box),
+      line: [part(rendered.content, 'line'), part(box, 'line')],
+      box: [part(rendered.content, 'box'), part(box, 'box')],
+    }
+  }, answer.html)
+  expect(compare.shown).toEqual(compare.rendered)
+  expect(compare.shown.length).toBeGreaterThan(8)
+  expect(compare.line[1]).toBe(compare.line[0])
+  expect(compare.box[1]).toBe(compare.box[0])
   expect(await page.locator('acme-cart #line').textContent()).toBe('2 items in USD')
   // The host document does not hold the HTML of the widget.
   expect(await page.evaluate(() => document.getElementById('line'))).toBeNull()
@@ -161,7 +189,7 @@ test('REQ-ISL-19 the element file is a loader: the script of the widget comes fr
   page.on('request', (r) => requests.push(r))
   await page.goto(host + '/')
   await waitState(page, 'ready')
-  const scripts = requests.map((r) => r.url()).filter((u) => u.endsWith('.js'))
+  const scripts = requests.map((r) => r.url()).filter((u) => u.endsWith('.js') && !u.endsWith('/log.js'))
   expect(scripts[0]).toBe(host + '/acme-cart.js')
   expect(scripts[1]).toMatch(new RegExp('^' + api.replaceAll('.', '\\.') + '/_gx/widget\\.[0-9a-f]{12}\\.js$'))
   expect(scripts.length).toBe(2)
@@ -273,5 +301,206 @@ test('REQ-ISL-11 a Tailwind build works in the shadow root: shadows, theme token
   expect(css).not.toContain('.underline')
   // The start values of the Tailwind variables hold with no condition.
   expect(css).toContain('@layer properties{*,:before,:after,::backdrop{--tw-shadow:0 0 #0000;')
+  await page.close()
+})
+
+// shadow reads from the shadow root of one widget of the page.
+const shadow = <T>(page: Page, selector: string, read: string): Promise<T> =>
+  page.evaluate(
+    ([sel, body]) => {
+      const root = document.querySelector(sel)!.shadowRoot!
+      return new Function('root', 'return ' + body)(root)
+    },
+    [selector, read] as const,
+  )
+
+const widgetState = (page: Page, selector = 'acme-cart') =>
+  shadow<{ count: string; many: boolean; expanded: string | null; open: boolean; qty: string; total: string }>(
+    page,
+    selector,
+    `({
+      count: root.querySelector('#count').textContent,
+      many: getComputedStyle(root.querySelector('#many')).display !== 'none',
+      expanded: root.querySelector('#toggle').getAttribute('aria-expanded'),
+      open: root.querySelector('#panel').classList.contains('is-open'),
+      qty: root.querySelector('#qty').value,
+      total: root.querySelector('#total').textContent,
+    })`,
+  )
+
+test('REQ-ISL-21 signals and client expressions work in a widget: text, show, bind, class, attr and statements', async () => {
+  const page = await open('/')
+  await waitState(page, 'ready')
+  // The first values of the signals.
+  expect(await widgetState(page)).toEqual({ count: '1', many: false, expanded: null, open: false, qty: '1', total: '0' })
+  // A signal statement: $Qty++ two times.
+  await page.locator('acme-cart #more').click()
+  await page.locator('acme-cart #more').click()
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#count')!.textContent === '3')
+  expect(await widgetState(page)).toMatchObject({ count: '3', many: true, qty: '3' })
+  // bind: the field writes the signal, as a number.
+  await page.locator('acme-cart #qty').fill('2')
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#count')!.textContent === '2')
+  expect(await widgetState(page)).toMatchObject({ count: '2', many: false })
+  // $Open = !$Open, attr: and class:.
+  await page.locator('acme-cart #toggle').click()
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#panel')!.classList.contains('is-open'))
+  expect(await widgetState(page)).toMatchObject({ expanded: '', open: true })
+  await page.locator('acme-cart #toggle').click()
+  await page.waitForFunction(() => !document.querySelector('acme-cart')!.shadowRoot!.querySelector('#panel')!.classList.contains('is-open'))
+  expect(await widgetState(page)).toMatchObject({ expanded: null, open: false })
+  await page.close()
+})
+
+test('REQ-ISL-21 an action reads the signals of the widget and its answer patches the shadow root', async () => {
+  const page = await browser.newPage()
+  const calls: Request[] = []
+  page.on('request', (r) => {
+    if (r.url().endsWith('/widgets/cart/add')) calls.push(r)
+  })
+  await page.goto(host + '/')
+  await waitState(page, 'ready')
+  await page.locator('acme-cart #qty').fill('4')
+  await page.locator('acme-cart #add').click()
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#total')!.textContent === '40')
+  // The answer set the signal back to 1: the field and the text follow.
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#count')!.textContent === '1')
+  expect(await widgetState(page)).toMatchObject({ count: '1', qty: '1', total: '40', many: false })
+  // The wire form of a widget: the signals as JSON, the scope and the tag
+  // in headers, and no cookie.
+  const post = calls.find((r) => r.method() === 'POST')!
+  const headers = await post.allHeaders()
+  expect(headers['gx-widget']).toBe('acme-cart')
+  expect(headers['gx-scope']).toBe('cart.Cart')
+  expect(headers['cookie']).toBeUndefined()
+  expect(JSON.parse(post.postData() ?? '{}')).toEqual({ signals: { cart: { Cart: { qty: 4, open: false } } } })
+  // The patch did not touch the document of the host.
+  expect(await page.evaluate(() => document.getElementById('total'))).toBeNull()
+  expect((await log(page)).filter((e) => e[0] === 'gx-error')).toEqual([])
+  await page.close()
+})
+
+test('REQ-ISL-15 an attribute change keeps the signals of the widget', async () => {
+  const page = await open('/')
+  await waitState(page, 'ready')
+  await page.locator('acme-cart #qty').fill('7')
+  await page.locator('acme-cart #toggle').click()
+  await page.evaluate(() => document.querySelector('acme-cart')!.setAttribute('currency', 'EUR'))
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#line')!.textContent === '2 items in EUR')
+  // The new render has the first values in its markup. The signals of the
+  // browser stay.
+  expect(await widgetState(page)).toMatchObject({ count: '7', qty: '7', many: true, open: true, expanded: '' })
+  await page.close()
+})
+
+test('REQ-ISL-20 a redirect of an action fires gx-navigate, and the page of the host does not move', async () => {
+  const page = await open('/')
+  await waitState(page, 'ready')
+  await page.locator('acme-cart #go').click()
+  await page.waitForFunction(() => (window as any).log.some((e: unknown[]) => e[0] === 'gx-navigate'))
+  expect((await log(page)).filter((e) => e[0] === 'gx-navigate')).toEqual([['gx-navigate', 'ACME-CART', { url: '/checkout?step=1' }]])
+  expect(page.url()).toBe(host + '/')
+  await page.close()
+})
+
+test('REQ-ISL-16 an action that fails fires gx-error with a status and a key, and no text of the server', async () => {
+  const page = await open('/')
+  await waitState(page, 'ready')
+  await page.locator('acme-cart #fail').click()
+  await waitState(page, 'error')
+  const errors = (await log(page)).filter((e) => e[0] === 'gx-error')
+  expect(errors).toEqual([['gx-error', 'ACME-CART', { status: 500, key: 'gx.error' }]])
+  expect(JSON.stringify(await log(page))).not.toContain('stock service')
+  // The widget stays on the page with its last render.
+  expect(await page.locator('acme-cart #line').textContent()).toBe('2 items in USD')
+  await page.close()
+})
+
+test('REQ-ISL-21 two widgets and a Datastar of the host do not share signals', async () => {
+  const page = await open('/two')
+  await page.waitForFunction(() => [...document.querySelectorAll('acme-cart')].every((el) => el.getAttribute('data-gx-state') === 'ready'))
+  await page.waitForFunction(() => document.querySelector('#hostqty')!.textContent === '100')
+  await page.locator('#first #more').click()
+  await page.locator('#first #more').click()
+  await page.locator('#second #qty').fill('9')
+  await page.waitForFunction(() => document.querySelector('#second')!.shadowRoot!.querySelector('#count')!.textContent === '9')
+  expect((await widgetState(page, '#first')).count).toBe('3')
+  expect((await widgetState(page, '#second')).count).toBe('9')
+  // The signal of the host has the same path. It keeps its value, and the
+  // Datastar of the host did not run the attributes of a widget.
+  expect(await page.locator('#hostqty').textContent()).toBe('100')
+  // An action of one instance patches that instance only.
+  await page.locator('#second #add').click()
+  await page.waitForFunction(() => document.querySelector('#second')!.shadowRoot!.querySelector('#total')!.textContent === '90')
+  expect((await widgetState(page, '#first')).total).toBe('0')
+  expect((await widgetState(page, '#first')).count).toBe('3')
+  await page.close()
+})
+
+test('SI-15 each control of the widget works on a host page with a strict policy and no unsafe-eval', async () => {
+  const page = await open('/strict')
+  await waitState(page, 'ready')
+  expect((await page.goto(host + '/strict'))!.headers()['content-security-policy']).toContain("default-src 'none'")
+  await waitState(page, 'ready')
+  await page.locator('acme-cart #more').click()
+  await page.locator('acme-cart #more').click()
+  await page.locator('acme-cart #toggle').click()
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#count')!.textContent === '3')
+  expect(await widgetState(page)).toMatchObject({ count: '3', many: true, open: true, expanded: '', qty: '3' })
+  await page.locator('acme-cart #add').click()
+  await page.waitForFunction(() => document.querySelector('acme-cart')!.shadowRoot!.querySelector('#total')!.textContent === '30')
+  // The stylesheet of the widget is in the shadow root under this policy.
+  expect(await shadow<string>(page, 'acme-cart', "getComputedStyle(root.querySelector('#loads')).color")).toBe('rgb(9, 9, 9)')
+  // The policy refused nothing.
+  expect((await log(page)).filter((e) => e[0] === 'csp')).toEqual([])
+  expect((await log(page)).filter((e) => e[0] === 'gx-error')).toEqual([])
+  await page.close()
+})
+
+test('SI-15 the widget script has no eval and no Function constructor, and the render holds no code', async () => {
+  const answer = (await (await fetch(api + '/widgets/cart', { headers: { 'Gx-Widget': 'acme-cart' } })).json()) as { script: string; html: string }
+  const script = await (await fetch(api + answer.script)).text()
+  expect(script).not.toMatch(/\beval\s*\(/)
+  expect(script).not.toMatch(/\bFunction\s*\(/)
+  expect(script).not.toContain('setTimeout("')
+  // A client expression is a tree of data in the render.
+  expect(answer.html).toContain('data-gx-show="[&#34;&gt;&#34;,[&#34;s&#34;,[&#34;cart&#34;,&#34;Cart&#34;,&#34;qty&#34;]],[&#34;v&#34;,2]]"')
+  expect(answer.html).not.toContain('$')
+  expect(answer.html).not.toContain('data-on:')
+})
+
+test('REQ-ISL-19 a new build of the server gives an open widget a fresh first render at its next action', async () => {
+  const page = await open('/')
+  await waitState(page, 'ready')
+  await page.locator('acme-cart #qty').fill('5')
+  const before = (await (await fetch(api + '/widgets/cart')).json()) as { build: string }
+  // A new build of the server takes the place of the old one. The page of
+  // the host stays open.
+  server.kill()
+  await server.exited
+  const bin2 = join(workDir, process.platform === 'win32' ? 'widgetapp2.exe' : 'widgetapp2')
+  const build = spawn(['go', 'build', '-ldflags', '-X main.stamp=2', '-o', bin2, './tests/e2e/widgetapp'], { cwd: repo, stderr: 'pipe' })
+  if ((await build.exited) !== 0) throw new Error('go build failed: ' + (await new Response(build.stderr).text()))
+  server = spawn([bin2, '-api', apiAddr, '-host', hostAddr, '-styles', stylesRoot], { stdout: 'ignore', stderr: 'inherit' })
+  await up()
+  const after = (await (await fetch(api + '/widgets/cart')).json()) as { build: string }
+  expect(after.build).not.toBe(before.build)
+  const loadsBefore = await shadow<string>(page, 'acme-cart', "root.querySelector('#loads').textContent")
+  // The answer of the action names the new build. The widget drops it and
+  // loads again from the new server, which counts its loads from 1.
+  await page.locator('acme-cart #add').click()
+  await page.waitForFunction(
+    (old) => {
+      const loads = document.querySelector('acme-cart')!.shadowRoot!.querySelector('#loads')?.textContent
+      return loads !== undefined && loads !== old && document.querySelector('acme-cart')!.getAttribute('data-gx-state') === 'ready'
+    },
+    loadsBefore,
+  )
+  // A fresh first render: the signals have their first values.
+  expect(await widgetState(page)).toMatchObject({ count: '1', qty: '1', total: '0' })
+  // The element file of the host did not change, and gx-ready fired one
+  // time for the element.
+  expect((await log(page)).filter((e) => e[0] === 'gx-ready').length).toBe(1)
+  expect((await log(page)).filter((e) => e[0] === 'gx-error')).toEqual([])
   await page.close()
 })

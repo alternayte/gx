@@ -23,12 +23,12 @@ func TestREQ_ACT_07_TranspileGolden(t *testing.T) {
 		{
 			"show value with inlined server value",
 			"<p show={$Qty > p.Total}>x</p>",
-			`gx.Attr{Key: "data-show", Value: "(" + gx.SignalPath("cart.Cart", p.GxKey, "qty") + " > " + gx.JSON(p.Total) + ")", Kind: gx.AttrText}`,
+			`gx.Client("data-show", "("+gx.SignalPath("cart.Cart", p.GxKey, "qty")+" > "+gx.JSON(p.Total)+")", gx.ExprOp(">", gx.ExprSignal("cart.Cart", p.GxKey, "qty"), gx.ExprValue(p.Total)))`,
 		},
 		{
 			"text value",
 			"<span text={$Qty}>x</span>",
-			`gx.Attr{Key: "data-text", Value: gx.SignalPath("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
+			`gx.Client("data-text", gx.SignalPath("cart.Cart", p.GxKey, "qty"), gx.ExprSignal("cart.Cart", p.GxKey, "qty"))`,
 		},
 		{
 			"bind",
@@ -38,27 +38,27 @@ func TestREQ_ACT_07_TranspileGolden(t *testing.T) {
 		{
 			"class",
 			"<p class:ring={$Open2}>x</p>",
-			`gx.Attr{Key: "data-class:ring", Value: gx.SignalPath("cart.Cart", p.GxKey, "open2"), Kind: gx.AttrText}`,
+			`gx.Client("data-class:ring", gx.SignalPath("cart.Cart", p.GxKey, "open2"), gx.ExprSignal("cart.Cart", p.GxKey, "open2"))`,
 		},
 		{
 			"attr",
 			`<p attr:aria-expanded={$Open2}>x</p>`,
-			`gx.Attr{Key: "data-attr:aria-expanded", Value: gx.SignalPath("cart.Cart", p.GxKey, "open2"), Kind: gx.AttrText}`,
+			`gx.Client("data-attr:aria-expanded", gx.SignalPath("cart.Cart", p.GxKey, "open2"), gx.ExprSignal("cart.Cart", p.GxKey, "open2"))`,
 		},
 		{
 			"on assignment",
 			"<button on:click={$Open2 = !$Open2}>x</button>",
-			"gx.Attr{Key: \"data-on:click\", Value: gx.SignalPath(\"cart.Cart\", p.GxKey, \"open2\") + \" = \" + \"!\" + gx.SignalPath(\"cart.Cart\", p.GxKey, \"open2\"), Kind: gx.AttrText}",
+			`gx.Client("data-on:click", gx.SignalPath("cart.Cart", p.GxKey, "open2")+" = "+"!"+gx.SignalPath("cart.Cart", p.GxKey, "open2"), gx.ExprOp("do", gx.ExprOp("=", gx.ExprPath("cart.Cart", p.GxKey, "open2"), gx.ExprOp("!", gx.ExprSignal("cart.Cart", p.GxKey, "open2")))))`,
 		},
 		{
 			"on increment",
 			"<button on:click={$Qty++}>x</button>",
-			"gx.Attr{Key: \"data-on:click\", Value: gx.SignalPath(\"cart.Cart\", p.GxKey, \"qty\") + \"++\", Kind: gx.AttrText}",
+			`gx.Client("data-on:click", gx.SignalPath("cart.Cart", p.GxKey, "qty")+"++", gx.ExprOp("do", gx.ExprOp("++", gx.ExprPath("cart.Cart", p.GxKey, "qty"))))`,
 		},
 		{
 			"gxc helper on a signal",
 			"<p show={gxc.Len($Text) > $Qty}>x</p>",
-			`"__gx.len(" + gx.SignalPath("cart.Cart", p.GxKey, "text") + ")" + " > " + gx.SignalPath("cart.Cart", p.GxKey, "qty")`,
+			`gx.Client("data-show", "("+"__gx.len("+gx.SignalPath("cart.Cart", p.GxKey, "text")+")"+" > "+gx.SignalPath("cart.Cart", p.GxKey, "qty")+")", gx.ExprOp(">", gx.ExprOp("len", gx.ExprSignal("cart.Cart", p.GxKey, "text")), gx.ExprSignal("cart.Cart", p.GxKey, "qty")))`,
 		},
 	}
 	for _, c := range cases {
@@ -86,7 +86,12 @@ func TestREQ_ACT_07_SignalStatements(t *testing.T) {
 	})
 	files := generateFiles(t, dir)
 	src := string(files[filepath.Join(dir, "cart/Cart_gx.go")])
-	for _, want := range []string{`+ "; " +`, `+ " = " +`, `+ "--"`} {
+	for _, want := range []string{
+		// The text of the adapter: three statements.
+		`+"; "+`, `+" = "+`, `+"--"`,
+		// The same statements as data, for a widget (SI-15).
+		`gx.ExprOp("do", gx.ExprOp("=", gx.ExprPath("cart.Cart", p.GxKey, "qty"), gx.ExprOp("+", gx.ExprSignal("cart.Cart", p.GxKey, "qty"), gx.ExprValue(1))), gx.ExprOp("=", gx.ExprPath("cart.Cart", p.GxKey, "open2"), gx.ExprValue(true)), gx.ExprOp("--", gx.ExprPath("cart.Cart", p.GxKey, "qty")))`,
+	} {
 		if !strings.Contains(src, want) {
 			t.Fatalf("statement codegen lacks %q:\n%s", want, src)
 		}
@@ -150,7 +155,7 @@ func TestREQ_ACT_07_SignalRef(t *testing.T) {
 		t.Fatalf("Page_gx.go does not pass the signal ref:\n%s", page)
 	}
 	dialog := string(files[filepath.Join(dir, "ui/dialog/Dialog_gx.go")])
-	if !strings.Contains(dialog, `"$" + gx.RefPath(p.Open)`) {
+	if !strings.Contains(dialog, `gx.Client("data-show", "$"+gx.RefPath(p.Open), gx.ExprRef(string(p.Open)))`) {
 		t.Fatalf("Dialog_gx.go does not read the signal ref:\n%s", dialog)
 	}
 }

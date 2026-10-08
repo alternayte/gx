@@ -32,8 +32,17 @@ type Mounted = {
   destroy: () => void
 }
 
+// What the element gives the widget script.
+type Host = {
+  server: string
+  request: (path: string, init: RequestInit) => Promise<Response>
+  fail: (error: WidgetError) => void
+  event: (name: string, detail: unknown) => boolean
+  reload: () => void
+}
+
 type Runtime = {
-  mount: (root: ShadowRoot, answer: Answer, server: string) => Promise<Mounted>
+  mount: (root: ShadowRoot, answer: Answer, host: Host) => Promise<Mounted>
 }
 
 declare const __GX_WIDGET_CONFIG__: Config
@@ -88,6 +97,31 @@ class WidgetElement extends HTMLElement {
     })
   }
 
+  // #host is what the widget script gets from the element: the requests of
+  // the widget, and the events to the host page.
+  #host(): Host {
+    return {
+      server,
+      request: (path, init) =>
+        fetch(server + path, {
+          ...init,
+          headers: { ...(init.headers as Record<string, string>), 'Gx-Widget': config.tag },
+          credentials: this.#credentials(),
+        }),
+      fail: (error) => this.#fail(error),
+      event: (name, detail) => this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, cancelable: true, detail })),
+      reload: () => this.#fresh(),
+    }
+  }
+
+  // #fresh drops the render of an old build and loads the widget again.
+  #fresh(): void {
+    this.#mounted?.destroy()
+    this.#mounted = undefined
+    this.#root.innerHTML = fallback
+    this.#queue()
+  }
+
   #url(): string {
     const query = new URLSearchParams()
     for (const name of config.attrs) {
@@ -134,7 +168,7 @@ class WidgetElement extends HTMLElement {
       if (this.#mounted) {
         this.#mounted.update(answer)
       } else {
-        const mounted = await runtime.mount(this.#root, answer, server)
+        const mounted = await runtime.mount(this.#root, answer, this.#host())
         if (turn !== this.#turn) {
           mounted.destroy()
           return

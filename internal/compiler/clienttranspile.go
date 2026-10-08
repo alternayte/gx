@@ -672,3 +672,147 @@ func printNode(n ast.Node) string {
 	_ = goprinter.Fprint(&b, token.NewFileSet(), n)
 	return b.String()
 }
+
+// The tree form of a client expression (SI-15). A widget gets each client
+// expression as data: a small JSON tree that the widget script evaluates.
+// The methods below build the Go expression of that tree, as the methods
+// above build the Go expression of the adapter text. The two forms come
+// from one typed expression, so they have one meaning.
+
+// treeValue returns a Go expression that builds the tree node of a value.
+func (t *transpiler) treeValue(expr ast.Expr) (string, error) {
+	if !t.hasSignal(expr) {
+		// A value of the server: data in the tree, as gx.JSON makes it
+		// data in the adapter text.
+		return "gx.ExprValue(" + printNode(expr) + ")", nil
+	}
+	switch e := expr.(type) {
+	case *ast.ParenExpr:
+		return t.treeValue(e.X)
+	case *ast.Ident:
+		if name, ok := strings.CutPrefix(e.Name, "_gxSig_"); ok {
+			return "gx.ExprSignal(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ", " + strconv.Quote(lowerFirst(name)) + ")", nil
+		}
+		if name, ok := strings.CutPrefix(e.Name, "_gxRef_"); ok {
+			return "gx.ExprRef(string(p." + name + "))", nil
+		}
+		return "", fmt.Errorf("identifier %s has no client value", e.Name)
+	case *ast.UnaryExpr:
+		inner, err := t.treeValue(e.X)
+		if err != nil {
+			return "", err
+		}
+		op, ok := map[token.Token]string{token.NOT: "!", token.SUB: "neg", token.ADD: "pos"}[e.Op]
+		if !ok {
+			return "", fmt.Errorf("operator %s is not allowed in a client value", e.Op)
+		}
+		return "gx.ExprOp(" + strconv.Quote(op) + ", " + inner + ")", nil
+	case *ast.BinaryExpr:
+		l, err := t.treeValue(e.X)
+		if err != nil {
+			return "", err
+		}
+		r, err := t.treeValue(e.Y)
+		if err != nil {
+			return "", err
+		}
+		op := e.Op.String()
+		if e.Op == token.QUO && intExpr(t.res.exprTypes[e.X]) && intExpr(t.res.exprTypes[e.Y]) {
+			// The division of two integers has the result of Go
+			// (REQ-ACT-13).
+			op = "idiv"
+		}
+		return "gx.ExprOp(" + strconv.Quote(op) + ", " + l + ", " + r + ")", nil
+	case *ast.CallExpr:
+		sel, ok := e.Fun.(*ast.SelectorExpr)
+		if !ok {
+			return "", fmt.Errorf("only gxc helpers are allowed in a client expression")
+		}
+		op, ok := map[string]string{"Len": "len", "At": "at", "Contains": "contains", "Index": "index"}[sel.Sel.Name]
+		if !ok {
+			return "", fmt.Errorf("gxc.%s has no client equivalent", sel.Sel.Name)
+		}
+		parts := []string{strconv.Quote(op)}
+		for _, a := range e.Args {
+			v, err := t.treeValue(a)
+			if err != nil {
+				return "", err
+			}
+			parts = append(parts, v)
+		}
+		return "gx.ExprOp(" + strings.Join(parts, ", ") + ")", nil
+	default:
+		return "", fmt.Errorf("expression is not allowed in a client value")
+	}
+}
+
+// treeStatements returns a Go expression that builds the tree of the
+// statements of an on: handler.
+func (t *transpiler) treeStatements(block *ast.BlockStmt) (string, error) {
+	parts := []string{strconv.Quote("do")}
+	for _, stmt := range block.List {
+		part, err := t.treeStmt(stmt)
+		if err != nil {
+			return "", err
+		}
+		parts = append(parts, part)
+	}
+	return "gx.ExprOp(" + strings.Join(parts, ", ") + ")", nil
+}
+
+func (t *transpiler) treeStmt(stmt ast.Stmt) (string, error) {
+	switch s := stmt.(type) {
+	case *ast.AssignStmt:
+		if s.Tok != token.ASSIGN || len(s.Lhs) != 1 || len(s.Rhs) != 1 {
+			return "", fmt.Errorf("only = is allowed in a signal statement")
+		}
+		target, err := t.treeTarget(s.Lhs[0])
+		if err != nil {
+			return "", err
+		}
+		rhs, err := t.treeValue(s.Rhs[0])
+		if err != nil {
+			return "", err
+		}
+		return "gx.ExprOp(" + strconv.Quote("=") + ", " + target + ", " + rhs + ")", nil
+	case *ast.IncDecStmt:
+		target, err := t.treeTarget(s.X)
+		if err != nil {
+			return "", err
+		}
+		return "gx.ExprOp(" + strconv.Quote(s.Tok.String()) + ", " + target + ")", nil
+	case *ast.ExprStmt:
+		if key := namedTypeKey(t.res.exprTypes[s.X]); key != "" && t.res.routeKeys[key] {
+			return t.treeCall(s.X, key)
+		}
+		return "", fmt.Errorf("only signal statements and action calls are allowed in an on: handler")
+	default:
+		return "", fmt.Errorf("statement is not allowed in an on: handler")
+	}
+}
+
+// treeTarget returns the path of the signal of an assignment target.
+func (t *transpiler) treeTarget(expr ast.Expr) (string, error) {
+	id, ok := expr.(*ast.Ident)
+	if !ok {
+		return "", fmt.Errorf("only a signal can be assigned")
+	}
+	name, ok := strings.CutPrefix(id.Name, "_gxSig_")
+	if !ok {
+		return "", fmt.Errorf("only a signal can be assigned")
+	}
+	return "gx.ExprPath(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ", " + strconv.Quote(lowerFirst(name)) + ")", nil
+}
+
+// treeCall returns the tree node of the action call for a route literal.
+func (t *transpiler) treeCall(call ast.Expr, key string) (string, error) {
+	method := t.res.routeMeth[key]
+	if !clientInvocable(method) {
+		return "", fmt.Errorf("method %s cannot be invoked from the client", method)
+	}
+	scope := strconv.Quote("")
+	if t.scoped {
+		scope = "gx.ScopeString(" + strconv.Quote(t.scopeBase) + ", " + t.keyExpr + ")"
+	}
+	return "gx.ExprCall(" + strconv.Quote(method) + ", (" + printNode(call) + ").URL(), " + scope + ")", nil
+}

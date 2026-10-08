@@ -344,6 +344,35 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 					continue
 				}
 			}
+			if a.Key == clientKey {
+				// A client expression: text for the adapter, or
+				// data for a widget (SI-15).
+				key, value, ok := st.resolveClient(a.Value)
+				if !ok {
+					continue
+				}
+				a.Key, a.Value, a.Kind = key, value, AttrText
+			}
+			if st.forWidget() {
+				// A widget has its own names for the attributes of
+				// signals, and an invocation is data.
+				switch a.Key {
+				case "data-signals", "data-bind":
+					a.Key = widgetAttrKey(a.Key)
+				case onKey:
+					out, ok := widgetOn(a.Value)
+					if !ok {
+						continue
+					}
+					a = out
+				case invokeKey:
+					out, ok := widgetInvoke(a.Value)
+					if !ok {
+						continue
+					}
+					a = out
+				}
+			}
 			if a.Key == onKey {
 				// An action invocation on an event: the adapter
 				// writes its own attributes (REQ-PLG-04).

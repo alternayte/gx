@@ -38,8 +38,8 @@ func TestREQ_ACT_05_SignalCodegen(t *testing.T) {
 		"GxKey gx.Key",
 		`gx.Attr{Key: "data-signals", Value: gx.SignalJSON("cart.Cart", p.GxKey, map[string]any{"qty": 1}), Kind: gx.AttrText}`,
 		`gx.Attr{Key: "data-bind", Value: gx.SignalName("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
-		`gx.Attr{Key: "data-show", Value: "(" + gx.SignalPath("cart.Cart", p.GxKey, "qty") + " > " + gx.JSON(1) + ")", Kind: gx.AttrText}`,
-		`gx.Attr{Key: "data-text", Value: gx.SignalPath("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}`,
+		`gx.Client("data-show", "("+gx.SignalPath("cart.Cart", p.GxKey, "qty")+" > "+gx.JSON(1)+")", gx.ExprOp(">", gx.ExprSignal("cart.Cart", p.GxKey, "qty"), gx.ExprValue(1)))`,
+		`gx.Client("data-text", gx.SignalPath("cart.Cart", p.GxKey, "qty"), gx.ExprSignal("cart.Cart", p.GxKey, "qty"))`,
 	} {
 		if !strings.Contains(src, want) {
 			t.Errorf("Cart_gx.go lacks %q:\n%s", want, src)

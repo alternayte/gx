@@ -83,6 +83,12 @@ func (wd *widget[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	name, _ := widgetScript()
+	if !isWidgetRequest(r) {
+		// The render of a widget route is the render for a widget, also
+		// when the request does not say so.
+		r = r.Clone(r.Context())
+		r.Header.Set(widgetHeader, wd.tag)
+	}
 	writeWidgetJSON(w, http.StatusOK, widgetAnswer{
 		Tag:    wd.tag,
 		HTML:   StringRequest(r, wd.view(props)),

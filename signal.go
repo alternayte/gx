@@ -133,8 +133,13 @@ func FragmentID(component, name string, key Key) string {
 }
 
 // Signals decodes the request signals through the app adapter
-// (REQ-ACT-03). It returns nil when no adapter is set.
+// (REQ-ACT-03). It returns nil when no adapter is set. The signals of a
+// widget request come in the wire form of a widget.
 func Signals(r *http.Request) (map[string]any, error) {
+	if isWidgetRequest(r) {
+		// A widget has one wire form under each adapter (D-264).
+		return widgetSignals(r)
+	}
 	adapter := AdapterOf(r)
 	if adapter == nil {
 		return nil, nil

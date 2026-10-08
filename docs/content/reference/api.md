@@ -164,6 +164,62 @@ func DefaultMessage(key string) string
 
 DefaultMessage returns the English message of a built-in rule key, or the key itself when the key has no default.
 
+### func ExprCall
+
+```go
+func ExprCall(method, url, scope string) string
+```
+
+ExprCall returns the tree node of an action invocation.
+
+### func ExprOp
+
+```go
+func ExprOp(op string, parts ...string) string
+```
+
+ExprOp returns a tree node with a name and its parts. Each part is a tree node or a path.
+
+### func ExprPath
+
+```go
+func ExprPath(base string, key Key, name string) string
+```
+
+ExprPath returns the path of a signal of a component instance, for the target of a signal statement.
+
+### func ExprRef
+
+```go
+func ExprRef(path string) string
+```
+
+ExprRef returns the tree node of a signal that a gx.SignalRef prop names. path is the text of the reference.
+
+### func ExprRefPath
+
+```go
+func ExprRefPath(path string) string
+```
+
+ExprRefPath returns the path of a signal that a gx.SignalRef prop names. The text of a reference is a bracket path, as gx.SignalRefPath writes it.
+
+### func ExprSignal
+
+```go
+func ExprSignal(base string, key Key, name string) string
+```
+
+ExprSignal returns the tree node of a signal of a component instance.
+
+### func ExprValue
+
+```go
+func ExprValue(v any) string
+```
+
+ExprValue returns the tree node of a server value. The value is data in the tree, as it is in gx.JSON.
+
 ### func FieldError
 
 ```go
@@ -498,7 +554,7 @@ SignalRefPath returns the bracket path of one signal, without the leading $, for
 func Signals(r *http.Request) (map[string]any, error)
 ```
 
-Signals decodes the request signals through the app adapter. It returns nil when no adapter is set.
+Signals decodes the request signals through the app adapter. It returns nil when no adapter is set. The signals of a widget request come in the wire form of a widget.
 
 ### func SortedKeys
 
@@ -709,6 +765,14 @@ func Bool(key string, present bool) Attr
 ```
 
 Bool returns a boolean attribute that is omitted when present is false.
+
+#### func Client
+
+```go
+func Client(key, value, tree string) Attr
+```
+
+Client returns a client attribute. key and value are the attribute of the adapter. tree is the same expression as data, for a widget. Generated code calls it.
 
 #### func ElementModule
 

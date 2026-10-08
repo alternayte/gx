@@ -612,8 +612,9 @@ func (g *gen) attrsExpr(el *Element) string {
 				if strings.Contains(a.Value, "$") {
 					if site := g.res.clientBy[a]; site != nil {
 						if v, ok := g.clientAttrValue(a, site); ok {
-							static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
-								strconv.Quote("data-class:"+rest), v))
+							if tree, ok := g.clientAttrTree(a, site); ok {
+								static = append(static, fmt.Sprintf("gx.Client(%s, %s, %s)", strconv.Quote("data-class:"+rest), v, tree))
+							}
 						}
 					}
 					continue
@@ -707,8 +708,14 @@ func (g *gen) attrsExpr(el *Element) string {
 					continue
 				}
 				if v, ok := g.clientAttrValue(a, site); ok {
-					static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
-						strconv.Quote(name), v))
+					if strings.HasPrefix(a.Name, "bind:") {
+						// The value is the name of a signal, in each
+						// form of the attribute.
+						static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
+							strconv.Quote(name), v))
+					} else if tree, ok := g.clientAttrTree(a, site); ok {
+						static = append(static, fmt.Sprintf("gx.Client(%s, %s, %s)", strconv.Quote(name), v, tree))
+					}
 				}
 				continue
 			}
@@ -1333,6 +1340,50 @@ func (g *gen) clientAttrValue(a *Attr, site *clientSite) (string, bool) {
 	if err != nil {
 		g.fail(a, CodeClientType, "client expression", "%s", err)
 		return "", false
+	}
+	return v, true
+}
+
+// clientAttrTree returns the Go expression of one client expression as
+// data, for a widget (SI-15). It reads the expression that clientAttrValue
+// reads.
+func (g *gen) clientAttrTree(a *Attr, site *clientSite) (string, bool) {
+	t := &transpiler{
+		res:       g.res,
+		file:      g.file,
+		scopeBase: g.file.Package + "." + g.name,
+		keyExpr:   g.keyExpr(),
+		scoped:    g.scoped,
+	}
+	fail := func(err error) (string, bool) {
+		g.fail(a, CodeClientType, "client expression", "%s", err)
+		return "", false
+	}
+	if site.block {
+		block, ok := site.node.(*ast.BlockStmt)
+		if !ok {
+			return "", false
+		}
+		v, err := t.treeStatements(block)
+		if err != nil {
+			return fail(err)
+		}
+		return v, true
+	}
+	expr, ok := site.node.(ast.Expr)
+	if !ok {
+		return "", false
+	}
+	if key := namedTypeKey(g.res.exprTypes[expr]); key != "" && g.res.routeKeys[key] {
+		v, err := t.treeCall(expr, key)
+		if err != nil {
+			return fail(err)
+		}
+		return "gx.ExprOp(" + strconv.Quote("do") + ", " + v + ")", true
+	}
+	v, err := t.treeValue(expr)
+	if err != nil {
+		return fail(err)
 	}
 	return v, true
 }

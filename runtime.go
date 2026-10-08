@@ -195,7 +195,7 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 // (REQ-ACT-07).
 func adapterMarker(key string) bool {
 	switch key {
-	case "data-signals", "data-bind", "data-show", "data-text", "data-init", invokeKey, onKey:
+	case "data-signals", "data-bind", "data-show", "data-text", "data-init", invokeKey, onKey, clientKey:
 		return true
 	}
 	for _, prefix := range []string{"data-on", "data-attr:", "data-class:"} {

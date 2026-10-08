@@ -57,10 +57,18 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	in, err := a.bind(r)
 	if err != nil {
+		if isWidgetRequest(r) {
+			writeWidgetError(w, http.StatusBadRequest, "gx.bad_input", "")
+			return
+		}
 		renderError(w, r, &BindError{Err: err})
 		return
 	}
 	if violation := RunRules(&in); violation != nil {
+		if isWidgetRequest(r) {
+			writeWidgetError(w, http.StatusUnprocessableEntity, violation.Key, violation.Field)
+			return
+		}
 		// A tampered signal value is a field error, not a handler
 		// error (SI-13). M5 turns this into a form re-render.
 		http.Error(w, violation.Error(), http.StatusUnprocessableEntity)
@@ -79,6 +87,11 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if len(ctx.res.Patches) == 0 {
 		// An action with no answer answers 204 (REQ-ACT-10).
 		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	if isWidgetRequest(r) {
+		// A widget gets the answer as data, under each adapter.
+		respondWidget(w, r, ctx.res)
 		return
 	}
 	adapter := AdapterOf(r)
