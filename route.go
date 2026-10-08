@@ -481,6 +481,9 @@ func (a *App) Group(prefix string, parts ...any) *App {
 			}
 			if a.widgetTags == nil {
 				a.widgetTags = map[string]bool{}
+				// The first widget of the app: serve the widget
+				// script. An app with no widget has no such route.
+				a.serveWidgetScript()
 			}
 			a.widgetTags[tag] = true
 		}

@@ -82,13 +82,23 @@ func (wd *widget[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeWidgetError(w, status, widgetErrorKey(status), "")
 		return
 	}
-	writeWidgetJSON(w, http.StatusOK, widgetAnswer{Tag: wd.tag, HTML: StringRequest(r, wd.view(props))})
+	name, _ := widgetScript()
+	writeWidgetJSON(w, http.StatusOK, widgetAnswer{
+		Tag:    wd.tag,
+		HTML:   StringRequest(r, wd.view(props)),
+		Script: BasePath() + "/_gx/" + name,
+		Build:  buildID(),
+	})
 }
 
 // widgetAnswer is the first answer of a widget route.
 type widgetAnswer struct {
-	Tag   string       `json:"tag,omitempty"`
-	HTML  string       `json:"html,omitempty"`
+	Tag  string `json:"tag,omitempty"`
+	HTML string `json:"html,omitempty"`
+	// Script is the path of the widget script of this build.
+	Script string `json:"script,omitempty"`
+	// Build names the build of the server.
+	Build string       `json:"build,omitempty"`
 	Error *widgetError `json:"error,omitempty"`
 }
 

@@ -60,3 +60,15 @@ if ! cmp -s "$tmp/devclient.js" internal/devserver/devclient.js; then
   diff -u internal/devserver/devclient.js "$tmp/devclient.js" >&2 || true
   exit 1
 fi
+bun build runtime/js/widget.ts --outfile "$tmp/widget.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/widget.js" runtime/js/widget.js; then
+  echo "rule: runtime/js/widget.js is stale; run just runtime" >&2
+  diff -u runtime/js/widget.js "$tmp/widget.js" >&2 || true
+  exit 1
+fi
+bun build runtime/js/widget-element.ts --outfile "$tmp/element.js" --target browser --minify >/dev/null
+if ! cmp -s "$tmp/element.js" internal/widgetelement/element.js; then
+  echo "rule: internal/widgetelement/element.js is stale; run just runtime" >&2
+  diff -u internal/widgetelement/element.js "$tmp/element.js" >&2 || true
+  exit 1
+fi
