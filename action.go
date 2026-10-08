@@ -61,6 +61,9 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if tc != nil {
 		tc.done = true
 	}
+	if isWidgetRequest(r) {
+		setWidgetBuild(w)
+	}
 	in, err := a.bind(r)
 	if err != nil {
 		if tc != nil {

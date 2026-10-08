@@ -85,6 +85,7 @@ func (l *loader) checkWidgets(res *typesResult, pkgs []*packages.Package, root s
 
 	mounts := collectMounts(pkgs)
 	actionVars := collectActionVars(pkgs)
+	formVars := collectFormVars(pkgs)
 	module := findModule(root)
 	// A component that two widgets use has one finding.
 	headSeen := map[*Element]bool{}
@@ -116,6 +117,17 @@ func (l *loader) checkWidgets(res *typesResult, pkgs []*packages.Package, root s
 				}
 				seen[av.varKey] = true
 				diag(CodeWidgetOrigins, av.at, "action "+Quoted(av.name)+" is in a group with no gx.AllowOrigins, and the widget "+w.label()+" invokes it from a different origin")
+			}
+		}
+		// A form of the widget is a request of the host origin too
+		// (REQ-ISL-20, REQ-ISL-22).
+		for _, key := range l.formRoutes(res, pkgs, module, w.view) {
+			for _, fv := range formVars[key] {
+				if seen[fv.varKey] || !lacksOrigins(mounts[fv.varKey]) {
+					continue
+				}
+				seen[fv.varKey] = true
+				diag(CodeWidgetOrigins, fv.at, "form "+Quoted(fv.name)+" is in a group with no gx.AllowOrigins, and the widget "+w.label()+" submits it from a different origin")
 			}
 		}
 	}
@@ -423,6 +435,122 @@ type actionVar struct {
 	at     token.Position
 }
 
+// collectFormVars maps the route type of each gx.Form that a package
+// variable holds to that variable.
+func collectFormVars(pkgs []*packages.Package) map[string][]actionVar {
+	out := map[string][]actionVar{}
+	sourceFiles(pkgs, func(pkg *packages.Package, file *ast.File) {
+		for _, decl := range file.Decls {
+			gen, ok := decl.(*ast.GenDecl)
+			if !ok || gen.Tok != token.VAR {
+				continue
+			}
+			for _, spec := range gen.Specs {
+				vs, ok := spec.(*ast.ValueSpec)
+				if !ok {
+					continue
+				}
+				for i, val := range vs.Values {
+					if i >= len(vs.Names) {
+						break
+					}
+					call := formCall(pkg, val)
+					if call == nil || len(call.Args) == 0 {
+						continue
+					}
+					t := pkg.TypesInfo.TypeOf(call.Args[0])
+					if t == nil {
+						continue
+					}
+					sig, ok := t.Underlying().(*types.Signature)
+					if !ok || sig.Params().Len() != 2 {
+						continue
+					}
+					// The input of a form is a pointer to its route type.
+					in := sig.Params().At(1).Type()
+					if ptr, ok := in.(*types.Pointer); ok {
+						in = ptr.Elem()
+					}
+					route := namedTypeKey(in)
+					key := packageVarKey(pkg.TypesInfo.Defs[vs.Names[i]])
+					if route == "" || key == "" {
+						continue
+					}
+					out[route] = append(out[route], actionVar{varKey: key, name: vs.Names[i].Name, at: pkg.Fset.Position(vs.Names[i].Pos())})
+				}
+			}
+		}
+	})
+	return out
+}
+
+// formCall returns the gx.Form call at the root of a call chain such as
+// gx.Form(fn, view).Tool().
+func formCall(pkg *packages.Package, expr ast.Expr) *ast.CallExpr {
+	for {
+		call, ok := ast.Unparen(expr).(*ast.CallExpr)
+		if !ok {
+			return nil
+		}
+		if isGxFuncExpr(pkg, call.Fun, "Form") {
+			return call
+		}
+		sel, ok := call.Fun.(*ast.SelectorExpr)
+		if !ok {
+			return nil
+		}
+		expr = sel.X
+	}
+}
+
+// formRoutes returns the route type of each form that the component tree of
+// a view renders: a component of the tree has a prop of the generated form
+// type of the route, for example F route.SendForm.
+func (l *loader) formRoutes(res *typesResult, pkgs []*packages.Package, module *Module, view types.Object) []string {
+	byDir := map[string]*packages.Package{}
+	for _, pkg := range pkgs {
+		if len(pkg.GoFiles) > 0 {
+			byDir[filepath.Clean(filepath.Dir(pkg.GoFiles[0]))] = pkg
+		}
+	}
+	seen := map[string]bool{}
+	var out []string
+	for _, tf := range l.componentTree(module, view) {
+		pkg := byDir[filepath.Clean(tf.p.Dir)]
+		if pkg == nil || pkg.Types == nil {
+			continue
+		}
+		name := strings.TrimSuffix(filepath.Base(tf.f.File), ".gx")
+		obj := pkg.Types.Scope().Lookup(name + "Props")
+		if obj == nil {
+			continue
+		}
+		props, ok := obj.Type().Underlying().(*types.Struct)
+		if !ok {
+			continue
+		}
+		for i := 0; i < props.NumFields(); i++ {
+			t := props.Field(i).Type()
+			if ptr, ok := t.(*types.Pointer); ok {
+				t = ptr.Elem()
+			}
+			named, ok := t.(*types.Named)
+			if !ok || named.Obj().Pkg() == nil {
+				continue
+			}
+			route, isForm := strings.CutSuffix(named.Obj().Name(), "Form")
+			key := named.Obj().Pkg().Path() + "." + route
+			if def := res.routeDefs[key]; !isForm || def == nil || !def.form || seen[key] {
+				continue
+			}
+			seen[key] = true
+			out = append(out, key)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
 // collectActionVars maps the route type of each gx.Action that a package
 // variable holds to that variable.
 func collectActionVars(pkgs []*packages.Package) map[string][]actionVar {
@@ -710,6 +838,11 @@ func secretPath(t types.Type, seen map[types.Type]bool) []string {
 	case *types.Array:
 		return secretPath(u.Elem(), seen)
 	case *types.Map:
+		// The JSON of a map writes each key as text, so a secret as a
+		// key crosses too.
+		if path := secretPath(u.Key(), seen); path != nil {
+			return path
+		}
 		return secretPath(u.Elem(), seen)
 	case *types.Struct:
 		for i := 0; i < u.NumFields(); i++ {

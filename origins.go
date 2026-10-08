@@ -187,6 +187,14 @@ func (a *App) serveListedOrigin(w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 	_, pattern := a.mux.Handler(r)
+	if asks := r.Header.Get("Access-Control-Request-Method"); r.Method == http.MethodOptions && asks != "" {
+		// A preflight asks for the request of a different method. Two
+		// groups can mount two methods of one path with two origin
+		// lists: the list of the group of that method decides.
+		real := r.Clone(r.Context())
+		real.Method = asks
+		_, pattern = a.mux.Handler(real)
+	}
 	policy := a.origins[pattern]
 	if policy == nil {
 		return false

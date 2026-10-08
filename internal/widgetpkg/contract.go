@@ -57,9 +57,10 @@ type manifest struct {
 				Type typeText `json:"type"`
 			} `json:"attributes"`
 			Events []struct {
-				Name   string   `json:"name"`
-				Type   typeText `json:"type"`
-				Detail []struct {
+				Name     string    `json:"name"`
+				Type     typeText  `json:"type"`
+				Contract *typeText `json:"contract"`
+				Detail   []struct {
 					Name     string   `json:"name"`
 					Type     typeText `json:"type"`
 					Optional bool     `json:"optional"`
@@ -95,6 +96,9 @@ func contracts(data []byte) (map[string]contract, error) {
 			}
 			for _, e := range d.Events {
 				c.events[e.Name] = e.Type.Text
+				if e.Contract != nil {
+					c.events[e.Name] = "CustomEvent<" + e.Contract.Text + ">"
+				}
 				for _, f := range e.Detail {
 					text := f.Type.Text
 					if f.Optional {

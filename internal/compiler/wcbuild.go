@@ -59,6 +59,9 @@ type WidgetEvent struct {
 	Name string
 	// Detail is the TypeScript type of the detail.
 	Detail string
+	// Contract is the type of the detail for the contract check: the
+	// values of a string enum are in the place of its name.
+	Contract string
 	// Fields are the fields of a detail that is an object, with the fields
 	// of each object below it.
 	Fields []WidgetField
@@ -238,7 +241,7 @@ func widgetEvents(w *widgetDecl, b *WidgetBuild) (string, []WidgetEvent, []Diagn
 						})
 						continue
 					}
-					e := WidgetEvent{Name: name, Detail: tsType(shape)}
+					e := WidgetEvent{Name: name, Detail: tsType(shape), Contract: contractType(shape)}
 					detailFields(shape, "", map[*islandObjectType]bool{}, &e.Fields)
 					events = append(events, e)
 				}
@@ -265,6 +268,35 @@ func widgetEvents(w *widgetDecl, b *WidgetBuild) (string, []WidgetEvent, []Diagn
 	return decls.String(), events, diags
 }
 
+// contractType returns the type of a shape for the contract check. It is the
+// TypeScript type with the values of each string enum in the place of its
+// name: the name of an enum stays when its values change, and the type file
+// of the host does not (REQ-ISL-13).
+func contractType(s *islandShape) string {
+	switch s.kind {
+	case islandEnum:
+		values := append([]string{}, s.values...)
+		sort.Strings(values)
+		parts := make([]string, len(values))
+		for i, v := range values {
+			data, _ := json.Marshal(v)
+			parts[i] = string(data)
+		}
+		return strings.Join(parts, " | ")
+	case islandList:
+		elem := contractType(s.elem)
+		if s.elem.kind == islandPointer || s.elem.kind == islandEnum {
+			elem = "(" + elem + ")"
+		}
+		return elem + "[]"
+	case islandMap:
+		return "Record<string, " + contractType(s.elem) + ">"
+	case islandPointer:
+		return contractType(s.elem) + " | null"
+	}
+	return tsType(s)
+}
+
 // detailFields lists the fields of each object in the detail of an event,
 // for the contract check of `gx wc check` (REQ-ISL-13).
 func detailFields(s *islandShape, path string, open map[*islandObjectType]bool, out *[]WidgetField) {
@@ -287,7 +319,7 @@ func detailFields(s *islandShape, path string, open map[*islandObjectType]bool, 
 			if path != "" {
 				name = path + "." + name
 			}
-			*out = append(*out, WidgetField{Name: name, Type: tsType(f.shape), Optional: f.absent != ""})
+			*out = append(*out, WidgetField{Name: name, Type: contractType(f.shape), Optional: f.absent != ""})
 			detailFields(f.shape, name, open, out)
 		}
 	}
@@ -389,6 +421,9 @@ func WidgetManifest(widgets []WidgetBuild) ([]byte, error) {
 		Name   string   `json:"name"`
 		Type   typ      `json:"type"`
 		Detail []detail `json:"detail,omitempty"`
+		// Contract is a field of Gx, as Detail is: the type of a detail
+		// with the values of its enum.
+		Contract *typ `json:"contract,omitempty"`
 	}
 	type cssProperty struct {
 		Name string `json:"name"`
@@ -436,6 +471,11 @@ func WidgetManifest(widgets []WidgetBuild) ([]byte, error) {
 		}
 		for _, e := range append(append([]WidgetEvent{}, w.Events...), lifecycleEvents...) {
 			ev := event{Name: e.Name, Type: typ{Text: "CustomEvent<" + e.Detail + ">"}}
+			if e.Contract != "" && e.Contract != e.Detail {
+				// A detail that is an enum itself: the manifest names
+				// its values for the contract check.
+				ev.Contract = &typ{Text: e.Contract}
+			}
 			for _, f := range e.Fields {
 				ev.Detail = append(ev.Detail, detail{Name: f.Name, Type: typ{Text: f.Type}, Optional: f.Optional})
 			}

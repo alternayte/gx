@@ -58,5 +58,13 @@ func (c *Ctx) Emit(e EventValue) {
 		panic("gx: Emit is only valid in an action or a form")
 	}
 	checkSecret(e.Detail)
+	if hasSecretKey(e.Detail) {
+		// The JSON of a map has its keys as text, so this secret has no
+		// redacted form: the event does not go to the browser (SI-04).
+		if devMode.Load() {
+			panic("gx: the detail of the event " + e.Name + " has a gx.Secret as the key of a map; a secret cannot cross to the client")
+		}
+		return
+	}
 	c.res.Patches = append(c.res.Patches, EventPatch{Name: e.Name, Detail: e.Detail, Scope: Scope(c.R)})
 }

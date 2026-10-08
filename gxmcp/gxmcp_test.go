@@ -117,10 +117,15 @@ func needToken(next http.Handler) http.Handler {
 	})
 }
 
+// groupHost and groupRemote are the host and the client address that the
+// middleware of the group saw last.
+var groupHost, groupRemote string
+
 // adminOnly is the auth rule of the group of the tool: a user request and a
 // tool call pass it in the same way.
 func adminOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		groupHost, groupRemote = r.Host, r.RemoteAddr
 		if r.Header.Get("Authorization") != "Bearer token-of-admin" {
 			http.Error(w, "forbidden", http.StatusForbidden)
 			return
@@ -232,6 +237,12 @@ func TestREQ_AI_07_MCPEndpoint(t *testing.T) {
 	}
 	if len(ta.seen) != 1 {
 		t.Fatalf("the handler ran %d times", len(ta.seen))
+	}
+	// The request of the action is the request of the caller: the
+	// middleware of the group sees the host and the client address of the
+	// MCP request.
+	if groupHost != strings.TrimPrefix(ta.url, "http://") || !strings.HasPrefix(groupRemote, "127.0.0.1:") {
+		t.Errorf("the middleware of the group saw the host %q and the client address %q", groupHost, groupRemote)
 	}
 	in := ta.seen[0]
 	if in.ID != 42 || in.Tab != "reviews" || in.Qty != 3 || in.Email != "a@b.example" ||

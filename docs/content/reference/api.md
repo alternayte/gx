@@ -745,6 +745,14 @@ func (a *App) CallTool(ctx context.Context, header http.Header, name string, arg
 
 CallTool runs the tool with the given name for an agent. args is the JSON object of the arguments. header holds the headers of the request of the agent: the request of the action gets them, so the middleware of the group of the action sees the caller as it sees a user. The caller of CallTool makes the cross-origin check of the request of the agent; a handler that the app mounts has it.
 
+#### func (App) CallToolFor
+
+```go
+func (a *App) CallToolFor(caller *http.Request, name string, args json.RawMessage) ToolAnswer
+```
+
+CallToolFor runs a tool as CallTool does, for the request of an agent that the caller has in hand. The request of the action then has the host, the client address and the TLS state of that request too. A middleware that reads them sees the caller.
+
 #### func (App) Errors
 
 ```go

@@ -1,8 +1,10 @@
 package gx
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -76,17 +78,17 @@ func (a *App) servePageTool(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	args := map[string]any{}
 	body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 1<<20))
-	if err == nil && len(body) > 0 {
-		err = json.Unmarshal(body, &args)
+	var args map[string]any
+	if err == nil {
+		args, err = toolArgs(body)
 	}
 	if err != nil {
 		http.Error(w, "gx: the arguments of a tool are a JSON object", http.StatusBadRequest)
 		return
 	}
 	// This request passed the cross-origin check of the app (SI-03).
-	in, _ := t.toolRequest(r.Context(), r.Header, args, true)
+	in, _ := t.toolRequest(r.Context(), r, r.Header, args, true)
 	a.mux.ServeHTTP(w, in)
 }
 
@@ -207,7 +209,7 @@ func flattenArg(out url.Values, name string, v any) {
 // argument goes to the part of the request that the binder reads it from.
 // The request has the headers of the call, so the middleware of the group
 // and the cross-origin check see the caller (SI-07).
-func (t mountedTool) toolRequest(ctx context.Context, header http.Header, args map[string]any, browser bool) (*http.Request, *toolCall) {
+func (t mountedTool) toolRequest(ctx context.Context, caller *http.Request, header http.Header, args map[string]any, browser bool) (*http.Request, *toolCall) {
 	tc := &toolCall{signals: map[string]any{}, browser: browser}
 	path := t.path
 	query, form := url.Values{}, url.Values{}
@@ -229,15 +231,19 @@ func (t mountedTool) toolRequest(ctx context.Context, header http.Header, args m
 		}
 	}
 	var body io.Reader
-	if t.method == http.MethodGet || t.method == http.MethodHead {
-		// A request with no body has its form values in the query.
+	switch t.method {
+	case http.MethodPost, http.MethodPut, http.MethodPatch:
+		body = strings.NewReader(form.Encode())
+	default:
+		// net/http reads a form body only for POST, PUT and PATCH. For
+		// each other method the binder reads the form values from the
+		// query, as it does for the request of a browser.
 		for name, values := range form {
 			query[name] = values
 		}
-	} else {
-		body = strings.NewReader(form.Encode())
 	}
-	target := BasePath() + path
+	// The routes of the app have no base path: a mount strips it.
+	target := path
 	if len(query) > 0 {
 		target += "?" + query.Encode()
 	}
@@ -265,8 +271,17 @@ func (t mountedTool) toolRequest(ctx context.Context, header http.Header, args m
 	if body != nil {
 		r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	}
-	if host := header.Get("Host"); host != "" {
-		r.Host = host
+	if caller != nil {
+		// The request of the action is the request of the caller: a
+		// middleware of the group reads the host, the client address and
+		// the TLS state as it does for a user request (SI-07).
+		r.Host = caller.Host
+		r.URL.Host = caller.Host
+		r.RemoteAddr = caller.RemoteAddr
+		r.TLS = caller.TLS
+		if caller.TLS != nil {
+			r.URL.Scheme = "https"
+		}
 	}
 	return r, tc
 }
@@ -366,6 +381,10 @@ func toolAnswer(tc *toolCall, rec *statusRecorder) ToolAnswer {
 		return fail("the action gave no answer")
 	case tc.res.Err != nil:
 		return fail(tc.res.Err.Error())
+	case tc.res.hasTool && hasSecretKey(tc.res.tool):
+		// The JSON of a map has its keys as text, so this secret has no
+		// redacted form: the agent gets no result (SI-04).
+		return fail("the result of the tool has a gx.Secret as the key of a map; a secret cannot cross to an agent")
 	case tc.res.hasTool:
 		data, err := json.Marshal(tc.res.tool)
 		if err != nil {
@@ -400,19 +419,29 @@ func (a *App) Tools() []ToolInfo {
 // (SI-07). The caller of CallTool makes the cross-origin check of the request
 // of the agent; a handler that the app mounts has it.
 //
-// Package gxmcp serves the tools over MCP with this method.
+// Package gxmcp serves the tools over MCP with CallToolFor.
 func (a *App) CallTool(ctx context.Context, header http.Header, name string, args json.RawMessage) ToolAnswer {
+	return a.callTool(ctx, nil, header, name, args)
+}
+
+// CallToolFor runs a tool as CallTool does, for the request of an agent that
+// the caller has in hand. The request of the action then has the host, the
+// client address and the TLS state of that request too. A middleware that
+// reads them sees the caller (SI-07).
+func (a *App) CallToolFor(caller *http.Request, name string, args json.RawMessage) ToolAnswer {
+	return a.callTool(caller.Context(), caller, caller.Header, name, args)
+}
+
+func (a *App) callTool(ctx context.Context, caller *http.Request, header http.Header, name string, args json.RawMessage) ToolAnswer {
 	t, ok := a.tools[name]
 	if !ok {
 		return ToolAnswer{Text: "the app has no tool " + strconv.Quote(name), IsError: true}
 	}
-	values := map[string]any{}
-	if len(args) > 0 {
-		if err := json.Unmarshal(args, &values); err != nil {
-			return ToolAnswer{Text: "the arguments are not a JSON object", IsError: true}
-		}
+	values, err := toolArgs(args)
+	if err != nil {
+		return ToolAnswer{Text: "the arguments are not a JSON object", IsError: true}
 	}
-	r, tc := t.toolRequest(ctx, header, values, false)
+	r, tc := t.toolRequest(ctx, caller, header, values, false)
 	rec := &statusRecorder{header: http.Header{}}
 	// The request of the agent passed the cross-origin check of the app
 	// with these headers (SI-03). The request of the action has a form
@@ -421,4 +450,23 @@ func (a *App) CallTool(ctx context.Context, header http.Header, name string, arg
 	r = r.WithContext(context.WithValue(r.Context(), csrfCheckedKey{}, true))
 	a.mux.ServeHTTP(rec, r)
 	return toolAnswer(tc, rec)
+}
+
+// toolArgs reads the JSON object of the arguments of a tool call. A number
+// keeps its text, so an integer above 2^53 reaches the binder with its
+// value.
+func toolArgs(data []byte) (map[string]any, error) {
+	args := map[string]any{}
+	if len(bytes.TrimSpace(data)) == 0 {
+		return args, nil
+	}
+	dec := json.NewDecoder(bytes.NewReader(data))
+	dec.UseNumber()
+	if err := dec.Decode(&args); err != nil {
+		return nil, err
+	}
+	if dec.More() {
+		return nil, errors.New("more than one JSON value")
+	}
+	return args, nil
 }

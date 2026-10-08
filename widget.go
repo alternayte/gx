@@ -73,6 +73,7 @@ func (wd *widget[In, P]) widgetAttrs() []string { return wd.attrs }
 // ServeHTTP binds the attributes, checks the rules, runs the loader and
 // answers with the HTML of the view as JSON.
 func (wd *widget[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	setWidgetBuild(w)
 	in, err := wd.bind(r)
 	if err != nil {
 		writeWidgetError(w, http.StatusBadRequest, "gx.bad_attribute", "")
@@ -151,7 +152,21 @@ func widgetErrorKey(status int) string {
 }
 
 func writeWidgetError(w http.ResponseWriter, status int, key, field string) {
-	writeWidgetJSON(w, status, widgetAnswer{Error: &widgetError{Status: status, Key: key, Field: field}})
+	writeWidgetJSON(w, status, widgetAnswer{Build: buildID(), Error: &widgetError{Status: status, Key: key, Field: field}})
+}
+
+// widgetBuildHeader names the build of the server on an answer to a widget.
+const widgetBuildHeader = "Gx-Build"
+
+// setWidgetBuild puts the build of the server on an answer to a widget
+// (REQ-ISL-19: each answer carries the hash of the build). An answer with no
+// body, as the 204 of an action with no patch, has it too, so an open widget
+// sees a new build at its next action. The header is exposed: the widget
+// script of a host page of a different origin reads it.
+func setWidgetBuild(w http.ResponseWriter) {
+	h := w.Header()
+	h.Set(widgetBuildHeader, buildID())
+	h.Add("Access-Control-Expose-Headers", widgetBuildHeader)
 }
 
 func writeWidgetJSON(w http.ResponseWriter, status int, a widgetAnswer) {

@@ -15,6 +15,9 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
+// callerKey is the context key of the MCP request of a tool call.
+type callerKey struct{}
+
 // endpoint is the MCP handler as a route of the app.
 type endpoint struct {
 	http.Handler
@@ -49,11 +52,18 @@ func Mount(app *gx.App, path string, middleware ...func(http.Handler) http.Handl
 				if req.Params == nil {
 					return nil, errors.New("gxmcp: a tool call with no params")
 				}
-				var header http.Header
-				if req.Extra != nil {
-					header = req.Extra.Header
+				var answer gx.ToolAnswer
+				if caller, ok := ctx.Value(callerKey{}).(*http.Request); ok {
+					// The request of the action is the request of the
+					// caller: host, client address and TLS state too.
+					answer = app.CallToolFor(caller.WithContext(ctx), name, req.Params.Arguments)
+				} else {
+					var header http.Header
+					if req.Extra != nil {
+						header = req.Extra.Header
+					}
+					answer = app.CallTool(ctx, header, name, req.Params.Arguments)
 				}
-				answer := app.CallTool(ctx, header, name, req.Params.Arguments)
 				res := &mcp.CallToolResult{IsError: answer.IsError, Content: []mcp.Content{&mcp.TextContent{Text: answer.Text}}}
 				if answer.Structured != nil {
 					res.StructuredContent = answer.Structured
@@ -79,6 +89,10 @@ func Mount(app *gx.App, path string, middleware ...func(http.Handler) http.Handl
 	for _, mw := range middleware {
 		parts = append(parts, mw)
 	}
-	parts = append(parts, gx.Handler(endpoint{Handler: handler, pattern: "/" + strings.Trim(path, "/")}))
+	// Each tool call of an MCP request gets that request.
+	withCaller := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), callerKey{}, r)))
+	})
+	parts = append(parts, gx.Handler(endpoint{Handler: withCaller, pattern: "/" + strings.Trim(path, "/")}))
 	app.Group("/", parts...)
 }

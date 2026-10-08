@@ -174,25 +174,31 @@ type Store = {
 
 const isTree = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
 
+// A node of the store has no prototype. A part of a path is a value of the
+// app: the key of a component instance can be "__proto__" or "constructor".
+// On a plain object such a part reaches Object.prototype of the host page;
+// on a node with no prototype it is one more key (REQ-ISL-21).
+const node = (): Record<string, unknown> => Object.create(null) as Record<string, unknown>
+
 const makeStore = (changed: () => void): Store => {
-  const root: Record<string, unknown> = {}
+  const root = node()
   const get = (path: string[]): unknown => {
-    let node: unknown = root
+    let at: unknown = root
     for (const part of path) {
-      if (!isTree(node)) return undefined
-      node = node[part]
+      if (!isTree(at) || !Object.hasOwn(at, part)) return undefined
+      at = at[part]
     }
-    return node
+    return at
   }
   const set = (path: string[], value: unknown): void => {
-    let node = root
+    let at = root
     for (const part of path.slice(0, -1)) {
-      if (!isTree(node[part])) node[part] = {}
-      node = node[part] as Record<string, unknown>
+      if (!Object.hasOwn(at, part) || !isTree(at[part])) at[part] = node()
+      at = at[part] as Record<string, unknown>
     }
     const name = path[path.length - 1]
-    if (name === undefined || node[name] === value) return
-    node[name] = value
+    if (name === undefined || (Object.hasOwn(at, name) && at[name] === value)) return
+    at[name] = value
     changed()
   }
   const merge = (values: Record<string, unknown>, keep: boolean, at: string[] = []): void => {
@@ -328,7 +334,15 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
       if (alive) host.fail({ status: 0, key: 'gx.network' })
       return
     }
-    if (!alive || res.status === 204) return
+    if (!alive) return
+    // Each answer names the build of the server in a header, also an
+    // answer with no body (REQ-ISL-19).
+    const seen = res.headers.get('Gx-Build')
+    if (seen && build && seen !== build) {
+      host.reload()
+      return
+    }
+    if (res.status === 204) return
     let answer: ActionAnswer = {}
     try {
       answer = (await res.json()) as ActionAnswer

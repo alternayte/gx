@@ -399,6 +399,9 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if tc != nil {
 		tc.done = true
 	}
+	if isWidgetRequest(r) {
+		setWidgetBuild(w)
+	}
 	in := f.newIn()
 	if mu, ok := in.(interface{ GxMaxUpload() int64 }); ok {
 		if n := mu.GxMaxUpload(); n > 0 {

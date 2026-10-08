@@ -1,6 +1,10 @@
 package gx
 
-import "sync/atomic"
+import (
+	"sync/atomic"
+
+	"github.com/alternayte/gx/internal/secretscan"
+)
 
 // Secret is a value that must not leave the server (SI-04). It renders and
 // marshals as "[redacted]".
@@ -14,6 +18,11 @@ func (s Secret) Reveal() string { return string(s) }
 
 // MarshalJSON never writes the secret.
 func (s Secret) MarshalJSON() ([]byte, error) { return []byte(`"[redacted]"`), nil }
+
+// hasSecretKey reports whether a value holds a map with a Secret as its key
+// type. encoding/json writes the key of a map as its text and calls no
+// method of the key, so MarshalJSON cannot redact it (SI-04).
+func hasSecretKey(v any) bool { return secretscan.HasKeyOfType(v, Secret("")) }
 
 var devMode atomic.Bool
 
