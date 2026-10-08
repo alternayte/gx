@@ -71,6 +71,16 @@ const (
 	// CodeIslandTypeScript is one error of the TypeScript compiler in an
 	// island file (REQ-ISL-08).
 	CodeIslandTypeScript = "GX6005"
+	// CodeWidgetTag is a widget with no tag, with a tag that is not a
+	// custom element name, or with the tag of a different widget
+	// (REQ-ISL-10).
+	CodeWidgetTag = "GX6003"
+	// CodeWidgetAttr is a field of a widget input that an attribute
+	// cannot hold (REQ-ISL-15).
+	CodeWidgetAttr = "GX6006"
+	// CodeWidgetOrigins is a widget, or an action that its component
+	// invokes, in a group with no gx.AllowOrigins (REQ-ISL-22).
+	CodeWidgetOrigins = "GX6008"
 	// CodeCredentialOrigin is a wildcard origin in gx.AllowCredentials
 	// (REQ-ISL-22, SI-14).
 	CodeCredentialOrigin = "GX6009"
@@ -135,8 +145,11 @@ var Catalog = []Info{
 	{CodeRuntimeClass, "class string is built at runtime"},
 	{CodeIslandProps, "island has no props struct"},
 	{CodeIslandType, "island prop type has no TypeScript mapping"},
+	{CodeWidgetTag, "widget tag is missing, not valid or used two times"},
 	{CodeIslandLoad, "unknown island load strategy"},
 	{CodeIslandTypeScript, "TypeScript error in an island"},
+	{CodeWidgetAttr, "widget input field cannot be an attribute"},
+	{CodeWidgetOrigins, "widget route is in a group with no origins"},
 	{CodeCredentialOrigin, "origin with cookies is not exact"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},

@@ -580,6 +580,14 @@ func When(name string, on bool) string
 
 When returns name when on is true, and the empty string otherwise.
 
+### func Widget
+
+```go
+func Widget[In any, P any](load func(*Ctx, In) (P, error), view func(P) Node) *widget[In, P]
+```
+
+Widget builds a widget from a loader and a view. A widget is a component that a page of a different site uses as a custom element. This server renders it.
+
 ### func WithNonce
 
 ```go

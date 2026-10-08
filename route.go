@@ -262,6 +262,9 @@ type App struct {
 	// origins holds, for each mounted pattern of a group with
 	// AllowOrigins, the origins that can call it (REQ-ISL-22).
 	origins map[string]*originPolicy
+	// widgetTags holds the element name of each mounted widget
+	// (REQ-ISL-10).
+	widgetTags map[string]bool
 }
 
 // appRoute is one mounted route as registered.
@@ -467,6 +470,19 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		handler = a.withToast(handler)
 		if m, ok := h.(interface{ mountPrefix(string) }); ok {
 			m.mountPrefix(prefix)
+		}
+		if wd, ok := h.(interface{ widgetTag() string }); ok {
+			tag := wd.widgetTag()
+			if tag == "" {
+				panic("gx: the widget " + h.Pattern() + " has no tag. Add .Tag(\"acme-name\") to gx.Widget.")
+			}
+			if a.widgetTags[tag] {
+				panic("gx: two widgets have the tag " + tag)
+			}
+			if a.widgetTags == nil {
+				a.widgetTags = map[string]bool{}
+			}
+			a.widgetTags[tag] = true
 		}
 		pattern := joinPattern(prefix, h.Pattern())
 		if a.patterns[pattern] {
