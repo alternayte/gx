@@ -43,7 +43,7 @@ func Cart(p CartProps) gx.Node {
 //line Cart.gx:20:44
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:21:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", "hover:opacity-90"), Kind: gx.AttrText}, gx.On("click", "POST", (route.Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}, gx.Text("Add")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", "hover:opacity-90"), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tool", Value: "cart_add", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tool-scope", Value: gx.ScopeString("cart.Cart", p.GxKey), Kind: gx.AttrText}, gx.On("click", "POST", (route.Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}, gx.Text("Add")))
 //line Cart.gx:21:149
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:22:3
@@ -55,7 +55,7 @@ func Cart(p CartProps) gx.Node {
 //line Cart.gx:23:50
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:24:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.On("click", "POST", (route.Toast{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}, gx.Text("Toast")))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "data-gx-tool", Value: "cart_toast", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tool-scope", Value: gx.ScopeString("cart.Cart", p.GxKey), Kind: gx.AttrText}, gx.On("click", "POST", (route.Toast{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}, gx.Text("Toast")))
 //line Cart.gx:24:50
 	_b1.Add(gx.Text("\n  "))
 //line Cart.gx:25:3

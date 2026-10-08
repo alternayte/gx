@@ -46,6 +46,7 @@ func GxDevSymbols() gx.DevPackage {
 			"CartProps":     reflect.TypeFor[CartProps](),
 			"CartSignals":   reflect.TypeFor[CartSignals](),
 			"ChangedDetail": reflect.TypeFor[ChangedDetail](),
+			"SavedResult":   reflect.TypeFor[SavedResult](),
 			"ToastsProps":   reflect.TypeFor[ToastsProps](),
 		},
 	}

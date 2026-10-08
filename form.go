@@ -28,6 +28,9 @@ type FormMeta struct {
 	// Enctype is the form encoding when the form holds files
 	// (REQ-FRM-09).
 	Enctype string
+	// Tool is the name of the tool of the form, or "" for a form with no
+	// Tool (REQ-AI-06).
+	Tool string
 }
 
 // GxFormName implements FormValue.
@@ -54,6 +57,11 @@ func (m FormMeta) Attrs() Attrs {
 	}
 	if m.Enctype != "" {
 		out = append(out, Attr{Key: "enctype", Value: m.Enctype, Kind: AttrText})
+	}
+	if m.Tool != "" {
+		// The form is a tool for an agent while it is on the page
+		// (REQ-AI-06).
+		out = append(out, Attr{Key: toolAttr, Value: m.Tool, Kind: AttrText})
 	}
 	return out
 }
@@ -418,7 +426,9 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if tc != nil {
 			tc.bad = true
-			return
+			if tc.finish(w) {
+				return
+			}
 		}
 		formBindError(w, r, err)
 		return
@@ -451,7 +461,9 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					if tc != nil {
 						// The redirect of a form is its answer.
 						tc.res = &Response{Patches: []Patch{RedirectPatch{URL: re.url}}, tool: ctx.res.tool, hasTool: ctx.res.hasTool}
-						return
+						if tc.finish(w) {
+							return
+						}
 					}
 					f.redirect(w, r, re.url)
 					return
@@ -466,13 +478,12 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// errors, or the answer of the handler.
 		if len(errs) > 0 {
 			tc.errs = errs
+		} else {
+			tc.res = ctx.res
+		}
+		if tc.finish(w) {
 			return
 		}
-		if ctx.res.Err != nil {
-			ctx.res.Patches = ctx.res.Patches[:len(ctx.res.Patches)-1]
-		}
-		tc.res = ctx.res
-		return
 	}
 	if len(errs) > 0 {
 		f.invalid(w, r, in, errs)

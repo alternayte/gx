@@ -29,7 +29,65 @@ func (a *App) addTool(def *toolDef, pattern string) {
 		a.tools = map[string]mountedTool{}
 	}
 	method, path, _ := strings.Cut(pattern, " ")
+	if len(a.tools) == 0 {
+		// The first tool of the app: serve the tool module and the tool
+		// routes of a page. An app with no tool has no such route.
+		a.registerAsset("tool.js", toolRuntimeJS)
+		a.mux.Handle("GET /_gx/tools/{name}", http.HandlerFunc(a.serveToolInfo))
+		a.mux.Handle("POST /_gx/tools/{name}", http.HandlerFunc(a.servePageTool))
+	}
 	a.tools[name] = mountedTool{def: def, method: method, path: path}
+}
+
+// serveToolInfo answers with the description of one tool, for the tool
+// module of a page (REQ-AI-06).
+func (a *App) serveToolInfo(w http.ResponseWriter, r *http.Request) {
+	t, ok := a.tools[r.PathValue("name")]
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	data, err := json.Marshal(struct {
+		Name        string          `json:"name"`
+		Description string          `json:"description"`
+		InputSchema json.RawMessage `json:"inputSchema"`
+		Confirm     bool            `json:"confirm,omitempty"`
+		ReadOnly    bool            `json:"readOnly,omitempty"`
+	}{t.def.info.Name, t.def.info.Description, json.RawMessage(t.def.info.Schema), t.def.confirm, t.method == http.MethodGet})
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	h := w.Header()
+	h.Set("Content-Type", "application/json; charset=utf-8")
+	h.Set("Cache-Control", "no-cache")
+	_, _ = w.Write(data)
+}
+
+// servePageTool runs one tool for the tool module of a page (REQ-AI-06).
+// The body is the JSON object of the arguments. The request of the action
+// has the headers of this request, so it is the request of the user of the
+// page: the middleware of the group of the action runs (SI-07). The answer
+// is the answer of the action for the page, with the answer for the agent in
+// a header.
+func (a *App) servePageTool(w http.ResponseWriter, r *http.Request) {
+	t, ok := a.tools[r.PathValue("name")]
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	args := map[string]any{}
+	body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 1<<20))
+	if err == nil && len(body) > 0 {
+		err = json.Unmarshal(body, &args)
+	}
+	if err != nil {
+		http.Error(w, "gx: the arguments of a tool are a JSON object", http.StatusBadRequest)
+		return
+	}
+	// This request passed the cross-origin check of the app (SI-03).
+	in, _ := t.toolRequest(r.Context(), r.Header, args, true)
+	a.mux.ServeHTTP(w, in)
 }
 
 // toolCall is one call of a tool. The request of the call carries it, and
@@ -44,6 +102,47 @@ type toolCall struct {
 	bad bool
 	// errs holds the field errors of the rules, by field name.
 	errs map[string]string
+	// browser is true for a call of the tool module of a page. The handler
+	// then writes its answer for the page as for a click, and the answer
+	// for the agent goes into a header (REQ-AI-06).
+	browser bool
+}
+
+// toolAttr marks an element that invokes a tool: its value is the name of
+// the tool. The tool module of the runtime registers the tool while such an
+// element is in the document (REQ-AI-06).
+const toolAttr = "data-gx-tool"
+
+// toolAnswerHeader carries the answer for the agent next to the answer for
+// the page.
+const toolAnswerHeader = "Gx-Tool-Answer"
+
+// toolAnswerLimit is the size of an answer that fits a header.
+const toolAnswerLimit = 6000
+
+// finish ends the tool part of a handler. It reports whether the handler
+// stops: a call of an MCP client needs no answer for a page. For a call of
+// the tool module it sets the answer for the agent as a header, and the
+// handler goes on with its answer for the page.
+func (tc *toolCall) finish(w http.ResponseWriter) (stop bool) {
+	if !tc.browser {
+		return true
+	}
+	answer := toolAnswer(tc, nil)
+	wire := struct {
+		Text       string          `json:"text"`
+		Structured json.RawMessage `json:"structured,omitempty"`
+		IsError    bool            `json:"isError,omitempty"`
+	}{answer.Text, answer.Structured, answer.IsError}
+	data, _ := json.Marshal(wire)
+	if len(data) > toolAnswerLimit {
+		// A header has a size limit. The page has the full answer.
+		wire.Structured = nil
+		wire.Text = "the result has " + strconv.Itoa(len(answer.Text)) + " bytes, which is too large for the answer of a tool in the browser; the page shows the change"
+		data, _ = json.Marshal(wire)
+	}
+	w.Header().Set(toolAnswerHeader, url.PathEscape(string(data)))
+	return false
 }
 
 type toolCallKey struct{}
@@ -108,8 +207,8 @@ func flattenArg(out url.Values, name string, v any) {
 // argument goes to the part of the request that the binder reads it from.
 // The request has the headers of the call, so the middleware of the group
 // and the cross-origin check see the caller (SI-07).
-func (t mountedTool) toolRequest(ctx context.Context, header http.Header, args map[string]any) (*http.Request, *toolCall) {
-	tc := &toolCall{signals: map[string]any{}}
+func (t mountedTool) toolRequest(ctx context.Context, header http.Header, args map[string]any, browser bool) (*http.Request, *toolCall) {
+	tc := &toolCall{signals: map[string]any{}, browser: browser}
 	path := t.path
 	query, form := url.Values{}, url.Values{}
 	for _, f := range t.def.info.Fields {
@@ -152,8 +251,13 @@ func (t mountedTool) toolRequest(ctx context.Context, header http.Header, args m
 	r.RequestURI = target
 	for name, values := range header {
 		switch name {
-		case "Content-Type", "Content-Length", "Accept", "Mcp-Session-Id", "Mcp-Protocol-Version", "Last-Event-Id":
-			// These describe the MCP message, not the call.
+		case "Content-Type", "Content-Length", "Mcp-Session-Id", "Mcp-Protocol-Version", "Last-Event-Id":
+			// These describe the message of the agent, not the call.
+		case "Accept":
+			// The tool module of a page asks for the answer of a click.
+			if browser {
+				r.Header[name] = values
+			}
 		default:
 			r.Header[name] = values
 		}
@@ -192,6 +296,9 @@ func patchSummary(p Patch) string {
 		return "redirect to " + t.URL
 	case ToastPatch:
 		return "toast: " + t.Text
+	case EventPatch:
+		data, _ := json.Marshal(t.Detail)
+		return "event " + t.Name + " " + string(data)
 	}
 	return "patch"
 }
@@ -238,7 +345,7 @@ type ToolAnswer struct {
 func toolAnswer(tc *toolCall, rec *statusRecorder) ToolAnswer {
 	fail := func(text string) ToolAnswer { return ToolAnswer{Text: text, IsError: true} }
 	switch {
-	case !tc.done:
+	case !tc.done && rec != nil:
 		// The middleware of the group, or the cross-origin check,
 		// answered: the app refuses this caller.
 		return fail("the app refused the call with status " + strconv.Itoa(rec.status()) + " " + http.StatusText(rec.status()))
@@ -305,7 +412,7 @@ func (a *App) CallTool(ctx context.Context, header http.Header, name string, arg
 			return ToolAnswer{Text: "the arguments are not a JSON object", IsError: true}
 		}
 	}
-	r, tc := t.toolRequest(ctx, header, values)
+	r, tc := t.toolRequest(ctx, header, values, false)
 	rec := &statusRecorder{header: http.Header{}}
 	// The request of the agent passed the cross-origin check of the app
 	// with these headers (SI-03). The request of the action has a form

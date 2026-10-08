@@ -65,7 +65,9 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if tc != nil {
 			tc.bad = true
-			return
+			if tc.finish(w) {
+				return
+			}
 		}
 		if isWidgetRequest(r) {
 			writeWidgetError(w, http.StatusBadRequest, "gx.bad_input", "")
@@ -77,7 +79,9 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if violation := RunRules(&in); violation != nil {
 		if tc != nil {
 			tc.errs = map[string]string{violation.Field: violation.Key}
-			return
+			if tc.finish(w) {
+				return
+			}
 		}
 		if isWidgetRequest(r) {
 			writeWidgetError(w, http.StatusUnprocessableEntity, violation.Key, violation.Field)
@@ -99,12 +103,12 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ctx.res.Err = handlerErr
 	}
 	if tc != nil {
-		// The answer of a tool call is data for the agent.
-		if handlerErr != nil {
-			ctx.res.Patches = ctx.res.Patches[:len(ctx.res.Patches)-1]
-		}
+		// The answer of a tool call is data for the agent. A call of the
+		// tool module of a page gets the answer for the page too.
 		tc.res = ctx.res
-		return
+		if tc.finish(w) {
+			return
+		}
 	}
 	if len(ctx.res.Patches) == 0 {
 		// An action with no answer answers 204 (REQ-ACT-10).

@@ -1262,9 +1262,13 @@ func renderFormValue(b *bytes.Buffer, d *routeDef) {
 	if d.hasFile {
 		enctype = "multipart/form-data"
 	}
+	toolField := ""
+	if d.tool != nil {
+		toolField = ", Tool: " + strconv.Quote(toolName(d))
+	}
 	b.WriteString("\tf := " + d.name + "Form{FormMeta: gx.FormMeta{Name: " + strconv.Quote(name) +
 		", ID: " + strconv.Quote(name+"-form") + ", Action: in.URL(), Method: " + strconv.Quote(method) +
-		", Enctype: " + strconv.Quote(enctype) + "}}\n")
+		", Enctype: " + strconv.Quote(enctype) + toolField + "}}\n")
 	for _, f := range d.fields {
 		b.WriteString("\tf." + f.name + " = " + formFieldExpr(d, d.name, strconv.Quote(name), "in.URL()", f, "in."+f.name, "errs", "", "") + "\n")
 	}

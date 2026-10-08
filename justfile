@@ -16,6 +16,7 @@ runtime:
     bun build runtime/js/overlay.ts --outfile runtime/js/overlay.js --target browser --minify
     bun build runtime/js/theme.ts --outfile runtime/js/theme.js --target browser --minify
     bun build runtime/js/island.ts --outfile runtime/js/island.js --target browser --minify
+    bun build runtime/js/tool.ts --outfile runtime/js/tool.js --target browser --minify
     bun build runtime/js/dev.ts --outfile internal/devserver/devclient.js --target browser --minify
     bun build runtime/js/widget.ts --outfile runtime/js/widget.js --target browser --minify
     bun build runtime/js/widget-behaviors.ts --outfile runtime/js/widget-behaviors.js --target browser --minify

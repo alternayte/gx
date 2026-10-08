@@ -226,6 +226,9 @@ func (a *App) headAssets(needs *runtimeNeeds) []byte {
 		if needs.overlay {
 			b.WriteString(stringNonce(behaviorRuntime("overlay"), needs.nonce))
 		}
+		if needs.tool {
+			b.WriteString(stringNonce(behaviorRuntime("tool"), needs.nonce))
+		}
 	}
 	return b.Bytes()
 }

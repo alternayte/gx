@@ -137,8 +137,15 @@ func FragmentID(component, name string, key Key) string {
 // widget request come in the wire form of a widget.
 func Signals(r *http.Request) (map[string]any, error) {
 	if tc := toolCallOf(r); tc != nil {
-		// A tool call has its signal arguments by name, with no scope.
-		return tc.signals, nil
+		// A tool call has its signal arguments by name. A call from a
+		// page names the scope of the invoking component, and the
+		// binder reads the signals inside that scope.
+		signals := tc.signals
+		parts := scopeParts(Scope(r))
+		for i := len(parts) - 1; i >= 0; i-- {
+			signals = map[string]any{parts[i]: signals}
+		}
+		return signals, nil
 	}
 	if isWidgetRequest(r) {
 		// A widget has one wire form under each adapter (D-264).

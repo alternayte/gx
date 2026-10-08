@@ -1467,6 +1467,9 @@ type FormMeta struct {
     // Enctype is the form encoding when the form holds files
     // (REQ-FRM-09).
     Enctype string
+    // Tool is the name of the tool of the form, or "" for a form with no
+    // Tool (REQ-AI-06).
+    Tool string
 }
 ```
 

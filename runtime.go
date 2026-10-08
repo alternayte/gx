@@ -43,6 +43,12 @@ var themeRuntimeJS []byte
 //go:embed runtime/js/island.js
 var islandRuntimeJS []byte
 
+// toolRuntimeJS is the built tool module (REQ-AI-06). A page loads it only
+// when it has an element that invokes a tool.
+//
+//go:embed runtime/js/tool.js
+var toolRuntimeJS []byte
+
 // themeRuntime returns the script tag of the theme script. It has no defer
 // and no module type, so the parser runs it before it paints.
 func themeRuntime() Node {
@@ -91,6 +97,8 @@ type runtimeNeeds struct {
 	overlay bool
 	// island is true when the page holds a TypeScript island.
 	island bool
+	// tool is true when an element of the page invokes a tool (REQ-AI-06).
+	tool bool
 	// theme is true when the page has a theme control; the stored theme
 	// then applies before the first paint.
 	theme bool
@@ -161,6 +169,9 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 				// web component (REQ-ISL-09).
 				if a.Key == "data-gx-module" {
 					needs.island = true
+				}
+				if a.Key == toolAttr {
+					needs.tool = true
 				}
 				switch {
 				case adapterMarker(a.Key):

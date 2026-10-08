@@ -18,6 +18,9 @@ export const gx = {
     const i = s.indexOf(sub)
     return i < 0 ? -1 : [...s.slice(0, i)].length
   },
+  // apply puts the answer of the server in the page. The tool module uses
+  // it for the answer of a tool call (REQ-AI-06).
+  apply: (res: Response): Promise<void> => applyAnswer(res),
 }
 
 ;(globalThis as { __gx?: typeof gx }).__gx = gx
@@ -481,8 +484,18 @@ installCSRF()
 // brings the first island into a page that started with none (REQ-ISL-04).
 // A page that the server renders with an island has the loader in its head.
 const loadIslands = (): void => {
+  loadTools()
   if (customElements.get('gx-island') || !document.querySelector('gx-island, [data-gx-module]')) return
   void import(new URL('./island.js', import.meta.url).href)
+}
+
+// loadTools loads the tool module when a patch brings the first element
+// with a tool into a page that started with none (REQ-AI-06).
+let toolsLoaded = false
+const loadTools = (): void => {
+  if (toolsLoaded || !document.querySelector('[data-gx-tool]')) return
+  toolsLoaded = true
+  void import(new URL('./tool.js', import.meta.url).href)
 }
 
 const adapterPresent = (): boolean => document.querySelector('script[data-gx-adapter]') !== null

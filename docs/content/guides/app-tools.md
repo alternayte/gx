@@ -1,6 +1,6 @@
 ---
 title: "Actions as tools for agents"
-description: "An action or a form with .Tool() is a tool that the agent of a user can call: the input schema comes from the rules, and package gxmcp serves the tools over MCP."
+description: "An action or a form with .Tool() is a tool that the agent of a user can call: in the browser through WebMCP, and on the server through MCP with package gxmcp."
 section: Guides
 order: 16
 ---
@@ -108,6 +108,33 @@ An action with no `gx.ToolResult` answers with a summary of its patches, one lin
 
 A call that breaks a rule is an error answer with the field and the message key. An error of the handler is an error answer with its text.
 
+## Tools in the browser
+
+A browser with WebMCP gives the agent of the user the tools of the page. Gx registers a tool while an element that invokes it is in the page: a button with `on:click={route.Add{...}}`, or the form of a form tool. When the element leaves the page, the tool leaves the browser. You write no code for this.
+
+```gx title="notes/Board.gx"
+package notes
+
+import "acme/notes/route"
+
+props {
+  List string
+}
+
+<section>
+  <h2>{p.List}</h2>
+  <button on:click={route.Add{List: p.List, Text: "A new note"}}>Add a note</button>
+  <button on:click={route.Clear{List: p.List}}>Clear the list</button>
+</section>
+```
+
+- A call of the tool runs the action on the server with the arguments of the agent. The answer changes the page as it does after a click, and the agent gets the result.
+- A tool with `gx.Confirm` asks the user first, with a dialog of the browser.
+- The runtime uses `document.modelContext`. It falls back to `navigator.modelContext`, which an earlier draft of WebMCP used. A browser with neither loads the page with no change.
+- A page with no tool element loads no script for tools.
+
+WebMCP is a draft of a W3C Community Group, and its API can change. The tool module of the Gx runtime is the one place that knows the API. A change of the draft needs a new Gx and no change of your app.
+
 ## Serve the tools over MCP
 
 Package `gxmcp` serves the tools over the Model Context Protocol with streamable HTTP. It is a package of its own because it uses the official MCP Go SDK. An app that does not import it does not compile the SDK.
@@ -171,6 +198,6 @@ The middleware of `gxmcp.Mount` runs before each MCP request. A request with no 
 A tool call is not a second way into the app. It runs the request of its action through the routes of the app, with the headers of the MCP request.
 
 - The middleware of the group of the action runs for the call. A user that the group refuses cannot run the tool.
-- The cross-origin check of the app applies to the MCP endpoint. A page of a different site cannot call it with the cookies of the user.
+- The cross-origin check of the app applies to the MCP endpoint and to the tool routes of a page. A page of a different site cannot call a tool with the cookies of the user.
 - The binder fills only the declared fields, and the rules run before the handler.
 - A value of type `gx.Secret` in a tool result is [GX7002](/errors/GX7002/). A secret that the compiler cannot see is `[redacted]` in the JSON.

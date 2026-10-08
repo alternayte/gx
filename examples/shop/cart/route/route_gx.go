@@ -34,6 +34,16 @@ func (in Add) URL() string {
 	return gx.BasePath() + b.String()
 }
 
+// GxTool describes Add as a tool.
+func (Add) GxTool() gx.ToolInfo {
+	return gx.ToolInfo{
+		Name:        "cart_add",
+		Description: "Sets the total of the cart to ten times the quantity. It is the action behind the Add button, and a tool for the agent of the user (REQ-AI-06).",
+		Schema:      "{\"additionalProperties\":false,\"properties\":{\"qty\":{\"type\":\"integer\"}},\"type\":\"object\"}",
+		Fields:      []gx.ToolField{{Name: "qty", In: "signal"}},
+	}
+}
+
 // Pattern returns the method and pattern of Error.
 func (Error) Pattern() string { return "POST /cart/error" }
 
@@ -138,6 +148,16 @@ func (in Toast) URL() string {
 	b.WriteString("/")
 	b.WriteString("toast")
 	return gx.BasePath() + b.String()
+}
+
+// GxTool describes Toast as a tool.
+func (Toast) GxTool() gx.ToolInfo {
+	return gx.ToolInfo{
+		Name:        "cart_toast",
+		Description: "Saves the cart and shows a toast. The browser asks the user before an agent runs it.",
+		Schema:      "{\"additionalProperties\":false,\"properties\":{},\"type\":\"object\"}",
+		Fields:      []gx.ToolField{},
+	}
 }
 
 // Pattern returns the method and pattern of ToastDemo.

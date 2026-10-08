@@ -10,6 +10,7 @@ import (
 	"go/types"
 	"os"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -697,6 +698,14 @@ func (g *gen) attrsExpr(el *Element) string {
 				continue
 			}
 			if site := g.res.clientBy[a]; site != nil {
+				// An element that invokes a tool names the tool, so the
+				// runtime registers it while the element is on the page
+				// (REQ-AI-06).
+				for _, mark := range g.toolMarks(a, site) {
+					if !slices.Contains(static, mark) {
+						static = append(static, mark)
+					}
+				}
 				if v, ok, isAction := g.actionAttr(a, site); isAction {
 					if ok {
 						static = append(static, v)
@@ -1255,6 +1264,33 @@ func (g *gen) clientAttrName(a *Attr) (string, bool) {
 		return "", false
 	}
 	return name, true
+}
+
+// toolMarks returns the attributes that name each tool that an on: handler
+// invokes: data-gx-tool with the name of the tool, and data-gx-tool-scope
+// with the signal scope of the component instance (REQ-AI-06).
+func (g *gen) toolMarks(a *Attr, site *clientSite) []string {
+	if !strings.HasPrefix(a.Name, "on:") || site.node == nil {
+		return nil
+	}
+	var out []string
+	ast.Inspect(site.node, func(n ast.Node) bool {
+		expr, ok := n.(ast.Expr)
+		if !ok {
+			return true
+		}
+		def := g.res.routeDefs[namedTypeKey(g.res.exprTypes[expr])]
+		if def == nil || def.tool == nil {
+			return true
+		}
+		out = append(out, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}", strconv.Quote("data-gx-tool"), strconv.Quote(toolName(def))))
+		if g.scoped {
+			out = append(out, fmt.Sprintf("gx.Attr{Key: %s, Value: gx.ScopeString(%s, %s), Kind: gx.AttrText}",
+				strconv.Quote("data-gx-tool-scope"), strconv.Quote(g.file.Package+"."+g.name), g.keyExpr()))
+		}
+		return false
+	})
+	return out
 }
 
 // actionAttr returns the gx.On call of an on: handler that is one route

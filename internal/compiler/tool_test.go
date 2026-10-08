@@ -185,3 +185,37 @@ func TestREQ_AI_08_SecretInToolResult(t *testing.T) {
 		t.Errorf("a secret in a tool result: %v", diags)
 	}
 }
+
+// TestREQ_AI_06_ToolMarkOnTheElement checks that the generated code names
+// the tool on each element that invokes it: the element of an on: handler,
+// with the signal scope of its component instance, and the form element of a
+// form tool. An element that invokes an action with no Tool has no mark.
+func TestREQ_AI_06_ToolMarkOnTheElement(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod": moduleWithGx(t),
+		"account/route/route.go": "package route\n\nimport \"github.com/alternayte/gx\"\n\n" +
+			"type Signup struct {\n\tgx.Route `POST /signup`\n\tEmail string\n}\n\n" +
+			"func (s *Signup) Rules() gx.Rules {\n\treturn gx.Rules{gx.Field(&s.Email, gx.Required)}\n}\n\n" +
+			"type Rename struct {\n\tgx.Route `POST /users/{id}/name`\n\tID int64\n\tgx.Unchecked\n\tName string `signal:\"name\"`\n}\n\n" +
+			"type Ping struct {\n\tgx.Route `POST /ping`\n}\n",
+		"account/SignupView.gx": "package account\n\nimport \"app/account/route\"\n\nprops {\n  F route.SignupForm\n}\n\n<form {...p.F.Attrs()}><input {...p.F.Email.Attrs()} /></form>\n",
+		"account/Panel.gx": "package account\n\nimport \"app/account/route\"\n\nprops {\n  ID int64\n}\n\nsignals {\n  Name string = \"\"\n}\n\n" +
+			"<div>\n  <input bind:value={$Name} />\n  <button id=\"one\" on:click={route.Rename{ID: p.ID}}>Rename</button>\n" +
+			"  <button id=\"three\" on:click={route.Ping{}}>Ping</button>\n</div>\n",
+		"account/account.go": "package account\n\nimport (\n\t\"app/account/route\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n" +
+			"// Makes an account for a new user.\nvar Signup = gx.Form(func(c *gx.Ctx, in *route.Signup) error { return nil }, SignupView).Tool()\n\n" +
+			"// Gives a user a new name.\nvar rename = gx.Action(func(c *gx.Ctx, in route.Rename) error { return nil }).Tool()\n\n" +
+			"var ping = gx.Action(func(c *gx.Ctx, in route.Ping) error { return nil })\n\n" +
+			"var Routes = gx.Collect(Signup, rename, ping)\n",
+		"account/account_test.go": "package account\n\nimport (\n\t\"strings\"\n\t\"testing\"\n\n\t\"app/account/route\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n" +
+			"func TestMarks(t *testing.T) {\n" +
+			"\tform := gx.String(SignupView(Signup.Props(&route.Signup{})))\n" +
+			"\tif !strings.Contains(form, `data-gx-tool=\"account_signup\"`) {\n\t\tt.Errorf(\"the form has no tool mark: %s\", form)\n\t}\n" +
+			"\tpanel := gx.String(Panel(PanelProps{ID: 7}))\n" +
+			"\tone := panel[strings.Index(panel, `id=\"one\"`):strings.Index(panel, `id=\"three\"`)]\n" +
+			"\tthree := panel[strings.Index(panel, `id=\"three\"`):]\n" +
+			"\tif !strings.Contains(one, `data-gx-tool=\"account_rename\"`) || !strings.Contains(one, `data-gx-tool-scope=\"account.Panel\"`) {\n\t\tt.Errorf(\"the button has no tool mark with its scope: %s\", one)\n\t}\n" +
+			"\tif strings.Contains(three, \"data-gx-tool\") {\n\t\tt.Errorf(\"the button of an action with no Tool has a tool mark: %s\", three)\n\t}\n}\n",
+	})
+	buildGenerated(t, dir, "test", "./...")
+}

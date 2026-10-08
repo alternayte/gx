@@ -27,13 +27,14 @@ var Widget = gx.Widget(func(c *gx.Ctx, in route.Widget) (CartProps, error) {
 	return CartProps{Label: in.Label, Total: 10}, nil
 }, Cart).Tag("shop-cart")
 
-// Add is the action behind the Add button.
+// Sets the total of the cart to ten times the quantity. It is the action
+// behind the Add button, and a tool for the agent of the user (REQ-AI-06).
 var Add = gx.Action(func(c *gx.Ctx, in route.Add) error {
 	key := gx.ScopeKey(gx.Scope(c.R), Base)
 	total := in.Qty * 10
 	c.Emit(Changed(ChangedDetail{Total: total}))
 	return c.Patch(CartTotal(key, total))
-})
+}).Tool()
 
 // Set sets Qty to 2 on the invoking instance.
 var Set = gx.Action(func(c *gx.Ctx, in route.Set) error {
@@ -45,10 +46,17 @@ var Redirect = gx.Action(func(c *gx.Ctx, in route.Redirect) error {
 	return c.Redirect(shoproute.Home{})
 })
 
-// Toast shows a toast.
+// Saves the cart and shows a toast. The browser asks the user before an
+// agent runs it.
 var Toast = gx.Action(func(c *gx.Ctx, in route.Toast) error {
+	gx.ToolResult(c, SavedResult{Saved: true})
 	return c.Toast("Saved")
-})
+}).Tool(gx.Confirm)
+
+// SavedResult is the result of the Toast tool for an agent.
+type SavedResult struct {
+	Saved bool `json:"saved"`
+}
 
 // ToastDemo shows the toast one demo button asks for. The two upload steps
 // share an ID, so the second toast replaces the first in place.
