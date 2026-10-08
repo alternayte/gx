@@ -556,9 +556,16 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
   const bindField = (el: Element, path: string[], effect: (fn: () => void) => () => void): (() => void) => {
     const field = el as HTMLInputElement
     const checkbox = field instanceof HTMLInputElement && field.type === 'checkbox'
+    // A radio button keeps its own value. The signal holds the value of
+    // the button of the group that is checked.
+    const radio = field instanceof HTMLInputElement && field.type === 'radio'
     const fromField = (): void => {
       if (checkbox) {
         store.set(path, field.checked)
+        return
+      }
+      if (radio) {
+        if (field.checked) store.set(path, typeof store.get(path) === 'number' ? Number(field.value) : field.value)
         return
       }
       const numeric = field.type === 'number' || field.type === 'range' || typeof store.get(path) === 'number'
@@ -569,6 +576,7 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     const stop = effect(() => {
       const v = store.get(path)
       if (checkbox) field.checked = Boolean(v)
+      else if (radio) field.checked = field.value === `${v ?? ''}`
       else if (field.value !== `${v ?? ''}`) field.value = `${v ?? ''}`
     })
     return () => {

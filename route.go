@@ -504,7 +504,7 @@ func (a *App) Group(prefix string, parts ...any) *App {
 			a.widgetTags[tag] = widgetelement.Config{Tag: tag, Attrs: wd.widgetAttrs(), Self: true, Path: mounted}
 		}
 		if t, ok := h.(interface{ toolDef() *toolDef }); ok && t.toolDef() != nil {
-			a.addTool(t.toolDef(), pattern)
+			a.addTool(t.toolDef(), pattern, handler)
 		}
 		a.patterns[pattern] = true
 		a.routes = append(a.routes, appRoute{pattern: pattern, handler: h})

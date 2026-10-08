@@ -89,6 +89,15 @@ type Directives interface {
 	Directives() []Directive
 }
 
+// objectSchema reports whether data is a JSON Schema with the type object.
+// The MCP server takes no other schema for the input of a tool.
+func objectSchema(data json.RawMessage) bool {
+	var schema struct {
+		Type string `json:"type"`
+	}
+	return json.Unmarshal(data, &schema) == nil && schema.Type == "object"
+}
+
 // pluginWord is a name that a plugin gives: an adapter, a registry or a
 // theme.
 var pluginWord = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
@@ -333,8 +342,8 @@ func (c *config) load() (*loaded, string) {
 					return nil, "the plugin " + quoted + " has the MCP tool " + strconv.Quote(tool.Name) + ". A tool has a name of lower-case letters, digits and underscores, a description and a Call function."
 				case toolNames[tool.Name]:
 					return nil, "the plugin " + quoted + " has the MCP tool " + strconv.Quote(tool.Name) + ", which a different tool of gx mcp has. Give the tool a different name."
-				case !json.Valid(tool.InputSchema):
-					return nil, "the MCP tool " + strconv.Quote(tool.Name) + " of the plugin " + quoted + " has an input schema that is not JSON."
+				case !objectSchema(tool.InputSchema):
+					return nil, "the MCP tool " + strconv.Quote(tool.Name) + " of the plugin " + quoted + " has an input schema that is not a JSON Schema of an object. Write {\"type\":\"object\", ...}."
 				}
 				toolNames[tool.Name] = true
 				l.tools = append(l.tools, mcpserver.ExtraTool{Name: tool.Name, Description: tool.Description, InputSchema: tool.InputSchema, Call: tool.Call})

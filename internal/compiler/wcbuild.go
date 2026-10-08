@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"unicode"
 
 	"github.com/alternayte/gx/internal/elementname"
+	"github.com/alternayte/gx/internal/widgetelement"
 )
 
 // WidgetBuild is what `gx wc build` knows about one widget (REQ-ISL-10): the
@@ -154,26 +154,9 @@ func Widgets(root string) ([]WidgetBuild, []Diagnostic) {
 }
 
 // widgetClassName makes the class name of a tag: "acme-cart" gives
-// "AcmeCart".
-func widgetClassName(tag string) string {
-	var b strings.Builder
-	upper := true
-	for _, r := range tag {
-		if !unicode.IsLetter(r) && !unicode.IsDigit(r) || r > unicode.MaxASCII {
-			upper = true
-			continue
-		}
-		if upper {
-			r = unicode.ToUpper(r)
-			upper = false
-		}
-		b.WriteRune(r)
-	}
-	if b.Len() == 0 {
-		return "Widget"
-	}
-	return b.String()
-}
+// "AcmeCart". The element file exports the class under this name and
+// "Element".
+func widgetClassName(tag string) string { return widgetelement.ClassName(tag) }
 
 // widgetEvents maps the domain events of the package of a widget: each
 // package variable that holds a gx.Event. It returns the TypeScript

@@ -77,7 +77,7 @@ var Routes = gx.Collect(add, clear)
 - The arguments are the fields of the input: the path variable `list`, the query value `pin`, and the form fields `text` and `color`.
 - `gx.Confirm` makes the browser ask the user before an agent runs the tool. Use it for an action that the user cannot undo.
 
-Only an action or a form with `.Tool()` is a tool. An agent cannot call a different route.
+Only an action or a form with `.Tool()` is a tool. A tool call runs the handler of its tool: no argument of the agent selects a different route.
 
 ## The input schema
 
@@ -200,4 +200,4 @@ A tool call is not a second way into the app. It runs the request of its action 
 - The middleware of the group of the action runs for the call. A user that the group refuses cannot run the tool.
 - The cross-origin check of the app applies to the MCP endpoint and to the tool routes of a page. A page of a different site cannot call a tool with the cookies of the user.
 - The binder fills only the declared fields, and the rules run before the handler.
-- A value of type `gx.Secret` in a tool result is [GX7002](/errors/GX7002/). A secret that the compiler cannot see is `[redacted]` in the JSON.
+- A value of type `gx.Secret` in a tool result is [GX7002](/errors/GX7002/). A secret that the compiler cannot see is `[redacted]` in the JSON. A secret as the key of a map has no redacted form, so the agent gets an error answer and no result.

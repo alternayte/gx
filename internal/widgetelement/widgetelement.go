@@ -10,6 +10,7 @@ import (
 	"errors"
 	"net/url"
 	"strings"
+	"unicode"
 
 	"github.com/alternayte/gx/internal/elementname"
 )
@@ -21,6 +22,33 @@ import (
 var loader []byte
 
 const placeholder = "__GX_WIDGET_CONFIG__"
+
+// classPlaceholder is the name under which the built loader exports its
+// element class. File puts the class name of the widget in its place, so the
+// type file of the widget names a value that the element file has.
+const classPlaceholder = "__GX_WIDGET_CLASS__"
+
+// ClassName makes the class name of a tag: "acme-cart" gives "AcmeCart".
+// The element file exports its class as this name and "Element".
+func ClassName(tag string) string {
+	var b strings.Builder
+	upper := true
+	for _, r := range tag {
+		if !unicode.IsLetter(r) && !unicode.IsDigit(r) || r > unicode.MaxASCII {
+			upper = true
+			continue
+		}
+		if upper {
+			r = unicode.ToUpper(r)
+			upper = false
+		}
+		b.WriteRune(r)
+	}
+	if b.Len() == 0 {
+		return "Widget"
+	}
+	return b.String()
+}
 
 // Config is the configuration of one element file.
 type Config struct {
@@ -65,5 +93,9 @@ func File(c Config) ([]byte, error) {
 	if bytes.Count(loader, []byte(placeholder)) != 1 {
 		return nil, errors.New("the built element file has no configuration placeholder; run just runtime")
 	}
-	return bytes.Replace(loader, []byte(placeholder), cfg, 1), nil
+	if bytes.Count(loader, []byte(classPlaceholder)) != 1 {
+		return nil, errors.New("the built element file has no class export; run just runtime")
+	}
+	out := bytes.Replace(loader, []byte(placeholder), cfg, 1)
+	return bytes.Replace(out, []byte(classPlaceholder), []byte(ClassName(c.Tag)+"Element"), 1), nil
 }

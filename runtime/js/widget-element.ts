@@ -63,10 +63,19 @@ const server = config.self ? new URL(import.meta.url).origin : config.server || 
 const fallback = '<slot></slot>'
 
 class WidgetElement extends HTMLElement {
-  static observedAttributes = config.attrs
+  // A browser writes the name of an attribute of an HTML element in lower
+  // case, and calls attributeChangedCallback by that name.
+  static observedAttributes = config.attrs.map((name) => name.toLowerCase())
 
   #root: ShadowRoot
   #mounted: Mounted | undefined
+  // #mounting is the mount that runs now, and #build the build of the
+  // server that made the mounted render.
+  #mounting: Promise<Mounted> | undefined
+  #build: string | undefined
+  // #life numbers the lives of the element in a page: a mount of an
+  // earlier life is dropped.
+  #life = 0
   #abort: AbortController | undefined
   // #turn numbers the loads, so the answer of an old load is dropped.
   #turn = 0
@@ -122,6 +131,7 @@ class WidgetElement extends HTMLElement {
 
   disconnectedCallback(): void {
     this.#turn++
+    this.#life++
     this.#abort?.abort()
     this.#mounted?.destroy()
     this.#mounted = undefined
@@ -156,6 +166,7 @@ class WidgetElement extends HTMLElement {
 
   // #fresh drops the render of an old build and loads the widget again.
   #fresh(): void {
+    this.#life++
     this.#mounted?.destroy()
     this.#mounted = undefined
     this.#root.innerHTML = fallback
@@ -201,15 +212,42 @@ class WidgetElement extends HTMLElement {
       }
       const runtime = (await import(server + answer.script)) as Runtime
       if (turn !== this.#turn) return
+      // One mount at a time. A load that comes while the first render
+      // mounts waits for that mount and then updates it: a second mount
+      // into the same shadow root, and the end of the first, would leave
+      // the root empty (REQ-ISL-16).
+      if (!this.#mounted && this.#mounting) {
+        await this.#mounting.catch(() => undefined)
+        if (turn !== this.#turn) return
+      }
+      if (this.#mounted && answer.build && this.#build && answer.build !== this.#build) {
+        // The server has a new build. Its HTML needs its own stylesheet
+        // and its own script, so the widget mounts again (REQ-ISL-19).
+        this.#mounted.destroy()
+        this.#mounted = undefined
+        this.#root.innerHTML = fallback
+      }
       if (this.#mounted) {
         this.#mounted.update(answer)
       } else {
-        const mounted = await runtime.mount(this.#root, answer, this.#host())
-        if (turn !== this.#turn) {
+        const life = this.#life
+        const pending = (this.#mounting = runtime.mount(this.#root, answer, this.#host()))
+        let mounted: Mounted
+        try {
+          mounted = await pending
+        } finally {
+          if (this.#mounting === pending) this.#mounting = undefined
+        }
+        if (life !== this.#life) {
+          // The element left the page, or loads again from the start.
           mounted.destroy()
           return
         }
         this.#mounted = mounted
+        this.#build = answer.build
+        // A newer load waits for this mount. It updates the mount and
+        // sets the state.
+        if (turn !== this.#turn) return
       }
       this.#state('ready')
       if (!this.#ready) {
@@ -238,3 +276,8 @@ class WidgetElement extends HTMLElement {
 }
 
 if (!customElements.get(config.tag)) customElements.define(config.tag, WidgetElement)
+
+// The type file of a widget declares the class of the element. gx puts the
+// class name of the widget in the place of this export name, so a host that
+// imports the class gets it.
+export { WidgetElement as __GX_WIDGET_CLASS__ }

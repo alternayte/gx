@@ -23,6 +23,27 @@ const helpers: Record<string, (...args: never[]) => unknown> = {
   },
 }
 
+// order compares two values as Go does (DR-05): a negative number when a is
+// before b, zero when they are equal. Go orders two strings by their UTF-8
+// bytes, which is the order of their code points. JavaScript orders by
+// UTF-16 code units, and the two orders differ for a character above U+FFFF.
+const order = (a: unknown, b: unknown): number => {
+  if (typeof a !== 'string' || typeof b !== 'string') {
+    const x = a as number
+    const y = b as number
+    return x < y ? -1 : x > y ? 1 : x === y ? 0 : NaN
+  }
+  const left = a[Symbol.iterator]()
+  const right = b[Symbol.iterator]()
+  for (;;) {
+    const l = left.next()
+    const r = right.next()
+    if (l.done || r.done) return l.done ? (r.done ? 0 : -1) : 1
+    const diff = (l.value.codePointAt(0) as number) - (r.value.codePointAt(0) as number)
+    if (diff !== 0) return diff
+  }
+}
+
 // evaluate returns the value of a tree node.
 export const evaluate = (node: Tree, read: Read): unknown => {
   const ev = (part: unknown): never => evaluate(part as Tree, read) as never
@@ -47,13 +68,13 @@ export const evaluate = (node: Tree, read: Read): unknown => {
     case '!=':
       return ev(a) !== ev(b)
     case '<':
-      return ev(a) < ev(b)
+      return order(ev(a), ev(b)) < 0
     case '<=':
-      return ev(a) <= ev(b)
+      return order(ev(a), ev(b)) <= 0
     case '>':
-      return ev(a) > ev(b)
+      return order(ev(a), ev(b)) > 0
     case '>=':
-      return ev(a) >= ev(b)
+      return order(ev(a), ev(b)) >= 0
     case '+':
       // The sum of two numbers, or two strings joined: Go has one type on
       // each side.

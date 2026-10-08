@@ -15,14 +15,18 @@ import (
 
 // mountedTool is one tool of the app with the mounted route of its action.
 type mountedTool struct {
-	def    *toolDef
-	method string
+	def *toolDef
+	// handler is the action with the middleware of its group, as the
+	// routes of the app have it. A tool call runs this handler and no
+	// other: no argument of the agent selects a route (SI-07).
+	handler http.Handler
+	method  string
 	// path is the mounted path of the route, with its pattern variables.
 	path string
 }
 
 // addTool records the tool of a mounted action or form.
-func (a *App) addTool(def *toolDef, pattern string) {
+func (a *App) addTool(def *toolDef, pattern string, handler http.Handler) {
 	name := def.info.Name
 	if _, ok := a.tools[name]; ok {
 		panic("gx: two tools have the name " + name)
@@ -38,7 +42,7 @@ func (a *App) addTool(def *toolDef, pattern string) {
 		a.mux.Handle("GET /_gx/tools/{name}", http.HandlerFunc(a.serveToolInfo))
 		a.mux.Handle("POST /_gx/tools/{name}", http.HandlerFunc(a.servePageTool))
 	}
-	a.tools[name] = mountedTool{def: def, method: method, path: path}
+	a.tools[name] = mountedTool{def: def, handler: handler, method: method, path: path}
 }
 
 // serveToolInfo answers with the description of one tool, for the tool
@@ -89,7 +93,8 @@ func (a *App) servePageTool(w http.ResponseWriter, r *http.Request) {
 	}
 	// This request passed the cross-origin check of the app (SI-03).
 	in, _ := t.toolRequest(r.Context(), r, r.Header, args, true)
-	a.mux.ServeHTTP(w, in)
+	// The handler of the tool runs, and no other route of the app.
+	t.handler.ServeHTTP(w, in)
 }
 
 // toolCall is one call of a tool. The request of the call carries it, and
@@ -212,6 +217,9 @@ func flattenArg(out url.Values, name string, v any) {
 func (t mountedTool) toolRequest(ctx context.Context, caller *http.Request, header http.Header, args map[string]any, browser bool) (*http.Request, *toolCall) {
 	tc := &toolCall{signals: map[string]any{}, browser: browser}
 	path := t.path
+	// The path values go to the request by name: the handler of the tool
+	// runs with no route match, so a value cannot name a different route.
+	pathValues := map[string]string{}
 	query, form := url.Values{}, url.Values{}
 	for _, f := range t.def.info.Fields {
 		v, ok := args[f.Name]
@@ -220,6 +228,7 @@ func (t mountedTool) toolRequest(ctx context.Context, caller *http.Request, head
 		}
 		switch f.In {
 		case "path":
+			pathValues[f.Name] = argText(v)
 			text := url.PathEscape(argText(v))
 			path = strings.NewReplacer("{"+f.Name+"}", text, "{"+f.Name+"...}", text).Replace(path)
 		case "query":
@@ -255,6 +264,9 @@ func (t mountedTool) toolRequest(ctx context.Context, caller *http.Request, head
 		r, _ = http.NewRequestWithContext(context.WithValue(ctx, toolCallKey{}, tc), t.method, "http://tool/", nil)
 	}
 	r.RequestURI = target
+	for name, value := range pathValues {
+		r.SetPathValue(name, value)
+	}
 	for name, values := range header {
 		switch name {
 		case "Content-Type", "Content-Length", "Mcp-Session-Id", "Mcp-Protocol-Version", "Last-Event-Id":
@@ -448,7 +460,7 @@ func (a *App) callTool(ctx context.Context, caller *http.Request, header http.He
 	// body, which the token rule for old browsers reads as a form of a
 	// page; the check is not made a second time on that form.
 	r = r.WithContext(context.WithValue(r.Context(), csrfCheckedKey{}, true))
-	a.mux.ServeHTTP(rec, r)
+	t.handler.ServeHTTP(rec, r)
 	return toolAnswer(tc, rec)
 }
 
