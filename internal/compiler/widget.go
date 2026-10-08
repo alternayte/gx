@@ -45,6 +45,9 @@ type routeMount struct {
 	// origins is true when gx.AllowOrigins or gx.AllowCredentials comes
 	// before the handler in the Group call.
 	origins bool
+	// prefix is the first part of the Group call, when it is a constant.
+	prefix   string
+	prefixOK bool
 }
 
 // checkWidgets reports the widget diagnostics of the module: a tag that is
@@ -77,7 +80,7 @@ func (l *loader) checkWidgets(res *typesResult, pkgs []*packages.Package, root s
 				byTag[w.tag] = w
 			}
 		}
-		out = append(out, widgetAttrDiags(w)...)
+		out = append(out, widgetAttrDiags(w, res)...)
 	}
 
 	mounts := collectMounts(pkgs)
@@ -132,9 +135,10 @@ func lacksOrigins(ms []routeMount) bool {
 }
 
 // widgetAttrDiags reports each field of the widget input that an attribute
-// cannot hold (GX6006). An attribute is text, so a field is a string, a
-// number, a bool or a named type of one of these.
-func widgetAttrDiags(w *widgetDecl) []Diagnostic {
+// cannot fill (GX6006). An attribute is text, so a field is a string, a
+// number, a bool or a named type of one of these. The element sends each
+// attribute as a query value, so a field needs a query tag.
+func widgetAttrDiags(w *widgetDecl, res *typesResult) []Diagnostic {
 	if w.input == nil {
 		return nil
 	}
@@ -142,21 +146,39 @@ func widgetAttrDiags(w *widgetDecl) []Diagnostic {
 	if !ok {
 		return nil
 	}
+	// The route definition holds each field that a request fills. A field
+	// with no tag is not in it.
+	queries, known := map[string]string{}, false
+	if w.input.Obj().Pkg() != nil {
+		if def := res.routeDefs[w.input.Obj().Pkg().Path()+"."+w.input.Obj().Name()]; def != nil {
+			known = true
+			for _, f := range def.fields {
+				queries[f.name] = f.query
+			}
+		}
+	}
 	var out []Diagnostic
 	for i := 0; i < st.NumFields(); i++ {
 		f := st.Field(i)
 		if f.Embedded() || !f.Exported() {
 			continue
 		}
-		if _, ok := bindKind(f.Type()); ok {
+		at := w.pkg.Fset.Position(f.Pos())
+		field := "field " + Quoted(f.Name()) + " of the widget input " + Quoted(w.input.Obj().Name())
+		if _, ok := bindKind(f.Type()); !ok {
+			out = append(out, Diagnostic{
+				Code: CodeWidgetAttr, File: at.Filename, Line: at.Line, Col: at.Column,
+				Msg: field + " has the type " + types.TypeString(f.Type(), typeQualifier(w.pkg)) + "; an attribute holds a string, a number or a bool",
+			})
 			continue
 		}
-		at := w.pkg.Fset.Position(f.Pos())
-		out = append(out, Diagnostic{
-			Code: CodeWidgetAttr, File: at.Filename, Line: at.Line, Col: at.Column,
-			Msg: "field " + Quoted(f.Name()) + " of the widget input " + Quoted(w.input.Obj().Name()) + " has the type " + types.TypeString(f.Type(), typeQualifier(w.pkg)) +
-				"; an attribute holds a string, a number or a bool",
-		})
+		if known && queries[f.Name()] == "" {
+			out = append(out, Diagnostic{
+				Code: CodeWidgetAttr, File: at.Filename, Line: at.Line, Col: at.Column,
+				Msg: field + " has no query tag; the element sends each attribute as a query value",
+				Fix: "add a tag such as `query:\"" + lowerFirst(f.Name()) + "\"`",
+			})
+		}
 	}
 	return out
 }
@@ -361,6 +383,10 @@ func collectMounts(pkgs []*packages.Package) map[string][]routeMount {
 				return true
 			}
 			origins := false
+			prefix, prefixOK := "", false
+			if tv, ok := pkg.TypesInfo.Types[call.Args[0]]; ok && tv.Value != nil && tv.Value.Kind() == constant.String {
+				prefix, prefixOK = constant.StringVal(tv.Value), true
+			}
 			for _, arg := range call.Args[1:] {
 				if c, ok := ast.Unparen(arg).(*ast.CallExpr); ok && (isGxFunc(pkg, c.Fun, "AllowOrigins") || isGxFunc(pkg, c.Fun, "AllowCredentials")) {
 					origins = true
@@ -368,7 +394,7 @@ func collectMounts(pkgs []*packages.Package) map[string][]routeMount {
 				}
 				for _, key := range members(pkg, arg) {
 					for _, handler := range expand(key, 0) {
-						mounts[handler] = append(mounts[handler], routeMount{origins: origins})
+						mounts[handler] = append(mounts[handler], routeMount{origins: origins, prefix: prefix, prefixOK: prefixOK})
 					}
 				}
 			}

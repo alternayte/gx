@@ -97,6 +97,13 @@ func TestREQ_ISL_15_WidgetAttributeType(t *testing.T) {
 	if len(diags) != 1 || !strings.HasSuffix(diags[0].File, "route.go") || diags[0].Line != 10 || !strings.Contains(diags[0].Msg, "Tags") {
 		t.Fatalf("diagnostics = %v, want one GX6006 at the field Tags", diags)
 	}
+
+	// A field with no query tag: no attribute reaches it.
+	routes = strings.Replace(widgetRoutes, "\tLimit    int    `query:\"limit\"`\n", "\tLimit    int\n", 1)
+	diags = codesOf(widgetTree(t, map[string]string{"cart/route/route.go": routes}), compiler.CodeWidgetAttr)
+	if len(diags) != 1 || diags[0].Line != 9 || !strings.Contains(diags[0].Msg, "Limit") || !strings.Contains(diags[0].Msg, "query tag") {
+		t.Fatalf("diagnostics = %v, want one GX6006 at the field Limit with no query tag", diags)
+	}
 }
 
 // TestREQ_ISL_22_WidgetNeedsOrigins covers GX6008: a widget, or an action
