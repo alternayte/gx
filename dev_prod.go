@@ -20,6 +20,10 @@ func (a *App) devRoutes() {}
 // build renders a page for a static host (REQ-EXP-02).
 func exportRequest(*http.Request) bool { return false }
 
+// devWidgetOrigin is false in a production build: only the origins of
+// gx.AllowOrigins can call a widget (REQ-ISL-23, SI-08).
+func devWidgetOrigin(*http.Request, string) bool { return false }
+
 // devKeepSignals is false in a production build: a page always sends the
 // first values of its signals (REQ-DEV-03).
 func devKeepSignals(*http.Request) bool { return false }

@@ -320,3 +320,24 @@ type getRoute struct{}
 
 func (getRoute) Pattern() string          { return "GET /get" }
 func (getRoute) Bind(*http.Request) error { return nil }
+
+// TestREQ_ISL_23_ProductionRefusesTheDevOrigin checks that a production
+// build has no dev host page origin: the other loopback name of the server
+// is an origin like each other, and it is not in the list (SI-08).
+func TestREQ_ISL_23_ProductionRefusesTheDevOrigin(t *testing.T) {
+	o := newOriginsApp(t, gx.AllowOrigins("https://shop.example.com"))
+	for _, origin := range []string{"http://localhost:3333", "http://127.0.0.1:3333"} {
+		req := httptest.NewRequest("POST", "http://127.0.0.1:3333/w/act", nil)
+		if origin == "http://127.0.0.1:3333" {
+			req = httptest.NewRequest("POST", "http://localhost:3333/w/act", nil)
+		}
+		req.Header.Set("Origin", origin)
+		req.Header.Set("Sec-Fetch-Site", "cross-site")
+		rec := httptest.NewRecorder()
+		o.ran = false
+		o.app.ServeHTTP(rec, req)
+		if rec.Code != http.StatusForbidden || o.ran || rec.Header().Get("Access-Control-Allow-Origin") != "" {
+			t.Errorf("origin %s: status %d, handler ran %v; want 403 in a production build", origin, rec.Code, o.ran)
+		}
+	}
+}

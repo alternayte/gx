@@ -125,6 +125,37 @@ func (a *App) devRoutes() {
 // rebuild (REQ-DEV-03).
 const devReloadHeader = "Gx-Dev-Reload"
 
+// devWidgetOrigin reports whether a cross-origin request comes from the dev
+// host page of a widget (REQ-ISL-23). `gx dev` answers on the names
+// localhost and 127.0.0.1, which are two origins for a browser: the dev page
+// on one name loads the widget from the other, so the widget runs across
+// origins with no entry in gx.AllowOrigins. The origin and the request have
+// loopback names and one port.
+func devWidgetOrigin(r *http.Request, origin string) bool {
+	scheme, from, ok := strings.Cut(origin, "://")
+	if !ok || scheme != "http" {
+		return false
+	}
+	fromHost, fromPort, err := net.SplitHostPort(from)
+	if err != nil {
+		return false
+	}
+	toHost, toPort, err := net.SplitHostPort(r.Host)
+	if err != nil {
+		return false
+	}
+	return fromPort == toPort && loopbackName(fromHost) && loopbackName(toHost)
+}
+
+// loopbackName reports whether a host of a URL names this machine.
+func loopbackName(host string) bool {
+	if host == "localhost" {
+		return true
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
+}
+
 // devKeepSignals reports whether the page renders for a dev reload. The
 // first values of its signals then set only the signals that the browser
 // does not hold, so the state of the page survives the rebuild.

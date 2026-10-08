@@ -184,6 +184,9 @@ func (s *server) run(ctx context.Context) error {
 		_, _ = w.Write(devClientJS)
 	})
 	mux.HandleFunc("GET /pagefind/", s.serveSearch)
+	// The dev host pages of the widgets (REQ-ISL-23).
+	mux.HandleFunc("GET /_gx/widgets", s.serveWidgets(proxy))
+	mux.HandleFunc("GET /_gx/widgets/{name}", s.serveWidgets(proxy))
 	mux.Handle("/", proxy)
 
 	srv := &http.Server{Addr: s.opt.Addr, Handler: mux}

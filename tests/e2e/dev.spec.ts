@@ -350,3 +350,42 @@ test('REQ-STY-08 a forced duplicate view-transition-name still transitions', asy
   expect(await page.$('#hero')).not.toBeNull()
   expect(warnings.some((w) => w.includes('duplicate view-transition-name'))).toBe(true)
 })
+
+test('REQ-ISL-23 gx dev serves a host page for a widget, and the widget runs across origins on it', async () => {
+  const port = new URL(url).port
+  const page = await browser.newPage()
+  const calls: { url: string; origin: string | undefined }[] = []
+  page.on('request', async (r) => {
+    if (r.url().includes('/widgets/cart') || r.url().includes('/cart/add')) calls.push({ url: r.url(), origin: (await r.allHeaders())['origin'] })
+  })
+  // The list names each widget of the app.
+  await page.goto(`http://localhost:${port}/_gx/widgets`)
+  expect(await page.locator('a', { hasText: 'shop-cart' }).getAttribute('href')).toBe('/_gx/widgets/shop-cart')
+  await page.locator('a', { hasText: 'shop-cart' }).click()
+  await page.waitForFunction(() => document.querySelector('shop-cart')?.getAttribute('data-gx-state') === 'ready')
+  // The page is on one loopback name and the widget calls the other: two
+  // origins. The shop does not list this origin; a dev build accepts it.
+  const widgetCall = calls.find((c) => c.url.includes('/widgets/cart'))!
+  expect(new URL(widgetCall.url).origin).toBe(`http://127.0.0.1:${port}`)
+  expect(widgetCall.origin).toBe(`http://localhost:${port}`)
+  // A field of the page sets the attribute of the element.
+  await page.locator('input[data-attr="label"]').fill('Dev cart')
+  await page.waitForFunction(() => document.querySelector('shop-cart')!.shadowRoot!.querySelector('p')!.textContent!.startsWith('Dev cart total:'))
+  // An action of the widget works across the two origins, and the page
+  // logs the events of the element.
+  await page.locator('shop-cart input[type=number]').fill('2')
+  await page.locator('shop-cart button', { hasText: 'Add' }).click()
+  await page.waitForFunction(() => [...document.querySelectorAll('#events li')].some((li) => li.textContent === 'cart-changed {"total":20}'))
+  expect(await page.locator('#events li').first().textContent()).toBe('gx-ready null')
+  // The token field sets the property: the next request has the header.
+  let auth: string | undefined
+  page.on('request', async (r) => {
+    if (r.url().includes('/widgets/cart') && r.method() === 'GET') auth = (await r.allHeaders())['authorization']
+  })
+  await page.locator('#token').fill('dev-token')
+  await page.locator('#token').blur()
+  await page.waitForFunction(() => (document.querySelector('shop-cart') as any).token === 'dev-token')
+  for (let i = 0; i < 50 && auth === undefined; i++) await Bun.sleep(100)
+  expect(auth).toBe('Bearer dev-token')
+  await page.close()
+})

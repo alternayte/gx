@@ -198,6 +198,10 @@ func (a *App) serveListedOrigin(w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 	ok, credentials := policy.match(origin)
+	if !ok && devWidgetOrigin(r, origin) {
+		// The dev host page of a widget, in a dev build only.
+		ok = true
+	}
 	if !ok {
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 		return true
