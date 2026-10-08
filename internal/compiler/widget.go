@@ -83,7 +83,25 @@ func (l *loader) checkWidgets(res *typesResult, pkgs []*packages.Package, root s
 	mounts := collectMounts(pkgs)
 	actionVars := collectActionVars(pkgs)
 	module := findModule(root)
+	// A component that two widgets use has one finding.
+	headSeen := map[*Element]bool{}
 	for _, w := range widgets {
+		for _, tf := range l.componentTree(module, w.view) {
+			walkElements(tf.f.Body, func(el *Element) {
+				qual, name, ok := componentTag(el.Name)
+				if !ok || name != "Head" || headSeen[el] {
+					return
+				}
+				if path, found := findImport(tf.f, qual); qual != "gx" && !(found && path == "github.com/alternayte/gx") {
+					return
+				}
+				headSeen[el] = true
+				out = append(out, Diagnostic{
+					Code: CodeWidgetHead, File: tf.f.File, Line: el.At.Line, Col: el.At.Col,
+					Msg: "gx.Head is in the widget " + w.label() + "; a widget has no document, so it has no title and no head",
+				})
+			})
+		}
 		if w.varKey != "" && lacksOrigins(mounts[w.varKey]) {
 			diag(CodeWidgetOrigins, w.at, "widget "+w.label()+" is in a group with no gx.AllowOrigins; a page of a different origin cannot load it")
 		}

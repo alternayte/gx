@@ -82,6 +82,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX6004](/errors/GX6004/) | Unknown island load strategy. |
 | [GX6005](/errors/GX6005/) | TypeScript error in an island. |
 | [GX6006](/errors/GX6006/) | Widget input field cannot be an attribute. |
+| [GX6007](/errors/GX6007/) | Gx.Head in a widget. |
 | [GX6008](/errors/GX6008/) | Widget route is in a group with no origins. |
 | [GX6009](/errors/GX6009/) | Origin with cookies is not exact. |
 

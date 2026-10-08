@@ -1,6 +1,7 @@
 package gx_test
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -409,5 +410,60 @@ func TestREQ_FRM_10_Translator(t *testing.T) {
 	f := in.GxFormValue(map[string]string{"email": "email.taken"}).(signupFormStub)
 	if f.Email.Error != "That address is not free." || f.Email.ErrorKey != "email.taken" {
 		t.Fatalf("field error = %q key %q", f.Email.Error, f.Email.ErrorKey)
+	}
+}
+
+// TestREQ_ISL_20_FormInWidget covers a form inside a widget: the answers of
+// an invalid submit, a valid submit and a live validation are steps for the
+// widget, with no adapter of the app (REQ-ISL-20).
+func TestREQ_ISL_20_FormInWidget(t *testing.T) {
+	old := gx.AdapterOf(nil)
+	adapter := &captureAdapter{}
+	gx.SetAdapter(adapter)
+	defer gx.SetAdapter(old)
+
+	form := gx.Form(func(c *gx.Ctx, in *signupInStub) error {
+		return c.Redirect(gx.URL("/done"))
+	}, signupViewStub)
+	type step struct{ Op, Mode, Target, HTML, URL string }
+	post := func(target, body string) (int, []step, string) {
+		req := httptest.NewRequest("POST", target, strings.NewReader(body))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Gx-Widget", "acme-signup")
+		rec := httptest.NewRecorder()
+		form.ServeHTTP(rec, req)
+		var answer struct {
+			Ops []step `json:"ops"`
+		}
+		if err := json.Unmarshal(rec.Body.Bytes(), &answer); err != nil {
+			t.Fatalf("the answer is not JSON: %v\n%s", err, rec.Body.String())
+		}
+		return rec.Code, answer.Ops, rec.Body.String()
+	}
+
+	// An invalid submit morphs the form element, with the values and the
+	// error.
+	code, ops, body := post("/signup", "email=a@b.co&age=3")
+	if code != http.StatusOK || len(ops) != 1 || ops[0].Op != "patch" || ops[0].Mode != "morph" || ops[0].Target != "#signup-form" {
+		t.Fatalf("invalid submit: status %d, answer %s", code, body)
+	}
+	if !strings.HasPrefix(ops[0].HTML, "<form") || !strings.Contains(ops[0].HTML, `value="a@b.co"`) || !strings.Contains(ops[0].HTML, "This value is too small.") {
+		t.Fatalf("the patch is not the form with its values and its error: %s", ops[0].HTML)
+	}
+
+	// A valid submit gives the redirect as a step: the host decides.
+	code, ops, body = post("/signup", "email=a@b.co&age=20")
+	if code != http.StatusOK || len(ops) != 1 || ops[0].Op != "redirect" || ops[0].URL != "/done" {
+		t.Fatalf("valid submit: status %d, answer %s", code, body)
+	}
+
+	// Live validation patches the error element of one field.
+	code, ops, body = post("/signup?gx-validate=email", "email=nope")
+	if code != http.StatusOK || len(ops) != 1 || ops[0].Target != "#signup-email-error" || !strings.Contains(ops[0].HTML, "must be a valid email address") {
+		t.Fatalf("live validation: status %d, answer %s", code, body)
+	}
+
+	if len(adapter.patches) != 0 {
+		t.Errorf("the adapter of the app wrote %d patches of a widget", len(adapter.patches))
 	}
 }

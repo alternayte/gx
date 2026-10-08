@@ -224,3 +224,27 @@ func TestREQ_ISL_17_SecretInEventDetail(t *testing.T) {
 		t.Fatalf("a detail with no secret: %v", clean)
 	}
 }
+
+// TestREQ_ISL_20_HeadInWidget covers GX6007: gx.Head in the view of a
+// widget, or in a component that the view uses. A widget has no document.
+func TestREQ_ISL_20_HeadInWidget(t *testing.T) {
+	withHead := "package cart\n\nimport \"app/cart/route\"\n\nprops {\n  Currency string\n}\n\n<gx.Head title=\"Cart\" />\n<section>\n  <button on:click={route.Add{}}>Add</button>\n</section>\n"
+	diags := codesOf(widgetTree(t, map[string]string{"cart/Cart.gx": withHead}), compiler.CodeWidgetHead)
+	if len(diags) != 1 || !strings.HasSuffix(diags[0].File, "Cart.gx") || diags[0].Line != 9 || !strings.Contains(diags[0].Msg, "acme-cart") {
+		t.Fatalf("diagnostics = %v, want one GX6007 at the gx.Head tag", diags)
+	}
+
+	// In a component that the view uses.
+	view := "package cart\n\nimport (\n  \"app/cart/route\"\n  \"app/ui/title\"\n)\n\nprops {\n  Currency string\n}\n\n<section>\n  <title.Title text={p.Currency} />\n  <button on:click={route.Add{}}>Add</button>\n</section>\n"
+	child := "package title\n\nprops {\n  Text string\n}\n\n<gx.Head title={p.Text} />\n<h2>{p.Text}</h2>\n"
+	diags = codesOf(widgetTree(t, map[string]string{"cart/Cart.gx": view, "ui/title/Title.gx": child}), compiler.CodeWidgetHead)
+	if len(diags) != 1 || !strings.HasSuffix(diags[0].File, "Title.gx") || diags[0].Line != 7 {
+		t.Fatalf("diagnostics = %v, want one GX6007 in the child component", diags)
+	}
+
+	// A page with gx.Head, in an app with a widget, has no finding.
+	page := "package other\n\n<gx.Head title=\"Other\" />\n<p>Other</p>\n"
+	if diags := codesOf(widgetTree(t, map[string]string{"other/Page.gx": page}), compiler.CodeWidgetHead); len(diags) != 0 {
+		t.Fatalf("a page with gx.Head: %v", diags)
+	}
+}

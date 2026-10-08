@@ -78,6 +78,9 @@ const (
 	// CodeWidgetAttr is a field of a widget input that an attribute
 	// cannot hold (REQ-ISL-15).
 	CodeWidgetAttr = "GX6006"
+	// CodeWidgetHead is gx.Head in the view of a widget, or in a
+	// component that the view uses (REQ-ISL-20).
+	CodeWidgetHead = "GX6007"
 	// CodeWidgetOrigins is a widget, or an action that its component
 	// invokes, in a group with no gx.AllowOrigins (REQ-ISL-22).
 	CodeWidgetOrigins = "GX6008"
@@ -149,6 +152,7 @@ var Catalog = []Info{
 	{CodeIslandLoad, "unknown island load strategy"},
 	{CodeIslandTypeScript, "TypeScript error in an island"},
 	{CodeWidgetAttr, "widget input field cannot be an attribute"},
+	{CodeWidgetHead, "gx.Head in a widget"},
 	{CodeWidgetOrigins, "widget route is in a group with no origins"},
 	{CodeCredentialOrigin, "origin with cookies is not exact"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},

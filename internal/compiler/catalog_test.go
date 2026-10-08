@@ -71,6 +71,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX6004 | unknown island load strategy",
 		"GX6005 | TypeScript error in an island",
 		"GX6006 | widget input field cannot be an attribute",
+		"GX6007 | gx.Head in a widget",
 		"GX6008 | widget route is in a group with no origins",
 		"GX6009 | origin with cookies is not exact",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",

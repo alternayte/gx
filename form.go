@@ -397,16 +397,20 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseMultipartForm(32 << 20); err != nil {
 			var maxErr *http.MaxBytesError
 			if errors.As(err, &maxErr) {
+				if isWidgetRequest(r) {
+					writeWidgetError(w, http.StatusRequestEntityTooLarge, "gx.too_large", "")
+					return
+				}
 				http.Error(w, "gx: upload too large", http.StatusRequestEntityTooLarge)
 				return
 			}
-			renderError(w, r, &BindError{Err: err})
+			formBindError(w, r, err)
 			return
 		}
 	}
 	errs, err := in.GxBindForm(r)
 	if err != nil {
-		renderError(w, r, &BindError{Err: err})
+		formBindError(w, r, err)
 		return
 	}
 	if field := validateField(r); field != "" {
@@ -453,11 +457,38 @@ func (f *form[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// formBindError answers a request whose body the binder cannot read.
+func formBindError(w http.ResponseWriter, r *http.Request, err error) {
+	if isWidgetRequest(r) {
+		writeWidgetError(w, http.StatusBadRequest, "gx.bad_input", "")
+		return
+	}
+	renderError(w, r, &BindError{Err: err})
+}
+
+// patchWriter returns the function that writes patches as the answer to the
+// request: the wire form of a widget, or the adapter of the app. It reports
+// false for a plain browser POST, which gets a page or a redirect.
+func patchWriter(r *http.Request) (func(http.ResponseWriter, *Response) error, bool) {
+	if isWidgetRequest(r) {
+		// A widget has one wire form under each adapter (D-264).
+		return func(w http.ResponseWriter, res *Response) error {
+			respondWidget(w, r, res)
+			return nil
+		}, true
+	}
+	adapter := AdapterOf(r)
+	if adapter == nil || !wantsEventStream(r) {
+		return nil, false
+	}
+	return func(w http.ResponseWriter, res *Response) error { return adapter.Respond(w, r, res) }, true
+}
+
 // respond sends the handler answer through the adapter, or as a plain
 // redirect when the request is not an adapter request.
 func (f *form[In, P]) respond(w http.ResponseWriter, r *http.Request, res *Response) {
-	adapter := AdapterOf(r)
-	if adapter == nil || !wantsEventStream(r) {
+	write, ok := patchWriter(r)
+	if !ok {
 		for _, p := range res.Patches {
 			if rp, ok := p.(RedirectPatch); ok {
 				http.Redirect(w, r, rp.URL, http.StatusSeeOther)
@@ -467,16 +498,15 @@ func (f *form[In, P]) respond(w http.ResponseWriter, r *http.Request, res *Respo
 		http.Error(w, "gx: form answer needs an adapter", http.StatusInternalServerError)
 		return
 	}
-	if err := adapter.Respond(w, r, res); err != nil {
+	if err := write(w, res); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 // redirect answers a redirect error (REQ-FRM-05).
 func (f *form[In, P]) redirect(w http.ResponseWriter, r *http.Request, url string) {
-	adapter := AdapterOf(r)
-	if adapter != nil && wantsEventStream(r) {
-		if err := adapter.Respond(w, r, &Response{Patches: []Patch{RedirectPatch{URL: url}}}); err != nil {
+	if write, ok := patchWriter(r); ok {
+		if err := write(w, &Response{Patches: []Patch{RedirectPatch{URL: url}}}); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 		return
@@ -489,14 +519,13 @@ func (f *form[In, P]) redirect(w http.ResponseWriter, r *http.Request, url strin
 func (f *form[In, P]) invalid(w http.ResponseWriter, r *http.Request, in FormInput, errs map[string]string) {
 	node := f.view(f.props(in, errs))
 	id := in.GxFormValue(nil).GxFormID()
-	adapter := AdapterOf(r)
-	if adapter != nil && wantsEventStream(r) {
+	if write, ok := patchWriter(r); ok {
 		el := findElementByID(node, id)
 		if el == nil {
 			http.Error(w, "gx: form element #"+id+" is missing from the form view", http.StatusInternalServerError)
 			return
 		}
-		err := adapter.Respond(w, r, &Response{Patches: []Patch{ElementPatch{
+		err := write(w, &Response{Patches: []Patch{ElementPatch{
 			Mode:   ModeMorph,
 			Target: idSelector(id),
 			Node:   el,
@@ -522,8 +551,8 @@ func validateField(r *http.Request) string {
 
 // validate patches only the error element of one field (REQ-FRM-06).
 func (f *form[In, P]) validate(w http.ResponseWriter, r *http.Request, in FormInput, field string) {
-	adapter := AdapterOf(r)
-	if adapter == nil || !wantsEventStream(r) {
+	write, ok := patchWriter(r)
+	if !ok {
 		http.Error(w, "gx: live validation needs an adapter", http.StatusBadRequest)
 		return
 	}
@@ -545,7 +574,7 @@ func (f *form[In, P]) validate(w http.ResponseWriter, r *http.Request, in FormIn
 		Target: idSelector(fieldID + "-error"),
 		Node:   FieldErrorNode(fieldID, message),
 	}
-	if err := adapter.Respond(w, r, &Response{Patches: []Patch{patch}}); err != nil {
+	if err := write(w, &Response{Patches: []Patch{patch}}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
