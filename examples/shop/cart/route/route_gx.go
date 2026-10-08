@@ -204,3 +204,34 @@ func (in Undo) URL() string {
 	b.WriteString("undo")
 	return gx.BasePath() + b.String()
 }
+
+// Pattern returns the method and pattern of Widget.
+func (Widget) Pattern() string { return "GET /widgets/cart" }
+
+// Bind fills Widget from the request.
+func (in *Widget) Bind(r *http.Request) error {
+	if v := r.URL.Query().Get("label"); v != "" {
+		in.Label = string(v)
+	} else {
+		in.Label = "Cart"
+	}
+	return nil
+}
+
+// URL returns the path of Widget.
+func (in Widget) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("widgets")
+	b.WriteString("/")
+	b.WriteString("cart")
+	q := url.Values{}
+	if in.Label != "" && in.Label != "Cart" {
+		q.Set("label", in.Label)
+	}
+	if s := q.Encode(); s != "" {
+		b.WriteString("?")
+		b.WriteString(s)
+	}
+	return gx.BasePath() + b.String()
+}

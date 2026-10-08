@@ -553,8 +553,8 @@ func (l *loader) invokedRoutes(res *typesResult, module *Module, view types.Obje
 const widgetClassesPath = ".gx/widget-classes.json"
 
 // widgetClasses returns, for the tag of each widget, the classes that the
-// widget uses: the classes of its component tree and the string literals of
-// the Go files in the packages of the tree. The rule is the rule of the app
+// widget uses: the classes of the .gx files and the string literals of the
+// Go files in each package of its component tree. The rule is the rule of the app
 // class list (REQ-STY-02), for the packages of one widget.
 func (l *loader) widgetClasses(res *typesResult, root string) map[string][]string {
 	out := map[string][]string{}
@@ -572,10 +572,20 @@ func (l *loader) widgetClasses(res *typesResult, root string) map[string][]strin
 				seen[class] = true
 			}
 		}
+		// A package of the tree gives each of its .gx files and each of its
+		// Go files. A component that the server renders into the widget
+		// later, as the toast of an answer, is then in the list when the
+		// view uses a component of its package.
 		dirs := map[string]bool{}
 		for _, tf := range l.componentTree(module, w.view) {
-			collectFileClasses(tf.f.Body, add)
-			dirs[filepath.Clean(tf.p.Dir)] = true
+			dir := filepath.Clean(tf.p.Dir)
+			if dirs[dir] {
+				continue
+			}
+			dirs[dir] = true
+			for _, f := range tf.p.Files {
+				collectFileClasses(f.Body, add)
+			}
 		}
 		for _, pkg := range res.pkgs {
 			for _, file := range pkg.Syntax {

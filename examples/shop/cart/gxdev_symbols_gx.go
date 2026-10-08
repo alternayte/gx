@@ -21,6 +21,7 @@ func GxDevSymbols() gx.DevPackage {
 			"Add":            reflect.ValueOf(&Add).Elem(),
 			"Cart":           reflect.ValueOf(Cart),
 			"CartTotal":      reflect.ValueOf(CartTotal),
+			"Changed":        reflect.ValueOf(&Changed).Elem(),
 			"Fail":           reflect.ValueOf(&Fail).Elem(),
 			"Fixtures":       reflect.ValueOf(&Fixtures).Elem(),
 			"Lazy":           reflect.ValueOf(&Lazy).Elem(),
@@ -34,15 +35,18 @@ func GxDevSymbols() gx.DevPackage {
 			"ToastsFixtures": reflect.ValueOf(&ToastsFixtures).Elem(),
 			"Transition":     reflect.ValueOf(&Transition).Elem(),
 			"Undo":           reflect.ValueOf(&Undo).Elem(),
+			"Widget":         reflect.ValueOf(&Widget).Elem(),
+			"WidgetRoutes":   reflect.ValueOf(&WidgetRoutes).Elem(),
 		},
 		Consts: map[string]constant.Value{
 			"Base":       gx.DevString("cart.Cart"),
 			"demoButton": gx.DevString("rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"),
 		},
 		Types: map[string]reflect.Type{
-			"CartProps":   reflect.TypeFor[CartProps](),
-			"CartSignals": reflect.TypeFor[CartSignals](),
-			"ToastsProps": reflect.TypeFor[ToastsProps](),
+			"CartProps":     reflect.TypeFor[CartProps](),
+			"CartSignals":   reflect.TypeFor[CartSignals](),
+			"ChangedDetail": reflect.TypeFor[ChangedDetail](),
+			"ToastsProps":   reflect.TypeFor[ToastsProps](),
 		},
 	}
 }

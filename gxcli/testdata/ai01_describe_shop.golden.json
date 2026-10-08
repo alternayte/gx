@@ -8904,10 +8904,7 @@
       ],
       "kind": "action",
       "handler": "cart.Add",
-      "prefix": "/",
-      "layouts": [
-        "ShellLayout"
-      ]
+      "prefix": "/"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Error",
@@ -8916,10 +8913,7 @@
       "fields": [],
       "kind": "action",
       "handler": "cart.Fail",
-      "prefix": "/",
-      "layouts": [
-        "ShellLayout"
-      ]
+      "prefix": "/"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Lazy",
@@ -8940,10 +8934,7 @@
       "fields": [],
       "kind": "action",
       "handler": "cart.Noop",
-      "prefix": "/",
-      "layouts": [
-        "ShellLayout"
-      ]
+      "prefix": "/"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Redirect",
@@ -8952,10 +8943,7 @@
       "fields": [],
       "kind": "action",
       "handler": "cart.Redirect",
-      "prefix": "/",
-      "layouts": [
-        "ShellLayout"
-      ]
+      "prefix": "/"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Set",
@@ -8964,10 +8952,7 @@
       "fields": [],
       "kind": "action",
       "handler": "cart.Set",
-      "prefix": "/",
-      "layouts": [
-        "ShellLayout"
-      ]
+      "prefix": "/"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Toast",
@@ -8976,10 +8961,7 @@
       "fields": [],
       "kind": "action",
       "handler": "cart.Toast",
-      "prefix": "/",
-      "layouts": [
-        "ShellLayout"
-      ]
+      "prefix": "/"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.ToastDemo",
@@ -9023,6 +9005,21 @@
       "layouts": [
         "ShellLayout"
       ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/cart/route.Widget",
+      "method": "GET",
+      "pattern": "GET /widgets/cart",
+      "fields": [
+        {
+          "name": "Label",
+          "type": "string",
+          "source": "query",
+          "key": "label",
+          "default": "Cart"
+        }
+      ],
+      "kind": "none"
     },
     {
       "type": "github.com/alternayte/gx/examples/shop/dashboard/route.Page",

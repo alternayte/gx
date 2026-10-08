@@ -30,6 +30,9 @@ export type ShopOptions = {
   gxdev?: boolean
   // csp starts the app with a strict Content-Security-Policy (SI-11).
   csp?: boolean
+  // widgetOrigins lists the origins of the host pages of the widgets, with
+  // commas between them (REQ-ISL-22).
+  widgetOrigins?: string
 }
 
 // startShop builds the example app and starts it.
@@ -49,6 +52,7 @@ export async function startShop(opts: ShopOptions = {}): Promise<Shop> {
   const url = `http://127.0.0.1:${port}`
   const run = [bin, '-addr', `127.0.0.1:${port}`]
   if (opts.csp) run.push('-csp')
+  if (opts.widgetOrigins) run.push('-widget-origins', opts.widgetOrigins)
   const server = spawn(run, {
     cwd: shopDir,
     stdout: 'ignore',

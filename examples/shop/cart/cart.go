@@ -11,10 +11,28 @@ import (
 // Base is the signal namespace of one Cart instance (REQ-ACT-06).
 const Base = "cart.Cart"
 
+// ChangedDetail is the detail of the cart-changed event.
+type ChangedDetail struct {
+	// Total is the new total of the cart.
+	Total int `json:"total"`
+}
+
+// Changed tells the page that the total of a cart changed. A host page of
+// the cart widget listens for it on the <shop-cart> element.
+var Changed = gx.Event[ChangedDetail]("cart-changed")
+
+// Widget is the cart as a widget: a page of a different site shows it with
+// the <shop-cart> element. It is the Cart component of the shop pages.
+var Widget = gx.Widget(func(c *gx.Ctx, in route.Widget) (CartProps, error) {
+	return CartProps{Label: in.Label, Total: 10}, nil
+}, Cart).Tag("shop-cart")
+
 // Add is the action behind the Add button.
 var Add = gx.Action(func(c *gx.Ctx, in route.Add) error {
 	key := gx.ScopeKey(gx.Scope(c.R), Base)
-	return c.Patch(CartTotal(key, in.Qty*10))
+	total := in.Qty * 10
+	c.Emit(Changed(ChangedDetail{Total: total}))
+	return c.Patch(CartTotal(key, total))
 })
 
 // Set sets Qty to 2 on the invoking instance.
@@ -84,5 +102,10 @@ var Lazy = gx.Action(func(c *gx.Ctx, in route.Lazy) error {
 	return c.Patch(gx.El("span", gx.Attrs{{Key: "id", Value: "lazy-slot"}}, gx.Text("loaded")))
 })
 
-// Routes collects the cart actions.
-var Routes = gx.Collect(Add, Set, Redirect, Toast, ToastDemo, Undo, Noop, Transition, Fail, Lazy)
+// WidgetRoutes collects the cart widget and each action that the Cart
+// component invokes. The app mounts them in a group with gx.AllowOrigins, so
+// a host page of a different origin can call them.
+var WidgetRoutes = gx.Collect(Widget, Add, Set, Redirect, Toast, Noop, Fail)
+
+// Routes collects the other cart actions.
+var Routes = gx.Collect(ToastDemo, Undo, Transition, Lazy)

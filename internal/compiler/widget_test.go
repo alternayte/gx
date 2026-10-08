@@ -149,8 +149,8 @@ func TestREQ_ISL_22_WidgetNeedsOrigins(t *testing.T) {
 }
 
 // TestREQ_ISL_11_WidgetClassList checks the class list of a widget: the
-// classes of its component, of each component that it uses, and of the Go
-// files of their packages. A class of a different part of the app is not in
+// classes of each .gx file and each Go file in the package of its component
+// and in the package of each component that it uses. A class of a different part of the app is not in
 // the list.
 func TestREQ_ISL_11_WidgetClassList(t *testing.T) {
 	cartGx := "package cart\n\nimport (\n  \"app/cart/route\"\n  \"app/ui/badge\"\n)\n\nprops {\n  Currency string\n}\n\n" +
@@ -162,9 +162,12 @@ func TestREQ_ISL_11_WidgetClassList(t *testing.T) {
 		"cart/cart.go":        widgetGo(`.Tag("acme-cart")`),
 		"cart/styles.go":      "package cart\n\nfunc tone() string { return \"bg-primary text-white\" }\n",
 		"ui/badge/Badge.gx":   "package badge\n\nprops {\n  Label string\n}\n\n<span class=\"rounded-full\">{p.Label}</span>\n",
-		"other/Page.gx":       "package other\n\n<p class=\"underline\">Other</p>\n",
-		"other/styles.go":     "package other\n\nconst tone = \"italic\"\n",
-		"main.go":             widgetMain("\tapp.Group(\"/\", gx.AllowOrigins(\"https://shop.example.com\"), cart.Routes)\n"),
+		// A component of a package of the tree that the view does not use:
+		// the server can render it into the widget in an answer.
+		"ui/badge/Dot.gx": "package badge\n\n<i class=\"size-2\"></i>\n",
+		"other/Page.gx":   "package other\n\n<p class=\"underline\">Other</p>\n",
+		"other/styles.go": "package other\n\nconst tone = \"italic\"\n",
+		"main.go":         widgetMain("\tapp.Group(\"/\", gx.AllowOrigins(\"https://shop.example.com\"), cart.Routes)\n"),
 	})
 	files, diags := compiler.Generate(dir)
 	if len(diags) != 0 {
@@ -180,7 +183,7 @@ func TestREQ_ISL_11_WidgetClassList(t *testing.T) {
 	if err := json.Unmarshal([]byte(got), &lists); err != nil {
 		t.Fatalf("no class lists of the widgets, or not JSON: %v\n%s", err, got)
 	}
-	want := []string{"bg-primary", "font-bold", "p-4", "ring-2", "rounded-full", "text-white"}
+	want := []string{"bg-primary", "font-bold", "p-4", "ring-2", "rounded-full", "size-2", "text-white"}
 	have := map[string]bool{}
 	for _, c := range lists["acme-cart"] {
 		have[c] = true

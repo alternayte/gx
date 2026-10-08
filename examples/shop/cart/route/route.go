@@ -3,6 +3,13 @@ package route
 
 import "github.com/alternayte/gx"
 
+// Widget is the first render of the cart widget. Its fields are the
+// attributes of the <shop-cart> element on a host page.
+type Widget struct {
+	gx.Route `GET /widgets/cart`
+	Label    string `query:"label" default:"Cart"`
+}
+
 // Add patches the total of the invoking cart instance.
 type Add struct {
 	gx.Route `POST /cart/add`
