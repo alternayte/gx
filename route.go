@@ -259,6 +259,9 @@ type App struct {
 	assets []string
 	// public holds the app's own static files (NFR-08).
 	public fs.FS
+	// origins holds, for each mounted pattern of a group with
+	// AllowOrigins, the origins that can call it (REQ-ISL-22).
+	origins map[string]*originPolicy
 }
 
 // appRoute is one mounted route as registered.
@@ -381,6 +384,9 @@ func renderError(w http.ResponseWriter, r *http.Request, err error) {
 // response is buffered so the adapter runtime can join it; action responses
 // stream through (request lifecycle step 6 and 7).
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if a.serveListedOrigin(w, r) {
+		return
+	}
 	CSRF(http.HandlerFunc(a.serve)).ServeHTTP(w, r)
 }
 
@@ -434,11 +440,14 @@ func (a *App) publicFile(r *http.Request) string {
 
 // Group mounts routes under a prefix. Middleware applies to the routes that
 // follow it in the same call (REQ-RTE-06, REQ-RTE-09). gx.Nav selects the
-// navigation mode of the routes that follow it (REQ-RTE-12).
+// navigation mode of the routes that follow it (REQ-RTE-12). gx.AllowOrigins
+// and gx.AllowCredentials list the origins that can call the routes that
+// follow them from a different origin (REQ-ISL-22).
 func (a *App) Group(prefix string, parts ...any) *App {
 	var mw []func(http.Handler) http.Handler
 	var layouts []layoutDef
 	nav := FullNavigation
+	var origins *originPolicy
 	add := func(h Handler) {
 		route := h
 		if len(layouts) > 0 {
@@ -466,6 +475,9 @@ func (a *App) Group(prefix string, parts ...any) *App {
 		a.patterns[pattern] = true
 		a.routes = append(a.routes, appRoute{pattern: pattern, handler: h})
 		a.mux.Handle(pattern, handler)
+		if origins != nil {
+			a.allowOrigins(pattern, origins)
+		}
 	}
 	for _, part := range parts {
 		switch v := part.(type) {
@@ -473,6 +485,8 @@ func (a *App) Group(prefix string, parts ...any) *App {
 			mw = append(mw, v)
 		case navOption:
 			nav = v.mode
+		case originsOption:
+			origins = origins.with(v)
 		case layoutDef:
 			layouts = append(layouts, v)
 		case []Handler:

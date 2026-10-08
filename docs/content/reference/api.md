@@ -20,6 +20,22 @@ func Action[In any](fn func(*Ctx, In) error) *action[In]
 
 Action registers a handler for a route type of any method. The handler answers with Patch, SetSignals, Redirect, Toast or nothing.
 
+### func AllowCredentials
+
+```go
+func AllowCredentials(origins ...string) originsOption
+```
+
+AllowCredentials lists the origins that can call the routes that follow it in a Group from a different origin with the cookies of the user. It takes exact origins only: a wildcard trusts each later subdomain with the session of each user. Use it for an app of your own on a different subdomain.
+
+### func AllowOrigins
+
+```go
+func AllowOrigins(origins ...string) originsOption
+```
+
+AllowOrigins lists the origins that can call the routes that follow it in a Group from a different origin. An origin is exact ("https://shop.example.com") , the subdomains of a host ("https://*.partner.io") , or AnyOrigin. A request from a listed origin carries no cookie: the server removes the Cookie header before the middleware runs. The user of such a request comes from a token.
+
 ### func AppendJSONBool
 
 ```go
@@ -647,7 +663,7 @@ Errors sets the error components per status.
 func (a *App) Group(prefix string, parts ...any) *App
 ```
 
-Group mounts routes under a prefix. Middleware applies to the routes that follow it in the same call. gx.Nav selects the navigation mode of the routes that follow it.
+Group mounts routes under a prefix. Middleware applies to the routes that follow it in the same call. gx.Nav selects the navigation mode of the routes that follow it. gx.AllowOrigins and gx.AllowCredentials list the origins that can call the routes that follow them from a different origin.
 
 #### func (App) ServeHTTP
 
@@ -2271,6 +2287,14 @@ type Unchecked struct{}
 Unchecked marks an action input whose signal fields need no rules. Embed it in the route struct.
 
 ## Constants and variables
+
+### AnyOrigin
+
+```go
+const AnyOrigin = "*"
+```
+
+AnyOrigin lists each origin in AllowOrigins. Use it for a public widget. AllowCredentials does not take it.
 
 ### DefaultThemeCSS
 

@@ -71,6 +71,9 @@ const (
 	// CodeIslandTypeScript is one error of the TypeScript compiler in an
 	// island file (REQ-ISL-08).
 	CodeIslandTypeScript = "GX6005"
+	// CodeCredentialOrigin is a wildcard origin in gx.AllowCredentials
+	// (REQ-ISL-22, SI-14).
+	CodeCredentialOrigin = "GX6009"
 )
 
 // Diagnostic is one compiler message.
@@ -134,6 +137,7 @@ var Catalog = []Info{
 	{CodeIslandType, "island prop type has no TypeScript mapping"},
 	{CodeIslandLoad, "unknown island load strategy"},
 	{CodeIslandTypeScript, "TypeScript error in an island"},
+	{CodeCredentialOrigin, "origin with cookies is not exact"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},

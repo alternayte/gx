@@ -5,6 +5,7 @@ package analyze
 
 import (
 	"go/ast"
+	"go/constant"
 	"go/token"
 	"go/types"
 	"strconv"
@@ -49,9 +50,51 @@ var RuntimeClass = &analysis.Analyzer{
 	Run:  runRuntimeClass,
 }
 
+// CredentialOrigins reports a constant origin of gx.AllowCredentials that is
+// a wildcard or gx.AnyOrigin (GX6009, REQ-ISL-22, SI-14).
+var CredentialOrigins = &analysis.Analyzer{
+	Name: "gxorigins",
+	Doc:  "report a wildcard origin in gx.AllowCredentials (GX6009)",
+	Run:  runCredentialOrigins,
+}
+
 // Analyzers returns the Gx analyzers in a stable order (REQ-TLS-03).
 func Analyzers() []*analysis.Analyzer {
-	return []*analysis.Analyzer{SafeHTML, RoutePackage, EnumCoverage, RuntimeClass}
+	return []*analysis.Analyzer{SafeHTML, RoutePackage, EnumCoverage, RuntimeClass, CredentialOrigins}
+}
+
+func runCredentialOrigins(pass *analysis.Pass) (any, error) {
+	for _, file := range pass.Files {
+		ast.Inspect(file, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok {
+				return true
+			}
+			obj := called(pass.TypesInfo, call.Fun)
+			if obj == nil || obj.Pkg() == nil || obj.Pkg().Path() != gxPath || obj.Name() != "AllowCredentials" {
+				return true
+			}
+			for _, arg := range call.Args {
+				// A value that is not a constant is checked at
+				// startup: gx.AllowCredentials panics.
+				tv, ok := pass.TypesInfo.Types[arg]
+				if !ok || tv.Value == nil || tv.Value.Kind() != constant.String {
+					continue
+				}
+				if !strings.Contains(constant.StringVal(tv.Value), "*") {
+					continue
+				}
+				pass.Report(analysis.Diagnostic{
+					Pos:      arg.Pos(),
+					End:      arg.End(),
+					Category: "GX6009",
+					Message:  "an origin of gx.AllowCredentials must be exact; a wildcard trusts each later subdomain with the session of the user",
+				})
+			}
+			return true
+		})
+	}
+	return nil, nil
 }
 
 func runRuntimeClass(pass *analysis.Pass) (any, error) {

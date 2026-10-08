@@ -99,3 +99,46 @@ func (p Props) class() string {
 		t.Fatalf("GX5003 lines = %s, want the four runtime cases [27 28 29 30]: %+v", got, findings)
 	}
 }
+
+// TestREQ_ISL_22_LintCredentialOrigins covers the gxorigins analyzer: a
+// constant origin of gx.AllowCredentials with a wildcard, or gx.AnyOrigin,
+// is GX6009. An exact origin, each origin form of gx.AllowOrigins, and a
+// value that is not a constant are clean; the last one panics at startup
+// (REQ-ISL-22, SI-14).
+func TestREQ_ISL_22_LintCredentialOrigins(t *testing.T) {
+	dir := writeModule(t, map[string]string{
+		"app/main.go": `package app
+
+import "github.com/alternayte/gx"
+
+const partners = "https://*.partner.io"
+
+func fromConfig() string { return "https://*.acme.dev" }
+
+func mount(app *gx.App) {
+	app.Group("/a", gx.AllowCredentials("https://*.acme.dev"))
+	app.Group("/b", gx.AllowCredentials(gx.AnyOrigin))
+	app.Group("/c", gx.AllowCredentials("https://app.acme.dev", partners))
+	app.Group("/d", gx.AllowCredentials("https://app.acme.dev"))
+	app.Group("/e", gx.AllowOrigins("https://*.partner.io", gx.AnyOrigin))
+	app.Group("/f", gx.AllowCredentials(fromConfig()))
+}
+`,
+	})
+	findings, err := analyze.Lint(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var lines []int
+	for _, f := range findings {
+		if f.Code == "GX6009" {
+			lines = append(lines, f.Line)
+			if !strings.Contains(f.Message, "exact") {
+				t.Errorf("message = %q", f.Message)
+			}
+		}
+	}
+	if got := fmt.Sprint(lines); got != "[10 11 12]" {
+		t.Fatalf("GX6009 lines = %s, want [10 11 12]: %+v", got, findings)
+	}
+}
