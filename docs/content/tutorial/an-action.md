@@ -130,10 +130,12 @@ props {
 <Buy productID={p.Product.ID} />
 ```
 
-```text title="GET /shop/2"
+<Result page="tutorial/an-action" get="/shop/2" />
+
+<!-- expect GET /shop/2
 Add to cart
 Not in the cart
-```
+-->
 
 Open a product, change the amount and press **Add to cart**. The status text changes. The page does not load again.
 

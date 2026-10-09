@@ -205,7 +205,7 @@ props {
 
 The page now has the attributes and the scripts of htmx:
 
-```text title="GET /"
+```html title="GET /"
 hx-post="/add" hx-trigger="click"
 /_gx/htmx.js
 ```

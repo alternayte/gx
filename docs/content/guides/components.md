@@ -166,12 +166,14 @@ var Save = gx.Action(func(c *gx.Ctx, in route.Save) error {
 var Routes = gx.Collect(Page, Save)
 ```
 
-```text title="GET /"
+<Result page="guides/components" get="/" />
+
+<!-- expect GET /
 <h3 class="font-semibold">Stock</h3>
 <strong>Tea</strong>
 Updated today
 border-destructive
-```
+-->
 
 ## Fragments
 

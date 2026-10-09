@@ -1,0 +1,23 @@
+<!--gx-result get="/shop/order" title="Order" html="" body="bg-background text-foreground"-->
+<header class="border-b border-border">
+  <nav class="mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm">
+    <a class="font-semibold" href="/" data-gx-active="page">Acme</a>
+  </nav>
+</header>
+<main class="mx-auto max-w-3xl p-4"><div data-gx-slot="layout.go:8-1kv42c9" style="display:contents">
+<h1 class="text-2xl font-semibold">Order</h1>
+<form class="mt-4 grid max-w-sm gap-2" id="order-form" method="post" action="/shop/order" data-gx-form="order">
+  <label for="order-name">Name</label>
+  <input class="rounded-md border border-border px-3 py-2" name="name" id="order-name" value="" required maxlength="80" data-gx-validate-url="/shop/order?gx-validate=name" type="text">
+  <p class="text-sm text-destructive" id="order-name-error" role="alert"></p>
+  <label for="order-email">Email</label>
+  <input class="rounded-md border border-border px-3 py-2" name="email" id="order-email" value="" required maxlength="254" data-gx-validate-url="/shop/order?gx-validate=email" type="email" data-gx-validate="blur">
+  <p class="text-sm text-destructive" id="order-email-error" role="alert"></p>
+  <div class="flex gap-2">
+    <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3" data-slot="button" data-variant="default" data-size="default" type="submit">Send</button>
+
+    <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 border border-border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3" data-slot="button" data-variant="outline" data-size="default" type="reset">Clear</button>
+
+  </div>
+</form>
+</div></main>

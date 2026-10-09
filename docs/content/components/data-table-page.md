@@ -6,67 +6,13 @@ group: "Blocks"
 item: "data-table-page"
 ---
 
-<Example item="data-table-page" name="data-table-page-default" label="Data Table Page: Default" block>
+<LiveTable item="data-table-page" />
 
-```gx
-<datatablepage.DataTablePage title="Invoices" description="Every invoice for this workspace.">
-  <:filter>
-    <input.Input name="q" type="search" placeholder="Search" attrs={gx.Attrs{{Key: "aria-label", Value: "Search"}}} />
-  </:filter>
-  <:table>
-    <table.Table>
-      <table.TableHeader>
-        <table.TableRow>
-          <table.TableHead>Invoice</table.TableHead>
-          <table.TableHead>Status</table.TableHead>
-          <table.TableHead class="text-right">Amount</table.TableHead>
-        </table.TableRow>
-      </table.TableHeader>
-      <table.TableBody>
-        <table.TableRow>
-          <table.TableCell class="font-medium">INV-001</table.TableCell>
-          <table.TableCell>Paid</table.TableCell>
-          <table.TableCell class="text-right">$120.00</table.TableCell>
-        </table.TableRow>
-        <table.TableRow>
-          <table.TableCell class="font-medium">INV-002</table.TableCell>
-          <table.TableCell>Open</table.TableCell>
-          <table.TableCell class="text-right">$80.00</table.TableCell>
-        </table.TableRow>
-        <table.TableRow>
-          <table.TableCell class="font-medium">INV-003</table.TableCell>
-          <table.TableCell>Paid</table.TableCell>
-          <table.TableCell class="text-right">$310.00</table.TableCell>
-        </table.TableRow>
-      </table.TableBody>
-    </table.Table>
-  </:table>
-  <:pagination>
-    <pagination.Pagination>
-      <pagination.PaginationContent>
-        <pagination.PaginationItem>
-          <pagination.PaginationPrevious href={gx.URL("/invoices?page=1")} />
-        </pagination.PaginationItem>
-        <pagination.PaginationItem>
-          <pagination.PaginationLink href={gx.URL("/invoices?page=1")} active>1</pagination.PaginationLink>
-        </pagination.PaginationItem>
-        <pagination.PaginationItem>
-          <pagination.PaginationLink href={gx.URL("/invoices?page=2")}>2</pagination.PaginationLink>
-        </pagination.PaginationItem>
-        <pagination.PaginationItem>
-          <pagination.PaginationNext href={gx.URL("/invoices?page=2")} />
-        </pagination.PaginationItem>
-      </pagination.PaginationContent>
-    </pagination.Pagination>
-  </:pagination>
-</datatablepage.DataTablePage>
-```
+<docs.Aside kind={docs.Note} title="Live preview">
 
-</Example>
+The sort links, the page links and the status filter work. Each state of the table is a page that the static export wrote, as the server of an app renders it for a request.
 
-<docs.Aside kind={docs.Note} title="Static preview">
-
-This page shows static fixtures. The live behaviour needs a server.
+A filter with a text field needs a server, so the preview has a filter with fixed values.
 
 </docs.Aside>
 

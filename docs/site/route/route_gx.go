@@ -3,9 +3,11 @@
 package route
 
 import (
+	"fmt"
 	gx "github.com/alternayte/gx"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -32,6 +34,76 @@ func (in Preview) URL() string {
 	b.WriteString(url.PathEscape(in.Item))
 	b.WriteString("/")
 	b.WriteString(url.PathEscape(in.Example))
+	b.WriteString("/")
+	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of Result.
+func (Result) Pattern() string { return "GET /result/{key}/" }
+
+// Bind fills Result from the request.
+func (in *Result) Bind(r *http.Request) error {
+	if v := gx.PathValue(r, "key"); v != "" {
+		in.Key = string(v)
+	}
+	return nil
+}
+
+// URL returns the path of Result.
+func (in Result) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("result")
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(in.Key))
+	b.WriteString("/")
+	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of TableDemo.
+func (TableDemo) Pattern() string { return "GET /preview/{item}/live/{status}/{sort}/{dir}/{page}/" }
+
+// Bind fills TableDemo from the request.
+func (in *TableDemo) Bind(r *http.Request) error {
+	if v := gx.PathValue(r, "item"); v != "" {
+		in.Item = string(v)
+	}
+	if v := gx.PathValue(r, "status"); v != "" {
+		in.Status = string(v)
+	}
+	if v := gx.PathValue(r, "sort"); v != "" {
+		in.Sort = string(v)
+	}
+	if v := gx.PathValue(r, "dir"); v != "" {
+		in.Dir = string(v)
+	}
+	if v := gx.PathValue(r, "page"); v != "" {
+		x, err := strconv.ParseInt(v, 10, 0)
+		if err != nil {
+			return fmt.Errorf("gx: Page: %w", err)
+		}
+		in.Page = int(x)
+	}
+	return nil
+}
+
+// URL returns the path of TableDemo.
+func (in TableDemo) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("preview")
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(in.Item))
+	b.WriteString("/")
+	b.WriteString("live")
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(in.Status))
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(in.Sort))
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(in.Dir))
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(strconv.FormatInt(int64(in.Page), 10)))
 	b.WriteString("/")
 	return gx.BasePath() + b.String()
 }

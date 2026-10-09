@@ -92,11 +92,13 @@ props {
 <p class="mt-4">Sorted by {p.Sort}, page {p.Page}.</p>
 ```
 
-```text title="GET /shop?sort=price"
+<Result page="guides/routing" get="/shop?sort=price" />
+
+<!-- expect GET /shop?sort=price
 Sorted by price, page 1.
 href="/shop?sort=price"
 href="/shop"
-```
+-->
 
 ## Mount
 
@@ -193,11 +195,13 @@ props {
 
 `<gx.Head>` sets the title, the meta tags and the link tags. The title of the page replaces the title of the layout.
 
-```text title="GET /shop"
+<Result page="guides/routing" get="/shop" />
+
+<!-- expect GET /shop
 <title>Shop</title>
 Ada
 data-active
-```
+-->
 
 ## Navigation
 

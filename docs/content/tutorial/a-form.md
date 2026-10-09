@@ -129,12 +129,14 @@ props {
 </form>
 ```
 
-```text title="GET /shop/order"
+<Result page="tutorial/a-form" get="/shop/order" />
+
+<!-- expect GET /shop/order
 data-gx-form="order"
 name="email"
 maxlength="254"
 required
-```
+-->
 
 The rules `Required` and `MaxLen` become the attributes `required` and `maxlength`. The browser checks them first.
 

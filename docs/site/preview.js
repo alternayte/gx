@@ -43,3 +43,57 @@
   new ResizeObserver(fit).observe(content)
   fit()
 })()
+
+// An example stays in its frame. A link to a page of an app and a form that
+// posts to an app have no target on this site: the preview stops them and
+// says what an app does. A link to a different state of a live example is a
+// page of this site, so it opens.
+;(() => {
+  const note = document.getElementById('gx-preview-note')
+  if (!note) return
+  let timer = 0
+  const say = (text) => {
+    note.textContent = text
+    note.hidden = false
+    window.clearTimeout(timer)
+    timer = window.setTimeout(() => {
+      note.hidden = true
+    }, 5000)
+  }
+  document.addEventListener('click', (e) => {
+    const link = e.target instanceof Element ? e.target.closest('a[href]') : null
+    if (!link) return
+    const url = new URL(link.getAttribute('href'), window.location.href)
+    if (url.origin !== window.location.origin) {
+      link.target = '_blank'
+      link.rel = 'noopener'
+      return
+    }
+    const here = url.pathname === window.location.pathname
+    if (here && url.hash !== '') return
+    if (!here && url.pathname.includes('/preview/')) return
+    // The listener is first in the capture phase, so the navigation of the
+    // runtime does not load the address.
+    e.preventDefault()
+    e.stopImmediatePropagation()
+    say('In an app, this link opens ' + url.pathname + url.search + '. The preview has no such page.')
+  }, true)
+  // An action of an example is a request to the server of an app. The
+  // preview answers it with no content.
+  const send = window.fetch.bind(window)
+  window.fetch = (input, init) => {
+    const method = ((init && init.method) || (input instanceof Request ? input.method : 'GET')).toUpperCase()
+    if (method === 'GET') return send(input, init)
+    say('An app runs this action on its server. The preview has no server.')
+    return Promise.resolve(new Response(null, { status: 204 }))
+  }
+  document.addEventListener('submit', (e) => {
+    const form = e.target
+    if (!(form instanceof HTMLFormElement)) return
+    // The search form of a docs shell has its own handler.
+    if (form.hasAttribute('data-gx-search-form') || form.method === 'dialog') return
+    e.preventDefault()
+    e.stopImmediatePropagation()
+    say('An app sends this form to its server, and the server answers. The preview has no server.')
+  }, true)
+})()

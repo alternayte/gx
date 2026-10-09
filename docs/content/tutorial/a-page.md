@@ -119,10 +119,12 @@ props {
 
 Open `http://127.0.0.1:3333/shop`.
 
-```text title="GET /shop"
+<Result page="tutorial/a-page" get="/shop" />
+
+<!-- expect GET /shop
 Tea: 4 EUR
 Cocoa: 6 EUR
-```
+-->
 
 ## What you have
 

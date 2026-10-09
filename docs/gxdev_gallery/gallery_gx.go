@@ -16,8 +16,11 @@ func Fixtures() []gx.Fixture {
 		{Component: "Example", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "Frame", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "IconGrid", Package: "github.com/alternayte/gx/docs/site", Missing: true},
+		{Component: "LiveTable", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "PageHeader", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "Preview", Package: "github.com/alternayte/gx/docs/site", Missing: true},
+		{Component: "Result", Package: "github.com/alternayte/gx/docs/site", Missing: true},
+		{Component: "TableDemoView", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 		{Component: "ToastDemo", Package: "github.com/alternayte/gx/docs/site", Missing: true},
 	}
 }

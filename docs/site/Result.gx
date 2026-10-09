@@ -1,0 +1,20 @@
+package site
+
+props {
+  // Page is the slug of the guide, for example "tutorial/a-page".
+  Page string
+  // Get is the address of the request to the sample app of the guide.
+  Get  string
+}
+
+{/* The page that the sample app of the guide gives for one address: a
+    window with the title of the page, the address, and the captured page in
+    a frame. */}
+<figure class="gx-result my-6 overflow-hidden rounded-lg border border-border" data-pagefind-ignore>
+  <figcaption class="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border bg-muted/50 px-3 py-2 text-xs">
+    <span class="font-medium text-foreground">{resultTitle(p.Page, p.Get)}</span>
+    <code class="rounded bg-background px-2 py-0.5 font-mono text-muted-foreground">{p.Get}</code>
+    <span class="ml-auto text-muted-foreground">The page of the sample app</span>
+  </figcaption>
+  <iframe src={resultRoute(p.Page, p.Get)} title={"Result: " + p.Get} loading="lazy" class="block h-40 w-full bg-background"></iframe>
+</figure>

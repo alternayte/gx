@@ -1,0 +1,40 @@
+<!--gx-result get="/account/signup" title="Sign up" html="" body="bg-background text-foreground"-->
+<header class="border-b border-border">
+  <nav class="mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm">
+    <a class="font-semibold" href="/" data-gx-active="page">Acme</a>
+  </nav>
+</header>
+<main class="mx-auto max-w-3xl p-4"><div data-gx-slot="layout.go:8-1kv42c9" style="display:contents">
+<h1 class="text-2xl font-semibold">Sign up</h1>
+<form class="mt-4 grid max-w-sm gap-2" id="signup-form" method="post" action="/account/signup" data-gx-form="signup" enctype="multipart/form-data">
+  <label for="signup-email">Email</label>
+  <input class="rounded-md border border-border px-3 py-2" name="email" id="signup-email" value="" required maxlength="254" data-gx-validate-url="/account/signup?gx-validate=email" type="email" data-gx-validate="blur">
+  <p class="text-sm text-destructive" id="signup-email-error" role="alert"></p>
+
+  <label for="signup-age">Age</label>
+  <input class="rounded-md border border-border px-3 py-2" name="age" id="signup-age" value="0" min="18" max="120" data-gx-validate-url="/account/signup?gx-validate=age" type="number">
+  <p class="text-sm text-destructive" id="signup-age-error" role="alert"></p>
+
+  <label for="signup-plan">Plan</label>
+  <select class="rounded-md border border-border px-3 py-2" name="plan" id="signup-plan">
+    <option value="free" selected>Free</option>
+    <option value="team">Team</option>
+  </select>
+
+  <label for="signup-address-city">City</label>
+  <input class="rounded-md border border-border px-3 py-2" name="address.city" id="signup-address-city" value="" required type="text">
+  <p class="text-sm text-destructive" id="signup-address-city-error" role="alert"></p>
+
+  <label for="signup-avatar">Picture</label>
+  <input name="avatar" id="signup-avatar" accept="image/*" data-gx-validate-url="/account/signup?gx-validate=avatar" type="file">
+  <p class="text-sm text-destructive" id="signup-avatar-error" role="alert"></p>
+
+  <label class="flex items-center gap-2">
+    <input name="terms" id="signup-terms" required data-gx-validate-url="/account/signup?gx-validate=terms" type="checkbox">
+    I accept the terms
+  </label>
+  <p class="text-sm text-destructive" id="signup-terms-error" role="alert"></p>
+
+  <button class="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" type="submit">Create account</button>
+</form>
+</div></main>

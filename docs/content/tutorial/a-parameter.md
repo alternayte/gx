@@ -106,14 +106,18 @@ props {
 </ul>
 ```
 
-```text title="GET /shop"
-href="/shop/2"
-```
+<Result page="tutorial/a-parameter" get="/shop" />
 
-```text title="GET /shop/2"
+<!-- expect GET /shop
+href="/shop/2"
+-->
+
+<Result page="tutorial/a-parameter" get="/shop/2" />
+
+<!-- expect GET /shop/2
 Coffee
 href="/shop"
-```
+-->
 
 When you rename the field `ID` or change the pattern, each link changes with it or stops the build. A string in `href` that is not a constant is the diagnostic [GX2011](/errors/GX2011/).
 

@@ -71,6 +71,12 @@ docs-gen:
 registry:
     tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT; go run ./cmd/gx registry build --out "$tmp" registry && cp "$tmp/index.json" registry/index.json && rm -rf registry/items && cp -R "$tmp/items" registry/items
 
+# Capture the result pages that the guides show, from the sample apps of the
+# guides. TestREQ_DOC_04_Samples fails when a capture is stale.
+docs-results:
+    rm -rf docs/site/results && mkdir -p docs/site/results
+    GX_DOCS_RESULTS=write go test -count=1 -timeout 40m ./internal/docscheck -run TestREQ_DOC_04_Samples
+
 # Run the docs site with rebuild and reload.
 docs-dev:
     cd docs && go run ../cmd/gx dev -main .

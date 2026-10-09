@@ -1,0 +1,18 @@
+<!--gx-result get="/shop/order" title="Order" html="" body="bg-background text-foreground"-->
+<header class="border-b border-border">
+  <nav class="mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm">
+    <a class="font-semibold" href="/" data-gx-active="page">Acme</a>
+  </nav>
+</header>
+<main class="mx-auto max-w-3xl p-4"><div data-gx-slot="layout.go:8-1kv42c9" style="display:contents">
+<h1 class="text-2xl font-semibold">Order</h1>
+<form class="mt-4 grid max-w-sm gap-2" id="order-form" method="post" action="/shop/order" data-gx-form="order">
+  <label for="order-name">Name</label>
+  <input class="rounded-md border border-border px-3 py-2" name="name" id="order-name" value="" required maxlength="80" data-gx-validate-url="/shop/order?gx-validate=name" type="text">
+  <p class="text-sm text-destructive" id="order-name-error" role="alert"></p>
+  <label for="order-email">Email</label>
+  <input class="rounded-md border border-border px-3 py-2" name="email" id="order-email" value="" required maxlength="254" data-gx-validate-url="/shop/order?gx-validate=email" type="email" data-gx-validate="blur">
+  <p class="text-sm text-destructive" id="order-email-error" role="alert"></p>
+  <button class="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" type="submit">Send</button>
+</form>
+</div></main>

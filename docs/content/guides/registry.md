@@ -38,10 +38,12 @@ import "acme/ui/badge"
 <Counter label="Clicks" />
 ```
 
-```text title="GET /"
+<Result page="guides/registry" get="/" />
+
+<!-- expect GET /
 data-slot="badge"
 data-variant="outline"
-```
+-->
 
 ## What an item holds
 

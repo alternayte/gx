@@ -94,9 +94,11 @@ props {
 <a href={route.Index{}}>All items</a>
 ```
 
-```text title="GET /catalog/2"
+<Result page="guides/static-export" get="/catalog/2" />
+
+<!-- expect GET /catalog/2
 Item 2
-```
+-->
 
 ## Features that need a server
 

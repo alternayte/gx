@@ -67,7 +67,7 @@ props {
 
 The server writes a `gx-island` element with the props as JSON:
 
-```text title="GET /board"
+```html title="GET /board"
 <gx-island name="acme/dashboard/RevenueChart" props="{&#34;title&#34;:&#34;Revenue&#34;,&#34;data&#34;:[{&#34;label&#34;:&#34;Jan&#34;,&#34;value&#34;:10}]}" load="eager"
 <div data-gx-island-root data-ignore-morph></div></gx-island>
 ```

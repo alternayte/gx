@@ -4,6 +4,7 @@
 package docscheck
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -94,6 +95,21 @@ func (p Page) Blocks() []Block {
 	lines := strings.Split(p.Body, "\n")
 	for i := 0; i < len(lines); i++ {
 		trimmed := strings.TrimSpace(lines[i])
+		// An expect comment holds the lines that a response must have. The
+		// reader of the page sees the captured page, not these lines.
+		if rest, ok := strings.CutPrefix(trimmed, "<!-- expect "); ok {
+			block := Block{Line: i + 1, Lang: "text", Title: strings.TrimSpace(rest)}
+			var code []string
+			for i++; i < len(lines); i++ {
+				if strings.TrimSpace(lines[i]) == "-->" {
+					break
+				}
+				code = append(code, lines[i])
+			}
+			block.Code = strings.Join(code, "\n") + "\n"
+			out = append(out, block)
+			continue
+		}
 		if !strings.HasPrefix(trimmed, "```") {
 			continue
 		}
@@ -144,4 +160,80 @@ func (p Page) Section(name string) string {
 		}
 	}
 	return strings.TrimSpace(strings.Join(out, "\n"))
+}
+
+// ResultsDir returns the directory of the captured result pages of the docs
+// site.
+func ResultsDir(repo string) string { return filepath.Join(repo, "docs", "site", "results") }
+
+// ResultKey returns the file name, with no extension, of the capture of one
+// GET of one page: "tutorial/a-page" and "/shop/2" give
+// "tutorial-a-page--shop-2".
+func ResultKey(slug, path string) string {
+	clean := func(s string) string {
+		var b strings.Builder
+		for _, r := range strings.Trim(s, "/") {
+			switch {
+			case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9':
+				b.WriteRune(r)
+			default:
+				b.WriteByte('-')
+			}
+		}
+		return b.String()
+	}
+	key := clean(slug) + "--" + clean(path)
+	return strings.TrimSuffix(key, "--")
+}
+
+var (
+	resultLink   = regexp.MustCompile(`<link rel="stylesheet" href="([^"]+)">`)
+	resultScript = regexp.MustCompile(`(?s)<script\b[^>]*>.*?</script>`)
+	resultHTML   = regexp.MustCompile(`<html\b([^>]*)>`)
+	resultBody   = regexp.MustCompile(`(?s)<body\b([^>]*)>(.*)</body>`)
+	resultClass  = regexp.MustCompile(`class="([^"]*)"`)
+	resultTitle  = regexp.MustCompile(`<title>([^<]*)</title>`)
+	// A token of a form and a nonce change with each run.
+	resultToken = regexp.MustCompile(`(name="gx-csrf" value=|nonce=|data-gx-csrf=)"[^"]*"`)
+)
+
+// Result is the capture of one response of a sample app: the content of
+// the body with no script, and the address of each stylesheet.
+type Result struct {
+	// Header is the first line of the capture file. It holds the title
+	// and the classes of the html and body elements.
+	Header string
+	Body   string
+	// Styles are the addresses of the stylesheets of the page.
+	Styles []string
+}
+
+// Capture reads a response of a sample app as a result page.
+func Capture(get, html string) Result {
+	class := func(attrs string) string {
+		if m := resultClass.FindStringSubmatch(attrs); m != nil {
+			return m[1]
+		}
+		return ""
+	}
+	var r Result
+	for _, m := range resultLink.FindAllStringSubmatch(html, -1) {
+		r.Styles = append(r.Styles, m[1])
+	}
+	title, htmlClass, bodyClass := "", "", ""
+	if m := resultTitle.FindStringSubmatch(html); m != nil {
+		title = m[1]
+	}
+	if m := resultHTML.FindStringSubmatch(html); m != nil {
+		htmlClass = class(m[1])
+	}
+	if m := resultBody.FindStringSubmatch(html); m != nil {
+		bodyClass = class(m[1])
+		r.Body = m[2]
+	}
+	r.Body = resultScript.ReplaceAllString(r.Body, "")
+	r.Body = resultToken.ReplaceAllString(r.Body, `$1""`)
+	r.Body = strings.TrimSpace(r.Body) + "\n"
+	r.Header = fmt.Sprintf("<!--gx-result get=%q title=%q html=%q body=%q-->", get, title, htmlClass, bodyClass)
+	return r
 }

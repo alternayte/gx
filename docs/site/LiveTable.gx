@@ -1,0 +1,15 @@
+package site
+
+props {
+  // Item is the registry item: "data-table" or "data-table-page".
+  Item string
+}
+
+{/* The frame of the live data table example. Each link in it opens the page
+    of a different state, in the frame. */}
+<div class="gx-frame gx-frame-block resize-y overflow-hidden rounded-lg border border-border bg-background">
+  <iframe src={tableDemoStart(p.Item)} title="Data table: live example" loading="lazy" class="block size-full"></iframe>
+</div>
+<p class="gx-frame-link mt-2 text-right text-xs" data-pagefind-ignore>
+  <a href={tableDemoStart(p.Item)} target="_blank" rel="noopener">Open the preview in a new tab</a>
+</p>

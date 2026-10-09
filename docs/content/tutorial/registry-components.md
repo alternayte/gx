@@ -51,10 +51,12 @@ props {
 </form>
 ```
 
-```text title="GET /shop/order"
+<Result page="tutorial/registry-components" get="/shop/order" />
+
+<!-- expect GET /shop/order
 data-slot="button"
 data-variant="outline"
-```
+-->
 
 ## How the component makes its classes
 

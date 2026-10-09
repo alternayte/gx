@@ -6,22 +6,13 @@ group: "Components"
 item: "data-table"
 ---
 
-<Example item="data-table" name="data-table-three" label="Data Table: Three">
+<LiveTable item="data-table" />
 
-```gx
-{datatable.DataTable(datatable.DataTableProps[datatable.FixtureRow]{
-  Columns: datatable.FixtureColumns,
-  Rows:    []datatable.FixtureRow{{Name: "Alpha", Total: 10}, {Name: "Beta", Total: 20}, {Name: "Gamma", Total: 30}},
-  Page:    datatable.Page{Number: 1, Size: 10, Total: 3},
-  Href:    datatable.FixtureHref,
-})}
-```
+<docs.Aside kind={docs.Note} title="Live preview">
 
-</Example>
+The sort links, the page links and the status filter work. Each state of the table is a page that the static export wrote, as the server of an app renders it for a request.
 
-<docs.Aside kind={docs.Note} title="Static preview">
-
-This page shows static fixtures. The live behaviour needs a server.
+A filter with a text field needs a server, so the preview has a filter with fixed values.
 
 </docs.Aside>
 

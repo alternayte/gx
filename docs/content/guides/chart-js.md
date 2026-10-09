@@ -236,7 +236,7 @@ func main() {
 
 The server writes the island element with the numbers as JSON:
 
-```text title="GET /board"
+```html title="GET /board"
 <gx-island name="acme/dashboard/SalesChart"
 <div data-gx-island-root data-ignore-morph></div></gx-island>
 ```

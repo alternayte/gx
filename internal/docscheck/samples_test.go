@@ -21,6 +21,7 @@ import (
 	"github.com/alternayte/gx/internal/docscheck"
 	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/exporter"
+	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/islands"
 	"github.com/alternayte/gx/internal/jspin"
 	"github.com/alternayte/gx/internal/registry"
@@ -333,6 +334,11 @@ func applyPage(t *testing.T, repo, dir string, p docscheck.Page) {
 	if len(gets) == 0 {
 		return
 	}
+	// gx build writes the stylesheet of the app. The docs site shows the
+	// captured pages, so they need their styles.
+	if _, err := gxstyles.Build(context.Background(), dir, true); err != nil {
+		t.Fatalf("%s: the stylesheet of the samples: %v", p.Slug, err)
+	}
 	bin := execname.Name(filepath.Join(t.TempDir(), "app"))
 	build = exec.Command("go", "build", "-o", bin, "./cmd/app")
 	build.Dir = dir
@@ -368,6 +374,49 @@ func applyPage(t *testing.T, repo, dir string, p docscheck.Page) {
 			if line = strings.TrimSpace(line); line != "" && !strings.Contains(body, line) {
 				t.Errorf("%s: GET %s does not hold %q\n%s", p.Slug, path, line, body)
 			}
+		}
+		// An expect comment stands for a result that the page shows. A
+		// block that the reader sees is markup, with no capture.
+		if b.Lang == "text" {
+			checkResult(t, repo, "http://"+addr, p.Slug, path, body)
+		}
+	}
+}
+
+// checkResult compares the capture of one response with the file that the
+// docs site shows for it. With GX_DOCS_RESULTS=write it writes the file:
+// `just docs-results`.
+func checkResult(t *testing.T, repo, origin, slug, path, body string) {
+	t.Helper()
+	r := docscheck.Capture(path, body)
+	var css strings.Builder
+	for _, href := range r.Styles {
+		sheet, status, err := fetch(origin + href)
+		if err != nil || status != http.StatusOK {
+			t.Fatalf("%s: GET %s: the stylesheet %s: %d %v", slug, path, href, status, err)
+		}
+		css.WriteString(sheet)
+	}
+	dir := docscheck.ResultsDir(repo)
+	key := docscheck.ResultKey(slug, path)
+	want := map[string]string{
+		key + ".html": r.Header + "\n" + r.Body,
+		key + ".css":  css.String(),
+	}
+	for name, text := range want {
+		file := filepath.Join(dir, name)
+		if os.Getenv("GX_DOCS_RESULTS") == "write" {
+			if err := os.MkdirAll(dir, 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(file, []byte(text), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			continue
+		}
+		got, err := os.ReadFile(file)
+		if err != nil || string(got) != text {
+			t.Errorf("%s: GET %s: docs/site/results/%s is missing or stale; run just docs-results", slug, path, name)
 		}
 	}
 }

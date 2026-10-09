@@ -44,7 +44,7 @@ var sections = []string{"Start", "Tutorial", "Guides", "Reference", "Compare", "
 // Pages is the content collection of the site.
 var Pages = gx.Collection[Meta]("content").Components(
 	docs.Aside, docs.Tabs, docs.TabItem, docs.Card, docs.CardGrid, docs.LinkCard,
-	Example, IconGrid, ChartDemo,
+	Example, IconGrid, ChartDemo, LiveTable, Result,
 )
 
 // Site is the shell configuration.
@@ -96,7 +96,7 @@ var PreviewPage = gx.Page(
 
 // Routes serves the previews, one page per content entry and the llms.txt
 // metadata.
-var Routes = gx.Collect(PreviewPage, gx.ContentEntries(Pages, View).LLMS(gx.LLMSOptions[Meta]{
+var Routes = gx.Collect(PreviewPage, TableDemoPage, ResultPage, gx.ContentEntries(Pages, View).LLMS(gx.LLMSOptions[Meta]{
 	Site:        Site.Title,
 	Summary:     summary,
 	Title:       func(m Meta) string { return m.Title },

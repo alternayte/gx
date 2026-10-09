@@ -74,10 +74,12 @@ import "acme/ui/greeting"
 <Counter label="Clicks" />
 ```
 
-```text title="GET /"
+<Result page="compare/migrate-from-templ" get="/" />
+
+<!-- expect GET /
 Hello, Ada
 <span>Welcome back.</span>
-```
+-->
 
 ## Steps
 

@@ -176,10 +176,12 @@ var Count = gx.Action(func(c *gx.Ctx, in route.Count) error {
 var Routes = gx.Collect(IndexPage, Add, Clear, Count)
 ```
 
-```text title="GET /todo"
+<Result page="guides/actions-and-signals" get="/todo" />
+
+<!-- expect GET /todo
 data-signals
 Counting
-```
+-->
 
 ## Events and modifiers
 

@@ -59,9 +59,11 @@ package home
 
 `gx dev` builds the app again and updates the page. The counter keeps its value.
 
-```text title="GET /"
+<Result page="start/quick-start" get="/" />
+
+<!-- expect GET /
 <h1 class="text-3xl font-semibold">Hello from acme</h1>
-```
+-->
 
 ## Check and build
 

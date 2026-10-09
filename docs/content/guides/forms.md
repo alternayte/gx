@@ -161,12 +161,14 @@ props {
 </form>
 ```
 
-```text title="GET /account/signup"
+<Result page="guides/forms" get="/account/signup" />
+
+<!-- expect GET /account/signup
 enctype="multipart/form-data"
 name="address.city"
 accept="image/*"
 min="18"
-```
+-->
 
 A form with a file field gets `enctype="multipart/form-data"`. Gx checks the size before the handler runs, and it does not read a file that is too large into memory.
 

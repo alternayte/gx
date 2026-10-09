@@ -86,10 +86,12 @@ import "acme/ui/tag"
 <Counter label="Clicks" />
 ```
 
-```text title="GET /"
+<Result page="guides/styling" get="/" />
+
+<!-- expect GET /
 bg-primary text-primary-foreground">Live
 py-0.5 text-xs font-medium bg-destructive text-white px-4">Removed
-```
+-->
 
 The third tag has `px-4` and no `px-2`: the class of the caller replaced it.
 

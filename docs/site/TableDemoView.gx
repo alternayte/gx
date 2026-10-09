@@ -1,0 +1,17 @@
+package site
+
+props {
+  Filters []TableDemoFilter
+  Table   gx.Node
+}
+
+{/* One state of the live data table example. Each filter is a link to the
+    page of a different state; an app can use a form with a text field,
+    which needs a server. */}
+<nav aria-label="Status" class="flex flex-wrap items-center gap-2 p-3 text-sm">
+  <span class="text-muted-foreground">Status</span>
+  for _, f := range p.Filters {
+    <a href={f.Href} class="rounded-md border border-border px-2.5 py-1 no-underline hover:bg-accent" class:bg-primary={f.Current} class:text-primary-foreground={f.Current} data-docs-filter={f.Label}>{f.Label}</a>
+  }
+</nav>
+{p.Table}

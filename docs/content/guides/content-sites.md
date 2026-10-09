@@ -133,11 +133,13 @@ func main() {
 }
 ```
 
-```text title="GET /notes/first/"
+<Result page="guides/content-sites" get="/notes/first/" />
+
+<!-- expect GET /notes/first/
 <h2 id="a-heading">
 href="/notes/second/"
 <table>
-```
+-->
 
 ## Markdown
 

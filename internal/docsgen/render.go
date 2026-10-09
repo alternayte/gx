@@ -68,6 +68,10 @@ func render(reg *registry, pages []*page) (map[string][]byte, error) {
 	return out, nil
 }
 
+// liveTable holds the items whose page starts with the live data table
+// example of the docs site (docs/site/tabledemo.go).
+var liveTable = map[string]bool{"data-table": true, "data-table-page": true}
+
 // quote returns s as a YAML double-quoted scalar and as an attribute value
 // of a content tag.
 func quote(s string) string {
@@ -112,6 +116,12 @@ func pageMarkdown(reg *registry, p *page) (string, error) {
 	switch {
 	case it.IconSet:
 		fmt.Fprintf(&b, "<IconGrid item=%s />\n\n", attrValue(it.Name))
+	case liveTable[it.Name]:
+		fmt.Fprintf(&b, "<LiveTable item=%s />\n\n", attrValue(it.Name))
+		b.WriteString("<docs.Aside kind={docs.Note} title=\"Live preview\">\n\n")
+		b.WriteString("The sort links, the page links and the status filter work. Each state of the table is a page that the static export wrote, as the server of an app renders it for a request.\n\n")
+		b.WriteString("A filter with a text field needs a server, so the preview has a filter with fixed values.\n\n")
+		b.WriteString("</docs.Aside>\n\n")
 	case len(p.Examples) > 0:
 		if err := writeExample(&b, reg, it, p.Examples[0]); err != nil {
 			return "", err
@@ -123,7 +133,7 @@ func pageMarkdown(reg *registry, p *page) (string, error) {
 		b.WriteString("The behaviour runtime then shows the toast, stacks it and removes it. The copy is for this page only.\n\n")
 		b.WriteString("An app sends the same markup from an action with `c.Toast`. Gx has no client call that shows a toast.\n\n")
 		b.WriteString("</docs.Aside>\n\n")
-	} else if it.Server {
+	} else if it.Server && !liveTable[it.Name] {
 		b.WriteString("<docs.Aside kind={docs.Note} title=\"Static preview\">\n\n")
 		b.WriteString("This page shows static fixtures. The live behaviour needs a server.\n\n")
 		b.WriteString("</docs.Aside>\n\n")
