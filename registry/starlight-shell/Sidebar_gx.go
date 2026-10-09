@@ -28,7 +28,7 @@ func Sidebar(p SidebarProps) gx.Node {
 //line Sidebar.gx:13:43
 	_b1.Add(gx.Text("\n  "))
 //line Sidebar.gx:14:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-menu", true), gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "aria-controls", Value: "gx-sidebar", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), icon("bars", "sl-open-menu"), gx.Text("\n    "), icon("close", "sl-close-menu"), gx.Text("\n    "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("Menu")), gx.Text("\n  "))))
+	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-menu", true), gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "aria-controls", Value: "gx-sidebar", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), icon("bars", "sl-open-menu"), gx.Text("\n    "), icon("close", "sl-close-menu"), gx.Raw(gx.SafeHTML("\n    <span class=\"sr-only\">Menu</span>\n  ")))))
 //line Sidebar.gx:18:12
 	_b1.Add(gx.Text("\n  "))
 //line Sidebar.gx:19:3

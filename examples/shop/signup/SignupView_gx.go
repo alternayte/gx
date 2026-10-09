@@ -41,7 +41,7 @@ func SignupView(p SignupViewProps) gx.Node {
 //line SignupView.gx:15:137
 		_b1.Add(gx.Text("\n    "))
 //line SignupView.gx:16:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("p", nil, gx.Text("Fix the errors below.")), gx.Text("\n    "))))
+		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("\n      <p>Fix the errors below.</p>\n    "))))
 //line SignupView.gx:18:11
 		_b1.Add(gx.Text("\n  "))
 	}
@@ -68,7 +68,7 @@ func SignupView(p SignupViewProps) gx.Node {
 //line SignupView.gx:24:53
 	_b1.Add(gx.Text("\n  "))
 //line SignupView.gx:25:3
-	_b1.Add(gx.El("fieldset", nil, gx.Frag(gx.Text("\n    "), gx.El("legend", nil, gx.Text("Shipping addresses")), gx.Text("\n    "), addressList(p.F.Addresses), gx.Text("\n    "), addButton(), gx.Text("\n  "))))
+	_b1.Add(gx.El("fieldset", nil, gx.Frag(gx.Raw(gx.SafeHTML("\n    <legend>Shipping addresses</legend>\n    ")), addressList(p.F.Addresses), gx.Text("\n    "), addButton(), gx.Text("\n  "))))
 //line SignupView.gx:29:14
 	_b1.Add(gx.Text("\n  "))
 //line SignupView.gx:30:3

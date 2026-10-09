@@ -44,7 +44,7 @@ func MobileToc(p MobileTocProps) gx.Node {
 //line MobileToc.gx:20:33
 	_b5.Add(gx.Text("\n          "))
 //line MobileToc.gx:21:11
-	_b5.Add(gx.El("li", nil, gx.Frag(gx.Text("\n            "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}, gx.Attr{Key: "data-gx-toc-target", Value: "_top", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: "2", Kind: gx.AttrText}}, gx.El("span", nil, gx.Text("Overview"))), gx.Text("\n          "))))
+	_b5.Add(gx.El("li", nil, gx.Frag(gx.Text("\n            "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}, gx.Attr{Key: "data-gx-toc-target", Value: "_top", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: "2", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("<span>Overview</span>"))), gx.Text("\n          "))))
 //line MobileToc.gx:23:16
 	_b5.Add(gx.Text("\n          "))
 //line MobileToc.gx:24:11

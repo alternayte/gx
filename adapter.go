@@ -123,20 +123,32 @@ func (b *bufferedWriter) Write(p []byte) (int, error) {
 func (b *bufferedWriter) Flush() {}
 
 // flush injects the adapter runtime and writes the buffered response.
-func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeeds) {
+//
+// It returns the Link values of a page with status 200, for the early hints
+// of the next request of the route.
+func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeeds) []string {
 	status := b.status
 	if status == 0 {
 		status = http.StatusOK
 	}
 	body := b.body.Bytes()
 	ct := b.header.Get("Content-Type")
+	var links []string
 	switch {
 	case needs != nil && needs.shell != nil && strings.Contains(ct, "text/html"):
 		// A rendered fragment becomes a document at every status, so an
 		// error view is styled too.
 		body = a.document(body, needs)
+		links = a.pageLinks(needs)
 	case status == http.StatusOK && strings.Contains(ct, "text/html"):
 		body = a.inject(body, needs)
+		links = a.pageLinks(needs)
+	}
+	// The early hints of this request are a guess; the answer names the
+	// files of this page.
+	w.Header().Del("Link")
+	for _, l := range links {
+		w.Header().Add("Link", l)
 	}
 	for k, vs := range b.header {
 		for _, v := range vs {
@@ -148,6 +160,10 @@ func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeed
 	}
 	w.WriteHeader(status)
 	_, _ = w.Write(body)
+	if status != http.StatusOK {
+		return nil
+	}
+	return links
 }
 
 // document writes the document shell around a rendered fragment: the
@@ -196,41 +212,54 @@ func (a *App) headAssets(needs *runtimeNeeds) []byte {
 	if link := stylesheetLink(); link != "" {
 		b.WriteString(link)
 	}
-	if needs != nil && needs.island {
-		// An island needs no adapter: its loader is its own module
-		// (REQ-ISL-04).
-		b.WriteString(stringNonce(behaviorRuntime("island"), needs.nonce))
+	if needs == nil {
+		return b.Bytes()
 	}
-	if a.adapter != nil && needs != nil {
-		// Signals, actions and server answers need both scripts: the
-		// runtime carries the CSRF wrapper and applies the frames the
-		// adapter receives (SI-03). A behaviour needs only the core
-		// runtime, and a plain page needs neither.
-		if needs.adapter || needs.core {
-			b.WriteString(stringNonce(coreRuntime(), needs.nonce))
-		}
-		if needs.adapter {
-			b.WriteString(stringNonce(a.runtimeScripts(), needs.nonce))
-		}
-		// Each behaviour module joins only the page that carries its
-		// marker (REQ-REG-07).
-		if needs.behavior {
-			b.WriteString(stringNonce(behaviorRuntime("behavior"), needs.nonce))
-		}
-		if needs.tabs {
-			b.WriteString(stringNonce(behaviorRuntime("tabs"), needs.nonce))
-		}
-		if needs.toast {
-			b.WriteString(stringNonce(behaviorRuntime("toast"), needs.nonce))
-		}
-		if needs.overlay {
-			b.WriteString(stringNonce(behaviorRuntime("overlay"), needs.nonce))
-		}
-		if needs.tool {
-			b.WriteString(stringNonce(behaviorRuntime("tool"), needs.nonce))
-		}
+	for _, n := range a.scriptNodes(needs) {
+		b.WriteString(stringNonce(n, needs.nonce))
 	}
 	return b.Bytes()
+}
+
+// scriptNodes returns the scripts of one page, in the order of the document.
+func (a *App) scriptNodes(needs *runtimeNeeds) []Node {
+	var out []Node
+	if needs.island {
+		// An island needs no adapter: its loader is its own module
+		// (REQ-ISL-04).
+		out = append(out, behaviorRuntime("island"))
+	}
+	if a.adapter == nil {
+		return out
+	}
+	// Signals, actions and server answers need both scripts: the
+	// runtime carries the CSRF wrapper and applies the frames the
+	// adapter receives (SI-03). A behaviour needs only the core
+	// runtime, and a plain page needs neither.
+	if needs.adapter || needs.core {
+		out = append(out, coreRuntime())
+	}
+	if needs.adapter {
+		out = append(out, a.runtimeScripts())
+	}
+	// Each behaviour module joins only the page that carries its
+	// marker (REQ-REG-07).
+	if needs.behavior {
+		out = append(out, behaviorRuntime("behavior"))
+	}
+	if needs.tabs {
+		out = append(out, behaviorRuntime("tabs"))
+	}
+	if needs.toast {
+		out = append(out, behaviorRuntime("toast"))
+	}
+	if needs.overlay {
+		out = append(out, behaviorRuntime("overlay"))
+	}
+	if needs.tool {
+		out = append(out, behaviorRuntime("tool"))
+	}
+	return out
 }
 
 // inject adds the stylesheet link and the scripts to a page that wrote its

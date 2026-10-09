@@ -50,7 +50,7 @@ func Header(p HeaderProps) gx.Node {
 //line Header.gx:15:58
 	_b3.Add(gx.Text("\n      "))
 //line Header.gx:16:7
-	_b3.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-button rounded-md border border-border px-2 py-1 text-muted-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-open", true), gx.Attr{Key: "aria-haspopup", Value: "dialog", Kind: gx.AttrText}}, gx.Frag(gx.Text("Search "), gx.El("kbd", gx.Attrs{gx.Attr{Key: "class", Value: "ml-1 text-xs", Kind: gx.AttrText}}, gx.Text("Ctrl K")))))
+	_b3.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-button rounded-md border border-border px-2 py-1 text-muted-foreground", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-open", true), gx.Attr{Key: "aria-haspopup", Value: "dialog", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("Search <kbd class=\"ml-1 text-xs\">Ctrl K</kbd>"))))
 //line Header.gx:16:215
 	_b3.Add(gx.Text("\n      "))
 //line Header.gx:17:7

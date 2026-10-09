@@ -32,7 +32,7 @@ func Toc(p TocProps) gx.Node {
 //line Toc.gx:11:27
 	_b2.Add(gx.Text("\n    "))
 //line Toc.gx:12:5
-	_b2.Add(gx.El("li", nil, gx.Frag(gx.Text("\n      "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}, gx.Attr{Key: "data-gx-toc-target", Value: "_top", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: "2", Kind: gx.AttrText}}, gx.El("span", nil, gx.Text("Overview"))), gx.Text("\n    "))))
+	_b2.Add(gx.El("li", nil, gx.Frag(gx.Text("\n      "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}, gx.Attr{Key: "data-gx-toc-target", Value: "_top", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: "2", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("<span>Overview</span>"))), gx.Text("\n    "))))
 //line Toc.gx:14:10
 	_b2.Add(gx.Text("\n    "))
 //line Toc.gx:15:5

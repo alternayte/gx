@@ -25,7 +25,7 @@ func PaginationNext(p PaginationNextProps) gx.Node {
 	}
 	var _b gx.Builder
 //line PaginationNext.gx:15:1
-	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class), Children: gx.Frag(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "hidden sm:block", Kind: gx.AttrText}}, gx.Text("Next")), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""})), Attrs: p.attrs()}))
+	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class), Children: gx.Frag(gx.Raw(gx.SafeHTML("<span class=\"hidden sm:block\">Next</span>")), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""})), Attrs: p.attrs()}))
 //line PaginationNext.gx:18:18
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

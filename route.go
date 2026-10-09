@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"hash/fnv"
 	"io/fs"
+	"log"
 	"net/http"
 	"path"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"sync"
@@ -269,6 +271,9 @@ type App struct {
 	widgetTags map[string]widgetelement.Config
 	// tools holds each mounted tool by its name (REQ-AI-06, SI-07).
 	tools map[string]mountedTool
+	// hints holds, for the pattern of each page route, the Link values
+	// of its last answer with status 200.
+	hints sync.Map
 }
 
 // appRoute is one mounted route as registered.
@@ -411,9 +416,10 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 		a.mux.ServeHTTP(w, r)
 		return
 	}
+	a.sendEarlyHints(w, r)
 	r, needs := withRuntimeNeeds(r)
 	b := newBufferedWriter()
-	a.mux.ServeHTTP(b, r)
+	a.serveBuffered(b, r)
 	if needs.signals && a.adapter != nil && !a.adapter.Signals() {
 		// gx.toml and Config.Adapter name different adapters, so the
 		// compiler did not report the signals (REQ-ACT-09). The page
@@ -428,7 +434,35 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 		// response.
 		needs.nonce = Nonce(r)
 	}
-	a.flush(w, b, needs)
+	links := a.flush(w, b, needs)
+	switch {
+	case r.Pattern == "" || r.Header.Get("Gx-Nav") != "":
+	case len(links) == 0:
+		a.hints.Delete(r.Pattern)
+	default:
+		a.hints.Store(r.Pattern, links)
+	}
+}
+
+// serveBuffered runs the route into the buffer. A panic of a loader, a view
+// or a handler becomes the 500 answer of REQ-RTE-10: the buffer drops what
+// the route wrote, so the browser gets the error component and no part of
+// the broken page. A dev build keeps the panic for the overlay (REQ-DEV-06).
+func (a *App) serveBuffered(b *bufferedWriter, r *http.Request) {
+	defer func() {
+		v := recover()
+		if v == nil {
+			return
+		}
+		if v == http.ErrAbortHandler || devMode.Load() {
+			panic(v)
+		}
+		log.Printf("gx: panic serving %s %s: %v\n%s", r.Method, r.URL.Path, v, debug.Stack())
+		*b = *newBufferedWriter()
+		r = r.WithContext(context.WithValue(r.Context(), errorViewsKey{}, a.errorViews))
+		renderError(b, r, fmt.Errorf("gx: panic: %v", v))
+	}()
+	a.mux.ServeHTTP(b, r)
 }
 
 // publicFile returns the name of the public file a request asks for, or ""
@@ -635,6 +669,10 @@ func (p *page[In, P]) LoadNode(ctx *Ctx) (Node, error) {
 func (p *page[In, P]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := &Ctx{W: w, R: r}
 	n, err := p.LoadNode(ctx)
+	if r.Context().Err() != nil {
+		// The client is gone: no one reads the page.
+		return
+	}
 	if err != nil {
 		renderError(w, r, err)
 		return
@@ -685,6 +723,10 @@ func (h *layoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx := &Ctx{W: w, R: r}
 	page, props, err := h.loadChain(ctx)
+	if r.Context().Err() != nil {
+		// The client is gone: no layout renders.
+		return
+	}
 	if err != nil {
 		renderError(w, r, err)
 		return

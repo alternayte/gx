@@ -17,7 +17,7 @@ func ThemeSelect(p ThemeSelectProps) gx.Node {
 	}
 	var _b gx.Builder
 //line ThemeSelect.gx:3:1
-	_b.Add(gx.El("label", gx.Attrs{gx.Attr{Key: "class", Value: "sl-select", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text("Select theme")), gx.Text("\n  "), icon("laptop", "sl-select-icon"), gx.Text("\n  "), gx.El("select", gx.Attrs{gx.Attr{Key: "data-gx-theme", Value: "select", Kind: gx.AttrText}, gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: "dark", Kind: gx.AttrText}}, gx.Text("Dark")), gx.Text("\n    "), gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: "light", Kind: gx.AttrText}}, gx.Text("Light")), gx.Text("\n    "), gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: "auto", Kind: gx.AttrText}, gx.Bool("selected", true)}, gx.Text("Auto")), gx.Text("\n  "))), gx.Text("\n  "), icon("down-caret", "sl-select-caret"), gx.Text("\n"))))
+	_b.Add(gx.El("label", gx.Attrs{gx.Attr{Key: "class", Value: "sl-select", Kind: gx.AttrText}}, gx.Frag(gx.Raw(gx.SafeHTML("\n  <span class=\"sr-only\">Select theme</span>\n  ")), icon("laptop", "sl-select-icon"), gx.Text("\n  "), gx.El("select", gx.Attrs{gx.Attr{Key: "data-gx-theme", Value: "select", Kind: gx.AttrText}, gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("\n    <option value=\"dark\">Dark</option>\n    <option value=\"light\">Light</option>\n    <option value=\"auto\" selected>Auto</option>\n  "))), gx.Text("\n  "), icon("down-caret", "sl-select-caret"), gx.Text("\n"))))
 //line ThemeSelect.gx:12:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()

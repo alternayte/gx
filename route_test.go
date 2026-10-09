@@ -1,9 +1,11 @@
 package gx_test
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -174,6 +176,97 @@ func TestREQ_RTE_10_ErrorStatuses(t *testing.T) {
 	rec := serve(gx.Redirect(homeRoute{}))
 	if rec.Code != 303 || rec.Header().Get("Location") != "/home" {
 		t.Fatalf("redirect: status %d location %q", rec.Code, rec.Header().Get("Location"))
+	}
+}
+
+// A panic in a view or a loader of a production build is a 500 answer with
+// the error component, and no part of the broken page (REQ-RTE-10). The
+// page is in a buffer, so the browser has no byte of it yet.
+func TestREQ_RTE_10_PanicIsA500(t *testing.T) {
+	serve := func(pg gx.Handler, views bool) *httptest.ResponseRecorder {
+		app := gx.New(gx.Config{})
+		if views {
+			app.Errors(nil, nil, func(c *gx.Ctx) gx.Node { return gx.Text("broken") })
+		}
+		app.Group("/", gx.Collect(pg))
+		rec := httptest.NewRecorder()
+		app.ServeHTTP(rec, httptest.NewRequest("GET", "/slow", nil))
+		return rec
+	}
+	viewPanic := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) { return 0, nil },
+		func(int) gx.Node {
+			var p *int
+			return gx.El("p", nil, gx.Text("half a page"), gx.Value(*p))
+		})
+	loaderPanic := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) {
+		c.W.Header().Set("X-Half", "1")
+		_, _ = c.W.Write([]byte("half a page"))
+		panic("boom")
+	}, func(int) gx.Node { return gx.Text("x") })
+
+	for _, c := range []struct {
+		name  string
+		pg    gx.Handler
+		views bool
+		body  string
+	}{
+		{"view, error component", viewPanic, true, shell("broken")},
+		{"view, no error component", viewPanic, false, "Internal Server Error\n"},
+		{"loader after a write", loaderPanic, true, shell("broken")},
+	} {
+		rec := serve(c.pg, c.views)
+		if rec.Code != 500 {
+			t.Errorf("%s: status %d, want 500", c.name, rec.Code)
+		}
+		if rec.Body.String() != c.body {
+			t.Errorf("%s: body %q, want %q", c.name, rec.Body.String(), c.body)
+		}
+		if rec.Header().Get("X-Half") != "" {
+			t.Errorf("%s: the answer keeps a header of the broken page", c.name)
+		}
+	}
+
+	// http.ErrAbortHandler is the way of a handler to drop the connection:
+	// it passes.
+	abort := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) { panic(http.ErrAbortHandler) },
+		func(int) gx.Node { return gx.Text("x") })
+	func() {
+		defer func() {
+			if v := recover(); v != http.ErrAbortHandler {
+				t.Errorf("http.ErrAbortHandler did not pass: recovered %v", v)
+			}
+		}()
+		serve(abort, true)
+	}()
+
+	// A dev build keeps the panic: the dev server shows it in the overlay
+	// (REQ-DEV-06).
+	gx.SetDev(true)
+	defer gx.SetDev(false)
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("a dev build did not keep the panic for the overlay")
+			}
+		}()
+		serve(viewPanic, true)
+	}()
+}
+
+// A request whose client went away during the loader renders no view
+// (REQ-RTE-08: the request context ends the work of the request).
+func TestREQ_RTE_08_NoRenderAfterCancel(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	pg := gx.Page(func(c *gx.Ctx, in slowRoute) (int, error) {
+		cancel()
+		return 1, nil
+	}, func(int) gx.Node { return gx.El("p", nil, gx.Text("page")) })
+	app := gx.New(gx.Config{})
+	app.Group("/", gx.Collect(pg))
+	rec := httptest.NewRecorder()
+	app.ServeHTTP(rec, httptest.NewRequest("GET", "/slow", nil).WithContext(ctx))
+	if strings.Contains(rec.Body.String(), "<p>") {
+		t.Fatalf("the page went to a client that is gone: %q", rec.Body.String())
 	}
 }
 

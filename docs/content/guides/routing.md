@@ -213,6 +213,14 @@ With no JavaScript, or between two different layouts, a link is a full load.
 
 `server.Errors(notFound, forbidden, serverError)` sets a component for each status. Each one is `func(*gx.Ctx) gx.Node`.
 
+A panic in a loader or in a view gives status 500 and the `serverError` component. The server writes the panic and its stack to the log. The browser gets no part of the broken page. In `gx dev`, the overlay shows the panic.
+
+## Early hints
+
+Each page names its stylesheet and its scripts in `Link` headers. A CDN can send these headers as early hints. Over HTTP/2, the app also sends status 103 with the `Link` values of the last answer of the route. The browser then gets the files while the loaders run. You set nothing for this.
+
+A page with a CSP nonce names only its stylesheet, because a strict policy refuses a script preload that has no nonce.
+
 ## Use Gx with an existing router
 
 Gx is plain `net/http`. Adopt it one level at a time.

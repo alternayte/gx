@@ -29,7 +29,7 @@ func Pagination(p PaginationProps) gx.Node {
 //line Pagination.gx:11:21
 		_b1.Add(gx.Text("\n    "))
 //line Pagination.gx:12:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), icon("left-arrow", ""), gx.Text("\n      "), gx.El("span", nil, gx.Frag(gx.Text("Previous"), gx.El("br", nil), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-link-title", Kind: gx.AttrText}}, gx.Text(p.Prev.Label)))), gx.Text("\n    "))))
+		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), icon("left-arrow", ""), gx.Text("\n      "), gx.El("span", nil, gx.Frag(gx.Raw(gx.SafeHTML("Previous<br>")), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-link-title", Kind: gx.AttrText}}, gx.Text(p.Prev.Label)))), gx.Text("\n    "))))
 //line Pagination.gx:15:9
 		_b1.Add(gx.Text("\n  "))
 	}
@@ -40,7 +40,7 @@ func Pagination(p PaginationProps) gx.Node {
 //line Pagination.gx:17:21
 		_b1.Add(gx.Text("\n    "))
 //line Pagination.gx:18:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), icon("right-arrow", ""), gx.Text("\n      "), gx.El("span", nil, gx.Frag(gx.Text("Next"), gx.El("br", nil), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-link-title", Kind: gx.AttrText}}, gx.Text(p.Next.Label)))), gx.Text("\n    "))))
+		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), icon("right-arrow", ""), gx.Text("\n      "), gx.El("span", nil, gx.Frag(gx.Raw(gx.SafeHTML("Next<br>")), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-link-title", Kind: gx.AttrText}}, gx.Text(p.Next.Label)))), gx.Text("\n    "))))
 //line Pagination.gx:21:9
 		_b1.Add(gx.Text("\n  "))
 	}

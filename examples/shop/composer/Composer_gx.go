@@ -53,7 +53,7 @@ func Composer(p ComposerProps) gx.Node {
 //line Composer.gx:22:137
 		_b2.Add(gx.Text("\n      "))
 //line Composer.gx:23:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "composer-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n        "), gx.El("p", nil, gx.Text("Fix the errors below.")), gx.Text("\n      "))))
+		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "composer-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("\n        <p>Fix the errors below.</p>\n      "))))
 //line Composer.gx:25:13
 		_b2.Add(gx.Text("\n    "))
 	}
@@ -87,7 +87,7 @@ func Composer(p ComposerProps) gx.Node {
 //line Composer.gx:47:10
 	_b1.Add(gx.Text("\n  "))
 //line Composer.gx:48:3
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("label", gx.Attrs{gx.Attr{Key: "for", Value: "composer-note", Kind: gx.AttrText}}, gx.Text("Note to self")), gx.Text("\n    "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-input px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "composer-note", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("composer.Composer", p.GxKey, "note"), Kind: gx.AttrText}}), gx.Text("\n    "), NoteCount(NoteCountProps{Note: gx.Ref[string](gx.SignalRefPath("composer.Composer", p.GxKey, "note")), Limit: 40}, gx.IslandLoad("eager")), gx.Text("\n  "))))
+	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Raw(gx.SafeHTML("\n    <label for=\"composer-note\">Note to self</label>\n    ")), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-input px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "composer-note", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("composer.Composer", p.GxKey, "note"), Kind: gx.AttrText}}), gx.Text("\n    "), NoteCount(NoteCountProps{Note: gx.Ref[string](gx.SignalRefPath("composer.Composer", p.GxKey, "note")), Limit: 40}, gx.IslandLoad("eager")), gx.Text("\n  "))))
 //line Composer.gx:52:9
 	_b1.Add(gx.Text("\n  "))
 //line Composer.gx:53:3

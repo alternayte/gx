@@ -14,6 +14,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	gx "github.com/alternayte/gx"
 )
 
 // Generate generates Go source for every .gx file under root. The result maps
@@ -527,18 +529,42 @@ func (g *gen) elementCall(el *Element, childrenExpr string) string {
 }
 
 // childExprs returns the children of an element as one gx.Node expression.
+// A run of children that holds a static element is one pre-escaped string
+// (SDD 3.2).
 func (g *gen) childExprs(ns []Node) string {
 	var parts []string
+	// run holds the children since the last child with an expression:
+	// their expressions, their nodes, and whether one is an element.
+	var runExprs []string
+	var runNodes []gx.Node
+	runElement := false
+	flush := func() {
+		if runElement {
+			parts = append(parts, "gx.Raw(gx.SafeHTML("+strconv.Quote(gx.String(gx.Frag(runNodes...)))+"))")
+		} else {
+			parts = append(parts, runExprs...)
+		}
+		runExprs, runNodes, runElement = nil, nil, false
+	}
 	for _, n := range ns {
 		switch t := n.(type) {
 		case *Text:
-			parts = append(parts, "gx.Text("+strconv.Quote(t.Data)+")")
+			runExprs = append(runExprs, "gx.Text("+strconv.Quote(t.Data)+")")
+			runNodes = append(runNodes, gx.Text(t.Data))
 		case *HTMLComment:
-			parts = append(parts, "gx.Raw(gx.SafeHTML("+strconv.Quote("<!--"+t.Data+"-->")+"))")
+			runExprs = append(runExprs, "gx.Raw(gx.SafeHTML("+strconv.Quote("<!--"+t.Data+"-->")+"))")
+			runNodes = append(runNodes, gx.Raw(gx.SafeHTML("<!--"+t.Data+"-->")))
 		case *Comment:
 		case *Expr:
+			flush()
 			parts = append(parts, g.exprValue(t, t.Data))
 		case *Element:
+			if node, ok := g.staticNode(t); ok {
+				runNodes = append(runNodes, node)
+				runElement = true
+				continue
+			}
+			flush()
 			pushed := g.keyAttrExpr(t)
 			if pushed != "" {
 				g.keyStack = append(g.keyStack, pushed)
@@ -553,6 +579,7 @@ func (g *gen) childExprs(ns []Node) string {
 			}
 		}
 	}
+	flush()
 	switch len(parts) {
 	case 0:
 		return ""
