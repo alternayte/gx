@@ -380,7 +380,9 @@ func TestREQ_ISL_19_AttributeChangeAfterANewBuild(t *testing.T) {
 releaseSheet()
 el.isConnected = true
 el.connectedCallback()
-await tick()
+// The first mount imports the widget script. The wait ends when the element
+// is ready, or after 400 ticks; the fixture check below is the same.
+for (let i = 0; i < 400 && el.getAttribute('data-gx-state') !== 'ready'; i++) await tick()
 const first = result()
 // The app owner deploys a new build. Its stylesheet has a new content hash.
 answer = { ...answer, html: '<p class="new-class">cart</p>', style: '/cart.b2.css', build: 'b2' }
