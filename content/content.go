@@ -5,6 +5,9 @@
 package content
 
 import (
+	"regexp"
+	"strconv"
+
 	"github.com/alternayte/gx"
 	gxcontent "github.com/alternayte/gx/internal/content"
 	"github.com/alternayte/gx/internal/highlight"
@@ -28,6 +31,45 @@ func Body(markdown []byte) (gx.Node, error) {
 	}
 	return gx.Raw(gx.SafeHTML(string(html))), nil //gx:trusted content is a repository file (SI-12)
 }
+
+// slotMarker finds the place of one slot in rendered Markdown. The
+// compiler writes the two forms: a comment for a component with its lines
+// to itself, an element for a component inside a line.
+var slotMarker = regexp.MustCompile(`<!--gx-slot:(\d+)-->|<gx-slot n="(\d+)"></gx-slot>`)
+
+// BodySlots renders a Markdown body that holds components (REQ-CNT-03).
+// The Markdown has one marker for each slot, and the result has slots[n]
+// in the place of marker n. The generated body function of a collection
+// calls it; the prose around the components of one parent is one document,
+// so a component in a list item stays in the list item.
+func BodySlots(markdown []byte, slots ...gx.Node) (gx.Node, error) {
+	html, err := gxcontent.Render(markdown, gxcontent.Options{GFM: true, Footnotes: true, Anchors: true, Highlight: true})
+	if err != nil {
+		return nil, err
+	}
+	// A component that is the only content of a paragraph is a block.
+	text := slotParagraph.ReplaceAllString(string(html), "$1")
+	var parts []gx.Node
+	last := 0
+	for _, m := range slotMarker.FindAllStringSubmatchIndex(text, -1) {
+		parts = append(parts, gx.Raw(gx.SafeHTML(text[last:m[0]]))) //gx:trusted content is a repository file (SI-12)
+		lo, hi := m[2], m[3]
+		if lo < 0 {
+			lo, hi = m[4], m[5]
+		}
+		digits := text[lo:hi]
+		if n, err := strconv.Atoi(digits); err == nil && n < len(slots) {
+			parts = append(parts, slots[n])
+		}
+		last = m[1]
+	}
+	parts = append(parts, gx.Raw(gx.SafeHTML(text[last:]))) //gx:trusted content is a repository file (SI-12)
+	return gx.Frag(parts...), nil
+}
+
+// slotParagraph finds a paragraph whose only content is one inline slot
+// marker.
+var slotParagraph = regexp.MustCompile(`<p>(<gx-slot n="\d+"></gx-slot>)</p>`)
 
 // CodeOptions are the frame options of a code block (REQ-CNT-05).
 type CodeOptions struct {

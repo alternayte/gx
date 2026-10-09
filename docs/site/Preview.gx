@@ -4,12 +4,17 @@ props {
   Title    string
   Block    bool = false
   Children gx.Node = nil
+  // Style is a style element after the stylesheet of the site. Nil omits it.
+  Style    gx.Node = nil
 }
 
 <gx.Head title={p.Title} />
 {/* The hidden theme marker loads the core runtime, which applies the stored
     theme and follows the theme select of the page around the frame. */}
 <span hidden data-gx-theme="auto"></span>
+if p.Style != nil {
+  {p.Style}
+}
 <div class="gx-stage" class:gx-stage-block={p.Block}>
   <div class="gx-stage-content">{p.Children}</div>
 </div>

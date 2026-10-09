@@ -1,0 +1,15 @@
+package starlight
+
+props {
+  // Links holds the social links. Each one shows the built-in icon that its Icon names.
+  Links []Link
+}
+
+<div class="sl-social-icons">
+  for _, l := range p.Links {
+    <a class="sl-social-link" href={l.Href} rel="me">
+      <span class="sr-only">{l.Label}</span>
+      {icon(l.Icon, "")}
+    </a>
+  }
+</div>

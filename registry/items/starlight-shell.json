@@ -1,0 +1,207 @@
+{
+  "name": "starlight-shell",
+  "version": "0.1.0",
+  "description": "The Starlight docs shell: fixed header, version label, search, social icons, theme select, sidebar, table of contents, hero, page links and 404.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "Header.fixtures.go",
+      "target": "ui/starlight-shell/Header.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar HeaderFixtures = gx.Fixtures[HeaderProps]{\n\t\"Default\": {Site: fixtureSite},\n}\n",
+      "sha256": "8c3f09d28e3d43b6afd4a49925ea5dcb7c5c5819c4b84e1c7a2062cf0502c6a7"
+    },
+    {
+      "path": "Header.gx",
+      "target": "ui/starlight-shell/Header.gx",
+      "content": "package starlight\n\nprops {\n  // Site is the site-wide data: the title, the versions and the social links.\n  Site Config\n}\n\n\u003cheader class=\"sl-header\"\u003e\n  \u003cdiv class=\"sl-header-inner\"\u003e\n    \u003cdiv class=\"sl-title-wrapper\"\u003e\n      \u003cSiteTitle site={p.Site} /\u003e\n    \u003c/div\u003e\n    \u003cdiv class=\"sl-header-search\"\u003e\n      \u003cbutton type=\"button\" class=\"sl-search-button\" data-gx-search-open aria-label=\"Search\" aria-keyshortcuts=\"Control+K\" aria-haspopup=\"dialog\"\u003e\n        {icon(\"magnifier\", \"\")}\n        \u003cspan aria-hidden=\"true\"\u003eSearch\u003c/span\u003e\n        \u003ckbd\u003e\u003ckbd data-gx-mod-key\u003eCtrl\u003c/kbd\u003e\u003ckbd\u003eK\u003c/kbd\u003e\u003c/kbd\u003e\n      \u003c/button\u003e\n    \u003c/div\u003e\n    \u003cdiv class=\"sl-right-group\"\u003e\n      \u003cSocialIcons links={p.Site.Links} /\u003e\n      \u003cThemeSelect /\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/header\u003e\n",
+      "sha256": "d2cc587224e73efc877203d1e74cc69525b9c01e07a7e3c7e6d8db9bf19ecd13"
+    },
+    {
+      "path": "Hero.fixtures.go",
+      "target": "ui/starlight-shell/Hero.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar HeroFixtures = gx.Fixtures[HeroProps]{\n\t\"Default\": {Title: \"Deedbox\", Tagline: \"Event-source part of your app.\"},\n\t\"Title\":   {Title: \"Deedbox\"},\n}\n",
+      "sha256": "f326dd1f501ceb48839f3e4cf8197853daf71b688b7fff3c04eb7423c0bb4b99"
+    },
+    {
+      "path": "Hero.gx",
+      "target": "ui/starlight-shell/Hero.gx",
+      "content": "package starlight\n\nprops {\n  // Title is the heading of the hero.\n  Title   string\n  // Tagline is the text below the title. Empty omits it.\n  Tagline string = \"\"\n  // Actions is the row of link buttons below the tagline. Nil omits it.\n  Actions gx.Node = nil\n  // Image is the picture beside the text. Nil omits it.\n  Image   gx.Node = nil\n}\n\n\u003cdiv class=\"sl-hero\"\u003e\n  if p.Image != nil {\n    \u003cdiv class=\"sl-hero-image\"\u003e{p.Image}\u003c/div\u003e\n  }\n  \u003cdiv class=\"sl-stack\"\u003e\n    \u003cdiv class=\"sl-copy\"\u003e\n      \u003ch1 id=\"_top\"\u003e{p.Title}\u003c/h1\u003e\n      if p.Tagline != \"\" {\n        \u003cdiv class=\"sl-tagline\"\u003e{p.Tagline}\u003c/div\u003e\n      }\n    \u003c/div\u003e\n    if p.Actions != nil {\n      \u003cdiv class=\"sl-actions\"\u003e{p.Actions}\u003c/div\u003e\n    }\n  \u003c/div\u003e\n\u003c/div\u003e\n",
+      "sha256": "dc05629876fdaefa3df7ac7cc5d1b57328fee790c27c9037f6dc4b88dae4ee89"
+    },
+    {
+      "path": "MobileToc.fixtures.go",
+      "target": "ui/starlight-shell/MobileToc.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar MobileTocFixtures = gx.Fixtures[MobileTocProps]{\n\t\"Default\": {Headings: fixtureHeadings},\n}\n",
+      "sha256": "6d240afdcedd556e96a04f8fcb930e03ef0400448bee258575edf0e649ad9900"
+    },
+    {
+      "path": "MobileToc.gx",
+      "target": "ui/starlight-shell/MobileToc.gx",
+      "content": "package starlight\n\nprops {\n  // Headings holds the entries of the table of contents, below the entry \"Overview\" for the\n  // top of the page.\n  Headings []Heading\n}\n\n\u003cdiv class=\"sl-mobile-toc\"\u003e\n  \u003cnav data-gx-toc aria-labelledby=\"sl-on-this-page-mobile\"\u003e\n    \u003cdetails data-gx-toc-menu\u003e\n      \u003csummary id=\"sl-on-this-page-mobile\"\u003e\n        \u003cspan class=\"sl-toggle\"\u003e\n          On this page\n          {icon(\"right-caret\", \"sl-caret\")}\n        \u003c/span\u003e\n        \u003cspan class=\"sl-display-current\" data-gx-toc-current\u003e\u003c/span\u003e\n      \u003c/summary\u003e\n      \u003cdiv class=\"sl-dropdown\"\u003e\n        \u003cul class=\"sl-toc-list\"\u003e\n          \u003cli\u003e\n            \u003ca href=\"#_top\" data-gx-toc-target=\"_top\" data-level=\"2\"\u003e\u003cspan\u003eOverview\u003c/span\u003e\u003c/a\u003e\n          \u003c/li\u003e\n          for _, h := range p.Headings {\n            \u003cli\u003e\n              \u003ca href={gx.URL(\"#\" + h.ID)} data-gx-toc-target={h.ID} data-level={h.Level}\u003e\u003cspan\u003e{h.Text}\u003c/span\u003e\u003c/a\u003e\n            \u003c/li\u003e\n          }\n        \u003c/ul\u003e\n      \u003c/div\u003e\n    \u003c/details\u003e\n  \u003c/nav\u003e\n\u003c/div\u003e\n",
+      "sha256": "f2f50b764a56f394e51277df6e3e725dfa559dd11cef2d89b1c6a717d0f3edd6"
+    },
+    {
+      "path": "NotFound.fixtures.go",
+      "target": "ui/starlight-shell/NotFound.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar NotFoundFixtures = gx.Fixtures[NotFoundProps]{\n\t\"Default\": {Site: fixtureSite},\n}\n",
+      "sha256": "32af31f92d86d6a62d6119fbf465c039522fd19b28901992901b1f5003d09538"
+    },
+    {
+      "path": "NotFound.gx",
+      "target": "ui/starlight-shell/NotFound.gx",
+      "content": "package starlight\n\nprops {\n  // Site is the site-wide data: the title, the versions and the social links.\n  Site    Config\n  // Title is the heading of the page.\n  Title   string = \"404\"\n  // Message is the text below the title.\n  Message string = \"Page not found. Check the URL or try using the search bar.\"\n}\n\n\u003cShell site={p.Site} nav={Nav{}} page={Page{Title: p.Title, Splash: true}} hero={Hero(HeroProps{Title: p.Title, Tagline: p.Message})} children={gx.Text(\"\")} /\u003e\n",
+      "sha256": "305fdd0be33240a09f9065ec2462975d7cbd5489677df593e25a0b7f8f5f63c7"
+    },
+    {
+      "path": "PageFooter.fixtures.go",
+      "target": "ui/starlight-shell/PageFooter.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar PageFooterFixtures = gx.Fixtures[PageFooterProps]{\n\t\"Default\": {Site: fixtureSite, Page: fixturePage},\n}\n",
+      "sha256": "1d55f2a1f3b25527c9ccf3f84d1693c9230a07c61397e793cb621298abee6393"
+    },
+    {
+      "path": "PageFooter.gx",
+      "target": "ui/starlight-shell/PageFooter.gx",
+      "content": "package starlight\n\nprops {\n  // Site is the site-wide data. Its EditBase builds the edit link; empty hides the link.\n  Site Config\n  // Page is the data of the current page: its path, its date and its previous and next\n  // items.\n  Page Page\n}\n\n\u003cfooter class=\"sl-footer\"\u003e\n  \u003cdiv class=\"sl-meta\"\u003e\n    if p.Site.EditURL(p.Page) != \"\" {\n      \u003ca class=\"sl-edit-link\" href={gx.URL(p.Site.EditURL(p.Page))}\u003e\n        {icon(\"pencil\", \"\")}\n        Edit page\n      \u003c/a\u003e\n    }\n    if p.Page.Updated != \"\" {\n      \u003cp data-gx-updated\u003eLast updated: \u003ctime\u003e{p.Page.Updated}\u003c/time\u003e\u003c/p\u003e\n    }\n  \u003c/div\u003e\n  \u003cPagination prev={p.Page.Prev} next={p.Page.Next} /\u003e\n\u003c/footer\u003e\n",
+      "sha256": "42465ac9270f5bdc2b2c3352a9f63c1fa70d3aa2df65a5cf3c9be25609b934fc"
+    },
+    {
+      "path": "Pagination.fixtures.go",
+      "target": "ui/starlight-shell/Pagination.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar PaginationFixtures = gx.Fixtures[PaginationProps]{\n\t\"Both\": {Prev: fixturePrev, Next: fixtureNext},\n\t\"Next\": {Next: fixtureNext},\n\t\"Prev\": {Prev: fixturePrev},\n}\n",
+      "sha256": "c5cd8ee66393d20af9e7bb5008a9bc5ab7a64c0fa0f7184f0e3231137b43b0aa"
+    },
+    {
+      "path": "Pagination.gx",
+      "target": "ui/starlight-shell/Pagination.gx",
+      "content": "package starlight\n\nprops {\n  // Prev is the previous sidebar item. Nil omits the link.\n  Prev *NavItem\n  // Next is the next sidebar item. Nil omits the link.\n  Next *NavItem\n}\n\n\u003cdiv class=\"sl-pagination\"\u003e\n  if p.Prev != nil {\n    \u003ca href={p.Prev.Href} rel=\"prev\"\u003e\n      {icon(\"left-arrow\", \"\")}\n      \u003cspan\u003ePrevious\u003cbr /\u003e\u003cspan class=\"sl-link-title\"\u003e{p.Prev.Label}\u003c/span\u003e\u003c/span\u003e\n    \u003c/a\u003e\n  }\n  if p.Next != nil {\n    \u003ca href={p.Next.Href} rel=\"next\"\u003e\n      {icon(\"right-arrow\", \"\")}\n      \u003cspan\u003eNext\u003cbr /\u003e\u003cspan class=\"sl-link-title\"\u003e{p.Next.Label}\u003c/span\u003e\u003c/span\u003e\n    \u003c/a\u003e\n  }\n\u003c/div\u003e\n",
+      "sha256": "dc4ec53753f9d7e8ec14c907fa8e66288ad97fdd9efddefb51b83d16fa95ee23"
+    },
+    {
+      "path": "SearchDialog.fixtures.go",
+      "target": "ui/starlight-shell/SearchDialog.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar SearchDialogFixtures = gx.Fixtures[SearchDialogProps]{\n\t\"Default\": {},\n}\n",
+      "sha256": "a73cf37373e116eefced899f8cda26f44336180e2bda8de327a521ce83afd42a"
+    },
+    {
+      "path": "SearchDialog.gx",
+      "target": "ui/starlight-shell/SearchDialog.gx",
+      "content": "package starlight\n\n\u003cdialog id=\"gx-search\" class=\"sl-search-dialog\" data-gx-search data-gx-search-src=\"/pagefind/pagefind.js\" aria-label=\"Search\"\u003e\n  \u003cdiv class=\"sl-search-frame\"\u003e\n    \u003cform method=\"get\" action=\"/search\" class=\"sl-search-form\" data-gx-search-form\u003e\n      \u003cdiv class=\"sl-search-field\"\u003e\n        {icon(\"magnifier\", \"\")}\n        \u003cinput type=\"search\" name=\"q\" class=\"sl-search-input\" placeholder=\"Search\" data-gx-search-input autocomplete=\"off\" /\u003e\n      \u003c/div\u003e\n      \u003cbutton type=\"button\" class=\"sl-search-close\" data-gx-search-close\u003eCancel\u003c/button\u003e\n    \u003c/form\u003e\n    \u003cdiv class=\"sl-search-results\" data-gx-search-results\u003e\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/dialog\u003e\n",
+      "sha256": "7f93fd9fff0d1efa23830a1a98452ab35b5084aa2034d6f749c01323ff5699f6"
+    },
+    {
+      "path": "Shell.fixtures.go",
+      "target": "ui/starlight-shell/Shell.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar ShellFixtures = gx.Fixtures[ShellProps]{\n\t\"Default\": {Site: fixtureSite, Nav: fixtureNav, Page: fixturePage, Children: gx.Text(\"Body.\")},\n\t\"Splash\": {\n\t\tSite:     fixtureSite,\n\t\tNav:      fixtureNav,\n\t\tPage:     Page{Title: \"Deedbox\", Path: \"/\", Splash: true},\n\t\tHero:     Hero(HeroProps{Title: \"Deedbox\", Tagline: \"Event-source part of your app.\"}),\n\t\tChildren: gx.Text(\"Body.\"),\n\t},\n}\n",
+      "sha256": "2f8cd893f11e3ca318f116fc9020a6d4b398e19a38aba9324ae695e4902240b8"
+    },
+    {
+      "path": "Shell.gx",
+      "target": "ui/starlight-shell/Shell.gx",
+      "content": "package starlight\n\nprops {\n  // Site is the site-wide data: the title, the versions and the social links.\n  Site     Config\n  // Nav is the sidebar model: the groups and their items.\n  Nav      Nav\n  // Page is the data of the current page: its title, its path, its headings and its previous\n  // and next items. A page with Splash has no sidebar and no table of contents.\n  Page     Page\n  // Hero is the hero of the page. It takes the place of the page title. Nil shows the title.\n  Hero     gx.Node = nil\n  // Children is the content of the page.\n  Children gx.Node\n}\n\n\u003cgx.Head htmlClass={RootClass(p.Page)} /\u003e\n\u003ca class=\"sl-skip-link\" href=\"#_top\"\u003eSkip to content\u003c/a\u003e\n\u003cdiv class=\"sl-page\"\u003e\n  \u003cHeader site={p.Site} /\u003e\n  if !p.Page.Splash {\n    \u003cSidebar site={p.Site} nav={p.Nav} path={p.Page.Path} /\u003e\n  }\n  \u003cdiv class=\"sl-main-frame\"\u003e\n    \u003cdiv class=\"sl-two-column\"\u003e\n      if len(p.Page.ShownTOC()) \u003e 0 || !p.Page.Splash {\n        \u003caside class=\"sl-right-sidebar-container\"\u003e\n          \u003cdiv class=\"sl-right-sidebar\"\u003e\n            \u003cMobileToc headings={p.Page.ShownTOC()} /\u003e\n            \u003cdiv class=\"sl-right-sidebar-panel\"\u003e\n              \u003cdiv class=\"sl-toc-container\"\u003e\n                \u003cToc headings={p.Page.ShownTOC()} /\u003e\n              \u003c/div\u003e\n            \u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/aside\u003e\n      }\n      \u003cdiv class=\"sl-main-pane\"\u003e\n        \u003cmain class=\"sl-main\" data-pagefind-body\u003e\n          if p.Hero != nil {\n            \u003cdiv class=\"sl-content-panel\"\u003e\n              \u003cdiv class=\"sl-container\"\u003e\n                {p.Hero}\n                \u003cdiv class=\"sl-markdown-content gx-content\"\u003e{p.Children}\u003c/div\u003e\n                \u003cPageFooter site={p.Site} page={p.Page} /\u003e\n              \u003c/div\u003e\n            \u003c/div\u003e\n          } else {\n            \u003cdiv class=\"sl-content-panel\"\u003e\n              \u003cdiv class=\"sl-container\"\u003e\n                \u003ch1 id=\"_top\" class=\"sl-page-title\"\u003e{p.Page.Title}\u003c/h1\u003e\n              \u003c/div\u003e\n            \u003c/div\u003e\n            \u003cdiv class=\"sl-content-panel\"\u003e\n              \u003cdiv class=\"sl-container\"\u003e\n                \u003cdiv class=\"sl-markdown-content gx-content\"\u003e{p.Children}\u003c/div\u003e\n                \u003cPageFooter site={p.Site} page={p.Page} /\u003e\n              \u003c/div\u003e\n            \u003c/div\u003e\n          }\n        \u003c/main\u003e\n      \u003c/div\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n\u003cSearchDialog /\u003e\n",
+      "sha256": "09f2875a20dba91ff81f82773f1517cb5f961ce07106f2677bb6ef5ae793c07c"
+    },
+    {
+      "path": "Sidebar.fixtures.go",
+      "target": "ui/starlight-shell/Sidebar.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarFixtures = gx.Fixtures[SidebarProps]{\n\t\"Default\": {Site: fixtureSite, Nav: fixtureNav, Path: \"/start/\"},\n}\n",
+      "sha256": "6e975f391cd6d1b4b28a9b1eafc18c3eb70eee81368d05c4f5d32624cfc83b9b"
+    },
+    {
+      "path": "Sidebar.gx",
+      "target": "ui/starlight-shell/Sidebar.gx",
+      "content": "package starlight\n\nprops {\n  // Site is the site-wide data. The mobile menu shows its social links.\n  Site Config\n  // Nav is the sidebar model: the groups and their items.\n  Nav  Nav\n  // Path is the site path of the current page. A closed group that holds the page starts\n  // open.\n  Path string\n}\n\n\u003cnav class=\"sl-sidebar\" aria-label=\"Main\"\u003e\n  \u003cbutton type=\"button\" class=\"sl-menu-button\" data-gx-menu aria-expanded=\"false\" aria-controls=\"gx-sidebar\"\u003e\n    {icon(\"bars\", \"sl-open-menu\")}\n    {icon(\"close\", \"sl-close-menu\")}\n    \u003cspan class=\"sr-only\"\u003eMenu\u003c/span\u003e\n  \u003c/button\u003e\n  \u003cdiv id=\"gx-sidebar\" class=\"sl-sidebar-pane\" data-gx-sidebar=\"50rem\"\u003e\n    \u003cdiv class=\"sl-sidebar-content\"\u003e\n      \u003cul class=\"sl-top-level\"\u003e\n        for _, g := range p.Nav.Groups {\n          \u003cli\u003e\n            \u003cdetails open={GroupOpen(p.Path, g.Collapsed, g.Items)}\u003e\n              \u003csummary\u003e\n                \u003cspan class=\"sl-group-label\"\u003e\n                  \u003cspan class=\"sl-large\"\u003e{g.Label}\u003c/span\u003e\n                  if g.Badge != \"\" {\n                    \u003cspan class=\"sl-badge\"\u003e{g.Badge}\u003c/span\u003e\n                  }\n                \u003c/span\u003e\n                {icon(\"right-caret\", \"sl-caret\")}\n              \u003c/summary\u003e\n              \u003cul\u003e\n                for _, it := range g.Items {\n                  \u003cSidebarItem item={it} path={p.Path} /\u003e\n                }\n              \u003c/ul\u003e\n            \u003c/details\u003e\n          \u003c/li\u003e\n        }\n      \u003c/ul\u003e\n      \u003cdiv class=\"sl-mobile-preferences\"\u003e\n        \u003cSocialIcons links={p.Site.Links} /\u003e\n        \u003cThemeSelect /\u003e\n      \u003c/div\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/nav\u003e\n",
+      "sha256": "b3227d4053d98fce439ecc9c2f530e41a5a820f1f1849e3be8e055bcddd5015e"
+    },
+    {
+      "path": "SidebarItem.fixtures.go",
+      "target": "ui/starlight-shell/SidebarItem.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar SidebarItemFixtures = gx.Fixtures[SidebarItemProps]{\n\t\"Link\":   {Item: NavItem{Label: \"Introduction\", Href: gx.URL(\"/start/\"), Badge: \"New\"}, Path: \"/start/\"},\n\t\"Group\":  {Item: NavItem{Label: \"Errors\", Items: []NavItem{{Label: \"GX1000\", Href: gx.URL(\"/errors/GX1000/\")}}}},\n\t\"Closed\": {Item: NavItem{Label: \"Errors\", Collapsed: true, Items: []NavItem{{Label: \"GX1000\", Href: gx.URL(\"/errors/GX1000/\")}}}},\n}\n",
+      "sha256": "0240046ac8489afa2c4d7e97327949a5de626b9b1048313c239aa2a2a04a4091"
+    },
+    {
+      "path": "SidebarItem.gx",
+      "target": "ui/starlight-shell/SidebarItem.gx",
+      "content": "package starlight\n\nprops {\n  // Item is the sidebar link. An item with nested items shows as a group that opens and\n  // closes.\n  Item NavItem\n  // Path is the site path of the current page. A closed group that holds the page starts\n  // open.\n  Path string\n}\n\n\u003cli\u003e\n  if len(p.Item.Items) \u003e 0 {\n    \u003cdetails open={GroupOpen(p.Path, p.Item.Collapsed, p.Item.Items)}\u003e\n      \u003csummary\u003e\n        \u003cspan class=\"sl-group-label\"\u003e\n          \u003cspan class=\"sl-large\"\u003e{p.Item.Label}\u003c/span\u003e\n          if p.Item.Badge != \"\" {\n            \u003cspan class=\"sl-badge\"\u003e{p.Item.Badge}\u003c/span\u003e\n          }\n        \u003c/span\u003e\n        {icon(\"right-caret\", \"sl-caret\")}\n      \u003c/summary\u003e\n      \u003cul\u003e\n        for _, child := range p.Item.Items {\n          \u003cSidebarItem item={child} path={p.Path} /\u003e\n        }\n      \u003c/ul\u003e\n    \u003c/details\u003e\n  } else {\n    \u003ca class=\"sl-nav-link\" href={p.Item.Href} active=\"page\"\u003e\n      \u003cspan\u003e{p.Item.Label}\u003c/span\u003e\n      if p.Item.Badge != \"\" {\n        \u003cspan class=\"sl-badge\"\u003e{p.Item.Badge}\u003c/span\u003e\n      }\n    \u003c/a\u003e\n  }\n\u003c/li\u003e\n",
+      "sha256": "721fdfad9ceba7e42c7421dc1b8fa4c0851d817053d20a1a8b2545812802cd2a"
+    },
+    {
+      "path": "SiteTitle.fixtures.go",
+      "target": "ui/starlight-shell/SiteTitle.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar SiteTitleFixtures = gx.Fixtures[SiteTitleProps]{\n\t\"Label\":    {Site: fixtureSite},\n\t\"Versions\": {Site: fixtureVersions},\n\t\"NoLabel\":  {Site: Config{Title: \"Deedbox\"}},\n}\n",
+      "sha256": "4d2b502441e47bd1ed92e63a734821b1f5f22c01c7d1760919bb07284fbbdd3a"
+    },
+    {
+      "path": "SiteTitle.gx",
+      "target": "ui/starlight-shell/SiteTitle.gx",
+      "content": "package starlight\n\nprops {\n  // Site is the site-wide data. With two or more Versions, a select shows after the title;\n  // with fewer, the Version label shows.\n  Site Config\n}\n\n\u003cdiv class=\"sl-title-row\"\u003e\n  \u003ca class=\"sl-site-title\" href={gx.URL(\"/\")}\u003e\n    \u003cspan translate=\"no\"\u003e{p.Site.Title}\u003c/span\u003e\n  \u003c/a\u003e\n  if len(p.Site.Versions) \u003e 1 {\n    \u003cselect class=\"sl-version-select\" aria-label=\"Documentation version\" data-gx-goto autocomplete=\"off\"\u003e\n      for _, v := range p.Site.Versions {\n        \u003coption value={string(v.Href)} selected={v.Label == p.Site.Version}\u003e{v.Label}\u003c/option\u003e\n      }\n    \u003c/select\u003e\n  } else if p.Site.Version != \"\" {\n    \u003cspan class=\"sl-version\" data-gx-version\u003e{p.Site.Version}\u003c/span\u003e\n  }\n\u003c/div\u003e\n",
+      "sha256": "1740d084e3c32f113e3dff0b853412d35c059e511c672dae8b21e756eeb3ef58"
+    },
+    {
+      "path": "SocialIcons.fixtures.go",
+      "target": "ui/starlight-shell/SocialIcons.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar SocialIconsFixtures = gx.Fixtures[SocialIconsProps]{\n\t\"Default\": {Links: fixtureSite.Links},\n}\n",
+      "sha256": "c18767d8140531ce2390564500cad2065df6b147942b68e3a89bfe7e71c59b66"
+    },
+    {
+      "path": "SocialIcons.gx",
+      "target": "ui/starlight-shell/SocialIcons.gx",
+      "content": "package starlight\n\nprops {\n  // Links holds the social links. Each one shows the built-in icon that its Icon names.\n  Links []Link\n}\n\n\u003cdiv class=\"sl-social-icons\"\u003e\n  for _, l := range p.Links {\n    \u003ca class=\"sl-social-link\" href={l.Href} rel=\"me\"\u003e\n      \u003cspan class=\"sr-only\"\u003e{l.Label}\u003c/span\u003e\n      {icon(l.Icon, \"\")}\n    \u003c/a\u003e\n  }\n\u003c/div\u003e\n",
+      "sha256": "844c7073deab53729b1a896a4d89d07b317422fad43958a6684bb4a1debb5d84"
+    },
+    {
+      "path": "ThemeSelect.fixtures.go",
+      "target": "ui/starlight-shell/ThemeSelect.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar ThemeSelectFixtures = gx.Fixtures[ThemeSelectProps]{\n\t\"Default\": {},\n}\n",
+      "sha256": "0ba78633b1426924678d80287de35ab0b7046897af0c799ad4ecdd3dc098eec8"
+    },
+    {
+      "path": "ThemeSelect.gx",
+      "target": "ui/starlight-shell/ThemeSelect.gx",
+      "content": "package starlight\n\n\u003clabel class=\"sl-select\"\u003e\n  \u003cspan class=\"sr-only\"\u003eSelect theme\u003c/span\u003e\n  {icon(\"laptop\", \"sl-select-icon\")}\n  \u003cselect data-gx-theme=\"select\" autocomplete=\"off\"\u003e\n    \u003coption value=\"dark\"\u003eDark\u003c/option\u003e\n    \u003coption value=\"light\"\u003eLight\u003c/option\u003e\n    \u003coption value=\"auto\" selected\u003eAuto\u003c/option\u003e\n  \u003c/select\u003e\n  {icon(\"down-caret\", \"sl-select-caret\")}\n\u003c/label\u003e\n",
+      "sha256": "ef1dd6d3b78780ad8733bab57a59919ec6c74e0c72a8ecc6a4aae78252afe354"
+    },
+    {
+      "path": "Toc.fixtures.go",
+      "target": "ui/starlight-shell/Toc.fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\nvar TocFixtures = gx.Fixtures[TocProps]{\n\t\"Default\": {Headings: fixtureHeadings},\n}\n",
+      "sha256": "97d123f726f275eb378c1a0f4924c04e79a8820c7e04b964d7343da5836bba4a"
+    },
+    {
+      "path": "Toc.gx",
+      "target": "ui/starlight-shell/Toc.gx",
+      "content": "package starlight\n\nprops {\n  // Headings holds the entries of the table of contents, below the entry \"Overview\" for the\n  // top of the page.\n  Headings []Heading\n}\n\n\u003cnav class=\"sl-toc\" data-gx-toc aria-labelledby=\"sl-on-this-page\"\u003e\n  \u003ch2 id=\"sl-on-this-page\"\u003eOn this page\u003c/h2\u003e\n  \u003cul class=\"sl-toc-list\"\u003e\n    \u003cli\u003e\n      \u003ca href=\"#_top\" data-gx-toc-target=\"_top\" data-level=\"2\"\u003e\u003cspan\u003eOverview\u003c/span\u003e\u003c/a\u003e\n    \u003c/li\u003e\n    for _, h := range p.Headings {\n      \u003cli\u003e\n        \u003ca href={gx.URL(\"#\" + h.ID)} data-gx-toc-target={h.ID} data-level={h.Level}\u003e\u003cspan\u003e{h.Text}\u003c/span\u003e\u003c/a\u003e\n      \u003c/li\u003e\n    }\n  \u003c/ul\u003e\n\u003c/nav\u003e\n",
+      "sha256": "ffb69eff65f40f21a34f87cd8ff48443d7ad1fd4c6803243b223a7d02b4e01ac"
+    },
+    {
+      "path": "fixtures.go",
+      "target": "ui/starlight-shell/fixtures.go",
+      "content": "package starlight\n\nimport \"github.com/alternayte/gx\"\n\n// fixtureNav is the sidebar model of the fixtures: two open groups, with a\n// nested group that starts closed.\nvar fixtureNav = Nav{Groups: []NavGroup{\n\t{Label: \"Start\", Items: []NavItem{\n\t\t{Label: \"Introduction\", Href: gx.URL(\"/start/\"), Badge: \"New\"},\n\t\t{Label: \"Install\", Href: gx.URL(\"/start/install/\")},\n\t}},\n\t{Label: \"Reference\", Items: []NavItem{\n\t\t{Label: \"Configuration\", Href: gx.URL(\"/reference/configuration/\")},\n\t\t{Label: \"Errors\", Collapsed: true, Items: []NavItem{\n\t\t\t{Label: \"GX1000\", Href: gx.URL(\"/errors/GX1000/\")},\n\t\t}},\n\t}},\n}}\n\n// fixtureSite is the site config of the fixtures.\nvar fixtureSite = Config{\n\tTitle:    \"Deedbox\",\n\tVersion:  \"latest\",\n\tLinks:    []Link{{Label: \"GitHub\", Href: gx.URL(\"https://example.com/gx\"), Icon: \"github\"}},\n\tEditBase: \"https://example.com/edit/main/content/docs/\",\n}\n\n// fixtureVersions is the site config of the fixture with a version select.\nvar fixtureVersions = Config{\n\tTitle:   \"Deedbox\",\n\tVersion: \"latest\",\n\tVersions: []Version{\n\t\t{Label: \"latest\", Href: gx.URL(\"https://example.com/\")},\n\t\t{Label: \"0.4\", Href: gx.URL(\"https://example.com/0.4/\")},\n\t},\n}\n\n// fixtureNext is the next page of the fixtures.\nvar fixtureNext = \u0026NavItem{Label: \"Install\", Href: gx.URL(\"/start/install/\")}\n\n// fixturePrev is the previous page of the fixtures.\nvar fixturePrev = \u0026NavItem{Label: \"Introduction\", Href: gx.URL(\"/start/\")}\n\n// fixtureHeadings are the headings of the fixtures.\nvar fixtureHeadings = []Heading{\n\t{Level: 2, Text: \"Install\", ID: \"install\"},\n\t{Level: 3, Text: \"First page\", ID: \"first-page\"},\n}\n\n// fixturePage is the page data of the fixtures.\nvar fixturePage = Page{\n\tTitle:   \"Introduction\",\n\tPath:    \"/start/\",\n\tUpdated: \"Oct 2, 2026\",\n\tNext:    fixtureNext,\n\tTOC:     fixtureHeadings,\n}\n",
+      "sha256": "49e662fe7f1a94d908bb47bc948eaf9bcf05f8b97eb0398ecc81d6bdef494d36"
+    },
+    {
+      "path": "helpers.go",
+      "target": "ui/starlight-shell/helpers.go",
+      "content": "package starlight\n\nimport (\n\t\"strings\"\n\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/docs\"\n)\n\n// icon renders one built-in icon of the docs kit at the size of the text.\nfunc icon(name docs.IconName, class string) gx.Node {\n\treturn gx.Icon(string(docs.IconBody(name)), gx.IconProps{Class: gx.Cx(\"sl-icon\", class)})\n}\n\n// Active reports whether href is the current page.\nfunc Active(path string, href string) bool {\n\treturn href != \"\" \u0026\u0026 path == href\n}\n\n// ActiveItem reports whether item or one of its descendants is the current\n// page.\nfunc ActiveItem(path string, item NavItem) bool {\n\tif Active(path, string(item.Href)) {\n\t\treturn true\n\t}\n\tfor _, child := range item.Items {\n\t\tif ActiveItem(path, child) {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn false\n}\n\n// GroupOpen reports whether a sidebar group starts open: it is not\n// collapsed, or it holds the current page.\nfunc GroupOpen(path string, collapsed bool, items []NavItem) bool {\n\tif !collapsed {\n\t\treturn true\n\t}\n\tfor _, item := range items {\n\t\tif ActiveItem(path, item) {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn false\n}\n\n// TocDepth returns the heading depth limit of the page.\nfunc (p Page) TocDepth() int {\n\tif p.Depth \u003c= 0 {\n\t\treturn 3\n\t}\n\treturn p.Depth\n}\n\n// ShownTOC returns the headings that the table of contents shows. A splash\n// page has none.\nfunc (p Page) ShownTOC() []Heading {\n\tif p.Splash {\n\t\treturn nil\n\t}\n\tdepth := p.TocDepth()\n\tvar out []Heading\n\tfor _, h := range p.TOC {\n\t\tif h.Level \u003e= 2 \u0026\u0026 h.Level \u003c= depth \u0026\u0026 h.Text != \"\" {\n\t\t\tout = append(out, h)\n\t\t}\n\t}\n\treturn out\n}\n\n// RootClass returns the classes of the html element. The theme sets the\n// widths of the layout from them.\nfunc RootClass(p Page) string {\n\tif p.Splash {\n\t\treturn \"\"\n\t}\n\t// A page with a sidebar always has the entry \"Overview\" in its table\n\t// of contents.\n\treturn \"sl-has-sidebar sl-has-toc\"\n}\n\n// EditURL returns the edit link of the page. The page path maps to its\n// Markdown file: \"/start/\" to \"start.md\".\nfunc (c Config) EditURL(p Page) string {\n\tif c.EditBase == \"\" || p.Path == \"\" {\n\t\treturn \"\"\n\t}\n\tbase := c.EditBase\n\tif base[len(base)-1] != '/' {\n\t\tbase += \"/\"\n\t}\n\tpath := strings.TrimPrefix(p.Path, \"/\")\n\tpath = strings.TrimSuffix(path, \"/\")\n\tif path == \"\" {\n\t\tpath = \"index\"\n\t}\n\treturn base + path + \".md\"\n}\n",
+      "sha256": "eb7cc3853405d6bef6671e5a5d72a9869a9f91b31586300102729cf88b3dc527"
+    },
+    {
+      "path": "nav.go",
+      "target": "ui/starlight-shell/nav.go",
+      "content": "// Package starlight is the starlight-shell registry block: the page\n// structure of the default Starlight theme. It has a fixed header, a\n// sidebar, a table of contents, a hero, page links and a search dialog.\n// The `starlight` theme styles it; the `docs` kit holds its icons.\npackage starlight\n\nimport (\n\t\"github.com/alternayte/gx\"\n\t\"github.com/alternayte/gx/registry/docs\"\n)\n\n// Nav is the sidebar model.\ntype Nav struct {\n\tGroups []NavGroup\n}\n\n// NavGroup is one top-level sidebar section. A group with Collapsed starts\n// closed, unless it holds the current page.\ntype NavGroup struct {\n\tLabel     string\n\tBadge     string\n\tCollapsed bool\n\tItems     []NavItem\n}\n\n// NavItem is one sidebar link. An item with Items is a nested group; a\n// nested group with Collapsed starts closed, unless it holds the current\n// page.\ntype NavItem struct {\n\tLabel     string\n\tHref      gx.URL\n\tBadge     string\n\tCollapsed bool\n\tItems     []NavItem\n}\n\n// Link is one social link of the header. Icon is the name of a built-in\n// icon of the docs kit, for example \"github\".\ntype Link struct {\n\tLabel string\n\tHref  gx.URL\n\tIcon  docs.IconName\n}\n\n// Version is one version of the docs: its label and the address of its\n// site.\ntype Version struct {\n\tLabel string\n\tHref  gx.URL\n}\n\n// Config is the site-wide shell data.\ntype Config struct {\n\tTitle string\n\t// Version is the label of the version that this site shows. The header\n\t// shows it after the title. Empty hides it.\n\tVersion string\n\t// Versions lists the versions of the docs. With two or more, the\n\t// header shows a select in place of the label, and a choice opens the\n\t// site of that version.\n\tVersions []Version\n\tLinks    []Link\n\t// EditBase is the repository edit URL up to the file path, for example\n\t// https://github.com/acme/site/edit/main/content/docs/. Empty hides\n\t// the edit link.\n\tEditBase string\n}\n\n// Page is the shell data of one page.\ntype Page struct {\n\tTitle string\n\t// Path is the site path of the page, for example /start/.\n\tPath string\n\t// Splash is true for a page with no sidebar and no table of contents,\n\t// such as a home page.\n\tSplash bool\n\t// Updated is the date of the last change. Empty hides it.\n\tUpdated string\n\t// Prev and Next are the previous and next sidebar items.\n\tPrev *NavItem\n\tNext *NavItem\n\t// TOC holds the page headings, in document order.\n\tTOC []Heading\n\t// Depth limits the table of contents to headings at or below this\n\t// level. Zero means 3.\n\tDepth int\n}\n\n// Heading is one table-of-contents entry.\ntype Heading struct {\n\tLevel int\n\tText  string\n\tID    string\n}\n",
+      "sha256": "921a6c357c04efc701f2d872112b38a6b348814d91fd9b2aebb5f8987bdb2e62"
+    }
+  ],
+  "registryDependencies": [
+    "docs",
+    "starlight"
+  ],
+  "requiredTokens": [
+    "--sl-color-bg",
+    "--sl-color-text",
+    "--sl-color-text-accent",
+    "--sl-nav-height",
+    "--sl-sidebar-width",
+    "--sl-content-width"
+  ],
+  "usage": "# starlight-shell\n\nThe page structure of the default Starlight theme. It has these parts:\n\n- A fixed header with the site title, a version label, the search button, social icons and a theme select.\n- A sidebar and a table of contents.\n- A hero for a splash page.\n- Page links, a search dialog and a 404 page.\n\nThe block needs the `starlight` theme for its look and the `docs` kit for\nits icons.\n\n## Use\n\n```go\nvar Site = starlight.Config{\n    Title:    \"Deedbox\",\n    Version:  \"latest\",\n    Links:    []starlight.Link{{Label: \"GitHub\", Href: gx.URL(\"https://github.com/acme/site\"), Icon: \"github\"}},\n    EditBase: \"https://github.com/acme/site/edit/main/content/docs/\",\n}\n\nfunc View(e gx.Entry[DocMeta]) gx.Node {\n    return starlight.Shell(starlight.ShellProps{Site: Site, Nav: Nav(), Page: PageFor(e), Children: DocsBody(e)})\n}\n```\n\nA splash page has no sidebar and no table of contents. Give it a hero:\n\n```go\nstarlight.Shell(starlight.ShellProps{\n    Site: Site,\n    Page: starlight.Page{Title: \"Deedbox\", Path: \"/\", Splash: true},\n    Hero: starlight.Hero(starlight.HeroProps{\n        Title:   \"Deedbox\",\n        Tagline: \"Event-source part of your app.\",\n        Actions: docs.LinkButton(docs.LinkButtonProps{Href: gx.URL(\"/start/\"), Icon: \"right-arrow\", Children: gx.Text(\"Start\")}),\n    }),\n    Children: DocsBody(e),\n})\n```\n\nWith two or more `Versions` in the config, the header shows a select. A\nchoice opens the site of that version.\n\n## Do\n\n- Keep the page `Path` with a trailing slash. The sidebar marks the item with the same path.\n- Name a built-in icon of the docs kit for each social link, for example `github`.\n- Set `Collapsed` on a long nested group. The group opens when it holds the current page.\n\n## Don't\n\n- Do not use the block without the `starlight` theme. The markup has no utility classes.\n- Do not put a `Toc` or a `Sidebar` outside the `Shell`.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| Tab | Moves through the skip link, the header, the sidebar, the content and the table of contents. |\n| Enter, Space | Opens the search dialog, the mobile menu, a sidebar group or the table of contents menu. |\n| Ctrl/Cmd K | Opens the search dialog. |\n| Escape | Closes the search dialog and the table of contents menu. |\n| Arrow up, Arrow down | Changes the theme or the version in its select. |\n"
+}

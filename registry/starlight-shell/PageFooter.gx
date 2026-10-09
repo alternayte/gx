@@ -1,0 +1,24 @@
+package starlight
+
+props {
+  // Site is the site-wide data. Its EditBase builds the edit link; empty hides the link.
+  Site Config
+  // Page is the data of the current page: its path, its date and its previous and next
+  // items.
+  Page Page
+}
+
+<footer class="sl-footer">
+  <div class="sl-meta">
+    if p.Site.EditURL(p.Page) != "" {
+      <a class="sl-edit-link" href={gx.URL(p.Site.EditURL(p.Page))}>
+        {icon("pencil", "")}
+        Edit page
+      </a>
+    }
+    if p.Page.Updated != "" {
+      <p data-gx-updated>Last updated: <time>{p.Page.Updated}</time></p>
+    }
+  </div>
+  <Pagination prev={p.Page.Prev} next={p.Page.Next} />
+</footer>

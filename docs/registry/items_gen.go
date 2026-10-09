@@ -59,6 +59,7 @@ import (
 	skeleton "github.com/alternayte/gx/registry/skeleton"
 	slider "github.com/alternayte/gx/registry/slider"
 	spinner "github.com/alternayte/gx/registry/spinner"
+	starlight "github.com/alternayte/gx/registry/starlight-shell"
 	switches "github.com/alternayte/gx/registry/switch"
 	table "github.com/alternayte/gx/registry/table"
 	tabs "github.com/alternayte/gx/registry/tabs"
@@ -440,6 +441,7 @@ var Items = []Item{
 			{Name: "aside-tip", Title: "Aside: Tip", Component: "Aside", Fixtures: []string{"Aside/Tip"}, Node: func() gx.Node { return docs.Aside(docs.AsideFixtures["Tip"]) }},
 			{Name: "aside-caution", Title: "Aside: Caution", Component: "Aside", Fixtures: []string{"Aside/Caution"}, Node: func() gx.Node { return docs.Aside(docs.AsideFixtures["Caution"]) }},
 			{Name: "aside-danger", Title: "Aside: Danger", Component: "Aside", Fixtures: []string{"Aside/Danger"}, Node: func() gx.Node { return docs.Aside(docs.AsideFixtures["Danger"]) }},
+			{Name: "aside-icon", Title: "Aside: Icon", Component: "Aside", Fixtures: []string{"Aside/Icon"}, Node: func() gx.Node { return docs.Aside(docs.AsideFixtures["Icon"]) }},
 			{Name: "badge-default", Title: "Badge: Default", Component: "Badge", Fixtures: []string{"Badge/Default"}, Node: func() gx.Node { return docs.Badge(docs.BadgeFixtures["Default"]) }},
 			{Name: "badge-secondary", Title: "Badge: Secondary", Component: "Badge", Fixtures: []string{"Badge/Secondary"}, Node: func() gx.Node { return docs.Badge(docs.BadgeFixtures["Secondary"]) }},
 			{Name: "badge-destructive", Title: "Badge: Destructive", Component: "Badge", Fixtures: []string{"Badge/Destructive"}, Node: func() gx.Node { return docs.Badge(docs.BadgeFixtures["Destructive"]) }},
@@ -447,6 +449,7 @@ var Items = []Item{
 			{Name: "card-title-and-body", Title: "Card: Title and body", Component: "Card", Fixtures: []string{"Card/TitleAndBody"}, Node: func() gx.Node { return docs.Card(docs.CardFixtures["TitleAndBody"]) }},
 			{Name: "card-body-only", Title: "Card: Body only", Component: "Card", Fixtures: []string{"Card/BodyOnly"}, Node: func() gx.Node { return docs.Card(docs.CardFixtures["BodyOnly"]) }},
 			{Name: "card-title-only", Title: "Card: Title only", Component: "Card", Fixtures: []string{"Card/TitleOnly"}, Node: func() gx.Node { return docs.Card(docs.CardFixtures["TitleOnly"]) }},
+			{Name: "card-with-icon", Title: "Card: With icon", Component: "Card", Fixtures: []string{"Card/WithIcon"}, Node: func() gx.Node { return docs.Card(docs.CardFixtures["WithIcon"]) }},
 			{Name: "card-grid-two", Title: "CardGrid: Two", Component: "CardGrid", Fixtures: []string{"CardGrid/Two"}, Node: func() gx.Node { return docs.CardGrid(docs.CardGridFixtures["Two"]) }},
 			{Name: "code-go", Title: "Code: Go", Component: "Code", Fixtures: []string{"Code/Go"}, Node: func() gx.Node { return docs.Code(docs.CodeFixtures["Go"]) }},
 			{Name: "code-marked", Title: "Code: Marked", Component: "Code", Fixtures: []string{"Code/Marked"}, Node: func() gx.Node { return docs.Code(docs.CodeFixtures["Marked"]) }},
@@ -462,6 +465,8 @@ var Items = []Item{
 			{Name: "link-button-secondary", Title: "LinkButton: Secondary", Component: "LinkButton", Fixtures: []string{"LinkButton/Secondary"}, Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Secondary"]) }},
 			{Name: "link-button-outline", Title: "LinkButton: Outline", Component: "LinkButton", Fixtures: []string{"LinkButton/Outline"}, Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Outline"]) }},
 			{Name: "link-button-ghost", Title: "LinkButton: Ghost", Component: "LinkButton", Fixtures: []string{"LinkButton/Ghost"}, Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Ghost"]) }},
+			{Name: "link-button-minimal", Title: "LinkButton: Minimal", Component: "LinkButton", Fixtures: []string{"LinkButton/Minimal"}, Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["Minimal"]) }},
+			{Name: "link-button-with-icon", Title: "LinkButton: With icon", Component: "LinkButton", Fixtures: []string{"LinkButton/WithIcon"}, Node: func() gx.Node { return docs.LinkButton(docs.LinkButtonFixtures["WithIcon"]) }},
 			{Name: "link-card-full", Title: "LinkCard: Full", Component: "LinkCard", Fixtures: []string{"LinkCard/Full"}, Node: func() gx.Node { return docs.LinkCard(docs.LinkCardFixtures["Full"]) }},
 			{Name: "link-card-short", Title: "LinkCard: Short", Component: "LinkCard", Fixtures: []string{"LinkCard/Short"}, Node: func() gx.Node { return docs.LinkCard(docs.LinkCardFixtures["Short"]) }},
 			{Name: "steps-three", Title: "Steps: Three", Component: "Steps", Fixtures: []string{"Steps/Three"}, Node: func() gx.Node { return docs.Steps(docs.StepsFixtures["Three"]) }},
@@ -1133,6 +1138,43 @@ var Items = []Item{
 			{Name: "spinner-default", Title: "Default", Component: "Spinner", Fixtures: []string{"Spinner/Default"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Default"]) }},
 			{Name: "spinner-large", Title: "Large", Component: "Spinner", Fixtures: []string{"Spinner/Large"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Large"]) }},
 			{Name: "spinner-muted", Title: "Muted", Component: "Spinner", Fixtures: []string{"Spinner/Muted"}, Node: func() gx.Node { return spinner.Spinner(spinner.SpinnerFixtures["Muted"]) }},
+		},
+	},
+	{
+		Name:        "starlight",
+		Title:       "Starlight",
+		Group:       "Docs kit",
+		Description: "The Starlight theme: the tokens, the page layout, the prose and the looks of the docs kit and the code frames.",
+	},
+	{
+		Name:        "starlight-shell",
+		Title:       "Starlight shell",
+		Group:       "Docs kit",
+		Description: "The Starlight docs shell: fixed header, version label, search, social icons, theme select, sidebar, table of contents, hero, page links and 404.",
+		Block:       true,
+		Examples: []Example{
+			{Name: "header-default", Title: "Header: Default", Component: "Header", Fixtures: []string{"Header/Default"}, Node: func() gx.Node { return starlight.Header(starlight.HeaderFixtures["Default"]) }},
+			{Name: "hero-default", Title: "Hero: Default", Component: "Hero", Fixtures: []string{"Hero/Default"}, Node: func() gx.Node { return starlight.Hero(starlight.HeroFixtures["Default"]) }},
+			{Name: "hero-title", Title: "Hero: Title", Component: "Hero", Fixtures: []string{"Hero/Title"}, Node: func() gx.Node { return starlight.Hero(starlight.HeroFixtures["Title"]) }},
+			{Name: "mobile-toc-default", Title: "MobileToc: Default", Component: "MobileToc", Fixtures: []string{"MobileToc/Default"}, Node: func() gx.Node { return starlight.MobileToc(starlight.MobileTocFixtures["Default"]) }},
+			{Name: "not-found-default", Title: "NotFound: Default", Component: "NotFound", Fixtures: []string{"NotFound/Default"}, Node: func() gx.Node { return starlight.NotFound(starlight.NotFoundFixtures["Default"]) }},
+			{Name: "page-footer-default", Title: "PageFooter: Default", Component: "PageFooter", Fixtures: []string{"PageFooter/Default"}, Node: func() gx.Node { return starlight.PageFooter(starlight.PageFooterFixtures["Default"]) }},
+			{Name: "pagination-both", Title: "Pagination: Both", Component: "Pagination", Fixtures: []string{"Pagination/Both"}, Node: func() gx.Node { return starlight.Pagination(starlight.PaginationFixtures["Both"]) }},
+			{Name: "pagination-next", Title: "Pagination: Next", Component: "Pagination", Fixtures: []string{"Pagination/Next"}, Node: func() gx.Node { return starlight.Pagination(starlight.PaginationFixtures["Next"]) }},
+			{Name: "pagination-prev", Title: "Pagination: Prev", Component: "Pagination", Fixtures: []string{"Pagination/Prev"}, Node: func() gx.Node { return starlight.Pagination(starlight.PaginationFixtures["Prev"]) }},
+			{Name: "search-dialog-default", Title: "SearchDialog: Default", Component: "SearchDialog", Fixtures: []string{"SearchDialog/Default"}, Node: func() gx.Node { return starlight.SearchDialog(starlight.SearchDialogFixtures["Default"]) }},
+			{Name: "shell-default", Title: "Shell: Default", Component: "Shell", Fixtures: []string{"Shell/Default"}, Node: func() gx.Node { return starlight.Shell(starlight.ShellFixtures["Default"]) }},
+			{Name: "shell-splash", Title: "Shell: Splash", Component: "Shell", Fixtures: []string{"Shell/Splash"}, Node: func() gx.Node { return starlight.Shell(starlight.ShellFixtures["Splash"]) }},
+			{Name: "sidebar-default", Title: "Sidebar: Default", Component: "Sidebar", Fixtures: []string{"Sidebar/Default"}, Node: func() gx.Node { return starlight.Sidebar(starlight.SidebarFixtures["Default"]) }},
+			{Name: "sidebar-item-link", Title: "SidebarItem: Link", Component: "SidebarItem", Fixtures: []string{"SidebarItem/Link"}, Node: func() gx.Node { return starlight.SidebarItem(starlight.SidebarItemFixtures["Link"]) }},
+			{Name: "sidebar-item-group", Title: "SidebarItem: Group", Component: "SidebarItem", Fixtures: []string{"SidebarItem/Group"}, Node: func() gx.Node { return starlight.SidebarItem(starlight.SidebarItemFixtures["Group"]) }},
+			{Name: "sidebar-item-closed", Title: "SidebarItem: Closed", Component: "SidebarItem", Fixtures: []string{"SidebarItem/Closed"}, Node: func() gx.Node { return starlight.SidebarItem(starlight.SidebarItemFixtures["Closed"]) }},
+			{Name: "site-title-label", Title: "SiteTitle: Label", Component: "SiteTitle", Fixtures: []string{"SiteTitle/Label"}, Node: func() gx.Node { return starlight.SiteTitle(starlight.SiteTitleFixtures["Label"]) }},
+			{Name: "site-title-versions", Title: "SiteTitle: Versions", Component: "SiteTitle", Fixtures: []string{"SiteTitle/Versions"}, Node: func() gx.Node { return starlight.SiteTitle(starlight.SiteTitleFixtures["Versions"]) }},
+			{Name: "site-title-no-label", Title: "SiteTitle: No label", Component: "SiteTitle", Fixtures: []string{"SiteTitle/NoLabel"}, Node: func() gx.Node { return starlight.SiteTitle(starlight.SiteTitleFixtures["NoLabel"]) }},
+			{Name: "social-icons-default", Title: "SocialIcons: Default", Component: "SocialIcons", Fixtures: []string{"SocialIcons/Default"}, Node: func() gx.Node { return starlight.SocialIcons(starlight.SocialIconsFixtures["Default"]) }},
+			{Name: "theme-select-default", Title: "ThemeSelect: Default", Component: "ThemeSelect", Fixtures: []string{"ThemeSelect/Default"}, Node: func() gx.Node { return starlight.ThemeSelect(starlight.ThemeSelectFixtures["Default"]) }},
+			{Name: "toc-default", Title: "Toc: Default", Component: "Toc", Fixtures: []string{"Toc/Default"}, Node: func() gx.Node { return starlight.Toc(starlight.TocFixtures["Default"]) }},
 		},
 	},
 	{

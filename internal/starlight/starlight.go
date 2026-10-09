@@ -67,10 +67,8 @@ var propRenames = map[string]map[string]string{
 
 // droppedProps maps a Starlight prop the docs kit does not have.
 var droppedProps = map[string]map[string]bool{
-	"Card":       {"icon": true},
-	"LinkCard":   {"icon": true, "attrs": true},
-	"LinkButton": {"icon": true},
-	"Aside":      {"title": true},
+	"LinkCard": {"icon": true, "attrs": true},
+	"Aside":    {"title": true},
 }
 
 // supportedKeys are the DocMeta keys the converter emits (REQ-CNT-13).
@@ -555,7 +553,7 @@ func rewriteTags(text, dir string, snippets map[string]string, known map[string]
 				}
 			}
 			atLineStart = false
-		case atLineStart && (strings.HasPrefix(text[i:], "    ") || strings.HasPrefix(text[i:], "\t")):
+		case atLineStart && (strings.HasPrefix(text[i:], "    ") || strings.HasPrefix(text[i:], "\t")) && !importedTagLine(text[i:], snippets, known):
 			// An indented code block line.
 			end := strings.IndexByte(text[i:], '\n')
 			if end < 0 {
@@ -639,8 +637,11 @@ func rewriteTags(text, dir string, snippets map[string]string, known map[string]
 				if err != nil {
 					return "", notes, err
 				}
+				// The guard is for a snippet that includes itself. A page
+				// can use one snippet two times.
+				delete(seen, file)
 				notes = append(notes, more...)
-				b.Write(converted)
+				b.WriteString(indentSnippet(string(converted), lineIndent(b.String())))
 				i = end + 1
 				atLineStart = false
 				continue
@@ -660,6 +661,49 @@ func rewriteTags(text, dir string, snippets map[string]string, known map[string]
 		}
 	}
 	return b.String(), notes, nil
+}
+
+// importedTagLine reports whether a line starts, after its indent, with the
+// tag of an imported component or snippet. Such a line is content and not
+// an indented code block: the item of a list with ten or more items has an
+// indent of four spaces.
+func importedTagLine(line string, snippets map[string]string, known map[string]bool) bool {
+	line = strings.TrimLeft(line, " \t")
+	line = strings.TrimPrefix(line, "<")
+	line = strings.TrimPrefix(line, "/")
+	name, _ := readName(line)
+	if name == "" {
+		return false
+	}
+	_, snippet := snippets[name]
+	return snippet || known[name]
+}
+
+// lineIndent returns the white space of the last line of out, when that
+// line holds white space only. An include tag in a list item has the indent
+// of the item.
+func lineIndent(out string) string {
+	line := out[strings.LastIndexByte(out, '\n')+1:]
+	if strings.TrimLeft(line, " \t") != "" {
+		return ""
+	}
+	return line
+}
+
+// indentSnippet puts indent before each line of an inlined snippet but the
+// first, which follows the indent of the include tag. The snippet then
+// stays in the list item that holds the tag.
+func indentSnippet(snippet, indent string) string {
+	if indent == "" {
+		return snippet
+	}
+	lines := strings.Split(snippet, "\n")
+	for i := 1; i < len(lines); i++ {
+		if lines[i] != "" {
+			lines[i] = indent + lines[i]
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
 // inlineSnippet reads one MDX include, with a cycle guard.

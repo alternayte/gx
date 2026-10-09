@@ -1,0 +1,22 @@
+package starlight
+
+props {
+  // Site is the site-wide data. With two or more Versions, a select shows after the title;
+  // with fewer, the Version label shows.
+  Site Config
+}
+
+<div class="sl-title-row">
+  <a class="sl-site-title" href={gx.URL("/")}>
+    <span translate="no">{p.Site.Title}</span>
+  </a>
+  if len(p.Site.Versions) > 1 {
+    <select class="sl-version-select" aria-label="Documentation version" data-gx-goto autocomplete="off">
+      for _, v := range p.Site.Versions {
+        <option value={string(v.Href)} selected={v.Label == p.Site.Version}>{v.Label}</option>
+      }
+    </select>
+  } else if p.Site.Version != "" {
+    <span class="sl-version" data-gx-version>{p.Site.Version}</span>
+  }
+</div>

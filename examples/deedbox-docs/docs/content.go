@@ -4,13 +4,15 @@
 package docs
 
 import (
+	"encoding/json"
+	"os"
 	"sort"
 	"strings"
 
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/content"
 	"github.com/alternayte/gx/registry/docs"
-	"github.com/alternayte/gx/registry/docs-shell"
+	shell "github.com/alternayte/gx/registry/starlight-shell"
 )
 
 // DocMeta is the frontmatter of one docs page (REQ-CNT-06).
@@ -32,13 +34,20 @@ var Docs = gx.Collection[DocMeta]("content/docs").Components(
 	docs.LinkCard, docs.LinkButton, docs.Badge, docs.FileTree, docs.Code, docs.LLMSkip,
 )
 
-// Site is the shell configuration (REQ-CNT-14).
+// Site is the shell configuration (REQ-CNT-14). The Deedbox site has one
+// version, so the header shows its label; a second entry in Versions makes
+// the label a select.
 var Site = shell.Config{
 	Title:    "Deedbox",
-	Version:  "v1.0.0",
-	Links:    []shell.Link{{Label: "GitHub", Href: gx.URL("https://github.com/alternayte/deedbox")}},
+	Version:  "latest",
+	Versions: []shell.Version{{Label: "latest", Href: gx.URL("https://deedbox-docs.pages.dev")}},
+	Links:    []shell.Link{{Label: "GitHub", Href: gx.URL("https://github.com/alternayte/deedbox"), Icon: "github"}},
 	EditBase: "https://github.com/alternayte/deedbox/edit/main/site/src/content/docs/",
 }
+
+// beaconToken is the token of Cloudflare Web Analytics. The deploy sets it;
+// the analytics are cookie-free and off without it.
+var beaconToken = os.Getenv("PUBLIC_CF_BEACON_TOKEN")
 
 // groupOrder is the sidebar order of the Starlight config (REQ-CNT-06).
 var groupOrder = []string{"Tutorials", "How-to guides", "Concepts", "Reference", "Operations", "Errors"}
@@ -52,43 +61,55 @@ var Routes = gx.Collect(gx.ContentEntries(Docs, View).LLMS(gx.LLMSOptions[DocMet
 	Skip:        func(m DocMeta) bool { return m.LLMS == "skip" },
 }))
 
-// View renders one entry inside the docs shell.
+// View renders one entry inside the Starlight shell.
 func View(e gx.Entry[DocMeta]) gx.Node {
-	body := DocsBody(e)
-	if e.Meta.Template == "splash" {
-		return splash(e, body)
-	}
-	return shell.Shell(shell.ShellProps{
+	props := shell.ShellProps{
 		Site:     Site,
 		Nav:      Nav(),
 		Page:     pageFor(e),
-		Children: body,
-	})
+		Children: DocsBody(e),
+	}
+	if e.Meta.Template == "splash" {
+		props.Page.Splash = true
+		props.Hero = hero(e)
+	}
+	return gx.Frag(shell.Shell(props), beacon())
 }
 
-// splash renders the home page without the sidebar (REQ-CNT-14).
-func splash(e gx.Entry[DocMeta], body gx.Node) gx.Node {
-	heading := shell.Splash(shell.SplashProps{
+// hero renders the hero of the home page. `gx import starlight` does not
+// convert the hero actions of the frontmatter, so they are here.
+func hero(e gx.Entry[DocMeta]) gx.Node {
+	return shell.Hero(shell.HeroProps{
 		Title:   e.Meta.Title,
 		Tagline: e.Meta.Description,
 		Actions: gx.Frag(
 			docs.LinkButton(docs.LinkButtonProps{
 				Href:     gx.URL("/tutorials/first-stream/"),
+				Variant:  docs.ButtonPrimary,
+				Icon:     "right-arrow",
 				Children: gx.Text("Write your first stream"),
 			}),
 			docs.LinkButton(docs.LinkButtonProps{
 				Href:     gx.URL("/tutorials/existing-ef-core-app/"),
-				Variant:  docs.ButtonSecondary,
+				Variant:  docs.ButtonMinimal,
 				Children: gx.Text("Add Deedbox to an EF Core app"),
 			}),
 		),
-		Children: body,
 	})
-	return gx.Frag(
-		shell.Header(shell.HeaderProps{Site: Site}),
-		gx.El("main", gx.Attrs{{Key: "id", Value: "gx-main", Kind: gx.AttrText}}, heading),
-		shell.SearchDialog(shell.SearchDialogProps{}),
-	)
+}
+
+// beacon renders the script of Cloudflare Web Analytics, as the head
+// option of the Starlight config does. With no token it renders nothing.
+func beacon() gx.Node {
+	if beaconToken == "" {
+		return gx.Text("")
+	}
+	data, _ := json.Marshal(map[string]string{"token": beaconToken})
+	return gx.El("script", gx.Attrs{
+		gx.Bool("defer", true),
+		{Key: "src", Value: "https://static.cloudflareinsights.com/beacon.min.js", Kind: gx.AttrURL},
+		{Key: "data-cf-beacon", Value: string(data), Kind: gx.AttrText},
+	})
 }
 
 // entryHref returns the site path of one entry slug.
@@ -124,7 +145,7 @@ func Nav() shell.Nav {
 		if label == "Reference" {
 			errorsItems := groups["Errors"]
 			sortEntries(errorsItems)
-			nested := shell.NavItem{Label: "Errors", Badge: "37"}
+			nested := shell.NavItem{Label: "Errors", Collapsed: true}
 			for _, e := range errorsItems {
 				nested.Items = append(nested.Items, navItem(e))
 			}
@@ -174,7 +195,6 @@ func pageFor(e gx.Entry[DocMeta]) shell.Page {
 	p := shell.Page{
 		Title:   e.Meta.Title,
 		Path:    string(entryHref(e.Slug)),
-		Section: e.Meta.SidebarGroup,
 		Updated: e.Meta.Updated,
 	}
 	for _, h := range content.Headings(e.Body) {

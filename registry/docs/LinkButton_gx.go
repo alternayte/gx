@@ -9,9 +9,11 @@ import (
 type LinkButtonProps struct {
 	// Href is the link target.
 	Href gx.URL
-	// Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline or
-	// ButtonGhost.
+	// Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline,
+	// ButtonGhost or ButtonMinimal.
 	Variant ButtonVariant
+	// Icon is the name of the built-in icon after the label. Empty omits it.
+	Icon IconName
 	// Children is the button label.
 	Children gx.Node
 	// Attrs adds HTML attributes to the root element.
@@ -25,9 +27,9 @@ func LinkButton(p LinkButtonProps) gx.Node {
 		}
 	}
 	var _b gx.Builder
-//line LinkButton.gx:15:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-link-button my-2 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs), p.Children))
-//line LinkButton.gx:15:187
+//line LinkButton.gx:17:1
+	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-link-button my-2 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-variant", Value: string(p.Variant), Kind: gx.AttrText}}, p.Attrs), gx.Frag(p.Children, linkButtonIcon(p.Icon))))
+//line LinkButton.gx:17:250
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

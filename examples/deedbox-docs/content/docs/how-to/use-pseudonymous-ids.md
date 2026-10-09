@@ -72,9 +72,9 @@ var jobIds = await pseudonyms.EraseIdentityAsync("github:alice");
 
 1. Deedbox computes the person's subject ID in every period whose secret still exists.
 2. It deletes the subject key of each of those subjects in one transaction. Their personal data reads as erased at once.
-3. It queues one erasure job per period, as [erase a person](/how-to/erase-a-person/) describes.
+3. It queues one erasure job per period in the same transaction, as [erase a person](/how-to/erase-a-person/) describes.
 
-`IEventStoreAdmin.EraseIdentityAsync(identity, tenantId)` does the same for a named tenant. From the CLI:
+`IEventStoreAdmin.EraseIdentityAsync(identity, tenantId)` does the same for a named tenant. The tenant is required; pass `""` when the app has no tenants. It returns an `ErasureResult` with the job IDs and the number of keys deleted. From the CLI:
 
 ```sh
 deedbox erase --identity github:alice --tenant acme --master-key env:DEEDBOX_MASTER_KEY --wait
@@ -93,6 +93,8 @@ var destroyed = await admin.DestroyPseudonymPeriodAsync("2026-Q1", tenantId: "ac
 ```
 <!-- endSnippet -->
 
+
+The tenant is required here too; pass `""` when the app has no tenants.
 
 From the CLI:
 

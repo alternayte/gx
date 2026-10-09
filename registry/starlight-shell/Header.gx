@@ -1,0 +1,25 @@
+package starlight
+
+props {
+  // Site is the site-wide data: the title, the versions and the social links.
+  Site Config
+}
+
+<header class="sl-header">
+  <div class="sl-header-inner">
+    <div class="sl-title-wrapper">
+      <SiteTitle site={p.Site} />
+    </div>
+    <div class="sl-header-search">
+      <button type="button" class="sl-search-button" data-gx-search-open aria-label="Search" aria-keyshortcuts="Control+K" aria-haspopup="dialog">
+        {icon("magnifier", "")}
+        <span aria-hidden="true">Search</span>
+        <kbd><kbd data-gx-mod-key>Ctrl</kbd><kbd>K</kbd></kbd>
+      </button>
+    </div>
+    <div class="sl-right-group">
+      <SocialIcons links={p.Site.Links} />
+      <ThemeSelect />
+    </div>
+  </div>
+</header>

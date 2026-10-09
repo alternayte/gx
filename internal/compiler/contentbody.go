@@ -17,6 +17,13 @@ type contentTag struct {
 	qual  string
 	attrs []contentAttr
 	pos   Pos
+	// block is true for a tag that has its lines to itself: only white
+	// space stands before the open tag and after the end of the tag.
+	block bool
+	// indent is the number of spaces before a block tag.
+	indent int
+	// lineStart is true when only white space stands before the open tag.
+	lineStart bool
 }
 
 // contentAttr is one attribute of a content tag.
@@ -73,7 +80,10 @@ func parseContentTree(src string, lineOffset int) ([]contentNode, []Diagnostic) 
 		top.kids = append(top.kids, contentNode{tag: tag})
 		stack = append(stack, &top.kids[len(top.kids)-1])
 	}
+	// closed is the tag that the last closing tag ended, or nil.
+	var closed *contentTag
 	closeTag := func(name string, at Pos) {
+		closed = nil
 		if len(stack) == 1 {
 			diags = append(diags, contentParseDiag(at, "closing tag </"+name+"> has no matching open tag"))
 			return
@@ -84,7 +94,18 @@ func parseContentTree(src string, lineOffset int) ([]contentNode, []Diagnostic) 
 			return
 		}
 		flush()
+		closed = top.tag
 		stack = stack[:len(stack)-1]
+	}
+	// endsLine reports whether only white space stands between i and the
+	// end of the line.
+	endsLine := func() bool {
+		for k := i; k < len(src) && src[k] != '\n'; k++ {
+			if !isTagSpace(src[k]) {
+				return false
+			}
+		}
+		return true
 	}
 	for i < len(src) {
 		switch {
@@ -162,6 +183,9 @@ func parseContentTree(src string, lineOffset int) ([]contentNode, []Diagnostic) 
 				stop++
 			}
 			advance(stop)
+			if closed != nil && closed.lineStart && endsLine() {
+				closed.block = true
+			}
 		case src[i] == '<':
 			name, _ := readTagName(src[i+1:])
 			if name == "" || !isComponentTagName(name) {
@@ -176,12 +200,18 @@ func parseContentTree(src string, lineOffset int) ([]contentNode, []Diagnostic) 
 				continue
 			}
 			at := Pos{Line: line, Col: col}
+			lineStart := atLineStart
 			tag, selfClose, stop := scanContentTag(src[i:], name, at)
 			advance(stop)
 			if tag == nil {
 				continue
 			}
+			tag.lineStart = lineStart
+			if lineStart {
+				tag.indent = col0Indent(src, i-stop)
+			}
 			if selfClose {
+				tag.block = lineStart && endsLine()
 				flush()
 				top := stack[len(stack)-1]
 				top.kids = append(top.kids, contentNode{tag: tag})
@@ -198,6 +228,16 @@ func parseContentTree(src string, lineOffset int) ([]contentNode, []Diagnostic) 
 		diags = append(diags, contentParseDiag(open.tag.pos, "unclosed component tag <"+openName(open)+">"))
 	}
 	return root.kids, diags
+}
+
+// col0Indent returns the number of spaces between the start of the line
+// and the byte at.
+func col0Indent(src string, at int) int {
+	n := 0
+	for at-n-1 >= 0 && src[at-n-1] == ' ' {
+		n++
+	}
+	return n
 }
 
 // openName returns the tag name of an open node.

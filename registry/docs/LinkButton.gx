@@ -3,13 +3,15 @@ package docs
 props {
   // Href is the link target.
   Href     gx.URL
-  // Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline or
-  // ButtonGhost.
+  // Variant sets the visual style: ButtonPrimary, ButtonSecondary, ButtonOutline,
+  // ButtonGhost or ButtonMinimal.
   Variant  ButtonVariant = ButtonPrimary
+  // Icon is the name of the built-in icon after the label. Empty omits it.
+  Icon     IconName = ""
   // Children is the button label.
   Children gx.Node
   // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
-<a href={p.Href} class={gx.Cx("gx-link-button my-2 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant])} {...p.Attrs}>{p.Children}</a>
+<a href={p.Href} class={gx.Cx("gx-link-button my-2 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant])} data-variant={string(p.Variant)} {...p.Attrs}>{p.Children}{linkButtonIcon(p.Icon)}</a>

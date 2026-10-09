@@ -171,6 +171,8 @@ The registry has two items for a docs site.
 | --- | --- |
 | `docs` | Aside, Tabs and TabItem, Steps, Card, CardGrid, LinkCard, LinkButton, Badge, FileTree, Code. |
 | `docs-shell` | The header, the sidebar, the table of contents, the page links, the theme select, the search dialog, the splash page and the 404 page. |
+| `starlight` | A theme: one stylesheet with the colours, the fonts, the page layout, the prose and the code frames of the default Starlight theme. |
+| `starlight-shell` | The page structure of the default Starlight theme. Use it with the `starlight` theme in place of `docs-shell`. |
 
 Tabs with the same `sync` key change together, and the browser remembers the choice.
 
@@ -185,3 +187,17 @@ gx import starlight --out content/docs ../my-starlight-site
 ```
 
 The command converts the frontmatter, the sidebar, the `.mdx` files and the Starlight components. It prints each part that it cannot convert.
+
+To keep the look of the Starlight site, add the shell. The command also adds the theme and the docs kit:
+
+```sh
+gx add starlight-shell
+```
+
+Then import `./starlight.css` in `app/theme.css`, and render each page with `starlight.Shell`. The pages of the two items show each step.
+
+Do these parts by hand after the import:
+
+- The hero of a splash page. Write its actions in Go, as `docs.LinkButton` values in the `Actions` of `starlight.Hero`.
+- The social links, the edit link and the versions. Set them in `starlight.Config`.
+- A script of the `head` option, such as an analytics script. Render a `script` element after the shell.

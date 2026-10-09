@@ -9,6 +9,8 @@ import (
 type CardProps struct {
 	// Title is the heading of the card. Empty omits it.
 	Title string
+	// Icon is the name of the built-in icon before the title. Empty omits it.
+	Icon IconName
 	// Description is the text below the title. Empty omits it.
 	Description string
 	// Children is the content of the card. Nil omits the body.
@@ -24,45 +26,63 @@ func Card(p CardProps) gx.Node {
 		}
 	}
 	var _b gx.Builder
-//line Card.gx:14:1
+//line Card.gx:16:1
 	var _b1 gx.Builder
-//line Card.gx:14:115
+//line Card.gx:16:115
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:15:3
+//line Card.gx:17:3
 	if p.Title != "" {
-//line Card.gx:15:21
+//line Card.gx:17:21
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:16:5
-		_b1.Add(gx.El("h3", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-base font-semibold leading-none tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Card.gx:16:87
+//line Card.gx:18:5
+		var _b2 gx.Builder
+//line Card.gx:18:111
+		_b2.Add(gx.Text("\n      "))
+//line Card.gx:19:7
+		if IconBody(p.Icon) != "" {
+//line Card.gx:19:34
+			_b2.Add(gx.Text("\n        "))
+//line Card.gx:20:9
+			_b2.Add(gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-card-icon size-5 shrink-0"}))
+//line Card.gx:20:97
+			_b2.Add(gx.Text("\n      "))
+		}
+//line Card.gx:21:8
+		_b2.Add(gx.Text("\n      "))
+//line Card.gx:22:7
+		_b2.Add(gx.El("span", nil, gx.Text(p.Title)))
+//line Card.gx:22:29
+		_b2.Add(gx.Text("\n    "))
+		_b1.Add(gx.El("h3", gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-title m-0 flex items-center gap-3 text-base font-semibold leading-none tracking-tight", Kind: gx.AttrText}}, _b2.Node()))
+//line Card.gx:23:10
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:17:4
+//line Card.gx:24:4
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:18:3
+//line Card.gx:25:3
 	if p.Description != "" {
-//line Card.gx:18:27
+//line Card.gx:25:27
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:19:5
+//line Card.gx:26:5
 		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 mt-1.5 text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Card.gx:19:76
+//line Card.gx:26:76
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:20:4
+//line Card.gx:27:4
 	_b1.Add(gx.Text("\n  "))
-//line Card.gx:21:3
+//line Card.gx:28:3
 	if p.Children != nil {
-//line Card.gx:21:25
+//line Card.gx:28:25
 		_b1.Add(gx.Text("\n    "))
-//line Card.gx:22:5
+//line Card.gx:29:5
 		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-body mt-4", Kind: gx.AttrText}}, p.Children))
-//line Card.gx:22:54
+//line Card.gx:29:54
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Card.gx:23:4
+//line Card.gx:30:4
 	_b1.Add(gx.Text("\n"))
 	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card my-4 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Card.gx:24:7
+//line Card.gx:31:7
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

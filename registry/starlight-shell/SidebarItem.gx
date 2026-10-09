@@ -1,0 +1,38 @@
+package starlight
+
+props {
+  // Item is the sidebar link. An item with nested items shows as a group that opens and
+  // closes.
+  Item NavItem
+  // Path is the site path of the current page. A closed group that holds the page starts
+  // open.
+  Path string
+}
+
+<li>
+  if len(p.Item.Items) > 0 {
+    <details open={GroupOpen(p.Path, p.Item.Collapsed, p.Item.Items)}>
+      <summary>
+        <span class="sl-group-label">
+          <span class="sl-large">{p.Item.Label}</span>
+          if p.Item.Badge != "" {
+            <span class="sl-badge">{p.Item.Badge}</span>
+          }
+        </span>
+        {icon("right-caret", "sl-caret")}
+      </summary>
+      <ul>
+        for _, child := range p.Item.Items {
+          <SidebarItem item={child} path={p.Path} />
+        }
+      </ul>
+    </details>
+  } else {
+    <a class="sl-nav-link" href={p.Item.Href} active="page">
+      <span>{p.Item.Label}</span>
+      if p.Item.Badge != "" {
+        <span class="sl-badge">{p.Item.Badge}</span>
+      }
+    </a>
+  }
+</li>

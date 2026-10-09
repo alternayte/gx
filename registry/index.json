@@ -140,7 +140,7 @@
     },
     {
       "name": "docs",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks.",
       "kind": "block"
     },
@@ -329,6 +329,18 @@
       "version": "0.1.0",
       "description": "An indicator for an unknown wait.",
       "kind": "component"
+    },
+    {
+      "name": "starlight",
+      "version": "0.1.0",
+      "description": "The Starlight theme: the tokens, the page layout, the prose and the looks of the docs kit and the code frames.",
+      "kind": "theme"
+    },
+    {
+      "name": "starlight-shell",
+      "version": "0.1.0",
+      "description": "The Starlight docs shell: fixed header, version label, search, social icons, theme select, sidebar, table of contents, hero, page links and 404.",
+      "kind": "block"
     },
     {
       "name": "switch",

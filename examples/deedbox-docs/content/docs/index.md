@@ -44,16 +44,16 @@ var result = await store.Execute<Cart>(cartId, cart => CartDecider.Add(cart, sku
 
 
 <docs.CardGrid>
-  <docs.Card title="Your app stays yours">
+  <docs.Card title="Your app stays yours" icon="setting">
     Deedbox tables live in their own schema. Appends share your connection and transaction. There is no mediator, no document database and no base class for your events.
   </docs.Card>
-  <docs.Card title="Correct under load">
+  <docs.Card title="Correct under load" icon="approve-check">
     No event is ever skipped. Global order is commit order. A torture suite checks this on both databases, with killed sessions and competing instances.
   </docs.Card>
-  <docs.Card title="Erasure built in">
+  <docs.Card title="Erasure built in" icon="warning">
     Mark personal data with an attribute. Erasing a person makes their data unreadable everywhere, even inside long-lived shared streams.
   </docs.Card>
-  <docs.Card title="Operable">
+  <docs.Card title="Operable" icon="list-format">
     A CLI, an admin API, metrics, traces and health checks that stay healthy during a rebuild.
   </docs.Card>
 </docs.CardGrid>

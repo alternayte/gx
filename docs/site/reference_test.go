@@ -52,9 +52,14 @@ func TestREQ_DOC_02_APIReference(t *testing.T) {
 	app.Group("/", site.Routes)
 
 	rows := 0
-	for name := range registryFixtures(t, filepath.Join("..", "registry")) {
+	for name, fixtures := range registryFixtures(t, filepath.Join("..", "registry")) {
 		it, _ := registry.Find(name)
 		if it.IconSet {
+			continue
+		}
+		// A theme is a stylesheet: it has no component, so it has no
+		// props to show.
+		if len(fixtures) == 0 {
 			continue
 		}
 		page := html.UnescapeString(tags.ReplaceAllString(get(t, app, "/components/"+name+"/"), ""))

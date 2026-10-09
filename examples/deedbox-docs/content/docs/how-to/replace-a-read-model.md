@@ -14,14 +14,14 @@ The method is often called a blue/green rebuild: the old projection is blue, the
 2. Register it under a new name, next to the old one. Keep the old one as it is: it serves reads until the switch.
 
    <!-- snippet: blue-green-register -->
-```cs
-services.AddDeedbox(es => es
-    .UsePostgres(connStr)
-    .Stream<Cart>(s => s.Events<ItemAdded, CheckedOut>())
-    .Projection<CartSummaryProjection>("cart_summary", Run.Inline)        // serves reads until the switch
-    .Projection<CartSummaryV2Projection>("cart_summary_v2", Run.Async));  // fills the new tables from the first event
-```
-<!-- endSnippet -->
+   ```cs
+   services.AddDeedbox(es => es
+       .UsePostgres(connStr)
+       .Stream<Cart>(s => s.Events<ItemAdded, CheckedOut>())
+       .Projection<CartSummaryProjection>("cart_summary", Run.Inline)        // serves reads until the switch
+       .Projection<CartSummaryV2Projection>("cart_summary_v2", Run.Async));  // fills the new tables from the first event
+   ```
+   <!-- endSnippet -->
 
 
    The new one can be async or inline. A new inline projection stays in catch-up until no instance of the old version is live, so it misses nothing during a rolling deploy; see [inline or async projections](/concepts/inline-or-async/#deploy-inline-projections-safely).
@@ -29,15 +29,15 @@ services.AddDeedbox(es => es
 3. Deploy. The runner applies every earlier event to the new projection, then keeps it current. Watch it with `deedbox status`, or from code:
 
    <!-- snippet: blue-green-ready -->
-```cs
-var status = await admin.GetStatusAsync();
-var next = status.Consumers.Single(c => c.Name == "cart_summary_v2");
-var ready = next.Status == "running" && next.Lag == 0;  // caught up with every event
-```
-<!-- endSnippet -->
+   ```cs
+   var status = await admin.GetStatusAsync();
+   var next = status.Consumers.Single(c => c.Name == "cart_summary_v2");
+   var ready = next.Status == ConsumerState.Running && next.Lag == 0;  // caught up with every event
+   ```
+   <!-- endSnippet -->
 
 
-   The health check stays healthy while the new projection catches up.
+   The health check stays healthy while the new projection catches up. If an inline projection cannot finish its catch-up, the check reports it as degraded; see [rebuild a projection](/how-to/rebuild-a-projection/#what-happens).
 
 4. When the new projection is caught up, switch the reads to the new tables. Use a configuration flag or a deploy. Both read models stay current until the next step, so you can switch back.
 

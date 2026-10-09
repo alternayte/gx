@@ -8,6 +8,11 @@ with:
 
     gx import starlight --out content/docs ../deedbox/site
 
+The site has the look of the Deedbox site, which uses the default Starlight
+theme: `app/starlight.css` is the `starlight` theme of the registry, and the
+pages use the `starlight-shell` block. `just parity-starlight` compares the
+two sites in a browser.
+
 Run the site:
 
     gx dev -main .

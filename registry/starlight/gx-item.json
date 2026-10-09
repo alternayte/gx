@@ -1,0 +1,12 @@
+{
+  "name": "starlight",
+  "version": "0.1.0",
+  "description": "The Starlight theme: the tokens, the page layout, the prose and the looks of the docs kit and the code frames.",
+  "kind": "theme",
+  "files": [
+    {
+      "path": "starlight.css",
+      "target": "app/starlight.css"
+    }
+  ]
+}

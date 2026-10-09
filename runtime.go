@@ -236,7 +236,7 @@ func behaviorMarker(key string) bool {
 	case "data-gx-copy", "data-gx-theme", "data-gx-menu",
 		"data-gx-search", "data-gx-search-open", "data-gx-search-close",
 		"data-gx-search-form", "data-gx-search-input", "data-gx-search-results",
-		"data-gx-search-src", "data-gx-toc", "data-gx-toc-target":
+		"data-gx-search-src", "data-gx-toc", "data-gx-toc-target", "data-gx-goto":
 		return true
 	}
 	return false

@@ -7,4 +7,5 @@ var AsideFixtures = gx.Fixtures[AsideProps]{
 	"Tip":     {Kind: Tip, Children: gx.Text("A tip.")},
 	"Caution": {Kind: Caution, Children: gx.Text("Careful.")},
 	"Danger":  {Kind: Danger, Title: "Danger", Children: gx.Text("Stop.")},
+	"Icon":    {Kind: Tip, Title: "Tip", Icon: "rocket", Children: gx.Text("A tip with an icon.")},
 }

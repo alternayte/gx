@@ -1,5 +1,6 @@
 // The Deedbox docs parity checklist in a real browser (REQ-CNT-14): the
-// shell, the docs kit components, search, code frames, llms files and meta.
+// Starlight shell, the docs kit components, search, code frames, llms files
+// and meta. `just parity-starlight` compares the look with the Starlight site.
 import { afterAll, beforeAll, expect, test } from 'bun:test'
 import { type Browser, type Page } from 'playwright-core'
 import { freePort, launchBrowser } from './harness'
@@ -62,28 +63,35 @@ afterAll(async () => {
 test('REQ-CNT-14 the splash home shows the hero, actions and card grid', async () => {
   page = await browser.newPage()
   await page.goto(url + '/')
-  await page.waitForSelector('.gx-splash')
-  expect(await page.$$('.gx-link-button')).toHaveLength(2)
+  await page.waitForSelector('.sl-hero')
+  expect(await page.$$('.sl-hero .gx-link-button')).toHaveLength(2)
   expect(await page.$$('.gx-card-grid .gx-card')).toHaveLength(4)
+  expect(await page.$$('.gx-card .gx-card-icon')).toHaveLength(4)
+  // A splash page has no sidebar and no table of contents.
+  expect(await page.$('#gx-sidebar')).toBeNull()
+  expect(await page.$('[data-gx-toc]')).toBeNull()
 })
 
 test('REQ-CNT-14 the sidebar has the Starlight groups and a nested Errors group', async () => {
   page = await browser.newPage()
   await page.goto(url + '/tutorials/first-stream/')
-  const labels = await page.$$eval('.gx-nav-group > summary', (els) => els.map((e) => e.textContent?.trim() ?? ''))
-  for (const want of ['Tutorials', 'How-to guides', 'Concepts', 'Reference', 'Operations']) {
-    expect(labels.some((l) => l.startsWith(want))).toBe(true)
-  }
-  const nested = await page.$$eval('.gx-nav-sub > summary', (els) => els.map((e) => e.textContent?.trim() ?? ''))
-  expect(nested.some((l) => l.startsWith('Errors'))).toBe(true)
-  expect(await page.textContent('.gx-nav-sub .gx-nav-badge')).toContain('37')
+  const labels = await page.$$eval('.sl-top-level > li > details > summary', (els) => els.map((e) => e.textContent?.trim() ?? ''))
+  expect(labels).toEqual(['Tutorials', 'How-to guides', 'Concepts', 'Reference', 'Operations'])
+  const nested = await page.$$eval('.sl-top-level details details > summary', (els) => els.map((e) => e.textContent?.trim() ?? ''))
+  expect(nested).toEqual(['Errors'])
+  // The Errors group starts closed and holds a page for each error.
+  expect(await page.$eval('.sl-top-level details details', (el) => (el as HTMLDetailsElement).open)).toBe(false)
+  expect((await page.$$('.sl-top-level details details a')).length).toBeGreaterThanOrEqual(37)
+  expect((await page.textContent('.sl-nav-link[aria-current="page"]'))?.trim()).toBe('Your first stream')
 })
 
 test('REQ-CNT-14 Markdown pages render Steps, Tabs and code frames', async () => {
   page = await browser.newPage()
   await page.goto(url + '/tutorials/first-stream/')
-  expect(await page.$('.gx-steps')).not.toBeNull()
-  expect(await page.$('.gx-tabs .gx-tab')).not.toBeNull()
+  // The steps are one list, and the tabs of a step are in its list item.
+  expect(await page.$$('.gx-steps > ol')).toHaveLength(1)
+  expect(await page.$('.gx-steps > ol > li .gx-tabs .gx-tab')).not.toBeNull()
+  expect(await page.$('.gx-steps > ol > li figure.gx-code')).not.toBeNull()
   expect(await page.$$('.gx-code')).not.toHaveLength(0)
   expect(await page.$$('.gx-code.terminal')).not.toHaveLength(0)
   expect(await page.$('[data-gx-copy]')).not.toBeNull()
@@ -108,9 +116,12 @@ test('REQ-CNT-14 the table of contents, anchors, edit link and pagination render
   await page.goto(url + '/tutorials/first-stream/')
   expect(await page.$$('[data-gx-toc] a')).not.toHaveLength(0)
   expect(await page.$('a.anchor[href^="#"]')).not.toBeNull()
-  const edit = await page.getAttribute('.gx-edit-link', 'href')
+  const edit = await page.getAttribute('.sl-edit-link', 'href')
   expect(edit).toContain('https://github.com/alternayte/deedbox/edit/main/site/src/content/docs/')
-  expect(await page.$('.gx-pagination-next')).not.toBeNull()
+  expect(await page.$('.sl-pagination a[rel="next"]')).not.toBeNull()
+  // The entry of the heading in view is the current one.
+  await page.evaluate(() => document.getElementById('next')?.scrollIntoView())
+  await page.waitForSelector('.sl-toc a[data-gx-toc-target="next"][aria-current="location"]')
 })
 
 test('REQ-CNT-14 search finds a page by body text', async () => {
@@ -123,19 +134,25 @@ test('REQ-CNT-14 search finds a page by body text', async () => {
   expect(hrefs.some((href) => href.includes('/concepts/erasure-and-keys'))).toBe(true)
 }, 90000)
 
-test('REQ-CNT-14 the theme select, version badge, GitHub link, skip link and menu', async () => {
+test('REQ-CNT-14 the theme select, version label, GitHub link, skip link and menu', async () => {
   page = await browser.newPage()
   await page.goto(url + '/tutorials/first-stream/')
-  expect((await page.textContent('[data-gx-version]'))?.trim()).toBe('v1.0.0')
-  const github = await page.getAttribute('a.gx-header-link', 'href')
+  expect((await page.textContent('[data-gx-version]'))?.trim()).toBe('latest')
+  const github = await page.getAttribute('.sl-right-group a.sl-social-link', 'href')
   expect(github).toBe('https://github.com/alternayte/deedbox')
-  expect(await page.getAttribute('.gx-skip-link', 'href')).toBe('#gx-main')
-  await page.click('[data-gx-theme="dark"]')
+  expect(await page.getAttribute('.sl-skip-link', 'href')).toBe('#_top')
+  const theme = '.sl-right-group select[data-gx-theme]'
+  await page.selectOption(theme, 'dark')
   expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true)
   await page.reload()
   expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true)
-  await page.click('[data-gx-theme="auto"]')
+  expect(await page.inputValue(theme)).toBe('dark')
+  await page.selectOption(theme, 'auto')
   expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(false)
+  // The sidebar shows from the width of 50rem.
+  await page.setViewportSize({ width: 900, height: 800 })
+  await page.waitForFunction(() => document.getElementById('gx-sidebar')?.hidden === false)
+  expect(await (await page.$('#gx-sidebar'))?.isVisible()).toBe(true)
   await page.setViewportSize({ width: 390, height: 800 })
   await page.waitForFunction(() => document.getElementById('gx-sidebar')?.hidden === true)
   const aside = await page.$('#gx-sidebar')
@@ -143,6 +160,15 @@ test('REQ-CNT-14 the theme select, version badge, GitHub link, skip link and men
   await page.click('[data-gx-menu]')
   await page.waitForFunction(() => document.getElementById('gx-sidebar')?.hidden === false)
   expect(await aside?.isVisible()).toBe(true)
+  await page.click('[data-gx-menu]')
+  await page.waitForFunction(() => document.getElementById('gx-sidebar')?.hidden === true)
+  // The table of contents is a menu at this width. It names the current
+  // entry and closes after a choice.
+  expect((await page.textContent('[data-gx-toc-menu] summary'))?.trim()).toContain('On this page')
+  await page.click('[data-gx-toc-menu] summary')
+  await page.click('[data-gx-toc-menu] a[data-gx-toc-target="next"]')
+  await page.waitForFunction(() => document.querySelector<HTMLDetailsElement>('[data-gx-toc-menu]')?.open === false)
+  await page.waitForFunction(() => document.querySelector('[data-gx-toc-current]')?.textContent?.trim() === 'Next')
 })
 
 test('REQ-CNT-14 the export writes llms files, a raw copy, sitemap and meta', async () => {

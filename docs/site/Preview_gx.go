@@ -10,6 +10,8 @@ type PreviewProps struct {
 	Title    string
 	Block    bool
 	Children gx.Node
+	// Style is a style element after the stylesheet of the site. Nil omits it.
+	Style gx.Node
 }
 
 func Preview(p PreviewProps) gx.Node {
@@ -19,23 +21,34 @@ func Preview(p PreviewProps) gx.Node {
 		}
 	}
 	var _b gx.Builder
-//line Preview.gx:9:1
+//line Preview.gx:11:1
 	_b.Add(gx.Head(gx.HeadProps{Title: p.Title, Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
-//line Preview.gx:9:28
+//line Preview.gx:11:28
 	_b.Add(gx.Text("\n"))
-//line Preview.gx:11:73
+//line Preview.gx:13:73
 	_b.Add(gx.Text("\n"))
-//line Preview.gx:12:1
+//line Preview.gx:14:1
 	_b.Add(gx.El("span", gx.Attrs{gx.Bool("hidden", true), gx.Attr{Key: "data-gx-theme", Value: "auto", Kind: gx.AttrText}}))
-//line Preview.gx:12:42
+//line Preview.gx:14:42
 	_b.Add(gx.Text("\n"))
-//line Preview.gx:13:1
+//line Preview.gx:15:1
+	if p.Style != nil {
+//line Preview.gx:15:20
+		_b.Add(gx.Text("\n  "))
+//line Preview.gx:16:3
+		_b.Add(p.Style)
+//line Preview.gx:16:12
+		_b.Add(gx.Text("\n"))
+	}
+//line Preview.gx:17:2
+	_b.Add(gx.Text("\n"))
+//line Preview.gx:18:1
 	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-stage", gx.When("gx-stage-block", p.Block)), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-stage-content", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line Preview.gx:15:7
+//line Preview.gx:20:7
 	_b.Add(gx.Text("\n"))
-//line Preview.gx:16:1
+//line Preview.gx:21:1
 	_b.Add(previewScript())
-//line Preview.gx:16:18
+//line Preview.gx:21:18
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

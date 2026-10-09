@@ -1,0 +1,144 @@
+{
+  "name": "starlight-shell",
+  "version": "0.1.0",
+  "description": "The Starlight docs shell: fixed header, version label, search, social icons, theme select, sidebar, table of contents, hero, page links and 404.",
+  "kind": "block",
+  "files": [
+    {
+      "path": "Header.fixtures.go",
+      "target": "ui/starlight-shell/Header.fixtures.go"
+    },
+    {
+      "path": "Header.gx",
+      "target": "ui/starlight-shell/Header.gx"
+    },
+    {
+      "path": "Hero.fixtures.go",
+      "target": "ui/starlight-shell/Hero.fixtures.go"
+    },
+    {
+      "path": "Hero.gx",
+      "target": "ui/starlight-shell/Hero.gx"
+    },
+    {
+      "path": "MobileToc.fixtures.go",
+      "target": "ui/starlight-shell/MobileToc.fixtures.go"
+    },
+    {
+      "path": "MobileToc.gx",
+      "target": "ui/starlight-shell/MobileToc.gx"
+    },
+    {
+      "path": "NotFound.fixtures.go",
+      "target": "ui/starlight-shell/NotFound.fixtures.go"
+    },
+    {
+      "path": "NotFound.gx",
+      "target": "ui/starlight-shell/NotFound.gx"
+    },
+    {
+      "path": "PageFooter.fixtures.go",
+      "target": "ui/starlight-shell/PageFooter.fixtures.go"
+    },
+    {
+      "path": "PageFooter.gx",
+      "target": "ui/starlight-shell/PageFooter.gx"
+    },
+    {
+      "path": "Pagination.fixtures.go",
+      "target": "ui/starlight-shell/Pagination.fixtures.go"
+    },
+    {
+      "path": "Pagination.gx",
+      "target": "ui/starlight-shell/Pagination.gx"
+    },
+    {
+      "path": "SearchDialog.fixtures.go",
+      "target": "ui/starlight-shell/SearchDialog.fixtures.go"
+    },
+    {
+      "path": "SearchDialog.gx",
+      "target": "ui/starlight-shell/SearchDialog.gx"
+    },
+    {
+      "path": "Shell.fixtures.go",
+      "target": "ui/starlight-shell/Shell.fixtures.go"
+    },
+    {
+      "path": "Shell.gx",
+      "target": "ui/starlight-shell/Shell.gx"
+    },
+    {
+      "path": "Sidebar.fixtures.go",
+      "target": "ui/starlight-shell/Sidebar.fixtures.go"
+    },
+    {
+      "path": "Sidebar.gx",
+      "target": "ui/starlight-shell/Sidebar.gx"
+    },
+    {
+      "path": "SidebarItem.fixtures.go",
+      "target": "ui/starlight-shell/SidebarItem.fixtures.go"
+    },
+    {
+      "path": "SidebarItem.gx",
+      "target": "ui/starlight-shell/SidebarItem.gx"
+    },
+    {
+      "path": "SiteTitle.fixtures.go",
+      "target": "ui/starlight-shell/SiteTitle.fixtures.go"
+    },
+    {
+      "path": "SiteTitle.gx",
+      "target": "ui/starlight-shell/SiteTitle.gx"
+    },
+    {
+      "path": "SocialIcons.fixtures.go",
+      "target": "ui/starlight-shell/SocialIcons.fixtures.go"
+    },
+    {
+      "path": "SocialIcons.gx",
+      "target": "ui/starlight-shell/SocialIcons.gx"
+    },
+    {
+      "path": "ThemeSelect.fixtures.go",
+      "target": "ui/starlight-shell/ThemeSelect.fixtures.go"
+    },
+    {
+      "path": "ThemeSelect.gx",
+      "target": "ui/starlight-shell/ThemeSelect.gx"
+    },
+    {
+      "path": "Toc.fixtures.go",
+      "target": "ui/starlight-shell/Toc.fixtures.go"
+    },
+    {
+      "path": "Toc.gx",
+      "target": "ui/starlight-shell/Toc.gx"
+    },
+    {
+      "path": "fixtures.go",
+      "target": "ui/starlight-shell/fixtures.go"
+    },
+    {
+      "path": "helpers.go",
+      "target": "ui/starlight-shell/helpers.go"
+    },
+    {
+      "path": "nav.go",
+      "target": "ui/starlight-shell/nav.go"
+    }
+  ],
+  "registryDependencies": [
+    "docs",
+    "starlight"
+  ],
+  "requiredTokens": [
+    "--sl-color-bg",
+    "--sl-color-text",
+    "--sl-color-text-accent",
+    "--sl-nav-height",
+    "--sl-sidebar-width",
+    "--sl-content-width"
+  ]
+}

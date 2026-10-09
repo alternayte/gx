@@ -192,3 +192,43 @@ func TestREQ_CNT_13_RemoteImport(t *testing.T) {
 		}
 	}
 }
+
+// TestREQ_CNT_13_SnippetInListItem checks an include tag in a list item:
+// each line of the snippet gets the indent of the tag, so the snippet stays
+// in the list item. It also checks that the icon of a card stays.
+func TestREQ_CNT_13_SnippetInListItem(t *testing.T) {
+	src := t.TempDir()
+	files := map[string]string{
+		"astro.config.mjs":            "import { defineConfig } from 'astro/config'\nimport starlight from '@astrojs/starlight'\n\nexport default defineConfig({ integrations: [starlight({ title: 'Deedbox' })] })\n",
+		"src/content/docs/start.mdx":  "---\ntitle: Start\n---\n\nimport { Card } from '@astrojs/starlight/components';\nimport CartEvents from '../../snippets/cart-events.md';\n\n1. Write the events.\n\n   <CartEvents />\n\n2. Next.\n\n10. Ten.\n\n    <CartEvents />\n\n<Card title=\"Operable\" icon=\"setting\">Text.</Card>\n",
+		"src/snippets/cart-events.md": "```cs\npublic record ItemAdded(string Sku);\n\npublic record CheckedOut();\n```\n",
+	}
+	for rel, body := range files {
+		path := filepath.Join(src, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	out := t.TempDir()
+	if _, err := starlight.Convert(starlight.Options{Src: src, Out: out}); err != nil {
+		t.Fatalf("Convert: %v", err)
+	}
+	data, err := os.ReadFile(filepath.Join(out, "start.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := string(data)
+	for _, want := range []string{
+		"   ```cs\n   public record ItemAdded(string Sku);\n\n   public record CheckedOut();\n   ```\n",
+		`<docs.Card title="Operable" icon="setting">`,
+		// An include tag with an indent of four spaces is not a code block.
+		"10. Ten.\n\n    ```cs\n    public record ItemAdded(string Sku);\n",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("start.md lacks %q:\n%s", want, got)
+		}
+	}
+}

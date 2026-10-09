@@ -11,6 +11,8 @@ type AsideProps struct {
 	Kind Kind
 	// Title is the heading of the callout. Empty omits it.
 	Title string
+	// Icon is the name of the built-in icon before the title. Empty omits it.
+	Icon IconName
 	// Children is the content of the callout.
 	Children gx.Node
 	// Attrs adds HTML attributes to the root element.
@@ -24,27 +26,45 @@ func Aside(p AsideProps) gx.Node {
 		}
 	}
 	var _b gx.Builder
-//line Aside.gx:14:1
+//line Aside.gx:16:1
 	var _b1 gx.Builder
-//line Aside.gx:14:127
+//line Aside.gx:16:154
 	_b1.Add(gx.Text("\n  "))
-//line Aside.gx:15:3
+//line Aside.gx:17:3
 	if p.Title != "" {
-//line Aside.gx:15:21
+//line Aside.gx:17:21
 		_b1.Add(gx.Text("\n    "))
-//line Aside.gx:16:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-title m-0 mb-1 font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Aside.gx:16:67
+//line Aside.gx:18:5
+		var _b2 gx.Builder
+//line Aside.gx:18:78
+		_b2.Add(gx.Text("\n      "))
+//line Aside.gx:19:7
+		if IconBody(p.Icon) != "" {
+//line Aside.gx:19:34
+			_b2.Add(gx.Text("\n        "))
+//line Aside.gx:20:9
+			_b2.Add(gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-aside-icon size-5 shrink-0"}))
+//line Aside.gx:20:98
+			_b2.Add(gx.Text("\n      "))
+		}
+//line Aside.gx:21:8
+		_b2.Add(gx.Text("\n      "))
+//line Aside.gx:22:7
+		_b2.Add(gx.El("span", nil, gx.Text(p.Title)))
+//line Aside.gx:22:29
+		_b2.Add(gx.Text("\n    "))
+		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-title m-0 mb-1 flex items-center gap-2 font-semibold", Kind: gx.AttrText}}, _b2.Node()))
+//line Aside.gx:23:9
 		_b1.Add(gx.Text("\n  "))
 	}
-//line Aside.gx:17:4
+//line Aside.gx:24:4
 	_b1.Add(gx.Text("\n  "))
-//line Aside.gx:18:3
+//line Aside.gx:25:3
 	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-body [&>p:first-child]:mt-0 [&>p:last-child]:mb-0", Kind: gx.AttrText}}, p.Children))
-//line Aside.gx:18:93
+//line Aside.gx:25:93
 	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind]), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Aside.gx:19:9
+	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-kind", Value: string(p.Kind), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
+//line Aside.gx:26:9
 	_b.Add(gx.Text("\n"))
 	return _b.Node()
 }

@@ -7,7 +7,7 @@ title: Run on Kubernetes
 
 This guide shows you how to run Deedbox with several replicas on Kubernetes.
 
-## Use the health check for liveness
+## Alert on the health check; do not probe with it
 
 <!-- snippet: health-checks -->
 ```cs
@@ -16,14 +16,29 @@ builder.Services.AddHealthChecks().AddDeedboxHealthChecks();
 <!-- endSnippet -->
 
 
-The check is unhealthy only when a projection or subscription is stalled, or when events wait and its checkpoint has not moved for `StallAfter` (10 minutes by default). A projection that is behind but moving, or rebuilding, is healthy. Kubernetes therefore does not restart a pod in the middle of a rebuild.
+The check is unhealthy when a projection or subscription is stalled, or when events wait and its checkpoint has not moved for `StallAfter` (10 minutes by default). A projection that is behind but moving, or rebuilding, is healthy.
+
+A restart does not fix a stall, and neither does taking a pod out of the Service. A subscription stalls when the service it calls is down. With the check on a liveness probe, Kubernetes then restarts every pod in a loop until that service is back. With the check on a readiness probe, every pod leaves the Service and your API is down. So keep the check off both probes, and give it its own path:
+
+<!-- snippet: health-endpoints -->
+```cs
+// The probes: the process answers. They leave the Deedbox check out.
+app.MapHealthChecks("/healthz", new() { Predicate = check => check.Name != "deedbox" });
+
+// For alerts: unhealthy while a projection or subscription is stalled or stuck.
+app.MapHealthChecks("/health/deedbox", new() { Predicate = check => check.Name == "deedbox" });
+```
+<!-- endSnippet -->
+
 
 ```yaml
 livenessProbe:
-  httpGet: { path: /health, port: 8080 }
-  periodSeconds: 30
-  failureThreshold: 4
+  httpGet: { path: /healthz, port: 8080 }
+readinessProbe:
+  httpGet: { path: /healthz, port: 8080 }
 ```
+
+Point your monitoring at `/health/deedbox` and alert when it is unhealthy. The [stalled projection](/operations/stalled-projection/) and [poison event](/operations/poison-event/) runbooks tell you what to do then.
 
 ## Run several replicas
 

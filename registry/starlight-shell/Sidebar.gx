@@ -1,0 +1,49 @@
+package starlight
+
+props {
+  // Site is the site-wide data. The mobile menu shows its social links.
+  Site Config
+  // Nav is the sidebar model: the groups and their items.
+  Nav  Nav
+  // Path is the site path of the current page. A closed group that holds the page starts
+  // open.
+  Path string
+}
+
+<nav class="sl-sidebar" aria-label="Main">
+  <button type="button" class="sl-menu-button" data-gx-menu aria-expanded="false" aria-controls="gx-sidebar">
+    {icon("bars", "sl-open-menu")}
+    {icon("close", "sl-close-menu")}
+    <span class="sr-only">Menu</span>
+  </button>
+  <div id="gx-sidebar" class="sl-sidebar-pane" data-gx-sidebar="50rem">
+    <div class="sl-sidebar-content">
+      <ul class="sl-top-level">
+        for _, g := range p.Nav.Groups {
+          <li>
+            <details open={GroupOpen(p.Path, g.Collapsed, g.Items)}>
+              <summary>
+                <span class="sl-group-label">
+                  <span class="sl-large">{g.Label}</span>
+                  if g.Badge != "" {
+                    <span class="sl-badge">{g.Badge}</span>
+                  }
+                </span>
+                {icon("right-caret", "sl-caret")}
+              </summary>
+              <ul>
+                for _, it := range g.Items {
+                  <SidebarItem item={it} path={p.Path} />
+                }
+              </ul>
+            </details>
+          </li>
+        }
+      </ul>
+      <div class="sl-mobile-preferences">
+        <SocialIcons links={p.Site.Links} />
+        <ThemeSelect />
+      </div>
+    </div>
+  </div>
+</nav>

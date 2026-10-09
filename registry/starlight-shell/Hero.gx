@@ -1,0 +1,29 @@
+package starlight
+
+props {
+  // Title is the heading of the hero.
+  Title   string
+  // Tagline is the text below the title. Empty omits it.
+  Tagline string = ""
+  // Actions is the row of link buttons below the tagline. Nil omits it.
+  Actions gx.Node = nil
+  // Image is the picture beside the text. Nil omits it.
+  Image   gx.Node = nil
+}
+
+<div class="sl-hero">
+  if p.Image != nil {
+    <div class="sl-hero-image">{p.Image}</div>
+  }
+  <div class="sl-stack">
+    <div class="sl-copy">
+      <h1 id="_top">{p.Title}</h1>
+      if p.Tagline != "" {
+        <div class="sl-tagline">{p.Tagline}</div>
+      }
+    </div>
+    if p.Actions != nil {
+      <div class="sl-actions">{p.Actions}</div>
+    }
+  </div>
+</div>

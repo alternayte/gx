@@ -5,15 +5,22 @@ props {
   Kind     Kind = Note
   // Title is the heading of the callout. Empty omits it.
   Title    string = ""
+  // Icon is the name of the built-in icon before the title. Empty omits it.
+  Icon     IconName = ""
   // Children is the content of the callout.
   Children gx.Node
   // Attrs adds HTML attributes to the root element.
   Attrs    gx.Attrs = nil
 }
 
-<aside class={gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind])} {...p.Attrs}>
+<aside class={gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind])} data-kind={string(p.Kind)} {...p.Attrs}>
   if p.Title != "" {
-    <p class="gx-aside-title m-0 mb-1 font-semibold">{p.Title}</p>
+    <p class="gx-aside-title m-0 mb-1 flex items-center gap-2 font-semibold">
+      if IconBody(p.Icon) != "" {
+        {gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-aside-icon size-5 shrink-0"})}
+      }
+      <span>{p.Title}</span>
+    </p>
   }
   <div class="gx-aside-body [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">{p.Children}</div>
 </aside>

@@ -276,7 +276,7 @@ func (reg *registry) loadItem(it *item) error {
 	switch {
 	case it.IconSet:
 		it.Group = groupIcons
-	case it.Name == "docs" || strings.HasPrefix(it.Name, "docs-"):
+	case it.Name == "docs" || strings.HasPrefix(it.Name, "docs-") || strings.HasPrefix(it.Name, "starlight"):
 		it.Group = groupDocsKit
 	case it.Kind == "block":
 		it.Group = groupBlocks

@@ -36,52 +36,52 @@ You need the .NET 10 SDK (or .NET 8) and a Postgres or SQL Server database. Dock
 2. Write the events. An event is a plain record that states what happened.
 
    <!-- snippet: cart-events -->
-```cs
-// Events: plain records. No marker interface, no base class.
-public record ItemAdded(string Sku, int Qty);
+   ```cs
+   // Events: plain records. No marker interface, no base class.
+   public record ItemAdded(string Sku, int Qty);
 
-public record CheckedOut(DateTimeOffset At);
-```
-<!-- endSnippet -->
+   public record CheckedOut(DateTimeOffset At);
+   ```
+   <!-- endSnippet -->
 
 
 3. Write the state. `Initial` is the state of a new cart. `Evolve` applies one event.
 
    <!-- snippet: cart-state -->
-```cs
-// State: Initial and Evolve. Nothing else.
-public record Cart(ImmutableDictionary<string, int> Items, bool IsCheckedOut) : IState<Cart>
-{
-    public static Cart Initial { get; } = new(ImmutableDictionary<string, int>.Empty, false);
+   ```cs
+   // State: Initial and Evolve. Nothing else.
+   public record Cart(ImmutableDictionary<string, int> Items, bool IsCheckedOut) : IState<Cart>
+   {
+       public static Cart Initial { get; } = new(ImmutableDictionary<string, int>.Empty, false);
 
-    public static Cart Evolve(Cart s, object e) => e switch
-    {
-        ItemAdded x => s with { Items = s.Items.SetItem(x.Sku, s.Items.GetValueOrDefault(x.Sku) + x.Qty) },
-        CheckedOut => s with { IsCheckedOut = true },
-        _ => s,
-    };
-}
-```
-<!-- endSnippet -->
+       public static Cart Evolve(Cart s, object e) => e switch
+       {
+           ItemAdded x => s with { Items = s.Items.SetItem(x.Sku, s.Items.GetValueOrDefault(x.Sku) + x.Qty) },
+           CheckedOut => s with { IsCheckedOut = true },
+           _ => s,
+       };
+   }
+   ```
+   <!-- endSnippet -->
 
 
 4. Write the decisions. A decision is a pure function: it takes the current state and returns new events. It never writes anything.
 
    <!-- snippet: cart-decider -->
-```cs
-// Decisions: pure functions from state to new events.
-public static class CartDecider
-{
-    public static IEnumerable<object> Add(Cart cart, string sku, int qty) =>
-        cart.IsCheckedOut
-            ? throw new InvalidOperationException("The cart is checked out.")
-            : [new ItemAdded(sku, qty)];
+   ```cs
+   // Decisions: pure functions from state to new events.
+   public static class CartDecider
+   {
+       public static IEnumerable<object> Add(Cart cart, string sku, int qty) =>
+           cart.IsCheckedOut
+               ? throw new InvalidOperationException("The cart is checked out.")
+               : [new ItemAdded(sku, qty)];
 
-    public static IEnumerable<object> CheckOut(Cart cart, DateTimeOffset now) =>
-        cart.IsCheckedOut || cart.Items.IsEmpty ? [] : [new CheckedOut(now)];
-}
-```
-<!-- endSnippet -->
+       public static IEnumerable<object> CheckOut(Cart cart, DateTimeOffset now) =>
+           cart.IsCheckedOut || cart.Items.IsEmpty ? [] : [new CheckedOut(now)];
+   }
+   ```
+   <!-- endSnippet -->
 
 
 5. Register the stream in `Program.cs`. `ApplySchemaOnStartup` creates the Deedbox tables when the app starts.
@@ -114,25 +114,25 @@ builder.Services.AddDeedbox(es => es
 6. Append events. Get `IEventStore` from dependency injection. `Execute` loads the cart, runs your decision, and appends the new events in one transaction.
 
    <!-- snippet: write-execute -->
-```cs
-// Load, decide, evolve and append in one transaction.
-var result = await store.Execute<Cart>(cartId, cart => CartDecider.Add(cart, sku, qty));
+   ```cs
+   // Load, decide, evolve and append in one transaction.
+   var result = await store.Execute<Cart>(cartId, cart => CartDecider.Add(cart, sku, qty));
 
-// result.State is the new state; result.Version the new version; result.Events the appended envelopes.
-```
-<!-- endSnippet -->
+   // result.State is the new state; result.Version the new version; result.Events the appended envelopes.
+   ```
+   <!-- endSnippet -->
 
 
 7. Or do each part yourself. `Load` returns the state and the version. `Append` writes only if the stream is still at that version.
 
    <!-- snippet: write-explicit -->
-```cs
-var (cart, version) = await store.Load<Cart>(cartId);
-var events = CartDecider.CheckOut(cart, now).ToList();
-if (events.Count > 0)
-    await store.Append(cartId, ExpectedVersion.Exact(version), events);
-```
-<!-- endSnippet -->
+   ```cs
+   var (cart, version) = await store.Load<Cart>(cartId);
+   var events = CartDecider.CheckOut(cart, now).ToList();
+   if (events.Count > 0)
+       await store.Append(cartId, ExpectedVersion.Exact(version), events);
+   ```
+   <!-- endSnippet -->
 
 
 </docs.Steps>

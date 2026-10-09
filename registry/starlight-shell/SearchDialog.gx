@@ -1,0 +1,14 @@
+package starlight
+
+<dialog id="gx-search" class="sl-search-dialog" data-gx-search data-gx-search-src="/pagefind/pagefind.js" aria-label="Search">
+  <div class="sl-search-frame">
+    <form method="get" action="/search" class="sl-search-form" data-gx-search-form>
+      <div class="sl-search-field">
+        {icon("magnifier", "")}
+        <input type="search" name="q" class="sl-search-input" placeholder="Search" data-gx-search-input autocomplete="off" />
+      </div>
+      <button type="button" class="sl-search-close" data-gx-search-close>Cancel</button>
+    </form>
+    <div class="sl-search-results" data-gx-search-results></div>
+  </div>
+</dialog>

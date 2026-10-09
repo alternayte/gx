@@ -1,0 +1,23 @@
+package starlight
+
+props {
+  // Prev is the previous sidebar item. Nil omits the link.
+  Prev *NavItem
+  // Next is the next sidebar item. Nil omits the link.
+  Next *NavItem
+}
+
+<div class="sl-pagination">
+  if p.Prev != nil {
+    <a href={p.Prev.Href} rel="prev">
+      {icon("left-arrow", "")}
+      <span>Previous<br /><span class="sl-link-title">{p.Prev.Label}</span></span>
+    </a>
+  }
+  if p.Next != nil {
+    <a href={p.Next.Href} rel="next">
+      {icon("right-arrow", "")}
+      <span>Next<br /><span class="sl-link-title">{p.Next.Label}</span></span>
+    </a>
+  }
+</div>

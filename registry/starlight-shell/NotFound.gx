@@ -1,0 +1,12 @@
+package starlight
+
+props {
+  // Site is the site-wide data: the title, the versions and the social links.
+  Site    Config
+  // Title is the heading of the page.
+  Title   string = "404"
+  // Message is the text below the title.
+  Message string = "Page not found. Check the URL or try using the search bar."
+}
+
+<Shell site={p.Site} nav={Nav{}} page={Page{Title: p.Title, Splash: true}} hero={Hero(HeroProps{Title: p.Title, Tagline: p.Message})} children={gx.Text("")} />

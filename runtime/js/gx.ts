@@ -115,6 +115,11 @@ const applyTheme = (mode: string): void => {
   if (mode === 'dark') root.classList.add('dark')
   else if (mode === 'light') root.classList.add('light')
   document.querySelectorAll<HTMLElement>('[data-gx-theme]').forEach((button) => {
+    // A theme control is a button for each mode, or one select.
+    if (button instanceof HTMLSelectElement) {
+      button.value = mode
+      return
+    }
     const on = button.getAttribute('data-gx-theme') === mode
     button.setAttribute('aria-pressed', on ? 'true' : 'false')
     if (on) button.setAttribute('data-active', '')
@@ -140,8 +145,10 @@ const openSearch = (): void => {
 // spyTOC marks the table-of-contents entry of the heading nearest the top
 // of the viewport (REQ-CNT-06).
 const spyTOC = (): void => {
-  const toc = document.querySelector('[data-gx-toc]')
-  if (!toc) return
+  document.querySelectorAll('[data-gx-toc]').forEach(spyOneTOC)
+}
+
+const spyOneTOC = (toc: Element): void => {
   const links = [...toc.querySelectorAll<HTMLElement>('[data-gx-toc-target]')]
   let active = ''
   for (const link of links) {
@@ -159,6 +166,11 @@ const spyTOC = (): void => {
     if (on) {
       link.setAttribute('aria-current', 'location')
       link.setAttribute('data-active', '')
+      // A closed table of contents shows the name of the current entry.
+      // The write is only for a new name: the page observer runs this
+      // function again after each change of the document.
+      const current = toc.querySelector('[data-gx-toc-current]')
+      if (current && current.textContent !== link.textContent) current.textContent = link.textContent
     } else {
       link.removeAttribute('aria-current')
       link.removeAttribute('data-active')
@@ -167,6 +179,12 @@ const spyTOC = (): void => {
 }
 
 const installShell = (): void => {
+  // The search shortcut shows the Command key on an Apple device.
+  if (/Mac|iPhone|iPod|iPad/i.test(navigator.platform)) {
+    document.querySelectorAll('[data-gx-mod-key]').forEach((key) => {
+      if (key.textContent !== '\u2318') key.textContent = '\u2318'
+    })
+  }
   applyTheme(storedTheme())
   syncSidebar()
   spyTOC()
@@ -177,7 +195,10 @@ const installShell = (): void => {
 const syncSidebar = (): void => {
   const side = document.getElementById('gx-sidebar')
   if (!side) return
-  const wide = window.matchMedia('(min-width: 1024px)').matches
+  // The value of data-gx-sidebar is the width from which the sidebar always
+  // shows.
+  const from = side.getAttribute('data-gx-sidebar') || '1024px'
+  const wide = window.matchMedia(`(min-width: ${from})`).matches
   const open = side.hasAttribute('data-open')
   side.hidden = !wide && !open
 }
@@ -189,17 +210,31 @@ const installShellEvents = (): void => {
   window.addEventListener('storage', (e) => {
     if (e.key === themeKey) applyTheme(e.newValue ?? 'auto')
   })
+  const chooseTheme = (mode: string): void => {
+    applyTheme(mode)
+    try {
+      localStorage.setItem(themeKey, mode)
+    } catch {
+      // Private mode has no storage.
+    }
+  }
+  document.addEventListener('change', (e) => {
+    const select = e.target
+    if (!(select instanceof HTMLSelectElement)) return
+    if (select.hasAttribute('data-gx-theme')) chooseTheme(select.value)
+    // A select of site addresses, such as the versions of the docs.
+    else if (select.hasAttribute('data-gx-goto') && select.value !== '') window.location.href = select.value
+  })
   document.addEventListener('click', (e) => {
     const at = e.target as Element | null
+    // A table of contents in a menu closes after a choice and on a click
+    // outside it.
+    document.querySelectorAll<HTMLDetailsElement>('details[data-gx-toc-menu][open]').forEach((menu) => {
+      if (!at || !menu.contains(at) || at.closest('a')) menu.open = false
+    })
     const theme = at?.closest?.('[data-gx-theme]') as HTMLElement | null
-    if (theme) {
-      const mode = theme.getAttribute('data-gx-theme') ?? 'auto'
-      applyTheme(mode)
-      try {
-        localStorage.setItem(themeKey, mode)
-      } catch {
-        // Private mode has no storage.
-      }
+    if (theme && !(theme instanceof HTMLSelectElement)) {
+      chooseTheme(theme.getAttribute('data-gx-theme') ?? 'auto')
       return
     }
     if (at?.closest?.('[data-gx-search-open]')) {
@@ -227,6 +262,13 @@ const installShellEvents = (): void => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault()
       openSearch()
+    }
+    if (e.key === 'Escape') {
+      document.querySelectorAll<HTMLDetailsElement>('details[data-gx-toc-menu][open]').forEach((menu) => {
+        const focused = menu.contains(document.activeElement)
+        menu.open = false
+        if (focused) menu.querySelector<HTMLElement>('summary')?.focus()
+      })
     }
   })
   window.addEventListener('resize', syncSidebar)

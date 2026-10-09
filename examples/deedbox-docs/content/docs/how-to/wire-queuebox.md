@@ -17,20 +17,20 @@ This guide shows you how to send events to other systems with [QueueBox](https:/
 3. Choose the events to publish:
 
    <!-- snippet: queuebox -->
-```cs
-services.AddDeedbox(es => es
-    .UsePostgres(connStr)
-    .Keys(keys => keys.FromEnvironment("DEEDBOX_MASTER_KEY"))
-    .Stream<Cart>(s => s.Events<ItemAdded, CheckedOut>())
-    .Stream<Manuscript>(s => s.Events<ReviewerInvited, CoAuthorAdded>())
-    .UseQueueBox(q => q
-        .Publish<CheckedOut>("cart.checked_out")
-        // Events with [PersonalData] need a payload you shape, so no personal data leaks by default.
-        .Publish<ReviewerInvited>("review.invited", (e, info) => new { e.ManuscriptId, e.ReviewerId })
-        // Tell downstream systems to erase too.
-        .Publish<SubjectErased>("privacy.subject_erased")));
-```
-<!-- endSnippet -->
+   ```cs
+   services.AddDeedbox(es => es
+       .UsePostgres(connStr)
+       .Keys(keys => keys.FromEnvironment("DEEDBOX_MASTER_KEY"))
+       .Stream<Cart>(s => s.Events<ItemAdded, CheckedOut>())
+       .Stream<Manuscript>(s => s.Events<ReviewerInvited, CoAuthorAdded>())
+       .UseQueueBox(q => q
+           .Publish<CheckedOut>("cart.checked_out")
+           // Events with [PersonalData] need a payload you shape, so no personal data leaks by default.
+           .Publish<ReviewerInvited>("review.invited", (e, info) => new { e.ManuscriptId, e.ReviewerId })
+           // Tell downstream systems to erase too.
+           .Publish<SubjectErased>("privacy.subject_erased")));
+   ```
+   <!-- endSnippet -->
 
 
 ## What each row holds
@@ -39,10 +39,12 @@ services.AddDeedbox(es => es
 | --- | --- |
 | `id` | The event ID. A destination deduplicates on `X-Message-Id`. |
 | `topic` | The topic you chose. |
-| `key` | The stream ID, so one stream's messages keep their order. |
+| `key` | The stream ID. It groups one stream's messages; it does not order them. |
 | `payload` | The event's JSON, or the payload you shaped. |
-| `headers` | `X-Correlation-Id`, `traceparent`, and the event's type, stream and version, plus the headers you add. |
+| `headers` | `X-Correlation-Id`, `traceparent`, and the event's type, stream and version, plus the headers you add. The stream version is in `x-deedbox-stream-version`. |
 | `aggregate_type` | The stream type. |
+
+One stream's messages can reach a destination out of order: the events of one append share an outbox time, and QueueBox publishes a batch concurrently. A receiver that needs order compares `x-deedbox-stream-version` and drops a message older than the one it holds.
 
 An event with `[PersonalData]` needs a payload you shape; start-up fails otherwise ([DBX032](/reference/errors/dbx032/)).
 
@@ -139,16 +141,16 @@ A breaking change, such as a renamed or removed field, needs a new topic. Deedbo
 2. Release the app with the new publication:
 
    <!-- snippet: queuebox-new-contract -->
-```cs
-// A breaking change goes to a new topic. From this release, nothing in the app writes the old topic.
-q.Publish<ItemPriced>((e, p) => new QueueBoxMessage("cart.item_added.v2", new
-{
-    sku = e.Sku,
-    quantity = e.Qty,
-    unitPrice = new { amount = e.Price, currency = "EUR" },
-}));
-```
-<!-- endSnippet -->
+   ```cs
+   // A breaking change goes to a new topic. From this release, nothing in the app writes the old topic.
+   q.Publish<ItemPriced>((e, p) => new QueueBoxMessage("cart.item_added.v2", new
+   {
+       sku = e.Sku,
+       quantity = e.Qty,
+       unitPrice = new { amount = e.Price, currency = "EUR" },
+   }));
+   ```
+   <!-- endSnippet -->
 
 
 3. Move each consumer to the new topic.

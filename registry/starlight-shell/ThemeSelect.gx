@@ -1,0 +1,12 @@
+package starlight
+
+<label class="sl-select">
+  <span class="sr-only">Select theme</span>
+  {icon("laptop", "sl-select-icon")}
+  <select data-gx-theme="select" autocomplete="off">
+    <option value="dark">Dark</option>
+    <option value="light">Light</option>
+    <option value="auto" selected>Auto</option>
+  </select>
+  {icon("down-caret", "sl-select-caret")}
+</label>

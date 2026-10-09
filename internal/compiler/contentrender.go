@@ -78,6 +78,9 @@ func renderContentFile(colls []contentCollection) ([]byte, error) {
 	b.Write(w.buf.Bytes())
 	if bodies {
 		b.WriteString("\n// gxContentMarkdown renders one prose chunk of a content body.\nfunc gxContentMarkdown(s string) gx.Node {\n\tnode, err := content.Body([]byte(s))\n\tif err != nil {\n\t\treturn gx.Text(\"\")\n\t}\n\treturn node\n}\n")
+		if w.slots {
+			b.WriteString("\n// gxContentSlots renders the prose around the components of one parent as one\n// Markdown document and puts each component in its slot.\nfunc gxContentSlots(s string, slots ...gx.Node) gx.Node {\n\tnode, err := content.BodySlots([]byte(s), slots...)\n\tif err != nil {\n\t\treturn gx.Text(\"\")\n\t}\n\treturn node\n}\n")
+		}
 	}
 	src, err := fixImports(contentBodyFile, b.Bytes())
 	if err != nil {
@@ -91,6 +94,8 @@ type contentWriter struct {
 	coll    contentCollection
 	buf     bytes.Buffer
 	imports map[string]string // path -> alias
+	// slots is true when a body uses gxContentSlots.
+	slots bool
 }
 
 // embed writes the content files of one collection into the package, so
@@ -127,7 +132,7 @@ func (w *contentWriter) collection(coll contentCollection) error {
 		slug := contentFileSlug(coll.dir, path)
 		body, _ := splitContentBody(src)
 		nodes, _ := parseContentTree(string(body), 0)
-		expr, err := w.nodes(nodes)
+		expr, err := w.nodes(nodes, 0)
 		if err != nil {
 			return err
 		}
@@ -137,36 +142,75 @@ func (w *contentWriter) collection(coll contentCollection) error {
 	return nil
 }
 
-// nodes renders a node list as one gx.Node expression.
-func (w *contentWriter) nodes(nodes []contentNode) (string, error) {
-	var parts []string
+// nodes renders a node list as one gx.Node expression. The prose of the
+// list is one Markdown document: a component between two prose chunks is a
+// slot in it, so a component in a list item stays in the list item. indent
+// is the number of spaces before the parent tag; each line loses that much.
+func (w *contentWriter) nodes(nodes []contentNode, indent int) (string, error) {
+	var md strings.Builder
+	var slots []string
+	prose := false
 	for _, node := range nodes {
+		if node.tag == nil {
+			if strings.TrimSpace(node.text) != "" {
+				prose = true
+			}
+			md.WriteString(node.text)
+			continue
+		}
 		expr, err := w.node(node)
 		if err != nil {
 			return "", err
 		}
-		if expr != "" {
-			parts = append(parts, expr)
+		if expr == "" {
+			continue
 		}
+		md.WriteString(contentSlotMarker(len(slots), node.tag.block))
+		slots = append(slots, expr)
 	}
-	switch len(parts) {
-	case 0:
+	switch {
+	case len(slots) == 0 && !prose:
 		return "gx.Text(\"\")", nil
-	case 1:
-		return parts[0], nil
-	default:
-		return "gx.Frag(" + strings.Join(parts, ", ") + ")", nil
+	case len(slots) == 0:
+		return "gxContentMarkdown(" + strconv.Quote(dedentContent(md.String(), indent)) + ")", nil
+	case !prose && len(slots) == 1:
+		return slots[0], nil
+	case !prose:
+		return "gx.Frag(" + strings.Join(slots, ", ") + ")", nil
 	}
+	w.slots = true
+	return "gxContentSlots(" + strconv.Quote(dedentContent(md.String(), indent)) + ", " + strings.Join(slots, ", ") + ")", nil
+}
+
+// contentSlotMarker returns the text that holds the place of slot n in the
+// Markdown document; content.BodySlots reads it. A block tag is an HTML
+// comment, which is an HTML block on its own line. A tag inside a line is
+// an element, which is inline HTML.
+func contentSlotMarker(n int, block bool) string {
+	if block {
+		return "<!--gx-slot:" + strconv.Itoa(n) + "-->"
+	}
+	return "<gx-slot n=\"" + strconv.Itoa(n) + "\"></gx-slot>"
+}
+
+// dedentContent removes up to indent leading spaces from each line.
+func dedentContent(s string, indent int) string {
+	if indent == 0 {
+		return s
+	}
+	lines := strings.Split(s, "\n")
+	for i, line := range lines {
+		n := 0
+		for n < indent && n < len(line) && line[n] == ' ' {
+			n++
+		}
+		lines[i] = line[n:]
+	}
+	return strings.Join(lines, "\n")
 }
 
 // node renders one node.
 func (w *contentWriter) node(node contentNode) (string, error) {
-	if node.tag == nil {
-		if strings.TrimSpace(node.text) == "" {
-			return "", nil
-		}
-		return "gxContentMarkdown(" + strconv.Quote(node.text) + ")", nil
-	}
 	comp, ok := w.coll.comps[node.tag.name]
 	if !ok {
 		// The content check reports the undeclared component.
@@ -186,7 +230,11 @@ func (w *contentWriter) node(node contentNode) (string, error) {
 	}
 	if len(node.kids) > 0 {
 		if prop, ok := comp.props["children"]; ok {
-			children, err := w.nodes(node.kids)
+			indent := 0
+			if node.tag.block {
+				indent = node.tag.indent
+			}
+			children, err := w.nodes(node.kids, indent)
 			if err != nil {
 				return "", err
 			}
@@ -223,7 +271,14 @@ func (w *contentWriter) attr(comp contentComp, prop Prop, attr contentAttr) (str
 	if isBuiltinPropType(prop.Type) {
 		return "", fmt.Errorf("content: a static value on the %s prop of %s", attr.name, comp.name)
 	}
-	return prop.Type + "(" + strconv.Quote(attr.value) + ")", nil
+	typ := prop.Type
+	// A named type of the package of the component needs its qualifier in
+	// the package of the collection.
+	if comp.pkgPath != "" && comp.pkgPath != w.coll.pkgPath && !strings.ContainsAny(typ, ".[]*") {
+		w.imports[comp.pkgPath] = comp.pkgName
+		typ = comp.pkgName + "." + typ
+	}
+	return typ + "(" + strconv.Quote(attr.value) + ")", nil
 }
 
 // isBuiltinPropType reports whether a prop type is a Go builtin.

@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks.",
   "kind": "block",
   "files": [
@@ -135,6 +135,10 @@
     {
       "path": "filetree.go",
       "target": "ui/docs/filetree.go"
+    },
+    {
+      "path": "icons.go",
+      "target": "ui/docs/icons.go"
     },
     {
       "path": "linkbutton.go",

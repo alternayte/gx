@@ -75,7 +75,13 @@ var PreviewPage = gx.Page(
 		if ex.Toast {
 			node = ToastDemo(ToastDemoProps{Children: node})
 		}
-		return PreviewProps{Title: it.Title + ": " + ex.Title, Block: it.Block, Children: node}, nil
+		props := PreviewProps{Title: it.Title + ": " + ex.Title, Block: it.Block, Children: node}
+		// The Starlight items have their own theme. The preview is a
+		// document of its own, so the theme does not reach the docs site.
+		if strings.HasPrefix(it.Name, "starlight") {
+			props.Style = starlightStyle()
+		}
+		return props, nil
 	},
 	Preview,
 ).Static(func() ([]route.Preview, error) {

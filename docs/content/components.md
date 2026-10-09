@@ -81,6 +81,8 @@ Each page shows live examples, the example code and the install command. Install
 <docs.CardGrid>
 <docs.LinkCard title="Docs" description="The Gx docs kit: callouts, tabs, steps, cards, badges, file trees, icons, hero and code blocks." href="/components/docs/" />
 <docs.LinkCard title="Docs shell" description="The Gx docs shell: header, sidebar, table of contents, pagination, splash, 404 and search dialog." href="/components/docs-shell/" />
+<docs.LinkCard title="Starlight" description="The Starlight theme: the tokens, the page layout, the prose and the looks of the docs kit and the code frames." href="/components/starlight/" />
+<docs.LinkCard title="Starlight shell" description="The Starlight docs shell: fixed header, version label, search, social icons, theme select, sidebar, table of contents, hero, page links and 404." href="/components/starlight-shell/" />
 </docs.CardGrid>
 
 ## Icons

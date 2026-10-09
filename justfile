@@ -105,6 +105,12 @@ bench-dev:
 parity-docs:
     cd tests/e2e && bun test deedbox.spec.ts
 
+# Visual parity of examples/deedbox-docs with the Starlight pages in
+# tests/e2e/starlight-ref (F-92). scripts/starlight-ref.sh writes the pages.
+parity-starlight:
+    cd tests/e2e && bun install --frozen-lockfile
+    bash tests/e2e/record.sh ./starlight.browsers.ts
+
 # The LSP latency budgets (NFR-06).
 bench-lsp:
     go test ./internal/lsp -run TestNFR_06 -v

@@ -81,6 +81,8 @@ public sealed class CartTotals : Projection
 
 Override `ResetAsync` to delete what the projection wrote. A [rebuild](/how-to/rebuild-a-projection/) needs it.
 
+A context that uses a retrying execution strategy, such as `EnableRetryOnFailure`, works with `Projection<TDbContext>`.
+
 ## Register it with a name and a run mode
 
 <!-- snippet: register-full -->
@@ -104,7 +106,7 @@ A projection has one run mode. Registering one class twice fails at start-up, be
 
 ## Handle large async workloads in batches
 
-A batch projection receives each batch of its events in one call. It runs async only.
+A batch projection receives each batch of its events in one call. It runs async only. `HandlerTimeout`, 5 minutes by default, limits that one call for the whole batch.
 
 <!-- snippet: batch-projection -->
 ```cs

@@ -1,0 +1,66 @@
+package starlight
+
+props {
+  // Site is the site-wide data: the title, the versions and the social links.
+  Site     Config
+  // Nav is the sidebar model: the groups and their items.
+  Nav      Nav
+  // Page is the data of the current page: its title, its path, its headings and its previous
+  // and next items. A page with Splash has no sidebar and no table of contents.
+  Page     Page
+  // Hero is the hero of the page. It takes the place of the page title. Nil shows the title.
+  Hero     gx.Node = nil
+  // Children is the content of the page.
+  Children gx.Node
+}
+
+<gx.Head htmlClass={RootClass(p.Page)} />
+<a class="sl-skip-link" href="#_top">Skip to content</a>
+<div class="sl-page">
+  <Header site={p.Site} />
+  if !p.Page.Splash {
+    <Sidebar site={p.Site} nav={p.Nav} path={p.Page.Path} />
+  }
+  <div class="sl-main-frame">
+    <div class="sl-two-column">
+      if len(p.Page.ShownTOC()) > 0 || !p.Page.Splash {
+        <aside class="sl-right-sidebar-container">
+          <div class="sl-right-sidebar">
+            <MobileToc headings={p.Page.ShownTOC()} />
+            <div class="sl-right-sidebar-panel">
+              <div class="sl-toc-container">
+                <Toc headings={p.Page.ShownTOC()} />
+              </div>
+            </div>
+          </div>
+        </aside>
+      }
+      <div class="sl-main-pane">
+        <main class="sl-main" data-pagefind-body>
+          if p.Hero != nil {
+            <div class="sl-content-panel">
+              <div class="sl-container">
+                {p.Hero}
+                <div class="sl-markdown-content gx-content">{p.Children}</div>
+                <PageFooter site={p.Site} page={p.Page} />
+              </div>
+            </div>
+          } else {
+            <div class="sl-content-panel">
+              <div class="sl-container">
+                <h1 id="_top" class="sl-page-title">{p.Page.Title}</h1>
+              </div>
+            </div>
+            <div class="sl-content-panel">
+              <div class="sl-container">
+                <div class="sl-markdown-content gx-content">{p.Children}</div>
+                <PageFooter site={p.Site} page={p.Page} />
+              </div>
+            </div>
+          }
+        </main>
+      </div>
+    </div>
+  </div>
+</div>
+<SearchDialog />

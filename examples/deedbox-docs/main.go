@@ -11,18 +11,20 @@ import (
 	"github.com/alternayte/gx/content"
 	"github.com/alternayte/gx/examples/deedbox-docs/docs"
 	"github.com/alternayte/gx/examples/deedbox-docs/gxstyles"
-	"github.com/alternayte/gx/registry/docs-shell"
+	starlight "github.com/alternayte/gx/registry/starlight-shell"
 )
 
 func main() {
 	content.Install()
-	gx.SetStylesheet(gxstyles.CSS())
+	// The code frames take their rules from the content stylesheet; the
+	// Starlight theme sets their colours.
+	gx.SetStylesheet(append(gxstyles.CSS(), content.CodeCSS()...))
 	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
 	notFound := func(c *gx.Ctx) gx.Node {
-		return shell.NotFound(shell.NotFoundProps{
-			Title:   "Page not found",
-			Message: "The page does not exist. Check the address or return to the start.",
-			Home:    "/",
+		return starlight.NotFound(starlight.NotFoundProps{
+			Site:    docs.Site,
+			Title:   "404",
+			Message: "Page not found. Check the URL or try using the search bar.",
 		})
 	}
 	app.Errors(notFound, notFound, notFound)
