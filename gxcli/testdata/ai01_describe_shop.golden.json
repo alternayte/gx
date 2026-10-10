@@ -88,6 +88,36 @@
       "fixtures": []
     },
     {
+      "name": "BasketView",
+      "package": "github.com/alternayte/gx/examples/shop/basket",
+      "file": "basket/BasketView.gx",
+      "props": [
+        {
+          "name": "Lines",
+          "type": "[]Line",
+          "required": true
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": []
+    },
+    {
+      "name": "Stars",
+      "package": "github.com/alternayte/gx/examples/shop/basket",
+      "file": "basket/Stars.gx",
+      "props": [],
+      "signals": [
+        {
+          "name": "Stars",
+          "type": "int",
+          "default": "0"
+        }
+      ],
+      "fragments": [],
+      "fixtures": []
+    },
+    {
       "name": "Cart",
       "package": "github.com/alternayte/gx/examples/shop/cart",
       "file": "cart/Cart.gx",
@@ -9008,6 +9038,42 @@
       ]
     },
     {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.Star",
+      "method": "POST",
+      "pattern": "POST /basket/star",
+      "fields": [],
+      "kind": "action",
+      "handler": "basket.Star",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.StarFail",
+      "method": "POST",
+      "pattern": "POST /basket/star-fail",
+      "fields": [],
+      "kind": "action",
+      "handler": "basket.StarFail",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.StarSet",
+      "method": "POST",
+      "pattern": "POST /basket/star-set",
+      "fields": [],
+      "kind": "action",
+      "handler": "basket.StarSet",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Add",
       "method": "POST",
       "pattern": "POST /cart/add",
@@ -9440,6 +9506,30 @@
       "route": "github.com/alternayte/gx/examples/shop/basket/route.Reset",
       "method": "POST",
       "pattern": "POST /basket/reset",
+      "signals": [],
+      "external": false
+    },
+    {
+      "handler": "basket.Star",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.Star",
+      "method": "POST",
+      "pattern": "POST /basket/star",
+      "signals": [],
+      "external": false
+    },
+    {
+      "handler": "basket.StarFail",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.StarFail",
+      "method": "POST",
+      "pattern": "POST /basket/star-fail",
+      "signals": [],
+      "external": false
+    },
+    {
+      "handler": "basket.StarSet",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.StarSet",
+      "method": "POST",
+      "pattern": "POST /basket/star-set",
       "signals": [],
       "external": false
     },

@@ -110,6 +110,7 @@ func (l *loader) load(dir string) *Package {
 		f, diags := ParseFile(path, src)
 		p.Diags = append(p.Diags, diags...)
 		if f != nil {
+			lowerOptimistic(f)
 			p.Files[strings.TrimSuffix(e.Name(), ".gx")] = f
 		}
 	}

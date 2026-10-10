@@ -730,6 +730,13 @@ func (g *gen) attrsExpr(el *Element) string {
 				}
 				if v, ok, isAction := g.actionAttr(a, site); isAction {
 					if ok {
+						if hasOptimistic(el, a) {
+							// The action of an optimistic update does
+							// not run a second time: the runtime puts
+							// the signals back at the first failure
+							// (REQ-ACT-18).
+							v = strings.Replace(v, "gx.On("+strconv.Quote(strings.TrimPrefix(a.Name, "on:")), "gx.On("+strconv.Quote(strings.TrimPrefix(a.Name, "on:")+".optimistic"), 1)
+						}
 						static = append(static, v)
 					}
 					continue
@@ -745,6 +752,22 @@ func (g *gen) attrsExpr(el *Element) string {
 						static = append(static, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}",
 							strconv.Quote(name), v))
 					} else if tree, ok := g.clientAttrTree(a, site); ok {
+						if a.Optimistic {
+							keep, wrote := g.keepExpr(site)
+							switch {
+							case g.optimisticAction(el, a) == nil:
+								g.fail(a, CodeOptimistic, "optimistic directive", "the element has no on:%s handler that invokes an action", onEvent(a.Name))
+								continue
+							case !wrote:
+								g.fail(a, CodeOptimistic, "optimistic directive", "the statements write no signal of this component")
+								continue
+							}
+							// The runtime saves each signal that the
+							// statements write, and the widget script
+							// saves the signals of the widget.
+							v = keep + " + " + v
+							tree = "gx.ExprOp(" + strconv.Quote("keep") + ", " + tree + ")"
+						}
 						static = append(static, fmt.Sprintf("gx.Client(%s, %s, %s)", strconv.Quote(name), v, tree))
 					}
 				}

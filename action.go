@@ -109,6 +109,8 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// error for the dev overlay.
 		ctx.res.Patches = append(ctx.res.Patches, ToastPatch{Text: handlerErr.Error(), Kind: ToastError})
 		ctx.res.Err = handlerErr
+		// The runtime puts optimistic signals back (REQ-ACT-18).
+		w.Header().Set(errorHeader, "1")
 	}
 	if tc != nil {
 		// The answer of a tool call is data for the agent. A call of the

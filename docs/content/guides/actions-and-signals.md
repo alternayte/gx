@@ -199,6 +199,22 @@ A fragment is the unit of an update. A change inside an inner fragment sends onl
 
 A fragment that holds a link to the current page has a different hash in an action answer, so it always goes. Use `c.Patch` when you know the exact fragment.
 
+## Optimistic updates
+
+An `optimistic:<event>` directive changes signals before the request of the action, so the page shows the result immediately. Write it beside the `on:<event>` handler of the action: `<button on:click={route.Like{}} optimistic:click={$Count++}>`.
+
+1. The runtime saves the value of each signal that the statements write.
+2. The statements run. The page shows the new values.
+3. The request of the action goes to the server.
+4. When the action succeeds, the answer of the server wins. A `c.SetSignals` or a patch replaces the optimistic value. An action with no answer keeps it.
+5. When the action fails, the runtime puts the saved values back. A failure is an error of the handler, a rule failure, an error status or no network.
+
+The directive changes signals only. To show an optimistic row or label, bind it to a signal with `show` or `text`.
+
+The request of an optimistic update goes one time. The adapter does not send it again after a failure.
+
+An action with `.debounce` or `.throttle` sends its request later, so its optimistic directive has no rollback. `gx check` reports [GX4013](/errors/GX4013/) for a directive with no action.
+
 ## Events and modifiers
 
 An `on:` directive takes a browser event name.

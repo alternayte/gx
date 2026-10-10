@@ -66,6 +66,7 @@ const (
 	// a JSON value cannot fill (REQ-AI-06, REQ-AI-09).
 	CodeTool             = "GX4011"
 	CodeUpdateNoFragment = "GX4012"
+	CodeOptimistic       = "GX4013"
 	CodeActionMethod     = "GX4009"
 	CodeSignalRules      = "GX4008"
 
@@ -163,6 +164,7 @@ var Catalog = []Info{
 	{CodeEventMod, "unknown event modifier or special event"},
 	{CodeTool, "tool has no description or an input with no JSON form"},
 	{CodeUpdateNoFragment, "c.Update takes a component with no fragment"},
+	{CodeOptimistic, "optimistic directive has no action or writes no signal"},
 	{CodeEnum, "gx.Enum misses a constant of its type"},
 	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},

@@ -301,9 +301,22 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
   const read = (path: string[]): unknown => store.get(path)
   const value = (text: string): unknown => evaluate(JSON.parse(text) as Tree, read)
 
+  // kept holds the signals of the widget from before an optimistic
+  // directive ran, for the action that follows in the same task
+  // (REQ-ACT-18).
+  let kept: Record<string, unknown> | undefined
+
   // run runs the statements of an on: handler.
   const run = (text: string): void => {
-    const [, ...statements] = JSON.parse(text) as Tree
+    let tree = JSON.parse(text) as Tree
+    if (tree[0] === 'keep') {
+      // An optimistic directive: the action of the element takes the
+      // saved signals and puts them back when it fails.
+      kept = structuredClone(store.root)
+      setTimeout(() => (kept = undefined), 0)
+      tree = tree[1] as Tree
+    }
+    const [, ...statements] = tree
     for (const statement of statements as Tree[]) {
       const [op, a, b] = statement
       switch (op) {
@@ -326,40 +339,43 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
   }
 
   // send sends one request of the widget and applies the answer (D-264).
-  const send = async (path: string, init: RequestInit): Promise<void> => {
+  // It returns false when the request failed: no answer, an error status
+  // or an error of the action.
+  const send = async (path: string, init: RequestInit): Promise<boolean> => {
     let res: Response
     try {
       res = await host.request(path, init)
     } catch {
       if (alive) host.fail({ status: 0, key: 'gx.network' })
-      return
+      return false
     }
-    if (!alive) return
+    if (!alive) return true
     // Each answer names the build of the server in a header, also an
     // answer with no body (REQ-ISL-19).
     const seen = res.headers.get('Gx-Build')
     if (seen && build && seen !== build) {
       host.reload()
-      return
+      return true
     }
-    if (res.status === 204) return
+    if (res.status === 204) return true
     let answer: ActionAnswer = {}
     try {
       answer = (await res.json()) as ActionAnswer
     } catch {
       // An answer that is not JSON is not an answer of Gx to a widget.
     }
-    if (!alive) return
+    if (!alive) return true
     if (answer.build && build && answer.build !== build) {
       // The server has a new build. Its answer is for HTML that this
       // widget does not hold, so the widget loads again (REQ-ISL-19).
       host.reload()
-      return
+      return true
     }
     for (const op of answer.ops ?? []) apply(op)
     scan()
     if (answer.error) host.fail(answer.error)
     else if (!res.ok) host.fail({ status: res.status, key: 'gx.error' })
+    return res.ok && !answer.error && res.headers.get('Gx-Error') === null
   }
 
   // call invokes an action of the server with the signals of the widget.
@@ -373,7 +389,16 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
       headers['Content-Type'] = 'application/json'
       init.body = JSON.stringify({ signals: store.root })
     }
-    return send(path, init)
+    // The signals of before an optimistic directive come back when the
+    // action fails (REQ-ACT-18).
+    const saved = kept
+    kept = undefined
+    return send(path, init).then((ok) => {
+      if (!ok && saved && alive) {
+        store.merge(saved, false, [])
+        scan()
+      }
+    })
   }
 
   // submit sends a form of the widget to its action (REQ-ISL-20). The
@@ -400,7 +425,7 @@ export const mount = async (root: ShadowRoot, answer: Answer, host: Host): Promi
     const path = el.getAttribute('data-gx-validate-url')
     if (!path) return undefined
     const value = el.type === 'checkbox' ? (el.checked ? el.value || 'on' : '') : el.value
-    return send(path, { method: 'POST', headers: { Accept: 'application/json' }, body: new URLSearchParams([[el.name, value]]) })
+    return send(path, { method: 'POST', headers: { Accept: 'application/json' }, body: new URLSearchParams([[el.name, value]]) }).then(() => undefined)
   }
 
   // apply does one step of the answer of an action.

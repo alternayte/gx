@@ -1,0 +1,9 @@
+package basket
+
+props {
+  Lines []Line
+}
+
+<gx.Head title="Gx shop basket" />
+<Basket lines={p.Lines} />
+<Stars />

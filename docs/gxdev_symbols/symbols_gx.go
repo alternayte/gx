@@ -185,6 +185,8 @@ func Packages() []gx.DevPackage {
 				"IslandMedia":           reflect.ValueOf(gx.IslandMedia),
 				"JSON":                  reflect.ValueOf(gx.JSON),
 				"JoinAttrs":             reflect.ValueOf(gx.JoinAttrs),
+				"Keep":                  reflect.ValueOf(gx.Keep),
+				"KeepSignal":            reflect.ValueOf(gx.KeepSignal),
 				"Max":                   reflect.ValueOf(gx.Max),
 				"MaxLen":                reflect.ValueOf(gx.MaxLen),
 				"MaxSize":               reflect.ValueOf(gx.MaxSize),

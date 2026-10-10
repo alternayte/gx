@@ -53,7 +53,7 @@ func Cart(p CartProps) gx.Node {
 //line Cart.gx:25:3
 		gx.Open("button", gx.Attrs{gx.On("click", "POST", (route.Noop{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}),
 //line Cart.gx:26:3
-		gx.Open("button", gx.Attrs{gx.On("click", "POST", (route.Error{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}),
+		gx.Open("button", gx.Attrs{gx.On("click.optimistic", "POST", (route.Error{}).URL(), gx.ScopeString("cart.Cart", p.GxKey)), gx.Client("data-on:click__capture", gx.Keep(gx.KeepSignal("cart.Cart", p.GxKey, "qty"))+gx.SignalPath("cart.Cart", p.GxKey, "qty")+" = "+gx.JSON(99), gx.ExprOp("keep", gx.ExprOp("do", gx.ExprOp("=", gx.ExprPath("cart.Cart", p.GxKey, "qty"), gx.ExprValue(99)))))}),
 	))
 //line Cart.gx:17:1
 	_b.Add(_tCart3.With(

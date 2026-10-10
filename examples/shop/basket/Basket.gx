@@ -6,7 +6,6 @@ props {
   Lines []Line
 }
 
-<gx.Head title="Gx shop basket" />
 <section class="my-4 rounded-xl border border-border bg-card p-4 text-card-foreground">
   <h1 class="text-2xl font-semibold">Basket</h1>
   <ul #lines class="my-2">

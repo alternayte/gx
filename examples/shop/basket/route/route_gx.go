@@ -65,3 +65,57 @@ func (in Reset) URL() string {
 	b.WriteString("reset")
 	return gx.BasePath() + b.String()
 }
+
+// Pattern returns the method and pattern of Star.
+func (Star) Pattern() string { return "POST /basket/star" }
+
+// Bind fills Star from the request.
+func (in *Star) Bind(r *http.Request) error {
+	return nil
+}
+
+// URL returns the path of Star.
+func (in Star) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("basket")
+	b.WriteString("/")
+	b.WriteString("star")
+	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of StarFail.
+func (StarFail) Pattern() string { return "POST /basket/star-fail" }
+
+// Bind fills StarFail from the request.
+func (in *StarFail) Bind(r *http.Request) error {
+	return nil
+}
+
+// URL returns the path of StarFail.
+func (in StarFail) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("basket")
+	b.WriteString("/")
+	b.WriteString("star-fail")
+	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of StarSet.
+func (StarSet) Pattern() string { return "POST /basket/star-set" }
+
+// Bind fills StarSet from the request.
+func (in *StarSet) Bind(r *http.Request) error {
+	return nil
+}
+
+// URL returns the path of StarSet.
+func (in StarSet) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("basket")
+	b.WriteString("/")
+	b.WriteString("star-set")
+	return gx.BasePath() + b.String()
+}

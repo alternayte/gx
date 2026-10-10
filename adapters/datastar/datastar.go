@@ -143,7 +143,14 @@ func (adapter) Respond(w http.ResponseWriter, r *http.Request, res *gx.Response)
 
 // Invoke returns the data-on:click attribute that calls the Datastar action
 // of the method. The scope travels in the Gx-Scope header (REQ-ACT-03).
-func (adapter) Invoke(method, url, scope string) gx.Attr {
+func (a adapter) Invoke(method, url, scope string) gx.Attr {
+	return a.invoke(method, url, scope, false)
+}
+
+// invoke writes the call of the action. once is true for an optimistic
+// update: Datastar then does not send a failed request again, because the
+// runtime puts the signals back at the first failure (REQ-ACT-18).
+func (adapter) invoke(method, url, scope string, once bool) gx.Attr {
 	var fn string
 	switch method {
 	case "GET":
@@ -161,9 +168,16 @@ func (adapter) Invoke(method, url, scope string) gx.Attr {
 	}
 	// The URL and the scope hold server values, such as an instance key.
 	// Each one is a JavaScript string literal with escapes (SI-05).
-	value := fn + "(" + jsString(url) + ")"
+	var opts []string
 	if scope != "" {
-		value = fn + "(" + jsString(url) + ", {headers: {'Gx-Scope': " + jsString(scope) + "}})"
+		opts = append(opts, "headers: {'Gx-Scope': "+jsString(scope)+"}")
+	}
+	if once {
+		opts = append(opts, "retryMaxCount: 0")
+	}
+	value := fn + "(" + jsString(url) + ")"
+	if len(opts) > 0 {
+		value = fn + "(" + jsString(url) + ", {" + strings.Join(opts, ", ") + "})"
 	}
 	return gx.Attr{Key: "data-on:click", Value: value}
 }
@@ -171,7 +185,7 @@ func (adapter) Invoke(method, url, scope string) gx.Attr {
 // On returns the data-on attribute of an action invocation on an event,
 // with the Datastar modifiers (REQ-ACT-08).
 func (a adapter) On(inv gx.Invocation) []gx.Attr {
-	call := a.Invoke(inv.Method, inv.URL, inv.Scope)
+	call := a.invoke(inv.Method, inv.URL, inv.Scope, inv.Optimistic)
 	if call.Key == "" {
 		return nil
 	}

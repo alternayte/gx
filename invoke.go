@@ -38,6 +38,10 @@ type Invocation struct {
 	Every string
 	// Mods are the event modifiers in source order.
 	Mods []Modifier
+	// Optimistic is true when the element changes signals before the
+	// request (REQ-ACT-18). The runtime puts the signals back at the
+	// first failure, so the adapter must not send the request again.
+	Optimistic bool
 }
 
 // Modifier is one event modifier of an Invocation. Value is the text in
@@ -108,7 +112,20 @@ func (st *renderState) resolveOn(value string) []Attr {
 	}
 	inv := Invocation{Method: fields[0], URL: externalURL(fields[0], fields[1]), Scope: fields[2]}
 	inv.Event, inv.Every, inv.Mods = ParseOn(fields[3])
+	inv.Mods, inv.Optimistic = cutOptimistic(inv.Mods)
 	return adapter.On(inv)
+}
+
+// cutOptimistic removes the mark of an optimistic update from the modifiers
+// of an On placeholder. The compiler writes the mark; it is not a modifier
+// of the event.
+func cutOptimistic(mods []Modifier) ([]Modifier, bool) {
+	for i, mod := range mods {
+		if mod.Name == "optimistic" {
+			return append(mods[:i:i], mods[i+1:]...), true
+		}
+	}
+	return mods, false
 }
 
 // Invoke returns the attribute that invokes the action at url with the HTTP

@@ -18,3 +18,18 @@ type Bump struct {
 type Reset struct {
 	gx.Route `POST /basket/reset`
 }
+
+// Star adds a star. The page shows it before the answer (REQ-ACT-18).
+type Star struct {
+	gx.Route `POST /basket/star`
+}
+
+// StarFail is an action that always fails.
+type StarFail struct {
+	gx.Route `POST /basket/star-fail`
+}
+
+// StarSet sets the stars to the number of the server.
+type StarSet struct {
+	gx.Route `POST /basket/star-set`
+}

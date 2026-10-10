@@ -2,6 +2,7 @@
 // package gx embeds. Keep it free of bare imports: users never run a
 // bundler for the core runtime.
 import { installCSRF } from './csrf'
+import { keep, type Kept } from './optimistic'
 //
 // It owns the parts an adapter does not: layout-aware navigation (REQ-RTE-12),
 // active links (REQ-RTE-13), the dev duplicate-scope check (REQ-ACT-06) and
@@ -21,6 +22,10 @@ export const gx = {
   // apply puts the answer of the server in the page. The tool module uses
   // it for the answer of a tool call (REQ-AI-06).
   apply: (res: Response): Promise<void> => applyAnswer(res),
+  // keep saves the values of the signals that an optimistic directive
+  // changes. The runtime puts them back when the action fails
+  // (REQ-ACT-18).
+  keep: (parts: Kept[]): void => keep(parts),
 }
 
 ;(globalThis as { __gx?: typeof gx }).__gx = gx
@@ -517,9 +522,20 @@ const cookie = (name: string): string => {
   return m ? decodeURIComponent(m[1]) : ''
 }
 
+// restoreSignals puts the saved values of an optimistic update back into
+// the signals of the page, as a signal patch of the server does
+// (REQ-ACT-18).
+const restoreSignals = (kept: Kept): void => {
+  document.dispatchEvent(
+    new CustomEvent('datastar-fetch', {
+      detail: { type: 'datastar-patch-signals', el: document.documentElement, argsRaw: { signals: JSON.stringify(kept) } },
+    }),
+  )
+}
+
 // Attach the CSRF token to every same-origin write, Datastar's fetches
 // included (SI-03).
-installCSRF()
+installCSRF(restoreSignals)
 
 // adapterPresent reports whether the page loaded a hypermedia adapter.
 // loadIslands loads the island loader when a patch or a morph navigation

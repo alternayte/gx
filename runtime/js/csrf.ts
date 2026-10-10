@@ -3,6 +3,8 @@
 // gx_csrf token on every same-origin write. Datastar's own fetches do not
 // carry it, so the runtime adds it here.
 
+import { take, watch, type Kept } from './optimistic'
+
 // cookieValue reads one cookie value.
 export const cookieValue = (name: string): string => {
   const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
@@ -79,17 +81,22 @@ export const fragmentsInit = (
 }
 
 // installCSRF wraps fetch so every same-origin write carries the token and
-// the hashes of the fragments of the page.
-export const installCSRF = (): void => {
+// the hashes of the fragments of the page. restore gets the values of an
+// optimistic update when its request fails (REQ-ACT-18).
+export const installCSRF = (restore: (kept: Kept) => void = () => {}): void => {
   const native = globalThis.fetch.bind(globalThis)
   globalThis.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> =>
-    native(
-      input,
-      fragmentsInit(
+    watch(
+      native(
         input,
-        csrfInit(input, init, location.origin, cookieValue('gx_csrf')),
-        location.origin,
-        fragmentHashes(document),
+        fragmentsInit(
+          input,
+          csrfInit(input, init, location.origin, cookieValue('gx_csrf')),
+          location.origin,
+          fragmentHashes(document),
+        ),
       ),
+      take(),
+      restore,
     )
 }

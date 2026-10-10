@@ -324,6 +324,22 @@ func JSON(v any) string
 
 JSON returns the JSON form of a server value inlined into a client expression. It panics when the value has no JSON form: the compiler must not inline it.
 
+### func Keep
+
+```go
+func Keep(signals ...string) string
+```
+
+Keep returns the statement that gives the values of signals to the Gx runtime before an optimistic directive changes them. The runtime puts the values back when the action of the element fails.
+
+### func KeepSignal
+
+```go
+func KeepSignal(base string, key Key, name string) string
+```
+
+KeepSignal returns the text that reads one signal of a component instance into an object with the shape of the signals of the page. Generated code gives it to Keep for each signal that an optimistic directive writes.
+
 ### func Layout
 
 ```go
@@ -1631,6 +1647,10 @@ type Invocation struct {
     Every string
     // Mods are the event modifiers in source order.
     Mods []Modifier
+    // Optimistic is true when the element changes signals before the
+    // request (REQ-ACT-18). The runtime puts the signals back at the
+    // first failure, so the adapter must not send the request again.
+    Optimistic bool
 }
 ```
 

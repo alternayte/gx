@@ -4,7 +4,9 @@
 package basket
 
 import (
+	"errors"
 	"sync"
+	"time"
 
 	"github.com/alternayte/gx"
 	"github.com/alternayte/gx/examples/shop/basket/route"
@@ -46,8 +48,8 @@ func count(ls []Line) int {
 
 // BasketPage is the basket page.
 var BasketPage = gx.Page(
-	func(c *gx.Ctx, in route.Page) (BasketProps, error) { return BasketProps{Lines: lines()}, nil },
-	Basket)
+	func(c *gx.Ctx, in route.Page) (BasketViewProps, error) { return BasketViewProps{Lines: lines()}, nil },
+	BasketView)
 
 // Bump adds one to a line and gives the whole basket to c.Update. The line
 // and the count are the fragments that differ, so only they go out.
@@ -70,5 +72,21 @@ var Reset = gx.Action(func(c *gx.Ctx, in route.Reset) error {
 	return c.Update(Basket(BasketProps{Lines: lines()}))
 })
 
+// Star answers with nothing: the optimistic value of the page stays.
+var Star = gx.Action(func(c *gx.Ctx, in route.Star) error { return nil })
+
+// StarFail fails after a moment, so the page shows the optimistic value and
+// then the value of before.
+var StarFail = gx.Action(func(c *gx.Ctx, in route.StarFail) error {
+	time.Sleep(150 * time.Millisecond)
+	return errors.New("the shop did not save the star")
+})
+
+// StarSet answers with its own number. The answer of the server wins over
+// the optimistic value.
+var StarSet = gx.Action(func(c *gx.Ctx, in route.StarSet) error {
+	return c.SetSignals(StarsSignals{Stars: 100})
+})
+
 // Routes collects the basket page and its actions.
-var Routes = gx.Collect(BasketPage, Bump, Reset)
+var Routes = gx.Collect(BasketPage, Bump, Reset, Star, StarFail, StarSet)

@@ -65,6 +65,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX4010](/errors/GX4010/) | Unknown event modifier or special event. |
 | [GX4011](/errors/GX4011/) | Tool has no description, or an input with no JSON form. |
 | [GX4012](/errors/GX4012/) | Hint: `c.Update` takes a component with no fragment. |
+| [GX4013](/errors/GX4013/) | Optimistic directive has no action, or writes no signal. |
 
 ## Styles and transitions
 

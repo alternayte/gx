@@ -23,5 +23,5 @@ signals {
   <button on:click={route.Redirect{}}>Go</button>
   <button on:click={route.Toast{}}>Toast</button>
   <button on:click={route.Noop{}}>Nothing</button>
-  <button on:click={route.Error{}}>Fail</button>
+  <button on:click={route.Error{}} optimistic:click={$Qty = 99}>Fail</button>
 </div>

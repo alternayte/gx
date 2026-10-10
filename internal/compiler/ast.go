@@ -115,6 +115,11 @@ type Attr struct {
 	Name    string
 	Value   string
 	ValueAt Pos
+	// Optimistic is true for an optimistic:<event> directive
+	// (REQ-ACT-18). The loader gives it the name of a capture handler of
+	// the event, so each pass reads it as an on: handler with signal
+	// statements.
+	Optimistic bool
 }
 
 // AttrKind tells how an attribute value is written.

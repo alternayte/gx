@@ -165,6 +165,7 @@ func widgetOn(value string) (Attr, bool) {
 		return Attr{}, false
 	}
 	event, every, mods := ParseOn(fields[3])
+	mods, _ = cutOptimistic(mods)
 	key := "data-gx-on:" + event
 	switch event {
 	case "load":

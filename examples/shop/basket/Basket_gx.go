@@ -19,60 +19,55 @@ func Basket(p BasketProps) gx.Node {
 	}
 	var _b gx.Builder
 //line Basket.gx:9:1
-	_b.Add(_tBasket0.With(
-//line Basket.gx:9:1
-		gx.Head(gx.HeadProps{Title: "Gx shop basket", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
-	))
-//line Basket.gx:10:1
 	var _b1 gx.Builder
-//line Basket.gx:10:88
-	_b1.Add(_tBasket1)
-//line Basket.gx:12:3
+//line Basket.gx:9:88
+	_b1.Add(_tBasket0)
+//line Basket.gx:11:3
 	var _b2 gx.Builder
-//line Basket.gx:12:27
-	_b2.Add(_tBasket2)
-//line Basket.gx:13:5
+//line Basket.gx:11:27
+	_b2.Add(_tBasket1)
+//line Basket.gx:12:5
 	for _, l := range p.Lines {
-//line Basket.gx:13:32
-		_b2.Add(_tBasket3)
-//line Basket.gx:14:7
+//line Basket.gx:12:32
+		_b2.Add(_tBasket2)
+//line Basket.gx:13:7
 		key := l.SKU
-//line Basket.gx:14:19
-		_b2.Add(_tBasket4.With(
-//line Basket.gx:15:7
+//line Basket.gx:13:19
+		_b2.Add(_tBasket3.With(
+//line Basket.gx:14:7
 			gx.OpenFragment("li", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("basket", "line", gx.InstanceKey(key)), Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "flex items-center gap-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-key", Value: key, Kind: gx.AttrText}}),
-//line Basket.gx:16:15
+//line Basket.gx:15:15
 			gx.Text(l.Name),
-//line Basket.gx:17:12
+//line Basket.gx:16:12
 			gx.Int(int64(l.Qty)),
-//line Basket.gx:18:9
+//line Basket.gx:17:9
 			gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-border px-2 text-sm", Kind: gx.AttrText}, gx.On("click", "POST", (route.Bump{SKU: l.SKU}).URL(), "")}),
 		))
 	}
-//line Basket.gx:20:6
-	_b2.Add(_tBasket5)
-//line Basket.gx:12:3
-	_b1.Add(_tBasket6.With(
-//line Basket.gx:12:3
+//line Basket.gx:19:6
+	_b2.Add(_tBasket4)
+//line Basket.gx:11:3
+	_b1.Add(_tBasket5.With(
+//line Basket.gx:11:3
 		gx.OpenFragment("ul", gx.Attrs{gx.Attr{Key: "id", Value: "basket-lines", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "my-2", Kind: gx.AttrText}}),
-//line Basket.gx:12:3
+//line Basket.gx:11:3
 		_b2.Node(),
-//line Basket.gx:22:13
+//line Basket.gx:21:13
 		gx.OpenFragment("span", gx.Attrs{gx.Attr{Key: "id", Value: "basket-count", Kind: gx.AttrText}}),
-//line Basket.gx:22:26
+//line Basket.gx:21:26
 		gx.Int(int64(count(p.Lines))),
-//line Basket.gx:23:3
+//line Basket.gx:22:3
 		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-border px-3 py-1.5 text-sm", Kind: gx.AttrText}, gx.On("click", "POST", (route.Reset{}).URL(), "")}),
 	))
-//line Basket.gx:10:1
-	_b.Add(_tBasket7.With(
-//line Basket.gx:10:1
+//line Basket.gx:9:1
+	_b.Add(_tBasket6.With(
+//line Basket.gx:9:1
 		_b1.Node(),
 	))
 	return _b.Node()
 }
 
-//line Basket.gx:12:3
+//line Basket.gx:11:3
 func BasketLines(p BasketProps) gx.Node {
 	if gx.Dev {
 		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/basket", "BasketLines", p); _ok {
@@ -80,147 +75,140 @@ func BasketLines(p BasketProps) gx.Node {
 		}
 	}
 	var _b gx.Builder
-//line Basket.gx:12:3
+//line Basket.gx:11:3
 	var _b3 gx.Builder
-//line Basket.gx:12:27
-	_b3.Add(_tBasket2)
-//line Basket.gx:13:5
+//line Basket.gx:11:27
+	_b3.Add(_tBasket1)
+//line Basket.gx:12:5
 	for _, l := range p.Lines {
-//line Basket.gx:13:32
-		_b3.Add(_tBasket3)
-//line Basket.gx:14:7
+//line Basket.gx:12:32
+		_b3.Add(_tBasket2)
+//line Basket.gx:13:7
 		key := l.SKU
-//line Basket.gx:14:19
-		_b3.Add(_tBasket4.With(
-//line Basket.gx:15:7
+//line Basket.gx:13:19
+		_b3.Add(_tBasket3.With(
+//line Basket.gx:14:7
 			gx.OpenFragment("li", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("basket", "line", gx.InstanceKey(key)), Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "flex items-center gap-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-key", Value: key, Kind: gx.AttrText}}),
-//line Basket.gx:16:15
+//line Basket.gx:15:15
 			gx.Text(l.Name),
-//line Basket.gx:17:12
+//line Basket.gx:16:12
 			gx.Int(int64(l.Qty)),
-//line Basket.gx:18:9
+//line Basket.gx:17:9
 			gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-border px-2 text-sm", Kind: gx.AttrText}, gx.On("click", "POST", (route.Bump{SKU: l.SKU}).URL(), "")}),
 		))
 	}
-//line Basket.gx:20:6
-	_b3.Add(_tBasket5)
-//line Basket.gx:12:3
-	_b.Add(_tBasket8.With(
-//line Basket.gx:12:3
+//line Basket.gx:19:6
+	_b3.Add(_tBasket4)
+//line Basket.gx:11:3
+	_b.Add(_tBasket7.With(
+//line Basket.gx:11:3
 		gx.OpenFragment("ul", gx.Attrs{gx.Attr{Key: "id", Value: "basket-lines", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "my-2", Kind: gx.AttrText}}),
-//line Basket.gx:12:3
+//line Basket.gx:11:3
 		_b3.Node(),
 	))
 	return _b.Node()
 }
 
-//line Basket.gx:15:7
+//line Basket.gx:14:7
 func BasketLine(key string, l Line) gx.Node {
 	if gx.Dev {
 		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/basket", "BasketLine", key, l); _ok {
 			return _n
 		}
 	}
-//line Basket.gx:15:7
-	return _tBasket9.With(
-//line Basket.gx:15:7
+//line Basket.gx:14:7
+	return _tBasket8.With(
+//line Basket.gx:14:7
 		gx.OpenFragment("li", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("basket", "line", gx.InstanceKey(key)), Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "flex items-center gap-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-key", Value: key, Kind: gx.AttrText}}),
-//line Basket.gx:16:15
+//line Basket.gx:15:15
 		gx.Text(l.Name),
-//line Basket.gx:17:12
+//line Basket.gx:16:12
 		gx.Int(int64(l.Qty)),
-//line Basket.gx:18:9
+//line Basket.gx:17:9
 		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-border px-2 text-sm", Kind: gx.AttrText}, gx.On("click", "POST", (route.Bump{SKU: l.SKU}).URL(), "")}),
 	)
 }
 
-//line Basket.gx:22:13
+//line Basket.gx:21:13
 func BasketCount(p BasketProps) gx.Node {
 	if gx.Dev {
 		if _n, _ok := gx.DevRender("github.com/alternayte/gx/examples/shop/basket", "BasketCount", p); _ok {
 			return _n
 		}
 	}
-//line Basket.gx:22:13
-	return _tBasket10.With(
-//line Basket.gx:22:13
+//line Basket.gx:21:13
+	return _tBasket9.With(
+//line Basket.gx:21:13
 		gx.OpenFragment("span", gx.Attrs{gx.Attr{Key: "id", Value: "basket-count", Kind: gx.AttrText}}),
-//line Basket.gx:22:26
+//line Basket.gx:21:26
 		gx.Int(int64(count(p.Lines))),
 	)
 }
 
 var _tBasket0 = gx.NewTemplate(
-	[]string{"", "\n"},
-	[]int{0},
-	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
-)
-
-var _tBasket1 = gx.NewTemplate(
 	[]string{"\n  <h1 class=\"text-2xl font-semibold\">Basket</h1>\n  "},
 	[]int{},
 	nil,
 	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
 ).With()
 
-var _tBasket2 = gx.NewTemplate(
+var _tBasket1 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
 	[]gx.TemplateRoot{{El: -1, Slot: -1}},
 ).With()
 
-var _tBasket3 = gx.NewTemplate(
+var _tBasket2 = gx.NewTemplate(
 	[]string{"\n      "},
 	[]int{},
 	nil,
 	[]gx.TemplateRoot{{El: -1, Slot: -1}},
 ).With()
 
-var _tBasket4 = gx.NewTemplate(
+var _tBasket3 = gx.NewTemplate(
 	[]string{"\n      <li", ">\n        <span>", "</span>\n        <b>", "</b>\n        <button", ">Add one</button>\n      </li>\n    "},
 	[]int{0, 2, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 4, End: 29}, {Slot: 3, Start: 13, EndStatic: 4, End: 17}},
 	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
 )
 
-var _tBasket5 = gx.NewTemplate(
+var _tBasket4 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
 	[]gx.TemplateRoot{{El: -1, Slot: -1}},
 ).With()
 
-var _tBasket6 = gx.NewTemplate(
+var _tBasket5 = gx.NewTemplate(
 	[]string{"<ul", ">", "</ul>\n  <p>Items: <span", ">", "</span></p>\n  <button", ">Reset</button>\n"},
 	[]int{0, 1, 1, 2, 0},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}, {Slot: 2, Start: 18, EndStatic: 4, End: 7}, {Slot: 4, Start: 14, EndStatic: 5, End: 15}},
 	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}},
 )
 
-var _tBasket7 = gx.NewTemplate(
+var _tBasket6 = gx.NewTemplate(
 	[]string{"<section class=\"my-4 rounded-xl border border-border bg-card p-4 text-card-foreground\">", "</section>\n"},
 	[]int{1},
 	nil,
 	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "section"}, {El: -1, Slot: -1}},
 )
 
-var _tBasket8 = gx.NewTemplate(
+var _tBasket7 = gx.NewTemplate(
 	[]string{"<ul", ">", "</ul>"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
 	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
-var _tBasket9 = gx.NewTemplate(
+var _tBasket8 = gx.NewTemplate(
 	[]string{"<li", ">\n        <span>", "</span>\n        <b>", "</b>\n        <button", ">Add one</button>\n      </li>"},
 	[]int{0, 2, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 29}, {Slot: 3, Start: 13, EndStatic: 4, End: 17}},
 	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
-var _tBasket10 = gx.NewTemplate(
+var _tBasket9 = gx.NewTemplate(
 	[]string{"<span", ">", "</span>"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},

@@ -426,3 +426,24 @@ test('REQ-ISL-16 a React host renders the widget and gets its events from the pr
   await page.waitForFunction(() => document.querySelector('#state')?.textContent === 'error 500 gx.error')
   await page.close()
 })
+
+test('REQ-ACT-18 an optimistic update in a widget comes back when the action fails', async () => {
+  const page = await open('/')
+  const qty = (): Promise<string> =>
+    page.evaluate(() => (document.querySelector('shop-cart')!.shadowRoot!.querySelector('input[type=number]') as HTMLInputElement).value)
+  const start = await qty()
+  // The answer of the action waits, so the page shows the optimistic value.
+  await page.route('**/cart/error', async (route) => {
+    await Bun.sleep(300)
+    await route.continue()
+  })
+  await page.click('shop-cart button:text-is("Fail")')
+  await page.waitForFunction(() => (document.querySelector('shop-cart')!.shadowRoot!.querySelector('input[type=number]') as HTMLInputElement).value === '99')
+  // The action fails: the value of before comes back.
+  await page.waitForFunction(
+    (want) => (document.querySelector('shop-cart')!.shadowRoot!.querySelector('input[type=number]') as HTMLInputElement).value === want,
+    start,
+  )
+  expect(await qty()).toBe(start)
+  await page.close()
+})

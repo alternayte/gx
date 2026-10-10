@@ -1,0 +1,14 @@
+package basket
+
+import "github.com/alternayte/gx/examples/shop/basket/route"
+
+signals {
+  Stars int = 0
+}
+
+<div class="my-4 flex items-center gap-2 rounded-xl border border-border bg-card p-4 text-card-foreground">
+  <span>Stars: <b id="stars" text={$Stars}>0</b></span>
+  <button id="star-ok" class="rounded-md border border-border px-2 text-sm" on:click={route.Star{}} optimistic:click={$Stars++}>Star</button>
+  <button id="star-fail" class="rounded-md border border-border px-2 text-sm" on:click={route.StarFail{}} optimistic:click={$Stars++}>Star, and the server fails</button>
+  <button id="star-set" class="rounded-md border border-border px-2 text-sm" on:click={route.StarSet{}} optimistic:click={$Stars++}>Star, and the server sets 100</button>
+</div>
