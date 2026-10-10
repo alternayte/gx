@@ -58,7 +58,7 @@ test:
 # many apps or start Chrome; the gate runs them.
 test-fast:
     go test -timeout 40m -p 1 ./internal/devserver ./internal/lsp ./internal/exporter
-    go test -timeout 40m $(go list ./... | grep -v -E '/gxcli$|/internal/(compiler|docscheck|mcpserver)$|/internal/editors/highlight$|/tests/review/')
+    go test -timeout 40m $(go list ./... | grep -v -E '/gxcli$|/internal/(compiler|docscheck|fuzz|mcpserver)$|/internal/editors/highlight$|/tests/review/')
 
 # Write the component pages of the docs site from registry/, then the
 # generated Go and the stylesheet of the docs app (REQ-DOC-02).
