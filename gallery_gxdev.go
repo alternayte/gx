@@ -135,8 +135,9 @@ func galleryFixture(component, name, pkg string) (Fixture, bool) {
 // galleryFixtureHTML is the document of one fixture: the tokens and the
 // stylesheet of the gallery, and the fixture alone in #gx-fixture. The dev
 // MCP server renders and audits it (REQ-AI-04). theme is "light", "dark" or
-// "" for the system preference.
-func galleryFixtureHTML(f Fixture, theme string) Node {
+// "" for the system preference. wrapper is the element around the fixture:
+// "main" for the gallery.
+func galleryFixtureHTML(f Fixture, theme, wrapper string) Node {
 	var body Node = Frag()
 	if f.Node != nil {
 		body = f.Node()
@@ -155,7 +156,7 @@ func galleryFixtureHTML(f Fixture, theme string) Node {
 				El("style", nil, Raw(galleryCSS)),
 			),
 			El("body", nil,
-				El("main", Attrs{
+				El(wrapper, Attrs{
 					{Key: "id", Value: "gx-fixture", Kind: AttrText},
 					{Key: "class", Value: "fixture-body", Kind: AttrText},
 					{Key: "data-fixture", Value: f.Component + "-" + f.Name, Kind: AttrText},

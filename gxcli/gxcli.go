@@ -19,6 +19,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/alternayte/gx/internal/analyze"
 	"github.com/alternayte/gx/internal/appmodel"
@@ -26,6 +27,7 @@ import (
 	"github.com/alternayte/gx/internal/devserver"
 	"github.com/alternayte/gx/internal/execname"
 	"github.com/alternayte/gx/internal/exporter"
+	"github.com/alternayte/gx/internal/fuzz"
 	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/gxstyles"
 	"github.com/alternayte/gx/internal/icons"
@@ -87,6 +89,8 @@ func Main(args []string, opts ...Option) int {
 		return runLSP(args[1:])
 	case "mcp":
 		return runMCP(args[1:])
+	case "fuzz":
+		return runFuzz(args[1:])
 	case "lint":
 		return runLint(args[1:])
 	case "icons":
@@ -137,6 +141,7 @@ Commands:
   describe  print the app model, with --json for machine output
   lsp       run the language server on stdio
   mcp       run the dev MCP server on stdio, for a coding agent
+  fuzz      render each component with random props and check the output
   lint      run go vet and the Gx analyzers on a module, with --json
   icons pin pin an icon set and generate one .gx component per icon
   pin       vendor an npm package for the islands: gx pin <pkg>@<version>
@@ -782,6 +787,51 @@ func runMCP(args []string) int {
 	}, mcpserver.Stdio())
 	if err != nil && ctx.Err() == nil {
 		fmt.Fprintf(os.Stderr, "gx mcp: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+// runFuzz renders each component of an app with random props and checks
+// each render (REQ-AI-11). The exit code is 1 when a prop set fails.
+func runFuzz(args []string) int {
+	fs := flag.NewFlagSet("gx fuzz", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	seed := fs.Uint64("seed", 0, "seed of the prop sets; 0 takes a new seed")
+	sets := fs.Int("sets", 20, "number of prop sets of each component")
+	asJSON := fs.Bool("json", false, "print machine output")
+	mainPkg := fs.String("main", "", "app main package")
+	dir := fs.String("app", ".", "app directory")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	rest := fs.Args()
+	if len(rest) > 1 || *sets < 1 {
+		fmt.Fprintln(os.Stderr, "usage: gx fuzz [--seed <n>] [--sets <n>] [--json] [--main <package>] [--app <dir>] [component]")
+		return 2
+	}
+	opt := fuzz.Options{Dir: *dir, Main: *mainPkg, Seed: *seed, Sets: *sets}
+	if len(rest) == 1 {
+		opt.Component = rest[0]
+	}
+	if opt.Seed == 0 {
+		opt.Seed = uint64(time.Now().UnixNano())
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	res, err := fuzz.Run(ctx, opt)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx fuzz: %v\n", err)
+		return 1
+	}
+	if *asJSON {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		_ = enc.Encode(res)
+	} else {
+		res.Print(os.Stdout)
+	}
+	if len(res.Failures) > 0 {
 		return 1
 	}
 	return 0

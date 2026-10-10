@@ -376,22 +376,3 @@ func TestREQ_AI_04_Registry(t *testing.T) {
 		t.Fatalf("the added badge does not render:\n%s", out.HTML)
 	}
 }
-
-// TestREQ_AI_04_AxePin covers the vendored axe-core: the embedded file is
-// the pinned release, so an audit needs no node and no download
-// (REQ-AI-04).
-func TestREQ_AI_04_AxePin(t *testing.T) {
-	data, err := os.ReadFile("axe.min.js")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got := mcpserver.SumAxe(data); got != mcpserver.AxeSHA256 {
-		t.Fatalf("axe.min.js has hash %s, want the pinned %s", got, mcpserver.AxeSHA256)
-	}
-	if !bytes.Contains(data[:200], []byte("axe v"+mcpserver.AxeVersion)) {
-		t.Fatalf("axe.min.js is not version %s", mcpserver.AxeVersion)
-	}
-	if _, err := os.Stat("axe.LICENSE"); err != nil {
-		t.Fatal("the axe-core licence is missing")
-	}
-}

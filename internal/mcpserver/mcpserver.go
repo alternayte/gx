@@ -7,7 +7,6 @@ package mcpserver
 import (
 	"context"
 	"crypto/sha256"
-	_ "embed"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -22,34 +21,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/chromedp/cdproto/runtime"
-	"github.com/chromedp/chromedp"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/alternayte/gx/internal/appmodel"
 	"github.com/alternayte/gx/internal/apprun"
+	"github.com/alternayte/gx/internal/chrome"
 	"github.com/alternayte/gx/internal/compiler"
 	"github.com/alternayte/gx/internal/registry"
 	"github.com/alternayte/gx/internal/tscheck"
 )
-
-// axeSource is axe-core 4.13.0 (MPL-2.0, see axe.LICENSE). The audit runs
-// it inside the page; the test pins its hash.
-//
-//go:embed axe.min.js
-var axeSource string
-
-// AxeVersion and AxeSHA256 pin the embedded axe-core build.
-const (
-	AxeVersion = "4.13.0"
-	AxeSHA256  = "c24f097bd2f451d4f933e8bc7d8d539f8672a2ebcb5cc9f9f3eec8ca9470a0c1"
-)
-
-// SumAxe returns the hex sha256 of an axe-core build.
-func SumAxe(data []byte) string {
-	sum := sha256.Sum256(data)
-	return hex.EncodeToString(sum[:])
-}
 
 // Options configure one server.
 type Options struct {
@@ -91,8 +71,7 @@ type Server struct {
 	mu       sync.Mutex
 	app      *apprun.App
 	snapshot string
-	browser  context.Context
-	closers  []context.CancelFunc
+	chrome   chrome.Browser
 }
 
 // New returns a server for the app in opt.Dir.
@@ -166,10 +145,7 @@ func Run(ctx context.Context, opt Options, t mcp.Transport) error {
 func (s *Server) Close() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	for i := len(s.closers) - 1; i >= 0; i-- {
-		s.closers[i]()
-	}
-	s.closers, s.browser = nil, nil
+	s.chrome.Close()
 	s.app.Stop()
 	s.app = nil
 }
@@ -295,7 +271,7 @@ func (s *Server) renderFixture(ctx context.Context, _ *mcp.CallToolRequest, in F
 		out.HTML = fixtureMarkup(page)
 		return nil, out, nil
 	}
-	shot, err := s.screenshot(ctx, target, 0, 0)
+	shot, err := s.chrome.Screenshot(ctx, target, 0, 0)
 	if err != nil {
 		return nil, FixtureOutput{}, err
 	}
@@ -371,7 +347,7 @@ func (s *Server) screenshotRoute(ctx context.Context, _ *mcp.CallToolRequest, in
 	if err != nil {
 		return nil, ScreenshotOutput{}, err
 	}
-	shot, err := s.screenshot(ctx, target, in.Width, in.Height)
+	shot, err := s.chrome.Screenshot(ctx, target, in.Width, in.Height)
 	if err != nil {
 		return nil, ScreenshotOutput{}, err
 	}
@@ -405,41 +381,12 @@ type AuditInput struct {
 	Theme     string `json:"theme,omitempty" jsonschema:"light or dark, for a fixture; empty follows the system"`
 }
 
-// AuditNode is one element that fails a rule.
-type AuditNode struct {
-	Target  []string `json:"target"`
-	HTML    string   `json:"html"`
-	Summary string   `json:"summary"`
-}
-
-// Violation is one failed axe rule.
-type Violation struct {
-	ID      string      `json:"id"`
-	Impact  string      `json:"impact"`
-	Help    string      `json:"help"`
-	HelpURL string      `json:"helpUrl"`
-	Nodes   []AuditNode `json:"nodes"`
-}
-
-// AuditOutput is the result of a11y_audit.
-type AuditOutput struct {
-	Violations []Violation `json:"violations"`
-	// Passes is the number of rules that passed.
-	Passes int    `json:"passes"`
-	Axe    string `json:"axe"`
-}
-
-// auditScript runs axe on the document and returns JSON text.
-const auditScript = `(async () => {
-  const r = await axe.run(document);
-  return JSON.stringify({
-    passes: r.passes.length,
-    violations: r.violations.map((v) => ({
-      id: v.id, impact: v.impact || "", help: v.help, helpUrl: v.helpUrl,
-      nodes: v.nodes.map((n) => ({ target: n.target.map(String), html: n.html, summary: n.failureSummary || "" })),
-    })),
-  });
-})()`
+// AuditNode, Violation and AuditOutput are the result of a11y_audit.
+type (
+	AuditNode   = chrome.AuditNode
+	Violation   = chrome.Violation
+	AuditOutput = chrome.AuditOutput
+)
 
 func (s *Server) a11yAudit(ctx context.Context, _ *mcp.CallToolRequest, in AuditInput) (*mcp.CallToolResult, AuditOutput, error) {
 	app, err := s.ensureApp(ctx)
@@ -463,28 +410,9 @@ func (s *Server) a11yAudit(ctx context.Context, _ *mcp.CallToolRequest, in Audit
 	default:
 		return nil, AuditOutput{}, errors.New("give a path, or a component and a fixture name")
 	}
-	tab, cancel, err := s.tab(ctx)
+	out, err := s.chrome.Audit(ctx, target, "")
 	if err != nil {
 		return nil, AuditOutput{}, err
-	}
-	defer cancel()
-	var raw string
-	await := func(p *runtime.EvaluateParams) *runtime.EvaluateParams { return p.WithAwaitPromise(true) }
-	if err := chromedp.Run(tab,
-		chromedp.EmulateViewport(1280, 800),
-		chromedp.Navigate(target),
-		chromedp.WaitReady("body", chromedp.ByQuery),
-		chromedp.Evaluate(axeSource, nil),
-		chromedp.Evaluate(auditScript, &raw, await),
-	); err != nil {
-		return nil, AuditOutput{}, fmt.Errorf("audit in Chrome: %w", err)
-	}
-	out := AuditOutput{Axe: AxeVersion}
-	if err := json.Unmarshal([]byte(raw), &out); err != nil {
-		return nil, AuditOutput{}, fmt.Errorf("axe result: %w", err)
-	}
-	if out.Violations == nil {
-		out.Violations = []Violation{}
 	}
 	return nil, out, nil
 }
@@ -645,62 +573,6 @@ func sourceSnapshot(dir string) string {
 		return nil
 	})
 	return hex.EncodeToString(h.Sum(nil))
-}
-
-// tab opens a new tab of the shared headless Chrome.
-func (s *Server) tab(ctx context.Context) (context.Context, context.CancelFunc, error) {
-	s.mu.Lock()
-	if s.browser == nil {
-		alloc, cancelAlloc := chromedp.NewExecAllocator(context.Background(), append(chromedp.DefaultExecAllocatorOptions[:],
-			// The first start of Chrome on a machine with load can take
-			// longer than the 20 s default.
-			chromedp.WSURLReadTimeout(90*time.Second))...)
-		browser, cancelBrowser := chromedp.NewContext(alloc)
-		if err := chromedp.Run(browser); err != nil {
-			cancelBrowser()
-			cancelAlloc()
-			s.mu.Unlock()
-			return nil, nil, fmt.Errorf("start headless Chrome: %w. Install Chrome or Chromium", err)
-		}
-		s.browser = browser
-		s.closers = append(s.closers, cancelAlloc, cancelBrowser)
-	}
-	browser := s.browser
-	s.mu.Unlock()
-	tab, cancelTab := chromedp.NewContext(browser)
-	tab, cancelTimeout := context.WithTimeout(tab, 60*time.Second)
-	stop := context.AfterFunc(ctx, cancelTab)
-	return tab, func() {
-		stop()
-		cancelTimeout()
-		cancelTab()
-	}, nil
-}
-
-// screenshot returns a PNG of the full page at target.
-func (s *Server) screenshot(ctx context.Context, target string, width, height int) ([]byte, error) {
-	if width <= 0 {
-		width = 1280
-	}
-	if height <= 0 {
-		height = 800
-	}
-	tab, cancel, err := s.tab(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer cancel()
-	var shot []byte
-	if err := chromedp.Run(tab,
-		chromedp.EmulateViewport(int64(width), int64(height)),
-		chromedp.Navigate(target),
-		chromedp.WaitReady("body", chromedp.ByQuery),
-		// Quality 100 gives a PNG.
-		chromedp.FullScreenshot(&shot, 100),
-	); err != nil {
-		return nil, fmt.Errorf("screenshot in Chrome: %w", err)
-	}
-	return shot, nil
 }
 
 // get reads one address of the app.

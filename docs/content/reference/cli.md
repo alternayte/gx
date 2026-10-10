@@ -249,6 +249,35 @@ gx mcp [--main <package>] [--registry <source>] [app]
 
 Runs the dev MCP server on standard input and output.
 
+## gx fuzz
+
+```sh
+gx fuzz [--seed <n>] [--sets <n>] [--json] [--main <package>] [--app <dir>] [component]
+```
+
+Renders each component of the app with random props, and checks each render. The command needs Chrome or Chromium. It needs no node.
+
+The command builds the app as `gx dev` does and makes prop sets from the prop types of each component. The first set is the empty value of each prop. The second set has a long string in each string prop. The third set has markup characters in each string prop. Each later set is random.
+
+A prop set fails when one of these checks fails:
+
+- The render does not panic.
+- The HTML parser gives the same tree that the render wrote.
+- axe finds no accessibility violation in headless Chrome.
+
+Two inputs are not inputs of a caller, and the command does not report them:
+
+- A component has a required prop of a type that the command cannot make, for example an interface or a function. The command does not render the component and prints `skipped` with the name of the prop.
+- A slot takes only some elements, for example the cells of a table row. Text in such a slot is not a defect of the component.
+
+The audit is for the component and not for a page. A control that gets its label from the caller has a finding.
+
+For each prop set that fails, the command prints an entry for the fixtures file of the component. Add the entry to `<Name>.fixtures.go` to see the defect in the gallery.
+
+The last line of the output shows the seed. Give the same seed with `--seed` to get the same prop sets again. `--sets` is the number of prop sets for each component; the default is 20. A component name selects one component: `Card`, or `ui.Card` when two packages have the name.
+
+The exit code is 1 when a prop set fails. `--json` prints machine output.
+
 ## gx help
 
 ```sh

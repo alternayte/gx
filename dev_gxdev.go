@@ -116,9 +116,10 @@ func (a *App) devRoutes() {
 			return
 		}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		_ = RenderRequest(w, r, galleryFixtureHTML(f, q.Get("theme")))
+		_ = RenderRequest(w, r, galleryFixtureHTML(f, q.Get("theme"), "main"))
 	}))
 	a.mux.Handle("GET /_gx/export", http.HandlerFunc(a.serveExportList))
+	a.fuzzRoutes()
 }
 
 // devReloadHeader marks the request that the dev client sends after a

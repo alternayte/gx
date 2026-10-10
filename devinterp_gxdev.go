@@ -34,6 +34,9 @@ func DevRune(lit string) constant.Value { return interp.Rune(lit) }
 var devState struct {
 	mu    sync.RWMutex
 	table *interp.Table
+	// pkgs holds the packages of the app by path. The fuzzer finds a
+	// component function here (REQ-AI-11).
+	pkgs map[string]*interp.Package
 	// funcs holds the interpreted functions by package path and name.
 	funcs map[string]map[string]*interp.Func
 	// files holds, for each swapped file, the names of its functions.
@@ -44,6 +47,7 @@ var devState struct {
 // app calls it with the packages of its generated gxdev_symbols package.
 func SetDevSymbols(pkgs []DevPackage) {
 	list := make([]*interp.Package, len(pkgs))
+	byPath := map[string]*interp.Package{}
 	for i := range pkgs {
 		p := pkgs[i]
 		if p.Path == "github.com/alternayte/gx" {
@@ -57,10 +61,12 @@ func SetDevSymbols(pkgs []DevPackage) {
 			p.Consts = consts
 		}
 		list[i] = &p
+		byPath[p.Path] = &p
 	}
 	devState.mu.Lock()
 	defer devState.mu.Unlock()
 	devState.table = interp.NewTable(list...)
+	devState.pkgs = byPath
 	devState.funcs = map[string]map[string]*interp.Func{}
 	devState.files = map[string][]string{}
 }
