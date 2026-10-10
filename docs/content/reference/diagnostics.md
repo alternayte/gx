@@ -66,6 +66,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX4011](/errors/GX4011/) | Tool has no description, or an input with no JSON form. |
 | [GX4012](/errors/GX4012/) | Hint: `c.Update` takes a component with no fragment. |
 | [GX4013](/errors/GX4013/) | Optimistic directive has no action, or writes no signal. |
+| [GX4014](/errors/GX4014/) | Shared signal in a component with no `gx.Room` prop. |
 
 ## Styles and transitions
 

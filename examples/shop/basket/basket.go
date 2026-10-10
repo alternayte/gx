@@ -48,8 +48,17 @@ func count(ls []Line) int {
 
 // BasketPage is the basket page.
 var BasketPage = gx.Page(
-	func(c *gx.Ctx, in route.Page) (BasketViewProps, error) { return BasketViewProps{Lines: lines()}, nil },
+	func(c *gx.Ctx, in route.Page) (BasketViewProps, error) {
+		// Each viewer of the page with the same room name shares the
+		// note. A real app gives a key that its user can see.
+		return BasketViewProps{Lines: lines(), Room: gx.RoomKey(c, in.Room)}, nil
+	},
 	BasketView)
+
+// Rules limits the shared note. A longer text reaches no viewer (SI-17).
+func (s *NoteSignals) Rules() gx.Rules {
+	return gx.Rules{gx.Field(&s.Note, gx.MaxLen(20))}
+}
 
 // Bump adds one to a line and gives the whole basket to c.Update. The line
 // and the count are the fragments that differ, so only they go out.
@@ -137,4 +146,6 @@ var StarSet = gx.Action(func(c *gx.Ctx, in route.StarSet) error {
 })
 
 // Routes collects the basket page and its actions.
-var Routes = gx.Collect(BasketPage, Bump, Reset, Star, StarFail, StarSet, SetQty, Count)
+// The routes of the room of the shared note are in the same group, so a
+// viewer of a room passes the middleware of the pages.
+var Routes = append(gx.Collect(BasketPage, Bump, Reset, Star, StarFail, StarSet, SetQty, Count), NoteRoom...)

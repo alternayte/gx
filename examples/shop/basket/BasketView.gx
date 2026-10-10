@@ -2,8 +2,10 @@ package basket
 
 props {
   Lines []Line
+  Room  gx.Room
 }
 
 <gx.Head title="Gx shop basket" />
 <Basket lines={p.Lines} />
 <Stars />
+<Note room={p.Room} />

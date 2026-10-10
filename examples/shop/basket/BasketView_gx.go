@@ -8,6 +8,7 @@ import (
 
 type BasketViewProps struct {
 	Lines []Line
+	Room  gx.Room
 	GxKey gx.Key
 }
 
@@ -17,20 +18,22 @@ func BasketView(p BasketViewProps) gx.Node {
 			return _n
 		}
 	}
-//line BasketView.gx:7:1
-	return _tBasketView0.With(
-//line BasketView.gx:7:1
-		gx.Head(gx.HeadProps{Title: "Gx shop basket", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
 //line BasketView.gx:8:1
-		Basket(BasketProps{Lines: p.Lines}),
+	return _tBasketView0.With(
+//line BasketView.gx:8:1
+		gx.Head(gx.HeadProps{Title: "Gx shop basket", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
 //line BasketView.gx:9:1
+		Basket(BasketProps{Lines: p.Lines}),
+//line BasketView.gx:10:1
 		Stars(StarsProps{GxKey: gx.ChildKey(p.GxKey, 3)}),
+//line BasketView.gx:11:1
+		Note(NoteProps{Room: p.Room, GxKey: gx.ChildKey(p.GxKey, 4)}),
 	)
 }
 
 var _tBasketView0 = gx.NewTemplate(
-	[]string{"", "\n", "\n", "\n"},
-	[]int{0, 0, 0},
+	[]string{"", "\n", "\n", "\n", "\n"},
+	[]int{0, 0, 0, 0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}},
 )

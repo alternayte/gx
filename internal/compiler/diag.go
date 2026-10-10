@@ -67,6 +67,7 @@ const (
 	CodeTool             = "GX4011"
 	CodeUpdateNoFragment = "GX4012"
 	CodeOptimistic       = "GX4013"
+	CodeSharedSignal     = "GX4014"
 	CodeActionMethod     = "GX4009"
 	CodeSignalRules      = "GX4008"
 
@@ -165,6 +166,7 @@ var Catalog = []Info{
 	{CodeTool, "tool has no description or an input with no JSON form"},
 	{CodeUpdateNoFragment, "c.Update takes a component with no fragment"},
 	{CodeOptimistic, "optimistic directive has no action or writes no signal"},
+	{CodeSharedSignal, "shared signal in a component with no gx.Room prop"},
 	{CodeEnum, "gx.Enum misses a constant of its type"},
 	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},

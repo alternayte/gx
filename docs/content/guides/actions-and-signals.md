@@ -215,6 +215,29 @@ The request of an optimistic update goes one time. The adapter does not send it 
 
 An action with `.debounce` or `.throttle` sends its request later, so its optimistic directive has no rollback. `gx check` reports [GX4013](/errors/GX4013/) for a directive with no action.
 
+## Shared signals
+
+A signal with the word `shared` has one value for each viewer of a room. Use it for presence, a typing mark or a cursor.
+
+1. Write the word before the name: `signals { shared Typing bool = false }`.
+2. Give the component a prop of type `gx.Room`.
+3. In the loader, make the key of the room: `gx.RoomKey(c, "doc-42")`. Each viewer with the same key is in the same room.
+4. Mount the routes of the room in a group of the app. Gx generates them as `<Component>Room`: `app.Group("/", auth, notes.Routes, notes.NoteRoom)`.
+
+A change of a viewer goes to the server, and then to each viewer of the room. The writer gets it back too.
+
+- **The key has a signature.** A viewer cannot change the key in the page to enter a different room. The server answers 403 to a key that it did not sign.
+- **The middleware of the group runs.** The stream and each write are requests to the routes that you mounted.
+- **The value passes rules.** Write a `Rules()` method on the generated `<Component>Signals` struct. A value that fails a rule reaches no viewer, and the page of the writer shows the value of the room again.
+- **A shared signal is not durable.** The room holds the last values while it has a viewer. Keep data that must stay in your database.
+
+An app with one replica needs no setup. For more than one replica, give `gx.Config` two values:
+
+- `Bus`: your implementation of `gx.Bus`, for example on `LISTEN` and `NOTIFY` of your database. Without it, each replica has its own rooms.
+- `Secret`: the same bytes on each replica. Without it, each process signs with its own secret, and a key of one replica is not valid on a second replica.
+
+`gx dev` writes the bus of the app to its log. `gx check` reports [GX4014](/errors/GX4014/) for a shared signal with no room. Under the htmx adapter a signal is a compile error.
+
 ## The JSON wire
 
 `.API()` on an action gives it a JSON answer for a client that is not a page: a mobile app or a script. The page still gets its patches from the same action.

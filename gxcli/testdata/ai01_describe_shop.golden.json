@@ -96,9 +96,41 @@
           "name": "Lines",
           "type": "[]Line",
           "required": true
+        },
+        {
+          "name": "Room",
+          "type": "gx.Room",
+          "required": true
         }
       ],
       "signals": [],
+      "fragments": [],
+      "fixtures": []
+    },
+    {
+      "name": "Note",
+      "package": "github.com/alternayte/gx/examples/shop/basket",
+      "file": "basket/Note.gx",
+      "props": [
+        {
+          "name": "Room",
+          "type": "gx.Room",
+          "required": true
+        }
+      ],
+      "signals": [
+        {
+          "name": "Note",
+          "type": "string",
+          "default": "\"\"",
+          "doc": "Note is the text that each viewer of the room sees and can change."
+        },
+        {
+          "name": "Busy",
+          "type": "bool",
+          "default": "false"
+        }
+      ],
       "fragments": [],
       "fixtures": []
     },
@@ -9029,7 +9061,15 @@
       "type": "github.com/alternayte/gx/examples/shop/basket/route.Page",
       "method": "GET",
       "pattern": "GET /basket",
-      "fields": [],
+      "fields": [
+        {
+          "name": "Room",
+          "type": "string",
+          "source": "query",
+          "key": "room",
+          "default": "main"
+        }
+      ],
       "kind": "page",
       "handler": "basket.BasketPage",
       "prefix": "/",

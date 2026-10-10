@@ -32,6 +32,9 @@ type Field struct {
 	Type       string
 	Default    string
 	HasDefault bool
+	// Shared is true for a signal with the word shared before its name:
+	// each viewer of a room sees its value (REQ-ACT-21).
+	Shared bool
 }
 
 // Node is a markup node.

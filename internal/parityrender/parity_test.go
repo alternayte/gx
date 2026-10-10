@@ -373,3 +373,51 @@ func TestREQ_DEV_05_SwappedCodeIsWhatRenders(t *testing.T) {
 		t.Fatal("the page after the swap back differs from the first page")
 	}
 }
+
+// TestREQ_ACT_22_DevLogNamesTheBus checks that a dev build of an app with a
+// shared signal writes the bus of its rooms to its log at startup, and that
+// a production build writes no such line (REQ-ACT-22).
+func TestREQ_ACT_22_DevLogNamesTheBus(t *testing.T) {
+	shop := filepath.Join(repoRoot(t), "examples", "shop")
+	logOf := func(tags ...string) string {
+		bin := execname.Name(filepath.Join(t.TempDir(), "app"))
+		args := append([]string{"build"}, tags...)
+		build := exec.Command("go", append(args, "-o", bin, "./cmd/shop")...)
+		build.Dir = shop
+		if out, err := build.CombinedOutput(); err != nil {
+			t.Fatalf("go build %v: %v\n%s", tags, err, out)
+		}
+		l, err := net.Listen("tcp", "127.0.0.1:0")
+		if err != nil {
+			t.Fatal(err)
+		}
+		addr := l.Addr().String()
+		_ = l.Close()
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		app := exec.CommandContext(ctx, bin, "-addr", addr)
+		app.Dir = shop
+		app.Env = append(os.Environ(), "GX_DEV_ADDR="+addr, "GX_DEV_SECRET="+devSecret)
+		var log bytes.Buffer
+		app.Stderr = &log
+		if err := app.Start(); err != nil {
+			t.Fatal(err)
+		}
+		// The app writes the line before it listens.
+		for deadline := time.Now().Add(30 * time.Second); time.Now().Before(deadline); time.Sleep(50 * time.Millisecond) {
+			if res, err := http.Get("http://" + addr + "/"); err == nil {
+				_ = res.Body.Close()
+				break
+			}
+		}
+		cancel()
+		_ = app.Wait()
+		return log.String()
+	}
+	if dev := logOf("-tags", "gxdev"); !strings.Contains(dev, "gx: shared signals use the in-memory bus of Gx") {
+		t.Errorf("the log of a dev build does not name the bus:\n%s", dev)
+	}
+	if prod := logOf(); strings.Contains(prod, "shared signals use") {
+		t.Errorf("a production build names the bus in its log:\n%s", prod)
+	}
+}

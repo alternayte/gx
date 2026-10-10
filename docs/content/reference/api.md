@@ -452,6 +452,14 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error
 
 RenderRequest renders n with the request in scope, so typed links mark the active page. The rendered markers feed the runtime script decision of the app.
 
+### func RoomURL
+
+```go
+func RoomURL(base string) string
+```
+
+RoomURL returns the address of the shared signals of a component, for the runtime. Generated code writes it into the root of the component.
+
 ### func Scope
 
 ```go
@@ -516,6 +524,14 @@ func SetIslands(b IslandBundle)
 
 SetIslands installs the island bundle of the app.
 
+### func SetSecret
+
+```go
+func SetSecret(secret []byte)
+```
+
+SetSecret sets the secret that signs the room keys. gx.New calls it for Config.Secret.
+
 ### func SetStylesheet
 
 ```go
@@ -539,6 +555,14 @@ func SetWidgetStylesheets(sheets map[string][]byte)
 ```
 
 SetWidgetStylesheets installs the stylesheet of each widget, by the tag of the widget. The main of an app calls it with gxstyles.Widgets(). The stylesheet of a widget holds only the classes that the widget uses, and lives in the shadow root of the element.
+
+### func ShareEffect
+
+```go
+func ShareEffect(base string, key Key, names ...string) string
+```
+
+ShareEffect returns the effect of the root of a component with shared signals: it gives the runtime the value of each shared signal, at the start and after each change. The runtime writes a changed value to the room. Generated code calls it.
 
 ### func SignalJSON
 
@@ -966,6 +990,25 @@ func (b *Builder) Node() Node
 
 Node returns the built node.
 
+### type Bus
+
+```go
+type Bus interface {
+    Publish(ctx context.Context, topic string, message []byte) error
+    Subscribe(ctx context.Context, topic string, receive func(message []byte)) (cancel func(), err error)
+}
+```
+
+Bus carries the values of shared signals between the replicas of an app. Publish gives a message to each subscriber of the topic, on each replica. Subscribe calls receive for each message of the topic until the caller calls cancel.
+
+#### func NewMemoryBus
+
+```go
+func NewMemoryBus() Bus
+```
+
+NewMemoryBus returns a bus that lives in this process. Two replicas of an app do not see the messages of each other through it.
+
 ### type CSPOptions
 
 ```go
@@ -1020,6 +1063,14 @@ type Config struct {
     // that file before any route, so the binary needs no file beside it
     // (NFR-08).
     Public fs.FS
+    // Bus carries the values of shared signals between the replicas of
+    // the app (REQ-ACT-22). With no bus, the in-memory bus of Gx carries
+    // them inside one process.
+    Bus Bus
+    // Secret signs the room keys of shared signals (SI-17). Each replica
+    // of the app needs the same secret. With no secret, the process makes
+    // its own.
+    Secret []byte
 }
 ```
 
@@ -1589,6 +1640,14 @@ func Collect(hs ...Handler) []Handler
 
 Collect returns its arguments as one route list.
 
+#### func SharedSignals
+
+```go
+func SharedSignals[S any](base string, names ...string) []Handler
+```
+
+SharedSignals returns the two routes of the shared signals of a component: the stream that a viewer of a room reads, and the write of a value. S is the generated Signals struct of the component, base is the signal namespace of the component, and names are its shared signals. Generated code makes the value; the app mounts it in a group, so each request passes the middleware of that group.
+
 ### type HeadProps
 
 ```go
@@ -2086,6 +2145,22 @@ type Response struct {
 ```
 
 Response is the ordered answer of an action, a form or a navigation.
+
+### type Room
+
+```go
+type Room string
+```
+
+Room is the key of a room with the signature of the server. A room is the set of viewers that share the shared signals of one component instance. A loader makes the value with RoomKey and gives it to the component as a prop; the page carries it, and a viewer cannot make one for a different key.
+
+#### func RoomKey
+
+```go
+func RoomKey(c *Ctx, key string) Room
+```
+
+RoomKey returns the room with the given key, signed by the server. A loader calls it for a viewer that can be in the room: the middleware of the group of the page ran before the loader. The key is what the viewers share, for example the id of a document.
 
 ### type Route
 

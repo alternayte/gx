@@ -65,6 +65,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4011 | tool has no description or an input with no JSON form",
 		"GX4012 | c.Update takes a component with no fragment",
 		"GX4013 | optimistic directive has no action or writes no signal",
+		"GX4014 | shared signal in a component with no gx.Room prop",
 		"GX5001 | gx.Enum misses a constant of its type",
 		"GX5002 | duplicate view-transition-name in one template",
 		"GX5003 | class string is built at runtime",

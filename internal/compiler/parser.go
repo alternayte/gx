@@ -144,6 +144,16 @@ func (p *parser) parseFile() *File {
 		}
 		f.HasSignals = true
 		f.Signals = p.parseFields()
+		for i := range f.Signals {
+			// "shared Typing bool" is the shared signal Typing: the word
+			// is the name of the field as the parser read it, and the
+			// name of the signal starts its type.
+			s := &f.Signals[i]
+			name, typ, ok := strings.Cut(s.Type, " ")
+			if s.Name == "shared" && ok && isExportedIdent(name) {
+				s.Shared, s.Name, s.Type = true, name, strings.TrimSpace(typ)
+			}
+		}
 	}
 	f.Body = p.parseNodes(p.eof)
 	return f

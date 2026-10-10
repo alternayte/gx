@@ -247,6 +247,14 @@ type Config struct {
 	// that file before any route, so the binary needs no file beside it
 	// (NFR-08).
 	Public fs.FS
+	// Bus carries the values of shared signals between the replicas of
+	// the app (REQ-ACT-22). With no bus, the in-memory bus of Gx carries
+	// them inside one process.
+	Bus Bus
+	// Secret signs the room keys of shared signals (SI-17). Each replica
+	// of the app needs the same secret. With no secret, the process makes
+	// its own.
+	Secret []byte
 }
 
 // App is an http.Handler that owns a ServeMux (REQ-RTE-18).
@@ -274,6 +282,9 @@ type App struct {
 	// hints holds, for the pattern of each page route, the Link values
 	// of its last answer with status 200.
 	hints sync.Map
+	// rooms holds the rooms of the shared signals of this app
+	// (REQ-ACT-21).
+	rooms *roomHub
 }
 
 // appRoute is one mounted route as registered.
@@ -285,7 +296,9 @@ type appRoute struct {
 // New returns an empty app.
 func New(cfg Config) *App {
 	SetBasePath(cfg.BasePath)
-	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast, public: cfg.Public}
+	SetSecret(cfg.Secret)
+	logBus(cfg.Bus)
+	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast, public: cfg.Public, rooms: newRoomHub(cfg.Bus)}
 	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
 	a.mux.Handle("GET "+islandsPath+"{file...}", http.HandlerFunc(serveIsland))
 	a.devRoutes()
@@ -493,6 +506,11 @@ func (a *App) Group(prefix string, parts ...any) *App {
 	nav := FullNavigation
 	var origins *originPolicy
 	add := func(h Handler) {
+		if shared, ok := h.(*sharedRoute); ok {
+			// The rooms of a shared signal belong to the app that
+			// mounts its routes (REQ-ACT-22).
+			h = shared.forApp(a)
+		}
 		route := h
 		if len(layouts) > 0 {
 			route = &layoutHandler{inner: h, layouts: layouts, morph: nav == MorphNavigation}

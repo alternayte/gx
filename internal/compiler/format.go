@@ -97,17 +97,24 @@ func indent(depth int) string {
 }
 
 func (pr *printer) writeFields(fields []Field) {
+	// label is the name of a field with the word of a shared signal.
+	label := func(f Field) string {
+		if f.Shared {
+			return "shared " + f.Name
+		}
+		return f.Name
+	}
 	width := 0
 	for _, f := range fields {
-		if len(f.Name) > width {
-			width = len(f.Name)
+		if len(label(f)) > width {
+			width = len(label(f))
 		}
 	}
 	for _, f := range fields {
 		for _, line := range docLines(f.Doc) {
 			pr.write(strings.TrimRight("  // "+line, " ") + "\n")
 		}
-		pr.write("  " + f.Name + strings.Repeat(" ", width-len(f.Name)+1) + formatGoExpr(f.Type))
+		pr.write("  " + label(f) + strings.Repeat(" ", width-len(label(f))+1) + formatGoExpr(f.Type))
 		if f.HasDefault {
 			pr.write(" = " + formatGoExpr(f.Default))
 		}

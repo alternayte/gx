@@ -262,6 +262,7 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 		g.write("")
 		g.fragmentFunc(el)
 	}
+	g.emitShared()
 	for _, decl := range g.tmpls.decls {
 		g.write("")
 		g.write("%s", decl)
@@ -592,6 +593,7 @@ func (g *gen) attrsExpr(el *Element) string {
 	var styleParts []string
 	if el == g.rootEl && len(g.file.Signals) > 0 {
 		static = append(static, g.signalsAttrs()...)
+		static = append(static, g.sharedAttrs()...)
 	}
 	spread := false
 	flush := func() {

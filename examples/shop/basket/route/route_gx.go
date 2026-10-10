@@ -67,6 +67,11 @@ func (Page) Pattern() string { return "GET /basket" }
 
 // Bind fills Page from the request.
 func (in *Page) Bind(r *http.Request) error {
+	if v := r.URL.Query().Get("room"); v != "" {
+		in.Room = string(v)
+	} else {
+		in.Room = "main"
+	}
 	return nil
 }
 
@@ -75,6 +80,14 @@ func (in Page) URL() string {
 	var b strings.Builder
 	b.WriteString("/")
 	b.WriteString("basket")
+	q := url.Values{}
+	if in.Room != "" && in.Room != "main" {
+		q.Set("room", in.Room)
+	}
+	if s := q.Encode(); s != "" {
+		b.WriteString("?")
+		b.WriteString(s)
+	}
 	return gx.BasePath() + b.String()
 }
 

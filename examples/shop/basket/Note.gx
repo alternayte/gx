@@ -1,0 +1,19 @@
+package basket
+
+props {
+  Room gx.Room
+}
+
+signals {
+  // Note is the text that each viewer of the room sees and can change.
+  shared Note string = ""
+  shared Busy bool = false
+}
+
+<div class="my-4 flex items-center gap-2 rounded-xl border border-border bg-card p-4 text-card-foreground">
+  <label for="note-input">Shared note</label>
+  <input id="note-input" class="rounded-md border border-border px-2 py-1 text-sm" bind:value={$Note} />
+  <span id="note-text" text={$Note}></span>
+  <button id="note-busy" class="rounded-md border border-border px-2 text-sm" on:click={$Busy = !$Busy}>Busy</button>
+  <span id="note-busy-mark" show={$Busy}>A viewer is busy</span>
+</div>

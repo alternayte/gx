@@ -6,6 +6,8 @@ import "github.com/alternayte/gx"
 // Page is the basket page. Its actions answer with c.Update.
 type Page struct {
 	gx.Route `GET /basket`
+	// Room names the room of the shared note of the page (REQ-ACT-21).
+	Room string `query:"room" default:"main"`
 }
 
 // Bump adds one to the quantity of a line.

@@ -3,6 +3,7 @@
 // bundler for the core runtime.
 import { installCSRF } from './csrf'
 import { keep, type Kept } from './optimistic'
+import { share, type Deps, type Values } from './room'
 //
 // It owns the parts an adapter does not: layout-aware navigation (REQ-RTE-12),
 // active links (REQ-RTE-13), the dev duplicate-scope check (REQ-ACT-06) and
@@ -26,6 +27,9 @@ export const gx = {
   // changes. The runtime puts them back when the action fails
   // (REQ-ACT-18).
   keep: (parts: Kept[]): void => keep(parts),
+  // share gives the values of the shared signals of a component to its
+  // room (REQ-ACT-21).
+  share: (el: Element, values: Values): void => share(el, values, roomDeps),
 }
 
 ;(globalThis as { __gx?: typeof gx }).__gx = gx
@@ -525,12 +529,41 @@ const cookie = (name: string): string => {
 // restoreSignals puts the saved values of an optimistic update back into
 // the signals of the page, as a signal patch of the server does
 // (REQ-ACT-18).
-const restoreSignals = (kept: Kept): void => {
+const restoreSignals = (kept: Kept): void => patchSignals(kept)
+
+// patchSignals puts values into the signals of the page, as a signal patch
+// of the server does.
+const patchSignals = (signals: Record<string, unknown>): void => {
   document.dispatchEvent(
     new CustomEvent('datastar-fetch', {
-      detail: { type: 'datastar-patch-signals', el: document.documentElement, argsRaw: { signals: JSON.stringify(kept) } },
+      detail: { type: 'datastar-patch-signals', el: document.documentElement, argsRaw: { signals: JSON.stringify(signals) } },
     }),
   )
+}
+
+// roomDeps connects a room to the browser (REQ-ACT-21).
+const roomDeps: Deps = {
+  open: (url, receive) => {
+    const source = new EventSource(url)
+    source.addEventListener('gx-room', (e) => receive(JSON.parse((e as MessageEvent<string>).data) as Values))
+    return () => source.close()
+  },
+  post: (url, room, signals) =>
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ room, signals }),
+    }).then(
+      (res) => res.ok,
+      () => false,
+    ),
+  patch: (scope, values) => {
+    let nested: Record<string, unknown> = values
+    for (let i = scope.length - 1; i >= 0; i--) nested = { [scope[i]]: nested }
+    patchSignals(nested)
+  },
+  later: (fn) => setTimeout(fn, 50),
 }
 
 // Attach the CSRF token to every same-origin write, Datastar's fetches
