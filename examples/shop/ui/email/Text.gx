@@ -1,0 +1,12 @@
+package email
+
+props {
+  // Muted gives the text a smaller size and a weaker colour, for a note.
+  Muted    bool = false
+  // Align is the horizontal position of the text: Left, Center or Right.
+  Align    Align = Left
+  // Children is the text.
+  Children gx.Node
+}
+
+<p style={p.style()}>{p.Children}</p>

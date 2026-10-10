@@ -327,6 +327,30 @@
           "ui/dropdown-menu/styles.go": "67a04596681446568922315018fb19a6040d687b52375ee12570e6703caec6b2"
         }
       },
+      "email": {
+        "version": "0.1.0",
+        "files": {
+          "ui/email/Button.fixtures.go": "3d1ef403592b1b645923f69a7cf033628db9d84ae8c5bde7959b70903ea31e1a",
+          "ui/email/Button.gx": "31b14d8a5e436dea070e14607e3a7cb82d3ef4665687d9b44d962731d268274c",
+          "ui/email/Column.fixtures.go": "ab5a93792c62a2c5e36acc30b0e706290248456e798c108736326121b031e664",
+          "ui/email/Column.gx": "734b3f707fae586f4443071c572a6d19d1c81983002a2c34be985454a4bd5302",
+          "ui/email/Divider.fixtures.go": "0365d0eaf905741747a5e4c90b094cf7def16dd3a851a50c751125fb98dea153",
+          "ui/email/Divider.gx": "9f2e9b8c78ba3fe980c5914e1c3866eedb1e23961a6e94af6ecaf5e5218f00cb",
+          "ui/email/Document.fixtures.go": "27f6bdeb463d59f21fb3e6f90abef070ce789ad38bba88a3e104a30f0177789b",
+          "ui/email/Document.gx": "0f8510285799370bf09b90b512130a0b12669e89f284b379814d3a0b8dd1695d",
+          "ui/email/Heading.fixtures.go": "73b6860e291762059736bd51b71c544874669d1d02d8ea87f301344499b0f1ab",
+          "ui/email/Heading.gx": "bdd51626c03595eeb8a64adef80a1b0c7d3b466b2ac170366d34a30439899399",
+          "ui/email/Image.fixtures.go": "3ba71102edf0440e7c8cd93ecdbed3d395ddd39ad7f6242172a9975776c783d7",
+          "ui/email/Image.gx": "5d207c54de91c5008da38ae9c6362e6ffeeeccce2afc79bd4864142cccea7896",
+          "ui/email/Row.fixtures.go": "e71d25df187fa4aa309de9aba2349de2c225743a8e73ac9f06f04c5bb8f554ae",
+          "ui/email/Row.gx": "edf9b6c319a556d3e69769d040a0cdc47c1f3a4e94b7d2977026e6aeb46a45d9",
+          "ui/email/Section.fixtures.go": "c24f3fdb63301bee7bd2999b3d3c8d84c88b96802190b32673ec01af0d050e31",
+          "ui/email/Section.gx": "8e695b8f73a069a0dd5541cb72f60e0dfc45d8ba7228b658e3468ea06d33a083",
+          "ui/email/Text.fixtures.go": "41737fb0bfaa878daa4c247c8ddb576066acf40ef8cc057e7094464a6e42c4ab",
+          "ui/email/Text.gx": "4c50e640786d8a5328f9dd192b51f05119856a8c8ec5b24dfd51d3907786059a",
+          "ui/email/styles.go": "85cfc831148a6512a65402973f4bc77147feaf3393ceec424edd31c87cdd6dc7"
+        }
+      },
       "empty": {
         "version": "0.1.0",
         "files": {

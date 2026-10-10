@@ -31,6 +31,7 @@ import (
 	shell "github.com/alternayte/gx/registry/docs-shell"
 	drawer "github.com/alternayte/gx/registry/drawer"
 	dropdownmenu "github.com/alternayte/gx/registry/dropdown-menu"
+	email "github.com/alternayte/gx/registry/email"
 	empty "github.com/alternayte/gx/registry/empty"
 	field "github.com/alternayte/gx/registry/field"
 	hovercard "github.com/alternayte/gx/registry/hover-card"
@@ -588,6 +589,32 @@ var Items = []Item{
 			{Name: "dropdown-menu-sub-trigger-disabled", Title: "DropdownMenuSubTrigger: Disabled", Component: "DropdownMenuSubTrigger", Fixtures: []string{"DropdownMenuSubTrigger/Disabled"}, Node: func() gx.Node {
 				return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Disabled"]))
 			}},
+		},
+	},
+	{
+		Name:        "email",
+		Title:       "Email",
+		Group:       "Components",
+		Description: "The parts of an HTML email: inline styles and table layout.",
+		Examples: []Example{
+			{Name: "button-default", Title: "Button: Default", Component: "Button", Fixtures: []string{"Button/Default"}, Node: func() gx.Node { return email.Button(email.ButtonFixtures["Default"]) }},
+			{Name: "button-center", Title: "Button: Center", Component: "Button", Fixtures: []string{"Button/Center"}, Node: func() gx.Node { return email.Button(email.ButtonFixtures["Center"]) }},
+			{Name: "column-default", Title: "Column: Default", Component: "Column", Fixtures: []string{"Column/Default"}, Node: func() gx.Node { return email.ColumnWrap(email.Column(email.ColumnFixtures["Default"])) }},
+			{Name: "column-fixed", Title: "Column: Fixed", Component: "Column", Fixtures: []string{"Column/Fixed"}, Node: func() gx.Node { return email.ColumnWrap(email.Column(email.ColumnFixtures["Fixed"])) }},
+			{Name: "column-right", Title: "Column: Right", Component: "Column", Fixtures: []string{"Column/Right"}, Node: func() gx.Node { return email.ColumnWrap(email.Column(email.ColumnFixtures["Right"])) }},
+			{Name: "divider-default", Title: "Divider: Default", Component: "Divider", Fixtures: []string{"Divider/Default"}, Node: func() gx.Node { return email.Divider(email.DividerFixtures["Default"]) }},
+			{Name: "document-default", Title: "Document: Default", Component: "Document", Fixtures: []string{"Document/Default"}, Node: func() gx.Node { return email.Document(email.DocumentFixtures["Default"]) }},
+			{Name: "document-preview", Title: "Document: Preview", Component: "Document", Fixtures: []string{"Document/Preview"}, Node: func() gx.Node { return email.Document(email.DocumentFixtures["Preview"]) }},
+			{Name: "heading-one", Title: "Heading: One", Component: "Heading", Fixtures: []string{"Heading/One"}, Node: func() gx.Node { return email.Heading(email.HeadingFixtures["One"]) }},
+			{Name: "heading-two", Title: "Heading: Two", Component: "Heading", Fixtures: []string{"Heading/Two"}, Node: func() gx.Node { return email.Heading(email.HeadingFixtures["Two"]) }},
+			{Name: "heading-three", Title: "Heading: Three", Component: "Heading", Fixtures: []string{"Heading/Three"}, Node: func() gx.Node { return email.Heading(email.HeadingFixtures["Three"]) }},
+			{Name: "image-default", Title: "Image: Default", Component: "Image", Fixtures: []string{"Image/Default"}, Node: func() gx.Node { return email.Image(email.ImageFixtures["Default"]) }},
+			{Name: "row-two-columns", Title: "Row: Two columns", Component: "Row", Fixtures: []string{"Row/TwoColumns"}, Node: func() gx.Node { return email.Row(email.RowFixtures["TwoColumns"]) }},
+			{Name: "section-default", Title: "Section: Default", Component: "Section", Fixtures: []string{"Section/Default"}, Node: func() gx.Node { return email.Section(email.SectionFixtures["Default"]) }},
+			{Name: "section-card", Title: "Section: Card", Component: "Section", Fixtures: []string{"Section/Card"}, Node: func() gx.Node { return email.Section(email.SectionFixtures["Card"]) }},
+			{Name: "text-default", Title: "Text: Default", Component: "Text", Fixtures: []string{"Text/Default"}, Node: func() gx.Node { return email.Text(email.TextFixtures["Default"]) }},
+			{Name: "text-muted", Title: "Text: Muted", Component: "Text", Fixtures: []string{"Text/Muted"}, Node: func() gx.Node { return email.Text(email.TextFixtures["Muted"]) }},
+			{Name: "text-center", Title: "Text: Center", Component: "Text", Fixtures: []string{"Text/Center"}, Node: func() gx.Node { return email.Text(email.TextFixtures["Center"]) }},
 		},
 	},
 	{

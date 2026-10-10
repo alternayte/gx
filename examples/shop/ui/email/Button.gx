@@ -1,0 +1,20 @@
+package email
+
+props {
+  // Href is the address that the button opens. gx.RenderEmail makes a site path an absolute URL.
+  Href     gx.URL
+  // Align is the horizontal position of the button: Left, Center or Right.
+  Align    Align = Left
+  // Children is the label of the button.
+  Children gx.Node
+}
+
+<table role="presentation" align={p.Align.attr()} cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px">
+  <tbody>
+    <tr>
+      <td align="center" style="background-color:var(--primary);border-radius:var(--radius)">
+        <a href={p.Href} style="display:inline-block;padding:12px 20px;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;font-weight:700;color:var(--primary-foreground);text-decoration:none">{p.Children}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

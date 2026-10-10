@@ -84,6 +84,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX6007 | gx.Head in a widget",
 		"GX6008 | widget route is in a group with no origins",
 		"GX6009 | origin with cookies is not exact",
+		"GX6010 | construct that an email cannot hold",
 		"GX7001 | conversion to gx.SafeHTML needs //gx:trusted",
 		"GX7002 | gx.Secret cannot cross to the client",
 		"GX8001 | frontmatter is malformed or unknown",

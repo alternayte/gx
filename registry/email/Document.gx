@@ -1,0 +1,29 @@
+package email
+
+props {
+  // Preview is the text that an inbox shows after the subject. It is not visible in the email.
+  Preview  string = ""
+  // Width is the largest width of the content in pixels.
+  Width    int = 600
+  // Children is the sections of the email.
+  Children gx.Node
+}
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:var(--background)">
+  <tbody>
+    <tr>
+      <td align="center" style="padding:24px 12px">
+        if p.Preview != "" {
+          <div style="display:none;max-height:0;overflow:hidden;opacity:0">{p.Preview}</div>
+        }
+        <table role="presentation" width={p.width()} cellpadding="0" cellspacing="0" border="0" style={p.style()}>
+          <tbody>
+            <tr>
+              <td align="left">{p.Children}</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

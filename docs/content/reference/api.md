@@ -1243,6 +1243,47 @@ type ElementPatch struct {
 
 ElementPatch changes one element, named by Target, a CSS selector.
 
+### type EmailMessage
+
+```go
+type EmailMessage struct {
+    HTML string
+    Text string
+}
+```
+
+EmailMessage is one rendered email: the HTML document and the same content as plain text. Give the two parts to the mail library of the app; Gx sends no email.
+
+#### func RenderEmail
+
+```go
+func RenderEmail(n Node, opt EmailOptions) (EmailMessage, error)
+```
+
+RenderEmail renders n as an email. The HTML is a full document: a node with no html element gets the document around it. A site path in a link or an image becomes an absolute URL from the base URL. A var() of a style becomes the value of its token.
+
+### type EmailOptions
+
+```go
+type EmailOptions struct {
+    // BaseURL is the address of the site, for example
+    // "https://shop.example". Each link and each image address that is a
+    // site path gets it, because an email has no site of its own.
+    BaseURL string
+    // Tokens are the theme tokens as values, by the name of the custom
+    // property: "--primary" to "#171717". The generated functions
+    // gxstyles.LightTokens and gxstyles.DarkTokens return them. A style
+    // that reads a token with var() gets the value.
+    Tokens map[string]string
+    // Lang is the language of the document. Empty means "en".
+    Lang string
+    // Title is the title of the document.
+    Title string
+}
+```
+
+EmailOptions are the options of RenderEmail.
+
 ### type Entry
 
 ```go

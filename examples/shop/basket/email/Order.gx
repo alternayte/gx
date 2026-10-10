@@ -1,0 +1,45 @@
+package email
+
+import (
+  kit "github.com/alternayte/gx/examples/shop/ui/email"
+  "github.com/alternayte/gx/examples/shop/basket/route"
+)
+
+props {
+  // Number is the number of the order.
+  Number string
+  // Name is the name of the customer.
+  Name   string
+  // Items are the lines of the order.
+  Items  []Item
+  // Total is the total of the order, with its currency.
+  Total  string
+}
+
+<kit.Document preview={"Order " + p.Number + " is on its way."}>
+  <kit.Section>
+    <kit.Image src={gx.URL("/logo.png")} alt="Gx shop" width={120} height={40} />
+  </kit.Section>
+  <kit.Section>
+    <kit.Heading>Your order is on its way</kit.Heading>
+    <kit.Text>Hello {p.Name}, thank you for your order {p.Number}. We send it in two days.</kit.Text>
+  </kit.Section>
+  <kit.Section card>
+    <kit.Heading level={2}>What you ordered</kit.Heading>
+    for _, it := range p.Items {
+      <kit.Row>
+        <kit.Column>{it.Qty} x {it.Name}</kit.Column>
+        <kit.Column width={120} align={kit.Right}>{it.Price}</kit.Column>
+      </kit.Row>
+    }
+    <kit.Divider />
+    <kit.Row>
+      <kit.Column><strong>Total</strong></kit.Column>
+      <kit.Column width={120} align={kit.Right}><strong>{p.Total}</strong></kit.Column>
+    </kit.Row>
+  </kit.Section>
+  <kit.Section>
+    <kit.Button href={gx.URL(route.Page{}.URL())} align={kit.Center}>See your basket</kit.Button>
+    <kit.Text muted align={kit.Center}>You get this email because you ordered at the <a href="/" style="color:var(--muted-foreground)">Gx shop</a>.</kit.Text>
+  </kit.Section>
+</kit.Document>

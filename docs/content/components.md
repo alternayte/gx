@@ -32,6 +32,7 @@ Each page shows live examples, the example code and the install command. Install
 <docs.LinkCard title="Dialog" description="A modal overlay with a trigger." href="/components/dialog/" />
 <docs.LinkCard title="Drawer" description="A bottom panel for a short task." href="/components/drawer/" />
 <docs.LinkCard title="Dropdown Menu" description="A menu of actions behind a trigger." href="/components/dropdown-menu/" />
+<docs.LinkCard title="Email" description="The parts of an HTML email: inline styles and table layout." href="/components/email/" />
 <docs.LinkCard title="Empty" description="A placeholder for an empty result." href="/components/empty/" />
 <docs.LinkCard title="Field" description="Layout and labels for one form field." href="/components/field/" />
 <docs.LinkCard title="Hover Card" description="A richer preview on hover or focus." href="/components/hover-card/" />

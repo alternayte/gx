@@ -32,6 +32,7 @@ import (
 	shell "github.com/alternayte/gx/registry/docs-shell"
 	drawer "github.com/alternayte/gx/registry/drawer"
 	dropdownmenu "github.com/alternayte/gx/registry/dropdown-menu"
+	email "github.com/alternayte/gx/registry/email"
 	empty "github.com/alternayte/gx/registry/empty"
 	field "github.com/alternayte/gx/registry/field"
 	hovercard "github.com/alternayte/gx/registry/hover-card"
@@ -277,6 +278,24 @@ func Fixtures() []gx.Fixture {
 		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/registry/dropdown-menu", Name: "Ghost", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Ghost"]) }},
 		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/registry/dropdown-menu", Name: "Start", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Start"]) }},
 		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/registry/dropdown-menu", Name: "Sub", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Sub"]) }},
+		{Component: "Button", Package: "github.com/alternayte/gx/registry/email", Name: "Center", Node: func() gx.Node { return email.Button(email.ButtonFixtures["Center"]) }},
+		{Component: "Button", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.Button(email.ButtonFixtures["Default"]) }},
+		{Component: "Column", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.ColumnWrap(email.Column(email.ColumnFixtures["Default"])) }},
+		{Component: "Column", Package: "github.com/alternayte/gx/registry/email", Name: "Fixed", Node: func() gx.Node { return email.ColumnWrap(email.Column(email.ColumnFixtures["Fixed"])) }},
+		{Component: "Column", Package: "github.com/alternayte/gx/registry/email", Name: "Right", Node: func() gx.Node { return email.ColumnWrap(email.Column(email.ColumnFixtures["Right"])) }},
+		{Component: "Divider", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.Divider(email.DividerFixtures["Default"]) }},
+		{Component: "Document", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.Document(email.DocumentFixtures["Default"]) }},
+		{Component: "Document", Package: "github.com/alternayte/gx/registry/email", Name: "Preview", Node: func() gx.Node { return email.Document(email.DocumentFixtures["Preview"]) }},
+		{Component: "Heading", Package: "github.com/alternayte/gx/registry/email", Name: "One", Node: func() gx.Node { return email.Heading(email.HeadingFixtures["One"]) }},
+		{Component: "Heading", Package: "github.com/alternayte/gx/registry/email", Name: "Three", Node: func() gx.Node { return email.Heading(email.HeadingFixtures["Three"]) }},
+		{Component: "Heading", Package: "github.com/alternayte/gx/registry/email", Name: "Two", Node: func() gx.Node { return email.Heading(email.HeadingFixtures["Two"]) }},
+		{Component: "Image", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.Image(email.ImageFixtures["Default"]) }},
+		{Component: "Row", Package: "github.com/alternayte/gx/registry/email", Name: "TwoColumns", Node: func() gx.Node { return email.Row(email.RowFixtures["TwoColumns"]) }},
+		{Component: "Section", Package: "github.com/alternayte/gx/registry/email", Name: "Card", Node: func() gx.Node { return email.Section(email.SectionFixtures["Card"]) }},
+		{Component: "Section", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.Section(email.SectionFixtures["Default"]) }},
+		{Component: "Text", Package: "github.com/alternayte/gx/registry/email", Name: "Center", Node: func() gx.Node { return email.Text(email.TextFixtures["Center"]) }},
+		{Component: "Text", Package: "github.com/alternayte/gx/registry/email", Name: "Default", Node: func() gx.Node { return email.Text(email.TextFixtures["Default"]) }},
+		{Component: "Text", Package: "github.com/alternayte/gx/registry/email", Name: "Muted", Node: func() gx.Node { return email.Text(email.TextFixtures["Muted"]) }},
 		{Component: "Empty", Package: "github.com/alternayte/gx/registry/empty", Name: "Full", Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Full"]) }},
 		{Component: "Empty", Package: "github.com/alternayte/gx/registry/empty", Name: "Outline", Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Outline"]) }},
 		{Component: "EmptyContent", Package: "github.com/alternayte/gx/registry/empty", Name: "Empty", Node: func() gx.Node { return empty.EmptyContent(empty.EmptyContentFixtures["Empty"]) }},

@@ -207,6 +207,7 @@ func (l *loader) checkDir(dir string) []Diagnostic {
 				Fix:  "put the markup inside one HTML element, for example <div>...</div>",
 			})
 		}
+		out = append(out, checkEmail(p, f)...)
 		out = l.checkNodes(p, f, f.Body, out)
 	}
 	return out

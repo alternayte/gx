@@ -1,0 +1,19 @@
+Gx shop
+
+Your order is on its way
+
+Hello Ada, thank you for your order 1042. We send it in two days.
+
+What you ordered
+
+2 x Green tea CHF 24.00
+
+1 x Cup & saucer CHF 5.50
+
+----------
+
+Total CHF 29.50
+
+See your basket (https://shop.example/basket)
+
+You get this email because you ordered at the Gx shop (https://shop.example/).

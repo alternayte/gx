@@ -11,7 +11,7 @@ import (
 	"reflect"
 
 	gx "github.com/alternayte/gx"
-	p64 "github.com/alternayte/gx/content"
+	p65 "github.com/alternayte/gx/content"
 	p1 "github.com/alternayte/gx/registry/accordion"
 	p2 "github.com/alternayte/gx/registry/alert"
 	p3 "github.com/alternayte/gx/registry/alert-dialog"
@@ -38,45 +38,46 @@ import (
 	p24 "github.com/alternayte/gx/registry/docs-shell"
 	p25 "github.com/alternayte/gx/registry/drawer"
 	p26 "github.com/alternayte/gx/registry/dropdown-menu"
-	p27 "github.com/alternayte/gx/registry/empty"
-	p28 "github.com/alternayte/gx/registry/field"
-	p29 "github.com/alternayte/gx/registry/hover-card"
-	p30 "github.com/alternayte/gx/registry/icons"
-	p31 "github.com/alternayte/gx/registry/input"
-	p32 "github.com/alternayte/gx/registry/input-group"
-	p33 "github.com/alternayte/gx/registry/input-otp"
-	p34 "github.com/alternayte/gx/registry/item"
-	p35 "github.com/alternayte/gx/registry/kbd"
-	p36 "github.com/alternayte/gx/registry/label"
-	p37 "github.com/alternayte/gx/registry/login"
-	p38 "github.com/alternayte/gx/registry/menubar"
-	p39 "github.com/alternayte/gx/registry/navigation-menu"
-	p40 "github.com/alternayte/gx/registry/pagination"
-	p41 "github.com/alternayte/gx/registry/popover"
-	p42 "github.com/alternayte/gx/registry/progress"
-	p43 "github.com/alternayte/gx/registry/radio-group"
-	p44 "github.com/alternayte/gx/registry/resizable"
-	p45 "github.com/alternayte/gx/registry/scroll-area"
-	p46 "github.com/alternayte/gx/registry/select"
-	p47 "github.com/alternayte/gx/registry/separator"
-	p48 "github.com/alternayte/gx/registry/settings-form"
-	p49 "github.com/alternayte/gx/registry/sheet"
-	p50 "github.com/alternayte/gx/registry/sidebar"
-	p51 "github.com/alternayte/gx/registry/signup"
-	p52 "github.com/alternayte/gx/registry/skeleton"
-	p53 "github.com/alternayte/gx/registry/slider"
-	p54 "github.com/alternayte/gx/registry/spinner"
-	p55 "github.com/alternayte/gx/registry/starlight-shell"
-	p56 "github.com/alternayte/gx/registry/switch"
-	p57 "github.com/alternayte/gx/registry/table"
-	p58 "github.com/alternayte/gx/registry/tabs"
-	p59 "github.com/alternayte/gx/registry/textarea"
-	p60 "github.com/alternayte/gx/registry/toast"
-	p61 "github.com/alternayte/gx/registry/toggle"
-	p62 "github.com/alternayte/gx/registry/toggle-group"
-	p63 "github.com/alternayte/gx/registry/tooltip"
-	p65 "strconv"
-	p66 "strings"
+	p27 "github.com/alternayte/gx/registry/email"
+	p28 "github.com/alternayte/gx/registry/empty"
+	p29 "github.com/alternayte/gx/registry/field"
+	p30 "github.com/alternayte/gx/registry/hover-card"
+	p31 "github.com/alternayte/gx/registry/icons"
+	p32 "github.com/alternayte/gx/registry/input"
+	p33 "github.com/alternayte/gx/registry/input-group"
+	p34 "github.com/alternayte/gx/registry/input-otp"
+	p35 "github.com/alternayte/gx/registry/item"
+	p36 "github.com/alternayte/gx/registry/kbd"
+	p37 "github.com/alternayte/gx/registry/label"
+	p38 "github.com/alternayte/gx/registry/login"
+	p39 "github.com/alternayte/gx/registry/menubar"
+	p40 "github.com/alternayte/gx/registry/navigation-menu"
+	p41 "github.com/alternayte/gx/registry/pagination"
+	p42 "github.com/alternayte/gx/registry/popover"
+	p43 "github.com/alternayte/gx/registry/progress"
+	p44 "github.com/alternayte/gx/registry/radio-group"
+	p45 "github.com/alternayte/gx/registry/resizable"
+	p46 "github.com/alternayte/gx/registry/scroll-area"
+	p47 "github.com/alternayte/gx/registry/select"
+	p48 "github.com/alternayte/gx/registry/separator"
+	p49 "github.com/alternayte/gx/registry/settings-form"
+	p50 "github.com/alternayte/gx/registry/sheet"
+	p51 "github.com/alternayte/gx/registry/sidebar"
+	p52 "github.com/alternayte/gx/registry/signup"
+	p53 "github.com/alternayte/gx/registry/skeleton"
+	p54 "github.com/alternayte/gx/registry/slider"
+	p55 "github.com/alternayte/gx/registry/spinner"
+	p56 "github.com/alternayte/gx/registry/starlight-shell"
+	p57 "github.com/alternayte/gx/registry/switch"
+	p58 "github.com/alternayte/gx/registry/table"
+	p59 "github.com/alternayte/gx/registry/tabs"
+	p60 "github.com/alternayte/gx/registry/textarea"
+	p61 "github.com/alternayte/gx/registry/toast"
+	p62 "github.com/alternayte/gx/registry/toggle"
+	p63 "github.com/alternayte/gx/registry/toggle-group"
+	p64 "github.com/alternayte/gx/registry/tooltip"
+	p66 "strconv"
+	p67 "strings"
 )
 
 // Packages returns the symbol table. The dev main of the app gives it to
@@ -146,6 +147,7 @@ func Packages() []gx.DevPackage {
 		p61.GxDevSymbols(),
 		p62.GxDevSymbols(),
 		p63.GxDevSymbols(),
+		p64.GxDevSymbols(),
 		gx.DevPackage{
 			Path: "github.com/alternayte/gx",
 			Name: "gx",
@@ -254,6 +256,7 @@ func Packages() []gx.DevPackage {
 				"ReadUploads":           reflect.ValueOf(gx.ReadUploads),
 				"Remove":                reflect.ValueOf(&gx.Remove).Elem(),
 				"Render":                reflect.ValueOf(gx.Render),
+				"RenderEmail":           reflect.ValueOf(gx.RenderEmail),
 				"RenderNode":            reflect.ValueOf(gx.RenderNode),
 				"RenderRequest":         reflect.ValueOf(gx.RenderRequest),
 				"RenderToast":           reflect.ValueOf(gx.RenderToast),
@@ -339,6 +342,8 @@ func Packages() []gx.DevPackage {
 				"ContentPage":    reflect.TypeFor[gx.ContentPage](),
 				"Ctx":            reflect.TypeFor[gx.Ctx](),
 				"ElementPatch":   reflect.TypeFor[gx.ElementPatch](),
+				"EmailMessage":   reflect.TypeFor[gx.EmailMessage](),
+				"EmailOptions":   reflect.TypeFor[gx.EmailOptions](),
 				"EventPatch":     reflect.TypeFor[gx.EventPatch](),
 				"EventValue":     reflect.TypeFor[gx.EventValue](),
 				"FieldView":      reflect.TypeFor[gx.FieldView](),
@@ -397,132 +402,132 @@ func Packages() []gx.DevPackage {
 			Path: "github.com/alternayte/gx/content",
 			Name: "content",
 			Values: map[string]reflect.Value{
-				"Body":      reflect.ValueOf(p64.Body),
-				"BodySlots": reflect.ValueOf(p64.BodySlots),
-				"Code":      reflect.ValueOf(p64.Code),
-				"CodeCSS":   reflect.ValueOf(p64.CodeCSS),
-				"Headings":  reflect.ValueOf(p64.Headings),
-				"Install":   reflect.ValueOf(p64.Install),
+				"Body":      reflect.ValueOf(p65.Body),
+				"BodySlots": reflect.ValueOf(p65.BodySlots),
+				"Code":      reflect.ValueOf(p65.Code),
+				"CodeCSS":   reflect.ValueOf(p65.CodeCSS),
+				"Headings":  reflect.ValueOf(p65.Headings),
+				"Install":   reflect.ValueOf(p65.Install),
 			},
 			Types: map[string]reflect.Type{
-				"CodeOptions": reflect.TypeFor[p64.CodeOptions](),
-				"Heading":     reflect.TypeFor[p64.Heading](),
+				"CodeOptions": reflect.TypeFor[p65.CodeOptions](),
+				"Heading":     reflect.TypeFor[p65.Heading](),
 			},
 		},
 		gx.DevPackage{
 			Path: "strconv",
 			Name: "strconv",
 			Values: map[string]reflect.Value{
-				"AppendBool":               reflect.ValueOf(p65.AppendBool),
-				"AppendFloat":              reflect.ValueOf(p65.AppendFloat),
-				"AppendInt":                reflect.ValueOf(p65.AppendInt),
-				"AppendQuote":              reflect.ValueOf(p65.AppendQuote),
-				"AppendQuoteRune":          reflect.ValueOf(p65.AppendQuoteRune),
-				"AppendQuoteRuneToASCII":   reflect.ValueOf(p65.AppendQuoteRuneToASCII),
-				"AppendQuoteRuneToGraphic": reflect.ValueOf(p65.AppendQuoteRuneToGraphic),
-				"AppendQuoteToASCII":       reflect.ValueOf(p65.AppendQuoteToASCII),
-				"AppendQuoteToGraphic":     reflect.ValueOf(p65.AppendQuoteToGraphic),
-				"AppendUint":               reflect.ValueOf(p65.AppendUint),
-				"Atoi":                     reflect.ValueOf(p65.Atoi),
-				"CanBackquote":             reflect.ValueOf(p65.CanBackquote),
-				"ErrRange":                 reflect.ValueOf(&p65.ErrRange).Elem(),
-				"ErrSyntax":                reflect.ValueOf(&p65.ErrSyntax).Elem(),
-				"FormatBool":               reflect.ValueOf(p65.FormatBool),
-				"FormatComplex":            reflect.ValueOf(p65.FormatComplex),
-				"FormatFloat":              reflect.ValueOf(p65.FormatFloat),
-				"FormatInt":                reflect.ValueOf(p65.FormatInt),
-				"FormatUint":               reflect.ValueOf(p65.FormatUint),
-				"IsGraphic":                reflect.ValueOf(p65.IsGraphic),
-				"IsPrint":                  reflect.ValueOf(p65.IsPrint),
-				"Itoa":                     reflect.ValueOf(p65.Itoa),
-				"ParseBool":                reflect.ValueOf(p65.ParseBool),
-				"ParseComplex":             reflect.ValueOf(p65.ParseComplex),
-				"ParseFloat":               reflect.ValueOf(p65.ParseFloat),
-				"ParseInt":                 reflect.ValueOf(p65.ParseInt),
-				"ParseUint":                reflect.ValueOf(p65.ParseUint),
-				"Quote":                    reflect.ValueOf(p65.Quote),
-				"QuoteRune":                reflect.ValueOf(p65.QuoteRune),
-				"QuoteRuneToASCII":         reflect.ValueOf(p65.QuoteRuneToASCII),
-				"QuoteRuneToGraphic":       reflect.ValueOf(p65.QuoteRuneToGraphic),
-				"QuoteToASCII":             reflect.ValueOf(p65.QuoteToASCII),
-				"QuoteToGraphic":           reflect.ValueOf(p65.QuoteToGraphic),
-				"QuotedPrefix":             reflect.ValueOf(p65.QuotedPrefix),
-				"Unquote":                  reflect.ValueOf(p65.Unquote),
-				"UnquoteChar":              reflect.ValueOf(p65.UnquoteChar),
+				"AppendBool":               reflect.ValueOf(p66.AppendBool),
+				"AppendFloat":              reflect.ValueOf(p66.AppendFloat),
+				"AppendInt":                reflect.ValueOf(p66.AppendInt),
+				"AppendQuote":              reflect.ValueOf(p66.AppendQuote),
+				"AppendQuoteRune":          reflect.ValueOf(p66.AppendQuoteRune),
+				"AppendQuoteRuneToASCII":   reflect.ValueOf(p66.AppendQuoteRuneToASCII),
+				"AppendQuoteRuneToGraphic": reflect.ValueOf(p66.AppendQuoteRuneToGraphic),
+				"AppendQuoteToASCII":       reflect.ValueOf(p66.AppendQuoteToASCII),
+				"AppendQuoteToGraphic":     reflect.ValueOf(p66.AppendQuoteToGraphic),
+				"AppendUint":               reflect.ValueOf(p66.AppendUint),
+				"Atoi":                     reflect.ValueOf(p66.Atoi),
+				"CanBackquote":             reflect.ValueOf(p66.CanBackquote),
+				"ErrRange":                 reflect.ValueOf(&p66.ErrRange).Elem(),
+				"ErrSyntax":                reflect.ValueOf(&p66.ErrSyntax).Elem(),
+				"FormatBool":               reflect.ValueOf(p66.FormatBool),
+				"FormatComplex":            reflect.ValueOf(p66.FormatComplex),
+				"FormatFloat":              reflect.ValueOf(p66.FormatFloat),
+				"FormatInt":                reflect.ValueOf(p66.FormatInt),
+				"FormatUint":               reflect.ValueOf(p66.FormatUint),
+				"IsGraphic":                reflect.ValueOf(p66.IsGraphic),
+				"IsPrint":                  reflect.ValueOf(p66.IsPrint),
+				"Itoa":                     reflect.ValueOf(p66.Itoa),
+				"ParseBool":                reflect.ValueOf(p66.ParseBool),
+				"ParseComplex":             reflect.ValueOf(p66.ParseComplex),
+				"ParseFloat":               reflect.ValueOf(p66.ParseFloat),
+				"ParseInt":                 reflect.ValueOf(p66.ParseInt),
+				"ParseUint":                reflect.ValueOf(p66.ParseUint),
+				"Quote":                    reflect.ValueOf(p66.Quote),
+				"QuoteRune":                reflect.ValueOf(p66.QuoteRune),
+				"QuoteRuneToASCII":         reflect.ValueOf(p66.QuoteRuneToASCII),
+				"QuoteRuneToGraphic":       reflect.ValueOf(p66.QuoteRuneToGraphic),
+				"QuoteToASCII":             reflect.ValueOf(p66.QuoteToASCII),
+				"QuoteToGraphic":           reflect.ValueOf(p66.QuoteToGraphic),
+				"QuotedPrefix":             reflect.ValueOf(p66.QuotedPrefix),
+				"Unquote":                  reflect.ValueOf(p66.Unquote),
+				"UnquoteChar":              reflect.ValueOf(p66.UnquoteChar),
 			},
 			Consts: map[string]constant.Value{
 				"IntSize": gx.DevInt("64"),
 			},
 			Types: map[string]reflect.Type{
-				"NumError": reflect.TypeFor[p65.NumError](),
+				"NumError": reflect.TypeFor[p66.NumError](),
 			},
 		},
 		gx.DevPackage{
 			Path: "strings",
 			Name: "strings",
 			Values: map[string]reflect.Value{
-				"Clone":          reflect.ValueOf(p66.Clone),
-				"Compare":        reflect.ValueOf(p66.Compare),
-				"Contains":       reflect.ValueOf(p66.Contains),
-				"ContainsAny":    reflect.ValueOf(p66.ContainsAny),
-				"ContainsFunc":   reflect.ValueOf(p66.ContainsFunc),
-				"ContainsRune":   reflect.ValueOf(p66.ContainsRune),
-				"Count":          reflect.ValueOf(p66.Count),
-				"Cut":            reflect.ValueOf(p66.Cut),
-				"CutPrefix":      reflect.ValueOf(p66.CutPrefix),
-				"CutSuffix":      reflect.ValueOf(p66.CutSuffix),
-				"EqualFold":      reflect.ValueOf(p66.EqualFold),
-				"Fields":         reflect.ValueOf(p66.Fields),
-				"FieldsFunc":     reflect.ValueOf(p66.FieldsFunc),
-				"FieldsFuncSeq":  reflect.ValueOf(p66.FieldsFuncSeq),
-				"FieldsSeq":      reflect.ValueOf(p66.FieldsSeq),
-				"HasPrefix":      reflect.ValueOf(p66.HasPrefix),
-				"HasSuffix":      reflect.ValueOf(p66.HasSuffix),
-				"Index":          reflect.ValueOf(p66.Index),
-				"IndexAny":       reflect.ValueOf(p66.IndexAny),
-				"IndexByte":      reflect.ValueOf(p66.IndexByte),
-				"IndexFunc":      reflect.ValueOf(p66.IndexFunc),
-				"IndexRune":      reflect.ValueOf(p66.IndexRune),
-				"Join":           reflect.ValueOf(p66.Join),
-				"LastIndex":      reflect.ValueOf(p66.LastIndex),
-				"LastIndexAny":   reflect.ValueOf(p66.LastIndexAny),
-				"LastIndexByte":  reflect.ValueOf(p66.LastIndexByte),
-				"LastIndexFunc":  reflect.ValueOf(p66.LastIndexFunc),
-				"Lines":          reflect.ValueOf(p66.Lines),
-				"Map":            reflect.ValueOf(p66.Map),
-				"NewReader":      reflect.ValueOf(p66.NewReader),
-				"NewReplacer":    reflect.ValueOf(p66.NewReplacer),
-				"Repeat":         reflect.ValueOf(p66.Repeat),
-				"Replace":        reflect.ValueOf(p66.Replace),
-				"ReplaceAll":     reflect.ValueOf(p66.ReplaceAll),
-				"Split":          reflect.ValueOf(p66.Split),
-				"SplitAfter":     reflect.ValueOf(p66.SplitAfter),
-				"SplitAfterN":    reflect.ValueOf(p66.SplitAfterN),
-				"SplitAfterSeq":  reflect.ValueOf(p66.SplitAfterSeq),
-				"SplitN":         reflect.ValueOf(p66.SplitN),
-				"SplitSeq":       reflect.ValueOf(p66.SplitSeq),
-				"Title":          reflect.ValueOf(p66.Title),
-				"ToLower":        reflect.ValueOf(p66.ToLower),
-				"ToLowerSpecial": reflect.ValueOf(p66.ToLowerSpecial),
-				"ToTitle":        reflect.ValueOf(p66.ToTitle),
-				"ToTitleSpecial": reflect.ValueOf(p66.ToTitleSpecial),
-				"ToUpper":        reflect.ValueOf(p66.ToUpper),
-				"ToUpperSpecial": reflect.ValueOf(p66.ToUpperSpecial),
-				"ToValidUTF8":    reflect.ValueOf(p66.ToValidUTF8),
-				"Trim":           reflect.ValueOf(p66.Trim),
-				"TrimFunc":       reflect.ValueOf(p66.TrimFunc),
-				"TrimLeft":       reflect.ValueOf(p66.TrimLeft),
-				"TrimLeftFunc":   reflect.ValueOf(p66.TrimLeftFunc),
-				"TrimPrefix":     reflect.ValueOf(p66.TrimPrefix),
-				"TrimRight":      reflect.ValueOf(p66.TrimRight),
-				"TrimRightFunc":  reflect.ValueOf(p66.TrimRightFunc),
-				"TrimSpace":      reflect.ValueOf(p66.TrimSpace),
-				"TrimSuffix":     reflect.ValueOf(p66.TrimSuffix),
+				"Clone":          reflect.ValueOf(p67.Clone),
+				"Compare":        reflect.ValueOf(p67.Compare),
+				"Contains":       reflect.ValueOf(p67.Contains),
+				"ContainsAny":    reflect.ValueOf(p67.ContainsAny),
+				"ContainsFunc":   reflect.ValueOf(p67.ContainsFunc),
+				"ContainsRune":   reflect.ValueOf(p67.ContainsRune),
+				"Count":          reflect.ValueOf(p67.Count),
+				"Cut":            reflect.ValueOf(p67.Cut),
+				"CutPrefix":      reflect.ValueOf(p67.CutPrefix),
+				"CutSuffix":      reflect.ValueOf(p67.CutSuffix),
+				"EqualFold":      reflect.ValueOf(p67.EqualFold),
+				"Fields":         reflect.ValueOf(p67.Fields),
+				"FieldsFunc":     reflect.ValueOf(p67.FieldsFunc),
+				"FieldsFuncSeq":  reflect.ValueOf(p67.FieldsFuncSeq),
+				"FieldsSeq":      reflect.ValueOf(p67.FieldsSeq),
+				"HasPrefix":      reflect.ValueOf(p67.HasPrefix),
+				"HasSuffix":      reflect.ValueOf(p67.HasSuffix),
+				"Index":          reflect.ValueOf(p67.Index),
+				"IndexAny":       reflect.ValueOf(p67.IndexAny),
+				"IndexByte":      reflect.ValueOf(p67.IndexByte),
+				"IndexFunc":      reflect.ValueOf(p67.IndexFunc),
+				"IndexRune":      reflect.ValueOf(p67.IndexRune),
+				"Join":           reflect.ValueOf(p67.Join),
+				"LastIndex":      reflect.ValueOf(p67.LastIndex),
+				"LastIndexAny":   reflect.ValueOf(p67.LastIndexAny),
+				"LastIndexByte":  reflect.ValueOf(p67.LastIndexByte),
+				"LastIndexFunc":  reflect.ValueOf(p67.LastIndexFunc),
+				"Lines":          reflect.ValueOf(p67.Lines),
+				"Map":            reflect.ValueOf(p67.Map),
+				"NewReader":      reflect.ValueOf(p67.NewReader),
+				"NewReplacer":    reflect.ValueOf(p67.NewReplacer),
+				"Repeat":         reflect.ValueOf(p67.Repeat),
+				"Replace":        reflect.ValueOf(p67.Replace),
+				"ReplaceAll":     reflect.ValueOf(p67.ReplaceAll),
+				"Split":          reflect.ValueOf(p67.Split),
+				"SplitAfter":     reflect.ValueOf(p67.SplitAfter),
+				"SplitAfterN":    reflect.ValueOf(p67.SplitAfterN),
+				"SplitAfterSeq":  reflect.ValueOf(p67.SplitAfterSeq),
+				"SplitN":         reflect.ValueOf(p67.SplitN),
+				"SplitSeq":       reflect.ValueOf(p67.SplitSeq),
+				"Title":          reflect.ValueOf(p67.Title),
+				"ToLower":        reflect.ValueOf(p67.ToLower),
+				"ToLowerSpecial": reflect.ValueOf(p67.ToLowerSpecial),
+				"ToTitle":        reflect.ValueOf(p67.ToTitle),
+				"ToTitleSpecial": reflect.ValueOf(p67.ToTitleSpecial),
+				"ToUpper":        reflect.ValueOf(p67.ToUpper),
+				"ToUpperSpecial": reflect.ValueOf(p67.ToUpperSpecial),
+				"ToValidUTF8":    reflect.ValueOf(p67.ToValidUTF8),
+				"Trim":           reflect.ValueOf(p67.Trim),
+				"TrimFunc":       reflect.ValueOf(p67.TrimFunc),
+				"TrimLeft":       reflect.ValueOf(p67.TrimLeft),
+				"TrimLeftFunc":   reflect.ValueOf(p67.TrimLeftFunc),
+				"TrimPrefix":     reflect.ValueOf(p67.TrimPrefix),
+				"TrimRight":      reflect.ValueOf(p67.TrimRight),
+				"TrimRightFunc":  reflect.ValueOf(p67.TrimRightFunc),
+				"TrimSpace":      reflect.ValueOf(p67.TrimSpace),
+				"TrimSuffix":     reflect.ValueOf(p67.TrimSuffix),
 			},
 			Types: map[string]reflect.Type{
-				"Builder":  reflect.TypeFor[p66.Builder](),
-				"Reader":   reflect.TypeFor[p66.Reader](),
-				"Replacer": reflect.TypeFor[p66.Replacer](),
+				"Builder":  reflect.TypeFor[p67.Builder](),
+				"Reader":   reflect.TypeFor[p67.Reader](),
+				"Replacer": reflect.TypeFor[p67.Replacer](),
 			},
 		},
 	}

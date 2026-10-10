@@ -1,0 +1,12 @@
+package email
+
+props {
+  // Width is the width of the column in pixels. Zero shares the width of the row.
+  Width    int = 0
+  // Align is the horizontal position of the content: Left, Center or Right.
+  Align    Align = Left
+  // Children is the content of the column.
+  Children gx.Node
+}
+
+<td align={p.Align.attr()} style={p.style()}>{p.Children}</td>

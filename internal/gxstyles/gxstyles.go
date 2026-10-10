@@ -293,5 +293,22 @@ func Build(ctx context.Context, root string, minify bool) (bool, error) {
 	if err := os.WriteFile(path, GenerateAll(css, widgets, routes), 0o644); err != nil {
 		return false, err
 	}
+	// The tokens of the theme as Go values, for an email (REQ-STY-14).
+	themeCSS, err := os.ReadFile(theme)
+	if err != nil {
+		return false, err
+	}
+	if err := writeIfChanged(TokensPath(root), GenerateTokens(themeCSS)); err != nil {
+		return false, err
+	}
 	return true, nil
+}
+
+// writeIfChanged writes a generated file only when its content changes, so
+// the dev loop sees no change of a file that is the same.
+func writeIfChanged(path string, data []byte) error {
+	if old, err := os.ReadFile(path); err == nil && bytes.Equal(old, data) {
+		return nil
+	}
+	return os.WriteFile(path, data, 0o644)
 }

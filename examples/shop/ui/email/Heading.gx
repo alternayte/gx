@@ -1,0 +1,19 @@
+package email
+
+props {
+  // Level is the level of the heading: 1, 2 or 3.
+  Level    int = 1
+  // Align is the horizontal position of the heading: Left, Center or Right.
+  Align    Align = Left
+  // Children is the text of the heading.
+  Children gx.Node
+}
+
+switch p.level() {
+case 2:
+  <h2 style={p.style()}>{p.Children}</h2>
+case 3:
+  <h3 style={p.style()}>{p.Children}</h3>
+default:
+  <h1 style={p.style()}>{p.Children}</h1>
+}

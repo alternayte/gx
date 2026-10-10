@@ -150,6 +150,42 @@
       "fixtures": []
     },
     {
+      "name": "Order",
+      "package": "github.com/alternayte/gx/examples/shop/basket/email",
+      "file": "basket/email/Order.gx",
+      "props": [
+        {
+          "name": "Number",
+          "type": "string",
+          "required": true,
+          "doc": "Number is the number of the order."
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": true,
+          "doc": "Name is the name of the customer."
+        },
+        {
+          "name": "Items",
+          "type": "[]Item",
+          "required": true,
+          "doc": "Items are the lines of the order."
+        },
+        {
+          "name": "Total",
+          "type": "string",
+          "required": true,
+          "doc": "Total is the total of the order, with its currency."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "TwoItems"
+      ]
+    },
+    {
       "name": "Cart",
       "package": "github.com/alternayte/gx/examples/shop/cart",
       "file": "cart/Cart.gx",
@@ -3378,6 +3414,264 @@
         "Ghost",
         "Start",
         "Sub"
+      ]
+    },
+    {
+      "name": "Button",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Button.gx",
+      "props": [
+        {
+          "name": "Href",
+          "type": "gx.URL",
+          "required": true,
+          "doc": "Href is the address that the button opens. gx.RenderEmail makes a site path an absolute URL."
+        },
+        {
+          "name": "Align",
+          "type": "Align",
+          "required": false,
+          "default": "Left",
+          "doc": "Align is the horizontal position of the button: Left, Center or Right."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the label of the button."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Center",
+        "Default"
+      ]
+    },
+    {
+      "name": "Column",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Column.gx",
+      "props": [
+        {
+          "name": "Width",
+          "type": "int",
+          "required": false,
+          "default": "0",
+          "doc": "Width is the width of the column in pixels. Zero shares the width of the row."
+        },
+        {
+          "name": "Align",
+          "type": "Align",
+          "required": false,
+          "default": "Left",
+          "doc": "Align is the horizontal position of the content: Left, Center or Right."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the content of the column."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default",
+        "Fixed",
+        "Right"
+      ]
+    },
+    {
+      "name": "Divider",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Divider.gx",
+      "props": [],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default"
+      ]
+    },
+    {
+      "name": "Document",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Document.gx",
+      "props": [
+        {
+          "name": "Preview",
+          "type": "string",
+          "required": false,
+          "default": "\"\"",
+          "doc": "Preview is the text that an inbox shows after the subject. It is not visible in the email."
+        },
+        {
+          "name": "Width",
+          "type": "int",
+          "required": false,
+          "default": "600",
+          "doc": "Width is the largest width of the content in pixels."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the sections of the email."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default",
+        "Preview"
+      ]
+    },
+    {
+      "name": "Heading",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Heading.gx",
+      "props": [
+        {
+          "name": "Level",
+          "type": "int",
+          "required": false,
+          "default": "1",
+          "doc": "Level is the level of the heading: 1, 2 or 3."
+        },
+        {
+          "name": "Align",
+          "type": "Align",
+          "required": false,
+          "default": "Left",
+          "doc": "Align is the horizontal position of the heading: Left, Center or Right."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the text of the heading."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "One",
+        "Three",
+        "Two"
+      ]
+    },
+    {
+      "name": "Image",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Image.gx",
+      "props": [
+        {
+          "name": "Src",
+          "type": "gx.URL",
+          "required": true,
+          "doc": "Src is the address of the image. gx.RenderEmail makes a site path an absolute URL."
+        },
+        {
+          "name": "Alt",
+          "type": "string",
+          "required": true,
+          "doc": "Alt is the text of the image. An email client shows it when it blocks images."
+        },
+        {
+          "name": "Width",
+          "type": "int",
+          "required": true,
+          "doc": "Width is the width of the image in pixels."
+        },
+        {
+          "name": "Height",
+          "type": "int",
+          "required": true,
+          "doc": "Height is the height of the image in pixels."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Default"
+      ]
+    },
+    {
+      "name": "Row",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Row.gx",
+      "props": [
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the columns of the row."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "TwoColumns"
+      ]
+    },
+    {
+      "name": "Section",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Section.gx",
+      "props": [
+        {
+          "name": "Card",
+          "type": "bool",
+          "required": false,
+          "default": "false",
+          "doc": "Card gives the section a border, a background and padding."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the content of the section."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Card",
+        "Default"
+      ]
+    },
+    {
+      "name": "Text",
+      "package": "github.com/alternayte/gx/examples/shop/ui/email",
+      "file": "ui/email/Text.gx",
+      "props": [
+        {
+          "name": "Muted",
+          "type": "bool",
+          "required": false,
+          "default": "false",
+          "doc": "Muted gives the text a smaller size and a weaker colour, for a note."
+        },
+        {
+          "name": "Align",
+          "type": "Align",
+          "required": false,
+          "default": "Left",
+          "doc": "Align is the horizontal position of the text: Left, Center or Right."
+        },
+        {
+          "name": "Children",
+          "type": "gx.Node",
+          "required": true,
+          "doc": "Children is the text."
+        }
+      ],
+      "signals": [],
+      "fragments": [],
+      "fixtures": [
+        "Center",
+        "Default",
+        "Muted"
       ]
     },
     {
@@ -10565,6 +10859,31 @@
         "ui/dropdown-menu/DropdownMenuTrigger.fixtures.go",
         "ui/dropdown-menu/DropdownMenuTrigger.gx",
         "ui/dropdown-menu/styles.go"
+      ]
+    },
+    {
+      "name": "email",
+      "version": "0.1.0",
+      "files": [
+        "ui/email/Button.fixtures.go",
+        "ui/email/Button.gx",
+        "ui/email/Column.fixtures.go",
+        "ui/email/Column.gx",
+        "ui/email/Divider.fixtures.go",
+        "ui/email/Divider.gx",
+        "ui/email/Document.fixtures.go",
+        "ui/email/Document.gx",
+        "ui/email/Heading.fixtures.go",
+        "ui/email/Heading.gx",
+        "ui/email/Image.fixtures.go",
+        "ui/email/Image.gx",
+        "ui/email/Row.fixtures.go",
+        "ui/email/Row.gx",
+        "ui/email/Section.fixtures.go",
+        "ui/email/Section.gx",
+        "ui/email/Text.fixtures.go",
+        "ui/email/Text.gx",
+        "ui/email/styles.go"
       ]
     },
     {

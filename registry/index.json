@@ -163,6 +163,12 @@
       "kind": "component"
     },
     {
+      "name": "email",
+      "version": "0.1.0",
+      "description": "The parts of an HTML email: inline styles and table layout.",
+      "kind": "component"
+    },
+    {
       "name": "empty",
       "version": "0.1.0",
       "description": "A placeholder for an empty result.",

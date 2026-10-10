@@ -95,6 +95,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX6007](/errors/GX6007/) | Gx.Head in a widget. |
 | [GX6008](/errors/GX6008/) | Widget route is in a group with no origins. |
 | [GX6009](/errors/GX6009/) | Origin with cookies is not exact. |
+| [GX6010](/errors/GX6010/) | Construct that an email cannot hold. |
 
 ## Security
 

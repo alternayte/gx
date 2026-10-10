@@ -102,6 +102,9 @@ const (
 	// CodeCredentialOrigin is a wildcard origin in gx.AllowCredentials
 	// (REQ-ISL-22, SI-14).
 	CodeCredentialOrigin = "GX6009"
+
+	// CodeEmail is a construct that an email cannot hold (REQ-REG-17).
+	CodeEmail = "GX6010"
 )
 
 // Diagnostic is one compiler message.
@@ -194,6 +197,7 @@ var Catalog = []Info{
 	{CodeWidgetHead, "gx.Head in a widget"},
 	{CodeWidgetOrigins, "widget route is in a group with no origins"},
 	{CodeCredentialOrigin, "origin with cookies is not exact"},
+	{CodeEmail, "construct that an email cannot hold"},
 	{CodeTrustedHTML, "conversion to gx.SafeHTML needs //gx:trusted"},
 	{CodeSecret, "gx.Secret cannot cross to the client"},
 	{CodeContentFrontmatter, "frontmatter is malformed or unknown"},

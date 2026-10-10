@@ -1,0 +1,133 @@
+{
+  "name": "email",
+  "version": "0.1.0",
+  "description": "The parts of an HTML email: inline styles and table layout.",
+  "kind": "component",
+  "files": [
+    {
+      "path": "Document.gx",
+      "target": "ui/email/Document.gx",
+      "content": "package email\n\nprops {\n  // Preview is the text that an inbox shows after the subject. It is not visible in the email.\n  Preview  string = \"\"\n  // Width is the largest width of the content in pixels.\n  Width    int = 600\n  // Children is the sections of the email.\n  Children gx.Node\n}\n\n\u003ctable role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:var(--background)\"\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd align=\"center\" style=\"padding:24px 12px\"\u003e\n        if p.Preview != \"\" {\n          \u003cdiv style=\"display:none;max-height:0;overflow:hidden;opacity:0\"\u003e{p.Preview}\u003c/div\u003e\n        }\n        \u003ctable role=\"presentation\" width={p.width()} cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style={p.style()}\u003e\n          \u003ctbody\u003e\n            \u003ctr\u003e\n              \u003ctd align=\"left\"\u003e{p.Children}\u003c/td\u003e\n            \u003c/tr\u003e\n          \u003c/tbody\u003e\n        \u003c/table\u003e\n      \u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n",
+      "sha256": "0f8510285799370bf09b90b512130a0b12669e89f284b379814d3a0b8dd1695d"
+    },
+    {
+      "path": "Section.gx",
+      "target": "ui/email/Section.gx",
+      "content": "package email\n\nprops {\n  // Card gives the section a border, a background and padding.\n  Card     bool = false\n  // Children is the content of the section.\n  Children gx.Node\n}\n\n\u003ctable role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd style={p.style()}\u003e{p.Children}\u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n",
+      "sha256": "8e695b8f73a069a0dd5541cb72f60e0dfc45d8ba7228b658e3468ea06d33a083"
+    },
+    {
+      "path": "Row.gx",
+      "target": "ui/email/Row.gx",
+      "content": "package email\n\nprops {\n  // Children is the columns of the row.\n  Children gx.Node\n}\n\n\u003ctable role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e{p.Children}\u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n",
+      "sha256": "edf9b6c319a556d3e69769d040a0cdc47c1f3a4e94b7d2977026e6aeb46a45d9"
+    },
+    {
+      "path": "Column.gx",
+      "target": "ui/email/Column.gx",
+      "content": "package email\n\nprops {\n  // Width is the width of the column in pixels. Zero shares the width of the row.\n  Width    int = 0\n  // Align is the horizontal position of the content: Left, Center or Right.\n  Align    Align = Left\n  // Children is the content of the column.\n  Children gx.Node\n}\n\n\u003ctd align={p.Align.attr()} style={p.style()}\u003e{p.Children}\u003c/td\u003e\n",
+      "sha256": "734b3f707fae586f4443071c572a6d19d1c81983002a2c34be985454a4bd5302"
+    },
+    {
+      "path": "Text.gx",
+      "target": "ui/email/Text.gx",
+      "content": "package email\n\nprops {\n  // Muted gives the text a smaller size and a weaker colour, for a note.\n  Muted    bool = false\n  // Align is the horizontal position of the text: Left, Center or Right.\n  Align    Align = Left\n  // Children is the text.\n  Children gx.Node\n}\n\n\u003cp style={p.style()}\u003e{p.Children}\u003c/p\u003e\n",
+      "sha256": "4c50e640786d8a5328f9dd192b51f05119856a8c8ec5b24dfd51d3907786059a"
+    },
+    {
+      "path": "Heading.gx",
+      "target": "ui/email/Heading.gx",
+      "content": "package email\n\nprops {\n  // Level is the level of the heading: 1, 2 or 3.\n  Level    int = 1\n  // Align is the horizontal position of the heading: Left, Center or Right.\n  Align    Align = Left\n  // Children is the text of the heading.\n  Children gx.Node\n}\n\nswitch p.level() {\ncase 2:\n  \u003ch2 style={p.style()}\u003e{p.Children}\u003c/h2\u003e\ncase 3:\n  \u003ch3 style={p.style()}\u003e{p.Children}\u003c/h3\u003e\ndefault:\n  \u003ch1 style={p.style()}\u003e{p.Children}\u003c/h1\u003e\n}\n",
+      "sha256": "bdd51626c03595eeb8a64adef80a1b0c7d3b466b2ac170366d34a30439899399"
+    },
+    {
+      "path": "Button.gx",
+      "target": "ui/email/Button.gx",
+      "content": "package email\n\nprops {\n  // Href is the address that the button opens. gx.RenderEmail makes a site path an absolute URL.\n  Href     gx.URL\n  // Align is the horizontal position of the button: Left, Center or Right.\n  Align    Align = Left\n  // Children is the label of the button.\n  Children gx.Node\n}\n\n\u003ctable role=\"presentation\" align={p.Align.attr()} cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin:0 0 16px\"\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd align=\"center\" style=\"background-color:var(--primary);border-radius:var(--radius)\"\u003e\n        \u003ca href={p.Href} style=\"display:inline-block;padding:12px 20px;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;font-weight:700;color:var(--primary-foreground);text-decoration:none\"\u003e{p.Children}\u003c/a\u003e\n      \u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n",
+      "sha256": "31b14d8a5e436dea070e14607e3a7cb82d3ef4665687d9b44d962731d268274c"
+    },
+    {
+      "path": "Image.gx",
+      "target": "ui/email/Image.gx",
+      "content": "package email\n\nprops {\n  // Src is the address of the image. gx.RenderEmail makes a site path an absolute URL.\n  Src    gx.URL\n  // Alt is the text of the image. An email client shows it when it blocks images.\n  Alt    string\n  // Width is the width of the image in pixels.\n  Width  int\n  // Height is the height of the image in pixels.\n  Height int\n}\n\n\u003cimg src={p.Src} alt={p.Alt} width={size(p.Width)} height={size(p.Height)} style={p.style()} /\u003e\n",
+      "sha256": "5d207c54de91c5008da38ae9c6362e6ffeeeccce2afc79bd4864142cccea7896"
+    },
+    {
+      "path": "Divider.gx",
+      "target": "ui/email/Divider.gx",
+      "content": "package email\n\n\u003chr style=\"border:0;border-top:1px solid var(--border);margin:24px 0\" /\u003e\n",
+      "sha256": "9f2e9b8c78ba3fe980c5914e1c3866eedb1e23961a6e94af6ecaf5e5218f00cb"
+    },
+    {
+      "path": "Document.fixtures.go",
+      "target": "ui/email/Document.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// DocumentFixtures are the examples of Document in the dev gallery.\nvar DocumentFixtures = gx.Fixtures[DocumentProps]{\n\t\"Default\": {Children: Text(TextProps{Children: gx.Text(\"The content of the email is here.\")})},\n\t\"Preview\": {Preview: \"Your order is on its way.\", Width: 480, Children: Text(TextProps{Children: gx.Text(\"An inbox shows the preview text after the subject.\")})},\n}\n",
+      "sha256": "27f6bdeb463d59f21fb3e6f90abef070ce789ad38bba88a3e104a30f0177789b"
+    },
+    {
+      "path": "Section.fixtures.go",
+      "target": "ui/email/Section.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// SectionFixtures are the examples of Section in the dev gallery.\nvar SectionFixtures = gx.Fixtures[SectionProps]{\n\t\"Default\": {Children: Text(TextProps{Children: gx.Text(\"A section groups the parts of an email.\")})},\n\t\"Card\":    {Card: true, Children: Text(TextProps{Children: gx.Text(\"A card section has a border and padding.\")})},\n}\n",
+      "sha256": "c24f3fdb63301bee7bd2999b3d3c8d84c88b96802190b32673ec01af0d050e31"
+    },
+    {
+      "path": "Row.fixtures.go",
+      "target": "ui/email/Row.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// RowFixtures are the examples of Row in the dev gallery.\nvar RowFixtures = gx.Fixtures[RowProps]{\n\t\"TwoColumns\": {Children: gx.Frag(\n\t\tColumn(ColumnProps{Children: gx.Text(\"Tea, 2 boxes\")}),\n\t\tColumn(ColumnProps{Width: 120, Align: Right, Children: gx.Text(\"12.00\")}),\n\t)},\n}\n",
+      "sha256": "e71d25df187fa4aa309de9aba2349de2c225743a8e73ac9f06f04c5bb8f554ae"
+    },
+    {
+      "path": "Column.fixtures.go",
+      "target": "ui/email/Column.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// ColumnFixtures are the examples of Column in the dev gallery.\nvar ColumnFixtures = gx.Fixtures[ColumnProps]{\n\t\"Default\": {Children: gx.Text(\"A column shares the width of the row.\")},\n\t\"Fixed\":   {Width: 160, Children: gx.Text(\"160 pixels\")},\n\t\"Right\":   {Align: Right, Children: gx.Text(\"To the right\")},\n}\n\n// ColumnWrap renders the column inside a row, as an email uses it.\nfunc ColumnWrap(n gx.Node) gx.Node {\n\treturn Row(RowProps{Children: n})\n}\n",
+      "sha256": "ab5a93792c62a2c5e36acc30b0e706290248456e798c108736326121b031e664"
+    },
+    {
+      "path": "Text.fixtures.go",
+      "target": "ui/email/Text.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// TextFixtures are the examples of Text in the dev gallery.\nvar TextFixtures = gx.Fixtures[TextProps]{\n\t\"Default\": {Children: gx.Text(\"Thank you for your order. We send it in two days.\")},\n\t\"Muted\":   {Muted: true, Children: gx.Text(\"You get this email because you have an account.\")},\n\t\"Center\":  {Align: Center, Children: gx.Text(\"Text in the centre\")},\n}\n",
+      "sha256": "41737fb0bfaa878daa4c247c8ddb576066acf40ef8cc057e7094464a6e42c4ab"
+    },
+    {
+      "path": "Heading.fixtures.go",
+      "target": "ui/email/Heading.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// HeadingFixtures are the examples of Heading in the dev gallery.\nvar HeadingFixtures = gx.Fixtures[HeadingProps]{\n\t\"One\":   {Children: gx.Text(\"Your order is on its way\")},\n\t\"Two\":   {Level: 2, Children: gx.Text(\"What you ordered\")},\n\t\"Three\": {Level: 3, Align: Center, Children: gx.Text(\"Questions\")},\n}\n",
+      "sha256": "73b6860e291762059736bd51b71c544874669d1d02d8ea87f301344499b0f1ab"
+    },
+    {
+      "path": "Button.fixtures.go",
+      "target": "ui/email/Button.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// ButtonFixtures are the examples of Button in the dev gallery.\nvar ButtonFixtures = gx.Fixtures[ButtonProps]{\n\t\"Default\": {Href: gx.URL(\"/orders/1042\"), Children: gx.Text(\"See the order\")},\n\t\"Center\":  {Href: gx.URL(\"/orders/1042\"), Align: Center, Children: gx.Text(\"Follow the parcel\")},\n}\n",
+      "sha256": "3d1ef403592b1b645923f69a7cf033628db9d84ae8c5bde7959b70903ea31e1a"
+    },
+    {
+      "path": "Image.fixtures.go",
+      "target": "ui/email/Image.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// pixel is a grey image of one pixel, so the gallery needs no file.\nconst pixel = gx.URL(\"data:image/gif;base64,R0lGODlhAQABAIAAAMzMzAAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==\")\n\n// ImageFixtures are the examples of Image in the dev gallery.\nvar ImageFixtures = gx.Fixtures[ImageProps]{\n\t\"Default\": {Src: pixel, Alt: \"The logo of the shop\", Width: 120, Height: 40},\n}\n",
+      "sha256": "3ba71102edf0440e7c8cd93ecdbed3d395ddd39ad7f6242172a9975776c783d7"
+    },
+    {
+      "path": "Divider.fixtures.go",
+      "target": "ui/email/Divider.fixtures.go",
+      "content": "package email\n\nimport \"github.com/alternayte/gx\"\n\n// DividerFixtures are the examples of Divider in the dev gallery.\nvar DividerFixtures = gx.Fixtures[DividerProps]{\n\t\"Default\": {},\n}\n",
+      "sha256": "0365d0eaf905741747a5e4c90b094cf7def16dd3a851a50c751125fb98dea153"
+    },
+    {
+      "path": "styles.go",
+      "target": "ui/email/styles.go",
+      "content": "// Package email holds the parts of an HTML email: inline styles and table\n// layout, which each email client reads. A component of this package has no\n// class, no signal and no script (GX6010). The styles read the theme tokens\n// with var(); gx.RenderEmail gives each one its value.\npackage email\n\nimport (\n\t\"strconv\"\n\n\t\"github.com/alternayte/gx\"\n)\n\n// Align is the horizontal position of the content of a part.\ntype Align string\n\n// The positions of the content.\nconst (\n\tLeft   Align = \"left\"\n\tCenter Align = \"center\"\n\tRight  Align = \"right\"\n)\n\n// attr returns the value of the align attribute; a zero value is Left.\nfunc (a Align) attr() string {\n\tswitch a {\n\tcase Center, Right:\n\t\treturn string(a)\n\t}\n\treturn string(Left)\n}\n\n// font is the font of each text. An email client has no font of the site.\nconst font = \"font-family:Helvetica,Arial,sans-serif;\"\n\n// width returns the width of the content in pixels; a zero value is 600.\nfunc (p DocumentProps) width() string {\n\tif p.Width \u003c= 0 {\n\t\treturn \"600\"\n\t}\n\treturn strconv.Itoa(p.Width)\n}\n\n// style returns the style of the content table.\nfunc (p DocumentProps) style() gx.Style {\n\treturn gx.Style(\"width:100%;max-width:\" + p.width() + \"px\")\n}\n\n// style returns the style of the cell of a section.\nfunc (p SectionProps) style() gx.Style {\n\tif p.Card {\n\t\treturn \"padding:24px;background-color:var(--card);border:1px solid var(--border);border-radius:var(--radius)\"\n\t}\n\treturn \"padding:12px 0\"\n}\n\n// style returns the style of a column. An empty width shares the row.\nfunc (p ColumnProps) style() gx.Style {\n\ts := \"padding:0 8px 0 0;vertical-align:top;\" + font + \"font-size:16px;line-height:24px;color:var(--foreground)\"\n\tif p.Width \u003e 0 {\n\t\ts += \";width:\" + strconv.Itoa(p.Width) + \"px\"\n\t}\n\treturn gx.Style(s)\n}\n\n// style returns the style of a paragraph.\nfunc (p TextProps) style() gx.Style {\n\ts := \"margin:0 0 16px;\" + font + \"font-size:16px;line-height:24px;text-align:\" + p.Align.attr()\n\tif p.Muted {\n\t\treturn gx.Style(s + \";font-size:14px;line-height:20px;color:var(--muted-foreground)\")\n\t}\n\treturn gx.Style(s + \";color:var(--foreground)\")\n}\n\n// level returns the level of a heading: 1, 2 or 3. A zero value is 1.\nfunc (p HeadingProps) level() int {\n\tif p.Level \u003c 1 {\n\t\treturn 1\n\t}\n\tif p.Level \u003e 3 {\n\t\treturn 3\n\t}\n\treturn p.Level\n}\n\n// style returns the style of a heading.\nfunc (p HeadingProps) style() gx.Style {\n\tsize := map[int]string{1: \"font-size:28px;line-height:36px\", 2: \"font-size:22px;line-height:28px\", 3: \"font-size:18px;line-height:24px\"}[p.level()]\n\treturn gx.Style(\"margin:0 0 16px;\" + font + size + \";font-weight:700;color:var(--foreground);text-align:\" + p.Align.attr())\n}\n\n// size returns a pixel count as an attribute value.\nfunc size(n int) string { return strconv.Itoa(n) }\n\n// style returns the style of an image. The image is not wider than its\n// column.\nfunc (p ImageProps) style() gx.Style {\n\treturn \"display:block;border:0;outline:none;max-width:100%;height:auto\"\n}\n",
+      "sha256": "85cfc831148a6512a65402973f4bc77147feaf3393ceec424edd31c87cdd6dc7"
+    }
+  ],
+  "requiredTokens": [
+    "--background",
+    "--foreground",
+    "--card",
+    "--primary",
+    "--primary-foreground",
+    "--muted-foreground",
+    "--border",
+    "--radius"
+  ],
+  "usage": "# Email\n\nThe parts of an HTML email. Each part has inline styles and table layout, which each email client reads. No part has a class, a signal or a script.\n\n## Usage\n\nWrite the email as a component in a package with the name `email`. Then render it with `gx.RenderEmail`.\n\n```gx\n\u003cemail.Document preview=\"Your order is on its way.\"\u003e\n  \u003cemail.Section\u003e\n    \u003cemail.Heading\u003eYour order is on its way\u003c/email.Heading\u003e\n    \u003cemail.Text\u003eThank you for your order.\u003c/email.Text\u003e\n    \u003cemail.Button href={gx.URL(route.Order{ID: p.ID}.URL())}\u003eSee the order\u003c/email.Button\u003e\n  \u003c/email.Section\u003e\n  \u003cemail.Divider /\u003e\n  \u003cemail.Section card\u003e\n    \u003cemail.Row\u003e\n      \u003cemail.Column\u003eTea, 2 boxes\u003c/email.Column\u003e\n      \u003cemail.Column width={120} align={email.Right}\u003e12.00\u003c/email.Column\u003e\n    \u003c/email.Row\u003e\n  \u003c/email.Section\u003e\n  \u003cemail.Image src={gx.URL(\"/logo.png\")} alt=\"The logo of the shop\" width={120} height={40} /\u003e\n  \u003cemail.Text muted\u003eYou get this email because you have an account.\u003c/email.Text\u003e\n\u003c/email.Document\u003e\n```\n\n```go\nmsg, err := gx.RenderEmail(OrderEmail(props), gx.EmailOptions{\n\tBaseURL: \"https://shop.example\",\n\tTokens:  gxstyles.LightTokens(),\n})\n```\n\n`msg.HTML` is the HTML document and `msg.Text` is the same content as plain text. Give the two parts to your mail library. Gx sends no email.\n\n## Parts\n\n| Part | Use |\n| --- | --- |\n| `Document` | The background and the centre column. It is the root of each email. `preview` is the text that an inbox shows after the subject. |\n| `Section` | A group of parts. `card` gives it a border and padding. |\n| `Row` | One row of columns. |\n| `Column` | One cell of a row. `width` is in pixels; zero shares the row. |\n| `Text` | A paragraph. `muted` is for a note. |\n| `Heading` | A heading of `level` 1, 2 or 3. |\n| `Button` | A link with the look of a button. |\n| `Image` | An image with its size and its `alt` text. |\n| `Divider` | A line between two sections. |\n\nThe styles read the theme tokens with `var()`: `--background`, `--foreground`, `--card`, `--primary`, `--primary-foreground`, `--muted-foreground`, `--border` and `--radius`. `gx.RenderEmail` gives each one the value from `gxstyles.LightTokens()` or `gxstyles.DarkTokens()`, so the email has no CSS variable.\n\n## Do\n\n- Put each part inside one `Document`.\n- Put only `Column` parts in a `Row`.\n- Give each `Image` its `alt` text, its width and its height. Many email clients block images at first.\n- Use a site path or a typed link for an address. `gx.RenderEmail` makes it an absolute URL.\n\n## Don't\n\n- Do not add a `class` attribute or a signal to a part. The compiler reports GX6010.\n- Do not use a component of a page, for example `button.Button`, in an email. Its classes have no effect there, and `gx.RenderEmail` returns an error.\n- Do not put text directly in a `Row`. A table row takes only cells.\n\n## Keyboard\n\n| Key | Action |\n| --- | --- |\n| None | The parts are static. A link and a button get the focus as each link does. |\n"
+}

@@ -43,6 +43,17 @@ Each distinct class list is one run of Tailwind. The key `route_sheets` in the `
 
 Dark mode follows the `.dark` class and the system setting.
 
+### Tokens for an email
+
+An email client reads no CSS variable and no `oklch` colour. `gx dev` and `gx build` also write the tokens of `app/theme.css` as Go values to `gxstyles/tokens_gx.go`:
+
+- `gxstyles.LightTokens()` returns the tokens of the `:root` rule.
+- `gxstyles.DarkTokens()` returns the tokens of the `.dark` rule. A token that the dark theme does not set has its light value.
+
+A colour is a hex colour, and a length is a number of pixels: `--primary` is `#171717` and `--radius` is `10px`. A colour with alpha is the colour on the `--background` of its theme. A token that is no colour and no length is not in the result.
+
+Give the tokens to `gx.RenderEmail` in `gx.EmailOptions.Tokens`. The function gives each `var()` of a `style` attribute its value. The registry item [email](/components/email/) has the parts of an email that read the tokens.
+
 ## Variants
 
 A variant is a Go type with constants. `gx.Enum` is a map from each constant to a static class string. `gx lint` reports a constant with no entry as [GX5001](/errors/GX5001/).

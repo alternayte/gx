@@ -1,0 +1,16 @@
+package email
+
+props {
+  // Card gives the section a border, a background and padding.
+  Card     bool = false
+  // Children is the content of the section.
+  Children gx.Node
+}
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tbody>
+    <tr>
+      <td style={p.style()}>{p.Children}</td>
+    </tr>
+  </tbody>
+</table>

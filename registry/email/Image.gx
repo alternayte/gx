@@ -1,0 +1,14 @@
+package email
+
+props {
+  // Src is the address of the image. gx.RenderEmail makes a site path an absolute URL.
+  Src    gx.URL
+  // Alt is the text of the image. An email client shows it when it blocks images.
+  Alt    string
+  // Width is the width of the image in pixels.
+  Width  int
+  // Height is the height of the image in pixels.
+  Height int
+}
+
+<img src={p.Src} alt={p.Alt} width={size(p.Width)} height={size(p.Height)} style={p.style()} />

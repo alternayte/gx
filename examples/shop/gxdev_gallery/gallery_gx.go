@@ -6,6 +6,7 @@ package gxdev_gallery
 
 import (
 	gx "github.com/alternayte/gx"
+	email "github.com/alternayte/gx/examples/shop/basket/email"
 	cart "github.com/alternayte/gx/examples/shop/cart"
 	accordion "github.com/alternayte/gx/examples/shop/ui/accordion"
 	alert "github.com/alternayte/gx/examples/shop/ui/alert"
@@ -31,6 +32,7 @@ import (
 	dialog "github.com/alternayte/gx/examples/shop/ui/dialog"
 	drawer "github.com/alternayte/gx/examples/shop/ui/drawer"
 	dropdownmenu "github.com/alternayte/gx/examples/shop/ui/dropdown-menu"
+	email80 "github.com/alternayte/gx/examples/shop/ui/email"
 	empty "github.com/alternayte/gx/examples/shop/ui/empty"
 	field "github.com/alternayte/gx/examples/shop/ui/field"
 	hovercard "github.com/alternayte/gx/examples/shop/ui/hover-card"
@@ -80,6 +82,7 @@ func Fixtures() []gx.Fixture {
 		{Component: "BasketView", Package: "github.com/alternayte/gx/examples/shop/basket", Missing: true},
 		{Component: "Note", Package: "github.com/alternayte/gx/examples/shop/basket", Missing: true},
 		{Component: "Stars", Package: "github.com/alternayte/gx/examples/shop/basket", Missing: true},
+		{Component: "Order", Package: "github.com/alternayte/gx/examples/shop/basket/email", Name: "TwoItems", Node: func() gx.Node { return email.Order(email.OrderFixtures["TwoItems"]) }},
 		{Component: "Cart", Package: "github.com/alternayte/gx/examples/shop/cart", Name: "Default", Node: func() gx.Node { return cart.Cart(cart.Fixtures["Default"]) }},
 		{Component: "Cart", Package: "github.com/alternayte/gx/examples/shop/cart", Name: "Empty", Node: func() gx.Node { return cart.Cart(cart.Fixtures["Empty"]) }},
 		{Component: "Toasts", Package: "github.com/alternayte/gx/examples/shop/cart", Name: "Default", Node: func() gx.Node { return cart.Toasts(cart.ToastsFixtures["Default"]) }},
@@ -238,6 +241,24 @@ func Fixtures() []gx.Fixture {
 		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Ghost", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Ghost"]) }},
 		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Start", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Start"]) }},
 		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Sub", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Sub"]) }},
+		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Center", Node: func() gx.Node { return email80.Button(email80.ButtonFixtures["Center"]) }},
+		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Button(email80.ButtonFixtures["Default"]) }},
+		{Component: "Column", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.ColumnWrap(email80.Column(email80.ColumnFixtures["Default"])) }},
+		{Component: "Column", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Fixed", Node: func() gx.Node { return email80.ColumnWrap(email80.Column(email80.ColumnFixtures["Fixed"])) }},
+		{Component: "Column", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Right", Node: func() gx.Node { return email80.ColumnWrap(email80.Column(email80.ColumnFixtures["Right"])) }},
+		{Component: "Divider", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Divider(email80.DividerFixtures["Default"]) }},
+		{Component: "Document", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Document(email80.DocumentFixtures["Default"]) }},
+		{Component: "Document", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Preview", Node: func() gx.Node { return email80.Document(email80.DocumentFixtures["Preview"]) }},
+		{Component: "Heading", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "One", Node: func() gx.Node { return email80.Heading(email80.HeadingFixtures["One"]) }},
+		{Component: "Heading", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Three", Node: func() gx.Node { return email80.Heading(email80.HeadingFixtures["Three"]) }},
+		{Component: "Heading", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Two", Node: func() gx.Node { return email80.Heading(email80.HeadingFixtures["Two"]) }},
+		{Component: "Image", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Image(email80.ImageFixtures["Default"]) }},
+		{Component: "Row", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "TwoColumns", Node: func() gx.Node { return email80.Row(email80.RowFixtures["TwoColumns"]) }},
+		{Component: "Section", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Card", Node: func() gx.Node { return email80.Section(email80.SectionFixtures["Card"]) }},
+		{Component: "Section", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Section(email80.SectionFixtures["Default"]) }},
+		{Component: "Text", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Center", Node: func() gx.Node { return email80.Text(email80.TextFixtures["Center"]) }},
+		{Component: "Text", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Text(email80.TextFixtures["Default"]) }},
+		{Component: "Text", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Muted", Node: func() gx.Node { return email80.Text(email80.TextFixtures["Muted"]) }},
 		{Component: "Empty", Package: "github.com/alternayte/gx/examples/shop/ui/empty", Name: "Full", Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Full"]) }},
 		{Component: "Empty", Package: "github.com/alternayte/gx/examples/shop/ui/empty", Name: "Outline", Node: func() gx.Node { return empty.Empty(empty.EmptyFixtures["Outline"]) }},
 		{Component: "EmptyContent", Package: "github.com/alternayte/gx/examples/shop/ui/empty", Name: "Empty", Node: func() gx.Node { return empty.EmptyContent(empty.EmptyContentFixtures["Empty"]) }},

@@ -142,6 +142,7 @@ func Init(opt Options) ([]string, error) {
 	files := map[string]string{
 		"app/theme.css":         gx.DefaultThemeCSS,
 		"gxstyles/styles_gx.go": string(gxstyles.Generate(nil)),
+		"gxstyles/tokens_gx.go": string(gxstyles.GenerateTokens([]byte(gx.DefaultThemeCSS))),
 		// The first island needs no edit of main: the bundle is installed
 		// from the start, and gx build fills it.
 		"gxislands/islands_gx.go": string(islands.Generate(nil)),

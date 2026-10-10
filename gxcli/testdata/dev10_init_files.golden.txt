@@ -16,6 +16,7 @@ gxdev_gallery/gallery_gx.go
 gxdev_symbols/symbols_gx.go
 gxislands/islands_gx.go
 gxstyles/styles_gx.go
+gxstyles/tokens_gx.go
 home/Counter.fixtures.go
 home/Counter.gx
 home/Counter_gx.go
