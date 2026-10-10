@@ -17,10 +17,10 @@ func TestREQ_STY_13_RouteClasses(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod": moduleWithGx(t),
 		// The layout of each page, with a component of its own package.
-		"shell/Shell.gx":  "package shell\n\nprops {\n  Children gx.Node\n}\n\n<main class=\"shell-main\"><Bar />{p.Children}</main>\n",
-		"shell/Bar.gx":    "package shell\n\n<nav class=\"shell-bar\">Site</nav>\n",
-		"shell/shell.go":  "package shell\n\nimport \"github.com/alternayte/gx\"\n\nvar Layout = gx.Layout(func(c *gx.Ctx) (struct{}, error) { return struct{}{}, nil },\n\tfunc(_ struct{}, children gx.Node) gx.Node { return Shell(ShellProps{Children: children}) })\n",
-		"shell/toast.go":  "package shell\n\nimport \"github.com/alternayte/gx\"\n\nfunc Toast(p gx.ToastPatch) gx.Node { return gx.El(\"p\", gx.Attrs{{Key: \"class\", Value: toastClass}}) }\n\nconst toastClass = \"toast-box\"\n",
+		"shell/Shell.gx": "package shell\n\nprops {\n  Children gx.Node\n}\n\n<main class=\"shell-main\"><Bar />{p.Children}</main>\n",
+		"shell/Bar.gx":   "package shell\n\n<nav class=\"shell-bar\">Site</nav>\n",
+		"shell/shell.go": "package shell\n\nimport \"github.com/alternayte/gx\"\n\nvar Layout = gx.Layout(func(c *gx.Ctx) (struct{}, error) { return struct{}{}, nil },\n\tfunc(_ struct{}, children gx.Node) gx.Node { return Shell(ShellProps{Children: children}) })\n",
+		"shell/toast.go": "package shell\n\nimport \"github.com/alternayte/gx\"\n\nfunc Toast(p gx.ToastPatch) gx.Node { return gx.El(\"p\", gx.Attrs{{Key: \"class\", Value: toastClass}}) }\n\nconst toastClass = \"toast-box\"\n",
 		// A shared component package.
 		"ui/badge/Badge.gx": "package badge\n\n<span class=\"badge-pill\">New</span>\n",
 		// The cart slice: its page uses the badge, and its action patches

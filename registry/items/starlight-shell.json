@@ -85,8 +85,8 @@
     {
       "path": "SearchDialog.gx",
       "target": "ui/starlight-shell/SearchDialog.gx",
-      "content": "package starlight\n\n\u003cdialog id=\"gx-search\" class=\"sl-search-dialog\" data-gx-search data-gx-search-src=\"/pagefind/pagefind.js\" aria-label=\"Search\"\u003e\n  \u003cdiv class=\"sl-search-frame\"\u003e\n    \u003cform method=\"get\" action=\"/search\" class=\"sl-search-form\" data-gx-search-form\u003e\n      \u003cdiv class=\"sl-search-field\"\u003e\n        {icon(\"magnifier\", \"\")}\n        \u003cinput type=\"search\" name=\"q\" class=\"sl-search-input\" placeholder=\"Search\" data-gx-search-input autocomplete=\"off\" /\u003e\n      \u003c/div\u003e\n      \u003cbutton type=\"button\" class=\"sl-search-close\" data-gx-search-close\u003eCancel\u003c/button\u003e\n    \u003c/form\u003e\n    \u003cdiv class=\"sl-search-results\" data-gx-search-results\u003e\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/dialog\u003e\n",
-      "sha256": "7f93fd9fff0d1efa23830a1a98452ab35b5084aa2034d6f749c01323ff5699f6"
+      "content": "package starlight\n\n\u003cdialog id=\"gx-search\" class=\"sl-search-dialog\" data-gx-search data-gx-search-src=\"/pagefind/pagefind.js\" aria-label=\"Search\"\u003e\n  \u003cdiv class=\"sl-search-frame\"\u003e\n    \u003cform method=\"get\" action=\"/search\" class=\"sl-search-form\" data-gx-search-form\u003e\n      \u003cdiv class=\"sl-search-field\"\u003e\n        {icon(\"magnifier\", \"\")}\n        \u003cinput type=\"search\" name=\"q\" class=\"sl-search-input\" placeholder=\"Search\" aria-label=\"Search\" data-gx-search-input autocomplete=\"off\" /\u003e\n      \u003c/div\u003e\n      \u003cbutton type=\"button\" class=\"sl-search-close\" data-gx-search-close\u003eCancel\u003c/button\u003e\n    \u003c/form\u003e\n    \u003cdiv class=\"sl-search-results\" data-gx-search-results\u003e\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/dialog\u003e\n",
+      "sha256": "31bed704448dc6b1f66b93628f42fdebb796724dd2c606c3b5867ac4d8ec822c"
     },
     {
       "path": "Shell.fixtures.go",

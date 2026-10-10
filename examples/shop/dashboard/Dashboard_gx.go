@@ -30,7 +30,7 @@ func Dashboard(p DashboardProps) gx.Node {
 //line Dashboard.gx:16:3
 		Charts(ChartsProps{Revenue: p.Revenue, Round: 0}),
 //line Dashboard.gx:18:5
-		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "w-20 rounded-md border border-border px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "number", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("dashboard.Dashboard", p.GxKey, "qty"), Kind: gx.AttrText}}),
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "w-20 rounded-md border border-border px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "number", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Quantity", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("dashboard.Dashboard", p.GxKey, "qty"), Kind: gx.AttrText}}),
 //line Dashboard.gx:19:5
 		Stepper(StepperProps{Qty: gx.Ref[int](gx.SignalRefPath("dashboard.Dashboard", p.GxKey, "qty"))}, gx.IslandLoad("eager")),
 //line Dashboard.gx:22:3

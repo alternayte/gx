@@ -75,7 +75,7 @@ signals {
 
 <div class="mt-4 flex items-center gap-2">
   status := "Not in the cart"
-  <input type="number" min="1" max="10" bind:value={$Qty} class="w-20 rounded-md border border-border px-2 py-1" />
+  <input type="number" min="1" max="10" aria-label="Quantity" bind:value={$Qty} class="w-20 rounded-md border border-border px-2 py-1" />
   <button class="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" on:click={route.Add{ID: p.ProductID}}>Add to cart</button>
   <span #status(status string) class="text-sm text-muted-foreground">{status}</span>
 </div>

@@ -37,6 +37,12 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX2013](/errors/GX2013/) | Value cannot render as text. |
 | [GX2014](/errors/GX2014/) | Signal needs an initial value. |
 | [GX2015](/errors/GX2015/) | Component with signals has no top-level HTML element. |
+| [GX2016](/errors/GX2016/) | `img` has no `alt` attribute. |
+| [GX2017](/errors/GX2017/) | Form control has no label. |
+| [GX2018](/errors/GX2018/) | Interactive element inside a link or a button. |
+| [GX2019](/errors/GX2019/) | One id on two elements of a component. |
+| [GX2020](/errors/GX2020/) | Element in a parent where a browser moves or drops it. |
+| [GX2021](/errors/GX2021/) | Warning: a heading skips a level. |
 
 ## Routes
 
@@ -105,3 +111,9 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX8002](/errors/GX8002/) | Component is not declared in this collection. |
 | [GX8003](/errors/GX8003/) | Content link or anchor is broken. |
 | [GX8004](/errors/GX8004/) | Code file or line range is missing. |
+
+## Budgets
+
+| Code | Diagnostic |
+| --- | --- |
+| [GX9001](/errors/GX9001/) | Page route is over its budget. |

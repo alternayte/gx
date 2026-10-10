@@ -9,7 +9,7 @@
 
 <h1 class="text-2xl font-semibold" data-signals="{&#34;todo&#34;:{&#34;IndexView&#34;:{&#34;open&#34;:false,&#34;title&#34;:&#34;&#34;}}}" data-gx-instance="todo.IndexView">To do</h1>
 <div class="mt-4 flex gap-2">
-  <input class="rounded-md border border-border px-3 py-2" type="text" data-bind="todo.IndexView.title">
+  <input class="rounded-md border border-border px-3 py-2" type="text" aria-label="Title" data-bind="todo.IndexView.title">
   <button class="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" data-on:click="@post(&#39;/todo/add&#39;, {headers: {&#39;Gx-Scope&#39;: &#39;todo.IndexView&#39;}})">Add</button>
   <button class="rounded-md border border-border px-3 py-1.5 text-sm" data-on:click="@post(&#39;/todo/clear&#39;, {headers: {&#39;Gx-Scope&#39;: &#39;todo.IndexView&#39;}})">Clear</button>
 </div>

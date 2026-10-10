@@ -43,10 +43,24 @@ Runs the app with build, restart, page morph and the error overlay.
 ## gx check
 
 ```sh
-gx check [--json] [--external-links] [app]
+gx check [--json] [--external-links] [--dead] [app]
 ```
 
 Checks each `.gx` file, the routes, the actions, the forms and the content. It fails when a generated file is stale. It type-checks each island with the pinned TypeScript compiler. `--json` prints the diagnostics for a tool. `--external-links` also requests each link to a different site.
+
+It also checks the content model of the markup:
+
+- an image with no `alt`
+- a form control with no label
+- an interactive element inside a link or a button
+- one id on two elements of a component
+- an element in a parent where a browser moves it
+
+A hint or a warning does not fail the check.
+
+With a `[budget]` table in `gx.toml`, it runs the app and fails for a page route that loads more JS or CSS than its budget.
+
+`--dead` also prints a report of code that nothing uses: components with no caller, page routes with no typed link, and classes of `app/theme.css` that no file uses. The report does not change the exit code. With `--json`, the output is one object with `diagnostics` and `dead`.
 
 ## gx generate
 

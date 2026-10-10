@@ -2,7 +2,7 @@ package shell
 
 <dialog id="gx-search" class="gx-search-dialog w-full max-w-lg rounded-lg border border-border bg-background p-0 text-foreground" data-gx-search data-gx-search-src="/pagefind/pagefind.js" aria-label="Search">
   <form method="get" action="/search" class="flex items-center gap-2 p-3" data-gx-search-form>
-    <input type="search" name="q" class="gx-search-input w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm" placeholder="Search the docs" data-gx-search-input autocomplete="off" />
+    <input type="search" name="q" class="gx-search-input w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm" placeholder="Search the docs" aria-label="Search the docs" data-gx-search-input autocomplete="off" />
     <button type="submit" class="rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground">Search</button>
     <button type="button" class="gx-search-close rounded-md border border-border px-3 py-2 text-sm" data-gx-search-close aria-label="Close">Close</button>
   </form>

@@ -12,7 +12,7 @@
 
 <div class="mt-4 flex items-center gap-2" data-signals="{&#34;shop&#34;:{&#34;Buy&#34;:{&#34;2&#34;:{&#34;qty&#34;:1}}}}" data-gx-instance="shop.Buy.2">
   
-  <input class="w-20 rounded-md border border-border px-2 py-1" type="number" min="1" max="10" data-bind="shop.Buy.2.qty">
+  <input class="w-20 rounded-md border border-border px-2 py-1" type="number" min="1" max="10" aria-label="Quantity" data-bind="shop.Buy.2.qty">
   <button class="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" data-on:click="@post(&#39;/shop/2/cart&#39;, {headers: {&#39;Gx-Scope&#39;: &#39;shop.Buy.2&#39;}})">Add to cart</button>
   <span id="buy-status-2" class="text-sm text-muted-foreground" data-gx-h="303fd337">Not in the cart</span>
 </div>

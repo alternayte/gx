@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/alternayte/gx/internal/compiler"
+	"github.com/alternayte/gx/internal/exporter"
 	"github.com/alternayte/gx/internal/gxconfig"
 	"github.com/alternayte/gx/internal/jspin"
 )
@@ -535,5 +536,20 @@ func App(ctx context.Context, dir string, opt compiler.CheckOptions) ([]compiler
 	if err != nil {
 		return diags, err
 	}
-	return append(diags, ts...), nil
+	diags = append(diags, ts...)
+	// The budget of each page route (REQ-DEV-13). The check runs the app,
+	// so it runs only for an app with a budget and with no other error.
+	if cfg, cfgErr := gxconfig.Load(dir); cfgErr == nil && cfg.Budget.Set() && !compiler.Failed(diags) {
+		findings, err := exporter.Budgets(ctx, dir, "", cfg.Budget)
+		if err != nil {
+			return diags, err
+		}
+		for _, f := range findings {
+			diags = append(diags, compiler.Diagnostic{
+				Code: compiler.CodeBudget, File: filepath.Join(dir, "gx.toml"), Line: 1, Col: 1, Msg: f.String(),
+				Fix: "load less on the page, or change the budget of the route in gx.toml",
+			})
+		}
+	}
+	return diags, nil
 }

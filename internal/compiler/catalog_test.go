@@ -44,6 +44,12 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX2012 | signal instance needs a key",
 		"GX2014 | signal needs an initial value",
 		"GX2015 | component with signals has no top-level HTML element",
+		"GX2016 | img has no alt attribute",
+		"GX2017 | form control has no label",
+		"GX2018 | interactive element inside a link or a button",
+		"GX2019 | one id on two elements of a component",
+		"GX2020 | element in a parent where a browser moves or drops it",
+		"GX2021 | heading skips a level",
 		"GX2011 | dynamic URL attribute",
 		"GX2013 | value cannot render as text",
 		"GX3000 | route field type cannot bind",
@@ -84,6 +90,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX8002 | component is not declared in this collection",
 		"GX8003 | content link or anchor is broken",
 		"GX8004 | code file or line range is missing",
+		"GX9001 | page route is over its budget",
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("catalog changed; update the snapshot deliberately:\ngot:\n%v\nwant:\n%v", got, want)

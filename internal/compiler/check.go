@@ -58,7 +58,7 @@ func CheckWith(root string, opt CheckOptions) []Diagnostic {
 // the same steps as CheckWith, so a second analysis finds nothing new and
 // takes as long as the first (NFR-05).
 func CheckApp(root string, opt CheckOptions) []Diagnostic {
-	files, out, res, _, _ := generate(root, nil)
+	files, out, res, l, dirs := generate(root, nil)
 	seen := map[Diagnostic]bool{}
 	for _, d := range out {
 		seen[d] = true
@@ -79,6 +79,17 @@ func CheckApp(root string, opt CheckOptions) []Diagnostic {
 	}
 	if files != nil {
 		add(staleFiles(files))
+	}
+	// The content model of each .gx file (REQ-AUT-23). These findings are
+	// of gx check only: the files compile and run.
+	if l != nil {
+		for _, dir := range dirs {
+			p := l.load(dir)
+			for _, name := range sortedFileNames(p.Files) {
+				add(checkContentModel(p.Files[name]))
+				add(headingHints(p.Files[name]))
+			}
+		}
 	}
 	if res != nil {
 		add(res.hints)

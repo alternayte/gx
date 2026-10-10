@@ -5,7 +5,7 @@ package starlight
     <form method="get" action="/search" class="sl-search-form" data-gx-search-form>
       <div class="sl-search-field">
         {icon("magnifier", "")}
-        <input type="search" name="q" class="sl-search-input" placeholder="Search" data-gx-search-input autocomplete="off" />
+        <input type="search" name="q" class="sl-search-input" placeholder="Search" aria-label="Search" data-gx-search-input autocomplete="off" />
       </div>
       <button type="button" class="sl-search-close" data-gx-search-close>Cancel</button>
     </form>

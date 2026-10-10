@@ -24,7 +24,7 @@ func SearchDialog(p SearchDialogProps) gx.Node {
 //line SearchDialog.gx:7:9
 		icon("magnifier", ""),
 //line SearchDialog.gx:8:9
-		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-input", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "search", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: "q", Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: "Search", Kind: gx.AttrText}, gx.Bool("data-gx-search-input", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}),
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-input", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "search", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: "q", Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: "Search", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}, gx.Bool("data-gx-search-input", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}),
 //line SearchDialog.gx:10:7
 		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-close", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-close", true)}),
 //line SearchDialog.gx:12:5

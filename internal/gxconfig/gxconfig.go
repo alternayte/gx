@@ -42,7 +42,27 @@ type Config struct {
 	// DefaultRouteSheets; a negative number turns the stylesheets of the
 	// routes off.
 	RouteSheets int
+	// Budget holds the size limits of the page routes (REQ-DEV-13).
+	Budget Budget
 }
+
+// Budget is the [budget] table of gx.toml: the largest gzipped size, in
+// bytes, of the JS and of the CSS that one page route loads (REQ-DEV-13).
+// Zero is no limit. A table [budget.routes."GET /basket"] sets the two
+// numbers of one route.
+type Budget struct {
+	JS, CSS int
+	Routes  map[string]RouteBudget
+}
+
+// RouteBudget is the budget of one route pattern. A number that is not set
+// is -1: the route then has the default of the [budget] table.
+type RouteBudget struct {
+	JS, CSS int
+}
+
+// Set reports whether the app has a budget.
+func (b Budget) Set() bool { return b.JS > 0 || b.CSS > 0 || len(b.Routes) > 0 }
 
 // DefaultRouteSheets is the limit of distinct route stylesheets of an app
 // that sets none.
@@ -140,7 +160,39 @@ func Load(root string) (Config, error) {
 		if unquoted, ok := unquote(value); ok {
 			value = unquoted
 		}
+		if pattern, ok := strings.CutPrefix(section, "budget.routes."); ok {
+			// [budget.routes."GET /basket"]: the pattern is a quoted key.
+			if unquoted, ok := unquote(strings.TrimSpace(pattern)); ok {
+				pattern = unquoted
+			}
+			if cfg.Budget.Routes == nil {
+				cfg.Budget.Routes = map[string]RouteBudget{}
+			}
+			route, have := cfg.Budget.Routes[pattern]
+			if !have {
+				route = RouteBudget{JS: -1, CSS: -1}
+			}
+			if n, err := strconv.Atoi(value); err == nil && n >= 0 {
+				switch key {
+				case "js":
+					route.JS = n
+				case "css":
+					route.CSS = n
+				}
+			}
+			cfg.Budget.Routes[pattern] = route
+			continue
+		}
 		switch section {
+		case "budget":
+			if n, err := strconv.Atoi(value); err == nil && n >= 0 {
+				switch key {
+				case "js":
+					cfg.Budget.JS = n
+				case "css":
+					cfg.Budget.CSS = n
+				}
+			}
 		case "":
 			if key == "adapter" {
 				if value != AdapterDatastar && value != AdapterHtmx && !pluginAdapters[value] {

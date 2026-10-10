@@ -66,7 +66,7 @@ signals {
 <section class="rounded-xl border border-border p-4">
   total := p.Price
   <p>Price: {p.Price} EUR</p>
-  <input type="number" min="1" bind:value={$Qty} class="mt-2 w-20 rounded-md border border-border px-2 py-1" />
+  <input type="number" min="1" aria-label="Quantity" bind:value={$Qty} class="mt-2 w-20 rounded-md border border-border px-2 py-1" />
   <p show={$Qty > 10} class="text-sm text-destructive">A large order needs more time.</p>
   <button class="mt-2 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground" on:click={route.Add{}}>Add to cart</button>
   <p class="mt-2">Total: <strong #total(total int)>{total}</strong> EUR</p>

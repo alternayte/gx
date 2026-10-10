@@ -15,7 +15,7 @@ signals {
   <h1 class="text-xl font-semibold">Dashboard</h1>
   <Charts revenue={p.Revenue} />
   <div class="flex items-center gap-3">
-    <input class="w-20 rounded-md border border-border px-2 py-1" type="number" bind:value={$Qty} />
+    <input class="w-20 rounded-md border border-border px-2 py-1" type="number" aria-label="Quantity" bind:value={$Qty} />
     <Stepper qty={$Qty} load="eager" />
   </div>
   {/* A custom event of a web component runs a signal statement. */}

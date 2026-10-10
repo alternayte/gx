@@ -60,7 +60,7 @@ signals {
   count := p.Count
   <p><span #count(count int)>{count}</span> items, prices in {p.Currency}</p>
   if !p.Compact {
-    <input type="number" min="1" max="99" bind:value={$Qty} />
+    <input type="number" min="1" max="99" aria-label="Quantity" bind:value={$Qty} />
   }
   <button class="rounded-md bg-primary px-3 py-1.5 text-primary-foreground" on:click={route.Add{}}>Add</button>
 </section>

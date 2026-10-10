@@ -53,7 +53,7 @@ func setup() error {
 	if _, err := scaffold.New(dir, "component", "ui/bad/Bad"); err != nil {
 		return err
 	}
-	bad := "package bad\n\nprops {\n  // Children is the content.\n  Children gx.Node\n}\n\n<div><img src=\"data:image/gif;base64,R0lGODlhAQABAAAAACw=\" width=\"20\" height=\"20\" />{p.Children}</div>\n"
+	bad := "package bad\n\nprops {\n  // Children is the content.\n  Children gx.Node\n  // Attrs are the attributes of the image.\n  Attrs gx.Attrs = nil\n}\n\n<div><img src=\"data:image/gif;base64,R0lGODlhAQABAAAAACw=\" width=\"20\" height=\"20\" {...p.Attrs} />{p.Children}</div>\n"
 	if err := os.WriteFile(filepath.Join(dir, "ui", "bad", "Bad.gx"), []byte(bad), 0o644); err != nil {
 		return err
 	}

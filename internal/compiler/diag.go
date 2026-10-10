@@ -34,6 +34,13 @@ const (
 	CodeURLAttr       = "GX2011"
 	CodeUnrenderable  = "GX2013"
 
+	CodeImgAlt            = "GX2016"
+	CodeControlLabel      = "GX2017"
+	CodeNestedInteractive = "GX2018"
+	CodeDuplicateID       = "GX2019"
+	CodeBadParent         = "GX2020"
+	CodeHeadingOrder      = "GX2021"
+
 	CodeTrustedHTML = "GX7001"
 	CodeSecret      = "GX7002"
 
@@ -50,6 +57,8 @@ const (
 	CodeContentLink = "GX8003"
 
 	CodeCodeFile = "GX8004"
+
+	CodeBudget = "GX9001"
 
 	CodeActionMissing       = "GX4001"
 	CodeActionTwice         = "GX4002"
@@ -145,6 +154,12 @@ var Catalog = []Info{
 	{CodeInstanceKey, "signal instance needs a key"},
 	{CodeSignalDefault, "signal needs an initial value"},
 	{CodeSignalRoot, "component with signals has no top-level HTML element"},
+	{CodeImgAlt, "img has no alt attribute"},
+	{CodeControlLabel, "form control has no label"},
+	{CodeNestedInteractive, "interactive element inside a link or a button"},
+	{CodeDuplicateID, "one id on two elements of a component"},
+	{CodeBadParent, "element in a parent where a browser moves or drops it"},
+	{CodeHeadingOrder, "heading skips a level"},
 	{CodeURLAttr, "dynamic URL attribute"},
 	{CodeUnrenderable, "value cannot render as text"},
 	{CodeRouteField, "route field type cannot bind"},
@@ -185,6 +200,7 @@ var Catalog = []Info{
 	{CodeContentComponent, "component is not declared in this collection"},
 	{CodeContentLink, "content link or anchor is broken"},
 	{CodeCodeFile, "code file or line range is missing"},
+	{CodeBudget, "page route is over its budget"},
 }
 
 // Doc returns the documentation path of the diagnostic (REQ-AUT-19).

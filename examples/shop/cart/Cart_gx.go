@@ -41,7 +41,7 @@ func Cart(p CartProps) gx.Node {
 //line Cart.gx:19:47
 		gx.Int(int64(total)),
 //line Cart.gx:20:3
-		gx.Open("input", gx.Attrs{gx.Attr{Key: "type", Value: "number", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}}),
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "type", Value: "number", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Quantity", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("cart.Cart", p.GxKey, "qty"), Kind: gx.AttrText}}),
 //line Cart.gx:21:3
 		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", "hover:opacity-90"), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tool", Value: "cart_add", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tool-scope", Value: gx.ScopeString("cart.Cart", p.GxKey), Kind: gx.AttrText}, gx.On("click", "POST", (route.Add{}).URL(), gx.ScopeString("cart.Cart", p.GxKey))}),
 //line Cart.gx:22:3

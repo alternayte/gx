@@ -17,7 +17,7 @@ signals {
 <div class="cart rounded-xl border border-border bg-card p-4 my-4 text-card-foreground" data-label={p.Label}>
   total := p.Total
   <p>{p.Label} total: <span #total(total int)>{total}</span></p>
-  <input type="number" bind:value={$Qty} />
+  <input type="number" aria-label="Quantity" bind:value={$Qty} />
   <button class={gx.Cx("rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", "hover:opacity-90")} on:click={route.Add{}}>Add</button>
   <button class="ml-2 rounded-md border border-border px-3 py-1.5 text-sm" on:click={route.Set{}}>Set 2</button>
   <button on:click={route.Redirect{}}>Go</button>

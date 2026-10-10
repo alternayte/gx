@@ -326,6 +326,7 @@ func runCheck(args []string) int {
 	fs.SetOutput(os.Stderr)
 	asJSON := fs.Bool("json", false, "print machine-readable output")
 	external := fs.Bool("external-links", false, "request every external content link")
+	dead := fs.Bool("dead", false, "also print the components, routes and theme classes that nothing uses")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -342,8 +343,20 @@ func runCheck(args []string) int {
 		fmt.Fprintf(os.Stderr, "gx check: %v\n", err)
 		return 1
 	}
+	// The dead-code report (REQ-DEV-14). It is a report: the exit code is
+	// the exit code of the check.
+	var report *compiler.DeadReport
+	if *dead {
+		report, _ = compiler.Dead(dir)
+	}
 	if *asJSON {
+		if report != nil {
+			return printJSONWithDead(diags, report)
+		}
 		return printJSON(diags)
+	}
+	if report != nil {
+		printDead(report)
 	}
 	// A hint is printed and does not fail the check (REQ-ACT-17).
 	printDiags(diags)
@@ -366,7 +379,43 @@ type jsonDiagnostic struct {
 	Doc      string `json:"doc"`
 }
 
-func printJSON(diags []compiler.Diagnostic) int {
+// printDead writes the dead-code report as text.
+func printDead(r *compiler.DeadReport) {
+	fmt.Println("Dead code. This is a report; it does not fail the check.")
+	fmt.Printf("\nComponents with no caller: %d\n", len(r.Components))
+	for _, c := range r.Components {
+		fmt.Printf("  %s (%s)\n", c.Name, c.File)
+	}
+	fmt.Printf("\nPage routes with no typed link: %d\n", len(r.Routes))
+	for _, route := range r.Routes {
+		fmt.Printf("  %s (%s)\n", route.Pattern, route.Type)
+	}
+	fmt.Printf("\nClasses of app/theme.css that no file uses: %d\n", len(r.Classes))
+	for _, class := range r.Classes {
+		fmt.Printf("  .%s\n", class)
+	}
+}
+
+// printJSONWithDead writes the diagnostics and the dead-code report as one
+// JSON object.
+func printJSONWithDead(diags []compiler.Diagnostic, report *compiler.DeadReport) int {
+	data, err := json.MarshalIndent(struct {
+		Diagnostics []jsonDiagnostic     `json:"diagnostics"`
+		Dead        *compiler.DeadReport `json:"dead"`
+	}{jsonDiagnostics(diags), report}, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "gx: %v\n", err)
+		return 1
+	}
+	fmt.Println(string(data))
+	if compiler.Failed(diags) {
+		return 1
+	}
+	return 0
+}
+
+// jsonDiagnostics returns the diagnostics in their JSON form.
+func jsonDiagnostics(diags []compiler.Diagnostic) []jsonDiagnostic {
 	out := make([]jsonDiagnostic, 0, len(diags))
 	for _, d := range diags {
 		severity := ""
@@ -384,6 +433,11 @@ func printJSON(diags []compiler.Diagnostic) int {
 			Doc:      d.Doc(),
 		})
 	}
+	return out
+}
+
+func printJSON(diags []compiler.Diagnostic) int {
+	out := jsonDiagnostics(diags)
 	data, err := json.MarshalIndent(out, "", "  ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gx: %v\n", err)
