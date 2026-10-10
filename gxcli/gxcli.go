@@ -46,7 +46,7 @@ import (
 
 // Version is the Gx release this command line tool belongs to. `gx init`
 // writes it into the go.mod of a new app.
-const Version = "0.3.0"
+const Version = "0.4.0"
 
 // Main runs the gx command with the given arguments and returns an exit
 // code. The cmd/gx/main.go of a project gives its plugins with WithPlugins

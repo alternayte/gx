@@ -26,3 +26,8 @@ Gx types the full loop of a web page: the template, the route, the link, the act
 - **Widgets.** A component of your app is a custom element on a page of a different site. Your server renders it. Read [Widgets](/guides/widgets/).
 - **Tools for agents.** An action with `.Tool()` is a tool that the agent of a user calls, in the browser and over MCP. Read [Actions as tools for agents](/guides/app-tools/).
 - **Plugins.** A typed Go value adds directives, commands and build steps to the `gx` command of a project. Read [Plugins](/guides/plugins/).
+- **Automatic updates.** `c.Update` sends only the fragments that changed. An optimistic directive shows a change before the server answers.
+- **A JSON wire.** An action with `.API()` answers JSON. `gx api` writes an OpenAPI file and a TypeScript client.
+- **Shared signals.** Each viewer of a room sees the value of a shared signal.
+- **Checks with no test to write.** `gx check` finds content model defects, pages over their budget and dead code. `gx fuzz` renders each component with random props.
+- **Email.** The registry item `email` and `gx.RenderEmail` make an HTML email and its plain text from a component.

@@ -2,7 +2,7 @@
 
 Gx is a Go framework for server-rendered web apps. It types the full loop of a page: the template, the route, the link, the action, the form and the signal in the browser. It runs on `net/http` and Datastar, and no default workflow needs node.
 
-**Status: version 0.3.0 is the current release.** The API of a 0.x release can change. Read the [docs](https://gx-docs.pages.dev) and the [comparisons](https://gx-docs.pages.dev/compare/comparisons/) before you choose Gx.
+**Status: version 0.4.0 is the current release.** The API of a 0.x release can change. Read the [docs](https://gx-docs.pages.dev) and the [comparisons](https://gx-docs.pages.dev/compare/comparisons/) before you choose Gx.
 
 ## Quick start
 
@@ -111,6 +111,11 @@ Rename `Qty`, the route or the fragment, and the build stops at each place that 
 - **Widgets.** A component of your app is a custom element on a page of a different site. Your server renders it.
 - **Tools for agents.** An action with `.Tool()` is a tool that the agent of a user calls, in the browser and over MCP.
 - **Plugins.** A typed Go value adds directives, commands and build steps to the `gx` command of a project.
+- **Automatic updates.** `c.Update` sends only the fragments that changed. An optimistic directive shows a change before the server answers.
+- **A JSON wire.** An action with `.API()` answers JSON. `gx api` writes an OpenAPI file and a TypeScript client.
+- **Shared signals.** Each viewer of a room sees the value of a shared signal.
+- **Checks with no test to write.** `gx check` finds content model defects, pages over their budget and dead code. `gx fuzz` renders each component with random props.
+- **Email.** The registry item `email` and `gx.RenderEmail` make an HTML email and its plain text from a component.
 - **One binary.** `gx build` puts the pages, the scripts and the stylesheet in one file.
 
 ## This repository
