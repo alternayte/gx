@@ -524,6 +524,14 @@ func SetIslands(b IslandBundle)
 
 SetIslands installs the island bundle of the app.
 
+### func SetRouteStylesheets
+
+```go
+func SetRouteStylesheets(sheets map[string][]byte)
+```
+
+SetRouteStylesheets installs the stylesheet of each page route, by the pattern of the route. A generated app gives it gxstyles.Routes(). A page of such a route links its own stylesheet, which holds only the classes that the page can use; each other page links the stylesheet of the app. Two routes with the same content share one file.
+
 ### func SetSecret
 
 ```go

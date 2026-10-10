@@ -108,6 +108,9 @@ type runtimeNeeds struct {
 	nonce string
 	// shell holds the head of a fragment page for the document shell.
 	shell *shellParts
+	// pattern is the pattern of the route of the page, for the
+	// stylesheet of the route (REQ-STY-13).
+	pattern string
 }
 
 // shellParts is what a rendered fragment hands to the document shell.

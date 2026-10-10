@@ -71,6 +71,13 @@ func collectFileClasses(nodes []Node, add func(string)) {
 					collectQuoted(a.Value, add)
 				case strings.HasPrefix(a.Name, "class:"):
 					add(strings.TrimPrefix(a.Name, "class:"))
+				case strings.HasSuffix(a.Name, "Class") && a.Kind == AttrString:
+					// A prop that holds classes, such as bodyClass of
+					// gx.Head: its value is in generated code only, which
+					// the class list does not read.
+					add(a.Value)
+				case strings.HasSuffix(a.Name, "Class") && a.Kind == AttrExpr:
+					collectQuoted(a.Value, add)
 				}
 			}
 			collectFileClasses(t.Children, add)

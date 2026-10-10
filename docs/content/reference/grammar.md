@@ -47,6 +47,9 @@ props {
   comment with no field below it and a `/* ... */` comment give `GX1000`.
 - Inside markup, `p` is the props value.
 - `$Name` reads a signal. It is valid only in client expressions.
+- In the `signals` block, the word `shared` before a name makes a shared
+  signal: `shared Typing bool = false`. The component then needs a prop of
+  type `gx.Room`.
 
 ## Body nodes
 
@@ -84,7 +87,7 @@ An attribute is one of:
   and generate a typed fragment function
 
 A directive name contains a colon: `class:name`, `bind:value`, `on:click`,
-`attr:aria-expanded`, `show`, `text`.
+`attr:aria-expanded`, `optimistic:click`, `show`, `text`.
 
 ## Control flow
 

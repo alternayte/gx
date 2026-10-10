@@ -77,6 +77,12 @@ func (h *navHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	serverIDs := chain.layoutIDs()
 	clientIDs := splitLayouts(r.Header.Get("Gx-Layouts"))
 	common := commonPrefix(serverIDs, clientIDs)
+	if hasRouteSheets() {
+		// The runtime links the stylesheet of this page before it
+		// applies the patch, in the place of the stylesheet of the page
+		// of now (REQ-STY-13).
+		w.Header().Set("Gx-Sheet", stylesheetURL(r.Pattern))
+	}
 	if len(serverIDs) > 0 && common == 0 {
 		// No shared layout: fall back to a full load (REQ-RTE-12).
 		w.Header().Set("Gx-Nav", "full")

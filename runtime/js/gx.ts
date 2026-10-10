@@ -704,6 +704,25 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
     else location.href = url
     return
   }
+  // The new page can have a stylesheet of its own (REQ-STY-13). It loads
+  // with no effect on the page of now, and takes the place of the
+  // stylesheet of now when the new page is in the document. The rules of
+  // two stylesheets never apply at the same time: their order decides
+  // between a class and its variant.
+  const sheets = [...document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"][href*="/_gx/"]')]
+  const need = res.headers.get('Gx-Sheet') ?? ''
+  let fresh: HTMLLinkElement | undefined
+  if (need !== '' && !sheets.some((l) => l.getAttribute('href') === need)) {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.media = 'not all'
+    link.href = need
+    await new Promise<void>((done) => {
+      link.onload = link.onerror = () => done()
+      document.head.append(link)
+    })
+    fresh = link
+  }
   // A morph can make the page short for a moment, and the browser then
   // moves the scroll position to the top. keep puts it back.
   const left = window.scrollX
@@ -713,6 +732,10 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
     // the new page never sees the old scroll position.
     if (!keep) window.scrollTo(0, 0)
     await applyAnswer(res)
+    if (fresh) {
+      fresh.media = 'all'
+      for (const old of sheets) old.remove()
+    }
     if (keep) window.scrollTo(left, top)
     if (push) {
       history.pushState({ gx: true }, '', url)

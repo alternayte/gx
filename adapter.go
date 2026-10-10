@@ -3,6 +3,8 @@ package gx
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"net/http"
 	"strings"
 	"sync"
@@ -126,7 +128,7 @@ func (b *bufferedWriter) Flush() {}
 //
 // It returns the Link values of a page with status 200, for the early hints
 // of the next request of the route.
-func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeeds) []string {
+func (a *App) flush(w http.ResponseWriter, r *http.Request, b *bufferedWriter, needs *runtimeNeeds) []string {
 	status := b.status
 	if status == 0 {
 		status = http.StatusOK
@@ -134,15 +136,18 @@ func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeed
 	body := b.body.Bytes()
 	ct := b.header.Get("Content-Type")
 	var links []string
+	page := false
 	switch {
 	case needs != nil && needs.shell != nil && strings.Contains(ct, "text/html"):
 		// A rendered fragment becomes a document at every status, so an
 		// error view is styled too.
 		body = a.document(body, needs)
 		links = a.pageLinks(needs)
+		page = true
 	case status == http.StatusOK && strings.Contains(ct, "text/html"):
 		body = a.inject(body, needs)
 		links = a.pageLinks(needs)
+		page = true
 	}
 	// The early hints of this request are a guess; the answer names the
 	// files of this page.
@@ -158,12 +163,43 @@ func (a *App) flush(w http.ResponseWriter, b *bufferedWriter, needs *runtimeNeed
 	if ct == "" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	}
+	if page && status == http.StatusOK && pageTag(w, r, body, needs) {
+		// The browser has these bytes (REQ-RTE-21).
+		w.WriteHeader(http.StatusNotModified)
+		return links
+	}
 	w.WriteHeader(status)
 	_, _ = w.Write(body)
 	if status != http.StatusOK {
 		return nil
 	}
 	return links
+}
+
+// pageTag sets the ETag of a GET page from its bytes, and reports whether
+// the request has the same tag (REQ-RTE-21). The loaders and the render ran:
+// the tag saves the transfer. A page with a CSP nonce has no tag: a 304 would
+// pair the body of before with a new nonce, and the browser would refuse
+// each script. A partial navigation and a widget answer have no tag.
+func pageTag(w http.ResponseWriter, r *http.Request, body []byte, needs *runtimeNeeds) bool {
+	if r == nil || (r.Method != http.MethodGet && r.Method != http.MethodHead) ||
+		(needs != nil && needs.nonce != "") || r.Header.Get("Gx-Nav") != "" || isWidgetRequest(r) {
+		return false
+	}
+	sum := sha256.Sum256(body)
+	tag := `"` + hex.EncodeToString(sum[:12]) + `"`
+	w.Header().Set("ETag", tag)
+	if w.Header().Get("Cache-Control") == "" {
+		// The browser asks each time, and a shared cache keeps no page
+		// of one user.
+		w.Header().Set("Cache-Control", "private, no-cache")
+	}
+	for _, have := range strings.Split(r.Header.Get("If-None-Match"), ",") {
+		if have = strings.TrimPrefix(strings.TrimSpace(have), "W/"); have == tag || have == "*" {
+			return true
+		}
+	}
+	return false
 }
 
 // document writes the document shell around a rendered fragment: the
@@ -209,7 +245,11 @@ func (a *App) document(fragment []byte, needs *runtimeNeeds) []byte {
 // all (NFR-04).
 func (a *App) headAssets(needs *runtimeNeeds) []byte {
 	var b bytes.Buffer
-	if link := stylesheetLink(); link != "" {
+	pattern := ""
+	if needs != nil {
+		pattern = needs.pattern
+	}
+	if link := stylesheetLink(pattern); link != "" {
 		b.WriteString(link)
 	}
 	if needs == nil {

@@ -13,7 +13,29 @@ Gx uses Tailwind CSS v4 classes as you write them. It does not need node: `gx` d
 2. `gx dev` and `gx build` run Tailwind over `app/theme.css` and that list.
 3. The result is the Go file `gxstyles/styles_gx.go`. The app serves it at `/_gx/app.css`, and the binary holds it.
 
+The class list also holds the value of a prop whose name ends in `Class`, such as `bodyClass` of `gx.Head`.
+
 Tailwind sees only a class that is a full static string in the source. A class that the program makes later is the diagnostic [GX5003](/errors/GX5003/).
+
+## A stylesheet for each route
+
+`gx build` also makes a smaller stylesheet for each page route. A page then links a file with only the classes that the page can use, in the place of `/_gx/app.css`. You change no markup.
+
+Add one line to `main.go`, after `gx.SetStylesheet`: `gx.SetRouteStylesheets(gxstyles.Routes())`. A new app from `gx init` has the line.
+
+The compiler makes the class list of a route from these packages:
+
+- The package that declares the page, the package of its view, and each package of your module that they import.
+- The packages of each layout view, of each error view and of the toast of the app.
+
+Keep each slice in its own package, and a page gets only the classes of its slice and of the components that it imports.
+
+- A route has its own stylesheet only for `gx.Page(load, View)` with a `.gx` component as the view. Each other page links `/_gx/app.css`.
+- Two routes with the same class list share one file. The name of the file has a hash of its content, so a browser keeps it.
+- With layout-aware navigation, the runtime loads the stylesheet of the new page first. It then puts the new page in the document and removes the stylesheet of before.
+- `gx dev` uses `/_gx/app.css` for each page.
+
+Each distinct class list is one run of Tailwind. The key `route_sheets` in the `[styles]` table of `gx.toml` sets the largest number of lists; the default is 16. Above it, the build makes no route stylesheet and says so. A negative number turns the feature off.
 
 ## Theme tokens
 

@@ -200,6 +200,7 @@ func (s *Session) incremental(root string, changed map[string]bool, stamps map[s
 	}
 	out[classesFilePath(root)] = classesBytes(collectClasses(s.dirs, s.l, s.res.pkgs))
 	out[filepath.Join(root, widgetClassesPath)] = widgetClassesBytes(s.l.widgetClasses(s.res, root))
+	out[filepath.Join(root, routeClassesPath)] = routeClassesBytes(s.l.routeClasses(s.res, root))
 	out[galleryFilePath(root)] = renderGallery(root, s.dirs, s.l, s.res.pkgs)
 	s.refreshContent(out)
 	s.files = out

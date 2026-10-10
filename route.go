@@ -300,6 +300,7 @@ func New(cfg Config) *App {
 	logBus(cfg.Bus)
 	a := &App{mux: http.NewServeMux(), patterns: map[string]bool{}, errorViews: map[int]func(*Ctx) Node{}, adapter: cfg.Adapter, toast: cfg.Toast, public: cfg.Public, rooms: newRoomHub(cfg.Bus)}
 	a.mux.Handle("GET /_gx/app.css", http.HandlerFunc(a.serveStylesheet))
+	a.mux.Handle("GET "+routeSheetPath+"{file}", http.HandlerFunc(serveRouteSheet))
 	a.mux.Handle("GET "+islandsPath+"{file...}", http.HandlerFunc(serveIsland))
 	a.devRoutes()
 	// The theme script needs no adapter: it only reads the stored theme.
@@ -433,6 +434,8 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 	r, needs := withRuntimeNeeds(r)
 	b := newBufferedWriter()
 	a.serveBuffered(b, r)
+	// The mux set the pattern of the route on the request.
+	needs.pattern = r.Pattern
 	if needs.signals && a.adapter != nil && !a.adapter.Signals() {
 		// gx.toml and Config.Adapter name different adapters, so the
 		// compiler did not report the signals (REQ-ACT-09). The page
@@ -447,7 +450,7 @@ func (a *App) serve(w http.ResponseWriter, r *http.Request) {
 		// response.
 		needs.nonce = Nonce(r)
 	}
-	links := a.flush(w, b, needs)
+	links := a.flush(w, r, b, needs)
 	switch {
 	case r.Pattern == "" || r.Header.Get("Gx-Nav") != "":
 	case len(links) == 0:

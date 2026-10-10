@@ -34,6 +34,7 @@ func main() {
 	setupGallery()
 	gx.SetStylesheet(gxstyles.CSS())
 	gx.SetWidgetStylesheets(gxstyles.Widgets())
+	gx.SetRouteStylesheets(gxstyles.Routes())
 	gx.SetIslands(gxislands.Bundle())
 	// The toast item renders every pushed toast, so its classes are in the
 	// app stylesheet.

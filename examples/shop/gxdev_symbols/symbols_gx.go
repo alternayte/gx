@@ -302,6 +302,7 @@ func Packages() []gx.DevPackage {
 				"SetFrontmatterDecoder": reflect.ValueOf(gx.SetFrontmatterDecoder),
 				"SetGallery":            reflect.ValueOf(gx.SetGallery),
 				"SetIslands":            reflect.ValueOf(gx.SetIslands),
+				"SetRouteStylesheets":   reflect.ValueOf(gx.SetRouteStylesheets),
 				"SetSecret":             reflect.ValueOf(gx.SetSecret),
 				"SetStylesheet":         reflect.ValueOf(gx.SetStylesheet),
 				"SetTranslator":         reflect.ValueOf(gx.SetTranslator),

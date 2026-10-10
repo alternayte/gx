@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -34,7 +35,18 @@ type Config struct {
 	// packages of a sibling directory names that directory here.
 	IslandRoots []string
 	Widgets     Widgets
+	// RouteSheets is the largest number of distinct stylesheets that the
+	// build makes for the page routes: the `route_sheets` key of [styles]
+	// (REQ-STY-13). Each one is one run of Tailwind. Above the number,
+	// each page links the stylesheet of the app. Zero is the default,
+	// DefaultRouteSheets; a negative number turns the stylesheets of the
+	// routes off.
+	RouteSheets int
 }
+
+// DefaultRouteSheets is the limit of distinct route stylesheets of an app
+// that sets none.
+const DefaultRouteSheets = 16
 
 // Widgets is the [widgets] table of gx.toml: the npm package of the widgets
 // of the app (REQ-ISL-13, REQ-ISL-14).
@@ -163,6 +175,12 @@ func Load(root string) (Config, error) {
 		case "islands":
 			if key == "roots" {
 				cfg.IslandRoots = strings.Fields(value)
+			}
+		case "styles":
+			if key == "route_sheets" {
+				if n, err := strconv.Atoi(value); err == nil {
+					cfg.RouteSheets = n
+				}
 			}
 		case "registries":
 			source := cfg.Registries[key]

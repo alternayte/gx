@@ -12,8 +12,12 @@ import (
 // from a header has no nonce, and a strict policy refuses it (SI-11).
 func (a *App) pageLinks(needs *runtimeNeeds) []string {
 	var links []string
-	if len(Stylesheet()) != 0 {
-		links = append(links, "<"+BasePath()+"/_gx/app.css>; rel=preload; as=style")
+	pattern := ""
+	if needs != nil {
+		pattern = needs.pattern
+	}
+	if url := stylesheetURL(pattern); url != "" {
+		links = append(links, "<"+url+">; rel=preload; as=style")
 	}
 	if needs == nil || needs.nonce != "" {
 		return links

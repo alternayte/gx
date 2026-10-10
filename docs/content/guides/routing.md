@@ -215,6 +215,14 @@ With no JavaScript, or between two different layouts, a link is a full load.
 
 A panic in a loader or in a view gives status 500 and the `serverError` component. The server writes the panic and its stack to the log. The browser gets no part of the broken page. In `gx dev`, the overlay shows the panic.
 
+## ETag
+
+A `GET` page has an `ETag` header from the bytes of the page. A request with the same tag gets status 304 and no body. The loaders and the render run for each request; the tag saves the transfer.
+
+When your code sets no `Cache-Control` header, the page has `Cache-Control: private, no-cache`. The browser then asks each time, and a shared cache keeps no page of a user.
+
+A page with a CSP nonce has no tag. Status 304 pairs the page of before with a new nonce, and the browser then refuses each script. A partial navigation, an answer of an action and a widget have no tag.
+
 ## Early hints
 
 Each page names its stylesheet and its scripts in `Link` headers. A CDN can send these headers as early hints. Over HTTP/2, the app also sends status 103 with the `Link` values of the last answer of the route. The browser then gets the files while the loaders run. You set nothing for this.
