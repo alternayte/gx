@@ -90,6 +90,13 @@ func addFixture(dir, component, name, entry string, imports []string) error {
 		return fmt.Errorf("the entry of the fixture is not Go source: %w", err)
 	}
 	for _, imp := range imports {
+		// An import is a path, or `name "path"`.
+		if name, quoted, ok := strings.Cut(imp, " "); ok {
+			if path, err := strconv.Unquote(quoted); err == nil {
+				astutil.AddNamedImport(fset, file, name, path)
+				continue
+			}
+		}
 		astutil.AddImport(fset, file, imp)
 	}
 	var out bytes.Buffer

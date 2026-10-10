@@ -186,9 +186,13 @@ func pageTag(w http.ResponseWriter, r *http.Request, body []byte, needs *runtime
 		(needs != nil && needs.nonce != "") || r.Header.Get("Gx-Nav") != "" || isWidgetRequest(r) {
 		return false
 	}
-	sum := sha256.Sum256(body)
-	tag := `"` + hex.EncodeToString(sum[:12]) + `"`
-	w.Header().Set("ETag", tag)
+	// A tag of the app stays: the app knows the version of its page.
+	tag := w.Header().Get("ETag")
+	if tag == "" {
+		sum := sha256.Sum256(body)
+		tag = `"` + hex.EncodeToString(sum[:12]) + `"`
+		w.Header().Set("ETag", tag)
+	}
 	if w.Header().Get("Cache-Control") == "" {
 		// The browser asks each time, and a shared cache keeps no page
 		// of one user.

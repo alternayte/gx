@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"hash/fnv"
 	"net/http"
 	"net/url"
@@ -151,6 +152,19 @@ func (c *Ctx) Update(n Node) error {
 		return c.Patch(n)
 	}
 	have := requestFragments(c.R)
+	if len(have) > 0 {
+		for _, rec := range records {
+			if _, ok := have[rec.id]; !ok && !rec.gone && rec.id != "" && rec.parent < 0 {
+				// The browser has no element of this fragment and no
+				// fragment around it: a patch of the fragment has no
+				// target. The component goes as its root elements.
+				if err := c.Patch(n); err != nil {
+					return fmt.Errorf("gx: Update: the fragment #%s is new on the page, so the component goes as its root: %w", rec.id, err)
+				}
+				return nil
+			}
+		}
+	}
 	sent := make([]bool, len(records))
 	for i, rec := range records {
 		if rec.parent >= 0 && sent[rec.parent] {

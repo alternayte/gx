@@ -14,6 +14,12 @@ type line struct {
 	notes string
 }
 
+// Boxed is an exported type with a field that is not exported.
+type Boxed struct {
+	Name   string
+	hidden int
+}
+
 type props struct {
 	Title string
 	Lines []line
@@ -86,7 +92,7 @@ func TestREQ_AI_12_FixtureSource(t *testing.T) {
 	}
 	want := `{Title: "a \"b\"", Lines: []line{line{SKU: "x", Qty: 2}, line{}}, Tags: map[string]int{"a": 1, "b": 2}, ` +
 		`Best: &line{SKU: "y", notes: "n"}, Count: func() *int { v := int(3); return &v }(), ` +
-		`When: time.Date(2026, 10, 10, 11, 0, 0, 0, time.UTC), Any: int64(4)}`
+		`When: time.Date(2026, 10, 10, 12, 0, 0, 0, time.FixedZone("x", 3600)), Any: int64(4)}`
 	if src != want {
 		t.Errorf("source:\n got %s\nwant %s", src, want)
 	}
@@ -95,11 +101,19 @@ func TestREQ_AI_12_FixtureSource(t *testing.T) {
 	}
 	// From a different package, the type has its package name and the
 	// field that is not exported has no source.
-	if _, _, err := Fixture(reflect.ValueOf(v), "example.com/other", Hooks{}); err == nil || !strings.Contains(err.Error(), "Best.notes") {
+	hidden := struct{ Box Boxed }{Box: Boxed{Name: "a", hidden: 1}}
+	if _, _, err := Fixture(reflect.ValueOf(hidden), "example.com/other", Hooks{}); err == nil || !strings.Contains(err.Error(), "Box.hidden") {
 		t.Errorf("a field of a different package that is not exported: err = %v", err)
 	}
-	src, imports, err = Fixture(reflect.ValueOf(props{Lines: []line{{SKU: "x"}}}), "example.com/other", Hooks{})
-	if err != nil || src != `{Lines: []propgen.line{propgen.line{SKU: "x"}}}` || strings.Join(imports, ",") != pkg {
+	// A type that its package does not export has no name in a different
+	// package (review round 2 of G7).
+	if _, _, err := Fixture(reflect.ValueOf(props{Lines: []line{{SKU: "x"}}}), "example.com/other", Hooks{}); err == nil || !strings.Contains(err.Error(), "does not export") {
+		t.Errorf("a type of a different package that is not exported: err = %v", err)
+	}
+	// A type that is exported has the name of its package, and the
+	// import. A time keeps its zone.
+	src, imports, err = Fixture(reflect.ValueOf(struct{ Box Boxed }{Box: Boxed{Name: "a"}}), "example.com/other", Hooks{})
+	if err != nil || src != `{Box: propgen.Boxed{Name: "a"}}` || strings.Join(imports, ",") != pkg {
 		t.Errorf("from a different package: %s, %v, %v", src, imports, err)
 	}
 	for name, bad := range map[string]props{

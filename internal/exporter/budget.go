@@ -86,9 +86,12 @@ func Budgets(ctx context.Context, dir, main string, budget gxconfig.Budget) ([]B
 		}()
 	}
 	sizes := map[string]int{}
+	// importsOf holds the modules that each file imports: a second page
+	// with the same file counts them too.
+	importsOf := map[string][]string{}
 	size := func(ref string) (int, []string, error) {
 		if n, ok := sizes[ref]; ok {
-			return n, nil, nil
+			return n, importsOf[ref], nil
 		}
 		resp, err := httpGet(ctx, app.Base+ref)
 		if err != nil {
@@ -116,6 +119,7 @@ func Budgets(ctx context.Context, dir, main string, budget gxconfig.Budget) ([]B
 				}
 			}
 		}
+		importsOf[ref] = imports
 		return buf.Len(), imports, nil
 	}
 	var out []BudgetFinding

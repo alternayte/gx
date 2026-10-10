@@ -2,6 +2,7 @@ package propgen
 
 import (
 	"fmt"
+	"go/token"
 	"reflect"
 	"sort"
 	"strconv"
@@ -12,7 +13,9 @@ import (
 // Fixture writes the prop value v as the value of one entry of a
 // gx.Fixtures literal: a composite literal with no type, for example
 // `{Title: "Card", Count: 3}`. pkgPath is the package of the fixtures file.
-// imports holds the import path of each package that the source names.
+// imports holds the import of each package that the source names: the
+// import path, or `name "path"` when two packages of the source have one
+// name.
 //
 // A gx.Node becomes a gx.Raw call with the HTML that the node renders. The
 // error names the prop that Go source cannot hold: a function, a channel
@@ -21,13 +24,19 @@ func Fixture(v reflect.Value, pkgPath string, h Hooks) (src string, imports []st
 	if v.Kind() != reflect.Struct {
 		return "", nil, fmt.Errorf("the props are a %s, not a struct", v.Kind())
 	}
-	w := writer{pkgPath: pkgPath, hooks: h, imports: map[string]bool{}}
+	w := writer{pkgPath: pkgPath, hooks: h, imports: map[string]string{}}
 	body, err := w.fields(v, "")
 	if err != nil {
 		return "", nil, err
 	}
-	for path := range w.imports {
-		imports = append(imports, path)
+	for path, name := range w.imports {
+		if name == "" {
+			imports = append(imports, path)
+		} else {
+			// Two packages have one name: the second has a name of
+			// its own in the import.
+			imports = append(imports, name+" "+strconv.Quote(path))
+		}
 	}
 	sort.Strings(imports)
 	return "{" + body + "}", imports, nil
@@ -36,7 +45,37 @@ func Fixture(v reflect.Value, pkgPath string, h Hooks) (src string, imports []st
 type writer struct {
 	pkgPath string
 	hooks   Hooks
-	imports map[string]bool
+	// imports holds, for each import path, the name of the import when
+	// it is not the name of the package.
+	imports map[string]string
+	// names holds the import path of each package name in use.
+	names map[string]string
+}
+
+// use returns the name that the source has for a package.
+func (w *writer) use(path, name string) string {
+	if alias, ok := w.imports[path]; ok {
+		if alias != "" {
+			return alias
+		}
+		return name
+	}
+	if w.names == nil {
+		w.names = map[string]string{}
+	}
+	alias := ""
+	for n := 2; w.names[name+alias] != ""; n++ {
+		alias = strconv.Itoa(n)
+	}
+	w.names[name+alias] = path
+	if alias != "" {
+		alias = name + alias
+	}
+	w.imports[path] = alias
+	if alias != "" {
+		return alias
+	}
+	return name
 }
 
 // cannot is the error of a value with no Go source.
@@ -53,10 +92,12 @@ func (w *writer) qualify(t reflect.Type, path string) (string, error) {
 	if t.PkgPath() == "" || t.PkgPath() == w.pkgPath {
 		return t.Name(), nil
 	}
-	w.imports[t.PkgPath()] = true
+	if !token.IsExported(t.Name()) {
+		return "", cannot(path, "a value of the type "+t.String()+", which its package does not export")
+	}
 	// reflect gives the package name before the dot.
 	name := t.String()
-	return name[:strings.Index(name, ".")] + "." + t.Name(), nil
+	return w.use(t.PkgPath(), name[:strings.Index(name, ".")]) + "." + t.Name(), nil
 }
 
 // typeExpr returns the Go source of a type.
@@ -129,21 +170,25 @@ func (w *writer) value(v reflect.Value, path string, depth int) (string, error) 
 		if err != nil {
 			return "", fmt.Errorf("prop %s: the node does not render: %w", strings.TrimPrefix(path, "."), err)
 		}
-		w.imports[gxPath] = true
-		return "gx.Raw(" + strconv.Quote(html) + ")", nil
+		return w.use(gxPath, "gx") + ".Raw(" + strconv.Quote(html) + ")", nil
 	}
 	if t == reflect.TypeFor[time.Time]() {
 		if v.IsZero() {
-			return "time.Time{}", nil
+			return w.use("time", "time") + ".Time{}", nil
 		}
 		if !v.CanInterface() {
 			return "", cannot(path, "a time in a field that is not exported")
 		}
-		// The instant is the same; the location becomes UTC.
-		u := v.Interface().(time.Time).UTC()
-		w.imports["time"] = true
-		return fmt.Sprintf("time.Date(%d, %d, %d, %d, %d, %d, %d, time.UTC)",
-			u.Year(), int(u.Month()), u.Day(), u.Hour(), u.Minute(), u.Second(), u.Nanosecond()), nil
+		// The time keeps its zone: a page shows the time of day of
+		// the zone.
+		tm := v.Interface().(time.Time)
+		pkg := w.use("time", "time")
+		zone := pkg + ".UTC"
+		if name, offset := tm.Zone(); tm.Location() != time.UTC {
+			zone = fmt.Sprintf("%s.FixedZone(%s, %d)", pkg, strconv.Quote(name), offset)
+		}
+		return fmt.Sprintf("%s.Date(%d, %d, %d, %d, %d, %d, %d, %s)", pkg,
+			tm.Year(), int(tm.Month()), tm.Day(), tm.Hour(), tm.Minute(), tm.Second(), tm.Nanosecond(), zone), nil
 	}
 	switch t.Kind() {
 	case reflect.Bool:

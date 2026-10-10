@@ -82,6 +82,28 @@ func Dead(root string) (*DeadReport, []Diagnostic) {
 			})
 		}
 	}
+	// A link inside a larger expression of a template, for example
+	// href={gx.URL(route.About{}.URL())}: the generated code of the
+	// template has the expression, with its types. The generated file of
+	// a route package has no link.
+	for _, pkg := range res.pkgs {
+		if pkg.Name == "route" {
+			continue
+		}
+		for _, file := range pkg.Syntax {
+			if !strings.HasSuffix(pkg.Fset.Position(file.Pos()).Filename, "_gx.go") {
+				continue
+			}
+			ast.Inspect(file, func(n ast.Node) bool {
+				if lit, ok := n.(*ast.CompositeLit); ok {
+					if key := namedTypeKey(pkg.TypesInfo.TypeOf(lit)); key != "" {
+						linked[key] = true
+					}
+				}
+				return true
+			})
+		}
+	}
 	sourceFiles(res.pkgs, func(pkg *packages.Package, file *ast.File) {
 		path := pkg.Fset.PositionFor(file.Pos(), false).Filename
 		fixtures := strings.HasSuffix(path, ".fixtures.go")

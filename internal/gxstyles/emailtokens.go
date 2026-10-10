@@ -173,15 +173,12 @@ func number(s string, full float64) (float64, bool) {
 	return f, err == nil
 }
 
-// parseColor reads a hex colour, rgb(), hsl(), oklch(), oklab(), white or
-// black. It returns the sRGB parts from 0 to 1 and the alpha.
+// parseColor reads a hex colour, rgb(), hsl(), oklch(), oklab() or a colour
+// name of CSS. It returns the sRGB parts from 0 to 1 and the alpha.
 func parseColor(value string) (c [3]float64, alpha float64, ok bool) {
 	value = strings.ToLower(strings.TrimSpace(value))
-	switch value {
-	case "white":
-		return [3]float64{1, 1, 1}, 1, true
-	case "black":
-		return [3]float64{}, 1, true
+	if named, ok := colorNames[value]; ok {
+		value = named
 	}
 	if h, isHex := strings.CutPrefix(value, "#"); isHex {
 		if len(h) == 3 || len(h) == 4 {

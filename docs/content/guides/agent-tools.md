@@ -66,9 +66,9 @@ The dev server writes the entry into `<Name>.fixtures.go` of the component and b
 
 The app keeps the props of the last render of each component. When a page shows a component two times, the fixture has the props of the last one.
 
-A slot value (`gx.Node`) becomes a `gx.Raw` call with the HTML that the slot rendered. A time becomes the same instant in UTC.
+A slot value (`gx.Node`) becomes a `gx.Raw` call with the HTML that the slot rendered. A time keeps its zone, so the page and the gallery show the same time of day.
 
-Go source cannot hold some values: a function, a channel, and a field of a different package that is not exported. For a prop with such a value, the dialog shows the name of the prop and the dev server writes nothing.
+Go source cannot hold some values: a function, a channel, and a type or a field of a different package that is not exported. For a prop with such a value, the dialog shows the name of the prop and the dev server writes nothing.
 
 A production build keeps no props and has no route for this.
 
