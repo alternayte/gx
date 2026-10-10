@@ -29,35 +29,78 @@ func LinkCard(p LinkCardProps) gx.Node {
 //line LinkCard.gx:16:1
 	var _b1 gx.Builder
 //line LinkCard.gx:16:146
-	_b1.Add(gx.Text("\n  "))
-//line LinkCard.gx:17:3
-	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "block font-medium text-foreground", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line LinkCard.gx:17:67
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tLinkCard0.With(
+//line LinkCard.gx:17:51
+		gx.Text(p.Title),
+	))
 //line LinkCard.gx:18:3
 	if p.Description != "" {
 //line LinkCard.gx:18:27
-		_b1.Add(gx.Text("\n    "))
-//line LinkCard.gx:19:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 block text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line LinkCard.gx:19:82
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tLinkCard1.With(
+//line LinkCard.gx:19:60
+			gx.Text(p.Description),
+		))
 	}
 //line LinkCard.gx:20:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tLinkCard2)
 //line LinkCard.gx:21:3
 	if p.Children != nil {
 //line LinkCard.gx:21:25
-		_b1.Add(gx.Text("\n    "))
-//line LinkCard.gx:22:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-link-card-body mt-2 block text-sm", Kind: gx.AttrText}}, p.Children))
-//line LinkCard.gx:22:75
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tLinkCard3.With(
+//line LinkCard.gx:22:56
+			p.Children,
+		))
 	}
 //line LinkCard.gx:23:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-link-card my-4 block rounded-lg border border-border p-4 no-underline transition-colors hover:bg-accent", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs), _b1.Node()))
-//line LinkCard.gx:24:5
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tLinkCard4)
+//line LinkCard.gx:16:1
+	_b.Add(_tLinkCard5.With(
+//line LinkCard.gx:16:1
+		gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-link-card my-4 block rounded-lg border border-border p-4 no-underline transition-colors hover:bg-accent", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}}, p.Attrs)),
+//line LinkCard.gx:16:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tLinkCard0 = gx.NewTemplate(
+	[]string{"\n  <span class=\"block font-medium text-foreground\">", "</span>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tLinkCard1 = gx.NewTemplate(
+	[]string{"\n    <span class=\"mt-1 block text-sm text-muted-foreground\">", "</span>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tLinkCard2 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tLinkCard3 = gx.NewTemplate(
+	[]string{"\n    <span class=\"gx-link-card-body mt-2 block text-sm\">", "</span>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tLinkCard4 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tLinkCard5 = gx.NewTemplate(
+	[]string{"<a", ">", "</a>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

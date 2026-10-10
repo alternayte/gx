@@ -17,10 +17,38 @@ func Toasts(p ToastsProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Toasts.gx:12:1
-	_b.Add(gx.El("section", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("my-4 rounded-xl border border-border bg-card p-4 text-card-foreground", p.Class), Kind: gx.AttrText}, gx.Bool("data-toast-demo", true)}, gx.Frag(gx.Raw(gx.SafeHTML("\n  <h2 class=\"text-sm font-medium\">Toasts</h2>\n  ")), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 flex flex-wrap gap-2", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "default"}).URL(), "")}, gx.Text("Default")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "success"}).URL(), "")}, gx.Text("Success")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "info"}).URL(), "")}, gx.Text("Info")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "warning"}).URL(), "")}, gx.Text("Warning")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "error"}).URL(), "")}, gx.Text("Error")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "description"}).URL(), "")}, gx.Text("Description")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "action"}).URL(), "")}, gx.Text("Action")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "undo"}).URL(), "")}, gx.Text("Undo")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "sticky"}).URL(), "")}, gx.Text("Sticky")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "upload-start"}).URL(), "")}, gx.Text("Start upload")), gx.Text("\n    "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "upload-done"}).URL(), "")}, gx.Text("Finish upload")), gx.Text("\n  "))), gx.Text("\n"))))
-//line Toasts.gx:27:11
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tToasts0.With(
+//line Toasts.gx:12:1
+		gx.Open("section", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("my-4 rounded-xl border border-border bg-card p-4 text-card-foreground", p.Class), Kind: gx.AttrText}, gx.Bool("data-toast-demo", true)}),
+//line Toasts.gx:15:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "default"}).URL(), "")}),
+//line Toasts.gx:16:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "success"}).URL(), "")}),
+//line Toasts.gx:17:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "info"}).URL(), "")}),
+//line Toasts.gx:18:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "warning"}).URL(), "")}),
+//line Toasts.gx:19:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "error"}).URL(), "")}),
+//line Toasts.gx:20:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "description"}).URL(), "")}),
+//line Toasts.gx:21:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "action"}).URL(), "")}),
+//line Toasts.gx:22:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "undo"}).URL(), "")}),
+//line Toasts.gx:23:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "sticky"}).URL(), "")}),
+//line Toasts.gx:24:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "upload-start"}).URL(), "")}),
+//line Toasts.gx:25:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: demoButton, Kind: gx.AttrText}, gx.On("click", "POST", (route.ToastDemo{Show: "upload-done"}).URL(), "")}),
+	)
 }
+
+var _tToasts0 = gx.NewTemplate(
+	[]string{"<section", ">\n  <h2 class=\"text-sm font-medium\">Toasts</h2>\n  <div class=\"mt-3 flex flex-wrap gap-2\">\n    <button", ">Default</button>\n    <button", ">Success</button>\n    <button", ">Info</button>\n    <button", ">Warning</button>\n    <button", ">Error</button>\n    <button", ">Description</button>\n    <button", ">Action</button>\n    <button", ">Undo</button>\n    <button", ">Sticky</button>\n    <button", ">Start upload</button>\n    <button", ">Finish upload</button>\n  </div>\n</section>\n"},
+	[]int{0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 12, End: 43}, {Slot: 1, Start: 94, EndStatic: 2, End: 17}, {Slot: 2, Start: 22, EndStatic: 3, End: 17}, {Slot: 3, Start: 22, EndStatic: 4, End: 14}, {Slot: 4, Start: 19, EndStatic: 5, End: 17}, {Slot: 5, Start: 22, EndStatic: 6, End: 15}, {Slot: 6, Start: 20, EndStatic: 7, End: 21}, {Slot: 7, Start: 26, EndStatic: 8, End: 16}, {Slot: 8, Start: 21, EndStatic: 9, End: 14}, {Slot: 9, Start: 19, EndStatic: 10, End: 16}, {Slot: 10, Start: 21, EndStatic: 11, End: 22}, {Slot: 11, Start: 27, EndStatic: 12, End: 23}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

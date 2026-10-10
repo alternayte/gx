@@ -24,32 +24,63 @@ func TextField(p TextFieldProps) gx.Node {
 //line TextField.gx:11:1
 	var _b1 gx.Builder
 //line TextField.gx:11:20
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tTextField0.With(
 //line TextField.gx:12:3
-	_b1.Add(gx.El("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}, gx.Text(p.Label)))
-//line TextField.gx:12:51
-	_b1.Add(gx.Text("\n  "))
+		gx.Open("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}),
+//line TextField.gx:12:34
+		gx.Text(p.Label),
 //line TextField.gx:13:3
-	_b1.Add(gx.El("input", gx.JoinAttrs(gx.FieldControlAttrs(p.Field, gx.When(p.Field.FieldID()+"-hint", p.Hint != "")), gx.Attrs{gx.Attr{Key: "type", Value: p.Field.FieldInputType(p.Type), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-validate", Value: p.Validate, Kind: gx.AttrText}})))
-//line TextField.gx:13:167
-	_b1.Add(gx.Text("\n  "))
+		gx.Open("input", gx.JoinAttrs(gx.FieldControlAttrs(p.Field, gx.When(p.Field.FieldID()+"-hint", p.Hint != "")), gx.Attrs{gx.Attr{Key: "type", Value: p.Field.FieldInputType(p.Type), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-validate", Value: p.Validate, Kind: gx.AttrText}})),
+	))
 //line TextField.gx:14:3
 	if p.Hint != "" {
 //line TextField.gx:14:20
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tTextField1.With(
 //line TextField.gx:15:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "hint", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.Field.FieldID() + "-hint", Kind: gx.AttrText}}, gx.Text(p.Hint)))
-//line TextField.gx:15:66
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("p", gx.Attrs{gx.Attr{Key: "class", Value: "hint", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.Field.FieldID() + "-hint", Kind: gx.AttrText}}),
+//line TextField.gx:15:54
+			gx.Text(p.Hint),
+		))
 	}
 //line TextField.gx:16:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tTextField2.With(
 //line TextField.gx:17:3
-	_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())))
-//line TextField.gx:17:79
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, _b1.Node()))
-//line TextField.gx:18:7
-	_b.Add(gx.Text("\n"))
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}),
+//line TextField.gx:17:53
+		gx.Text(p.Field.FieldError()),
+	))
+//line TextField.gx:11:1
+	_b.Add(_tTextField3.With(
+//line TextField.gx:11:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tTextField0 = gx.NewTemplate(
+	[]string{"\n  <label", ">", "</label>\n  <input", ">\n  "},
+	[]int{0, 1, 0},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 8}, {Slot: 2, Start: 11, EndStatic: 3, End: 1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tTextField1 = gx.NewTemplate(
+	[]string{"\n    <p", ">", "</p>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tTextField2 = gx.NewTemplate(
+	[]string{"\n  <p", ">", "</p>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tTextField3 = gx.NewTemplate(
+	[]string{"<div class=\"field\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

@@ -19,10 +19,18 @@ func Steps(p StepsProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Steps.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-steps my-4 [&>ol]:m-0 [&>ol]:list-none [&>ol]:space-y-4 [&>ol]:p-0 [&>ol>li]:border-l-2 [&>ol>li]:border-border [&>ol>li]:pl-4", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Steps.gx:10:175
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSteps0.With(
+//line Steps.gx:10:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-steps my-4 [&>ol]:m-0 [&>ol]:list-none [&>ol]:space-y-4 [&>ol]:p-0 [&>ol>li]:border-l-2 [&>ol>li]:border-border [&>ol>li]:pl-4", Kind: gx.AttrText}}, p.Attrs)),
+//line Steps.gx:10:157
+		p.Children,
+	)
 }
+
+var _tSteps0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

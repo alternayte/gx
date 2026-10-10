@@ -23,10 +23,18 @@ func Label(p LabelProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Label.gx:14:1
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "label", Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line Label.gx:14:299
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tLabel0.With(
+//line Label.gx:14:1
+		gx.Open("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "label", Kind: gx.AttrText}}, p.attrs())),
+//line Label.gx:14:279
+		p.Children,
+	)
 }
+
+var _tLabel0 = gx.NewTemplate(
+	[]string{"<label", ">", "</label>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

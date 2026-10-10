@@ -25,10 +25,18 @@ func Progress(p ProgressProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Progress.gx:16:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative h-2 w-full overflow-hidden rounded-full bg-primary/20", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "progressbar", Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemin", Value: gx.TextValue(0), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemax", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuenow", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "h-full w-full flex-1 bg-primary transition-all motion-reduce:transition-none", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("transform: translateX(-" + p.offset() + "%)")))), Kind: gx.AttrStyle}}), gx.Text("\n"))))
-//line Progress.gx:18:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tProgress0.With(
+//line Progress.gx:16:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative h-2 w-full overflow-hidden rounded-full bg-primary/20", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "progressbar", Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemin", Value: gx.TextValue(0), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuemax", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "aria-valuenow", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)),
+//line Progress.gx:17:3
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "h-full w-full flex-1 bg-primary transition-all motion-reduce:transition-none", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("transform: translateX(-" + p.offset() + "%)")))), Kind: gx.AttrStyle}}),
+	)
 }
+
+var _tProgress0 = gx.NewTemplate(
+	[]string{"<div", ">\n  <div", "></div>\n</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 14}, {Slot: 1, Start: 4, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

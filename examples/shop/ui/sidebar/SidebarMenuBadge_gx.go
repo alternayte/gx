@@ -21,10 +21,18 @@ func SidebarMenuBadge(p SidebarMenuBadgeProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarMenuBadge.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-badge", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-badge", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuBadge.gx:12:592
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarMenuBadge0.With(
+//line SidebarMenuBadge.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-aria-[current=page]/menu-button:text-sidebar-accent-foreground peer-data-active/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-badge", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-badge", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarMenuBadge.gx:12:574
+		p.Children,
+	)
 }
+
+var _tSidebarMenuBadge0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

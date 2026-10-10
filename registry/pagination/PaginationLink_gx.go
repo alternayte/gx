@@ -29,10 +29,18 @@ func PaginationLink(p PaginationLinkProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PaginationLink.gx:21:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "pagination-link", Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line PaginationLink.gx:21:95
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPaginationLink0.With(
+//line PaginationLink.gx:21:1
+		gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "pagination-link", Kind: gx.AttrText}}, p.attrs())),
+//line PaginationLink.gx:21:79
+		p.Children,
+	)
 }
+
+var _tPaginationLink0 = gx.NewTemplate(
+	[]string{"<a", ">", "</a>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

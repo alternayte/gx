@@ -1,0 +1,11 @@
+package bench
+
+props {
+  Rows int
+}
+
+<div class="page">
+  for i := 0; i < p.Rows; i++ {
+    <li class="row">{i} items</li>
+  }
+</div>

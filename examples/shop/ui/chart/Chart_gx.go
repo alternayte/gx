@@ -33,89 +33,206 @@ func Chart(p ChartProps) gx.Node {
 //line Chart.gx:20:1
 	var _b1 gx.Builder
 //line Chart.gx:20:84
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tChart0.With(
 //line Chart.gx:21:3
-	_b1.Add(gx.El("figcaption", gx.Attrs{gx.Attr{Key: "class", Value: captionClass, Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Chart.gx:21:58
-	_b1.Add(gx.Text("\n  "))
+		gx.Open("figcaption", gx.Attrs{gx.Attr{Key: "class", Value: captionClass, Kind: gx.AttrText}}),
+//line Chart.gx:21:36
+		gx.Text(p.Title),
 //line Chart.gx:22:3
-	_b1.Add(ChartCanvas(ChartCanvasProps{Table: p.tableID(), Label: p.Title, Kind: string(p.kind()), Categories: p.Categories, Series: p.Series, Classes: canvasClasses}))
-//line Chart.gx:22:146
-	_b1.Add(gx.Text("\n  "))
+		ChartCanvas(ChartCanvasProps{Table: p.tableID(), Label: p.Title, Kind: string(p.kind()), Categories: p.Categories, Series: p.Series, Classes: canvasClasses}),
+	))
 //line Chart.gx:23:3
 	var _b2 gx.Builder
 //line Chart.gx:23:46
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tChart1)
 //line Chart.gx:24:5
 	var _b3 gx.Builder
 //line Chart.gx:24:12
-	_b3.Add(gx.Text("\n      "))
+	_b3.Add(_tChart2)
 //line Chart.gx:25:7
 	var _b4 gx.Builder
 //line Chart.gx:25:11
-	_b4.Add(gx.Text("\n        "))
+	_b4.Add(_tChart3.With(
 //line Chart.gx:26:9
-	_b4.Add(gx.El("th", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}, gx.Attr{Key: "scope", Value: "col", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Chart.gx:26:57
-	_b4.Add(gx.Text("\n        "))
+		gx.Open("th", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}, gx.Attr{Key: "scope", Value: "col", Kind: gx.AttrText}}),
+//line Chart.gx:26:43
+		gx.Text(p.Title),
+	))
 //line Chart.gx:27:9
 	for _, c := range p.Categories {
 //line Chart.gx:27:41
-		_b4.Add(gx.Text("\n          "))
+		_b4.Add(_tChart4.With(
 //line Chart.gx:28:11
-		_b4.Add(gx.El("th", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}, gx.Attr{Key: "scope", Value: "col", Kind: gx.AttrText}}, gx.Text(c)))
-//line Chart.gx:28:53
-		_b4.Add(gx.Text("\n        "))
+			gx.Open("th", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}, gx.Attr{Key: "scope", Value: "col", Kind: gx.AttrText}}),
+//line Chart.gx:28:45
+			gx.Text(c),
+		))
 	}
 //line Chart.gx:29:10
-	_b4.Add(gx.Text("\n      "))
-	_b3.Add(gx.El("tr", nil, _b4.Node()))
-//line Chart.gx:30:12
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("thead", nil, _b3.Node()))
-//line Chart.gx:31:13
-	_b2.Add(gx.Text("\n    "))
+	_b4.Add(_tChart2)
+//line Chart.gx:25:7
+	_b3.Add(_tChart5.With(
+//line Chart.gx:25:7
+		_b4.Node(),
+	))
+//line Chart.gx:24:5
+	_b2.Add(_tChart6.With(
+//line Chart.gx:24:5
+		_b3.Node(),
+	))
 //line Chart.gx:32:5
 	var _b5 gx.Builder
 //line Chart.gx:32:12
-	_b5.Add(gx.Text("\n      "))
+	_b5.Add(_tChart2)
 //line Chart.gx:33:7
 	for _, s := range p.Series {
 //line Chart.gx:33:35
-		_b5.Add(gx.Text("\n        "))
+		_b5.Add(_tChart7)
 //line Chart.gx:34:9
 		var _b6 gx.Builder
 //line Chart.gx:34:13
-		_b6.Add(gx.Text("\n          "))
+		_b6.Add(_tChart8.With(
 //line Chart.gx:35:11
-		_b6.Add(gx.El("th", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}, gx.Attr{Key: "scope", Value: "row", Kind: gx.AttrText}}, gx.Text(s.Name)))
-//line Chart.gx:35:58
-		_b6.Add(gx.Text("\n          "))
+			gx.Open("th", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}, gx.Attr{Key: "scope", Value: "row", Kind: gx.AttrText}}),
+//line Chart.gx:35:45
+			gx.Text(s.Name),
+		))
 //line Chart.gx:36:11
 		for _, v := range s.Values {
 //line Chart.gx:36:39
-			_b6.Add(gx.Text("\n            "))
+			_b6.Add(_tChart9.With(
 //line Chart.gx:37:13
-			_b6.Add(gx.El("td", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}}, gx.Text(formatValue(v))))
-//line Chart.gx:37:56
-			_b6.Add(gx.Text("\n          "))
+				gx.Open("td", gx.Attrs{gx.Attr{Key: "class", Value: cellClass, Kind: gx.AttrText}}),
+//line Chart.gx:37:35
+				gx.Text(formatValue(v)),
+			))
 		}
 //line Chart.gx:38:12
-		_b6.Add(gx.Text("\n        "))
-		_b5.Add(gx.El("tr", nil, _b6.Node()))
-//line Chart.gx:39:14
-		_b5.Add(gx.Text("\n      "))
+		_b6.Add(_tChart7)
+//line Chart.gx:34:9
+		_b5.Add(_tChart10.With(
+//line Chart.gx:34:9
+			_b6.Node(),
+		))
 	}
 //line Chart.gx:40:8
-	_b5.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("tbody", nil, _b5.Node()))
-//line Chart.gx:41:13
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("table", gx.Attrs{gx.Attr{Key: "class", Value: tableClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.tableID(), Kind: gx.AttrText}}, _b2.Node()))
-//line Chart.gx:42:11
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("figure", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "chart", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Chart.gx:43:10
-	_b.Add(gx.Text("\n"))
+	_b5.Add(_tChart1)
+//line Chart.gx:32:5
+	_b2.Add(_tChart11.With(
+//line Chart.gx:32:5
+		_b5.Node(),
+	))
+//line Chart.gx:23:3
+	_b1.Add(_tChart12.With(
+//line Chart.gx:23:3
+		gx.Open("table", gx.Attrs{gx.Attr{Key: "class", Value: tableClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.tableID(), Kind: gx.AttrText}}),
+//line Chart.gx:23:3
+		_b2.Node(),
+	))
+//line Chart.gx:20:1
+	_b.Add(_tChart13.With(
+//line Chart.gx:20:1
+		gx.Open("figure", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "chart", Kind: gx.AttrText}}, p.Attrs)),
+//line Chart.gx:20:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tChart0 = gx.NewTemplate(
+	[]string{"\n  <figcaption", ">", "</figcaption>\n  ", "\n  "},
+	[]int{0, 1, 0},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 13}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}},
+)
+
+var _tChart1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tChart2 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tChart3 = gx.NewTemplate(
+	[]string{"\n        <th", ">", "</th>\n        "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 9, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tChart4 = gx.NewTemplate(
+	[]string{"\n          <th", ">", "</th>\n        "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tChart5 = gx.NewTemplate(
+	[]string{"<tr>", "</tr>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tr"}, {El: -1, Slot: -1}},
+)
+
+var _tChart6 = gx.NewTemplate(
+	[]string{"<thead>", "</thead>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "thead"}, {El: -1, Slot: -1}},
+)
+
+var _tChart7 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tChart8 = gx.NewTemplate(
+	[]string{"\n          <th", ">", "</th>\n          "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tChart9 = gx.NewTemplate(
+	[]string{"\n            <td", ">", "</td>\n          "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 13, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tChart10 = gx.NewTemplate(
+	[]string{"<tr>", "</tr>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tr"}, {El: -1, Slot: -1}},
+)
+
+var _tChart11 = gx.NewTemplate(
+	[]string{"<tbody>", "</tbody>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tbody"}, {El: -1, Slot: -1}},
+)
+
+var _tChart12 = gx.NewTemplate(
+	[]string{"<table", ">", "</table>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tChart13 = gx.NewTemplate(
+	[]string{"<figure", ">", "</figure>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

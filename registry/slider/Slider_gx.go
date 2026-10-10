@@ -35,10 +35,16 @@ func Slider(p SliderProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Slider.gx:26:1
-	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.fill()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "type", Value: "range", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: gx.TextValue(p.min()), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "step", Value: gx.TextValue(p.step()), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-behavior", true)}, p.Attrs)))
-//line Slider.gx:26:205
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSlider0.With(
+//line Slider.gx:26:1
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.fill()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "type", Value: "range", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: gx.TextValue(p.min()), Kind: gx.AttrText}, gx.Attr{Key: "max", Value: gx.TextValue(p.max()), Kind: gx.AttrText}, gx.Attr{Key: "value", Value: gx.TextValue(p.Value), Kind: gx.AttrText}, gx.Attr{Key: "step", Value: gx.TextValue(p.step()), Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-behavior", true)}, p.Attrs)),
+	)
 }
+
+var _tSlider0 = gx.NewTemplate(
+	[]string{"<input", ">\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

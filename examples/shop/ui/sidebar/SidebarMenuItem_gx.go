@@ -21,10 +21,18 @@ func SidebarMenuItem(p SidebarMenuItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarMenuItem.gx:12:1
-	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/menu-item relative", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-item", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuItem.gx:12:141
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarMenuItem0.With(
+//line SidebarMenuItem.gx:12:1
+		gx.Open("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/menu-item relative", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-item", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-item", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarMenuItem.gx:12:124
+		p.Children,
+	)
 }
+
+var _tSidebarMenuItem0 = gx.NewTemplate(
+	[]string{"<li", ">", "</li>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

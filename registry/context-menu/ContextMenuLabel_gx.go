@@ -23,10 +23,18 @@ func ContextMenuLabel(p ContextMenuLabelProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenuLabel.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("px-2 py-1.5 text-sm font-medium text-foreground", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ContextMenuLabel.gx:14:152
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenuLabel0.With(
+//line ContextMenuLabel.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("px-2 py-1.5 text-sm font-medium text-foreground", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, p.Attrs)),
+//line ContextMenuLabel.gx:14:134
+		p.Children,
+	)
 }
+
+var _tContextMenuLabel0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

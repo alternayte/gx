@@ -21,45 +21,122 @@ func Toc(p TocProps) gx.Node {
 //line Toc.gx:8:1
 	if len(p.Headings) > 0 {
 //line Toc.gx:8:25
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tToc0)
 //line Toc.gx:9:3
 		var _b1 gx.Builder
 //line Toc.gx:9:91
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tToc1)
 //line Toc.gx:10:5
 		var _b2 gx.Builder
 //line Toc.gx:10:86
-		_b2.Add(gx.Text("\n      "))
-//line Toc.gx:11:7
-		_b2.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mb-2 font-medium", Kind: gx.AttrText}}, gx.Text("On this page")))
-//line Toc.gx:11:51
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tToc2)
 //line Toc.gx:12:7
 		var _b3 gx.Builder
 //line Toc.gx:12:66
-		_b3.Add(gx.Text("\n        "))
+		_b3.Add(_tToc3)
 //line Toc.gx:13:9
 		for _, h := range p.Headings {
 //line Toc.gx:13:39
-			_b3.Add(gx.Text("\n          "))
+			_b3.Add(_tToc4.With(
 //line Toc.gx:14:11
-			_b3.Add(gx.El("li", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc-item", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n            "), gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc-link block pl-3 text-muted-foreground hover:text-foreground [&[aria-current=location]]:text-foreground [&[data-level='3']]:pl-6", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("#" + h.ID)), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-gx-toc-target", Value: h.ID, Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}, gx.Text(h.Text)), gx.Text("\n          "))))
-//line Toc.gx:16:16
-			_b3.Add(gx.Text("\n        "))
+				gx.Open("li", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc-item", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}),
+//line Toc.gx:15:13
+				gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc-link block pl-3 text-muted-foreground hover:text-foreground [&[aria-current=location]]:text-foreground [&[data-level='3']]:pl-6", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("#" + h.ID)), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-gx-toc-target", Value: h.ID, Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}),
+//line Toc.gx:15:232
+				gx.Text(h.Text),
+			))
 		}
 //line Toc.gx:17:10
-		_b3.Add(gx.Text("\n      "))
-		_b2.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "list-none space-y-1 border-l border-border p-0", Kind: gx.AttrText}}, _b3.Node()))
-//line Toc.gx:18:12
-		_b2.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-8 text-sm", Kind: gx.AttrText}}, _b2.Node()))
-//line Toc.gx:19:11
-		_b1.Add(gx.Text("\n  "))
-		_b.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc hidden w-56 shrink-0 xl:block", Kind: gx.AttrText}, gx.Bool("data-gx-toc", true), gx.Attr{Key: "aria-label", Value: "On this page", Kind: gx.AttrText}}, _b1.Node()))
-//line Toc.gx:20:9
-		_b.Add(gx.Text("\n"))
+		_b3.Add(_tToc5)
+//line Toc.gx:12:7
+		_b2.Add(_tToc6.With(
+//line Toc.gx:12:7
+			_b3.Node(),
+		))
+//line Toc.gx:10:5
+		_b1.Add(_tToc7.With(
+//line Toc.gx:10:5
+			_b2.Node(),
+		))
+//line Toc.gx:9:3
+		_b.Add(_tToc8.With(
+//line Toc.gx:9:3
+			gx.Open("nav", gx.Attrs{gx.Attr{Key: "class", Value: "gx-toc hidden w-56 shrink-0 xl:block", Kind: gx.AttrText}, gx.Bool("data-gx-toc", true), gx.Attr{Key: "aria-label", Value: "On this page", Kind: gx.AttrText}}),
+//line Toc.gx:9:3
+			_b1.Node(),
+		))
 	}
 //line Toc.gx:21:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tToc9)
 	return _b.Node()
 }
+
+var _tToc0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tToc1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tToc2 = gx.NewTemplate(
+	[]string{"\n      <p class=\"mb-2 font-medium\">On this page</p>\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+).With()
+
+var _tToc3 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tToc4 = gx.NewTemplate(
+	[]string{"\n          <li", ">\n            <a", ">", "</a>\n          </li>\n        "},
+	[]int{0, 1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 3, End: 20}, {Slot: 1, Start: 14, EndStatic: 3, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tToc5 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tToc6 = gx.NewTemplate(
+	[]string{"<ul class=\"list-none space-y-1 border-l border-border p-0\">", "</ul>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)
+
+var _tToc7 = gx.NewTemplate(
+	[]string{"<div class=\"sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-8 text-sm\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tToc8 = gx.NewTemplate(
+	[]string{"<nav", ">", "</nav>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tToc9 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

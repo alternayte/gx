@@ -29,42 +29,101 @@ func Aside(p AsideProps) gx.Node {
 //line Aside.gx:16:1
 	var _b1 gx.Builder
 //line Aside.gx:16:154
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAside0)
 //line Aside.gx:17:3
 	if p.Title != "" {
 //line Aside.gx:17:21
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tAside1)
 //line Aside.gx:18:5
 		var _b2 gx.Builder
 //line Aside.gx:18:78
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tAside2)
 //line Aside.gx:19:7
 		if IconBody(p.Icon) != "" {
 //line Aside.gx:19:34
-			_b2.Add(gx.Text("\n        "))
+			_b2.Add(_tAside3.With(
 //line Aside.gx:20:9
-			_b2.Add(gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-aside-icon size-5 shrink-0"}))
-//line Aside.gx:20:98
-			_b2.Add(gx.Text("\n      "))
+				gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-aside-icon size-5 shrink-0"}),
+			))
 		}
 //line Aside.gx:21:8
-		_b2.Add(gx.Text("\n      "))
-//line Aside.gx:22:7
-		_b2.Add(gx.El("span", nil, gx.Text(p.Title)))
-//line Aside.gx:22:29
-		_b2.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-title m-0 mb-1 flex items-center gap-2 font-semibold", Kind: gx.AttrText}}, _b2.Node()))
-//line Aside.gx:23:9
-		_b1.Add(gx.Text("\n  "))
+		_b2.Add(_tAside4.With(
+//line Aside.gx:22:13
+			gx.Text(p.Title),
+		))
+//line Aside.gx:18:5
+		_b1.Add(_tAside5.With(
+//line Aside.gx:18:5
+			_b2.Node(),
+		))
 	}
 //line Aside.gx:24:4
-	_b1.Add(gx.Text("\n  "))
-//line Aside.gx:25:3
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-aside-body [&>p:first-child]:mt-0 [&>p:last-child]:mb-0", Kind: gx.AttrText}}, p.Children))
-//line Aside.gx:25:93
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-kind", Value: string(p.Kind), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Aside.gx:26:9
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tAside6.With(
+//line Aside.gx:25:75
+		p.Children,
+	))
+//line Aside.gx:16:1
+	_b.Add(_tAside7.With(
+//line Aside.gx:16:1
+		gx.Open("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-aside my-4 rounded-lg border border-border bg-muted/40 p-4 text-sm", kindClass[p.Kind]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-kind", Value: string(p.Kind), Kind: gx.AttrText}}, p.Attrs)),
+//line Aside.gx:16:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tAside0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAside1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAside2 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAside3 = gx.NewTemplate(
+	[]string{"\n        ", "\n      "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tAside4 = gx.NewTemplate(
+	[]string{"\n      <span>", "</span>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tAside5 = gx.NewTemplate(
+	[]string{"<p class=\"gx-aside-title m-0 mb-1 flex items-center gap-2 font-semibold\">", "</p>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tAside6 = gx.NewTemplate(
+	[]string{"\n  <div class=\"gx-aside-body [&amp;&gt;p:first-child]:mt-0 [&amp;&gt;p:last-child]:mb-0\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tAside7 = gx.NewTemplate(
+	[]string{"<aside", ">", "</aside>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

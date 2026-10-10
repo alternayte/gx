@@ -21,10 +21,18 @@ func TableCaption(p TableCaptionProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TableCaption.gx:12:1
-	_b.Add(gx.El("caption", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mt-4 text-sm text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-caption", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableCaption.gx:12:132
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTableCaption0.With(
+//line TableCaption.gx:12:1
+		gx.Open("caption", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mt-4 text-sm text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-caption", Kind: gx.AttrText}}, p.Attrs)),
+//line TableCaption.gx:12:110
+		p.Children,
+	)
 }
+
+var _tTableCaption0 = gx.NewTemplate(
+	[]string{"<caption", ">", "</caption>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

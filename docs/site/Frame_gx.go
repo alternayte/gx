@@ -20,16 +20,22 @@ func Frame(p FrameProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Frame.gx:14:37
-	_b.Add(gx.Text("\n"))
+	return _tFrame0.With(
 //line Frame.gx:15:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-frame resize-y overflow-hidden rounded-lg border border-border bg-background", gx.When("gx-frame-block", p.Block)), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("iframe", gx.Attrs{gx.Attr{Key: "class", Value: "block size-full", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: route.Preview{Item: p.Item, Example: p.Name}.URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "title", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "loading", Value: "lazy", Kind: gx.AttrText}}), gx.Text("\n"))))
-//line Frame.gx:17:7
-	_b.Add(gx.Text("\n"))
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-frame resize-y overflow-hidden rounded-lg border border-border bg-background", gx.When("gx-frame-block", p.Block)), Kind: gx.AttrText}}),
+//line Frame.gx:16:3
+		gx.Open("iframe", gx.Attrs{gx.Attr{Key: "class", Value: "block size-full", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: route.Preview{Item: p.Item, Example: p.Name}.URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "title", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "loading", Value: "lazy", Kind: gx.AttrText}}),
 //line Frame.gx:18:1
-	_b.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-frame-link mt-2 text-right text-xs", Kind: gx.AttrText}, gx.Bool("data-pagefind-ignore", true)}, gx.Frag(gx.Text("\n  "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Preview{Item: p.Item, Example: p.Name}.URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "target", Value: "_blank", Kind: gx.AttrText}, gx.Attr{Key: "rel", Value: "noopener", Kind: gx.AttrText}}, gx.Text("Open the preview in a new tab")), gx.Text("\n"))))
-//line Frame.gx:20:5
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-frame-link mt-2 text-right text-xs", Kind: gx.AttrText}, gx.Bool("data-pagefind-ignore", true)}),
+//line Frame.gx:19:3
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Preview{Item: p.Item, Example: p.Name}.URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "target", Value: "_blank", Kind: gx.AttrText}, gx.Attr{Key: "rel", Value: "noopener", Kind: gx.AttrText}}),
+	)
 }
+
+var _tFrame0 = gx.NewTemplate(
+	[]string{"\n<div", ">\n  <iframe", "></iframe>\n</div>\n<p", ">\n  <a", ">Open the preview in a new tab</a>\n</p>\n"},
+	[]int{0, 1, 0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 1, EndStatic: 2, End: 17}, {Slot: 1, Start: 4, EndStatic: 2, End: 10}, {Slot: 2, Start: 18, EndStatic: 4, End: 39}, {Slot: 3, Start: 4, EndStatic: 4, End: 34}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}},
+)

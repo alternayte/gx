@@ -30,10 +30,16 @@ func InputGroupInput(p InputGroupInputProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line InputGroupInput.gx:22:1
-	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Control, "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs())))
-//line InputGroupInput.gx:22:274
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tInputGroupInput0.With(
+//line InputGroupInput.gx:22:1
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Control, "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs())),
+	)
 }
+
+var _tInputGroupInput0 = gx.NewTemplate(
+	[]string{"<input", ">\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

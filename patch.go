@@ -118,15 +118,14 @@ func (c *Ctx) Patch(nodes ...Node) error {
 		if err != nil {
 			return err
 		}
-		for _, el := range roots {
-			id := attrValue(el, "id")
-			if id == "" {
-				return fmt.Errorf("gx: patch node <%s> has no id", el.name)
+		for _, root := range roots {
+			if root.id == "" {
+				return fmt.Errorf("gx: patch node <%s> has no id", root.name)
 			}
 			c.res.Patches = append(c.res.Patches, ElementPatch{
 				Mode:       mode,
-				Target:     idSelector(id),
-				Node:       el,
+				Target:     idSelector(root.id),
+				Node:       root.node,
 				Transition: transition,
 			})
 		}
@@ -176,32 +175,9 @@ func Scope(r *http.Request) string {
 	return r.Header.Get("Gx-Scope")
 }
 
-// patchRoots returns the top-level elements of a patch node.
-func patchRoots(n Node) ([]*elNode, error) {
-	switch t := n.(type) {
-	case *elNode:
-		return []*elNode{t}, nil
-	case fragNode:
-		var out []*elNode
-		for _, child := range t {
-			roots, err := patchRoots(child)
-			if err != nil {
-				return nil, err
-			}
-			out = append(out, roots...)
-		}
-		if len(out) == 0 {
-			return nil, errors.New("gx: patch node is empty")
-		}
-		return out, nil
-	default:
-		return nil, fmt.Errorf("gx: patch node %T is not an element", n)
-	}
-}
-
 // attrValue returns the value of a named attribute, or "".
-func attrValue(el *elNode, name string) string {
-	for _, a := range el.attrs {
+func attrValue(attrs Attrs, name string) string {
+	for _, a := range attrs {
 		if a.Key == name && a.Kind != AttrBool {
 			return a.Value
 		}

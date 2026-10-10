@@ -21,10 +21,18 @@ func MenubarShortcut(p MenubarShortcutProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line MenubarShortcut.gx:12:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line MenubarShortcut.gx:12:119
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tMenubarShortcut0.With(
+//line MenubarShortcut.gx:12:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("ml-auto text-xs tracking-widest text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line MenubarShortcut.gx:12:100
+		p.Children,
+	)
 }
+
+var _tMenubarShortcut0 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

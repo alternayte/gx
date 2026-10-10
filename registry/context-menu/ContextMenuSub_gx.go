@@ -21,10 +21,18 @@ func ContextMenuSub(p ContextMenuSubProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenuSub.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Bool("data-gx-sub", true)}, p.Attrs), p.Children))
-//line ContextMenuSub.gx:12:77
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenuSub0.With(
+//line ContextMenuSub.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Bool("data-gx-sub", true)}, p.Attrs)),
+//line ContextMenuSub.gx:12:59
+		p.Children,
+	)
 }
+
+var _tContextMenuSub0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

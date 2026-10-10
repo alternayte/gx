@@ -35,10 +35,20 @@ func Toggle(p ToggleProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Toggle.gx:26:1
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Pressed), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}), gx.Text("\n  "), p.Children, gx.Text("\n"))))
-//line Toggle.gx:29:9
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tToggle0.With(
+//line Toggle.gx:26:1
+		gx.Open("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, p.Attrs)),
+//line Toggle.gx:27:3
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Pressed), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}),
+//line Toggle.gx:28:3
+		p.Children,
+	)
 }
+
+var _tToggle0 = gx.NewTemplate(
+	[]string{"<label", ">\n  <input", ">\n  ", "\n</label>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 9}, {Slot: 1, Start: 4, EndStatic: 2, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

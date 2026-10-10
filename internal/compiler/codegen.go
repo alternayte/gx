@@ -14,8 +14,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	gx "github.com/alternayte/gx"
 )
 
 // Generate generates Go source for every .gx file under root. The result maps
@@ -159,6 +157,8 @@ type gen struct {
 	fragKey    string
 	// keyStack holds the key expressions of enclosing keyed elements.
 	keyStack []string
+	// tmpls holds the template variables of the file (DR-11).
+	tmpls *tmplStore
 }
 
 // firstTopLevelElement returns the first element of a component body.
@@ -197,7 +197,7 @@ func posOf(n any) Pos {
 }
 
 func generateFile(l *loader, p *Package, name string, f *File, res *typesResult) ([]byte, []Diagnostic) {
-	g := &gen{l: l, res: res, pkg: p, file: f, name: name}
+	g := &gen{l: l, res: res, pkg: p, file: f, name: name, tmpls: &tmplStore{prefix: name}}
 	if comp, ok := p.component(name); ok {
 		g.scoped = res.componentScoped(l, p, f, comp, map[*File]bool{})
 	}
@@ -255,14 +255,16 @@ func generateFile(l *loader, p *Package, name string, f *File, res *typesResult)
 	g.write("func %s(p %sProps) gx.Node {", name, name)
 	g.ind++
 	g.devHook(name, []string{"p"})
-	g.write("var _b gx.Builder")
-	g.emitStmts(f.Body, "_b")
-	g.write("return _b.Node()")
+	g.emitBody(f.Body)
 	g.ind--
 	g.write("}")
 	for _, el := range fragmentElements(f.Body) {
 		g.write("")
 		g.fragmentFunc(el)
+	}
+	for _, decl := range g.tmpls.decls {
+		g.write("")
+		g.write("%s", decl)
 	}
 	src, err := fixImports(name+"_gx.go", g.withExtraImports())
 	if err != nil {
@@ -372,46 +374,90 @@ func subtreeNeedsBlock(ns []Node) bool {
 	return false
 }
 
+// emitBody writes the statements of a function body and its return. A body
+// with no statement below it is one template value.
+func (g *gen) emitBody(ns []Node) {
+	if !subtreeNeedsBlock(ns) {
+		expr := g.childExprs(ns)
+		if expr == "" {
+			expr = "gx.Frag()"
+		}
+		for _, n := range ns {
+			if _, comment := n.(*Comment); !comment {
+				g.lineAt(n)
+				break
+			}
+		}
+		g.write("return %s", expr)
+		return
+	}
+	g.write("var _b gx.Builder")
+	g.emitStmts(ns, "_b")
+	g.write("return _b.Node()")
+}
+
+// emitStmts writes a list of nodes as statements that add to a builder. The
+// nodes between two statements are one template value (DR-11). A value is
+// added where its nodes are in the source, so each expression runs in the
+// order of the .gx file.
 func (g *gen) emitStmts(ns []Node, builder string) {
+	tb := newTmpl()
+	var first Node
+	flush := func() {
+		if expr := g.tmplExpr(tb); expr != "" {
+			g.lineAt(first)
+			g.add(builder, expr)
+		}
+		tb, first = newTmpl(), nil
+	}
 	for _, n := range ns {
 		switch t := n.(type) {
-		case *Text:
-			g.lineAt(t)
-			g.add(builder, "gx.Text("+strconv.Quote(t.Data)+")")
-		case *HTMLComment:
-			g.lineAt(t)
-			g.add(builder, "gx.Raw(gx.SafeHTML("+strconv.Quote("<!--"+t.Data+"-->")+"))")
 		case *Comment:
 			// A {/* ... */} comment never renders (REQ-AUT-16).
-		case *Expr:
-			g.lineAt(t)
-			g.add(builder, g.exprValue(t, t.Data))
 		case *Let:
+			flush()
 			g.lineAt(t)
 			g.write("%s := %s", t.Name, t.Expr)
 		case *Control:
+			flush()
 			g.emitControl(t, builder)
 		case *Element:
-			g.lineAt(t)
 			pushed := g.keyAttrExpr(t)
 			if pushed != "" {
 				g.keyStack = append(g.keyStack, pushed)
 			}
 			if qual, name, ok := componentTag(t.Name); ok {
-				g.emitComponent(t, qual, name, builder)
+				if built := g.componentBlocks(t, qual, name, flush); built != nil {
+					g.tmplValue(tb, g.componentCallExpr(t, qual, name, built), posOf(t))
+				} else {
+					g.tmplValue(tb, g.componentCallExpr(t, qual, name, nil), posOf(t))
+				}
 			} else if subtreeNeedsBlock(t.Children) {
+				// The statements of the content run first, as the
+				// source has them.
+				flush()
+				g.lineAt(t)
 				nb := g.newBuilder()
 				g.write("var %s gx.Builder", nb)
 				g.emitStmts(t.Children, nb)
-				g.add(builder, g.elementExprWith(t, nb+".Node()"))
+				g.tmplElement(tb, t, nb+".Node()", true)
 			} else {
-				g.add(builder, g.elementExpr(t))
+				g.tmplElement(tb, t, "", false)
+			}
+			if first == nil {
+				first = t
 			}
 			if pushed != "" {
 				g.keyStack = g.keyStack[:len(g.keyStack)-1]
 			}
+		default:
+			if first == nil {
+				first = n
+			}
+			g.tmplNodes(tb, []Node{n})
 		}
 	}
+	flush()
 }
 
 func (g *gen) emitControl(c *Control, builder string) {
@@ -467,6 +513,10 @@ func (g *gen) emitControl(c *Control, builder string) {
 	}
 }
 
+// intTypes are the signed integer types of Go. A named type is not in the
+// list: it can have a String method.
+var intTypes = map[string]bool{"int": true, "int8": true, "int16": true, "int32": true, "int64": true}
+
 // exprValue returns the gx.Node expression for a text expression.
 func (g *gen) exprValue(n any, raw string) string {
 	expr := strings.TrimSpace(raw)
@@ -496,6 +546,9 @@ func (g *gen) exprValue(n any, raw string) string {
 		return "gx.Text((" + expr + ").String())"
 	case isNamedUnderlying(t, types.String):
 		return "gx.Text(string(" + expr + "))"
+	case intTypes[t.String()]:
+		// The render writes the digits with no string (NFR-03).
+		return "gx.Int(int64(" + expr + "))"
 	case g.res.renderable(t):
 		return "gx.Value(" + expr + ")"
 	default:
@@ -516,10 +569,6 @@ func (g *gen) elementExpr(el *Element) string {
 	return g.elementCall(el, g.childExprs(el.Children))
 }
 
-func (g *gen) elementExprWith(el *Element, childrenExpr string) string {
-	return g.elementCall(el, childrenExpr)
-}
-
 func (g *gen) elementCall(el *Element, childrenExpr string) string {
 	attrs := g.attrsExpr(el)
 	if childrenExpr == "" {
@@ -528,66 +577,12 @@ func (g *gen) elementCall(el *Element, childrenExpr string) string {
 	return fmt.Sprintf("gx.El(%s, %s, %s)", strconv.Quote(el.Name), attrs, childrenExpr)
 }
 
-// childExprs returns the children of an element as one gx.Node expression.
-// A run of children that holds a static element is one pre-escaped string
-// (SDD 3.2).
+// childExprs returns a list of nodes with no statement below it as one
+// gx.Node expression: a template value, or "" for no content.
 func (g *gen) childExprs(ns []Node) string {
-	var parts []string
-	// run holds the children since the last child with an expression:
-	// their expressions, their nodes, and whether one is an element.
-	var runExprs []string
-	var runNodes []gx.Node
-	runElement := false
-	flush := func() {
-		if runElement {
-			parts = append(parts, "gx.Raw(gx.SafeHTML("+strconv.Quote(gx.String(gx.Frag(runNodes...)))+"))")
-		} else {
-			parts = append(parts, runExprs...)
-		}
-		runExprs, runNodes, runElement = nil, nil, false
-	}
-	for _, n := range ns {
-		switch t := n.(type) {
-		case *Text:
-			runExprs = append(runExprs, "gx.Text("+strconv.Quote(t.Data)+")")
-			runNodes = append(runNodes, gx.Text(t.Data))
-		case *HTMLComment:
-			runExprs = append(runExprs, "gx.Raw(gx.SafeHTML("+strconv.Quote("<!--"+t.Data+"-->")+"))")
-			runNodes = append(runNodes, gx.Raw(gx.SafeHTML("<!--"+t.Data+"-->")))
-		case *Comment:
-		case *Expr:
-			flush()
-			parts = append(parts, g.exprValue(t, t.Data))
-		case *Element:
-			if node, ok := g.staticNode(t); ok {
-				runNodes = append(runNodes, node)
-				runElement = true
-				continue
-			}
-			flush()
-			pushed := g.keyAttrExpr(t)
-			if pushed != "" {
-				g.keyStack = append(g.keyStack, pushed)
-			}
-			if qual, name, ok := componentTag(t.Name); ok {
-				parts = append(parts, g.componentCallExpr(t, qual, name, nil))
-			} else {
-				parts = append(parts, g.elementExpr(t))
-			}
-			if pushed != "" {
-				g.keyStack = g.keyStack[:len(g.keyStack)-1]
-			}
-		}
-	}
-	flush()
-	switch len(parts) {
-	case 0:
-		return ""
-	case 1:
-		return parts[0]
-	default:
-		return "gx.Frag(" + strings.Join(parts, ", ") + ")"
-	}
+	tb := newTmpl()
+	g.tmplNodes(tb, ns)
+	return g.tmplExpr(tb)
 }
 
 func (g *gen) attrsExpr(el *Element) string {
@@ -844,9 +839,7 @@ func (g *gen) fragmentFunc(el *Element) {
 	g.devHook(name, args)
 	savedFrag, savedKey := g.inFragment, g.fragKey
 	g.inFragment, g.fragKey = true, keyParam
-	g.write("var _b gx.Builder")
-	g.emitStmts([]Node{el}, "_b")
-	g.write("return _b.Node()")
+	g.emitBody([]Node{el})
 	g.inFragment, g.fragKey = savedFrag, savedKey
 	g.ind--
 	g.write("}")
@@ -1002,21 +995,29 @@ func splitChildren(ns []Node) []childPart {
 	return parts
 }
 
-func (g *gen) emitComponent(el *Element, qual, name, builder string) {
+// componentBlocks writes the builders of the parts of a component call that
+// hold statements, and returns the expression of each part. It calls flush
+// before the first statement. It returns nil for a call with no such part.
+func (g *gen) componentBlocks(el *Element, qual, name string, flush func()) map[string]string {
 	comp, _, _ := g.resolveComponent(qual, name)
-	built := map[string]string{}
+	var built map[string]string
 	for _, part := range splitChildren(el.Children) {
 		if comp != nil && g.isSlotProp(comp, part) {
 			continue // the slot closure carries the statements
 		}
 		if subtreeNeedsBlock(part.nodes) {
+			if built == nil {
+				flush()
+				g.lineAt(el)
+				built = map[string]string{}
+			}
 			nb := g.newBuilder()
 			g.write("var %s gx.Builder", nb)
 			g.emitStmts(part.nodes, nb)
 			built[part.key] = nb + ".Node()"
 		}
 	}
-	g.add(builder, g.componentCallExpr(el, qual, name, built))
+	return built
 }
 
 // isSlotProp reports whether the part fills a gx.Slot[T] prop.
@@ -1035,10 +1036,8 @@ func (g *gen) isSlotProp(comp *Component, part childPart) bool {
 
 // slotClosure returns a func(value T) gx.Node for a gx.Slot[T] prop.
 func (g *gen) slotClosure(param, elemType string, ns []Node) string {
-	sub := &gen{l: g.l, res: g.res, pkg: g.pkg, file: g.file, name: g.name, ind: 1}
-	sub.write("var _c gx.Builder")
-	sub.emitStmts(ns, "_c")
-	sub.write("return _c.Node()")
+	sub := &gen{l: g.l, res: g.res, pkg: g.pkg, file: g.file, name: g.name, ind: 1, tmpls: g.tmpls}
+	sub.emitBody(ns)
 	return "func(" + param + " " + elemType + ") gx.Node {\n" + sub.b.String() + "}"
 }
 

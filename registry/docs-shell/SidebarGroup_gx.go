@@ -25,49 +25,110 @@ func SidebarGroup(p SidebarGroupProps) gx.Node {
 //line SidebarGroup.gx:12:1
 	var _b1 gx.Builder
 //line SidebarGroup.gx:12:62
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSidebarGroup0)
 //line SidebarGroup.gx:13:3
 	var _b2 gx.Builder
 //line SidebarGroup.gx:13:151
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tSidebarGroup1.With(
 //line SidebarGroup.gx:14:5
-	_b2.Add(gx.Text(p.Group.Label))
-//line SidebarGroup.gx:14:20
-	_b2.Add(gx.Text("\n    "))
+		gx.Text(p.Group.Label),
+	))
 //line SidebarGroup.gx:15:5
 	if p.Group.Badge != "" {
 //line SidebarGroup.gx:15:29
-		_b2.Add(gx.Text("\n      "))
-//line SidebarGroup.gx:16:7
-		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-badge rounded-full border border-border px-1.5 text-[10px]", Kind: gx.AttrText}}, gx.Text(p.Group.Badge)))
-//line SidebarGroup.gx:16:109
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tSidebarGroup2.With(
+//line SidebarGroup.gx:16:87
+			gx.Text(p.Group.Badge),
+		))
 	}
 //line SidebarGroup.gx:17:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-group-label flex cursor-pointer items-center gap-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground", Kind: gx.AttrText}}, _b2.Node()))
-//line SidebarGroup.gx:18:13
-	_b1.Add(gx.Text("\n  "))
+	_b2.Add(_tSidebarGroup0)
+//line SidebarGroup.gx:13:3
+	_b1.Add(_tSidebarGroup3.With(
+//line SidebarGroup.gx:13:3
+		_b2.Node(),
+	))
 //line SidebarGroup.gx:19:3
 	var _b3 gx.Builder
 //line SidebarGroup.gx:19:46
-	_b3.Add(gx.Text("\n    "))
+	_b3.Add(_tSidebarGroup4)
 //line SidebarGroup.gx:20:5
 	for _, it := range p.Group.Items {
 //line SidebarGroup.gx:20:39
-		_b3.Add(gx.Text("\n      "))
+		_b3.Add(_tSidebarGroup5.With(
 //line SidebarGroup.gx:21:7
-		_b3.Add(SidebarItem(SidebarItemProps{Item: it, Path: p.Path}))
-//line SidebarGroup.gx:21:46
-		_b3.Add(gx.Text("\n    "))
+			SidebarItem(SidebarItemProps{Item: it, Path: p.Path}),
+		))
 	}
 //line SidebarGroup.gx:22:6
-	_b3.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 list-none space-y-0.5 p-0", Kind: gx.AttrText}}, _b3.Node()))
-//line SidebarGroup.gx:23:8
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("details", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-group mb-4", Kind: gx.AttrText}, gx.Bool("open", !p.Group.Collapsed)}, _b1.Node()))
-//line SidebarGroup.gx:24:11
-	_b.Add(gx.Text("\n"))
+	_b3.Add(_tSidebarGroup0)
+//line SidebarGroup.gx:19:3
+	_b1.Add(_tSidebarGroup6.With(
+//line SidebarGroup.gx:19:3
+		_b3.Node(),
+	))
+//line SidebarGroup.gx:12:1
+	_b.Add(_tSidebarGroup7.With(
+//line SidebarGroup.gx:12:1
+		gx.Open("details", gx.Attrs{gx.Attr{Key: "class", Value: "gx-nav-group mb-4", Kind: gx.AttrText}, gx.Bool("open", !p.Group.Collapsed)}),
+//line SidebarGroup.gx:12:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSidebarGroup0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarGroup1 = gx.NewTemplate(
+	[]string{"\n    ", "\n    "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarGroup2 = gx.NewTemplate(
+	[]string{"\n      <span class=\"gx-nav-badge rounded-full border border-border px-1.5 text-[10px]\">", "</span>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarGroup3 = gx.NewTemplate(
+	[]string{"<summary class=\"gx-nav-group-label flex cursor-pointer items-center gap-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground\">", "</summary>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "summary"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarGroup4 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarGroup5 = gx.NewTemplate(
+	[]string{"\n      ", "\n    "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarGroup6 = gx.NewTemplate(
+	[]string{"<ul class=\"mt-1 list-none space-y-0.5 p-0\">", "</ul>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarGroup7 = gx.NewTemplate(
+	[]string{"<details", ">", "</details>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

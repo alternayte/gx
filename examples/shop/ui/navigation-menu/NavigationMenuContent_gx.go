@@ -21,10 +21,18 @@ func NavigationMenuContent(p NavigationMenuContentProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line NavigationMenuContent.gx:12:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "invisible absolute top-full left-0 z-50 w-max origin-top-left scale-95 pt-1.5 opacity-0 transition-[opacity,scale,visibility] delay-150 duration-200 motion-reduce:transition-none group-hover/navigation-menu-item:visible group-hover/navigation-menu-item:scale-100 group-hover/navigation-menu-item:opacity-100 group-focus-within/navigation-menu-item:visible group-focus-within/navigation-menu-item:scale-100 group-focus-within/navigation-menu-item:opacity-100", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("overflow-hidden rounded-md border border-border bg-popover p-2 pr-2.5 text-popover-foreground shadow", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children), gx.Text("\n"))))
-//line NavigationMenuContent.gx:14:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tNavigationMenuContent0.With(
+//line NavigationMenuContent.gx:13:3
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("overflow-hidden rounded-md border border-border bg-popover p-2 pr-2.5 text-popover-foreground shadow", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line NavigationMenuContent.gx:13:148
+		p.Children,
+	)
 }
+
+var _tNavigationMenuContent0 = gx.NewTemplate(
+	[]string{"<div class=\"invisible absolute top-full left-0 z-50 w-max origin-top-left scale-95 pt-1.5 opacity-0 transition-[opacity,scale,visibility] delay-150 duration-200 motion-reduce:transition-none group-hover/navigation-menu-item:visible group-hover/navigation-menu-item:scale-100 group-hover/navigation-menu-item:opacity-100 group-focus-within/navigation-menu-item:visible group-focus-within/navigation-menu-item:scale-100 group-focus-within/navigation-menu-item:opacity-100\">\n  <div", ">", "</div>\n</div>\n"},
+	[]int{1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 474, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

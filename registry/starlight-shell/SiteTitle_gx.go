@@ -22,48 +22,113 @@ func SiteTitle(p SiteTitleProps) gx.Node {
 //line SiteTitle.gx:9:1
 	var _b1 gx.Builder
 //line SiteTitle.gx:9:27
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSiteTitle0.With(
 //line SiteTitle.gx:10:3
-	_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-site-title", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("/")), Kind: gx.AttrURL, Active: "page"}}, gx.Frag(gx.Text("\n    "), gx.El("span", gx.Attrs{gx.Attr{Key: "translate", Value: "no", Kind: gx.AttrText}}, gx.Text(p.Site.Title)), gx.Text("\n  "))))
-//line SiteTitle.gx:12:7
-	_b1.Add(gx.Text("\n  "))
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-site-title", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL("/")), Kind: gx.AttrURL, Active: "page"}}),
+//line SiteTitle.gx:11:26
+		gx.Text(p.Site.Title),
+	))
 //line SiteTitle.gx:13:3
 	if len(p.Site.Versions) > 1 {
 //line SiteTitle.gx:13:32
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tSiteTitle1)
 //line SiteTitle.gx:14:5
 		var _b2 gx.Builder
 //line SiteTitle.gx:14:106
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tSiteTitle2)
 //line SiteTitle.gx:15:7
 		for _, v := range p.Site.Versions {
 //line SiteTitle.gx:15:42
-			_b2.Add(gx.Text("\n        "))
+			_b2.Add(_tSiteTitle3.With(
 //line SiteTitle.gx:16:9
-			_b2.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: string(v.Href), Kind: gx.AttrText}, gx.Bool("selected", v.Label == p.Site.Version)}, gx.Text(v.Label)))
-//line SiteTitle.gx:16:95
-			_b2.Add(gx.Text("\n      "))
+				gx.Open("option", gx.Attrs{gx.Attr{Key: "value", Value: string(v.Href), Kind: gx.AttrText}, gx.Bool("selected", v.Label == p.Site.Version)}),
+//line SiteTitle.gx:16:77
+				gx.Text(v.Label),
+			))
 		}
 //line SiteTitle.gx:17:8
-		_b2.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("select", gx.Attrs{gx.Attr{Key: "class", Value: "sl-version-select", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Documentation version", Kind: gx.AttrText}, gx.Bool("data-gx-goto", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}, _b2.Node()))
-//line SiteTitle.gx:18:14
-		_b1.Add(gx.Text("\n  "))
+		_b2.Add(_tSiteTitle1)
+//line SiteTitle.gx:14:5
+		_b1.Add(_tSiteTitle4.With(
+//line SiteTitle.gx:14:5
+			gx.Open("select", gx.Attrs{gx.Attr{Key: "class", Value: "sl-version-select", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Documentation version", Kind: gx.AttrText}, gx.Bool("data-gx-goto", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}),
+//line SiteTitle.gx:14:5
+			_b2.Node(),
+		))
 	} else {
 //line SiteTitle.gx:19:10
 		if p.Site.Version != "" {
 //line SiteTitle.gx:19:35
-			_b1.Add(gx.Text("\n    "))
+			_b1.Add(_tSiteTitle5.With(
 //line SiteTitle.gx:20:5
-			_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-version", Kind: gx.AttrText}, gx.Bool("data-gx-version", true)}, gx.Text(p.Site.Version)))
-//line SiteTitle.gx:20:69
-			_b1.Add(gx.Text("\n  "))
+				gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-version", Kind: gx.AttrText}, gx.Bool("data-gx-version", true)}),
+//line SiteTitle.gx:20:46
+				gx.Text(p.Site.Version),
+			))
 		}
 	}
 //line SiteTitle.gx:21:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-title-row", Kind: gx.AttrText}}, _b1.Node()))
-//line SiteTitle.gx:22:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tSiteTitle6)
+//line SiteTitle.gx:9:1
+	_b.Add(_tSiteTitle7.With(
+//line SiteTitle.gx:9:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSiteTitle0 = gx.NewTemplate(
+	[]string{"\n  <a", ">\n    <span translate=\"no\">", "</span>\n  </a>\n  "},
+	[]int{0, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 14}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSiteTitle1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSiteTitle2 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSiteTitle3 = gx.NewTemplate(
+	[]string{"\n        <option", ">", "</option>\n      "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 9, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSiteTitle4 = gx.NewTemplate(
+	[]string{"<select", ">", "</select>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSiteTitle5 = gx.NewTemplate(
+	[]string{"\n    <span", ">", "</span>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSiteTitle6 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSiteTitle7 = gx.NewTemplate(
+	[]string{"<div class=\"sl-title-row\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

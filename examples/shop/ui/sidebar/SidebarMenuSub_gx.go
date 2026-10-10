@@ -21,10 +21,18 @@ func SidebarMenuSub(p SidebarMenuSubProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarMenuSub.gx:12:1
-	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-sub", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-sub", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuSub.gx:12:209
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarMenuSub0.With(
+//line SidebarMenuSub.gx:12:1
+		gx.Open("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-sub", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-sub", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarMenuSub.gx:12:192
+		p.Children,
+	)
 }
+
+var _tSidebarMenuSub0 = gx.NewTemplate(
+	[]string{"<ul", ">", "</ul>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

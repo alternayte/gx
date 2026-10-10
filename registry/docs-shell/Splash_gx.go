@@ -27,46 +27,93 @@ func Splash(p SplashProps) gx.Node {
 //line Splash.gx:14:1
 	var _b1 gx.Builder
 //line Splash.gx:14:45
-	_b1.Add(gx.Text("\n  "))
-//line Splash.gx:15:3
-	_b1.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-5xl font-bold tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Splash.gx:15:67
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSplash0.With(
+//line Splash.gx:15:53
+		gx.Text(p.Title),
+	))
 //line Splash.gx:16:3
 	if p.Tagline != "" {
 //line Splash.gx:16:23
-		_b1.Add(gx.Text("\n    "))
-//line Splash.gx:17:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto mt-4 max-w-2xl text-lg text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Tagline)))
-//line Splash.gx:17:84
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tSplash1.With(
+//line Splash.gx:17:69
+			gx.Text(p.Tagline),
+		))
 	}
 //line Splash.gx:18:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSplash2)
 //line Splash.gx:19:3
 	if p.Actions != nil {
 //line Splash.gx:19:24
-		_b1.Add(gx.Text("\n    "))
-//line Splash.gx:20:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 flex flex-wrap items-center justify-center gap-3", Kind: gx.AttrText}}, p.Actions))
-//line Splash.gx:20:89
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tSplash3.With(
+//line Splash.gx:20:72
+			p.Actions,
+		))
 	}
 //line Splash.gx:21:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSplash2)
 //line Splash.gx:22:3
 	if p.Children != nil {
 //line Splash.gx:22:25
-		_b1.Add(gx.Text("\n    "))
-//line Splash.gx:23:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-splash-body mt-10", Kind: gx.AttrText}}, p.Children))
-//line Splash.gx:23:57
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tSplash4.With(
+//line Splash.gx:23:39
+			p.Children,
+		))
 	}
 //line Splash.gx:24:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "gx-splash my-12 text-center", Kind: gx.AttrText}}, _b1.Node()))
-//line Splash.gx:25:10
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tSplash5)
+//line Splash.gx:14:1
+	_b.Add(_tSplash6.With(
+//line Splash.gx:14:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSplash0 = gx.NewTemplate(
+	[]string{"\n  <h1 class=\"m-0 text-5xl font-bold tracking-tight\">", "</h1>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+)
+
+var _tSplash1 = gx.NewTemplate(
+	[]string{"\n    <p class=\"mx-auto mt-4 max-w-2xl text-lg text-muted-foreground\">", "</p>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tSplash2 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSplash3 = gx.NewTemplate(
+	[]string{"\n    <div class=\"mt-6 flex flex-wrap items-center justify-center gap-3\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tSplash4 = gx.NewTemplate(
+	[]string{"\n    <div class=\"gx-splash-body mt-10\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tSplash5 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSplash6 = gx.NewTemplate(
+	[]string{"<header class=\"gx-splash my-12 text-center\">", "</header>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}},
+)

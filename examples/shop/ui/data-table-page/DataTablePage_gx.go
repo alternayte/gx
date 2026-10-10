@@ -30,64 +30,134 @@ func DataTablePage(p DataTablePageProps) gx.Node {
 //line DataTablePage.gx:19:1
 	var _b1 gx.Builder
 //line DataTablePage.gx:19:59
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tDataTablePage0)
 //line DataTablePage.gx:20:3
 	var _b2 gx.Builder
 //line DataTablePage.gx:20:63
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tDataTablePage1)
 //line DataTablePage.gx:21:5
 	var _b3 gx.Builder
 //line DataTablePage.gx:21:38
-	_b3.Add(gx.Text("\n      "))
-//line DataTablePage.gx:22:7
-	_b3.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-xl font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line DataTablePage.gx:22:55
-	_b3.Add(gx.Text("\n      "))
+	_b3.Add(_tDataTablePage2.With(
+//line DataTablePage.gx:22:41
+		gx.Text(p.Title),
+	))
 //line DataTablePage.gx:23:7
 	if p.Description != "" {
 //line DataTablePage.gx:23:31
-		_b3.Add(gx.Text("\n        "))
-//line DataTablePage.gx:24:9
-		_b3.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line DataTablePage.gx:24:69
-		_b3.Add(gx.Text("\n      "))
+		_b3.Add(_tDataTablePage3.With(
+//line DataTablePage.gx:24:50
+			gx.Text(p.Description),
+		))
 	}
 //line DataTablePage.gx:25:8
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-1", Kind: gx.AttrText}}, _b3.Node()))
-//line DataTablePage.gx:26:11
-	_b2.Add(gx.Text("\n    "))
+	_b3.Add(_tDataTablePage1)
+//line DataTablePage.gx:21:5
+	_b2.Add(_tDataTablePage4.With(
+//line DataTablePage.gx:21:5
+		_b3.Node(),
+	))
 //line DataTablePage.gx:27:5
 	if p.Filter != nil {
 //line DataTablePage.gx:27:25
-		_b2.Add(gx.Text("\n      "))
-//line DataTablePage.gx:28:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "w-56", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n        "), p.Filter, gx.Text("\n      "))))
-//line DataTablePage.gx:30:13
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tDataTablePage5.With(
+//line DataTablePage.gx:29:9
+			p.Filter,
+		))
 	}
 //line DataTablePage.gx:31:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-wrap items-end justify-between gap-4", Kind: gx.AttrText}}, _b2.Node()))
-//line DataTablePage.gx:32:9
-	_b1.Add(gx.Text("\n  "))
+	_b2.Add(_tDataTablePage0)
+//line DataTablePage.gx:20:3
+	_b1.Add(_tDataTablePage6.With(
+//line DataTablePage.gx:20:3
+		_b2.Node(),
 //line DataTablePage.gx:33:3
-	_b1.Add(card.Card(card.CardProps{Title: "", Description: "", Action: nil, Footer: nil, Class: "", Children: p.Table, Attrs: nil}))
-//line DataTablePage.gx:35:15
-	_b1.Add(gx.Text("\n  "))
+		card.Card(card.CardProps{Title: "", Description: "", Action: nil, Footer: nil, Class: "", Children: p.Table, Attrs: nil}),
+	))
 //line DataTablePage.gx:36:3
 	if p.Pagination != nil {
 //line DataTablePage.gx:36:27
-		_b1.Add(gx.Text("\n    "))
-//line DataTablePage.gx:37:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex justify-center", Kind: gx.AttrText}}, p.Pagination))
-//line DataTablePage.gx:37:58
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tDataTablePage7.With(
+//line DataTablePage.gx:37:38
+			p.Pagination,
+		))
 	}
 //line DataTablePage.gx:38:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex w-full max-w-5xl flex-col gap-6", Kind: gx.AttrText}}, _b1.Node()))
-//line DataTablePage.gx:39:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tDataTablePage8)
+//line DataTablePage.gx:19:1
+	_b.Add(_tDataTablePage9.With(
+//line DataTablePage.gx:19:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tDataTablePage0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDataTablePage1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDataTablePage2 = gx.NewTemplate(
+	[]string{"\n      <h1 class=\"text-xl font-semibold\">", "</h1>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+)
+
+var _tDataTablePage3 = gx.NewTemplate(
+	[]string{"\n        <p class=\"text-sm text-muted-foreground\">", "</p>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tDataTablePage4 = gx.NewTemplate(
+	[]string{"<div class=\"flex flex-col gap-1\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tDataTablePage5 = gx.NewTemplate(
+	[]string{"\n      <div class=\"w-56\">\n        ", "\n      </div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tDataTablePage6 = gx.NewTemplate(
+	[]string{"<div class=\"flex flex-wrap items-end justify-between gap-4\">", "</div>\n  ", "\n  "},
+	[]int{1, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+)
+
+var _tDataTablePage7 = gx.NewTemplate(
+	[]string{"\n    <div class=\"flex justify-center\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tDataTablePage8 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDataTablePage9 = gx.NewTemplate(
+	[]string{"<div class=\"mx-auto flex w-full max-w-5xl flex-col gap-6\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

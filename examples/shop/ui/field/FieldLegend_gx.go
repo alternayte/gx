@@ -23,10 +23,18 @@ func FieldLegend(p FieldLegendProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line FieldLegend.gx:14:1
-	_b.Add(gx.El("legend", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-3 font-medium data-[variant=legend]:text-base data-[variant=label]:text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-legend", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldLegend.gx:14:199
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tFieldLegend0.With(
+//line FieldLegend.gx:14:1
+		gx.Open("legend", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mb-3 font-medium data-[variant=legend]:text-base data-[variant=label]:text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-legend", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs)),
+//line FieldLegend.gx:14:178
+		p.Children,
+	)
 }
+
+var _tFieldLegend0 = gx.NewTemplate(
+	[]string{"<legend", ">", "</legend>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

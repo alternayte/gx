@@ -21,10 +21,18 @@ func ItemActions(p ItemActionsProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ItemActions.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-actions", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemActions.gx:12:112
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tItemActions0.With(
+//line ItemActions.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-actions", Kind: gx.AttrText}}, p.Attrs)),
+//line ItemActions.gx:12:94
+		p.Children,
+	)
 }
+
+var _tItemActions0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

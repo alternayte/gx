@@ -23,10 +23,18 @@ func ContextMenu(p ContextMenuProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenu.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed z-50 m-0 min-w-[8rem] origin-top-left overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-place", Value: "right start 2", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ContextMenu.gx:14:666
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenu0.With(
+//line ContextMenu.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed z-50 m-0 min-w-[8rem] origin-top-left overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden opacity-0 scale-95 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-150 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 starting:open:-translate-x-2 data-[side=left]:origin-top-right data-[side=left]:starting:open:translate-x-2 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-place", Value: "right start 2", Kind: gx.AttrText}}, p.Attrs)),
+//line ContextMenu.gx:14:648
+		p.Children,
+	)
 }
+
+var _tContextMenu0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

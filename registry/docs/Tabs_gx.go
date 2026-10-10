@@ -24,10 +24,18 @@ func Tabs(p TabsProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Tabs.gx:15:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-tabs my-4", Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Tabs.gx:15:115
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTabs0.With(
+//line Tabs.gx:15:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-tabs my-4", Kind: gx.AttrText}}, gx.Attrs{gx.Bool("data-gx-tabs", true), gx.Attr{Key: "data-sync", Value: p.Sync, Kind: gx.AttrText}, gx.Attr{Key: "data-default", Value: p.Default, Kind: gx.AttrText}}, p.Attrs)),
+//line Tabs.gx:15:97
+		p.Children,
+	)
 }
+
+var _tTabs0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

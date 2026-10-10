@@ -25,10 +25,20 @@ func Collapsible(p CollapsibleProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Collapsible.gx:16:1
-	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/collapsible [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}}, p.Summary), gx.Text("\n  "), p.Children, gx.Text("\n"))))
-//line Collapsible.gx:19:11
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCollapsible0.With(
+//line Collapsible.gx:16:1
+		gx.Open("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/collapsible [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Bool("open", p.Open)}, p.Attrs)),
+//line Collapsible.gx:17:213
+		p.Summary,
+//line Collapsible.gx:18:3
+		p.Children,
+	)
 }
+
+var _tCollapsible0 = gx.NewTemplate(
+	[]string{"<details", ">\n  <summary class=\"inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&amp;::-webkit-details-marker]:hidden\">", "</summary>\n  ", "\n</details>\n"},
+	[]int{0, 2, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 11}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -20,10 +20,16 @@ func Check(p CheckProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Check.gx:11:1
-	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 6L9 17l-5-5\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line Check.gx:11:197
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCheck0.With(
+//line Check.gx:11:1
+		gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 6L9 17l-5-5\"/>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tCheck0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

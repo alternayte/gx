@@ -21,10 +21,16 @@ func NotFound(p NotFoundProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line NotFound.gx:12:1
-	_b.Add(Shell(ShellProps{Site: p.Site, Nav: Nav{}, Page: Page{Title: p.Title, Splash: true}, Hero: Hero(HeroProps{Title: p.Title, Tagline: p.Message}), Children: gx.Text("")}))
-//line NotFound.gx:12:160
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tNotFound0.With(
+//line NotFound.gx:12:1
+		Shell(ShellProps{Site: p.Site, Nav: Nav{}, Page: Page{Title: p.Title, Splash: true}, Hero: Hero(HeroProps{Title: p.Title, Tagline: p.Message}), Children: gx.Text("")}),
+	)
 }
+
+var _tNotFound0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

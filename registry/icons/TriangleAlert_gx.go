@@ -20,10 +20,16 @@ func TriangleAlert(p TriangleAlertProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TriangleAlert.gx:11:1
-	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line TriangleAlert.gx:11:270
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTriangleAlert0.With(
+//line TriangleAlert.gx:11:1
+		gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\"/>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tTriangleAlert0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

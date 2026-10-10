@@ -30,27 +30,57 @@ func TabsTrigger(p TabsTriggerProps) gx.Node {
 //line TabsTrigger.gx:17:1
 	var _b1 gx.Builder
 //line TabsTrigger.gx:17:1949
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tTabsTrigger0)
 //line TabsTrigger.gx:18:3
 	if p.Children != nil {
 //line TabsTrigger.gx:18:25
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tTabsTrigger1.With(
 //line TabsTrigger.gx:19:5
-		_b1.Add(p.Children)
-//line TabsTrigger.gx:19:17
-		_b1.Add(gx.Text("\n  "))
+			p.Children,
+		))
 	} else {
 //line TabsTrigger.gx:20:11
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tTabsTrigger1.With(
 //line TabsTrigger.gx:21:5
-		_b1.Add(gx.Text(p.Label))
-//line TabsTrigger.gx:21:14
-		_b1.Add(gx.Text("\n  "))
+			gx.Text(p.Label),
+		))
 	}
 //line TabsTrigger.gx:22:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 group-data-[variant=default]/tabs-list:data-[selected=true]:shadow-sm group-data-[variant=line]/tabs-list:data-[selected=true]:shadow-none dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-[selected=true]:bg-transparent dark:group-data-[variant=line]/tabs-list:data-[selected=true]:border-transparent dark:group-data-[variant=line]/tabs-list:data-[selected=true]:bg-transparent data-[selected=true]:bg-background data-[selected=true]:text-foreground dark:data-[selected=true]:border-input dark:data-[selected=true]:bg-input/30 dark:data-[selected=true]:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[selected=true]:after:opacity-100 motion-reduce:transition-none motion-reduce:after:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tab", Kind: gx.AttrText}, gx.Attr{Key: "aria-selected", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs), _b1.Node()))
-//line TabsTrigger.gx:23:10
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tTabsTrigger2)
+//line TabsTrigger.gx:17:1
+	_b.Add(_tTabsTrigger3.With(
+//line TabsTrigger.gx:17:1
+		gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 group-data-[variant=default]/tabs-list:data-[selected=true]:shadow-sm group-data-[variant=line]/tabs-list:data-[selected=true]:shadow-none dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-[selected=true]:bg-transparent dark:group-data-[variant=line]/tabs-list:data-[selected=true]:border-transparent dark:group-data-[variant=line]/tabs-list:data-[selected=true]:bg-transparent data-[selected=true]:bg-background data-[selected=true]:text-foreground dark:data-[selected=true]:border-input dark:data-[selected=true]:bg-input/30 dark:data-[selected=true]:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[selected=true]:after:opacity-100 motion-reduce:transition-none motion-reduce:after:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tab", Kind: gx.AttrText}, gx.Attr{Key: "aria-selected", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs)),
+//line TabsTrigger.gx:17:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tTabsTrigger0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tTabsTrigger1 = gx.NewTemplate(
+	[]string{"\n    ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tTabsTrigger2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tTabsTrigger3 = gx.NewTemplate(
+	[]string{"<button", ">", "</button>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

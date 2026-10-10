@@ -21,24 +21,52 @@ func PageHeader(p PageHeaderProps) gx.Node {
 //line PageHeader.gx:8:1
 	var _b1 gx.Builder
 //line PageHeader.gx:8:37
-	_b1.Add(gx.Text("\n  "))
-//line PageHeader.gx:9:3
-	_b1.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-3xl font-bold tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line PageHeader.gx:9:63
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tPageHeader0.With(
+//line PageHeader.gx:9:49
+		gx.Text(p.Title),
+	))
 //line PageHeader.gx:10:3
 	if p.Description != "" {
 //line PageHeader.gx:10:27
-		_b1.Add(gx.Text("\n    "))
-//line PageHeader.gx:11:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mt-2 text-lg text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line PageHeader.gx:11:70
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tPageHeader1.With(
+//line PageHeader.gx:11:51
+			gx.Text(p.Description),
+		))
 	}
 //line PageHeader.gx:12:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "gx-page-header mb-8", Kind: gx.AttrText}}, _b1.Node()))
-//line PageHeader.gx:13:10
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tPageHeader2)
+//line PageHeader.gx:8:1
+	_b.Add(_tPageHeader3.With(
+//line PageHeader.gx:8:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tPageHeader0 = gx.NewTemplate(
+	[]string{"\n  <h1 class=\"text-3xl font-bold tracking-tight\">", "</h1>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+)
+
+var _tPageHeader1 = gx.NewTemplate(
+	[]string{"\n    <p class=\"mt-2 text-lg text-muted-foreground\">", "</p>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tPageHeader2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPageHeader3 = gx.NewTemplate(
+	[]string{"<header class=\"gx-page-header mb-8\">", "</header>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}},
+)

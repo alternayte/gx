@@ -19,10 +19,16 @@ func SidebarSeparator(p SidebarSeparatorProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarSeparator.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-px w-full shrink-0 bg-border", "mx-2 w-auto bg-sidebar-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-separator", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}, p.Attrs)))
-//line SidebarSeparator.gx:10:212
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarSeparator0.With(
+//line SidebarSeparator.gx:10:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("h-px w-full shrink-0 bg-border", "mx-2 w-auto bg-sidebar-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-separator", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "none", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: "horizontal", Kind: gx.AttrText}}, p.Attrs)),
+	)
 }
+
+var _tSidebarSeparator0 = gx.NewTemplate(
+	[]string{"<div", "></div>\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

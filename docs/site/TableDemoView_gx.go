@@ -19,32 +19,57 @@ func TableDemoView(p TableDemoViewProps) gx.Node {
 	}
 	var _b gx.Builder
 //line TableDemoView.gx:10:30
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tTableDemoView0)
 //line TableDemoView.gx:11:1
 	var _b1 gx.Builder
 //line TableDemoView.gx:11:80
-	_b1.Add(gx.Text("\n  "))
-//line TableDemoView.gx:12:3
-	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "text-muted-foreground", Kind: gx.AttrText}}, gx.Text("Status")))
-//line TableDemoView.gx:12:52
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tTableDemoView1)
 //line TableDemoView.gx:13:3
 	for _, f := range p.Filters {
 //line TableDemoView.gx:13:32
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tTableDemoView2.With(
 //line TableDemoView.gx:14:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("rounded-md border border-border px-2.5 py-1 no-underline hover:bg-accent", gx.When("bg-primary", f.Current), gx.When("text-primary-foreground", f.Current)), Kind: gx.AttrText}, gx.Attr{Key: "href", Value: f.Href.URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-docs-filter", Value: f.Label, Kind: gx.AttrText}}, gx.Text(f.Label)))
-//line TableDemoView.gx:14:214
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("rounded-md border border-border px-2.5 py-1 no-underline hover:bg-accent", gx.When("bg-primary", f.Current), gx.When("text-primary-foreground", f.Current)), Kind: gx.AttrText}, gx.Attr{Key: "href", Value: f.Href.URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-docs-filter", Value: f.Label, Kind: gx.AttrText}}),
+//line TableDemoView.gx:14:201
+			gx.Text(f.Label),
+		))
 	}
 //line TableDemoView.gx:15:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-wrap items-center gap-2 p-3 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Status", Kind: gx.AttrText}}, _b1.Node()))
-//line TableDemoView.gx:16:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tTableDemoView0)
+//line TableDemoView.gx:11:1
+	_b.Add(_tTableDemoView3.With(
+//line TableDemoView.gx:11:1
+		_b1.Node(),
 //line TableDemoView.gx:17:1
-	_b.Add(p.Table)
-//line TableDemoView.gx:17:10
-	_b.Add(gx.Text("\n"))
+		p.Table,
+	))
 	return _b.Node()
 }
+
+var _tTableDemoView0 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tTableDemoView1 = gx.NewTemplate(
+	[]string{"\n  <span class=\"text-muted-foreground\">Status</span>\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+).With()
+
+var _tTableDemoView2 = gx.NewTemplate(
+	[]string{"\n    <a", ">", "</a>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tTableDemoView3 = gx.NewTemplate(
+	[]string{"<nav class=\"flex flex-wrap items-center gap-2 p-3 text-sm\" aria-label=\"Status\">", "</nav>\n", "\n"},
+	[]int{1, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "nav"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+)

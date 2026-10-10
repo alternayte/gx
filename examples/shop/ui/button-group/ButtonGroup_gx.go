@@ -23,10 +23,18 @@ func ButtonGroup(p ButtonGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ButtonGroup.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "button-group", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ButtonGroup.gx:14:374
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tButtonGroup0.With(
+//line ButtonGroup.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "button-group", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.Attrs)),
+//line ButtonGroup.gx:14:356
+		p.Children,
+	)
 }
+
+var _tButtonGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

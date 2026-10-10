@@ -23,10 +23,18 @@ func InputGroupAddon(p InputGroupAddonProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line InputGroupAddon.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4", alignClass[Align(p.align())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-addon", Kind: gx.AttrText}, gx.Attr{Key: "data-align", Value: p.align(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line InputGroupAddon.gx:14:407
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tInputGroupAddon0.With(
+//line InputGroupAddon.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4", alignClass[Align(p.align())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-addon", Kind: gx.AttrText}, gx.Attr{Key: "data-align", Value: p.align(), Kind: gx.AttrText}}, p.Attrs)),
+//line InputGroupAddon.gx:14:389
+		p.Children,
+	)
 }
+
+var _tInputGroupAddon0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

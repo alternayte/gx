@@ -21,10 +21,18 @@ func KbdGroup(p KbdGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line KbdGroup.gx:12:1
-	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line KbdGroup.gx:12:116
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tKbdGroup0.With(
+//line KbdGroup.gx:12:1
+		gx.Open("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd-group", Kind: gx.AttrText}}, p.Attrs)),
+//line KbdGroup.gx:12:98
+		p.Children,
+	)
 }
+
+var _tKbdGroup0 = gx.NewTemplate(
+	[]string{"<kbd", ">", "</kbd>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

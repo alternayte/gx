@@ -22,10 +22,127 @@ func SettingsForm(p SettingsFormProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SettingsForm.gx:14:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex w-full max-w-2xl flex-col gap-6", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("form", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-6", Kind: gx.AttrText}, gx.Attr{Key: "method", Value: "post", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: string(p.Action), Kind: gx.AttrURL, Active: "page"}}, gx.Frag(gx.Text("\n    "), card.Card(card.CardProps{Title: "Profile", Description: "Your public name and email.", Action: nil, Footer: nil, Class: "", Children: field.FieldGroup(field.FieldGroupProps{Class: "", Children: gx.Frag(field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldLabel(field.FieldLabelProps{For: "name", Class: "", Children: gx.Text("Name"), Attrs: nil}), input.Input(input.InputProps{Id: "name", Type: "text", Name: "name", Value: "", Placeholder: "", Class: "", Attrs: nil})), Attrs: nil}), field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldLabel(field.FieldLabelProps{For: "email", Class: "", Children: gx.Text("Email"), Attrs: nil}), input.Input(input.InputProps{Id: "email", Type: "email", Name: "email", Value: "", Placeholder: "", Class: "", Attrs: nil})), Attrs: nil})), Attrs: nil}), Attrs: nil}), gx.Text("\n    "), card.Card(card.CardProps{Title: "Notifications", Description: "Choose what reaches your inbox.", Action: nil, Footer: nil, Class: "", Children: field.FieldGroup(field.FieldGroupProps{Class: "", Children: gx.Frag(field.Field(field.FieldProps{Orientation: field.Horizontal, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldContent(field.FieldContentProps{Class: "", Children: gx.Frag(field.FieldTitle(field.FieldTitleProps{Class: "", Children: gx.Text("Product news"), Attrs: nil}), field.FieldDescription(field.FieldDescriptionProps{Class: "", Children: gx.Text("One message each month."), Attrs: nil})), Attrs: nil}), switches.Switch(switches.SwitchProps{Size: switches.Md, Name: "news", Label: "Product news", Value: "on", Checked: false, Disabled: false, Class: "", Attrs: nil})), Attrs: nil}), field.FieldSeparator(field.FieldSeparatorProps{Class: "", Children: nil, Attrs: nil}), field.Field(field.FieldProps{Orientation: field.Horizontal, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldContent(field.FieldContentProps{Class: "", Children: gx.Frag(field.FieldTitle(field.FieldTitleProps{Class: "", Children: gx.Text("Security alerts"), Attrs: nil}), field.FieldDescription(field.FieldDescriptionProps{Class: "", Children: gx.Text("Sign-in and password changes."), Attrs: nil})), Attrs: nil}), switches.Switch(switches.SwitchProps{Size: switches.Md, Name: "alerts", Label: "Security alerts", Value: "on", Checked: true, Disabled: false, Class: "", Attrs: nil})), Attrs: nil})), Attrs: nil}), Attrs: nil}), gx.Text("\n    "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex justify-end", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), button.Button(button.ButtonProps{Variant: button.Default, Size: button.Md, Type: "submit", Class: "", Children: gx.Text("Save changes"), Attrs: nil}), gx.Text("\n    "))), gx.Text("\n  "))), gx.Text("\n"))))
-//line SettingsForm.gx:51:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSettingsForm9.With(
+//line SettingsForm.gx:15:3
+		gx.Open("form", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-6", Kind: gx.AttrText}, gx.Attr{Key: "method", Value: "post", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: string(p.Action), Kind: gx.AttrURL, Active: "page"}}),
+//line SettingsForm.gx:16:5
+		card.Card(card.CardProps{Title: "Profile", Description: "Your public name and email.", Action: nil, Footer: nil, Class: "", Children: field.FieldGroup(field.FieldGroupProps{Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:18:9
+			field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:19:11
+				field.FieldLabel(field.FieldLabelProps{For: "name", Class: "", Children: _tSettingsForm0, Attrs: nil}),
+//line SettingsForm.gx:20:11
+				input.Input(input.InputProps{Id: "name", Type: "text", Name: "name", Value: "", Placeholder: "", Class: "", Attrs: nil}),
+			), Attrs: nil}),
+//line SettingsForm.gx:22:9
+			field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:23:11
+				field.FieldLabel(field.FieldLabelProps{For: "email", Class: "", Children: _tSettingsForm2, Attrs: nil}),
+//line SettingsForm.gx:24:11
+				input.Input(input.InputProps{Id: "email", Type: "email", Name: "email", Value: "", Placeholder: "", Class: "", Attrs: nil}),
+			), Attrs: nil}),
+		), Attrs: nil}), Attrs: nil}),
+//line SettingsForm.gx:28:5
+		card.Card(card.CardProps{Title: "Notifications", Description: "Choose what reaches your inbox.", Action: nil, Footer: nil, Class: "", Children: field.FieldGroup(field.FieldGroupProps{Class: "", Children: _tSettingsForm7.With(
+//line SettingsForm.gx:30:9
+			field.Field(field.FieldProps{Orientation: field.Horizontal, Invalid: false, Disabled: false, Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:31:11
+				field.FieldContent(field.FieldContentProps{Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:32:13
+					field.FieldTitle(field.FieldTitleProps{Class: "", Children: _tSettingsForm3, Attrs: nil}),
+//line SettingsForm.gx:33:13
+					field.FieldDescription(field.FieldDescriptionProps{Class: "", Children: _tSettingsForm4, Attrs: nil}),
+				), Attrs: nil}),
+//line SettingsForm.gx:35:11
+				switches.Switch(switches.SwitchProps{Size: switches.Md, Name: "news", Label: "Product news", Value: "on", Checked: false, Disabled: false, Class: "", Attrs: nil}),
+			), Attrs: nil}),
+//line SettingsForm.gx:37:9
+			field.FieldSeparator(field.FieldSeparatorProps{Class: "", Children: nil, Attrs: nil}),
+//line SettingsForm.gx:38:9
+			field.Field(field.FieldProps{Orientation: field.Horizontal, Invalid: false, Disabled: false, Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:39:11
+				field.FieldContent(field.FieldContentProps{Class: "", Children: _tSettingsForm1.With(
+//line SettingsForm.gx:40:13
+					field.FieldTitle(field.FieldTitleProps{Class: "", Children: _tSettingsForm5, Attrs: nil}),
+//line SettingsForm.gx:41:13
+					field.FieldDescription(field.FieldDescriptionProps{Class: "", Children: _tSettingsForm6, Attrs: nil}),
+				), Attrs: nil}),
+//line SettingsForm.gx:43:11
+				switches.Switch(switches.SwitchProps{Size: switches.Md, Name: "alerts", Label: "Security alerts", Value: "on", Checked: true, Disabled: false, Class: "", Attrs: nil}),
+			), Attrs: nil}),
+		), Attrs: nil}), Attrs: nil}),
+//line SettingsForm.gx:48:7
+		button.Button(button.ButtonProps{Variant: button.Default, Size: button.Md, Type: "submit", Class: "", Children: _tSettingsForm8, Attrs: nil}),
+	)
 }
+
+var _tSettingsForm0 = gx.NewTemplate(
+	[]string{"Name"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm1 = gx.NewTemplate(
+	[]string{"", "", ""},
+	[]int{0, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}},
+)
+
+var _tSettingsForm2 = gx.NewTemplate(
+	[]string{"Email"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm3 = gx.NewTemplate(
+	[]string{"Product news"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm4 = gx.NewTemplate(
+	[]string{"One message each month."},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm5 = gx.NewTemplate(
+	[]string{"Security alerts"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm6 = gx.NewTemplate(
+	[]string{"Sign-in and password changes."},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm7 = gx.NewTemplate(
+	[]string{"", "", "", ""},
+	[]int{0, 0, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}},
+)
+
+var _tSettingsForm8 = gx.NewTemplate(
+	[]string{"Save changes"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSettingsForm9 = gx.NewTemplate(
+	[]string{"<div class=\"mx-auto flex w-full max-w-2xl flex-col gap-6\">\n  <form", ">\n    ", "\n    ", "\n    <div class=\"flex justify-end\">\n      ", "\n    </div>\n  </form>\n</div>\n"},
+	[]int{1, 2, 2, 3},
+	[]gx.TemplateEl{{Slot: 0, Start: 61, EndStatic: 4, End: 21}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

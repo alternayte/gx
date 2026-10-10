@@ -41,10 +41,20 @@ func Calendar(p CalendarProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Calendar.gx:32:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "calendar", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: inputClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "date", Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: p.Min, Kind: gx.AttrText}, gx.Attr{Key: "max", Value: p.Max, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}}, p.Attrs)), gx.Text("\n  "), CalendarGrid(CalendarGridProps{Input: p.Id, Month: p.month(), WeekStart: p.weekStart(), Locale: p.Locale, Display: p.Display, Popover: p.Popover, PreviousLabel: "Previous month", NextLabel: "Next month", Classes: gridClasses}, gx.IslandLoad("eager")), gx.Text("\n"))))
-//line Calendar.gx:35:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCalendar0.With(
+//line Calendar.gx:32:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "calendar", Kind: gx.AttrText}}),
+//line Calendar.gx:33:3
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: inputClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "date", Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "min", Value: p.Min, Kind: gx.AttrText}, gx.Attr{Key: "max", Value: p.Max, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}}, p.Attrs)),
+//line Calendar.gx:34:3
+		CalendarGrid(CalendarGridProps{Input: p.Id, Month: p.month(), WeekStart: p.weekStart(), Locale: p.Locale, Display: p.Display, Popover: p.Popover, PreviousLabel: "Previous month", NextLabel: "Next month", Classes: gridClasses}, gx.IslandLoad("eager")),
+	)
 }
+
+var _tCalendar0 = gx.NewTemplate(
+	[]string{"<div", ">\n  <input", ">\n  ", "\n</div>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 7}, {Slot: 1, Start: 4, EndStatic: 2, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

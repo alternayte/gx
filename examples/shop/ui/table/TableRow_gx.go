@@ -21,10 +21,18 @@ func TableRow(p TableRowProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TableRow.gx:12:1
-	_b.Add(gx.El("tr", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-row", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableRow.gx:12:189
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTableRow0.With(
+//line TableRow.gx:12:1
+		gx.Open("tr", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-row", Kind: gx.AttrText}}, p.Attrs)),
+//line TableRow.gx:12:172
+		p.Children,
+	)
 }
+
+var _tTableRow0 = gx.NewTemplate(
+	[]string{"<tr", ">", "</tr>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

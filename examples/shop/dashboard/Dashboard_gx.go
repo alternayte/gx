@@ -21,16 +21,30 @@ func Dashboard(p DashboardProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Dashboard.gx:11:2
-	_b.Add(gx.Text("\n\n"))
+	return _tDashboard0.With(
 //line Dashboard.gx:13:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Dashboard", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
-//line Dashboard.gx:13:30
-	_b.Add(gx.Text("\n"))
+		gx.Head(gx.HeadProps{Title: "Dashboard", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
 //line Dashboard.gx:14:1
-	_b.Add(gx.El("section", gx.Attrs{gx.Attr{Key: "class", Value: "space-y-6", Kind: gx.AttrText}, gx.Attr{Key: "data-signals", Value: gx.SignalJSON("dashboard.Dashboard", p.GxKey, map[string]any{"qty": 1}), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-instance", Value: gx.ScopeString("dashboard.Dashboard", p.GxKey), Kind: gx.AttrText}}, gx.Frag(gx.Raw(gx.SafeHTML("\n  <h1 class=\"text-xl font-semibold\">Dashboard</h1>\n  ")), Charts(ChartsProps{Revenue: p.Revenue, Round: 0}), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-3", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "w-20 rounded-md border border-border px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "number", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("dashboard.Dashboard", p.GxKey, "qty"), Kind: gx.AttrText}}), gx.Text("\n    "), Stepper(StepperProps{Qty: gx.Ref[int](gx.SignalRefPath("dashboard.Dashboard", p.GxKey, "qty"))}, gx.IslandLoad("eager")), gx.Text("\n  "))), gx.Text("\n  "), gx.Text("\n  "), gx.El("sl-details", gx.Attrs{gx.Attr{Key: "id", Value: "ten", Kind: gx.AttrText}, gx.Attr{Key: "summary", Value: "Set the quantity to ten", Kind: gx.AttrText}, gx.Client("data-on:sl-show", gx.SignalPath("dashboard.Dashboard", p.GxKey, "qty")+" = "+gx.JSON(10), gx.ExprOp("do", gx.ExprOp("=", gx.ExprPath("dashboard.Dashboard", p.GxKey, "qty"), gx.ExprValue(10)))), gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}, gx.Text("Open me.")), gx.Raw(gx.SafeHTML("\n  \n  <div class=\"h-[2400px]\"></div>\n  ")), Legend(LegendProps{Labels: []string{"Revenue", "Users"}}), gx.Text("\n  "), WideTable(WideTableProps{Data: p.Revenue}, gx.IslandMedia("(min-width: 1600px)")), gx.Text("\n"))))
-//line Dashboard.gx:27:11
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("section", gx.Attrs{gx.Attr{Key: "class", Value: "space-y-6", Kind: gx.AttrText}, gx.Attr{Key: "data-signals", Value: gx.SignalJSON("dashboard.Dashboard", p.GxKey, map[string]any{"qty": 1}), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-instance", Value: gx.ScopeString("dashboard.Dashboard", p.GxKey), Kind: gx.AttrText}}),
+//line Dashboard.gx:16:3
+		Charts(ChartsProps{Revenue: p.Revenue, Round: 0}),
+//line Dashboard.gx:18:5
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "w-20 rounded-md border border-border px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "number", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("dashboard.Dashboard", p.GxKey, "qty"), Kind: gx.AttrText}}),
+//line Dashboard.gx:19:5
+		Stepper(StepperProps{Qty: gx.Ref[int](gx.SignalRefPath("dashboard.Dashboard", p.GxKey, "qty"))}, gx.IslandLoad("eager")),
+//line Dashboard.gx:22:3
+		gx.Open("sl-details", gx.Attrs{gx.Attr{Key: "id", Value: "ten", Kind: gx.AttrText}, gx.Attr{Key: "summary", Value: "Set the quantity to ten", Kind: gx.AttrText}, gx.Client("data-on:sl-show", gx.SignalPath("dashboard.Dashboard", p.GxKey, "qty")+" = "+gx.JSON(10), gx.ExprOp("do", gx.ExprOp("=", gx.ExprPath("dashboard.Dashboard", p.GxKey, "qty"), gx.ExprValue(10)))), gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}),
+//line Dashboard.gx:25:3
+		Legend(LegendProps{Labels: []string{"Revenue", "Users"}}),
+//line Dashboard.gx:26:3
+		WideTable(WideTableProps{Data: p.Revenue}, gx.IslandMedia("(min-width: 1600px)")),
+	)
 }
+
+var _tDashboard0 = gx.NewTemplate(
+	[]string{"\n\n", "\n<section", ">\n  <h1 class=\"text-xl font-semibold\">Dashboard</h1>\n  ", "\n  <div class=\"flex items-center gap-3\">\n    <input", ">\n    ", "\n  </div>\n  \n  <sl-details", ">Open me.</sl-details>\n  \n  <div class=\"h-[2400px]\"></div>\n  ", "\n  ", "\n</section>\n"},
+	[]int{0, 0, 1, 2, 2, 1, 1, 1},
+	[]gx.TemplateEl{{Slot: 1, Start: 1, EndStatic: 8, End: 11}, {Slot: 3, Start: 45, EndStatic: 4, End: 1}, {Slot: 5, Start: 15, EndStatic: 6, End: 22}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -23,10 +23,18 @@ func ResizablePanelGroup(p ResizablePanelGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ResizablePanelGroup.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(groupClass[p.orientation()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "resizable-panel-group", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ResizablePanelGroup.gx:14:158
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tResizablePanelGroup0.With(
+//line ResizablePanelGroup.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(groupClass[p.orientation()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "resizable-panel-group", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs)),
+//line ResizablePanelGroup.gx:14:140
+		p.Children,
+	)
 }
+
+var _tResizablePanelGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

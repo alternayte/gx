@@ -29,10 +29,16 @@ func InputGroupButton(p InputGroupButtonProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line InputGroupButton.gx:21:1
-	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: buttonSize[p.size()], Type: p.Type, Class: gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class), Children: p.Children, Attrs: p.Attrs}))
-//line InputGroupButton.gx:21:215
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tInputGroupButton0.With(
+//line InputGroupButton.gx:21:1
+		button.Button(button.ButtonProps{Variant: p.variant(), Size: buttonSize[p.size()], Type: p.Type, Class: gx.Cx("flex items-center gap-2 text-sm shadow-none", sizeClass[p.size()], p.Class), Children: p.Children, Attrs: p.Attrs}),
+	)
 }
+
+var _tInputGroupButton0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

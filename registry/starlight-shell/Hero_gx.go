@@ -27,60 +27,127 @@ func Hero(p HeroProps) gx.Node {
 //line Hero.gx:14:1
 	var _b1 gx.Builder
 //line Hero.gx:14:22
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tHero0)
 //line Hero.gx:15:3
 	if p.Image != nil {
 //line Hero.gx:15:22
-		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:16:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-hero-image", Kind: gx.AttrText}}, p.Image))
-//line Hero.gx:16:47
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tHero1.With(
+//line Hero.gx:16:32
+			p.Image,
+		))
 	}
 //line Hero.gx:17:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tHero0)
 //line Hero.gx:18:3
 	var _b2 gx.Builder
 //line Hero.gx:18:25
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tHero2)
 //line Hero.gx:19:5
 	var _b3 gx.Builder
 //line Hero.gx:19:26
-	_b3.Add(gx.Text("\n      "))
+	_b3.Add(_tHero3.With(
 //line Hero.gx:20:7
-	_b3.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "id", Value: "_top", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Hero.gx:20:35
-	_b3.Add(gx.Text("\n      "))
+		gx.Open("h1", gx.Attrs{gx.Attr{Key: "id", Value: "_top", Kind: gx.AttrText}}),
+//line Hero.gx:20:21
+		gx.Text(p.Title),
+	))
 //line Hero.gx:21:7
 	if p.Tagline != "" {
 //line Hero.gx:21:27
-		_b3.Add(gx.Text("\n        "))
-//line Hero.gx:22:9
-		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-tagline", Kind: gx.AttrText}}, gx.Text(p.Tagline)))
-//line Hero.gx:22:50
-		_b3.Add(gx.Text("\n      "))
+		_b3.Add(_tHero4.With(
+//line Hero.gx:22:33
+			gx.Text(p.Tagline),
+		))
 	}
 //line Hero.gx:23:8
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-copy", Kind: gx.AttrText}}, _b3.Node()))
-//line Hero.gx:24:11
-	_b2.Add(gx.Text("\n    "))
+	_b3.Add(_tHero2)
+//line Hero.gx:19:5
+	_b2.Add(_tHero5.With(
+//line Hero.gx:19:5
+		_b3.Node(),
+	))
 //line Hero.gx:25:5
 	if p.Actions != nil {
 //line Hero.gx:25:26
-		_b2.Add(gx.Text("\n      "))
-//line Hero.gx:26:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-actions", Kind: gx.AttrText}}, p.Actions))
-//line Hero.gx:26:48
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tHero6.With(
+//line Hero.gx:26:31
+			p.Actions,
+		))
 	}
 //line Hero.gx:27:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-stack", Kind: gx.AttrText}}, _b2.Node()))
-//line Hero.gx:28:9
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-hero", Kind: gx.AttrText}}, _b1.Node()))
-//line Hero.gx:29:7
-	_b.Add(gx.Text("\n"))
+	_b2.Add(_tHero0)
+//line Hero.gx:18:3
+	_b1.Add(_tHero7.With(
+//line Hero.gx:18:3
+		_b2.Node(),
+	))
+//line Hero.gx:14:1
+	_b.Add(_tHero8.With(
+//line Hero.gx:14:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tHero0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tHero1 = gx.NewTemplate(
+	[]string{"\n    <div class=\"sl-hero-image\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero2 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tHero3 = gx.NewTemplate(
+	[]string{"\n      <h1", ">", "</h1>\n      "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tHero4 = gx.NewTemplate(
+	[]string{"\n        <div class=\"sl-tagline\">", "</div>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero5 = gx.NewTemplate(
+	[]string{"<div class=\"sl-copy\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero6 = gx.NewTemplate(
+	[]string{"\n      <div class=\"sl-actions\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero7 = gx.NewTemplate(
+	[]string{"<div class=\"sl-stack\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero8 = gx.NewTemplate(
+	[]string{"<div class=\"sl-hero\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

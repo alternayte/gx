@@ -3,12 +3,14 @@
 package gx
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // Node is one node of a render tree. Only this package implements Node.
@@ -60,6 +62,15 @@ func (b *Builder) Add(n ...Node) { b.nodes = append(b.nodes, n...) }
 
 // Node returns the built node.
 func (b *Builder) Node() Node { return fragNode(b.nodes) }
+
+// Int returns a text node for an integer. Generated code uses it for an
+// expression of an integer type: the render writes the digits with no
+// string (NFR-03).
+func Int(v int64) Node { return intNode(v) }
+
+type intNode int64
+
+func (intNode) node() {}
 
 // Value returns a text node for a renderable value: bool, integer, float,
 // string, fmt.Stringer or error.
@@ -260,8 +271,7 @@ func Render(w http.ResponseWriter, r *http.Request, n Node) error {
 
 // RenderNode writes n to a writer with no request in scope.
 func RenderNode(w io.Writer, n Node) error {
-	_, err := io.WriteString(w, String(n))
-	return err
+	return writeRequest(w, nil, n)
 }
 
 // RenderRequest renders n with the request in scope, so typed links mark the
@@ -270,27 +280,65 @@ func RenderNode(w io.Writer, n Node) error {
 func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 	needs := runtimeNeedsOf(r)
 	if needs == nil {
-		_, err := io.WriteString(w, StringRequest(r, n))
-		return err
+		return writeRequest(w, r, n)
 	}
 	*needs = scanRuntimeNeeds(n)
 	needs.nonce = Nonce(r)
 	if needs.ownDocument {
 		// The node writes its own html element, so the head stays where
 		// the node put it.
-		_, err := io.WriteString(w, StringRequest(r, n))
-		return err
+		return writeRequest(w, r, n)
 	}
 	// The app writes the document shell around this fragment, and the
 	// gx.Head output moves into its head.
 	st := &renderState{request: r, requestURI: activeURI(r), headWritten: true, nonce: needs.nonce, keepSignals: devKeepSignals(r)}
 	collectHead(n, st, 1)
-	var head, body strings.Builder
-	renderHead(&head, st)
-	renderNode(&body, n, st)
-	needs.shell = &shellParts{head: head.String(), props: st.head}
-	_, err := io.WriteString(w, body.String())
+	b := getBuffer()
+	defer putBuffer(b)
+	renderHead(b, st)
+	needs.shell = &shellParts{head: b.String(), props: st.head}
+	b.Reset()
+	renderNode(b, n, st)
+	_, err := w.Write(b.Bytes())
 	return err
+}
+
+// bufferPool holds the buffers of the render. A render writes into one
+// buffer and gives its bytes to the writer, so a page costs no buffer of
+// its own (NFR-03).
+var bufferPool = sync.Pool{New: func() any { return new(bytes.Buffer) }}
+
+func getBuffer() *bytes.Buffer {
+	b := bufferPool.Get().(*bytes.Buffer)
+	b.Reset()
+	return b
+}
+
+// putBuffer gives a buffer back. A very large page does not keep its
+// buffer in the pool.
+func putBuffer(b *bytes.Buffer) {
+	if b.Cap() <= 1<<18 {
+		bufferPool.Put(b)
+	}
+}
+
+// writeRequest renders n into a buffer of the pool and writes it.
+func writeRequest(w io.Writer, r *http.Request, n Node) error {
+	b := getBuffer()
+	defer putBuffer(b)
+	renderRequest(b, r, n)
+	_, err := w.Write(b.Bytes())
+	return err
+}
+
+// renderRequest renders n with the request in scope.
+func renderRequest(b *bytes.Buffer, r *http.Request, n Node) {
+	st := &renderState{request: r, nonce: Nonce(r), keepSignals: devKeepSignals(r)}
+	if r != nil && r.URL != nil {
+		st.requestURI = activeURI(r)
+	}
+	collectHead(n, st, 1)
+	renderNode(b, n, st)
 }
 
 // String returns the HTML of n with no request in scope.
@@ -298,17 +346,13 @@ func String(n Node) string { return StringRequest(nil, n) }
 
 // StringRequest returns the HTML of n with the request in scope.
 func StringRequest(r *http.Request, n Node) string {
-	var b strings.Builder
-	st := &renderState{request: r, nonce: Nonce(r), keepSignals: devKeepSignals(r)}
-	if r != nil && r.URL != nil {
-		st.requestURI = activeURI(r)
-	}
-	collectHead(n, st, 1)
-	renderNode(&b, n, st)
+	b := getBuffer()
+	defer putBuffer(b)
+	renderRequest(b, r, n)
 	return b.String()
 }
 
-func renderNode(b *strings.Builder, n Node, st *renderState) {
+func renderNode(b *bytes.Buffer, n Node, st *renderState) {
 	switch t := n.(type) {
 	case nil:
 		return
@@ -318,7 +362,10 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 			renderHead(b, st)
 		}
 	case textNode:
-		b.WriteString(escapeText(string(t)))
+		_, _ = textEscaper.WriteString(b, string(t))
+	case intNode:
+		var digits [20]byte
+		b.Write(strconv.AppendInt(digits[:0], int64(t), 10))
 	case rawNode:
 		b.WriteString(string(t))
 	case fragNode:
@@ -328,108 +375,7 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 	case *elNode:
 		b.WriteByte('<')
 		b.WriteString(t.name)
-		for _, a := range t.attrs {
-			if a.Kind == AttrBool {
-				if a.Value == "true" {
-					b.WriteByte(' ')
-					b.WriteString(a.Key)
-				}
-				continue
-			}
-			if a.Kind == attrBundle {
-				// The file of an island or of a web component module:
-				// the installed bundle names it at render time.
-				a.Value, a.Kind = bundleURL(a.Value), AttrURL
-				if a.Value == "" {
-					continue
-				}
-			}
-			if a.Key == clientKey {
-				// A client expression: text for the adapter, or
-				// data for a widget (SI-15).
-				key, value, ok := st.resolveClient(a.Value)
-				if !ok {
-					continue
-				}
-				a.Key, a.Value, a.Kind = key, value, AttrText
-			}
-			if st.forWidget() {
-				// A widget has its own names for the attributes of
-				// signals, and an invocation is data.
-				switch a.Key {
-				case "data-signals", "data-bind":
-					a.Key = widgetAttrKey(a.Key)
-				case onKey:
-					out, ok := widgetOn(a.Value)
-					if !ok {
-						continue
-					}
-					a = out
-				case invokeKey:
-					out, ok := widgetInvoke(a.Value)
-					if !ok {
-						continue
-					}
-					a = out
-				}
-			}
-			if a.Key == onKey {
-				// An action invocation on an event: the adapter
-				// writes its own attributes (REQ-PLG-04).
-				for _, out := range st.resolveOn(a.Value) {
-					b.WriteByte(' ')
-					b.WriteString(out.Key)
-					b.WriteString(`="`)
-					b.WriteString(escapeAttr(out.Value))
-					b.WriteByte('"')
-				}
-				continue
-			}
-			if a.Kind == AttrText && strings.IndexByte(a.Value, 0) >= 0 {
-				// An action invocation: the adapter writes it
-				// (REQ-PLG-04).
-				a.Key, a.Value = st.resolveInvoke(a.Key, a.Value)
-				if a.Key == "" {
-					continue
-				}
-			}
-			b.WriteByte(' ')
-			b.WriteString(a.Key)
-			if st != nil && st.keepSignals && a.Key == "data-signals" {
-				// A dev reload keeps the state of the page: a signal
-				// that the browser holds keeps its value.
-				b.WriteString("__ifmissing")
-			}
-			b.WriteString(`="`)
-			switch a.Kind {
-			case AttrURL:
-				b.WriteString(escapeURL(a.Value))
-			case AttrStyle:
-				b.WriteString(escapeStyle(a.Value))
-			default:
-				b.WriteString(escapeAttr(a.Value))
-			}
-			b.WriteByte('"')
-			if a.Active != "" {
-				b.WriteString(` data-gx-active="`)
-				b.WriteString(escapeAttr(a.Active))
-				b.WriteByte('"')
-			}
-			if a.Active != "" && st != nil {
-				switch {
-				case a.Active == "section" && sectionMatch(st.requestURI, a.Value):
-					b.WriteString(" data-active")
-				case a.Active == "page" && st.requestURI == a.Value:
-					b.WriteString(` aria-current="page"`)
-				}
-			}
-		}
-		if t.name == "script" && st != nil && st.nonce != "" && !hasAttr(t.attrs, "nonce") {
-			// Every script carries the nonce of the policy (SI-11).
-			b.WriteString(` nonce="`)
-			b.WriteString(escapeAttr(st.nonce))
-			b.WriteByte('"')
-		}
+		writeAttrs(b, t.name, t.attrs, st)
 		b.WriteByte('>')
 		if voidElements[t.name] {
 			return
@@ -440,6 +386,120 @@ func renderNode(b *strings.Builder, n Node, st *renderState) {
 		b.WriteString("</")
 		b.WriteString(t.name)
 		b.WriteByte('>')
+	case *tmplNode:
+		t.render(b, st)
+	case *tmplElNode:
+		t.render(b, st)
+	case *openNode:
+		writeAttrs(b, t.name, t.attrs, st)
+	}
+}
+
+// writeAttrs writes the attributes of one element, and the nonce of a
+// script. The element of a tree and the open tag of a template value both
+// use it, so the two give the same bytes (REQ-AUT-21).
+func writeAttrs(b *bytes.Buffer, name string, attrs Attrs, st *renderState) {
+	for _, a := range attrs {
+		if a.Kind == AttrBool {
+			if a.Value == "true" {
+				b.WriteByte(' ')
+				b.WriteString(a.Key)
+			}
+			continue
+		}
+		if a.Kind == attrBundle {
+			// The file of an island or of a web component module:
+			// the installed bundle names it at render time.
+			a.Value, a.Kind = bundleURL(a.Value), AttrURL
+			if a.Value == "" {
+				continue
+			}
+		}
+		if a.Key == clientKey {
+			// A client expression: text for the adapter, or
+			// data for a widget (SI-15).
+			key, value, ok := st.resolveClient(a.Value)
+			if !ok {
+				continue
+			}
+			a.Key, a.Value, a.Kind = key, value, AttrText
+		}
+		if st.forWidget() {
+			// A widget has its own names for the attributes of
+			// signals, and an invocation is data.
+			switch a.Key {
+			case "data-signals", "data-bind":
+				a.Key = widgetAttrKey(a.Key)
+			case onKey:
+				out, ok := widgetOn(a.Value)
+				if !ok {
+					continue
+				}
+				a = out
+			case invokeKey:
+				out, ok := widgetInvoke(a.Value)
+				if !ok {
+					continue
+				}
+				a = out
+			}
+		}
+		if a.Key == onKey {
+			// An action invocation on an event: the adapter
+			// writes its own attributes (REQ-PLG-04).
+			for _, out := range st.resolveOn(a.Value) {
+				b.WriteByte(' ')
+				b.WriteString(out.Key)
+				b.WriteString(`="`)
+				b.WriteString(escapeAttr(out.Value))
+				b.WriteByte('"')
+			}
+			continue
+		}
+		if a.Kind == AttrText && strings.IndexByte(a.Value, 0) >= 0 {
+			// An action invocation: the adapter writes it
+			// (REQ-PLG-04).
+			a.Key, a.Value = st.resolveInvoke(a.Key, a.Value)
+			if a.Key == "" {
+				continue
+			}
+		}
+		b.WriteByte(' ')
+		b.WriteString(a.Key)
+		if st != nil && st.keepSignals && a.Key == "data-signals" {
+			// A dev reload keeps the state of the page: a signal
+			// that the browser holds keeps its value.
+			b.WriteString("__ifmissing")
+		}
+		b.WriteString(`="`)
+		switch a.Kind {
+		case AttrURL:
+			b.WriteString(escapeURL(a.Value))
+		case AttrStyle:
+			b.WriteString(escapeStyle(a.Value))
+		default:
+			b.WriteString(escapeAttr(a.Value))
+		}
+		b.WriteByte('"')
+		if a.Active != "" {
+			b.WriteString(` data-gx-active="`)
+			b.WriteString(escapeAttr(a.Active))
+			b.WriteByte('"')
+		}
+		if a.Active != "" && st != nil {
+			switch {
+			case a.Active == "section" && sectionMatch(st.requestURI, a.Value):
+				b.WriteString(" data-active")
+			case a.Active == "page" && st.requestURI == a.Value:
+				b.WriteString(` aria-current="page"`)
+			}
+		}
+	}
+	if name == "script" && st != nil && st.nonce != "" && !hasAttr(attrs, "nonce") {
+		// Every script carries the nonce of the policy (SI-11).
+		b.WriteString(` nonce="`)
+		b.WriteString(escapeAttr(st.nonce))
+		b.WriteByte('"')
 	}
 }
 

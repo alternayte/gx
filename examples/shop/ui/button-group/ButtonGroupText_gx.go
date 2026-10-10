@@ -27,20 +27,43 @@ func ButtonGroupText(p ButtonGroupTextProps) gx.Node {
 //line ButtonGroupText.gx:14:1
 	if p.For != "" {
 //line ButtonGroupText.gx:14:17
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tButtonGroupText0.With(
 //line ButtonGroupText.gx:15:3
-		_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "for", Value: p.For, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ButtonGroupText.gx:15:246
-		_b.Add(gx.Text("\n"))
+			gx.Open("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "for", Value: p.For, Kind: gx.AttrText}}, p.Attrs)),
+//line ButtonGroupText.gx:15:226
+			p.Children,
+		))
 	} else {
 //line ButtonGroupText.gx:16:9
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tButtonGroupText1.With(
 //line ButtonGroupText.gx:17:3
-		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ButtonGroupText.gx:17:230
-		_b.Add(gx.Text("\n"))
+			gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 rounded-md border border-border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line ButtonGroupText.gx:17:212
+			p.Children,
+		))
 	}
 //line ButtonGroupText.gx:18:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tButtonGroupText2)
 	return _b.Node()
 }
+
+var _tButtonGroupText0 = gx.NewTemplate(
+	[]string{"\n  <label", ">", "</label>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tButtonGroupText1 = gx.NewTemplate(
+	[]string{"\n  <div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tButtonGroupText2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

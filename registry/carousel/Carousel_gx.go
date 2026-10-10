@@ -27,10 +27,22 @@ func Carousel(p CarouselProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Carousel.gx:18:1
-	_b.Add(gx.El("section", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "carousel", Kind: gx.AttrText}, gx.Attr{Key: "aria-roledescription", Value: "carousel", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: viewportClass[p.orientation()], Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.viewportID(), Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label() + " slides", Kind: gx.AttrText}}, p.Children), gx.Text("\n  "), CarouselControls(CarouselControlsProps{Viewport: p.viewportID(), Orientation: string(p.orientation()), PreviousLabel: "Previous slide", NextLabel: "Next slide", StatusText: statusText, Classes: controlClasses}, gx.IslandLoad("eager")), gx.Text("\n"))))
-//line Carousel.gx:21:11
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCarousel0.With(
+//line Carousel.gx:18:1
+		gx.Open("section", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "carousel", Kind: gx.AttrText}, gx.Attr{Key: "aria-roledescription", Value: "carousel", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: string(p.orientation()), Kind: gx.AttrText}}, p.Attrs)),
+//line Carousel.gx:19:3
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: viewportClass[p.orientation()], Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.viewportID(), Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label() + " slides", Kind: gx.AttrText}}),
+//line Carousel.gx:19:128
+		p.Children,
+//line Carousel.gx:20:3
+		CarouselControls(CarouselControlsProps{Viewport: p.viewportID(), Orientation: string(p.orientation()), PreviousLabel: "Previous slide", NextLabel: "Next slide", StatusText: statusText, Classes: controlClasses}, gx.IslandLoad("eager")),
+	)
 }
+
+var _tCarousel0 = gx.NewTemplate(
+	[]string{"<section", ">\n  <div", ">", "</div>\n  ", "\n</section>\n"},
+	[]int{0, 1, 2, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 11}, {Slot: 1, Start: 4, EndStatic: 3, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

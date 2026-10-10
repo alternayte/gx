@@ -19,10 +19,16 @@ func MenubarSeparator(p MenubarSeparatorProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line MenubarSeparator.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("-mx-1 my-1 h-px bg-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}}, p.Attrs)))
-//line MenubarSeparator.gx:10:94
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tMenubarSeparator0.With(
+//line MenubarSeparator.gx:10:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("-mx-1 my-1 h-px bg-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}}, p.Attrs)),
+	)
 }
+
+var _tMenubarSeparator0 = gx.NewTemplate(
+	[]string{"<div", "></div>\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

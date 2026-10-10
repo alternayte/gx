@@ -23,10 +23,18 @@ func SelectOption(p SelectOptionProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SelectOption.gx:14:1
-	_b.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("selected", p.Selected), gx.Bool("disabled", p.Disabled)}, p.Children))
-//line SelectOption.gx:14:90
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSelectOption0.With(
+//line SelectOption.gx:14:1
+		gx.Open("option", gx.Attrs{gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("selected", p.Selected), gx.Bool("disabled", p.Disabled)}),
+//line SelectOption.gx:14:69
+		p.Children,
+	)
 }
+
+var _tSelectOption0 = gx.NewTemplate(
+	[]string{"<option", ">", "</option>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

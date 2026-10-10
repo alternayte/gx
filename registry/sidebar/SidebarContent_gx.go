@@ -21,10 +21,18 @@ func SidebarContent(p SidebarContentProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarContent.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-h-0 flex-1 flex-col gap-2 overflow-auto", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarContent.gx:12:163
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarContent0.With(
+//line SidebarContent.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-h-0 flex-1 flex-col gap-2 overflow-auto", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-content", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "content", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarContent.gx:12:145
+		p.Children,
+	)
 }
+
+var _tSidebarContent0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

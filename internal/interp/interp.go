@@ -8,6 +8,7 @@ import (
 	"go/token"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 // File is one compiled source file: its functions by name.
@@ -76,7 +77,7 @@ func Compile(table *Table, pkgPath, filename string, src []byte) (file *File, er
 	if own == nil {
 		return nil, &Unsupported{Msg: "the symbol table has no package " + pkgPath}
 	}
-	c := &compiler{table: table, fset: fset, own: own, imports: map[string]*Package{}}
+	c := &compiler{table: table, fset: fset, own: own, imports: map[string]*Package{}, fileVars: map[string]reflect.Value{}}
 	defer func() {
 		if r := recover(); r != nil {
 			u, ok := r.(*Unsupported)
@@ -97,6 +98,26 @@ func Compile(table *Table, pkgPath, filename string, src []byte) (file *File, er
 			name = im.Name.Name
 		}
 		c.imports[name] = pkg
+	}
+	// The template variables of generated code hold the static strings of
+	// the markup (DR-11). A markup edit changes them, so the interpreter
+	// makes each one from its own source and does not read the compiled
+	// one.
+	for _, decl := range parsed.Decls {
+		gd, ok := decl.(*ast.GenDecl)
+		if !ok || gd.Tok != token.VAR {
+			continue
+		}
+		for _, spec := range gd.Specs {
+			vs, ok := spec.(*ast.ValueSpec)
+			if !ok || len(vs.Names) != 1 || len(vs.Values) != 1 || !strings.HasPrefix(vs.Names[0].Name, "_t") {
+				continue
+			}
+			c.fn = &funcScope{blocks: []map[string]variable{{}}}
+			v := c.typed(vs.Values[0], c.expr(vs.Values[0], nil), nil)
+			c.fileVars[vs.Names[0].Name] = v.eval(&frame{vars: make([]reflect.Value, c.fn.slots)})
+			c.fn = nil
+		}
 	}
 	file = &File{funcs: map[string]*Func{}}
 	for _, decl := range parsed.Decls {
@@ -129,6 +150,8 @@ type compiler struct {
 	own     *Package
 	imports map[string]*Package
 	fn      *funcScope
+	// fileVars holds the template variables of the file by name.
+	fileVars map[string]reflect.Value
 }
 
 // funcScope is the compile-time view of one function or function literal:
@@ -652,6 +675,9 @@ func (c *compiler) ident(id *ast.Ident) value {
 		slot := v.slot
 		get := func(fr *frame) reflect.Value { return fromFrame(fr, depth).vars[slot] }
 		return value{typ: v.typ, eval: get, addr: get}
+	}
+	if v, ok := c.fileVars[id.Name]; ok {
+		return symbolValue(v)
 	}
 	if v, ok := c.own.Values[id.Name]; ok {
 		return symbolValue(v)

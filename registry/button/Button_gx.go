@@ -27,10 +27,18 @@ func Button(p ButtonProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Button.gx:18:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: Class(p.Variant, p.Size, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.typeAttr(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Button.gx:18:172
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tButton0.With(
+//line Button.gx:18:1
+		gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: Class(p.Variant, p.Size, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.typeAttr(), Kind: gx.AttrText}}, p.Attrs)),
+//line Button.gx:18:151
+		p.Children,
+	)
 }
+
+var _tButton0 = gx.NewTemplate(
+	[]string{"<button", ">", "</button>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

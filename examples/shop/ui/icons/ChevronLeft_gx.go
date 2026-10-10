@@ -20,10 +20,16 @@ func ChevronLeft(p ChevronLeftProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ChevronLeft.gx:11:1
-	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m15 18l-6-6l6-6\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line ChevronLeft.gx:11:197
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tChevronLeft0.With(
+//line ChevronLeft.gx:11:1
+		gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m15 18l-6-6l6-6\"/>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tChevronLeft0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

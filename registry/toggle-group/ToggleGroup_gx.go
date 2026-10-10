@@ -29,10 +29,18 @@ func ToggleGroup(p ToggleGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ToggleGroup.gx:20:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] rounded-md", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.gap()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "data-spacing", Value: gx.TextValue(p.spacing()), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ToggleGroup.gx:20:270
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tToggleGroup0.With(
+//line ToggleGroup.gx:20:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] rounded-md", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.gap()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}, gx.Attr{Key: "data-spacing", Value: gx.TextValue(p.spacing()), Kind: gx.AttrText}}, p.Attrs)),
+//line ToggleGroup.gx:20:252
+		p.Children,
+	)
 }
+
+var _tToggleGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

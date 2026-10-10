@@ -25,14 +25,22 @@ func MenubarMenu(p MenubarMenuProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line MenubarMenu.gx:16:1
-	_b.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.triggerStyle()))), Kind: gx.AttrStyle}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "popovertarget", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-roving-item", true)}, gx.Text(p.Label)))
-//line MenubarMenu.gx:16:403
-	_b.Add(gx.Text("\n"))
+	return _tMenubarMenu0.With(
+//line MenubarMenu.gx:16:1
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground has-[+:popover-open]:bg-accent has-[+:popover-open]:text-accent-foreground", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.triggerStyle()))), Kind: gx.AttrStyle}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "popovertarget", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-roving-item", true)}),
+//line MenubarMenu.gx:16:385
+		gx.Text(p.Label),
 //line MenubarMenu.gx:17:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[12rem] origin-top-left data-[side=top]:origin-bottom-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.contentStyle()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-place", Value: "bottom start 8 -4", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line MenubarMenu.gx:17:415
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[12rem] origin-top-left data-[side=top]:origin-bottom-left overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.contentStyle()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-place", Value: "bottom start 8 -4", Kind: gx.AttrText}}, p.Attrs)),
+//line MenubarMenu.gx:17:397
+		p.Children,
+	)
 }
+
+var _tMenubarMenu0 = gx.NewTemplate(
+	[]string{"<button", ">", "</button>\n<div", ">", "</div>\n"},
+	[]int{0, 1, 0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}, {Slot: 2, Start: 10, EndStatic: 4, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}},
+)

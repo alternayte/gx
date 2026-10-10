@@ -19,12 +19,22 @@ func Result(p ResultProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Result.gx:12:17
-	_b.Add(gx.Text("\n"))
+	return _tResult0.With(
 //line Result.gx:13:1
-	_b.Add(gx.El("figure", gx.Attrs{gx.Attr{Key: "class", Value: "gx-result my-6 overflow-hidden rounded-lg border border-border", Kind: gx.AttrText}, gx.Bool("data-pagefind-ignore", true)}, gx.Frag(gx.Text("\n  "), gx.El("figcaption", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border bg-muted/50 px-3 py-2 text-xs", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "font-medium text-foreground", Kind: gx.AttrText}}, gx.Text(resultTitle(p.Page, p.Get))), gx.Text("\n    "), gx.El("code", gx.Attrs{gx.Attr{Key: "class", Value: "rounded bg-background px-2 py-0.5 font-mono text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Get)), gx.Raw(gx.SafeHTML("\n    <span class=\"ml-auto text-muted-foreground\">The page of the sample app</span>\n  ")))), gx.Text("\n  "), gx.El("iframe", gx.Attrs{gx.Attr{Key: "class", Value: "block h-40 w-full bg-background", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: resultRoute(p.Page, p.Get).URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "title", Value: "Result: " + p.Get, Kind: gx.AttrText}, gx.Attr{Key: "loading", Value: "lazy", Kind: gx.AttrText}}), gx.Text("\n"))))
-//line Result.gx:20:10
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("figure", gx.Attrs{gx.Attr{Key: "class", Value: "gx-result my-6 overflow-hidden rounded-lg border border-border", Kind: gx.AttrText}, gx.Bool("data-pagefind-ignore", true)}),
+//line Result.gx:15:47
+		gx.Text(resultTitle(p.Page, p.Get)),
+//line Result.gx:16:85
+		gx.Text(p.Get),
+//line Result.gx:19:3
+		gx.Open("iframe", gx.Attrs{gx.Attr{Key: "class", Value: "block h-40 w-full bg-background", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: resultRoute(p.Page, p.Get).URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "title", Value: "Result: " + p.Get, Kind: gx.AttrText}, gx.Attr{Key: "loading", Value: "lazy", Kind: gx.AttrText}}),
+	)
 }
+
+var _tResult0 = gx.NewTemplate(
+	[]string{"\n<figure", ">\n  <figcaption class=\"flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border bg-muted/50 px-3 py-2 text-xs\">\n    <span class=\"font-medium text-foreground\">", "</span>\n    <code class=\"rounded bg-background px-2 py-0.5 font-mono text-muted-foreground\">", "</code>\n    <span class=\"ml-auto text-muted-foreground\">The page of the sample app</span>\n  </figcaption>\n  <iframe", "></iframe>\n</figure>\n"},
+	[]int{0, 3, 3, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 1, EndStatic: 4, End: 20}, {Slot: 3, Start: 108, EndStatic: 4, End: 10}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

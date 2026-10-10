@@ -23,10 +23,18 @@ func NavigationMenu(p NavigationMenuProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line NavigationMenu.gx:14:1
-	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-center justify-center gap-1", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line NavigationMenu.gx:16:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tNavigationMenu0.With(
+//line NavigationMenu.gx:14:1
+		gx.Open("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex max-w-max flex-1 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)),
+//line NavigationMenu.gx:15:71
+		p.Children,
+	)
 }
+
+var _tNavigationMenu0 = gx.NewTemplate(
+	[]string{"<nav", ">\n  <ul class=\"flex flex-1 list-none items-center justify-center gap-1\">", "</ul>\n</nav>\n"},
+	[]int{0, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 12}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

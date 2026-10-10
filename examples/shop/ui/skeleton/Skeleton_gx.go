@@ -19,10 +19,16 @@ func Skeleton(p SkeletonProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Skeleton.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("animate-pulse rounded-md bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}}, p.Attrs)))
-//line Skeleton.gx:10:107
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSkeleton0.With(
+//line Skeleton.gx:10:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("animate-pulse rounded-md bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}}, p.Attrs)),
+	)
 }
+
+var _tSkeleton0 = gx.NewTemplate(
+	[]string{"<div", "></div>\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

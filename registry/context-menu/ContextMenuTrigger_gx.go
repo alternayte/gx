@@ -23,10 +23,18 @@ func ContextMenuTrigger(p ContextMenuTriggerProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenuTrigger.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-gx-contextmenu", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ContextMenuTrigger.gx:14:86
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenuTrigger0.With(
+//line ContextMenuTrigger.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-gx-contextmenu", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Attrs)),
+//line ContextMenuTrigger.gx:14:68
+		p.Children,
+	)
 }
+
+var _tContextMenuTrigger0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -23,10 +23,18 @@ func DropdownMenuGroup(p DropdownMenuGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line DropdownMenuGroup.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenuGroup.gx:14:87
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tDropdownMenuGroup0.With(
+//line DropdownMenuGroup.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)),
+//line DropdownMenuGroup.gx:14:69
+		p.Children,
+	)
 }
+
+var _tDropdownMenuGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

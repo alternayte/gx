@@ -21,10 +21,18 @@ func AvatarGroup(p AvatarGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line AvatarGroup.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line AvatarGroup.gx:12:188
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tAvatarGroup0.With(
+//line AvatarGroup.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-group", Kind: gx.AttrText}}, p.Attrs)),
+//line AvatarGroup.gx:12:170
+		p.Children,
+	)
 }
+
+var _tAvatarGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

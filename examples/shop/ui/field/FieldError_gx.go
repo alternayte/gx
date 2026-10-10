@@ -28,58 +28,124 @@ func FieldError(p FieldErrorProps) gx.Node {
 //line FieldError.gx:15:1
 	if p.Children != nil || len(p.messages()) > 0 {
 //line FieldError.gx:15:48
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tFieldError0)
 //line FieldError.gx:16:3
 		var _b1 gx.Builder
 //line FieldError.gx:16:121
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tFieldError1)
 //line FieldError.gx:17:5
 		if p.Children != nil {
 //line FieldError.gx:17:27
-			_b1.Add(gx.Text("\n      "))
+			_b1.Add(_tFieldError2.With(
 //line FieldError.gx:18:7
-			_b1.Add(p.Children)
-//line FieldError.gx:18:19
-			_b1.Add(gx.Text("\n    "))
+				p.Children,
+			))
 		} else {
 //line FieldError.gx:19:12
 			if len(p.messages()) == 1 {
 //line FieldError.gx:19:39
-				_b1.Add(gx.Text("\n      "))
+				_b1.Add(_tFieldError2.With(
 //line FieldError.gx:20:7
-				_b1.Add(gx.Text(p.messages()[0]))
-//line FieldError.gx:20:24
-				_b1.Add(gx.Text("\n    "))
+					gx.Text(p.messages()[0]),
+				))
 			} else {
 //line FieldError.gx:21:13
-				_b1.Add(gx.Text("\n      "))
+				_b1.Add(_tFieldError3)
 //line FieldError.gx:22:7
 				var _b2 gx.Builder
 //line FieldError.gx:22:54
-				_b2.Add(gx.Text("\n        "))
+				_b2.Add(_tFieldError4)
 //line FieldError.gx:23:9
 				for _, message := range p.messages() {
 //line FieldError.gx:23:47
-					_b2.Add(gx.Text("\n          "))
-//line FieldError.gx:24:11
-					_b2.Add(gx.El("li", nil, gx.Text(message)))
-//line FieldError.gx:24:29
-					_b2.Add(gx.Text("\n        "))
+					_b2.Add(_tFieldError5.With(
+//line FieldError.gx:24:15
+						gx.Text(message),
+					))
 				}
 //line FieldError.gx:25:10
-				_b2.Add(gx.Text("\n      "))
-				_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "ml-4 flex list-disc flex-col gap-1", Kind: gx.AttrText}}, _b2.Node()))
-//line FieldError.gx:26:12
-				_b1.Add(gx.Text("\n    "))
+				_b2.Add(_tFieldError3)
+//line FieldError.gx:22:7
+				_b1.Add(_tFieldError6.With(
+//line FieldError.gx:22:7
+					_b2.Node(),
+				))
 			}
 		}
 //line FieldError.gx:27:6
-		_b1.Add(gx.Text("\n  "))
-		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm font-normal text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field-error", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line FieldError.gx:28:9
-		_b.Add(gx.Text("\n"))
+		_b1.Add(_tFieldError0)
+//line FieldError.gx:16:3
+		_b.Add(_tFieldError7.With(
+//line FieldError.gx:16:3
+			gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-sm font-normal text-destructive", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "field-error", Kind: gx.AttrText}}, p.Attrs)),
+//line FieldError.gx:16:3
+			_b1.Node(),
+		))
 	}
 //line FieldError.gx:29:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tFieldError8)
 	return _b.Node()
 }
+
+var _tFieldError0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFieldError1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFieldError2 = gx.NewTemplate(
+	[]string{"\n      ", "\n    "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tFieldError3 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFieldError4 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFieldError5 = gx.NewTemplate(
+	[]string{"\n          <li>", "</li>\n        "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+)
+
+var _tFieldError6 = gx.NewTemplate(
+	[]string{"<ul class=\"ml-4 flex list-disc flex-col gap-1\">", "</ul>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)
+
+var _tFieldError7 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tFieldError8 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

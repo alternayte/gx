@@ -29,10 +29,16 @@ func Input(p InputProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Input.gx:20:1
-	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input", Kind: gx.AttrText}}, p.Attrs)))
-//line Input.gx:20:160
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tInput0.With(
+//line Input.gx:20:1
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input", Kind: gx.AttrText}}, p.Attrs)),
+	)
 }
+
+var _tInput0 = gx.NewTemplate(
+	[]string{"<input", ">\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

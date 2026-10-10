@@ -21,10 +21,18 @@ func Kbd(p KbdProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Kbd.gx:12:1
-	_b.Add(gx.El("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-foreground select-none [&_svg:not([class*='size-'])]:size-3 [[data-slot=tooltip-content]_&]:bg-background/20 [[data-slot=tooltip-content]_&]:text-background dark:[[data-slot=tooltip-content]_&]:bg-background/10", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Kbd.gx:12:434
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tKbd0.With(
+//line Kbd.gx:12:1
+		gx.Open("kbd", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-foreground select-none [&_svg:not([class*='size-'])]:size-3 [[data-slot=tooltip-content]_&]:bg-background/20 [[data-slot=tooltip-content]_&]:text-background dark:[[data-slot=tooltip-content]_&]:bg-background/10", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "kbd", Kind: gx.AttrText}}, p.Attrs)),
+//line Kbd.gx:12:416
+		p.Children,
+	)
 }
+
+var _tKbd0 = gx.NewTemplate(
+	[]string{"<kbd", ">", "</kbd>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

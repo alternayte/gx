@@ -21,10 +21,18 @@ func TableBody(p TableBodyProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TableBody.gx:12:1
-	_b.Add(gx.El("tbody", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr:last-child]:border-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-body", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableBody.gx:12:117
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTableBody0.With(
+//line TableBody.gx:12:1
+		gx.Open("tbody", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr:last-child]:border-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-body", Kind: gx.AttrText}}, p.Attrs)),
+//line TableBody.gx:12:97
+		p.Children,
+	)
 }
+
+var _tTableBody0 = gx.NewTemplate(
+	[]string{"<tbody", ">", "</tbody>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

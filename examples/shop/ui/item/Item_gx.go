@@ -31,20 +31,43 @@ func Item(p ItemProps) gx.Node {
 //line Item.gx:18:1
 	if p.Href != "" {
 //line Item.gx:18:18
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tItem0.With(
 //line Item.gx:19:3
-		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Item.gx:19:132
-		_b.Add(gx.Text("\n"))
+			gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs)),
+//line Item.gx:19:116
+			p.Children,
+		))
 	} else {
 //line Item.gx:20:9
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tItem1.With(
 //line Item.gx:21:3
-		_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Item.gx:21:122
-		_b.Add(gx.Text("\n"))
+			gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs)),
+//line Item.gx:21:104
+			p.Children,
+		))
 	}
 //line Item.gx:22:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tItem2)
 	return _b.Node()
 }
+
+var _tItem0 = gx.NewTemplate(
+	[]string{"\n  <a", ">", "</a>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tItem1 = gx.NewTemplate(
+	[]string{"\n  <div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tItem2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

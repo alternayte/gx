@@ -35,71 +35,179 @@ func Composer(p ComposerProps) gx.Node {
 	}
 	var _b gx.Builder
 //line Composer.gx:17:2
-	_b.Add(gx.Text("\n\n"))
+	_b.Add(_tComposer0)
 //line Composer.gx:19:1
 	var _b1 gx.Builder
 //line Composer.gx:19:94
-	_b1.Add(gx.Text("\n  "))
-//line Composer.gx:20:3
-	_b1.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg font-semibold", Kind: gx.AttrText}}, gx.Text("New message")))
-//line Composer.gx:20:53
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tComposer1)
 //line Composer.gx:21:3
 	var _b2 gx.Builder
 //line Composer.gx:21:56
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tComposer2)
 //line Composer.gx:22:5
 	if p.F.To.Error != "" || p.F.Subject.Error != "" || p.F.Body.Error != "" || p.F.Priority.Error != "" || p.F.Attachment.Error != "" {
 //line Composer.gx:22:137
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tComposer3.With(
 //line Composer.gx:23:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "composer-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("\n        <p>Fix the errors below.</p>\n      "))))
-//line Composer.gx:25:13
-		_b2.Add(gx.Text("\n    "))
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "id", Value: "composer-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}),
+		))
 	}
 //line Composer.gx:26:6
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tComposer12.With(
 //line Composer.gx:27:5
-	_b2.Add(ui.TextField(ui.TextFieldProps{Field: p.F.To, Label: "To", Type: "email", Validate: "blur", Hint: ""}))
-//line Composer.gx:27:76
-	_b2.Add(gx.Text("\n    "))
+		ui.TextField(ui.TextFieldProps{Field: p.F.To, Label: "To", Type: "email", Validate: "blur", Hint: ""}),
 //line Composer.gx:28:5
-	_b2.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Subject, Label: "Subject", Type: "text", Validate: "input", Hint: ""}))
-//line Composer.gx:28:74
-	_b2.Add(gx.Text("\n    "))
+		ui.TextField(ui.TextFieldProps{Field: p.F.Subject, Label: "Subject", Type: "text", Validate: "input", Hint: ""}),
 //line Composer.gx:29:5
-	_b2.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Body, Label: "Message", Type: "text", Validate: "", Hint: ""}))
-//line Composer.gx:29:54
-	_b2.Add(gx.Text("\n    "))
+		ui.TextField(ui.TextFieldProps{Field: p.F.Body, Label: "Message", Type: "text", Validate: "", Hint: ""}),
 //line Composer.gx:30:5
-	_b2.Add(selectbox.Select(selectbox.SelectProps{Name: p.F.Priority.Name, Label: "Priority", Size: selectbox.Md, Placeholder: "", Class: "w-48", Children: gx.Frag(selectbox.SelectOption(selectbox.SelectOptionProps{Value: "low", Selected: p.F.Priority.Value == "low", Disabled: false, Children: gx.Text("Low")}), selectbox.SelectOption(selectbox.SelectOptionProps{Value: "normal", Selected: p.F.Priority.Value == "normal", Disabled: false, Children: gx.Text("Normal")}), selectbox.SelectOption(selectbox.SelectOptionProps{Value: "high", Selected: p.F.Priority.Value == "high", Disabled: false, Children: gx.Text("High")})), Attrs: nil}))
-//line Composer.gx:34:24
-	_b2.Add(gx.Text("\n    "))
+		selectbox.Select(selectbox.SelectProps{Name: p.F.Priority.Name, Label: "Priority", Size: selectbox.Md, Placeholder: "", Class: "w-48", Children: _tComposer7.With(
+//line Composer.gx:31:7
+			selectbox.SelectOption(selectbox.SelectOptionProps{Value: "low", Selected: p.F.Priority.Value == "low", Disabled: false, Children: _tComposer4}),
+//line Composer.gx:32:7
+			selectbox.SelectOption(selectbox.SelectOptionProps{Value: "normal", Selected: p.F.Priority.Value == "normal", Disabled: false, Children: _tComposer5}),
+//line Composer.gx:33:7
+			selectbox.SelectOption(selectbox.SelectOptionProps{Value: "high", Selected: p.F.Priority.Value == "high", Disabled: false, Children: _tComposer6}),
+		), Attrs: nil}),
 //line Composer.gx:35:5
-	_b2.Add(ui.FileField(ui.FileFieldProps{Field: p.F.Attachment, Label: "Attachment"}))
-//line Composer.gx:35:63
-	_b2.Add(gx.Text("\n    "))
-//line Composer.gx:36:5
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex gap-2", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), button.Button(button.ButtonProps{Variant: button.Default, Size: button.Md, Type: "submit", Class: "", Children: gx.Text("Send"), Attrs: nil}), gx.Text("\n      "), dialog.Dialog(dialog.DialogProps{Id: "composer-discard", Title: "Discard the draft?", Description: "The text of the message is lost.", Trigger: gx.Frag(gx.Text("\n          "), button.Button(button.ButtonProps{Variant: button.Outline, Size: button.Md, Type: "button", Class: "", Children: gx.Text("Discard"), Attrs: nil}), gx.Text("\n        ")), Footer: gx.Frag(gx.Text("\n          "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-border px-3 py-1.5 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true), gx.On("click", "POST", (route.Discard{}).URL(), gx.ScopeString("composer.Composer", p.GxKey))}, gx.Text("Discard the draft")), gx.Text("\n        ")), Open: false, Class: "", Children: nil, Attrs: nil}), gx.Text("\n    "))))
-//line Composer.gx:46:11
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("form", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "grid gap-3", Kind: gx.AttrText}}, p.F.Attrs(), gx.Attrs{gx.Bool("novalidate", true)}), _b2.Node()))
-//line Composer.gx:47:10
-	_b1.Add(gx.Text("\n  "))
-//line Composer.gx:48:3
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Raw(gx.SafeHTML("\n    <label for=\"composer-note\">Note to self</label>\n    ")), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-input px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "composer-note", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("composer.Composer", p.GxKey, "note"), Kind: gx.AttrText}}), gx.Text("\n    "), NoteCount(NoteCountProps{Note: gx.Ref[string](gx.SignalRefPath("composer.Composer", p.GxKey, "note")), Limit: 40}, gx.IslandLoad("eager")), gx.Text("\n  "))))
-//line Composer.gx:52:9
-	_b1.Add(gx.Text("\n  "))
+		ui.FileField(ui.FileFieldProps{Field: p.F.Attachment, Label: "Attachment"}),
+//line Composer.gx:37:7
+		button.Button(button.ButtonProps{Variant: button.Default, Size: button.Md, Type: "submit", Class: "", Children: _tComposer8, Attrs: nil}),
+//line Composer.gx:38:7
+		dialog.Dialog(dialog.DialogProps{Id: "composer-discard", Title: "Discard the draft?", Description: "The text of the message is lost.", Trigger: _tComposer10.With(
+//line Composer.gx:40:11
+			button.Button(button.ButtonProps{Variant: button.Outline, Size: button.Md, Type: "button", Class: "", Children: _tComposer9, Attrs: nil}),
+		), Footer: _tComposer11.With(
+//line Composer.gx:43:11
+			gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-border px-3 py-1.5 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true), gx.On("click", "POST", (route.Discard{}).URL(), gx.ScopeString("composer.Composer", p.GxKey))}),
+		), Open: false, Class: "", Children: nil, Attrs: nil}),
+	))
+//line Composer.gx:21:3
+	_b1.Add(_tComposer13.With(
+//line Composer.gx:21:3
+		gx.Open("form", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "grid gap-3", Kind: gx.AttrText}}, p.F.Attrs(), gx.Attrs{gx.Bool("novalidate", true)})),
+//line Composer.gx:21:3
+		_b2.Node(),
+//line Composer.gx:50:5
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "rounded-md border border-input px-2 py-1", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "composer-note", Kind: gx.AttrText}, gx.Attr{Key: "data-bind", Value: gx.SignalName("composer.Composer", p.GxKey, "note"), Kind: gx.AttrText}}),
+//line Composer.gx:51:5
+		NoteCount(NoteCountProps{Note: gx.Ref[string](gx.SignalRefPath("composer.Composer", p.GxKey, "note")), Limit: 40}, gx.IslandLoad("eager")),
 //line Composer.gx:53:3
-	_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm underline", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "composer-help", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: shoproute.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("How the shop works")))
-//line Composer.gx:53:98
-	_b1.Add(gx.Text("\n  "))
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm underline", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "composer-help", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: shoproute.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}),
 //line Composer.gx:54:3
-	_b1.Add(toast.Toaster(toast.ToasterProps{Class: "", Children: nil, Attrs: nil}))
-//line Composer.gx:54:20
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("section", gx.Attrs{gx.Attr{Key: "class", Value: "grid gap-4 rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-signals", Value: gx.SignalJSON("composer.Composer", p.GxKey, map[string]any{"note": ""}), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-instance", Value: gx.ScopeString("composer.Composer", p.GxKey), Kind: gx.AttrText}}, _b1.Node()))
-//line Composer.gx:55:11
-	_b.Add(gx.Text("\n"))
+		toast.Toaster(toast.ToasterProps{Class: "", Children: nil, Attrs: nil}),
+	))
+//line Composer.gx:19:1
+	_b.Add(_tComposer14.With(
+//line Composer.gx:19:1
+		gx.Open("section", gx.Attrs{gx.Attr{Key: "class", Value: "grid gap-4 rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-signals", Value: gx.SignalJSON("composer.Composer", p.GxKey, map[string]any{"note": ""}), Kind: gx.AttrText}, gx.Attr{Key: "data-gx-instance", Value: gx.ScopeString("composer.Composer", p.GxKey), Kind: gx.AttrText}}),
+//line Composer.gx:19:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tComposer0 = gx.NewTemplate(
+	[]string{"\n\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer1 = gx.NewTemplate(
+	[]string{"\n  <h2 class=\"text-lg font-semibold\">New message</h2>\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h2"}, {El: -1, Slot: -1}},
+).With()
+
+var _tComposer2 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer3 = gx.NewTemplate(
+	[]string{"\n      <div", ">\n        <p>Fix the errors below.</p>\n      </div>\n    "},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 1, End: 51}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tComposer4 = gx.NewTemplate(
+	[]string{"Low"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer5 = gx.NewTemplate(
+	[]string{"Normal"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer6 = gx.NewTemplate(
+	[]string{"High"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer7 = gx.NewTemplate(
+	[]string{"", "", "", ""},
+	[]int{0, 0, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}},
+)
+
+var _tComposer8 = gx.NewTemplate(
+	[]string{"Send"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer9 = gx.NewTemplate(
+	[]string{"Discard"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tComposer10 = gx.NewTemplate(
+	[]string{"\n          ", "\n        "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tComposer11 = gx.NewTemplate(
+	[]string{"\n          <button", ">Discard the draft</button>\n        "},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 1, End: 27}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tComposer12 = gx.NewTemplate(
+	[]string{"\n    ", "\n    ", "\n    ", "\n    ", "\n    ", "\n    <div class=\"flex gap-2\">\n      ", "\n      ", "\n    </div>\n  "},
+	[]int{0, 0, 0, 0, 0, 1, 1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: -1, Slot: 4}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tComposer13 = gx.NewTemplate(
+	[]string{"<form", ">", "</form>\n  <div class=\"flex items-center gap-2 text-sm\">\n    <label for=\"composer-note\">Note to self</label>\n    <input", ">\n    ", "\n  </div>\n  <a", ">How the shop works</a>\n  ", "\n"},
+	[]int{0, 1, 1, 1, 0, 0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}, {Slot: 2, Start: 112, EndStatic: 3, End: 1}, {Slot: 4, Start: 12, EndStatic: 5, End: 23}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 5}, {El: -1, Slot: -1}},
+)
+
+var _tComposer14 = gx.NewTemplate(
+	[]string{"<section", ">", "</section>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

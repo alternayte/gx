@@ -46,7 +46,8 @@ func TestNFR_05_IncrementalSession(t *testing.T) {
 	if len(diags) > 0 {
 		t.Fatalf("incremental: %v", diags)
 	}
-	if !strings.Contains(string(files[card]), `"card"`) {
+	// The class is in a static string of the template (DR-11).
+	if !strings.Contains(string(files[card]), `card\"`) {
 		t.Fatalf("incremental output:\n%s", files[card])
 	}
 	t.Logf("NFR-05 incremental session: %s", took)

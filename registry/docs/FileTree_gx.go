@@ -23,20 +23,51 @@ func FileTree(p FileTreeProps) gx.Node {
 //line FileTree.gx:10:1
 	var _b1 gx.Builder
 //line FileTree.gx:10:76
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tFileTree0)
 //line FileTree.gx:11:3
 	for _, it := range p.Items {
 //line FileTree.gx:11:31
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tFileTree1.With(
 //line FileTree.gx:12:5
-		_b1.Add(FileTreeItemRow(FileTreeItemRowProps{Item: it}))
-//line FileTree.gx:12:34
-		_b1.Add(gx.Text("\n  "))
+			FileTreeItemRow(FileTreeItemRowProps{Item: it}),
+		))
 	}
 //line FileTree.gx:13:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-file-tree my-4 list-none space-y-1 p-0 text-sm", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line FileTree.gx:14:6
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tFileTree2)
+//line FileTree.gx:10:1
+	_b.Add(_tFileTree3.With(
+//line FileTree.gx:10:1
+		gx.Open("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-file-tree my-4 list-none space-y-1 p-0 text-sm", Kind: gx.AttrText}}, p.Attrs)),
+//line FileTree.gx:10:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tFileTree0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFileTree1 = gx.NewTemplate(
+	[]string{"\n    ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tFileTree2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFileTree3 = gx.NewTemplate(
+	[]string{"<ul", ">", "</ul>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

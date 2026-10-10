@@ -27,10 +27,18 @@ func MenubarItem(p MenubarItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line MenubarItem.gx:18:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-close", true)}, rovingItem(p.Disabled), p.Attrs), p.Children))
-//line MenubarItem.gx:18:621
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tMenubarItem0.With(
+//line MenubarItem.gx:18:1
+		gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", variantClass[p.variant()], insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled), gx.Bool("data-gx-close", true)}, rovingItem(p.Disabled), p.Attrs)),
+//line MenubarItem.gx:18:600
+		p.Children,
+	)
 }
+
+var _tMenubarItem0 = gx.NewTemplate(
+	[]string{"<button", ">", "</button>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

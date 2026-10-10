@@ -21,10 +21,18 @@ func CarouselItem(p CarouselItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line CarouselItem.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(itemClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-roledescription", Value: "slide", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "carousel-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line CarouselItem.gx:12:139
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCarouselItem0.With(
+//line CarouselItem.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(itemClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-roledescription", Value: "slide", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "carousel-item", Kind: gx.AttrText}}, p.Attrs)),
+//line CarouselItem.gx:12:121
+		p.Children,
+	)
 }
+
+var _tCarouselItem0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

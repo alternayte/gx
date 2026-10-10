@@ -19,10 +19,18 @@ func CardGrid(p CardGridProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line CardGrid.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-grid my-4 grid gap-4 sm:grid-cols-2", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line CardGrid.gx:10:89
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCardGrid0.With(
+//line CardGrid.gx:10:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-grid my-4 grid gap-4 sm:grid-cols-2", Kind: gx.AttrText}}, p.Attrs)),
+//line CardGrid.gx:10:71
+		p.Children,
+	)
 }
+
+var _tCardGrid0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

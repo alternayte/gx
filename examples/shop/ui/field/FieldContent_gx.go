@@ -21,10 +21,18 @@ func FieldContent(p FieldContentProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line FieldContent.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-content flex flex-1 flex-col gap-1.5 leading-snug", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldContent.gx:12:151
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tFieldContent0.With(
+//line FieldContent.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-content flex flex-1 flex-col gap-1.5 leading-snug", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-content", Kind: gx.AttrText}}, p.Attrs)),
+//line FieldContent.gx:12:133
+		p.Children,
+	)
 }
+
+var _tFieldContent0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -25,10 +25,22 @@ func HoverCard(p HoverCardProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line HoverCard.gx:16:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/hover-card relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), p.Trigger, gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("invisible absolute top-full z-50 mt-1 w-64 -translate-y-2 scale-95 rounded-md border border-border bg-popover p-4 text-popover-foreground opacity-0 shadow-md outline-hidden transition-[opacity,scale,translate,visibility] delay-300 duration-150 motion-reduce:transition-none group-hover/hover-card:visible group-hover/hover-card:translate-y-0 group-hover/hover-card:scale-100 group-hover/hover-card:opacity-100 group-hover/hover-card:delay-700 group-has-[:focus-visible]/hover-card:visible group-has-[:focus-visible]/hover-card:translate-y-0 group-has-[:focus-visible]/hover-card:scale-100 group-has-[:focus-visible]/hover-card:opacity-100 group-has-[:focus-visible]/hover-card:delay-700", alignClass[p.align()]), Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line HoverCard.gx:19:8
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tHoverCard0.With(
+//line HoverCard.gx:16:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/hover-card relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line HoverCard.gx:17:3
+		p.Trigger,
+//line HoverCard.gx:18:3
+		gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("invisible absolute top-full z-50 mt-1 w-64 -translate-y-2 scale-95 rounded-md border border-border bg-popover p-4 text-popover-foreground opacity-0 shadow-md outline-hidden transition-[opacity,scale,translate,visibility] delay-300 duration-150 motion-reduce:transition-none group-hover/hover-card:visible group-hover/hover-card:translate-y-0 group-hover/hover-card:scale-100 group-hover/hover-card:opacity-100 group-hover/hover-card:delay-700 group-has-[:focus-visible]/hover-card:visible group-has-[:focus-visible]/hover-card:translate-y-0 group-has-[:focus-visible]/hover-card:scale-100 group-has-[:focus-visible]/hover-card:opacity-100 group-has-[:focus-visible]/hover-card:delay-700", alignClass[p.align()]), Kind: gx.AttrText}}),
+//line HoverCard.gx:18:736
+		p.Children,
+	)
 }
+
+var _tHoverCard0 = gx.NewTemplate(
+	[]string{"<span", ">\n  ", "\n  <span", ">", "</span>\n</span>\n"},
+	[]int{0, 1, 1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 15}, {Slot: 2, Start: 3, EndStatic: 4, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

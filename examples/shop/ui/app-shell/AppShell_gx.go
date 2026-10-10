@@ -28,31 +28,84 @@ func AppShell(p AppShellProps) gx.Node {
 //line AppShell.gx:16:1
 	var _b1 gx.Builder
 //line AppShell.gx:16:32
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAppShell0)
 //line AppShell.gx:17:3
 	var _b2 gx.Builder
 //line AppShell.gx:18:5
-	_b2.Add(sidebar.SidebarHeader(sidebar.SidebarHeaderProps{Class: "", Children: gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "px-2 py-1 text-sm font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)), Attrs: nil}))
+	_b2.Add(_tAppShell2.With(
+//line AppShell.gx:18:5
+		sidebar.SidebarHeader(sidebar.SidebarHeaderProps{Class: "", Children: _tAppShell1.With(
+//line AppShell.gx:19:53
+			gx.Text(p.Title),
+		), Attrs: nil}),
 //line AppShell.gx:21:5
-	_b2.Add(sidebar.SidebarContent(sidebar.SidebarContentProps{Class: "", Children: p.Nav, Attrs: nil}))
+		sidebar.SidebarContent(sidebar.SidebarContentProps{Class: "", Children: p.Nav, Attrs: nil}),
+	))
 //line AppShell.gx:24:5
 	if p.Footer != nil {
 //line AppShell.gx:24:25
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tAppShell3.With(
 //line AppShell.gx:25:7
-		_b2.Add(sidebar.SidebarFooter(sidebar.SidebarFooterProps{Class: "", Children: p.Footer, Attrs: nil}))
-//line AppShell.gx:25:64
-		_b2.Add(gx.Text("\n    "))
+			sidebar.SidebarFooter(sidebar.SidebarFooterProps{Class: "", Children: p.Footer, Attrs: nil}),
+		))
 	}
-	_b1.Add(sidebar.Sidebar(sidebar.SidebarProps{Id: "gx-sidebar", Side: sidebar.Left, Class: "", Children: _b2.Node(), Attrs: nil}))
-//line AppShell.gx:27:21
-	_b1.Add(gx.Text("\n  "))
-//line AppShell.gx:28:3
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex min-w-0 flex-1 flex-col", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "flex h-14 items-center gap-2 border-b border-border px-4", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), sidebar.SidebarTrigger(sidebar.SidebarTriggerProps{Controls: "gx-sidebar", Class: "-ml-1 lg:hidden", Attrs: nil}), gx.Text("\n      "), gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)), gx.Text("\n    "))), gx.Text("\n    "), gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "flex-1 p-6", Kind: gx.AttrText}}, p.Children), gx.Text("\n  "))))
-//line AppShell.gx:34:9
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex min-h-screen", Kind: gx.AttrText}}, _b1.Node()))
-//line AppShell.gx:35:7
-	_b.Add(gx.Text("\n"))
+//line AppShell.gx:17:3
+	_b1.Add(_tAppShell4.With(
+//line AppShell.gx:17:3
+		sidebar.Sidebar(sidebar.SidebarProps{Id: "gx-sidebar", Side: sidebar.Left, Class: "", Children: _b2.Node(), Attrs: nil}),
+//line AppShell.gx:30:7
+		sidebar.SidebarTrigger(sidebar.SidebarTriggerProps{Controls: "gx-sidebar", Class: "-ml-1 lg:hidden", Attrs: nil}),
+//line AppShell.gx:31:41
+		gx.Text(p.Title),
+//line AppShell.gx:33:30
+		p.Children,
+	))
+//line AppShell.gx:16:1
+	_b.Add(_tAppShell5.With(
+//line AppShell.gx:16:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tAppShell0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAppShell1 = gx.NewTemplate(
+	[]string{"<span class=\"px-2 py-1 text-sm font-semibold\">", "</span>"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}},
+)
+
+var _tAppShell2 = gx.NewTemplate(
+	[]string{"", "", ""},
+	[]int{0, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}},
+)
+
+var _tAppShell3 = gx.NewTemplate(
+	[]string{"\n      ", "\n    "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tAppShell4 = gx.NewTemplate(
+	[]string{"", "\n  <div class=\"flex min-w-0 flex-1 flex-col\">\n    <header class=\"flex h-14 items-center gap-2 border-b border-border px-4\">\n      ", "\n      <h1 class=\"text-sm font-semibold\">", "</h1>\n    </header>\n    <main class=\"flex-1 p-6\">", "</main>\n  </div>\n"},
+	[]int{0, 2, 3, 2},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tAppShell5 = gx.NewTemplate(
+	[]string{"<div class=\"flex min-h-screen\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

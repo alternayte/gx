@@ -27,24 +27,54 @@ func SidebarMenuSkeleton(p SidebarMenuSkeletonProps) gx.Node {
 //line SidebarMenuSkeleton.gx:14:1
 	var _b1 gx.Builder
 //line SidebarMenuSkeleton.gx:14:152
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSidebarMenuSkeleton0)
 //line SidebarMenuSkeleton.gx:15:3
 	if p.ShowIcon {
 //line SidebarMenuSkeleton.gx:15:18
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tSidebarMenuSkeleton1.With(
 //line SidebarMenuSkeleton.gx:16:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "size-4 animate-pulse rounded-md bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton-icon", Kind: gx.AttrText}}))
-//line SidebarMenuSkeleton.gx:16:121
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "size-4 animate-pulse rounded-md bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton-icon", Kind: gx.AttrText}}),
+		))
 	}
 //line SidebarMenuSkeleton.gx:17:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSidebarMenuSkeleton2.With(
 //line SidebarMenuSkeleton.gx:18:3
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("--skeleton-width: " + p.width())))), Kind: gx.AttrStyle}, gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton-text", Kind: gx.AttrText}}))
-//line SidebarMenuSkeleton.gx:18:199
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-8 items-center gap-2 rounded-md px-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line SidebarMenuSkeleton.gx:19:7
-	_b.Add(gx.Text("\n"))
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("--skeleton-width: " + p.width())))), Kind: gx.AttrStyle}, gx.Attr{Key: "data-slot", Value: "skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton-text", Kind: gx.AttrText}}),
+	))
+//line SidebarMenuSkeleton.gx:14:1
+	_b.Add(_tSidebarMenuSkeleton3.With(
+//line SidebarMenuSkeleton.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex h-8 items-center gap-2 rounded-md px-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-menu-skeleton", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-skeleton", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarMenuSkeleton.gx:14:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSidebarMenuSkeleton0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarMenuSkeleton1 = gx.NewTemplate(
+	[]string{"\n    <div", "></div>\n  "},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarMenuSkeleton2 = gx.NewTemplate(
+	[]string{"\n  <div", "></div>\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarMenuSkeleton3 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

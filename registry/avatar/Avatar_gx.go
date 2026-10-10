@@ -33,41 +33,86 @@ func Avatar(p AvatarProps) gx.Node {
 //line Avatar.gx:20:1
 	var _b1 gx.Builder
 //line Avatar.gx:20:199
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAvatar0)
 //line Avatar.gx:21:3
 	if p.Src != "" {
 //line Avatar.gx:21:19
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tAvatar1.With(
 //line Avatar.gx:22:5
-		_b1.Add(gx.El("img", gx.Attrs{gx.Attr{Key: "class", Value: "aspect-square size-full rounded-full object-cover", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "avatar-image", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: string(p.Src), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "alt", Value: p.Alt, Kind: gx.AttrText}}))
-//line Avatar.gx:22:119
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("img", gx.Attrs{gx.Attr{Key: "class", Value: "aspect-square size-full rounded-full object-cover", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "avatar-image", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: string(p.Src), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "alt", Value: p.Alt, Kind: gx.AttrText}}),
+		))
 	} else {
 //line Avatar.gx:23:10
 		if p.Fallback != "" {
 //line Avatar.gx:23:31
-			_b1.Add(gx.Text("\n    "))
+			_b1.Add(_tAvatar2.With(
 //line Avatar.gx:24:5
-			_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex size-full items-center justify-center rounded-full bg-muted text-sm text-foreground group-data-[size=sm]/avatar:text-xs", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "avatar-fallback", Kind: gx.AttrText}}, gx.Text(p.Fallback)))
-//line Avatar.gx:24:191
-			_b1.Add(gx.Text("\n  "))
+				gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex size-full items-center justify-center rounded-full bg-muted text-sm text-foreground group-data-[size=sm]/avatar:text-xs", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "avatar-fallback", Kind: gx.AttrText}}),
+//line Avatar.gx:24:172
+				gx.Text(p.Fallback),
+			))
 		}
 	}
 //line Avatar.gx:25:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAvatar0)
 //line Avatar.gx:26:3
 	if p.Badge != nil {
 //line Avatar.gx:26:22
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tAvatar3.With(
 //line Avatar.gx:27:5
-		_b1.Add(p.Badge)
-//line Avatar.gx:27:14
-		_b1.Add(gx.Text("\n  "))
+			p.Badge,
+		))
 	}
 //line Avatar.gx:28:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar relative flex size-8 shrink-0 rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Avatar.gx:29:8
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tAvatar4)
+//line Avatar.gx:20:1
+	_b.Add(_tAvatar5.With(
+//line Avatar.gx:20:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/avatar relative flex size-8 shrink-0 rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.Attrs)),
+//line Avatar.gx:20:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tAvatar0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAvatar1 = gx.NewTemplate(
+	[]string{"\n    <img", ">\n  "},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tAvatar2 = gx.NewTemplate(
+	[]string{"\n    <span", ">", "</span>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tAvatar3 = gx.NewTemplate(
+	[]string{"\n    ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tAvatar4 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAvatar5 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -21,20 +21,53 @@ func SocialIcons(p SocialIconsProps) gx.Node {
 //line SocialIcons.gx:8:1
 	var _b1 gx.Builder
 //line SocialIcons.gx:8:30
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSocialIcons0)
 //line SocialIcons.gx:9:3
 	for _, l := range p.Links {
 //line SocialIcons.gx:9:30
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tSocialIcons1.With(
 //line SocialIcons.gx:10:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-social-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(l.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "me", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sr-only", Kind: gx.AttrText}}, gx.Text(l.Label)), gx.Text("\n      "), icon(l.Icon, ""), gx.Text("\n    "))))
-//line SocialIcons.gx:13:9
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-social-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(l.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "me", Kind: gx.AttrText}}),
+//line SocialIcons.gx:11:29
+			gx.Text(l.Label),
+//line SocialIcons.gx:12:7
+			icon(l.Icon, ""),
+		))
 	}
 //line SocialIcons.gx:14:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-social-icons", Kind: gx.AttrText}}, _b1.Node()))
-//line SocialIcons.gx:15:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tSocialIcons2)
+//line SocialIcons.gx:8:1
+	_b.Add(_tSocialIcons3.With(
+//line SocialIcons.gx:8:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSocialIcons0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSocialIcons1 = gx.NewTemplate(
+	[]string{"\n    <a", ">\n      <span class=\"sr-only\">", "</span>\n      ", "\n    </a>\n  "},
+	[]int{0, 2, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 9}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSocialIcons2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSocialIcons3 = gx.NewTemplate(
+	[]string{"<div class=\"sl-social-icons\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

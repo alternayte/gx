@@ -21,10 +21,18 @@ func EmptyTitle(p EmptyTitleProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line EmptyTitle.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-lg font-medium tracking-tight", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-title", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line EmptyTitle.gx:12:122
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tEmptyTitle0.With(
+//line EmptyTitle.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-lg font-medium tracking-tight", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty-title", Kind: gx.AttrText}}, p.Attrs)),
+//line EmptyTitle.gx:12:104
+		p.Children,
+	)
 }
+
+var _tEmptyTitle0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

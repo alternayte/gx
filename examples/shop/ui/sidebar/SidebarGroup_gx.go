@@ -21,10 +21,18 @@ func SidebarGroup(p SidebarGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarGroup.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarGroup.gx:12:152
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarGroup0.With(
+//line SidebarGroup.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full min-w-0 flex-col p-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-group", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "group", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarGroup.gx:12:134
+		p.Children,
+	)
 }
+
+var _tSidebarGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

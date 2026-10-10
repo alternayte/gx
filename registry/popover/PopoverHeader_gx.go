@@ -21,10 +21,18 @@ func PopoverHeader(p PopoverHeaderProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PopoverHeader.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-1 text-sm", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PopoverHeader.gx:12:91
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPopoverHeader0.With(
+//line PopoverHeader.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-1 text-sm", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line PopoverHeader.gx:12:73
+		p.Children,
+	)
 }
+
+var _tPopoverHeader0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -16,30 +16,22 @@ func About(p AboutProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line About.gx:5:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop about", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
-//line About.gx:5:34
-	_b.Add(gx.Text("\n"))
-//line About.gx:6:1
-	_b.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-2xl font-semibold", Kind: gx.AttrText}}, gx.Text("About")))
-//line About.gx:6:46
-	_b.Add(gx.Text("\n"))
-//line About.gx:7:1
-	_b.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-muted-foreground", Kind: gx.AttrText}}, gx.Text("A shop built with Gx.")))
-//line About.gx:7:59
-	_b.Add(gx.Text("\n"))
+	return _tAbout0.With(
+//line About.gx:5:1
+		gx.Head(gx.HeadProps{Title: "Gx shop about", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
 //line About.gx:8:1
-	_b.Add(gx.El("div", gx.Attrs{gx.On("load", "GET", (cartroute.Lazy{}).URL(), "")}))
-//line About.gx:8:39
-	_b.Add(gx.Text("\n"))
+		gx.Open("div", gx.Attrs{gx.On("load", "GET", (cartroute.Lazy{}).URL(), "")}),
 //line About.gx:9:1
-	_b.Add(gx.El("img", gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.TransitionStyle(Hero(1)))), Kind: gx.AttrStyle}, gx.Attr{Key: "id", Value: "hero", Kind: gx.AttrText}, gx.Attr{Key: "width", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "height", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "alt", Value: "Hero", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23888'/%3E%3C/svg%3E", Kind: gx.AttrURL}}))
-//line About.gx:9:224
-	_b.Add(gx.Text("\n"))
+		gx.Open("img", gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.TransitionStyle(Hero(1)))), Kind: gx.AttrStyle}, gx.Attr{Key: "id", Value: "hero", Kind: gx.AttrText}, gx.Attr{Key: "width", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "height", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "alt", Value: "Hero", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23888'/%3E%3C/svg%3E", Kind: gx.AttrURL}}),
 //line About.gx:10:1
-	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: "lazy-slot", Kind: gx.AttrText}}, gx.Text("waiting")))
-//line About.gx:10:36
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("span", gx.Attrs{gx.Attr{Key: "id", Value: "lazy-slot", Kind: gx.AttrText}}),
+	)
 }
+
+var _tAbout0 = gx.NewTemplate(
+	[]string{"", "\n<h1 class=\"text-2xl font-semibold\">About</h1>\n<p class=\"text-muted-foreground\">A shop built with Gx.</p>\n<div", "></div>\n<img", ">\n<span", ">waiting</span>\n"},
+	[]int{0, 0, 0, 0},
+	[]gx.TemplateEl{{Slot: 1, Start: 106, EndStatic: 2, End: 7}, {Slot: 2, Start: 8, EndStatic: 3, End: 1}, {Slot: 3, Start: 2, EndStatic: 4, End: 15}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -18,42 +18,32 @@ func Home(p HomeProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Home.gx:8:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop home", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
-//line Home.gx:8:33
-	_b.Add(gx.Text("\n"))
-//line Home.gx:9:1
-	_b.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "text-2xl font-semibold", Kind: gx.AttrText}}, gx.Text("Two carts")))
-//line Home.gx:9:50
-	_b.Add(gx.Text("\n"))
+	return _tHome0.With(
+//line Home.gx:8:1
+		gx.Head(gx.HeadProps{Title: "Gx shop home", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
 //line Home.gx:10:1
-	_b.Add(cart.Cart(cart.CartProps{Label: "Alpha", Total: 1, GxKey: gx.InstanceKey("alpha")}))
-//line Home.gx:10:50
-	_b.Add(gx.Text("\n"))
+		cart.Cart(cart.CartProps{Label: "Alpha", Total: 1, GxKey: gx.InstanceKey("alpha")}),
 //line Home.gx:11:1
-	_b.Add(cart.Cart(cart.CartProps{Label: "Beta", Total: 2, GxKey: gx.InstanceKey("beta")}))
-//line Home.gx:11:48
-	_b.Add(gx.Text("\n"))
+		cart.Cart(cart.CartProps{Label: "Beta", Total: 2, GxKey: gx.InstanceKey("beta")}),
 //line Home.gx:12:1
-	_b.Add(cart.Toasts(cart.ToastsProps{Class: ""}))
-//line Home.gx:12:16
-	_b.Add(gx.Text("\n"))
+		cart.Toasts(cart.ToastsProps{Class: ""}),
 //line Home.gx:13:1
-	_b.Add(gx.El("div", gx.Attrs{gx.On("visible", "GET", (cartroute.Lazy{}).URL(), gx.ScopeString("shop.Home", p.GxKey))}, gx.Frag(gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: "lazy-slot", Kind: gx.AttrText}}, gx.Text("waiting")), gx.Text("\n"))))
-//line Home.gx:15:7
-	_b.Add(gx.Text("\n"))
+		gx.Open("div", gx.Attrs{gx.On("visible", "GET", (cartroute.Lazy{}).URL(), gx.ScopeString("shop.Home", p.GxKey))}),
+//line Home.gx:14:3
+		gx.Open("span", gx.Attrs{gx.Attr{Key: "id", Value: "lazy-slot", Kind: gx.AttrText}}),
 //line Home.gx:16:1
-	_b.Add(gx.El("img", gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.TransitionStyle(Hero(1)))), Kind: gx.AttrStyle}, gx.Attr{Key: "id", Value: "hero", Kind: gx.AttrText}, gx.Attr{Key: "width", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "height", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "alt", Value: "Hero", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23888'/%3E%3C/svg%3E", Kind: gx.AttrURL}}))
-//line Home.gx:16:224
-	_b.Add(gx.Text("\n"))
+		gx.Open("img", gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.TransitionStyle(Hero(1)))), Kind: gx.AttrStyle}, gx.Attr{Key: "id", Value: "hero", Kind: gx.AttrText}, gx.Attr{Key: "width", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "height", Value: "40", Kind: gx.AttrText}, gx.Attr{Key: "alt", Value: "Hero", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23888'/%3E%3C/svg%3E", Kind: gx.AttrURL}}),
 //line Home.gx:17:1
-	_b.Add(gx.El("button", gx.Attrs{gx.On("click", "POST", (cartroute.Transition{}).URL(), gx.ScopeString("shop.Home", p.GxKey))}, gx.Text("Transition")))
-//line Home.gx:17:62
-	_b.Add(gx.Text("\n"))
+		gx.Open("button", gx.Attrs{gx.On("click", "POST", (cartroute.Transition{}).URL(), gx.ScopeString("shop.Home", p.GxKey))}),
 //line Home.gx:18:1
-	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "id", Value: "transition-target", Kind: gx.AttrText}}, gx.Text("idle")))
-//line Home.gx:18:41
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("span", gx.Attrs{gx.Attr{Key: "id", Value: "transition-target", Kind: gx.AttrText}}),
+	)
 }
+
+var _tHome0 = gx.NewTemplate(
+	[]string{"", "\n<h1 class=\"text-2xl font-semibold\">Two carts</h1>\n", "\n", "\n", "\n<div", ">\n  <span", ">waiting</span>\n</div>\n<img", ">\n<button", ">Transition</button>\n<span", ">idle</span>\n"},
+	[]int{0, 0, 0, 0, 0, 1, 0, 0, 0},
+	[]gx.TemplateEl{{Slot: 4, Start: 1, EndStatic: 6, End: 22}, {Slot: 5, Start: 4, EndStatic: 6, End: 15}, {Slot: 6, Start: 23, EndStatic: 7, End: 1}, {Slot: 7, Start: 2, EndStatic: 8, End: 20}, {Slot: 8, Start: 21, EndStatic: 9, End: 12}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}, {El: 3, Slot: -1}, {El: -1, Slot: -1}, {El: 4, Slot: -1}, {El: -1, Slot: -1}},
+)

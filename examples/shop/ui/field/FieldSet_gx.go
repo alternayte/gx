@@ -21,10 +21,18 @@ func FieldSet(p FieldSetProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line FieldSet.gx:12:1
-	_b.Add(gx.El("fieldset", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-6 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-set", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldSet.gx:12:192
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tFieldSet0.With(
+//line FieldSet.gx:12:1
+		gx.Open("fieldset", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-col gap-6 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-set", Kind: gx.AttrText}}, p.Attrs)),
+//line FieldSet.gx:12:169
+		p.Children,
+	)
 }
+
+var _tFieldSet0 = gx.NewTemplate(
+	[]string{"<fieldset", ">", "</fieldset>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 11}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

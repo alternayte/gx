@@ -138,6 +138,49 @@ func runtimeNeedsOf(r *http.Request) *runtimeNeeds {
 // (NFR-04).
 func scanRuntimeNeeds(n Node) runtimeNeeds {
 	var needs runtimeNeeds
+	// mark records the markers of one element.
+	mark := func(name string, attrs Attrs) {
+		switch name {
+		case "html":
+			needs.ownDocument = true
+		case islandElement:
+			needs.island = true
+		}
+		for _, a := range attrs {
+			if a.Key == "data-gx-theme" {
+				needs.theme = true
+			}
+			if a.Key == "data-signals" {
+				needs.signals = true
+			}
+			// The island loader also loads the module of an imported
+			// web component (REQ-ISL-09).
+			if a.Key == "data-gx-module" {
+				needs.island = true
+			}
+			if a.Key == toolAttr {
+				needs.tool = true
+			}
+			switch {
+			case adapterMarker(a.Key):
+				needs.adapter = true
+				needs.core = true
+			case interactiveMarker(a.Key):
+				needs.adapter = true
+				needs.core = true
+			case behaviorMarker(a.Key):
+				needs.core = true
+			case componentBehaviorMarker(a.Key):
+				needs.behavior = true
+			case tabsMarker(a.Key):
+				needs.tabs = true
+			case a.Key == "data-gx-toaster":
+				needs.toast = true
+			case overlayMarker(a.Key):
+				needs.overlay = true
+			}
+		}
+	}
 	var walk func(Node)
 	walk = func(n Node) {
 		switch t := n.(type) {
@@ -152,48 +195,21 @@ func scanRuntimeNeeds(n Node) runtimeNeeds {
 				needs.core = true
 			}
 		case *elNode:
-			switch t.name {
-			case "html":
-				needs.ownDocument = true
-			case islandElement:
-				needs.island = true
-			}
-			for _, a := range t.attrs {
-				if a.Key == "data-gx-theme" {
-					needs.theme = true
-				}
-				if a.Key == "data-signals" {
-					needs.signals = true
-				}
-				// The island loader also loads the module of an imported
-				// web component (REQ-ISL-09).
-				if a.Key == "data-gx-module" {
-					needs.island = true
-				}
-				if a.Key == toolAttr {
-					needs.tool = true
-				}
-				switch {
-				case adapterMarker(a.Key):
-					needs.adapter = true
-					needs.core = true
-				case interactiveMarker(a.Key):
-					needs.adapter = true
-					needs.core = true
-				case behaviorMarker(a.Key):
-					needs.core = true
-				case componentBehaviorMarker(a.Key):
-					needs.behavior = true
-				case tabsMarker(a.Key):
-					needs.tabs = true
-				case a.Key == "data-gx-toaster":
-					needs.toast = true
-				case overlayMarker(a.Key):
-					needs.overlay = true
-				}
-			}
+			mark(t.name, t.attrs)
 			for _, c := range t.children {
 				walk(c)
+			}
+		case *openNode:
+			// The open tag of a template value: an element with a
+			// marker always has its attributes as a dynamic value.
+			mark(t.name, t.attrs)
+		case *tmplNode:
+			for _, d := range t.dyn() {
+				walk(d)
+			}
+		case *tmplElNode:
+			for _, d := range t.inner() {
+				walk(d)
 			}
 		}
 	}

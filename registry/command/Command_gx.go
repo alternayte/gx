@@ -33,103 +33,228 @@ func Command(p CommandProps) gx.Node {
 //line Command.gx:20:1
 	var _b1 gx.Builder
 //line Command.gx:20:83
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tCommand0.With(
 //line Command.gx:21:3
-	_b1.Add(CommandInput(CommandInputProps{List: p.listID(), Empty: p.emptyID(), Label: p.label(), Placeholder: p.placeholder(), Classes: inputClasses}, gx.IslandLoad("eager")))
-//line Command.gx:21:141
-	_b1.Add(gx.Text("\n  "))
+		CommandInput(CommandInputProps{List: p.listID(), Empty: p.emptyID(), Label: p.label(), Placeholder: p.placeholder(), Classes: inputClasses}, gx.IslandLoad("eager")),
+	))
 //line Command.gx:22:3
 	var _b2 gx.Builder
 //line Command.gx:22:80
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tCommand1)
 //line Command.gx:23:5
 	for gi, g := range p.Groups {
 //line Command.gx:23:34
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tCommand2)
 //line Command.gx:24:7
 		var _b3 gx.Builder
 //line Command.gx:24:97
-		_b3.Add(gx.Text("\n        "))
+		_b3.Add(_tCommand3.With(
 //line Command.gx:25:9
-		_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: headingClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.headingID(gi), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}, gx.Text(g.Heading)))
-//line Command.gx:25:93
-		_b3.Add(gx.Text("\n        "))
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: headingClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.headingID(gi), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}}),
+//line Command.gx:25:76
+			gx.Text(g.Heading),
+		))
 //line Command.gx:26:9
 		for _, it := range g.Items {
 //line Command.gx:26:37
-			_b3.Add(gx.Text("\n          "))
+			_b3.Add(_tCommand4)
 //line Command.gx:27:11
 			if it.Href != "" {
 //line Command.gx:27:29
-				_b3.Add(gx.Text("\n            "))
+				_b3.Add(_tCommand5)
 //line Command.gx:28:13
 				var _b4 gx.Builder
 //line Command.gx:28:207
-				_b4.Add(gx.Text("\n              "))
-//line Command.gx:29:15
-				_b4.Add(gx.El("span", nil, gx.Text(it.Label)))
-//line Command.gx:29:38
-				_b4.Add(gx.Text("\n              "))
+				_b4.Add(_tCommand6.With(
+//line Command.gx:29:21
+					gx.Text(it.Label),
+				))
 //line Command.gx:30:15
 				if it.Shortcut != "" {
 //line Command.gx:30:37
-					_b4.Add(gx.Text("\n                "))
+					_b4.Add(_tCommand7.With(
 //line Command.gx:31:17
-					_b4.Add(gx.El("kbd", gx.Attrs{gx.Attr{Key: "class", Value: shortcutClass, Kind: gx.AttrText}}, gx.Text(it.Shortcut)))
-//line Command.gx:31:63
-					_b4.Add(gx.Text("\n              "))
+						gx.Open("kbd", gx.Attrs{gx.Attr{Key: "class", Value: shortcutClass, Kind: gx.AttrText}}),
+//line Command.gx:31:44
+						gx.Text(it.Shortcut),
+					))
 				}
 //line Command.gx:32:16
-				_b4.Add(gx.Text("\n            "))
-				_b3.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: itemClass, Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "option", Kind: gx.AttrText}, gx.Attr{Key: "aria-selected", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(it.Href), Kind: gx.AttrURL, Active: "page"}, gx.Bool("data-command-item", true), gx.Attr{Key: "data-value", Value: it.value(), Kind: gx.AttrText}, gx.Attr{Key: "data-label", Value: it.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-keywords", Value: it.Keywords, Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: it.disabled(), Kind: gx.AttrText}}, _b4.Node()))
-//line Command.gx:33:17
-				_b3.Add(gx.Text("\n          "))
+				_b4.Add(_tCommand5)
+//line Command.gx:28:13
+				_b3.Add(_tCommand8.With(
+//line Command.gx:28:13
+					gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: itemClass, Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "option", Kind: gx.AttrText}, gx.Attr{Key: "aria-selected", Value: "false", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(it.Href), Kind: gx.AttrURL, Active: "page"}, gx.Bool("data-command-item", true), gx.Attr{Key: "data-value", Value: it.value(), Kind: gx.AttrText}, gx.Attr{Key: "data-label", Value: it.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-keywords", Value: it.Keywords, Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: it.disabled(), Kind: gx.AttrText}}),
+//line Command.gx:28:13
+					_b4.Node(),
+				))
 			} else {
 //line Command.gx:34:19
-				_b3.Add(gx.Text("\n            "))
+				_b3.Add(_tCommand5)
 //line Command.gx:35:13
 				var _b5 gx.Builder
 //line Command.gx:35:234
-				_b5.Add(gx.Text("\n              "))
-//line Command.gx:36:15
-				_b5.Add(gx.El("span", nil, gx.Text(it.Label)))
-//line Command.gx:36:38
-				_b5.Add(gx.Text("\n              "))
+				_b5.Add(_tCommand6.With(
+//line Command.gx:36:21
+					gx.Text(it.Label),
+				))
 //line Command.gx:37:15
 				if it.Shortcut != "" {
 //line Command.gx:37:37
-					_b5.Add(gx.Text("\n                "))
+					_b5.Add(_tCommand7.With(
 //line Command.gx:38:17
-					_b5.Add(gx.El("kbd", gx.Attrs{gx.Attr{Key: "class", Value: shortcutClass, Kind: gx.AttrText}}, gx.Text(it.Shortcut)))
-//line Command.gx:38:63
-					_b5.Add(gx.Text("\n              "))
+						gx.Open("kbd", gx.Attrs{gx.Attr{Key: "class", Value: shortcutClass, Kind: gx.AttrText}}),
+//line Command.gx:38:44
+						gx.Text(it.Shortcut),
+					))
 				}
 //line Command.gx:39:16
-				_b5.Add(gx.Text("\n            "))
-				_b3.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: itemClass, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "option", Kind: gx.AttrText}, gx.Attr{Key: "aria-selected", Value: "false", Kind: gx.AttrText}, gx.Bool("data-command-item", true), gx.Attr{Key: "data-value", Value: it.value(), Kind: gx.AttrText}, gx.Attr{Key: "data-label", Value: it.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-keywords", Value: it.Keywords, Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: it.disabled(), Kind: gx.AttrText}, gx.Bool("disabled", it.Disabled)}, _b5.Node()))
-//line Command.gx:40:22
-				_b3.Add(gx.Text("\n          "))
+				_b5.Add(_tCommand5)
+//line Command.gx:35:13
+				_b3.Add(_tCommand9.With(
+//line Command.gx:35:13
+					gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: itemClass, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "option", Kind: gx.AttrText}, gx.Attr{Key: "aria-selected", Value: "false", Kind: gx.AttrText}, gx.Bool("data-command-item", true), gx.Attr{Key: "data-value", Value: it.value(), Kind: gx.AttrText}, gx.Attr{Key: "data-label", Value: it.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-keywords", Value: it.Keywords, Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: it.disabled(), Kind: gx.AttrText}, gx.Bool("disabled", it.Disabled)}),
+//line Command.gx:35:13
+					_b5.Node(),
+				))
 			}
 //line Command.gx:41:12
-			_b3.Add(gx.Text("\n        "))
+			_b3.Add(_tCommand10)
 		}
 //line Command.gx:42:10
-		_b3.Add(gx.Text("\n      "))
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: groupClass, Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-labelledby", Value: p.headingID(gi), Kind: gx.AttrText}, gx.Bool("data-command-group", true)}, _b3.Node()))
-//line Command.gx:43:13
-		_b2.Add(gx.Text("\n    "))
+		_b3.Add(_tCommand2)
+//line Command.gx:24:7
+		_b2.Add(_tCommand11.With(
+//line Command.gx:24:7
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: groupClass, Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-labelledby", Value: p.headingID(gi), Kind: gx.AttrText}, gx.Bool("data-command-group", true)}),
+//line Command.gx:24:7
+			_b3.Node(),
+		))
 	}
 //line Command.gx:44:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: listClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.listID(), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "listbox", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}}, _b2.Node()))
-//line Command.gx:45:9
-	_b1.Add(gx.Text("\n  "))
+	_b2.Add(_tCommand12)
+//line Command.gx:22:3
+	_b1.Add(_tCommand13.With(
+//line Command.gx:22:3
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: listClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.listID(), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "listbox", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.label(), Kind: gx.AttrText}}),
+//line Command.gx:22:3
+		_b2.Node(),
 //line Command.gx:46:3
-	_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: emptyClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.emptyID(), Kind: gx.AttrText}, gx.Bool("hidden", true)}, gx.Text(p.emptyText())))
-//line Command.gx:46:68
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "command", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Command.gx:47:7
-	_b.Add(gx.Text("\n"))
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "class", Value: emptyClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.emptyID(), Kind: gx.AttrText}, gx.Bool("hidden", true)}),
+//line Command.gx:46:49
+		gx.Text(p.emptyText()),
+	))
+//line Command.gx:20:1
+	_b.Add(_tCommand14.With(
+//line Command.gx:20:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "command", Kind: gx.AttrText}}, p.Attrs)),
+//line Command.gx:20:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tCommand0 = gx.NewTemplate(
+	[]string{"\n  ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tCommand1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCommand2 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCommand3 = gx.NewTemplate(
+	[]string{"\n        <div", ">", "</div>\n        "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 9, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCommand4 = gx.NewTemplate(
+	[]string{"\n          "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCommand5 = gx.NewTemplate(
+	[]string{"\n            "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCommand6 = gx.NewTemplate(
+	[]string{"\n              <span>", "</span>\n              "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tCommand7 = gx.NewTemplate(
+	[]string{"\n                <kbd", ">", "</kbd>\n              "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 17, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCommand8 = gx.NewTemplate(
+	[]string{"<a", ">", "</a>\n          "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCommand9 = gx.NewTemplate(
+	[]string{"<button", ">", "</button>\n          "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCommand10 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCommand11 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n    "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCommand12 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCommand13 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n  <p", ">", "</p>\n"},
+	[]int{0, 1, 0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}, {Slot: 2, Start: 9, EndStatic: 4, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCommand14 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

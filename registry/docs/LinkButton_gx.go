@@ -26,10 +26,20 @@ func LinkButton(p LinkButtonProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line LinkButton.gx:17:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-link-button my-2 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-variant", Value: string(p.Variant), Kind: gx.AttrText}}, p.Attrs), gx.Frag(p.Children, linkButtonIcon(p.Icon))))
-//line LinkButton.gx:17:250
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tLinkButton0.With(
+//line LinkButton.gx:17:1
+		gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("gx-link-button my-2 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium no-underline", buttonClass[p.Variant]), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-variant", Value: string(p.Variant), Kind: gx.AttrText}}, p.Attrs)),
+//line LinkButton.gx:17:210
+		p.Children,
+//line LinkButton.gx:17:222
+		linkButtonIcon(p.Icon),
+	)
 }
+
+var _tLinkButton0 = gx.NewTemplate(
+	[]string{"<a", ">", "", "</a>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

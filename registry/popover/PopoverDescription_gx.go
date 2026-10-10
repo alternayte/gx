@@ -21,10 +21,18 @@ func PopoverDescription(p PopoverDescriptionProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PopoverDescription.gx:12:1
-	_b.Add(gx.El("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PopoverDescription.gx:12:81
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPopoverDescription0.With(
+//line PopoverDescription.gx:12:1
+		gx.Open("p", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("text-muted-foreground", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line PopoverDescription.gx:12:65
+		p.Children,
+	)
 }
+
+var _tPopoverDescription0 = gx.NewTemplate(
+	[]string{"<p", ">", "</p>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

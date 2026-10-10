@@ -21,10 +21,16 @@ func Example(p ExampleProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Example.gx:13:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-example my-6", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), docs.Tabs(docs.TabsProps{Children: gx.Frag(docs.TabItem(docs.TabItemProps{Label: "Preview", Children: Frame(FrameProps{Item: p.Item, Name: p.Name, Label: p.Label, Block: p.Block})}), docs.TabItem(docs.TabItemProps{Label: "Code", Children: gx.El("div", gx.Attrs{{Key: "data-pagefind-ignore", Value: ""}}, p.Children)}))}), gx.Text("\n"))))
-//line Example.gx:15:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tExample0.With(
+//line Example.gx:14:3
+		docs.Tabs(docs.TabsProps{Children: gx.Frag(docs.TabItem(docs.TabItemProps{Label: "Preview", Children: Frame(FrameProps{Item: p.Item, Name: p.Name, Label: p.Label, Block: p.Block})}), docs.TabItem(docs.TabItemProps{Label: "Code", Children: gx.El("div", gx.Attrs{{Key: "data-pagefind-ignore", Value: ""}}, p.Children)}))}),
+	)
 }
+
+var _tExample0 = gx.NewTemplate(
+	[]string{"<div class=\"gx-example my-6\">\n  ", "\n</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

@@ -15,10 +15,20 @@ func ThemeSelect(p ThemeSelectProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ThemeSelect.gx:3:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme inline-flex gap-1 rounded-md border border-border p-0.5", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "group", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Theme", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "light", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}, gx.Text("Light")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "dark", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}, gx.Text("Dark")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}, gx.Text("Auto")), gx.Text("\n"))))
-//line ThemeSelect.gx:7:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tThemeSelect0.With(
+//line ThemeSelect.gx:4:3
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "light", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}),
+//line ThemeSelect.gx:5:3
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "dark", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}),
+//line ThemeSelect.gx:6:3
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-theme-button rounded px-2 py-0.5 text-xs", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-theme", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "aria-pressed", Value: "false", Kind: gx.AttrText}}),
+	)
 }
+
+var _tThemeSelect0 = gx.NewTemplate(
+	[]string{"<div class=\"gx-theme inline-flex gap-1 rounded-md border border-border p-0.5\" role=\"group\" aria-label=\"Theme\">\n  <button", ">Light</button>\n  <button", ">Dark</button>\n  <button", ">Auto</button>\n</div>\n"},
+	[]int{1, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 113, EndStatic: 1, End: 15}, {Slot: 1, Start: 18, EndStatic: 2, End: 14}, {Slot: 2, Start: 17, EndStatic: 3, End: 14}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

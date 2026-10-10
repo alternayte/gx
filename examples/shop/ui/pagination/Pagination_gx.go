@@ -21,10 +21,18 @@ func Pagination(p PaginationProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Pagination.gx:12:1
-	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mx-auto flex w-full justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "navigation", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "pagination", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Pagination.gx:12:163
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPagination0.With(
+//line Pagination.gx:12:1
+		gx.Open("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("mx-auto flex w-full justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "navigation", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "pagination", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination", Kind: gx.AttrText}}, p.Attrs)),
+//line Pagination.gx:12:145
+		p.Children,
+	)
 }
+
+var _tPagination0 = gx.NewTemplate(
+	[]string{"<nav", ">", "</nav>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

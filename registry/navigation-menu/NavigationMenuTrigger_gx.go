@@ -22,10 +22,20 @@ func NavigationMenuTrigger(p NavigationMenuTriggerProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line NavigationMenuTrigger.gx:14:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(triggerClass, "group-hover/navigation-menu-item:bg-accent/50 group-hover/navigation-menu-item:text-accent-foreground group-hover/navigation-menu-item:hover:bg-accent group-hover/navigation-menu-item:focus:bg-accent group-focus-within/navigation-menu-item:bg-accent/50 group-focus-within/navigation-menu-item:text-accent-foreground group-focus-within/navigation-menu-item:hover:bg-accent group-focus-within/navigation-menu-item:focus:bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "true", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), p.Children, gx.Text("\n  "), icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "relative top-[1px] ml-1 size-3 transition duration-300 group-hover/navigation-menu-item:rotate-180 group-focus-within/navigation-menu-item:rotate-180 motion-reduce:transition-none"}), gx.Text("\n"))))
-//line NavigationMenuTrigger.gx:17:10
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tNavigationMenuTrigger0.With(
+//line NavigationMenuTrigger.gx:14:1
+		gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(triggerClass, "group-hover/navigation-menu-item:bg-accent/50 group-hover/navigation-menu-item:text-accent-foreground group-hover/navigation-menu-item:hover:bg-accent group-hover/navigation-menu-item:focus:bg-accent group-focus-within/navigation-menu-item:bg-accent/50 group-focus-within/navigation-menu-item:text-accent-foreground group-focus-within/navigation-menu-item:hover:bg-accent group-focus-within/navigation-menu-item:focus:bg-accent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "true", Kind: gx.AttrText}}, p.Attrs)),
+//line NavigationMenuTrigger.gx:15:3
+		p.Children,
+//line NavigationMenuTrigger.gx:16:3
+		icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "relative top-[1px] ml-1 size-3 transition duration-300 group-hover/navigation-menu-item:rotate-180 group-focus-within/navigation-menu-item:rotate-180 motion-reduce:transition-none"}),
+	)
 }
+
+var _tNavigationMenuTrigger0 = gx.NewTemplate(
+	[]string{"<button", ">\n  ", "\n  ", "\n</button>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

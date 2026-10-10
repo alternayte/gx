@@ -22,39 +22,51 @@ func Preview(p PreviewProps) gx.Node {
 	}
 	var _b gx.Builder
 //line Preview.gx:11:1
-	_b.Add(gx.Head(gx.HeadProps{Title: p.Title, Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
-//line Preview.gx:11:28
-	_b.Add(gx.Text("\n"))
-//line Preview.gx:13:73
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tPreview0.With(
+//line Preview.gx:11:1
+		gx.Head(gx.HeadProps{Title: p.Title, Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
 //line Preview.gx:14:1
-	_b.Add(gx.El("span", gx.Attrs{gx.Bool("hidden", true), gx.Attr{Key: "data-gx-theme", Value: "auto", Kind: gx.AttrText}}))
-//line Preview.gx:14:42
-	_b.Add(gx.Text("\n"))
+		gx.Open("span", gx.Attrs{gx.Bool("hidden", true), gx.Attr{Key: "data-gx-theme", Value: "auto", Kind: gx.AttrText}}),
+	))
 //line Preview.gx:15:1
 	if p.Style != nil {
 //line Preview.gx:15:20
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tPreview1.With(
 //line Preview.gx:16:3
-		_b.Add(p.Style)
-//line Preview.gx:16:12
-		_b.Add(gx.Text("\n"))
+			p.Style,
+		))
 	}
 //line Preview.gx:17:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tPreview2.With(
 //line Preview.gx:18:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-stage", gx.When("gx-stage-block", p.Block)), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-stage-content", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line Preview.gx:20:7
-	_b.Add(gx.Text("\n"))
-//line Preview.gx:22:29
-	_b.Add(gx.Text("\n"))
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Classes("gx-stage", gx.When("gx-stage-block", p.Block)), Kind: gx.AttrText}}),
+//line Preview.gx:19:33
+		p.Children,
 //line Preview.gx:23:1
-	_b.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "fixed inset-x-2 bottom-2 z-50 rounded-md border border-border bg-background px-3 py-2 text-xs text-foreground shadow-md", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-preview-note", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "status", Kind: gx.AttrText}, gx.Bool("hidden", true)}))
-//line Preview.gx:23:178
-	_b.Add(gx.Text("\n"))
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "class", Value: "fixed inset-x-2 bottom-2 z-50 rounded-md border border-border bg-background px-3 py-2 text-xs text-foreground shadow-md", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-preview-note", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "status", Kind: gx.AttrText}, gx.Bool("hidden", true)}),
 //line Preview.gx:24:1
-	_b.Add(previewScript())
-//line Preview.gx:24:18
-	_b.Add(gx.Text("\n"))
+		previewScript(),
+	))
 	return _b.Node()
 }
+
+var _tPreview0 = gx.NewTemplate(
+	[]string{"", "\n\n<span", "></span>\n"},
+	[]int{0, 0},
+	[]gx.TemplateEl{{Slot: 1, Start: 2, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPreview1 = gx.NewTemplate(
+	[]string{"\n  ", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tPreview2 = gx.NewTemplate(
+	[]string{"\n<div", ">\n  <div class=\"gx-stage-content\">", "</div>\n</div>\n\n<p", "></p>\n", "\n"},
+	[]int{0, 2, 0, 0},
+	[]gx.TemplateEl{{Slot: 0, Start: 1, EndStatic: 2, End: 13}, {Slot: 2, Start: 15, EndStatic: 3, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}},
+)

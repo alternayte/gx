@@ -40,89 +40,186 @@ func Dialog(p DialogProps) gx.Node {
 //line Dialog.gx:28:1
 	var _b1 gx.Builder
 //line Dialog.gx:28:24
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tDialog0)
 //line Dialog.gx:29:3
 	if p.Trigger != nil {
 //line Dialog.gx:29:24
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tDialog1.With(
 //line Dialog.gx:30:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-open", Value: "#" + p.Id, Kind: gx.AttrText}}, p.Trigger))
-//line Dialog.gx:30:72
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-open", Value: "#" + p.Id, Kind: gx.AttrText}}),
+//line Dialog.gx:30:54
+			p.Trigger,
+		))
 	}
 //line Dialog.gx:31:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tDialog0)
 //line Dialog.gx:32:3
 	var _b2 gx.Builder
 //line Dialog.gx:32:717
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tDialog2)
 //line Dialog.gx:33:5
 	if p.Title != "" || p.Description != "" {
 //line Dialog.gx:33:46
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tDialog3)
 //line Dialog.gx:34:7
 		var _b3 gx.Builder
 //line Dialog.gx:34:65
-		_b3.Add(gx.Text("\n        "))
+		_b3.Add(_tDialog4)
 //line Dialog.gx:35:9
 		if p.Title != "" {
 //line Dialog.gx:35:27
-			_b3.Add(gx.Text("\n          "))
-//line Dialog.gx:36:11
-			_b3.Add(gx.El("h2", gx.Attrs{gx.Attr{Key: "class", Value: "text-lg leading-none font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Dialog.gx:36:72
-			_b3.Add(gx.Text("\n        "))
+			_b3.Add(_tDialog5.With(
+//line Dialog.gx:36:58
+				gx.Text(p.Title),
+			))
 		}
 //line Dialog.gx:37:10
-		_b3.Add(gx.Text("\n        "))
+		_b3.Add(_tDialog4)
 //line Dialog.gx:38:9
 		if p.Description != "" {
 //line Dialog.gx:38:33
-			_b3.Add(gx.Text("\n          "))
-//line Dialog.gx:39:11
-			_b3.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Dialog.gx:39:71
-			_b3.Add(gx.Text("\n        "))
+			_b3.Add(_tDialog6.With(
+//line Dialog.gx:39:52
+				gx.Text(p.Description),
+			))
 		}
 //line Dialog.gx:40:10
-		_b3.Add(gx.Text("\n      "))
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-2 text-center sm:text-left", Kind: gx.AttrText}}, _b3.Node()))
-//line Dialog.gx:41:13
-		_b2.Add(gx.Text("\n    "))
+		_b3.Add(_tDialog3)
+//line Dialog.gx:34:7
+		_b2.Add(_tDialog7.With(
+//line Dialog.gx:34:7
+			_b3.Node(),
+		))
 	}
 //line Dialog.gx:42:6
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tDialog2)
 //line Dialog.gx:43:5
 	if p.Children != nil {
 //line Dialog.gx:43:27
-		_b2.Add(gx.Text("\n      "))
-//line Dialog.gx:44:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "text-sm", Kind: gx.AttrText}}, p.Children))
-//line Dialog.gx:44:46
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tDialog8.With(
+//line Dialog.gx:44:28
+			p.Children,
+		))
 	}
 //line Dialog.gx:45:6
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tDialog2)
 //line Dialog.gx:46:5
 	if p.Footer != nil {
 //line Dialog.gx:46:25
-		_b2.Add(gx.Text("\n      "))
-//line Dialog.gx:47:7
-		_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", Kind: gx.AttrText}}, p.Footer))
-//line Dialog.gx:47:91
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tDialog9.With(
+//line Dialog.gx:47:75
+			p.Footer,
+		))
 	}
 //line Dialog.gx:48:6
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tDialog10.With(
 //line Dialog.gx:49:5
-	_b2.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}, gx.Frag(gx.Text("\n      "), icons.X(icons.XProps{Label: "", Class: "size-4"}), gx.Raw(gx.SafeHTML("\n      <span class=\"sr-only\">Close</span>\n    ")))))
-//line Dialog.gx:52:14
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border border-border bg-background p-6 text-foreground shadow-lg outline-none open:grid sm:max-w-lg opacity-0 scale-95 transition-[opacity,scale,overlay,display] transition-discrete duration-200 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true), gx.Bool("data-gx-trap", true)}, p.Attrs), _b2.Node()))
-//line Dialog.gx:53:12
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "contents", Kind: gx.AttrText}}, _b1.Node()))
-//line Dialog.gx:54:8
-	_b.Add(gx.Text("\n"))
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-close", true)}),
+//line Dialog.gx:50:7
+		icons.X(icons.XProps{Label: "", Class: "size-4"}),
+	))
+//line Dialog.gx:32:3
+	_b1.Add(_tDialog11.With(
+//line Dialog.gx:32:3
+		gx.Open("dialog", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("fixed inset-0 m-auto h-fit w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border border-border bg-background p-6 text-foreground shadow-lg outline-none open:grid sm:max-w-lg opacity-0 scale-95 transition-[opacity,scale,overlay,display] transition-discrete duration-200 open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-95 motion-reduce:transition-none backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0 motion-reduce:backdrop:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("open", p.Open), gx.Bool("data-gx-dismiss", true), gx.Bool("data-gx-trap", true)}, p.Attrs)),
+//line Dialog.gx:32:3
+		_b2.Node(),
+	))
+//line Dialog.gx:28:1
+	_b.Add(_tDialog12.With(
+//line Dialog.gx:28:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tDialog0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDialog1 = gx.NewTemplate(
+	[]string{"\n    <span", ">", "</span>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tDialog2 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDialog3 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDialog4 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tDialog5 = gx.NewTemplate(
+	[]string{"\n          <h2 class=\"text-lg leading-none font-semibold\">", "</h2>\n        "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h2"}, {El: -1, Slot: -1}},
+)
+
+var _tDialog6 = gx.NewTemplate(
+	[]string{"\n          <p class=\"text-sm text-muted-foreground\">", "</p>\n        "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tDialog7 = gx.NewTemplate(
+	[]string{"<div class=\"flex flex-col gap-2 text-center sm:text-left\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tDialog8 = gx.NewTemplate(
+	[]string{"\n      <div class=\"text-sm\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tDialog9 = gx.NewTemplate(
+	[]string{"\n      <div class=\"flex flex-col-reverse gap-2 sm:flex-row sm:justify-end\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tDialog10 = gx.NewTemplate(
+	[]string{"\n    <button", ">\n      ", "\n      <span class=\"sr-only\">Close</span>\n    </button>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 55}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tDialog11 = gx.NewTemplate(
+	[]string{"<dialog", ">", "</dialog>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tDialog12 = gx.NewTemplate(
+	[]string{"<span class=\"contents\">", "</span>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)

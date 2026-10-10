@@ -9,12 +9,12 @@ import (
 	"github.com/alternayte/gx"
 )
 
+// BenchmarkRender builds the page from generated code inside the timed loop
+// and writes it, as the templ side does (NFR-03, B-015).
 func BenchmarkRender(b *testing.B) {
-	node := benchPage()
 	b.ReportAllocs()
-	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if err := gx.RenderNode(io.Discard, node); err != nil {
+		if err := gx.RenderNode(io.Discard, BenchPage(BenchPageProps{Rows: benchRows})); err != nil {
 			b.Fatal(err)
 		}
 	}
@@ -37,9 +37,8 @@ func BenchmarkRenderTempl(b *testing.B) {
 // reference laptop, not on shared CI machines.
 func TestNFR_03_RenderBenchmarks(t *testing.T) {
 	gxRes := testing.Benchmark(func(b *testing.B) {
-		node := benchPage()
 		for i := 0; i < b.N; i++ {
-			if err := gx.RenderNode(io.Discard, node); err != nil {
+			if err := gx.RenderNode(io.Discard, BenchPage(BenchPageProps{Rows: benchRows})); err != nil {
 				b.Fatal(err)
 			}
 		}
@@ -58,11 +57,5 @@ func TestNFR_03_RenderBenchmarks(t *testing.T) {
 		float64(gxRes.NsPerOp())/float64(templRes.NsPerOp()))
 }
 
-func benchPage() gx.Node {
-	rows := make([]gx.Node, 0, 50)
-	for i := 0; i < 50; i++ {
-		rows = append(rows, gx.El("li", gx.Attrs{{Key: "class", Value: "row"}},
-			gx.Value(i), gx.Text(" items")))
-	}
-	return gx.El("div", gx.Attrs{{Key: "class", Value: "page"}}, gx.Frag(rows...))
-}
+// benchRows is the number of rows of the page of each side.
+const benchRows = 50

@@ -27,10 +27,18 @@ func Textarea(p TextareaProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Textarea.gx:18:1
-	_b.Add(gx.El("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "textarea", Kind: gx.AttrText}}, p.attrs()), gx.Text(p.Value)))
-//line Textarea.gx:18:139
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTextarea0.With(
+//line Textarea.gx:18:1
+		gx.Open("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(Class, p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "textarea", Kind: gx.AttrText}}, p.attrs())),
+//line Textarea.gx:18:119
+		gx.Text(p.Value),
+	)
 }
+
+var _tTextarea0 = gx.NewTemplate(
+	[]string{"<textarea", ">", "</textarea>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 11}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

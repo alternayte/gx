@@ -29,20 +29,43 @@ func Badge(p BadgeProps) gx.Node {
 //line Badge.gx:16:1
 	if p.Href != "" {
 //line Badge.gx:16:18
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tBadge0.With(
 //line Badge.gx:17:3
-		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "badge", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Badge.gx:17:112
-		_b.Add(gx.Text("\n"))
+			gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "badge", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs)),
+//line Badge.gx:17:96
+			p.Children,
+		))
 	} else {
 //line Badge.gx:18:9
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tBadge1.With(
 //line Badge.gx:19:3
-		_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "badge", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Badge.gx:19:104
-		_b.Add(gx.Text("\n"))
+			gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "badge", Kind: gx.AttrText}, gx.Attr{Key: "data-variant", Value: p.variant(), Kind: gx.AttrText}}, p.Attrs)),
+//line Badge.gx:19:85
+			p.Children,
+		))
 	}
 //line Badge.gx:20:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tBadge2)
 	return _b.Node()
 }
+
+var _tBadge0 = gx.NewTemplate(
+	[]string{"\n  <a", ">", "</a>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tBadge1 = gx.NewTemplate(
+	[]string{"\n  <span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tBadge2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

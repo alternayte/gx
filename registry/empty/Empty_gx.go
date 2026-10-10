@@ -21,10 +21,18 @@ func Empty(p EmptyProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Empty.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Empty.gx:12:206
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tEmpty0.With(
+//line Empty.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "empty", Kind: gx.AttrText}}, p.Attrs)),
+//line Empty.gx:12:188
+		p.Children,
+	)
 }
+
+var _tEmpty0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -17,10 +17,26 @@ func Header(p HeaderProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Header.gx:8:1
-	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "sl-header", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-header-inner", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-title-wrapper", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), SiteTitle(SiteTitleProps{Site: p.Site}), gx.Text("\n    "))), gx.Text("\n    "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-header-search", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-button", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-open", true), gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}, gx.Attr{Key: "aria-keyshortcuts", Value: "Control+K", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "dialog", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n        "), icon("magnifier", ""), gx.Raw(gx.SafeHTML("\n        <span aria-hidden=\"true\">Search</span>\n        ")), gx.El("kbd", nil, gx.Frag(gx.El("kbd", gx.Attrs{gx.Bool("data-gx-mod-key", true)}, gx.Text("Ctrl")), gx.Raw(gx.SafeHTML("<kbd>K</kbd>")))), gx.Text("\n      "))), gx.Text("\n    "))), gx.Text("\n    "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-right-group", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), SocialIcons(SocialIconsProps{Links: p.Site.Links}), gx.Text("\n      "), ThemeSelect(ThemeSelectProps{}), gx.Text("\n    "))), gx.Text("\n  "))), gx.Text("\n"))))
-//line Header.gx:25:10
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tHeader0.With(
+//line Header.gx:11:7
+		SiteTitle(SiteTitleProps{Site: p.Site}),
+//line Header.gx:14:7
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-button", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-open", true), gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}, gx.Attr{Key: "aria-keyshortcuts", Value: "Control+K", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "dialog", Kind: gx.AttrText}}),
+//line Header.gx:15:9
+		icon("magnifier", ""),
+//line Header.gx:17:14
+		gx.Open("kbd", gx.Attrs{gx.Bool("data-gx-mod-key", true)}),
+//line Header.gx:21:7
+		SocialIcons(SocialIconsProps{Links: p.Site.Links}),
+//line Header.gx:22:7
+		ThemeSelect(ThemeSelectProps{}),
+	)
 }
+
+var _tHeader0 = gx.NewTemplate(
+	[]string{"<header class=\"sl-header\">\n  <div class=\"sl-header-inner\">\n    <div class=\"sl-title-wrapper\">\n      ", "\n    </div>\n    <div class=\"sl-header-search\">\n      <button", ">\n        ", "\n        <span aria-hidden=\"true\">Search</span>\n        <kbd><kbd", ">Ctrl</kbd><kbd>K</kbd></kbd>\n      </button>\n    </div>\n    <div class=\"sl-right-group\">\n      ", "\n      ", "\n    </div>\n  </div>\n</header>\n"},
+	[]int{3, 3, 4, 5, 3, 3},
+	[]gx.TemplateEl{{Slot: 1, Start: 53, EndStatic: 4, End: 45}, {Slot: 3, Start: 61, EndStatic: 4, End: 11}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}},
+)

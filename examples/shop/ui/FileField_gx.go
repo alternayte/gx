@@ -17,10 +17,24 @@ func FileField(p FileFieldProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line FileField.gx:8:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}, gx.Text(p.Label)), gx.Text("\n  "), gx.El("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: "file", Kind: gx.AttrText}})), gx.Text("\n  "), gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())), gx.Text("\n"))))
-//line FileField.gx:12:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tFileField0.With(
+//line FileField.gx:9:3
+		gx.Open("label", gx.Attrs{gx.Attr{Key: "for", Value: p.Field.FieldID(), Kind: gx.AttrText}}),
+//line FileField.gx:9:34
+		gx.Text(p.Label),
+//line FileField.gx:10:3
+		gx.Open("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: "file", Kind: gx.AttrText}})),
+//line FileField.gx:11:3
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}),
+//line FileField.gx:11:53
+		gx.Text(p.Field.FieldError()),
+	)
 }
+
+var _tFileField0 = gx.NewTemplate(
+	[]string{"<div class=\"field\">\n  <label", ">", "</label>\n  <input", ">\n  <p", ">", "</p>\n</div>\n"},
+	[]int{1, 2, 1, 1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 22, EndStatic: 2, End: 8}, {Slot: 2, Start: 11, EndStatic: 3, End: 1}, {Slot: 3, Start: 4, EndStatic: 5, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

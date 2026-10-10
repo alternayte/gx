@@ -18,6 +18,5 @@ func LLMSkip(p LLMSkipProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
-	return _b.Node()
+	return gx.Frag()
 }

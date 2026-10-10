@@ -20,10 +20,16 @@ func CircleCheck(p CircleCheckProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line CircleCheck.gx:11:1
-	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m16 9l-5.5 5.5L8 12\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line CircleCheck.gx:11:246
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCircleCheck0.With(
+//line CircleCheck.gx:11:1
+		gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m16 9l-5.5 5.5L8 12\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tCircleCheck0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

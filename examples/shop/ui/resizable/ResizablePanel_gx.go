@@ -27,10 +27,20 @@ func ResizablePanel(p ResizablePanelProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ResizablePanel.gx:18:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: panelClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "resizable-panel", Kind: gx.AttrText}, gx.Attr{Key: "data-min-size", Value: gx.TextValue(p.MinSize), Kind: gx.AttrText}, gx.Attr{Key: "data-max-size", Value: gx.TextValue(p.maxSize()), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(contentClass, p.Class), Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line ResizablePanel.gx:20:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tResizablePanel0.With(
+//line ResizablePanel.gx:18:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: panelClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "resizable-panel", Kind: gx.AttrText}, gx.Attr{Key: "data-min-size", Value: gx.TextValue(p.MinSize), Kind: gx.AttrText}, gx.Attr{Key: "data-max-size", Value: gx.TextValue(p.maxSize()), Kind: gx.AttrText}}, p.Attrs)),
+//line ResizablePanel.gx:19:3
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(contentClass, p.Class), Kind: gx.AttrText}}),
+//line ResizablePanel.gx:19:45
+		p.Children,
+	)
 }
+
+var _tResizablePanel0 = gx.NewTemplate(
+	[]string{"<div", ">\n  <div", ">", "</div>\n</div>\n"},
+	[]int{0, 1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 13}, {Slot: 1, Start: 4, EndStatic: 3, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

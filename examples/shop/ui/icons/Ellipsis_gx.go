@@ -20,10 +20,16 @@ func Ellipsis(p EllipsisProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Ellipsis.gx:11:1
-	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"19\" cy=\"12\" r=\"1\"/><circle cx=\"5\" cy=\"12\" r=\"1\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line Ellipsis.gx:11:285
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tEllipsis0.With(
+//line Ellipsis.gx:11:1
+		gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"19\" cy=\"12\" r=\"1\"/><circle cx=\"5\" cy=\"12\" r=\"1\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tEllipsis0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

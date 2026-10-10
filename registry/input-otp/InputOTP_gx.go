@@ -33,10 +33,20 @@ func InputOTP(p InputOTPProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line InputOTP.gx:24:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-otp", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: inputClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "text", Kind: gx.AttrText}, gx.Attr{Key: "inputmode", Value: "numeric", Kind: gx.AttrText}, gx.Attr{Key: "pattern", Value: p.pattern(), Kind: gx.AttrText}, gx.Attr{Key: "maxlength", Value: gx.TextValue(p.length()), Kind: gx.AttrText}, gx.Attr{Key: "autocomplete", Value: "one-time-code", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs)), gx.Text("\n  "), InputOTPSlots(InputOTPSlotsProps{Input: p.Id, Length: p.length(), Group: p.Group, SlotClass: slotClass, ActiveClass: activeClass, CaretClass: caretClass, SeparatorClass: separatorClass, OverlayClass: overlayClass}, gx.IslandLoad("eager")), gx.Text("\n"))))
-//line InputOTP.gx:27:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tInputOTP0.With(
+//line InputOTP.gx:24:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-otp", Kind: gx.AttrText}}),
+//line InputOTP.gx:25:3
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: inputClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "text", Kind: gx.AttrText}, gx.Attr{Key: "inputmode", Value: "numeric", Kind: gx.AttrText}, gx.Attr{Key: "pattern", Value: p.pattern(), Kind: gx.AttrText}, gx.Attr{Key: "maxlength", Value: gx.TextValue(p.length()), Kind: gx.AttrText}, gx.Attr{Key: "autocomplete", Value: "one-time-code", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs)),
+//line InputOTP.gx:26:3
+		InputOTPSlots(InputOTPSlotsProps{Input: p.Id, Length: p.length(), Group: p.Group, SlotClass: slotClass, ActiveClass: activeClass, CaretClass: caretClass, SeparatorClass: separatorClass, OverlayClass: overlayClass}, gx.IslandLoad("eager")),
+	)
 }
+
+var _tInputOTP0 = gx.NewTemplate(
+	[]string{"<div", ">\n  <input", ">\n  ", "\n</div>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 7}, {Slot: 1, Start: 4, EndStatic: 2, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

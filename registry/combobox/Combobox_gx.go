@@ -39,35 +39,78 @@ func Combobox(p ComboboxProps) gx.Node {
 //line Combobox.gx:26:1
 	var _b1 gx.Builder
 //line Combobox.gx:26:61
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tCombobox0)
 //line Combobox.gx:27:3
 	var _b2 gx.Builder
 //line Combobox.gx:27:111
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tCombobox1.With(
 //line Combobox.gx:28:5
-	_b2.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: "", Kind: gx.AttrText}, gx.Bool("selected", p.Value == "")}, gx.Text(p.placeholder())))
-//line Combobox.gx:28:73
-	_b2.Add(gx.Text("\n    "))
+		gx.Open("option", gx.Attrs{gx.Attr{Key: "value", Value: "", Kind: gx.AttrText}, gx.Bool("selected", p.Value == "")}),
+//line Combobox.gx:28:47
+		gx.Text(p.placeholder()),
+	))
 //line Combobox.gx:29:5
 	for _, o := range p.Options {
 //line Combobox.gx:29:34
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tCombobox2.With(
 //line Combobox.gx:30:7
-		_b2.Add(gx.El("option", gx.Attrs{gx.Attr{Key: "value", Value: o.Value, Kind: gx.AttrText}, gx.Bool("selected", o.Value == p.Value), gx.Bool("disabled", o.Disabled)}, gx.Text(o.Label)))
-//line Combobox.gx:30:101
-		_b2.Add(gx.Text("\n    "))
+			gx.Open("option", gx.Attrs{gx.Attr{Key: "value", Value: o.Value, Kind: gx.AttrText}, gx.Bool("selected", o.Value == p.Value), gx.Bool("disabled", o.Disabled)}),
+//line Combobox.gx:30:83
+			gx.Text(o.Label),
+		))
 	}
 //line Combobox.gx:31:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("select", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: selectClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs), _b2.Node()))
-//line Combobox.gx:32:12
-	_b1.Add(gx.Text("\n  "))
+	_b2.Add(_tCombobox0)
+//line Combobox.gx:27:3
+	_b1.Add(_tCombobox3.With(
+//line Combobox.gx:27:3
+		gx.Open("select", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: selectClass, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Attrs)),
+//line Combobox.gx:27:3
+		_b2.Node(),
 //line Combobox.gx:33:3
-	_b1.Add(ComboboxInput(ComboboxInputProps{Select: p.Id, Placeholder: p.placeholder(), EmptyText: p.emptyText(), Classes: inputClasses}, gx.IslandLoad("eager")))
-//line Combobox.gx:33:126
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "combobox", Kind: gx.AttrText}}, _b1.Node()))
-//line Combobox.gx:34:7
-	_b.Add(gx.Text("\n"))
+		ComboboxInput(ComboboxInputProps{Select: p.Id, Placeholder: p.placeholder(), EmptyText: p.emptyText(), Classes: inputClasses}, gx.IslandLoad("eager")),
+	))
+//line Combobox.gx:26:1
+	_b.Add(_tCombobox4.With(
+//line Combobox.gx:26:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(rootClass, p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "combobox", Kind: gx.AttrText}}),
+//line Combobox.gx:26:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tCombobox0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCombobox1 = gx.NewTemplate(
+	[]string{"\n    <option", ">", "</option>\n    "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCombobox2 = gx.NewTemplate(
+	[]string{"\n      <option", ">", "</option>\n    "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCombobox3 = gx.NewTemplate(
+	[]string{"<select", ">", "</select>\n  ", "\n"},
+	[]int{0, 1, 0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}},
+)
+
+var _tCombobox4 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

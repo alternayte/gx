@@ -18,12 +18,23 @@ func Charts(p ChartsProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Charts.gx:11:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.Text("\n  "), gx.El("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}, gx.Frag(gx.Text("Round "), gx.Value(p.Round))), gx.Text("\n  "), gx.El("sl-details", gx.Attrs{gx.Attr{Key: "summary", Value: "About these numbers", Kind: gx.AttrText}, gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}, gx.Text("The numbers follow the round.")), gx.Text("\n  "), BarChart(BarChartProps{Round: p.Round, Data: p.Revenue}, gx.IslandLoad("eager")), gx.Text("\n  "), Sparkline(SparklineProps{Data: p.Revenue}, gx.IslandLoad("idle")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.On("click", "POST", (route.Refresh{Round: p.Round + 1}).URL(), "")}, gx.Text("Refresh")), gx.Text("\n"))))
-//line Charts.gx:18:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCharts0.With(
+//line Charts.gx:11:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}),
+//line Charts.gx:13:3
+		gx.Open("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}),
+//line Charts.gx:13:42
+		gx.Int(int64(p.Round)),
+//line Charts.gx:14:3
+		gx.Open("sl-details", gx.Attrs{gx.Attr{Key: "summary", Value: "About these numbers", Kind: gx.AttrText}, gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}),
+//line Charts.gx:15:3
+		BarChart(BarChartProps{Round: p.Round, Data: p.Revenue}, gx.IslandLoad("eager")),
+//line Charts.gx:16:3
+		Sparkline(SparklineProps{Data: p.Revenue}, gx.IslandLoad("idle")),
+//line Charts.gx:17:3
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.On("click", "POST", (route.Refresh{Round: p.Round + 1}).URL(), "")}),
+	)
 }
 
 //line Charts.gx:11:1
@@ -33,8 +44,35 @@ func ChartsPanel(p ChartsProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Charts.gx:11:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.Text("\n  "), gx.El("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}, gx.Frag(gx.Text("Round "), gx.Value(p.Round))), gx.Text("\n  "), gx.El("sl-details", gx.Attrs{gx.Attr{Key: "summary", Value: "About these numbers", Kind: gx.AttrText}, gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}, gx.Text("The numbers follow the round.")), gx.Text("\n  "), BarChart(BarChartProps{Round: p.Round, Data: p.Revenue}, gx.IslandLoad("eager")), gx.Text("\n  "), Sparkline(SparklineProps{Data: p.Revenue}, gx.IslandLoad("idle")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.On("click", "POST", (route.Refresh{Round: p.Round + 1}).URL(), "")}, gx.Text("Refresh")), gx.Text("\n"))))
-	return _b.Node()
+	return _tCharts1.With(
+//line Charts.gx:11:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}),
+//line Charts.gx:13:3
+		gx.Open("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}),
+//line Charts.gx:13:42
+		gx.Int(int64(p.Round)),
+//line Charts.gx:14:3
+		gx.Open("sl-details", gx.Attrs{gx.Attr{Key: "summary", Value: "About these numbers", Kind: gx.AttrText}, gx.ElementModule("@shoelace-style/shoelace/dist/components/details/details.js"), gx.Attr{Key: "data-preserve-attr", Value: "disabled open", Kind: gx.AttrText}}),
+//line Charts.gx:15:3
+		BarChart(BarChartProps{Round: p.Round, Data: p.Revenue}, gx.IslandLoad("eager")),
+//line Charts.gx:16:3
+		Sparkline(SparklineProps{Data: p.Revenue}, gx.IslandLoad("idle")),
+//line Charts.gx:17:3
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-3 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.On("click", "POST", (route.Refresh{Round: p.Round + 1}).URL(), "")}),
+	)
 }
+
+var _tCharts0 = gx.NewTemplate(
+	[]string{"<div", ">\n  \n  <sl-badge", ">Round ", "</sl-badge>\n  <sl-details", ">The numbers follow the round.</sl-details>\n  ", "\n  ", "\n  <button", ">Refresh</button>\n</div>\n"},
+	[]int{0, 1, 2, 1, 1, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 7, End: 24}, {Slot: 1, Start: 7, EndStatic: 3, End: 11}, {Slot: 3, Start: 14, EndStatic: 4, End: 43}, {Slot: 6, Start: 3, EndStatic: 7, End: 17}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tCharts1 = gx.NewTemplate(
+	[]string{"<div", ">\n  \n  <sl-badge", ">Round ", "</sl-badge>\n  <sl-details", ">The numbers follow the round.</sl-details>\n  ", "\n  ", "\n  <button", ">Refresh</button>\n</div>"},
+	[]int{0, 1, 2, 1, 1, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 7, End: 24}, {Slot: 1, Start: 7, EndStatic: 3, End: 11}, {Slot: 3, Start: 14, EndStatic: 4, End: 43}, {Slot: 6, Start: 3, EndStatic: 7, End: 17}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
+)

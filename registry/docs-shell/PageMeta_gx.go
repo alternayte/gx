@@ -23,31 +23,68 @@ func PageMeta(p PageMetaProps) gx.Node {
 //line PageMeta.gx:10:1
 	var _b1 gx.Builder
 //line PageMeta.gx:10:83
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tPageMeta0)
 //line PageMeta.gx:11:3
 	if p.Site.EditURL(p.Page) != "" {
 //line PageMeta.gx:11:36
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tPageMeta1.With(
 //line PageMeta.gx:12:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-edit-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Site.EditURL(p.Page))), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Edit this page")))
-//line PageMeta.gx:12:85
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-edit-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Site.EditURL(p.Page))), Kind: gx.AttrURL, Active: "page"}}),
+		))
 	}
 //line PageMeta.gx:13:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tPageMeta0)
 //line PageMeta.gx:14:3
 	if p.Page.Updated != "" {
 //line PageMeta.gx:14:28
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tPageMeta2.With(
 //line PageMeta.gx:15:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-updated", Kind: gx.AttrText}, gx.Bool("data-gx-updated", true)}, gx.Frag(gx.Text("Last updated "), gx.Text(p.Page.Updated))))
-//line PageMeta.gx:15:82
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: "gx-updated", Kind: gx.AttrText}, gx.Bool("data-gx-updated", true)}),
+//line PageMeta.gx:15:59
+			gx.Text(p.Page.Updated),
+		))
 	}
 //line PageMeta.gx:16:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-page-meta mt-8 flex flex-wrap gap-4 text-sm text-muted-foreground", Kind: gx.AttrText}}, _b1.Node()))
-//line PageMeta.gx:17:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tPageMeta3)
+//line PageMeta.gx:10:1
+	_b.Add(_tPageMeta4.With(
+//line PageMeta.gx:10:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tPageMeta0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPageMeta1 = gx.NewTemplate(
+	[]string{"\n    <a", ">Edit this page</a>\n  "},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 1, End: 19}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPageMeta2 = gx.NewTemplate(
+	[]string{"\n    <span", ">Last updated ", "</span>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPageMeta3 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPageMeta4 = gx.NewTemplate(
+	[]string{"<div class=\"gx-page-meta mt-8 flex flex-wrap gap-4 text-sm text-muted-foreground\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

@@ -20,20 +20,51 @@ func IconGrid(p IconGridProps) gx.Node {
 //line IconGrid.gx:7:1
 	var _b1 gx.Builder
 //line IconGrid.gx:7:98
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tIconGrid0)
 //line IconGrid.gx:8:3
 	for _, ex := range iconExamples(p.Item) {
 //line IconGrid.gx:8:44
-		_b1.Add(gx.Text("\n    "))
-//line IconGrid.gx:9:5
-		_b1.Add(gx.El("li", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 flex flex-col items-center gap-3 rounded-lg border border-border p-4 text-center", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex size-10 items-center justify-center [&>svg]:size-6", Kind: gx.AttrText}}, ex.Node()), gx.Text("\n      "), gx.El("code", gx.Attrs{gx.Attr{Key: "class", Value: "text-xs text-muted-foreground", Kind: gx.AttrText}}, gx.Text(ex.Component)), gx.Text("\n    "))))
-//line IconGrid.gx:12:10
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tIconGrid1.With(
+//line IconGrid.gx:10:77
+			ex.Node(),
+//line IconGrid.gx:11:51
+			gx.Text(ex.Component),
+		))
 	}
 //line IconGrid.gx:13:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "gx-icon-grid my-6 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 md:grid-cols-4", Kind: gx.AttrText}}, _b1.Node()))
-//line IconGrid.gx:14:6
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tIconGrid2)
+//line IconGrid.gx:7:1
+	_b.Add(_tIconGrid3.With(
+//line IconGrid.gx:7:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tIconGrid0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tIconGrid1 = gx.NewTemplate(
+	[]string{"\n    <li class=\"m-0 flex flex-col items-center gap-3 rounded-lg border border-border p-4 text-center\">\n      <span class=\"flex size-10 items-center justify-center [&amp;&gt;svg]:size-6\">", "</span>\n      <code class=\"text-xs text-muted-foreground\">", "</code>\n    </li>\n  "},
+	[]int{2, 2},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+)
+
+var _tIconGrid2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tIconGrid3 = gx.NewTemplate(
+	[]string{"<ul class=\"gx-icon-grid my-6 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 md:grid-cols-4\">", "</ul>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)

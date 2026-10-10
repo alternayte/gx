@@ -635,28 +635,6 @@ func FieldErrorNode(fieldID, message string) Node {
 	}, Text(message))
 }
 
-// findElementByID returns the first element with the given id.
-func findElementByID(n Node, id string) *elNode {
-	switch t := n.(type) {
-	case *elNode:
-		if attrValue(t, "id") == id {
-			return t
-		}
-		for _, child := range t.children {
-			if el := findElementByID(child, id); el != nil {
-				return el
-			}
-		}
-	case fragNode:
-		for _, child := range t {
-			if el := findElementByID(child, id); el != nil {
-				return el
-			}
-		}
-	}
-	return nil
-}
-
 // FormText returns one request form value after parsing (REQ-FRM-08).
 func FormText(r *http.Request, name string) string {
 	parseRequestForm(r)

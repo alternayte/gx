@@ -15,10 +15,22 @@ func ChartDemo(p ChartDemoProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ChartDemo.gx:3:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-chart-demo my-6 rounded-lg border border-border p-4", Kind: gx.AttrText}, gx.Bool("data-chart-demo", true), gx.Attr{Key: "data-sets", Value: chartSetsJSON, Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), SalesChart(SalesChartProps{Title: chartTitle, Data: chartSets[0]}, gx.IslandLoad("visible")), gx.Text("\n  "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-4 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-chart-next", true)}, gx.Text("Load new numbers")), gx.Text("\n  "), chartDemoScript(), gx.Text("\n"))))
-//line ChartDemo.gx:7:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tChartDemo0.With(
+//line ChartDemo.gx:3:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-chart-demo my-6 rounded-lg border border-border p-4", Kind: gx.AttrText}, gx.Bool("data-chart-demo", true), gx.Attr{Key: "data-sets", Value: chartSetsJSON, Kind: gx.AttrText}}),
+//line ChartDemo.gx:4:3
+		SalesChart(SalesChartProps{Title: chartTitle, Data: chartSets[0]}, gx.IslandLoad("visible")),
+//line ChartDemo.gx:5:3
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "mt-4 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-chart-next", true)}),
+//line ChartDemo.gx:6:3
+		chartDemoScript(),
+	)
 }
+
+var _tChartDemo0 = gx.NewTemplate(
+	[]string{"<div", ">\n  ", "\n  <button", ">Load new numbers</button>\n  ", "\n</div>\n"},
+	[]int{0, 1, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 7}, {Slot: 2, Start: 3, EndStatic: 3, End: 26}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

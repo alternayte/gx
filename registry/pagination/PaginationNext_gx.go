@@ -23,10 +23,26 @@ func PaginationNext(p PaginationNextProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PaginationNext.gx:15:1
-	_b.Add(PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class), Children: gx.Frag(gx.Raw(gx.SafeHTML("<span class=\"hidden sm:block\">Next</span>")), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""})), Attrs: p.attrs()}))
-//line PaginationNext.gx:18:18
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPaginationNext1.With(
+//line PaginationNext.gx:15:1
+		PaginationLink(PaginationLinkProps{Href: p.Href, Active: false, Size: button.Md, Class: gx.Cx("gap-1 px-2.5 sm:pr-2.5", p.Class), Children: _tPaginationNext0.With(
+//line PaginationNext.gx:17:3
+			icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""}),
+		), Attrs: p.attrs()}),
+	)
 }
+
+var _tPaginationNext0 = gx.NewTemplate(
+	[]string{"<span class=\"hidden sm:block\">Next</span>", ""},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: 0}},
+)
+
+var _tPaginationNext1 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

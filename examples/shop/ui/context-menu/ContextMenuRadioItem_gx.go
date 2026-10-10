@@ -31,10 +31,22 @@ func ContextMenuRadioItem(p ContextMenuRadioItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenuRadioItem.gx:23:1
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "radio", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitemradio", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled))), gx.Text("\n  "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible", Kind: gx.AttrText}}, icons.Circle(icons.CircleProps{Label: "", Class: "size-2 *:fill-current"})), gx.Text("\n  "), p.Children, gx.Text("\n"))))
-//line ContextMenuRadioItem.gx:27:9
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenuRadioItem0.With(
+//line ContextMenuRadioItem.gx:23:1
+		gx.Open("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm select-none hover:bg-accent hover:text-accent-foreground has-[:focus]:bg-accent has-[:focus]:text-accent-foreground has-[:disabled]:pointer-events-none has-[:disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line ContextMenuRadioItem.gx:24:3
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "radio", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitemradio", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled))),
+//line ContextMenuRadioItem.gx:25:126
+		icons.Circle(icons.CircleProps{Label: "", Class: "size-2 *:fill-current"}),
+//line ContextMenuRadioItem.gx:26:3
+		p.Children,
+	)
 }
+
+var _tContextMenuRadioItem0 = gx.NewTemplate(
+	[]string{"<label", ">\n  <input", ">\n  <span class=\"pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible\">", "</span>\n  ", "\n</label>\n"},
+	[]int{0, 1, 2, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 9}, {Slot: 1, Start: 4, EndStatic: 2, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -24,22 +24,34 @@ func Shell(p ShellProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Shell.gx:15:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground antialiased"}))
-//line Shell.gx:15:66
-	_b.Add(gx.Text("\n"))
-//line Shell.gx:16:1
-	_b.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-skip-link sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: "#gx-main", Kind: gx.AttrURL}}, gx.Text("Skip to content")))
-//line Shell.gx:16:223
-	_b.Add(gx.Text("\n"))
-//line Shell.gx:17:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-shell min-h-screen", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), Header(HeaderProps{Site: p.Site}), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-7xl gap-8 px-4", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), Sidebar(SidebarProps{Nav: p.Nav, Path: p.Page.Path}), gx.Text("\n    "), gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "min-w-0 flex-1 py-8", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-main", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.El("article", gx.Attrs{gx.Attr{Key: "class", Value: "gx-content", Kind: gx.AttrText}, gx.Bool("data-pagefind-body", true)}, p.Children), gx.Text("\n      "), Pagination(PaginationProps{Prev: p.Page.Prev, Next: p.Page.Next}), gx.Text("\n      "), PageMeta(PageMetaProps{Site: p.Site, Page: p.Page}), gx.Text("\n    "))), gx.Text("\n    "), Toc(TocProps{Headings: p.Page.ShownTOC()}), gx.Text("\n  "))), gx.Text("\n"))))
-//line Shell.gx:28:7
-	_b.Add(gx.Text("\n"))
+	return _tShell0.With(
+//line Shell.gx:15:1
+		gx.Head(gx.HeadProps{Title: "", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground antialiased"}),
+//line Shell.gx:18:3
+		Header(HeaderProps{Site: p.Site}),
+//line Shell.gx:20:5
+		Sidebar(SidebarProps{Nav: p.Nav, Path: p.Page.Path}),
+//line Shell.gx:21:5
+		gx.Open("main", gx.Attrs{gx.Attr{Key: "class", Value: "min-w-0 flex-1 py-8", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-main", Kind: gx.AttrText}}),
+//line Shell.gx:22:7
+		gx.Open("article", gx.Attrs{gx.Attr{Key: "class", Value: "gx-content", Kind: gx.AttrText}, gx.Bool("data-pagefind-body", true)}),
+//line Shell.gx:22:54
+		p.Children,
+//line Shell.gx:23:7
+		Pagination(PaginationProps{Prev: p.Page.Prev, Next: p.Page.Next}),
+//line Shell.gx:24:7
+		PageMeta(PageMetaProps{Site: p.Site, Page: p.Page}),
+//line Shell.gx:26:5
+		Toc(TocProps{Headings: p.Page.ShownTOC()}),
 //line Shell.gx:29:1
-	_b.Add(SearchDialog(SearchDialogProps{}))
-//line Shell.gx:29:17
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		SearchDialog(SearchDialogProps{}),
+	)
 }
+
+var _tShell0 = gx.NewTemplate(
+	[]string{"", "\n<a class=\"gx-skip-link sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground\" href=\"#gx-main\">Skip to content</a>\n<div class=\"gx-shell min-h-screen\">\n  ", "\n  <div class=\"mx-auto flex max-w-7xl gap-8 px-4\">\n    ", "\n    <main", ">\n      <article", ">", "</article>\n      ", "\n      ", "\n    </main>\n    ", "\n  </div>\n</div>\n", "\n"},
+	[]int{0, 1, 2, 2, 3, 4, 3, 3, 2, 0},
+	[]gx.TemplateEl{{Slot: 3, Start: 5, EndStatic: 8, End: 12}, {Slot: 4, Start: 8, EndStatic: 6, End: 10}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "a"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 9}, {El: -1, Slot: -1}},
+)

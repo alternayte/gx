@@ -15,10 +15,24 @@ func SearchDialog(p SearchDialogProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SearchDialog.gx:3:1
-	_b.Add(gx.El("dialog", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-dialog w-full max-w-lg rounded-lg border border-border bg-background p-0 text-foreground", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-search", Kind: gx.AttrText}, gx.Bool("data-gx-search", true), gx.Attr{Key: "data-gx-search-src", Value: "/pagefind/pagefind.js", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("form", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2 p-3", Kind: gx.AttrText}, gx.Attr{Key: "method", Value: "get", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: "/search", Kind: gx.AttrURL}, gx.Bool("data-gx-search-form", true)}, gx.Frag(gx.Text("\n    "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-input w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "search", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: "q", Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: "Search the docs", Kind: gx.AttrText}, gx.Bool("data-gx-search-input", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}), gx.Raw(gx.SafeHTML("\n    <button class=\"rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground\" type=\"submit\">Search</button>\n    ")), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-close rounded-md border border-border px-3 py-2 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-close", true), gx.Attr{Key: "aria-label", Value: "Close", Kind: gx.AttrText}}, gx.Text("Close")), gx.Text("\n  "))), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-results max-h-80 overflow-y-auto px-3 pb-3 text-sm", Kind: gx.AttrText}, gx.Bool("data-gx-search-results", true)}), gx.Text("\n"))))
-//line SearchDialog.gx:10:10
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSearchDialog0.With(
+//line SearchDialog.gx:3:1
+		gx.Open("dialog", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-dialog w-full max-w-lg rounded-lg border border-border bg-background p-0 text-foreground", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-search", Kind: gx.AttrText}, gx.Bool("data-gx-search", true), gx.Attr{Key: "data-gx-search-src", Value: "/pagefind/pagefind.js", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}}),
+//line SearchDialog.gx:4:3
+		gx.Open("form", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2 p-3", Kind: gx.AttrText}, gx.Attr{Key: "method", Value: "get", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: "/search", Kind: gx.AttrURL}, gx.Bool("data-gx-search-form", true)}),
+//line SearchDialog.gx:5:5
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-input w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "search", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: "q", Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: "Search the docs", Kind: gx.AttrText}, gx.Bool("data-gx-search-input", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}),
+//line SearchDialog.gx:7:5
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-close rounded-md border border-border px-3 py-2 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-close", true), gx.Attr{Key: "aria-label", Value: "Close", Kind: gx.AttrText}}),
+//line SearchDialog.gx:9:3
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-search-results max-h-80 overflow-y-auto px-3 pb-3 text-sm", Kind: gx.AttrText}, gx.Bool("data-gx-search-results", true)}),
+	)
 }
+
+var _tSearchDialog0 = gx.NewTemplate(
+	[]string{"<dialog", ">\n  <form", ">\n    <input", ">\n    <button class=\"rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground\" type=\"submit\">Search</button>\n    <button", ">Close</button>\n  </form>\n  <div", "></div>\n</dialog>\n"},
+	[]int{0, 1, 2, 2, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 5, End: 17}, {Slot: 1, Start: 4, EndStatic: 4, End: 25}, {Slot: 2, Start: 6, EndStatic: 3, End: 1}, {Slot: 3, Start: 120, EndStatic: 4, End: 15}, {Slot: 4, Start: 28, EndStatic: 5, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

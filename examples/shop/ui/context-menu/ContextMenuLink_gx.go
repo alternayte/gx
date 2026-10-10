@@ -23,10 +23,18 @@ func ContextMenuLink(p ContextMenuLinkProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenuLink.gx:14:1
-	_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Bool("data-gx-roving-item", true), gx.Bool("data-gx-close", true)}, p.Attrs), p.Children))
-//line ContextMenuLink.gx:14:487
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenuLink0.With(
+//line ContextMenuLink.gx:14:1
+		gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm no-underline outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Bool("data-gx-roving-item", true), gx.Bool("data-gx-close", true)}, p.Attrs)),
+//line ContextMenuLink.gx:14:471
+		p.Children,
+	)
 }
+
+var _tContextMenuLink0 = gx.NewTemplate(
+	[]string{"<a", ">", "</a>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

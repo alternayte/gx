@@ -24,10 +24,18 @@ func AspectRatio(p AspectRatioProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line AspectRatio.gx:15:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative w-full overflow-hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("aspect-ratio: " + p.ratio())))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "aspect-ratio", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line AspectRatio.gx:15:167
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tAspectRatio0.With(
+//line AspectRatio.gx:15:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative w-full overflow-hidden", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(gx.Style("aspect-ratio: " + p.ratio())))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "aspect-ratio", Kind: gx.AttrText}}, p.Attrs)),
+//line AspectRatio.gx:15:149
+		p.Children,
+	)
 }
+
+var _tAspectRatio0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

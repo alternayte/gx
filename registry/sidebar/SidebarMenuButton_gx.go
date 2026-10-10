@@ -34,20 +34,43 @@ func SidebarMenuButton(p SidebarMenuButtonProps) gx.Node {
 //line SidebarMenuButton.gx:21:1
 	if p.Href != "" {
 //line SidebarMenuButton.gx:21:18
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tSidebarMenuButton0.With(
 //line SidebarMenuButton.gx:22:3
-		_b.Add(gx.El("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.attrs()), p.Children))
-//line SidebarMenuButton.gx:22:149
-		_b.Add(gx.Text("\n"))
+			gx.Open("a", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "href", Value: string(p.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.attrs())),
+//line SidebarMenuButton.gx:22:133
+			p.Children,
+		))
 	} else {
 //line SidebarMenuButton.gx:23:9
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tSidebarMenuButton1.With(
 //line SidebarMenuButton.gx:24:3
-		_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.buttonAttrs()), p.Children))
-//line SidebarMenuButton.gx:24:165
-		_b.Add(gx.Text("\n"))
+			gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-button", Kind: gx.AttrText}, gx.Attr{Key: "data-size", Value: p.size(), Kind: gx.AttrText}}, p.buttonAttrs())),
+//line SidebarMenuButton.gx:24:144
+			p.Children,
+		))
 	}
 //line SidebarMenuButton.gx:25:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tSidebarMenuButton2)
 	return _b.Node()
 }
+
+var _tSidebarMenuButton0 = gx.NewTemplate(
+	[]string{"\n  <a", ">", "</a>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarMenuButton1 = gx.NewTemplate(
+	[]string{"\n  <button", ">", "</button>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarMenuButton2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

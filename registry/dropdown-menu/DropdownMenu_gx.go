@@ -25,10 +25,18 @@ func DropdownMenu(p DropdownMenuProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line DropdownMenu.gx:16:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-place", Value: p.place(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line DropdownMenu.gx:16:368
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tDropdownMenu0.With(
+//line DropdownMenu.gx:16:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-hidden", motionClass, alignClass[p.align()], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "style", Value: string(gx.StyleJoin(gx.Style(p.style()))), Kind: gx.AttrStyle}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Attr{Key: "popover", Value: "auto", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menu", Kind: gx.AttrText}, gx.Bool("data-gx-dismiss", true), gx.Attr{Key: "data-gx-roving", Value: "nowrap", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-place", Value: p.place(), Kind: gx.AttrText}}, p.Attrs)),
+//line DropdownMenu.gx:16:350
+		p.Children,
+	)
 }
+
+var _tDropdownMenu0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

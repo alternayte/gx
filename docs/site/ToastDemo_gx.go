@@ -18,24 +18,24 @@ func ToastDemo(p ToastDemoProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ToastDemo.gx:13:80
-	_b.Add(gx.Text("\n"))
+	return _tToastDemo0.With(
 //line ToastDemo.gx:14:1
-	_b.Add(button.Button(button.ButtonProps{Variant: button.Outline, Attrs: gx.Attrs{{Key: "data-docs-toast", Value: ""}}, Children: gx.Text("Show the toast")}))
-//line ToastDemo.gx:14:152
-	_b.Add(gx.Text("\n"))
+		button.Button(button.ButtonProps{Variant: button.Outline, Attrs: gx.Attrs{{Key: "data-docs-toast", Value: ""}}, Children: gx.Text("Show the toast")}),
 //line ToastDemo.gx:15:1
-	_b.Add(gx.El("template", gx.Attrs{gx.Bool("data-docs-toast-source", true)}, p.Children))
-//line ToastDemo.gx:15:57
-	_b.Add(gx.Text("\n"))
+		gx.Open("template", gx.Attrs{gx.Bool("data-docs-toast-source", true)}),
+//line ToastDemo.gx:15:34
+		p.Children,
 //line ToastDemo.gx:16:1
-	_b.Add(toast.Toaster(toast.ToasterProps{}))
-//line ToastDemo.gx:16:38
-	_b.Add(gx.Text("\n"))
+		toast.Toaster(toast.ToasterProps{}),
 //line ToastDemo.gx:17:1
-	_b.Add(toastScript())
-//line ToastDemo.gx:17:16
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		toastScript(),
+	)
 }
+
+var _tToastDemo0 = gx.NewTemplate(
+	[]string{"\n", "\n<template", ">", "</template>\n", "\n", "\n"},
+	[]int{0, 0, 1, 0, 0},
+	[]gx.TemplateEl{{Slot: 1, Start: 1, EndStatic: 3, End: 11}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: -1, Slot: 4}, {El: -1, Slot: -1}},
+)

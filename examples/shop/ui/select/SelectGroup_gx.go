@@ -21,10 +21,18 @@ func SelectGroup(p SelectGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SelectGroup.gx:12:1
-	_b.Add(gx.El("optgroup", gx.Attrs{gx.Attr{Key: "label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, p.Children))
-//line SelectGroup.gx:12:72
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSelectGroup0.With(
+//line SelectGroup.gx:12:1
+		gx.Open("optgroup", gx.Attrs{gx.Attr{Key: "label", Value: p.Label, Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}),
+//line SelectGroup.gx:12:49
+		p.Children,
+	)
 }
+
+var _tSelectGroup0 = gx.NewTemplate(
+	[]string{"<optgroup", ">", "</optgroup>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 11}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

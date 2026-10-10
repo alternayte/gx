@@ -30,10 +30,16 @@ func DropdownMenuTrigger(p DropdownMenuTriggerProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line DropdownMenuTrigger.gx:22:1
-	_b.Add(button.Button(button.ButtonProps{Variant: p.variant(), Size: p.Size, Type: "button", Class: p.Class, Children: p.Children, Attrs: p.attrs()}))
-//line DropdownMenuTrigger.gx:22:114
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tDropdownMenuTrigger0.With(
+//line DropdownMenuTrigger.gx:22:1
+		button.Button(button.ButtonProps{Variant: p.variant(), Size: p.Size, Type: "button", Class: p.Class, Children: p.Children, Attrs: p.attrs()}),
+	)
 }
+
+var _tDropdownMenuTrigger0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

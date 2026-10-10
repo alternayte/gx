@@ -21,10 +21,18 @@ func BreadcrumbPage(p BreadcrumbPageProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line BreadcrumbPage.gx:12:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("font-normal text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-page", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "link", Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "aria-current", Value: "page", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbPage.gx:12:174
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tBreadcrumbPage0.With(
+//line BreadcrumbPage.gx:12:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("font-normal text-foreground", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-page", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "link", Kind: gx.AttrText}, gx.Attr{Key: "aria-disabled", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "aria-current", Value: "page", Kind: gx.AttrText}}, p.Attrs)),
+//line BreadcrumbPage.gx:12:155
+		p.Children,
+	)
 }
+
+var _tBreadcrumbPage0 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

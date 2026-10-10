@@ -24,10 +24,16 @@ func Separator(p SeparatorProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Separator.gx:15:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs())))
-//line Separator.gx:15:177
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSeparator0.With(
+//line Separator.gx:15:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("shrink-0 bg-border", orientationClass[Orientation(p.orientation())], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "separator", Kind: gx.AttrText}, gx.Attr{Key: "data-orientation", Value: p.orientation(), Kind: gx.AttrText}}, p.attrs())),
+	)
 }
+
+var _tSeparator0 = gx.NewTemplate(
+	[]string{"<div", "></div>\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

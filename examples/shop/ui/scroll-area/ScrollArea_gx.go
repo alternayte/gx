@@ -21,10 +21,18 @@ func ScrollArea(p ScrollAreaProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ScrollArea.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative overflow-auto transition-[color,box-shadow] outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ScrollArea.gx:12:315
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tScrollArea0.With(
+//line ScrollArea.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative overflow-auto transition-[color,box-shadow] outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 motion-reduce:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}}, p.Attrs)),
+//line ScrollArea.gx:12:297
+		p.Children,
+	)
 }
+
+var _tScrollArea0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

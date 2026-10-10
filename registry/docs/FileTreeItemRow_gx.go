@@ -21,70 +21,149 @@ func FileTreeItemRow(p FileTreeItemRowProps) gx.Node {
 //line FileTreeItemRow.gx:8:1
 	var _b1 gx.Builder
 //line FileTreeItemRow.gx:8:31
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tFileTreeItemRow0)
 //line FileTreeItemRow.gx:9:3
 	var _b2 gx.Builder
 //line FileTreeItemRow.gx:9:41
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tFileTreeItemRow1)
 //line FileTreeItemRow.gx:10:5
 	if p.Item.Dir {
 //line FileTreeItemRow.gx:10:20
-		_b2.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:11:7
-		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "font-medium text-foreground", Kind: gx.AttrText}}, gx.Frag(gx.Text(p.Item.Name), gx.Text("/"))))
-//line FileTreeItemRow.gx:11:70
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tFileTreeItemRow2.With(
+//line FileTreeItemRow.gx:11:49
+			gx.Text(p.Item.Name),
+		))
 	} else {
 //line FileTreeItemRow.gx:12:13
-		_b2.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:13:7
-		_b2.Add(gx.El("span", nil, gx.Text(p.Item.Name)))
-//line FileTreeItemRow.gx:13:33
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tFileTreeItemRow3.With(
+//line FileTreeItemRow.gx:13:13
+			gx.Text(p.Item.Name),
+		))
 	}
 //line FileTreeItemRow.gx:14:6
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tFileTreeItemRow1)
 //line FileTreeItemRow.gx:15:5
 	if p.Item.Comment != "" {
 //line FileTreeItemRow.gx:15:30
-		_b2.Add(gx.Text("\n      "))
-//line FileTreeItemRow.gx:16:7
-		_b2.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Item.Comment)))
-//line FileTreeItemRow.gx:16:66
-		_b2.Add(gx.Text("\n    "))
+		_b2.Add(_tFileTreeItemRow4.With(
+//line FileTreeItemRow.gx:16:43
+			gx.Text(p.Item.Comment),
+		))
 	}
 //line FileTreeItemRow.gx:17:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center gap-2", Kind: gx.AttrText}}, _b2.Node()))
-//line FileTreeItemRow.gx:18:10
-	_b1.Add(gx.Text("\n  "))
+	_b2.Add(_tFileTreeItemRow0)
+//line FileTreeItemRow.gx:9:3
+	_b1.Add(_tFileTreeItemRow5.With(
+//line FileTreeItemRow.gx:9:3
+		_b2.Node(),
+	))
 //line FileTreeItemRow.gx:19:3
 	if len(p.Item.Children) > 0 {
 //line FileTreeItemRow.gx:19:32
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tFileTreeItemRow1)
 //line FileTreeItemRow.gx:20:5
 		var _b3 gx.Builder
 //line FileTreeItemRow.gx:20:74
-		_b3.Add(gx.Text("\n      "))
+		_b3.Add(_tFileTreeItemRow6)
 //line FileTreeItemRow.gx:21:7
 		for _, child := range p.Item.Children {
 //line FileTreeItemRow.gx:21:46
-			_b3.Add(gx.Text("\n        "))
+			_b3.Add(_tFileTreeItemRow7.With(
 //line FileTreeItemRow.gx:22:9
-			_b3.Add(FileTreeItemRow(FileTreeItemRowProps{Item: child}))
-//line FileTreeItemRow.gx:22:41
-			_b3.Add(gx.Text("\n      "))
+				FileTreeItemRow(FileTreeItemRowProps{Item: child}),
+			))
 		}
 //line FileTreeItemRow.gx:23:8
-		_b3.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "mt-1 list-none space-y-1 border-l border-border p-0 pl-4", Kind: gx.AttrText}}, _b3.Node()))
-//line FileTreeItemRow.gx:24:10
-		_b1.Add(gx.Text("\n  "))
+		_b3.Add(_tFileTreeItemRow1)
+//line FileTreeItemRow.gx:20:5
+		_b1.Add(_tFileTreeItemRow8.With(
+//line FileTreeItemRow.gx:20:5
+			_b3.Node(),
+		))
 	}
 //line FileTreeItemRow.gx:25:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("li", gx.Attrs{gx.Attr{Key: "class", Value: "gx-file-tree-item", Kind: gx.AttrText}}, _b1.Node()))
-//line FileTreeItemRow.gx:26:6
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tFileTreeItemRow9)
+//line FileTreeItemRow.gx:8:1
+	_b.Add(_tFileTreeItemRow10.With(
+//line FileTreeItemRow.gx:8:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tFileTreeItemRow0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFileTreeItemRow1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFileTreeItemRow2 = gx.NewTemplate(
+	[]string{"\n      <span class=\"font-medium text-foreground\">", "/</span>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tFileTreeItemRow3 = gx.NewTemplate(
+	[]string{"\n      <span>", "</span>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tFileTreeItemRow4 = gx.NewTemplate(
+	[]string{"\n      <span class=\"text-muted-foreground\">", "</span>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tFileTreeItemRow5 = gx.NewTemplate(
+	[]string{"<span class=\"flex items-center gap-2\">", "</span>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tFileTreeItemRow6 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFileTreeItemRow7 = gx.NewTemplate(
+	[]string{"\n        ", "\n      "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tFileTreeItemRow8 = gx.NewTemplate(
+	[]string{"<ul class=\"mt-1 list-none space-y-1 border-l border-border p-0 pl-4\">", "</ul>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)
+
+var _tFileTreeItemRow9 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tFileTreeItemRow10 = gx.NewTemplate(
+	[]string{"<li class=\"gx-file-tree-item\">", "</li>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+)

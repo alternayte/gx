@@ -23,45 +23,94 @@ func Pagination(p PaginationProps) gx.Node {
 //line Pagination.gx:10:1
 	if p.Prev != nil || p.Next != nil {
 //line Pagination.gx:10:36
-		_b.Add(gx.Text("\n  "))
+		_b.Add(_tPagination0)
 //line Pagination.gx:11:3
 		var _b1 gx.Builder
 //line Pagination.gx:11:118
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tPagination1)
 //line Pagination.gx:12:5
 		if p.Prev != nil {
 //line Pagination.gx:12:23
-			_b1.Add(gx.Text("\n      "))
+			_b1.Add(_tPagination2.With(
 //line Pagination.gx:13:7
-			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-prev", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}, gx.Frag(gx.Text("Previous: "), gx.Text(p.Prev.Label))))
-//line Pagination.gx:13:95
-			_b1.Add(gx.Text("\n    "))
+				gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-prev", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}),
+//line Pagination.gx:13:77
+				gx.Text(p.Prev.Label),
+			))
 		} else {
 //line Pagination.gx:14:13
-			_b1.Add(gx.Text("\n      "))
-//line Pagination.gx:15:7
-			_b1.Add(gx.El("span", nil))
-//line Pagination.gx:15:20
-			_b1.Add(gx.Text("\n    "))
+			_b1.Add(_tPagination3)
 		}
 //line Pagination.gx:16:6
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tPagination1)
 //line Pagination.gx:17:5
 		if p.Next != nil {
 //line Pagination.gx:17:23
-			_b1.Add(gx.Text("\n      "))
+			_b1.Add(_tPagination4.With(
 //line Pagination.gx:18:7
-			_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-next", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}, gx.Frag(gx.Text("Next: "), gx.Text(p.Next.Label))))
-//line Pagination.gx:18:91
-			_b1.Add(gx.Text("\n    "))
+				gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination-next", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}),
+//line Pagination.gx:18:73
+				gx.Text(p.Next.Label),
+			))
 		}
 //line Pagination.gx:19:6
-		_b1.Add(gx.Text("\n  "))
-		_b.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "gx-pagination mt-10 flex justify-between gap-4 border-t border-border pt-4 text-sm", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Pages", Kind: gx.AttrText}}, _b1.Node()))
-//line Pagination.gx:20:9
-		_b.Add(gx.Text("\n"))
+		_b1.Add(_tPagination0)
+//line Pagination.gx:11:3
+		_b.Add(_tPagination5.With(
+//line Pagination.gx:11:3
+			_b1.Node(),
+		))
 	}
 //line Pagination.gx:21:2
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tPagination6)
 	return _b.Node()
 }
+
+var _tPagination0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPagination1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPagination2 = gx.NewTemplate(
+	[]string{"\n      <a", ">Previous: ", "</a>\n    "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPagination3 = gx.NewTemplate(
+	[]string{"\n      <span></span>\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+).With()
+
+var _tPagination4 = gx.NewTemplate(
+	[]string{"\n      <a", ">Next: ", "</a>\n    "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPagination5 = gx.NewTemplate(
+	[]string{"<nav class=\"gx-pagination mt-10 flex justify-between gap-4 border-t border-border pt-4 text-sm\" aria-label=\"Pages\">", "</nav>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "nav"}, {El: -1, Slot: -1}},
+)
+
+var _tPagination6 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()

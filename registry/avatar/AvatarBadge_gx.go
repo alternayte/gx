@@ -21,10 +21,18 @@ func AvatarBadge(p AvatarBadgeProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line AvatarBadge.gx:12:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background select-none group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[&>svg]:hidden group-data-[size=default]/avatar:size-2.5 group-data-[size=default]/avatar:[&>svg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[&>svg]:size-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-badge", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line AvatarBadge.gx:12:490
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tAvatarBadge0.With(
+//line AvatarBadge.gx:12:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background select-none group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[&>svg]:hidden group-data-[size=default]/avatar:size-2.5 group-data-[size=default]/avatar:[&>svg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[&>svg]:size-2", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "avatar-badge", Kind: gx.AttrText}}, p.Attrs)),
+//line AvatarBadge.gx:12:471
+		p.Children,
+	)
 }
+
+var _tAvatarBadge0 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

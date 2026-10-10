@@ -30,10 +30,16 @@ func Code(p CodeProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Code.gx:23:1
-	_b.Add(content.Code(p.Code, content.CodeOptions{Title: p.Title, Wrap: p.Wrap, Marks: p.Marks, Ins: p.Ins, Del: p.Del, Words: p.Words}))
-//line Code.gx:23:130
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCode0.With(
+//line Code.gx:23:1
+		content.Code(p.Code, content.CodeOptions{Title: p.Title, Wrap: p.Wrap, Marks: p.Marks, Ins: p.Ins, Del: p.Del, Words: p.Words}),
+	)
 }
+
+var _tCode0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

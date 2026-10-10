@@ -21,10 +21,20 @@ func NotFound(p NotFoundProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line NotFound.gx:12:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-not-found mx-auto my-16 max-w-lg text-center", Kind: gx.AttrText}}, gx.Frag(gx.Raw(gx.SafeHTML("\n  <p class=\"text-5xl font-bold\">404</p>\n  ")), gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "mt-4 text-2xl font-semibold", Kind: gx.AttrText}}, gx.Text(p.Title)), gx.Text("\n  "), gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mt-2 text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Message)), gx.Text("\n  "), gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Home)), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Go home")), gx.Text("\n"))))
-//line NotFound.gx:17:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tNotFound0.With(
+//line NotFound.gx:14:43
+		gx.Text(p.Title),
+//line NotFound.gx:15:41
+		gx.Text(p.Message),
+//line NotFound.gx:16:3
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Home)), Kind: gx.AttrURL, Active: "page"}}),
+	)
 }
+
+var _tNotFound0 = gx.NewTemplate(
+	[]string{"<div class=\"gx-not-found mx-auto my-16 max-w-lg text-center\">\n  <p class=\"text-5xl font-bold\">404</p>\n  <h1 class=\"mt-4 text-2xl font-semibold\">", "</h1>\n  <p class=\"mt-2 text-muted-foreground\">", "</p>\n  <a", ">Go home</a>\n</div>\n"},
+	[]int{2, 2, 1},
+	[]gx.TemplateEl{{Slot: 2, Start: 7, EndStatic: 3, End: 12}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

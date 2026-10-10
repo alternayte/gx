@@ -21,10 +21,18 @@ func FieldGroup(p FieldGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line FieldGroup.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldGroup.gx:12:222
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tFieldGroup0.With(
+//line FieldGroup.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-group", Kind: gx.AttrText}}, p.Attrs)),
+//line FieldGroup.gx:12:204
+		p.Children,
+	)
 }
+
+var _tFieldGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -29,60 +29,132 @@ func Card(p CardProps) gx.Node {
 //line Card.gx:16:1
 	var _b1 gx.Builder
 //line Card.gx:16:115
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tCard0)
 //line Card.gx:17:3
 	if p.Title != "" {
 //line Card.gx:17:21
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tCard1)
 //line Card.gx:18:5
 		var _b2 gx.Builder
 //line Card.gx:18:111
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tCard2)
 //line Card.gx:19:7
 		if IconBody(p.Icon) != "" {
 //line Card.gx:19:34
-			_b2.Add(gx.Text("\n        "))
+			_b2.Add(_tCard3.With(
 //line Card.gx:20:9
-			_b2.Add(gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-card-icon size-5 shrink-0"}))
-//line Card.gx:20:97
-			_b2.Add(gx.Text("\n      "))
+				gx.Icon(string(IconBody(p.Icon)), gx.IconProps{Class: "gx-card-icon size-5 shrink-0"}),
+			))
 		}
 //line Card.gx:21:8
-		_b2.Add(gx.Text("\n      "))
-//line Card.gx:22:7
-		_b2.Add(gx.El("span", nil, gx.Text(p.Title)))
-//line Card.gx:22:29
-		_b2.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("h3", gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-title m-0 flex items-center gap-3 text-base font-semibold leading-none tracking-tight", Kind: gx.AttrText}}, _b2.Node()))
-//line Card.gx:23:10
-		_b1.Add(gx.Text("\n  "))
+		_b2.Add(_tCard4.With(
+//line Card.gx:22:13
+			gx.Text(p.Title),
+		))
+//line Card.gx:18:5
+		_b1.Add(_tCard5.With(
+//line Card.gx:18:5
+			_b2.Node(),
+		))
 	}
 //line Card.gx:24:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tCard0)
 //line Card.gx:25:3
 	if p.Description != "" {
 //line Card.gx:25:27
-		_b1.Add(gx.Text("\n    "))
-//line Card.gx:26:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 mt-1.5 text-sm text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Description)))
-//line Card.gx:26:76
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tCard6.With(
+//line Card.gx:26:57
+			gx.Text(p.Description),
+		))
 	}
 //line Card.gx:27:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tCard0)
 //line Card.gx:28:3
 	if p.Children != nil {
 //line Card.gx:28:25
-		_b1.Add(gx.Text("\n    "))
-//line Card.gx:29:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-card-body mt-4", Kind: gx.AttrText}}, p.Children))
-//line Card.gx:29:54
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tCard7.With(
+//line Card.gx:29:36
+			p.Children,
+		))
 	}
 //line Card.gx:30:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card my-4 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Card.gx:31:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tCard8)
+//line Card.gx:16:1
+	_b.Add(_tCard9.With(
+//line Card.gx:16:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-card my-4 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm", Kind: gx.AttrText}}, p.Attrs)),
+//line Card.gx:16:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tCard0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCard1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCard2 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCard3 = gx.NewTemplate(
+	[]string{"\n        ", "\n      "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tCard4 = gx.NewTemplate(
+	[]string{"\n      <span>", "</span>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tCard5 = gx.NewTemplate(
+	[]string{"<h3 class=\"gx-card-title m-0 flex items-center gap-3 text-base font-semibold leading-none tracking-tight\">", "</h3>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "h3"}, {El: -1, Slot: -1}},
+)
+
+var _tCard6 = gx.NewTemplate(
+	[]string{"\n    <p class=\"m-0 mt-1.5 text-sm text-muted-foreground\">", "</p>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tCard7 = gx.NewTemplate(
+	[]string{"\n    <div class=\"gx-card-body mt-4\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tCard8 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tCard9 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

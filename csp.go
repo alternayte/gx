@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"net/http"
-	"strings"
 )
 
 type nonceKey struct{}
@@ -75,7 +74,8 @@ func stringNonce(n Node, nonce string) string {
 	if nonce == "" {
 		return String(n)
 	}
-	var b strings.Builder
-	renderNode(&b, n, &renderState{nonce: nonce})
+	b := getBuffer()
+	defer putBuffer(b)
+	renderNode(b, n, &renderState{nonce: nonce})
 	return b.String()
 }

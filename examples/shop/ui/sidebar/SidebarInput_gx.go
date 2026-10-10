@@ -28,10 +28,16 @@ func SidebarInput(p SidebarInputProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarInput.gx:20:1
-	_b.Add(gx.El("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Class, "h-8 w-full bg-background shadow-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-input", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "input", Kind: gx.AttrText}}, p.Attrs)))
-//line SidebarInput.gx:20:225
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarInput0.With(
+//line SidebarInput.gx:20:1
+		gx.Open("input", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(input.Class, "h-8 w-full bg-background shadow-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: p.inputType(), Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-input", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "input", Kind: gx.AttrText}}, p.Attrs)),
+	)
 }
+
+var _tSidebarInput0 = gx.NewTemplate(
+	[]string{"<input", ">\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

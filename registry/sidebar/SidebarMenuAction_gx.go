@@ -25,10 +25,18 @@ func SidebarMenuAction(p SidebarMenuActionProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarMenuAction.gx:16:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", hoverClass[p.ShowOnHover], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-action", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-action", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarMenuAction.gx:16:726
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarMenuAction0.With(
+//line SidebarMenuAction.gx:16:1
+		gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform motion-reduce:transition-none peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 after:absolute after:-inset-2 md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5", hoverClass[p.ShowOnHover], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: p.Label, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "sidebar-menu-action", Kind: gx.AttrText}, gx.Attr{Key: "data-sidebar", Value: "menu-action", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarMenuAction.gx:16:705
+		p.Children,
+	)
 }
+
+var _tSidebarMenuAction0 = gx.NewTemplate(
+	[]string{"<button", ">", "</button>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

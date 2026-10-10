@@ -21,10 +21,18 @@ func Breadcrumb(p BreadcrumbProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Breadcrumb.gx:12:1
-	_b.Add(gx.El("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: "breadcrumb", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "breadcrumb", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Breadcrumb.gx:12:100
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tBreadcrumb0.With(
+//line Breadcrumb.gx:12:1
+		gx.Open("nav", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.Class, Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-label", Value: "breadcrumb", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "breadcrumb", Kind: gx.AttrText}}, p.Attrs)),
+//line Breadcrumb.gx:12:82
+		p.Children,
+	)
 }
+
+var _tBreadcrumb0 = gx.NewTemplate(
+	[]string{"<nav", ">", "</nav>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

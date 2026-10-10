@@ -39,3 +39,6 @@ The spec is `docs/SDD.md`; it and the build state in `docs/build/` stay local an
 - document shell: the doctype, html, head and body that the framework writes around a page. Avoid: document wrapper, page skeleton.
 - widget: a component that a Gx server renders into a custom element on a page of a different site. Avoid: exported element, exported web component, embed.
 - host: the page of a different site that uses a widget; it is not a Gx app. Avoid: consumer, embedder, parent page.
+- template value: what generated code returns from a component: its constant static strings and its list of dynamic values. Avoid: render tree, compiled template.
+- room: the set of viewers that share one shared signal; its key comes from a loader. Avoid: channel, topic.
+- shared signal: a signal whose value each viewer in a room sees; it is not durable. Avoid: synced signal, global signal.

@@ -24,10 +24,26 @@ func SidebarTrigger(p SidebarTriggerProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarTrigger.gx:16:1
-	_b.Add(button.Button(button.ButtonProps{Variant: button.Ghost, Size: button.Icon, Type: "button", Class: gx.Cx("size-7", p.Class), Children: gx.Frag(icons.PanelLeft(icons.PanelLeftProps{Label: "", Class: ""}), gx.Raw(gx.SafeHTML("<span class=\"sr-only\">Toggle Sidebar</span>"))), Attrs: p.attrs()}))
-//line SidebarTrigger.gx:19:17
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarTrigger1.With(
+//line SidebarTrigger.gx:16:1
+		button.Button(button.ButtonProps{Variant: button.Ghost, Size: button.Icon, Type: "button", Class: gx.Cx("size-7", p.Class), Children: _tSidebarTrigger0.With(
+//line SidebarTrigger.gx:17:3
+			icons.PanelLeft(icons.PanelLeftProps{Label: "", Class: ""}),
+		), Attrs: p.attrs()}),
+	)
 }
+
+var _tSidebarTrigger0 = gx.NewTemplate(
+	[]string{"", "<span class=\"sr-only\">Toggle Sidebar</span>"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "span"}},
+)
+
+var _tSidebarTrigger1 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

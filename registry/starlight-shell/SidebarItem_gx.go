@@ -25,99 +25,220 @@ func SidebarItem(p SidebarItemProps) gx.Node {
 //line SidebarItem.gx:12:1
 	var _b1 gx.Builder
 //line SidebarItem.gx:12:5
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSidebarItem0)
 //line SidebarItem.gx:13:3
 	if len(p.Item.Items) > 0 {
 //line SidebarItem.gx:13:29
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tSidebarItem1)
 //line SidebarItem.gx:14:5
 		var _b2 gx.Builder
 //line SidebarItem.gx:14:71
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tSidebarItem2)
 //line SidebarItem.gx:15:7
 		var _b3 gx.Builder
 //line SidebarItem.gx:15:16
-		_b3.Add(gx.Text("\n        "))
+		_b3.Add(_tSidebarItem3)
 //line SidebarItem.gx:16:9
 		var _b4 gx.Builder
 //line SidebarItem.gx:16:38
-		_b4.Add(gx.Text("\n          "))
-//line SidebarItem.gx:17:11
-		_b4.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-large", Kind: gx.AttrText}}, gx.Text(p.Item.Label)))
-//line SidebarItem.gx:17:55
-		_b4.Add(gx.Text("\n          "))
+		_b4.Add(_tSidebarItem4.With(
+//line SidebarItem.gx:17:34
+			gx.Text(p.Item.Label),
+		))
 //line SidebarItem.gx:18:11
 		if p.Item.Badge != "" {
 //line SidebarItem.gx:18:34
-			_b4.Add(gx.Text("\n            "))
-//line SidebarItem.gx:19:13
-			_b4.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-badge", Kind: gx.AttrText}}, gx.Text(p.Item.Badge)))
-//line SidebarItem.gx:19:57
-			_b4.Add(gx.Text("\n          "))
+			_b4.Add(_tSidebarItem5.With(
+//line SidebarItem.gx:19:36
+				gx.Text(p.Item.Badge),
+			))
 		}
 //line SidebarItem.gx:20:12
-		_b4.Add(gx.Text("\n        "))
-		_b3.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-group-label", Kind: gx.AttrText}}, _b4.Node()))
-//line SidebarItem.gx:21:16
-		_b3.Add(gx.Text("\n        "))
+		_b4.Add(_tSidebarItem3)
+//line SidebarItem.gx:16:9
+		_b3.Add(_tSidebarItem6.With(
+//line SidebarItem.gx:16:9
+			_b4.Node(),
 //line SidebarItem.gx:22:9
-		_b3.Add(icon("right-caret", "sl-caret"))
-//line SidebarItem.gx:22:42
-		_b3.Add(gx.Text("\n      "))
-		_b2.Add(gx.El("summary", nil, _b3.Node()))
-//line SidebarItem.gx:23:17
-		_b2.Add(gx.Text("\n      "))
+			icon("right-caret", "sl-caret"),
+		))
+//line SidebarItem.gx:15:7
+		_b2.Add(_tSidebarItem7.With(
+//line SidebarItem.gx:15:7
+			_b3.Node(),
+		))
 //line SidebarItem.gx:24:7
 		var _b5 gx.Builder
 //line SidebarItem.gx:24:11
-		_b5.Add(gx.Text("\n        "))
+		_b5.Add(_tSidebarItem3)
 //line SidebarItem.gx:25:9
 		for _, child := range p.Item.Items {
 //line SidebarItem.gx:25:45
-			_b5.Add(gx.Text("\n          "))
+			_b5.Add(_tSidebarItem8.With(
 //line SidebarItem.gx:26:11
-			_b5.Add(SidebarItem(SidebarItemProps{Item: child, Path: p.Path}))
-//line SidebarItem.gx:26:53
-			_b5.Add(gx.Text("\n        "))
+				SidebarItem(SidebarItemProps{Item: child, Path: p.Path}),
+			))
 		}
 //line SidebarItem.gx:27:10
-		_b5.Add(gx.Text("\n      "))
-		_b2.Add(gx.El("ul", nil, _b5.Node()))
-//line SidebarItem.gx:28:12
-		_b2.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("details", gx.Attrs{gx.Bool("open", GroupOpen(p.Path, p.Item.Collapsed, p.Item.Items))}, _b2.Node()))
-//line SidebarItem.gx:29:15
-		_b1.Add(gx.Text("\n  "))
+		_b5.Add(_tSidebarItem2)
+//line SidebarItem.gx:24:7
+		_b2.Add(_tSidebarItem9.With(
+//line SidebarItem.gx:24:7
+			_b5.Node(),
+		))
+//line SidebarItem.gx:14:5
+		_b1.Add(_tSidebarItem10.With(
+//line SidebarItem.gx:14:5
+			gx.Open("details", gx.Attrs{gx.Bool("open", GroupOpen(p.Path, p.Item.Collapsed, p.Item.Items))}),
+//line SidebarItem.gx:14:5
+			_b2.Node(),
+		))
 	} else {
 //line SidebarItem.gx:30:11
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tSidebarItem1)
 //line SidebarItem.gx:31:5
 		var _b6 gx.Builder
 //line SidebarItem.gx:31:61
-		_b6.Add(gx.Text("\n      "))
-//line SidebarItem.gx:32:7
-		_b6.Add(gx.El("span", nil, gx.Text(p.Item.Label)))
-//line SidebarItem.gx:32:34
-		_b6.Add(gx.Text("\n      "))
+		_b6.Add(_tSidebarItem11.With(
+//line SidebarItem.gx:32:13
+			gx.Text(p.Item.Label),
+		))
 //line SidebarItem.gx:33:7
 		if p.Item.Badge != "" {
 //line SidebarItem.gx:33:30
-			_b6.Add(gx.Text("\n        "))
-//line SidebarItem.gx:34:9
-			_b6.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-badge", Kind: gx.AttrText}}, gx.Text(p.Item.Badge)))
-//line SidebarItem.gx:34:53
-			_b6.Add(gx.Text("\n      "))
+			_b6.Add(_tSidebarItem12.With(
+//line SidebarItem.gx:34:32
+				gx.Text(p.Item.Badge),
+			))
 		}
 //line SidebarItem.gx:35:8
-		_b6.Add(gx.Text("\n    "))
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-nav-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Item.Href), Kind: gx.AttrURL, Active: "page"}}, _b6.Node()))
-//line SidebarItem.gx:36:9
-		_b1.Add(gx.Text("\n  "))
+		_b6.Add(_tSidebarItem1)
+//line SidebarItem.gx:31:5
+		_b1.Add(_tSidebarItem13.With(
+//line SidebarItem.gx:31:5
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-nav-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(p.Item.Href), Kind: gx.AttrURL, Active: "page"}}),
+//line SidebarItem.gx:31:5
+			_b6.Node(),
+		))
 	}
 //line SidebarItem.gx:37:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("li", nil, _b1.Node()))
-//line SidebarItem.gx:38:6
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tSidebarItem14)
+//line SidebarItem.gx:12:1
+	_b.Add(_tSidebarItem15.With(
+//line SidebarItem.gx:12:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSidebarItem0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarItem1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarItem2 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarItem3 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarItem4 = gx.NewTemplate(
+	[]string{"\n          <span class=\"sl-large\">", "</span>\n          "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem5 = gx.NewTemplate(
+	[]string{"\n            <span class=\"sl-badge\">", "</span>\n          "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem6 = gx.NewTemplate(
+	[]string{"<span class=\"sl-group-label\">", "</span>\n        ", "\n      "},
+	[]int{1, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem7 = gx.NewTemplate(
+	[]string{"<summary>", "</summary>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "summary"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem8 = gx.NewTemplate(
+	[]string{"\n          ", "\n        "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem9 = gx.NewTemplate(
+	[]string{"<ul>", "</ul>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem10 = gx.NewTemplate(
+	[]string{"<details", ">", "</details>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem11 = gx.NewTemplate(
+	[]string{"\n      <span>", "</span>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem12 = gx.NewTemplate(
+	[]string{"\n        <span class=\"sl-badge\">", "</span>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem13 = gx.NewTemplate(
+	[]string{"<a", ">", "</a>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 4}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSidebarItem14 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebarItem15 = gx.NewTemplate(
+	[]string{"<li>", "</li>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+)

@@ -250,6 +250,14 @@ func postSwap(t *testing.T, base string, payload []byte, secret, host string) *h
 	return res
 }
 
+// aboutHeading and aboutTitle are two places of the generated code of the
+// About page of the shop: the text of its heading in a static string, and
+// the expression of its title.
+const (
+	aboutHeading = ">About</h1>"
+	aboutTitle   = `Title: "Gx shop about"`
+)
+
 // TestREQ_DEV_02_SwapOnlyFromGxDev proves that the app runs new code only
 // for gx dev: a swap request needs the secret that gx dev gave the app, and
 // a Host header of the loopback interface (F-51). A page of a different
@@ -262,11 +270,11 @@ func TestREQ_DEV_02_SwapOnlyFromGxDev(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	i := bytes.Index(src, []byte(`gx.Text("`))
-	if i < 0 {
-		t.Fatal("About_gx.go has no text node")
+	// The text of the page is in a static string of a template (DR-11).
+	if !bytes.Contains(src, []byte(aboutHeading)) {
+		t.Fatal("About_gx.go has no heading text in a static string")
 	}
-	edited := append(append(append([]byte{}, src[:i]...), []byte(`gx.Text("FOREIGN-CODE`)...), src[i+len(`gx.Text("`):]...)
+	edited := bytes.Replace(src, []byte(aboutHeading), []byte(">FOREIGN-CODE</h1>"), 1)
 	payload, _ := json.Marshal(map[string]string{"package": pkg, "file": "About_gx.go", "source": string(edited)})
 
 	base := startDevApp(t, shop, "./cmd/shop")
@@ -333,13 +341,14 @@ func TestREQ_DEV_05_SwappedCodeIsWhatRenders(t *testing.T) {
 	if bytes.Contains(before, []byte("SWAPPED-TEXT")) {
 		t.Fatal("the page has the marker before the swap")
 	}
-	// The generated code has the page text as string literals. This is
-	// what a markup edit changes.
-	i := bytes.Index(src, []byte(`gx.Text("`))
-	if i < 0 {
-		t.Fatal("About_gx.go has no text node")
+	// The generated code has the page text in the static strings of a
+	// template (DR-11). This is what a markup edit changes. An expression
+	// is a dynamic value of the template value.
+	if !bytes.Contains(src, []byte(aboutHeading)) || !bytes.Contains(src, []byte(aboutTitle)) {
+		t.Fatal("About_gx.go has no heading text in a static string, or no title expression")
 	}
-	edited := append(append(append([]byte{}, src[:i]...), []byte(`gx.Text("SWAPPED-TEXT" + strconv.Itoa(len(p.GxNoSuchField)) + "`)...), src[i+len(`gx.Text("`):]...)
+	edited := bytes.Replace(src, []byte(aboutHeading), []byte(">SWAPPED-TEXT</h1>"), 1)
+	edited = bytes.Replace(edited, []byte(aboutTitle), []byte(`Title: "t" + strconv.Itoa(len(p.GxNoSuchField))`), 1)
 	ok, reason := swap(t, base, pkg, "About_gx.go", edited)
 	if ok || !strings.Contains(reason, "the symbol table has no name strconv") {
 		t.Fatalf("a swap that uses a package outside the imports of the file = %v, %q", ok, reason)
@@ -348,7 +357,7 @@ func TestREQ_DEV_05_SwappedCodeIsWhatRenders(t *testing.T) {
 		t.Fatal("a refused swap changed the page")
 	}
 
-	edited = append(append(append([]byte{}, src[:i]...), []byte(`gx.Text("SWAPPED-TEXT`)...), src[i+len(`gx.Text("`):]...)
+	edited = bytes.Replace(src, []byte(aboutHeading), []byte(">SWAPPED-TEXT</h1>"), 1)
 	if ok, reason := swap(t, base, pkg, "About_gx.go", edited); !ok {
 		t.Fatalf("the swap was refused: %s", reason)
 	}

@@ -22,10 +22,18 @@ func Badge(p BadgeProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Badge.gx:13:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium", badgeClass[p.Variant]), Kind: gx.AttrText}}, p.Attrs), gx.Text(p.Label)))
-//line Badge.gx:13:155
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tBadge0.With(
+//line Badge.gx:13:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium", badgeClass[p.Variant]), Kind: gx.AttrText}}, p.Attrs)),
+//line Badge.gx:13:139
+		gx.Text(p.Label),
+	)
 }
+
+var _tBadge0 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

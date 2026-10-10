@@ -26,10 +26,119 @@ func Signup(p SignupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Signup.gx:18:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "grid min-h-screen lg:grid-cols-2", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex items-center justify-center p-6", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), card.Card(card.CardProps{Title: p.Title, Description: p.Description, Action: nil, Footer: nil, Class: "w-full max-w-sm", Children: gx.El("form", gx.Attrs{gx.Attr{Key: "method", Value: "post", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: string(p.Action), Kind: gx.AttrURL, Active: "page"}}, gx.Frag(gx.Text("\n        "), field.FieldGroup(field.FieldGroupProps{Class: "", Children: gx.Frag(field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldLabel(field.FieldLabelProps{For: "name", Class: "", Children: gx.Text("Name"), Attrs: nil}), input.Input(input.InputProps{Id: "name", Type: "text", Name: "name", Value: "", Placeholder: "", Class: "", Attrs: nil})), Attrs: nil}), field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldLabel(field.FieldLabelProps{For: "email", Class: "", Children: gx.Text("Email"), Attrs: nil}), input.Input(input.InputProps{Id: "email", Type: "email", Name: "email", Value: "", Placeholder: "you@example.com", Class: "", Attrs: nil})), Attrs: nil}), field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: gx.Frag(field.FieldLabel(field.FieldLabelProps{For: "password", Class: "", Children: gx.Text("Password"), Attrs: nil}), input.Input(input.InputProps{Id: "password", Type: "password", Name: "password", Value: "", Placeholder: "", Class: "", Attrs: nil}), field.FieldDescription(field.FieldDescriptionProps{Class: "", Children: gx.Text("At least 12 characters."), Attrs: nil})), Attrs: nil}), checkbox.Checkbox(checkbox.CheckboxProps{Name: "terms", Value: "on", Checked: false, Disabled: false, Invalid: false, Class: "", Children: gx.Text("I accept the terms"), Attrs: nil}), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-col gap-3", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n            "), button.Button(button.ButtonProps{Variant: button.Default, Size: button.Md, Type: "submit", Class: "w-full", Children: gx.Text("Create account"), Attrs: nil}), gx.Raw(gx.SafeHTML("\n            <p class=\"text-center text-sm text-muted-foreground\">Already have an account? <a class=\"underline underline-offset-4 hover:text-primary\" href=\"/login\">Sign in</a></p>\n          "))))), Attrs: nil}), gx.Text("\n      "))), Attrs: nil}), gx.Text("\n  "))), gx.Raw(gx.SafeHTML("\n  <div class=\"hidden flex-col justify-between bg-muted p-10 lg:flex\">\n    <a class=\"font-semibold no-underline\" href=\"/\">Gx</a>\n    <p class=\"max-w-sm text-sm text-foreground/80\">Typed templates, routes and forms in one loop.</p>\n  </div>\n")))))
-//line Signup.gx:49:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSignup10.With(
+//line Signup.gx:20:5
+		card.Card(card.CardProps{Title: p.Title, Description: p.Description, Action: nil, Footer: nil, Class: "w-full max-w-sm", Children: _tSignup9.With(
+//line Signup.gx:21:7
+			gx.Open("form", gx.Attrs{gx.Attr{Key: "method", Value: "post", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: string(p.Action), Kind: gx.AttrURL, Active: "page"}}),
+//line Signup.gx:22:9
+			field.FieldGroup(field.FieldGroupProps{Class: "", Children: _tSignup8.With(
+//line Signup.gx:23:11
+				field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: _tSignup1.With(
+//line Signup.gx:24:13
+					field.FieldLabel(field.FieldLabelProps{For: "name", Class: "", Children: _tSignup0, Attrs: nil}),
+//line Signup.gx:25:13
+					input.Input(input.InputProps{Id: "name", Type: "text", Name: "name", Value: "", Placeholder: "", Class: "", Attrs: nil}),
+				), Attrs: nil}),
+//line Signup.gx:27:11
+				field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: _tSignup1.With(
+//line Signup.gx:28:13
+					field.FieldLabel(field.FieldLabelProps{For: "email", Class: "", Children: _tSignup2, Attrs: nil}),
+//line Signup.gx:29:13
+					input.Input(input.InputProps{Id: "email", Type: "email", Name: "email", Value: "", Placeholder: "you@example.com", Class: "", Attrs: nil}),
+				), Attrs: nil}),
+//line Signup.gx:31:11
+				field.Field(field.FieldProps{Orientation: field.Vertical, Invalid: false, Disabled: false, Class: "", Children: _tSignup5.With(
+//line Signup.gx:32:13
+					field.FieldLabel(field.FieldLabelProps{For: "password", Class: "", Children: _tSignup3, Attrs: nil}),
+//line Signup.gx:33:13
+					input.Input(input.InputProps{Id: "password", Type: "password", Name: "password", Value: "", Placeholder: "", Class: "", Attrs: nil}),
+//line Signup.gx:34:13
+					field.FieldDescription(field.FieldDescriptionProps{Class: "", Children: _tSignup4, Attrs: nil}),
+				), Attrs: nil}),
+//line Signup.gx:36:11
+				checkbox.Checkbox(checkbox.CheckboxProps{Name: "terms", Value: "on", Checked: false, Disabled: false, Invalid: false, Class: "", Children: _tSignup6, Attrs: nil}),
+//line Signup.gx:38:13
+				button.Button(button.ButtonProps{Variant: button.Default, Size: button.Md, Type: "submit", Class: "w-full", Children: _tSignup7, Attrs: nil}),
+			), Attrs: nil}),
+		), Attrs: nil}),
+	)
 }
+
+var _tSignup0 = gx.NewTemplate(
+	[]string{"Name"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignup1 = gx.NewTemplate(
+	[]string{"", "", ""},
+	[]int{0, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}},
+)
+
+var _tSignup2 = gx.NewTemplate(
+	[]string{"Email"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignup3 = gx.NewTemplate(
+	[]string{"Password"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignup4 = gx.NewTemplate(
+	[]string{"At least 12 characters."},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignup5 = gx.NewTemplate(
+	[]string{"", "", "", ""},
+	[]int{0, 0, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}},
+)
+
+var _tSignup6 = gx.NewTemplate(
+	[]string{"I accept the terms"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignup7 = gx.NewTemplate(
+	[]string{"Create account"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignup8 = gx.NewTemplate(
+	[]string{"", "", "", "", "<div class=\"flex flex-col gap-3\">\n            ", "\n            <p class=\"text-center text-sm text-muted-foreground\">Already have an account? <a class=\"underline underline-offset-4 hover:text-primary\" href=\"/login\">Sign in</a></p>\n          </div>"},
+	[]int{0, 0, 0, 0, 1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}, {El: -1, Slot: 3}, {El: -1, Slot: -1, Name: "div"}},
+)
+
+var _tSignup9 = gx.NewTemplate(
+	[]string{"<form", ">\n        ", "\n      </form>"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 14}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
+)
+
+var _tSignup10 = gx.NewTemplate(
+	[]string{"<div class=\"grid min-h-screen lg:grid-cols-2\">\n  <div class=\"flex items-center justify-center p-6\">\n    ", "\n  </div>\n  <div class=\"hidden flex-col justify-between bg-muted p-10 lg:flex\">\n    <a class=\"font-semibold no-underline\" href=\"/\">Gx</a>\n    <p class=\"max-w-sm text-sm text-foreground/80\">Typed templates, routes and forms in one loop.</p>\n  </div>\n</div>\n"},
+	[]int{2},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

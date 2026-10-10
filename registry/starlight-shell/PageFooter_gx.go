@@ -24,42 +24,88 @@ func PageFooter(p PageFooterProps) gx.Node {
 //line PageFooter.gx:11:1
 	var _b1 gx.Builder
 //line PageFooter.gx:11:27
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tPageFooter0)
 //line PageFooter.gx:12:3
 	var _b2 gx.Builder
 //line PageFooter.gx:12:24
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tPageFooter1)
 //line PageFooter.gx:13:5
 	if p.Site.EditURL(p.Page) != "" {
 //line PageFooter.gx:13:38
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tPageFooter2.With(
 //line PageFooter.gx:14:7
-		_b2.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-edit-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Site.EditURL(p.Page))), Kind: gx.AttrURL, Active: "page"}}, gx.Frag(gx.Text("\n        "), icon("pencil", ""), gx.Text("\n        Edit page\n      "))))
-//line PageFooter.gx:17:11
-		_b2.Add(gx.Text("\n    "))
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-edit-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: string(gx.URL(p.Site.EditURL(p.Page))), Kind: gx.AttrURL, Active: "page"}}),
+//line PageFooter.gx:15:9
+			icon("pencil", ""),
+		))
 	}
 //line PageFooter.gx:18:6
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tPageFooter1)
 //line PageFooter.gx:19:5
 	if p.Page.Updated != "" {
 //line PageFooter.gx:19:30
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tPageFooter3.With(
 //line PageFooter.gx:20:7
-		_b2.Add(gx.El("p", gx.Attrs{gx.Bool("data-gx-updated", true)}, gx.Frag(gx.Text("Last updated: "), gx.El("time", nil, gx.Text(p.Page.Updated)))))
-//line PageFooter.gx:20:73
-		_b2.Add(gx.Text("\n    "))
+			gx.Open("p", gx.Attrs{gx.Bool("data-gx-updated", true)}),
+//line PageFooter.gx:20:46
+			gx.Text(p.Page.Updated),
+		))
 	}
 //line PageFooter.gx:21:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-meta", Kind: gx.AttrText}}, _b2.Node()))
-//line PageFooter.gx:22:9
-	_b1.Add(gx.Text("\n  "))
+	_b2.Add(_tPageFooter0)
+//line PageFooter.gx:12:3
+	_b1.Add(_tPageFooter4.With(
+//line PageFooter.gx:12:3
+		_b2.Node(),
 //line PageFooter.gx:23:3
-	_b1.Add(Pagination(PaginationProps{Prev: p.Page.Prev, Next: p.Page.Next}))
-//line PageFooter.gx:23:55
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("footer", gx.Attrs{gx.Attr{Key: "class", Value: "sl-footer", Kind: gx.AttrText}}, _b1.Node()))
-//line PageFooter.gx:24:10
-	_b.Add(gx.Text("\n"))
+		Pagination(PaginationProps{Prev: p.Page.Prev, Next: p.Page.Next}),
+	))
+//line PageFooter.gx:11:1
+	_b.Add(_tPageFooter5.With(
+//line PageFooter.gx:11:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tPageFooter0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPageFooter1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPageFooter2 = gx.NewTemplate(
+	[]string{"\n      <a", ">\n        ", "\n        Edit page\n      </a>\n    "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 29}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPageFooter3 = gx.NewTemplate(
+	[]string{"\n      <p", ">Last updated: <time>", "</time></p>\n    "},
+	[]int{0, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 11}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPageFooter4 = gx.NewTemplate(
+	[]string{"<div class=\"sl-meta\">", "</div>\n  ", "\n"},
+	[]int{1, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+)
+
+var _tPageFooter5 = gx.NewTemplate(
+	[]string{"<footer class=\"sl-footer\">", "</footer>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "footer"}, {El: -1, Slot: -1}},
+)

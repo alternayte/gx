@@ -20,22 +20,28 @@ func Shell(p ShellProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Shell.gx:12:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground"}))
-//line Shell.gx:12:70
-	_b.Add(gx.Text("\n"))
-//line Shell.gx:13:1
-	_b.Add(gx.El("header", gx.Attrs{gx.Attr{Key: "class", Value: "border-b border-border", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Home")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("About")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Sign up")), gx.Text("\n    "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: dashboardroute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}, gx.Text("Dashboard")), gx.Text("\n  "))), gx.Text("\n"))))
-//line Shell.gx:20:10
-	_b.Add(gx.Text("\n"))
-//line Shell.gx:21:1
-	_b.Add(gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto max-w-3xl p-4", Kind: gx.AttrText}}, p.Children))
-//line Shell.gx:21:56
-	_b.Add(gx.Text("\n"))
+	return _tShell0.With(
+//line Shell.gx:12:1
+		gx.Head(gx.HeadProps{Title: "Gx shop", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: "bg-background text-foreground"}),
+//line Shell.gx:15:5
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: route.Home{}.URL(), Kind: gx.AttrURL, Active: "page"}}),
+//line Shell.gx:16:5
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: route.About{}.URL(), Kind: gx.AttrURL, Active: "page"}}),
+//line Shell.gx:17:5
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: signuproute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}),
+//line Shell.gx:18:5
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: dashboardroute.Page{}.URL(), Kind: gx.AttrURL, Active: "page"}}),
+//line Shell.gx:21:37
+		p.Children,
 //line Shell.gx:22:1
-	_b.Add(toast.Toaster(toast.ToasterProps{Class: "", Children: nil, Attrs: nil}))
-//line Shell.gx:22:18
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		toast.Toaster(toast.ToasterProps{Class: "", Children: nil, Attrs: nil}),
+	)
 }
+
+var _tShell0 = gx.NewTemplate(
+	[]string{"", "\n<header class=\"border-b border-border\">\n  <nav class=\"mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm\">\n    <a", ">Home</a>\n    <a", ">About</a>\n    <a", ">Sign up</a>\n    <a", ">Dashboard</a>\n  </nav>\n</header>\n<main class=\"mx-auto max-w-3xl p-4\">", "</main>\n", "\n"},
+	[]int{0, 2, 2, 2, 2, 1, 0},
+	[]gx.TemplateEl{{Slot: 1, Start: 115, EndStatic: 2, End: 9}, {Slot: 2, Start: 14, EndStatic: 3, End: 10}, {Slot: 3, Start: 15, EndStatic: 4, End: 12}, {Slot: 4, Start: 17, EndStatic: 5, End: 14}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "main"}, {El: -1, Slot: -1}, {El: -1, Slot: 6}, {El: -1, Slot: -1}},
+)

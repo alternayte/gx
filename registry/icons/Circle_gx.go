@@ -20,10 +20,16 @@ func Circle(p CircleProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Circle.gx:11:1
-	_b.Add(gx.Icon("<circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line Circle.gx:11:206
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCircle0.With(
+//line Circle.gx:11:1
+		gx.Icon("<circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"/>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tCircle0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

@@ -29,46 +29,95 @@ func Hero(p HeroProps) gx.Node {
 //line Hero.gx:16:1
 	var _b1 gx.Builder
 //line Hero.gx:16:55
-	_b1.Add(gx.Text("\n  "))
-//line Hero.gx:17:3
-	_b1.Add(gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "m-0 text-4xl font-bold tracking-tight", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Hero.gx:17:67
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tHero0.With(
+//line Hero.gx:17:53
+		gx.Text(p.Title),
+	))
 //line Hero.gx:18:3
 	if p.Tagline != "" {
 //line Hero.gx:18:23
-		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:19:5
-		_b1.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "mx-auto mt-3 max-w-2xl text-lg text-muted-foreground", Kind: gx.AttrText}}, gx.Text(p.Tagline)))
-//line Hero.gx:19:84
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tHero1.With(
+//line Hero.gx:19:69
+			gx.Text(p.Tagline),
+		))
 	}
 //line Hero.gx:20:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tHero2)
 //line Hero.gx:21:3
 	if p.Actions != nil {
 //line Hero.gx:21:24
-		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:22:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "mt-6 flex flex-wrap items-center justify-center gap-3", Kind: gx.AttrText}}, p.Actions))
-//line Hero.gx:22:89
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tHero3.With(
+//line Hero.gx:22:72
+			p.Actions,
+		))
 	}
 //line Hero.gx:23:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tHero2)
 //line Hero.gx:24:3
 	if p.Children != nil {
 //line Hero.gx:24:25
-		_b1.Add(gx.Text("\n    "))
-//line Hero.gx:25:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-hero-body mt-8", Kind: gx.AttrText}}, p.Children))
-//line Hero.gx:25:54
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tHero4.With(
+//line Hero.gx:25:36
+			p.Children,
+		))
 	}
 //line Hero.gx:26:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("header", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-hero my-8 text-center", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Hero.gx:27:10
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tHero5)
+//line Hero.gx:16:1
+	_b.Add(_tHero6.With(
+//line Hero.gx:16:1
+		gx.Open("header", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: "gx-hero my-8 text-center", Kind: gx.AttrText}}, p.Attrs)),
+//line Hero.gx:16:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tHero0 = gx.NewTemplate(
+	[]string{"\n  <h1 class=\"m-0 text-4xl font-bold tracking-tight\">", "</h1>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+)
+
+var _tHero1 = gx.NewTemplate(
+	[]string{"\n    <p class=\"mx-auto mt-3 max-w-2xl text-lg text-muted-foreground\">", "</p>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+)
+
+var _tHero2 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tHero3 = gx.NewTemplate(
+	[]string{"\n    <div class=\"mt-6 flex flex-wrap items-center justify-center gap-3\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero4 = gx.NewTemplate(
+	[]string{"\n    <div class=\"gx-hero-body mt-8\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tHero5 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tHero6 = gx.NewTemplate(
+	[]string{"<header", ">", "</header>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -25,58 +25,87 @@ func SignupView(p SignupViewProps) gx.Node {
 	}
 	var _b gx.Builder
 //line SignupView.gx:12:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "Gx shop signup", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}))
-//line SignupView.gx:12:35
-	_b.Add(gx.Text("\n"))
-//line SignupView.gx:13:1
-	_b.Add(gx.El("h1", nil, gx.Text("Sign up")))
-//line SignupView.gx:13:17
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tSignupView0.With(
+//line SignupView.gx:12:1
+		gx.Head(gx.HeadProps{Title: "Gx shop signup", Meta: nil, Links: nil, Lang: "", HtmlClass: "", BodyClass: ""}),
+	))
 //line SignupView.gx:14:1
 	var _b1 gx.Builder
 //line SignupView.gx:14:24
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSignupView1)
 //line SignupView.gx:15:3
 	if p.F.Email.Error != "" || p.F.Age.Error != "" || p.F.Terms.Error != "" || p.F.Avatar.Error != "" || p.F.Address.Street.Error != "" {
 //line SignupView.gx:15:137
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tSignupView2.With(
 //line SignupView.gx:16:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("\n      <p>Fix the errors below.</p>\n    "))))
-//line SignupView.gx:18:11
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "id", Value: "signup-errors", Kind: gx.AttrText}, gx.Bool("data-gx-error-summary", true), gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}),
+		))
 	}
 //line SignupView.gx:19:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSignupView4.With(
 //line SignupView.gx:20:3
-	_b1.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Email, Label: "Email", Type: "email", Validate: "blur", Hint: "We never share it."}))
-//line SignupView.gx:20:106
-	_b1.Add(gx.Text("\n  "))
+		ui.TextField(ui.TextFieldProps{Field: p.F.Email, Label: "Email", Type: "email", Validate: "blur", Hint: "We never share it."}),
 //line SignupView.gx:21:3
-	_b1.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Age, Label: "Age", Type: "number", Validate: "input", Hint: ""}))
-//line SignupView.gx:21:78
-	_b1.Add(gx.Text("\n  "))
+		ui.TextField(ui.TextFieldProps{Field: p.F.Age, Label: "Age", Type: "number", Validate: "input", Hint: ""}),
 //line SignupView.gx:22:3
-	_b1.Add(ui.TextField(ui.TextFieldProps{Field: p.F.Address.Street, Label: "Street", Type: "text", Validate: "", Hint: ""}))
-//line SignupView.gx:22:73
-	_b1.Add(gx.Text("\n  "))
+		ui.TextField(ui.TextFieldProps{Field: p.F.Address.Street, Label: "Street", Type: "text", Validate: "", Hint: ""}),
 //line SignupView.gx:23:3
-	_b1.Add(ui.Checkbox(ui.CheckboxProps{Field: p.F.Terms, Children: gx.Text("I accept the terms")}))
-//line SignupView.gx:23:66
-	_b1.Add(gx.Text("\n  "))
+		ui.Checkbox(ui.CheckboxProps{Field: p.F.Terms, Children: _tSignupView3}),
 //line SignupView.gx:24:3
-	_b1.Add(ui.FileField(ui.FileFieldProps{Field: p.F.Avatar, Label: "Avatar"}))
-//line SignupView.gx:24:53
-	_b1.Add(gx.Text("\n  "))
-//line SignupView.gx:25:3
-	_b1.Add(gx.El("fieldset", nil, gx.Frag(gx.Raw(gx.SafeHTML("\n    <legend>Shipping addresses</legend>\n    ")), addressList(p.F.Addresses), gx.Text("\n    "), addButton(), gx.Text("\n  "))))
-//line SignupView.gx:29:14
-	_b1.Add(gx.Text("\n  "))
-//line SignupView.gx:30:3
-	_b1.Add(gx.El("button", gx.Attrs{gx.Attr{Key: "type", Value: "submit", Kind: gx.AttrText}}, gx.Text("Create account")))
-//line SignupView.gx:30:48
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("form", p.F.Attrs(), _b1.Node()))
-//line SignupView.gx:31:8
-	_b.Add(gx.Text("\n"))
+		ui.FileField(ui.FileFieldProps{Field: p.F.Avatar, Label: "Avatar"}),
+//line SignupView.gx:27:5
+		addressList(p.F.Addresses),
+//line SignupView.gx:28:5
+		addButton(),
+	))
+//line SignupView.gx:14:1
+	_b.Add(_tSignupView5.With(
+//line SignupView.gx:14:1
+		gx.Open("form", p.F.Attrs()),
+//line SignupView.gx:14:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSignupView0 = gx.NewTemplate(
+	[]string{"", "\n<h1>Sign up</h1>\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+)
+
+var _tSignupView1 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignupView2 = gx.NewTemplate(
+	[]string{"\n    <div", ">\n      <p>Fix the errors below.</p>\n    </div>\n  "},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 1, End: 47}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tSignupView3 = gx.NewTemplate(
+	[]string{"I accept the terms"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSignupView4 = gx.NewTemplate(
+	[]string{"\n  ", "\n  ", "\n  ", "\n  ", "\n  ", "\n  <fieldset>\n    <legend>Shipping addresses</legend>\n    ", "\n    ", "\n  </fieldset>\n  <button type=\"submit\">Create account</button>\n"},
+	[]int{0, 0, 0, 0, 0, 1, 1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: -1, Slot: 4}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "fieldset"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "button"}, {El: -1, Slot: -1}},
+)
+
+var _tSignupView5 = gx.NewTemplate(
+	[]string{"<form", ">", "</form>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

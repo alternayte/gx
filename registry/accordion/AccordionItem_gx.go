@@ -31,10 +31,24 @@ func AccordionItem(p AccordionItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line AccordionItem.gx:23:1
-	_b.Add(gx.El("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/accordion-item border-border border-b last:border-b-0 [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Bool("open", p.Open)}, p.Attrs), gx.Frag(gx.Text("\n  "), gx.El("summary", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 inert:pointer-events-none inert:opacity-50 [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}, gx.Bool("inert", p.Disabled)}, gx.Frag(gx.Text("\n    "), gx.Text(p.Title), gx.Text("\n    "), icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-open/accordion-item:rotate-180 motion-reduce:transition-none"}), gx.Text("\n  "))), gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "pt-0 pb-4 text-sm", Kind: gx.AttrText}}, p.Children), gx.Text("\n"))))
-//line AccordionItem.gx:29:11
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tAccordionItem0.With(
+//line AccordionItem.gx:23:1
+		gx.Open("details", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/accordion-item border-border border-b last:border-b-0 [interpolate-size:allow-keywords] [&::details-content]:h-0 [&::details-content]:overflow-hidden [&::details-content]:transition-[height,content-visibility] [&::details-content]:transition-discrete [&::details-content]:duration-200 [&::details-content]:ease-out open:[&::details-content]:h-auto motion-reduce:[&::details-content]:transition-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Bool("open", p.Open)}, p.Attrs)),
+//line AccordionItem.gx:24:3
+		gx.Open("summary", gx.Attrs{gx.Attr{Key: "class", Value: "flex flex-1 list-none items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 inert:pointer-events-none inert:opacity-50 [&::-webkit-details-marker]:hidden", Kind: gx.AttrText}, gx.Bool("inert", p.Disabled)}),
+//line AccordionItem.gx:25:5
+		gx.Text(p.Title),
+//line AccordionItem.gx:26:5
+		icons.ChevronDown(icons.ChevronDownProps{Label: "", Class: "pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-open/accordion-item:rotate-180 motion-reduce:transition-none"}),
+//line AccordionItem.gx:28:34
+		p.Children,
+	)
 }
+
+var _tAccordionItem0 = gx.NewTemplate(
+	[]string{"<details", ">\n  <summary", ">\n    ", "\n    ", "\n  </summary>\n  <div class=\"pt-0 pb-4 text-sm\">", "</div>\n</details>\n"},
+	[]int{0, 1, 2, 2, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 5, End: 17}, {Slot: 1, Start: 4, EndStatic: 4, End: 13}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

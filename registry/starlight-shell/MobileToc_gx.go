@@ -22,56 +22,150 @@ func MobileToc(p MobileTocProps) gx.Node {
 //line MobileToc.gx:9:1
 	var _b1 gx.Builder
 //line MobileToc.gx:9:28
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tMobileToc0)
 //line MobileToc.gx:10:3
 	var _b2 gx.Builder
 //line MobileToc.gx:10:61
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tMobileToc1)
 //line MobileToc.gx:11:5
 	var _b3 gx.Builder
 //line MobileToc.gx:11:31
-	_b3.Add(gx.Text("\n      "))
+	_b3.Add(_tMobileToc2.With(
 //line MobileToc.gx:12:7
-	_b3.Add(gx.El("summary", gx.Attrs{gx.Attr{Key: "id", Value: "sl-on-this-page-mobile", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n        "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-toggle", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n          On this page\n          "), icon("right-caret", "sl-caret"), gx.Text("\n        "))), gx.Text("\n        "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-display-current", Kind: gx.AttrText}, gx.Bool("data-gx-toc-current", true)}), gx.Text("\n      "))))
-//line MobileToc.gx:18:17
-	_b3.Add(gx.Text("\n      "))
+		gx.Open("summary", gx.Attrs{gx.Attr{Key: "id", Value: "sl-on-this-page-mobile", Kind: gx.AttrText}}),
+//line MobileToc.gx:15:11
+		icon("right-caret", "sl-caret"),
+//line MobileToc.gx:17:9
+		gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-display-current", Kind: gx.AttrText}, gx.Bool("data-gx-toc-current", true)}),
+	))
 //line MobileToc.gx:19:7
 	var _b4 gx.Builder
 //line MobileToc.gx:19:32
-	_b4.Add(gx.Text("\n        "))
+	_b4.Add(_tMobileToc3)
 //line MobileToc.gx:20:9
 	var _b5 gx.Builder
 //line MobileToc.gx:20:33
-	_b5.Add(gx.Text("\n          "))
-//line MobileToc.gx:21:11
-	_b5.Add(gx.El("li", nil, gx.Frag(gx.Text("\n            "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}, gx.Attr{Key: "data-gx-toc-target", Value: "_top", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: "2", Kind: gx.AttrText}}, gx.Raw(gx.SafeHTML("<span>Overview</span>"))), gx.Text("\n          "))))
-//line MobileToc.gx:23:16
-	_b5.Add(gx.Text("\n          "))
+	_b5.Add(_tMobileToc4.With(
+//line MobileToc.gx:22:13
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}, gx.Attr{Key: "data-gx-toc-target", Value: "_top", Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: "2", Kind: gx.AttrText}}),
+	))
 //line MobileToc.gx:24:11
 	for _, h := range p.Headings {
 //line MobileToc.gx:24:41
-		_b5.Add(gx.Text("\n            "))
-//line MobileToc.gx:25:13
-		_b5.Add(gx.El("li", nil, gx.Frag(gx.Text("\n              "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(gx.URL("#" + h.ID)), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-gx-toc-target", Value: h.ID, Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}, gx.El("span", nil, gx.Text(h.Text))), gx.Text("\n            "))))
-//line MobileToc.gx:27:18
-		_b5.Add(gx.Text("\n          "))
+		_b5.Add(_tMobileToc5.With(
+//line MobileToc.gx:26:15
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: string(gx.URL("#" + h.ID)), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "data-gx-toc-target", Value: h.ID, Kind: gx.AttrText}, gx.Attr{Key: "data-level", Value: gx.TextValue(h.Level), Kind: gx.AttrText}}),
+//line MobileToc.gx:26:97
+			gx.Text(h.Text),
+		))
 	}
 //line MobileToc.gx:28:12
-	_b5.Add(gx.Text("\n        "))
-	_b4.Add(gx.El("ul", gx.Attrs{gx.Attr{Key: "class", Value: "sl-toc-list", Kind: gx.AttrText}}, _b5.Node()))
-//line MobileToc.gx:29:14
-	_b4.Add(gx.Text("\n      "))
-	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-dropdown", Kind: gx.AttrText}}, _b4.Node()))
-//line MobileToc.gx:30:13
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("details", gx.Attrs{gx.Bool("data-gx-toc-menu", true)}, _b3.Node()))
-//line MobileToc.gx:31:15
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("nav", gx.Attrs{gx.Bool("data-gx-toc", true), gx.Attr{Key: "aria-labelledby", Value: "sl-on-this-page-mobile", Kind: gx.AttrText}}, _b2.Node()))
-//line MobileToc.gx:32:9
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-mobile-toc", Kind: gx.AttrText}}, _b1.Node()))
-//line MobileToc.gx:33:7
-	_b.Add(gx.Text("\n"))
+	_b5.Add(_tMobileToc3)
+//line MobileToc.gx:20:9
+	_b4.Add(_tMobileToc6.With(
+//line MobileToc.gx:20:9
+		_b5.Node(),
+	))
+//line MobileToc.gx:19:7
+	_b3.Add(_tMobileToc7.With(
+//line MobileToc.gx:19:7
+		_b4.Node(),
+	))
+//line MobileToc.gx:11:5
+	_b2.Add(_tMobileToc8.With(
+//line MobileToc.gx:11:5
+		gx.Open("details", gx.Attrs{gx.Bool("data-gx-toc-menu", true)}),
+//line MobileToc.gx:11:5
+		_b3.Node(),
+	))
+//line MobileToc.gx:10:3
+	_b1.Add(_tMobileToc9.With(
+//line MobileToc.gx:10:3
+		gx.Open("nav", gx.Attrs{gx.Bool("data-gx-toc", true), gx.Attr{Key: "aria-labelledby", Value: "sl-on-this-page-mobile", Kind: gx.AttrText}}),
+//line MobileToc.gx:10:3
+		_b2.Node(),
+	))
+//line MobileToc.gx:9:1
+	_b.Add(_tMobileToc10.With(
+//line MobileToc.gx:9:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tMobileToc0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tMobileToc1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tMobileToc2 = gx.NewTemplate(
+	[]string{"\n      <summary", ">\n        <span class=\"sl-toggle\">\n          On this page\n          ", "\n        </span>\n        <span", "></span>\n      </summary>\n      "},
+	[]int{0, 2, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 3, End: 25}, {Slot: 2, Start: 25, EndStatic: 3, End: 8}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc3 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tMobileToc4 = gx.NewTemplate(
+	[]string{"\n          <li>\n            <a", "><span>Overview</span></a>\n          </li>\n          "},
+	[]int{1},
+	[]gx.TemplateEl{{Slot: 0, Start: 28, EndStatic: 1, End: 26}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc5 = gx.NewTemplate(
+	[]string{"\n            <li>\n              <a", "><span>", "</span></a>\n            </li>\n          "},
+	[]int{1, 3},
+	[]gx.TemplateEl{{Slot: 0, Start: 32, EndStatic: 2, End: 11}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc6 = gx.NewTemplate(
+	[]string{"<ul class=\"sl-toc-list\">", "</ul>\n      "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc7 = gx.NewTemplate(
+	[]string{"<div class=\"sl-dropdown\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc8 = gx.NewTemplate(
+	[]string{"<details", ">", "</details>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc9 = gx.NewTemplate(
+	[]string{"<nav", ">", "</nav>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tMobileToc10 = gx.NewTemplate(
+	[]string{"<div class=\"sl-mobile-toc\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

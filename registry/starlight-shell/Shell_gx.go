@@ -28,99 +28,221 @@ func Shell(p ShellProps) gx.Node {
 	}
 	var _b gx.Builder
 //line Shell.gx:17:1
-	_b.Add(gx.Head(gx.HeadProps{Title: "", Meta: nil, Links: nil, Lang: "", HtmlClass: RootClass(p.Page), BodyClass: ""}))
-//line Shell.gx:17:42
-	_b.Add(gx.Text("\n"))
-//line Shell.gx:18:1
-	_b.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "class", Value: "sl-skip-link", Kind: gx.AttrText}, gx.Attr{Key: "href", Value: "#_top", Kind: gx.AttrURL}}, gx.Text("Skip to content")))
-//line Shell.gx:18:57
-	_b.Add(gx.Text("\n"))
+	_b.Add(_tShell0.With(
+//line Shell.gx:17:1
+		gx.Head(gx.HeadProps{Title: "", Meta: nil, Links: nil, Lang: "", HtmlClass: RootClass(p.Page), BodyClass: ""}),
+	))
 //line Shell.gx:19:1
 	var _b1 gx.Builder
 //line Shell.gx:19:22
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tShell1.With(
 //line Shell.gx:20:3
-	_b1.Add(Header(HeaderProps{Site: p.Site}))
-//line Shell.gx:20:27
-	_b1.Add(gx.Text("\n  "))
+		Header(HeaderProps{Site: p.Site}),
+	))
 //line Shell.gx:21:3
 	if !p.Page.Splash {
 //line Shell.gx:21:22
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tShell2.With(
 //line Shell.gx:22:5
-		_b1.Add(Sidebar(SidebarProps{Site: p.Site, Nav: p.Nav, Path: p.Page.Path}))
-//line Shell.gx:22:61
-		_b1.Add(gx.Text("\n  "))
+			Sidebar(SidebarProps{Site: p.Site, Nav: p.Nav, Path: p.Page.Path}),
+		))
 	}
 //line Shell.gx:23:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tShell3)
 //line Shell.gx:24:3
 	var _b2 gx.Builder
 //line Shell.gx:24:30
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tShell4)
 //line Shell.gx:25:5
 	var _b3 gx.Builder
 //line Shell.gx:25:32
-	_b3.Add(gx.Text("\n      "))
+	_b3.Add(_tShell5)
 //line Shell.gx:26:7
 	if len(p.Page.ShownTOC()) > 0 || !p.Page.Splash {
 //line Shell.gx:26:56
-		_b3.Add(gx.Text("\n        "))
-//line Shell.gx:27:9
-		_b3.Add(gx.El("aside", gx.Attrs{gx.Attr{Key: "class", Value: "sl-right-sidebar-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n          "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-right-sidebar", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n            "), MobileToc(MobileTocProps{Headings: p.Page.ShownTOC()}), gx.Text("\n            "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-right-sidebar-panel", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n              "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-toc-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n                "), Toc(TocProps{Headings: p.Page.ShownTOC()}), gx.Text("\n              "))), gx.Text("\n            "))), gx.Text("\n          "))), gx.Text("\n        "))))
-//line Shell.gx:36:17
-		_b3.Add(gx.Text("\n      "))
+		_b3.Add(_tShell6.With(
+//line Shell.gx:29:13
+			MobileToc(MobileTocProps{Headings: p.Page.ShownTOC()}),
+//line Shell.gx:32:17
+			Toc(TocProps{Headings: p.Page.ShownTOC()}),
+		))
 	}
 //line Shell.gx:37:8
-	_b3.Add(gx.Text("\n      "))
+	_b3.Add(_tShell5)
 //line Shell.gx:38:7
 	var _b4 gx.Builder
 //line Shell.gx:38:33
-	_b4.Add(gx.Text("\n        "))
+	_b4.Add(_tShell7)
 //line Shell.gx:39:9
 	var _b5 gx.Builder
 //line Shell.gx:39:50
-	_b5.Add(gx.Text("\n          "))
+	_b5.Add(_tShell8)
 //line Shell.gx:40:11
 	if p.Hero != nil {
 //line Shell.gx:40:29
-		_b5.Add(gx.Text("\n            "))
-//line Shell.gx:41:13
-		_b5.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-content-panel", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n              "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n                "), p.Hero, gx.Text("\n                "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-markdown-content gx-content", Kind: gx.AttrText}}, p.Children), gx.Text("\n                "), PageFooter(PageFooterProps{Site: p.Site, Page: p.Page}), gx.Text("\n              "))), gx.Text("\n            "))))
-//line Shell.gx:47:19
-		_b5.Add(gx.Text("\n          "))
+		_b5.Add(_tShell9.With(
+//line Shell.gx:43:17
+			p.Hero,
+//line Shell.gx:44:61
+			p.Children,
+//line Shell.gx:45:17
+			PageFooter(PageFooterProps{Site: p.Site, Page: p.Page}),
+		))
 	} else {
 //line Shell.gx:48:19
-		_b5.Add(gx.Text("\n            "))
-//line Shell.gx:49:13
-		_b5.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-content-panel", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n              "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n                "), gx.El("h1", gx.Attrs{gx.Attr{Key: "class", Value: "sl-page-title", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "_top", Kind: gx.AttrText}}, gx.Text(p.Page.Title)), gx.Text("\n              "))), gx.Text("\n            "))))
-//line Shell.gx:53:19
-		_b5.Add(gx.Text("\n            "))
-//line Shell.gx:54:13
-		_b5.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-content-panel", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n              "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n                "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-markdown-content gx-content", Kind: gx.AttrText}}, p.Children), gx.Text("\n                "), PageFooter(PageFooterProps{Site: p.Site, Page: p.Page}), gx.Text("\n              "))), gx.Text("\n            "))))
-//line Shell.gx:59:19
-		_b5.Add(gx.Text("\n          "))
+		_b5.Add(_tShell10.With(
+//line Shell.gx:51:17
+			gx.Open("h1", gx.Attrs{gx.Attr{Key: "class", Value: "sl-page-title", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "_top", Kind: gx.AttrText}}),
+//line Shell.gx:51:53
+			gx.Text(p.Page.Title),
+//line Shell.gx:56:61
+			p.Children,
+//line Shell.gx:57:17
+			PageFooter(PageFooterProps{Site: p.Site, Page: p.Page}),
+		))
 	}
 //line Shell.gx:60:12
-	_b5.Add(gx.Text("\n        "))
-	_b4.Add(gx.El("main", gx.Attrs{gx.Attr{Key: "class", Value: "sl-main", Kind: gx.AttrText}, gx.Bool("data-pagefind-body", true)}, _b5.Node()))
-//line Shell.gx:61:16
-	_b4.Add(gx.Text("\n      "))
-	_b3.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-main-pane", Kind: gx.AttrText}}, _b4.Node()))
-//line Shell.gx:62:13
-	_b3.Add(gx.Text("\n    "))
-	_b2.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-two-column", Kind: gx.AttrText}}, _b3.Node()))
-//line Shell.gx:63:11
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-main-frame", Kind: gx.AttrText}}, _b2.Node()))
-//line Shell.gx:64:9
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-page", Kind: gx.AttrText}}, _b1.Node()))
-//line Shell.gx:65:7
-	_b.Add(gx.Text("\n"))
+	_b5.Add(_tShell7)
+//line Shell.gx:39:9
+	_b4.Add(_tShell11.With(
+//line Shell.gx:39:9
+		gx.Open("main", gx.Attrs{gx.Attr{Key: "class", Value: "sl-main", Kind: gx.AttrText}, gx.Bool("data-pagefind-body", true)}),
+//line Shell.gx:39:9
+		_b5.Node(),
+	))
+//line Shell.gx:38:7
+	_b3.Add(_tShell12.With(
+//line Shell.gx:38:7
+		_b4.Node(),
+	))
+//line Shell.gx:25:5
+	_b2.Add(_tShell13.With(
+//line Shell.gx:25:5
+		_b3.Node(),
+	))
+//line Shell.gx:24:3
+	_b1.Add(_tShell14.With(
+//line Shell.gx:24:3
+		_b2.Node(),
+	))
+//line Shell.gx:19:1
+	_b.Add(_tShell15.With(
+//line Shell.gx:19:1
+		_b1.Node(),
 //line Shell.gx:66:1
-	_b.Add(SearchDialog(SearchDialogProps{}))
-//line Shell.gx:66:17
-	_b.Add(gx.Text("\n"))
+		SearchDialog(SearchDialogProps{}),
+	))
 	return _b.Node()
 }
+
+var _tShell0 = gx.NewTemplate(
+	[]string{"", "\n<a class=\"sl-skip-link\" href=\"#_top\">Skip to content</a>\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "a"}, {El: -1, Slot: -1}},
+)
+
+var _tShell1 = gx.NewTemplate(
+	[]string{"\n  ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tShell2 = gx.NewTemplate(
+	[]string{"\n    ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tShell3 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tShell4 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tShell5 = gx.NewTemplate(
+	[]string{"\n      "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tShell6 = gx.NewTemplate(
+	[]string{"\n        <aside class=\"sl-right-sidebar-container\">\n          <div class=\"sl-right-sidebar\">\n            ", "\n            <div class=\"sl-right-sidebar-panel\">\n              <div class=\"sl-toc-container\">\n                ", "\n              </div>\n            </div>\n          </div>\n        </aside>\n      "},
+	[]int{2, 4},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "aside"}, {El: -1, Slot: -1}},
+)
+
+var _tShell7 = gx.NewTemplate(
+	[]string{"\n        "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tShell8 = gx.NewTemplate(
+	[]string{"\n          "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tShell9 = gx.NewTemplate(
+	[]string{"\n            <div class=\"sl-content-panel\">\n              <div class=\"sl-container\">\n                ", "\n                <div class=\"sl-markdown-content gx-content\">", "</div>\n                ", "\n              </div>\n            </div>\n          "},
+	[]int{2, 3, 2},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tShell10 = gx.NewTemplate(
+	[]string{"\n            <div class=\"sl-content-panel\">\n              <div class=\"sl-container\">\n                <h1", ">", "</h1>\n              </div>\n            </div>\n            <div class=\"sl-content-panel\">\n              <div class=\"sl-container\">\n                <div class=\"sl-markdown-content gx-content\">", "</div>\n                ", "\n              </div>\n            </div>\n          "},
+	[]int{2, 3, 3, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 101, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tShell11 = gx.NewTemplate(
+	[]string{"<main", ">", "</main>\n      "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tShell12 = gx.NewTemplate(
+	[]string{"<div class=\"sl-main-pane\">", "</div>\n    "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tShell13 = gx.NewTemplate(
+	[]string{"<div class=\"sl-two-column\">", "</div>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tShell14 = gx.NewTemplate(
+	[]string{"<div class=\"sl-main-frame\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)
+
+var _tShell15 = gx.NewTemplate(
+	[]string{"<div class=\"sl-page\">", "</div>\n", "\n"},
+	[]int{1, 0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+)

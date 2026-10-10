@@ -23,10 +23,18 @@ func TabsContent(p TabsContentProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TabsContent.gx:14:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex-1 outline-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "tabpanel", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab-panel", Value: p.Label, Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TabsContent.gx:14:140
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTabsContent0.With(
+//line TabsContent.gx:14:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex-1 outline-none", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "tabpanel", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "0", Kind: gx.AttrText}, gx.Attr{Key: "data-gx-tab-panel", Value: p.Label, Kind: gx.AttrText}}, p.Attrs)),
+//line TabsContent.gx:14:122
+		p.Children,
+	)
 }
+
+var _tTabsContent0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

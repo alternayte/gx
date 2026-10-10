@@ -26,27 +26,57 @@ func BreadcrumbSeparator(p BreadcrumbSeparatorProps) gx.Node {
 //line BreadcrumbSeparator.gx:14:1
 	var _b1 gx.Builder
 //line BreadcrumbSeparator.gx:14:133
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tBreadcrumbSeparator0)
 //line BreadcrumbSeparator.gx:15:3
 	if p.Children != nil {
 //line BreadcrumbSeparator.gx:15:25
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tBreadcrumbSeparator1.With(
 //line BreadcrumbSeparator.gx:16:5
-		_b1.Add(p.Children)
-//line BreadcrumbSeparator.gx:16:17
-		_b1.Add(gx.Text("\n  "))
+			p.Children,
+		))
 	} else {
 //line BreadcrumbSeparator.gx:17:11
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tBreadcrumbSeparator1.With(
 //line BreadcrumbSeparator.gx:18:5
-		_b1.Add(icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""}))
-//line BreadcrumbSeparator.gx:18:27
-		_b1.Add(gx.Text("\n  "))
+			icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: ""}),
+		))
 	}
 //line BreadcrumbSeparator.gx:19:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&>svg]:size-3.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line BreadcrumbSeparator.gx:20:6
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tBreadcrumbSeparator2)
+//line BreadcrumbSeparator.gx:14:1
+	_b.Add(_tBreadcrumbSeparator3.With(
+//line BreadcrumbSeparator.gx:14:1
+		gx.Open("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&>svg]:size-3.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-separator", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "presentation", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, p.Attrs)),
+//line BreadcrumbSeparator.gx:14:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tBreadcrumbSeparator0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tBreadcrumbSeparator1 = gx.NewTemplate(
+	[]string{"\n    ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tBreadcrumbSeparator2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tBreadcrumbSeparator3 = gx.NewTemplate(
+	[]string{"<li", ">", "</li>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

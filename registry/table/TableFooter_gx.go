@@ -21,10 +21,18 @@ func TableFooter(p TableFooterProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TableFooter.gx:12:1
-	_b.Add(gx.El("tfoot", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-footer", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableFooter.gx:12:148
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTableFooter0.With(
+//line TableFooter.gx:12:1
+		gx.Open("tfoot", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-footer", Kind: gx.AttrText}}, p.Attrs)),
+//line TableFooter.gx:12:128
+		p.Children,
+	)
 }
+
+var _tTableFooter0 = gx.NewTemplate(
+	[]string{"<tfoot", ">", "</tfoot>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

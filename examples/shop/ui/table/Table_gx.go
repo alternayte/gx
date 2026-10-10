@@ -21,10 +21,20 @@ func Table(p TableProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Table.gx:12:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "relative w-full overflow-x-auto", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "table-container", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("table", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full caption-bottom text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table", Kind: gx.AttrText}}, p.Attrs), p.Children), gx.Text("\n"))))
-//line Table.gx:14:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTable0.With(
+//line Table.gx:12:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "relative w-full overflow-x-auto", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "table-container", Kind: gx.AttrText}}),
+//line Table.gx:13:3
+		gx.Open("table", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("w-full caption-bottom text-sm", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table", Kind: gx.AttrText}}, p.Attrs)),
+//line Table.gx:13:97
+		p.Children,
+	)
 }
+
+var _tTable0 = gx.NewTemplate(
+	[]string{"<div", ">\n  <table", ">", "</table>\n</div>\n"},
+	[]int{0, 1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 15}, {Slot: 1, Start: 4, EndStatic: 3, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

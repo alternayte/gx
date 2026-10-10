@@ -17,10 +17,16 @@ func SelectSeparator(p SelectSeparatorProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SelectSeparator.gx:8:1
-	_b.Add(gx.El("hr", p.Attrs))
-//line SelectSeparator.gx:8:20
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSelectSeparator0.With(
+//line SelectSeparator.gx:8:1
+		gx.Open("hr", p.Attrs),
+	)
 }
+
+var _tSelectSeparator0 = gx.NewTemplate(
+	[]string{"<hr", ">\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

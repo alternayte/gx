@@ -23,31 +23,74 @@ func Pagination(p PaginationProps) gx.Node {
 //line Pagination.gx:10:1
 	var _b1 gx.Builder
 //line Pagination.gx:10:28
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tPagination0)
 //line Pagination.gx:11:3
 	if p.Prev != nil {
 //line Pagination.gx:11:21
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tPagination1.With(
 //line Pagination.gx:12:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), icon("left-arrow", ""), gx.Text("\n      "), gx.El("span", nil, gx.Frag(gx.Raw(gx.SafeHTML("Previous<br>")), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-link-title", Kind: gx.AttrText}}, gx.Text(p.Prev.Label)))), gx.Text("\n    "))))
-//line Pagination.gx:15:9
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Prev.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "prev", Kind: gx.AttrText}}),
+//line Pagination.gx:13:7
+			icon("left-arrow", ""),
+//line Pagination.gx:14:55
+			gx.Text(p.Prev.Label),
+		))
 	}
 //line Pagination.gx:16:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tPagination0)
 //line Pagination.gx:17:3
 	if p.Next != nil {
 //line Pagination.gx:17:21
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tPagination2.With(
 //line Pagination.gx:18:5
-		_b1.Add(gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), icon("right-arrow", ""), gx.Text("\n      "), gx.El("span", nil, gx.Frag(gx.Raw(gx.SafeHTML("Next<br>")), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "sl-link-title", Kind: gx.AttrText}}, gx.Text(p.Next.Label)))), gx.Text("\n    "))))
-//line Pagination.gx:21:9
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: string(p.Next.Href), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "rel", Value: "next", Kind: gx.AttrText}}),
+//line Pagination.gx:19:7
+			icon("right-arrow", ""),
+//line Pagination.gx:20:51
+			gx.Text(p.Next.Label),
+		))
 	}
 //line Pagination.gx:22:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-pagination", Kind: gx.AttrText}}, _b1.Node()))
-//line Pagination.gx:23:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tPagination3)
+//line Pagination.gx:10:1
+	_b.Add(_tPagination4.With(
+//line Pagination.gx:10:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tPagination0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPagination1 = gx.NewTemplate(
+	[]string{"\n    <a", ">\n      ", "\n      <span>Previous<br><span class=\"sl-link-title\">", "</span></span>\n    </a>\n  "},
+	[]int{0, 1, 3},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 23}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPagination2 = gx.NewTemplate(
+	[]string{"\n    <a", ">\n      ", "\n      <span>Next<br><span class=\"sl-link-title\">", "</span></span>\n    </a>\n  "},
+	[]int{0, 1, 3},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 23}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tPagination3 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tPagination4 = gx.NewTemplate(
+	[]string{"<div class=\"sl-pagination\">", "</div>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

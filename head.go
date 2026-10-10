@@ -1,8 +1,8 @@
 package gx
 
 import (
+	"bytes"
 	"net/http"
-	"strings"
 )
 
 // Meta is one meta tag in the head (REQ-RTE-11).
@@ -85,6 +85,15 @@ func collectHead(n Node, st *renderState, depth int) {
 		for _, c := range t.children {
 			collectHead(c, st, depth+1)
 		}
+	case *tmplNode:
+		// The template says how many elements are around each value.
+		for i, d := range t.dyn() {
+			collectHead(d, st, depth+t.t.depth[i])
+		}
+	case *tmplElNode:
+		for i, d := range t.inner() {
+			collectHead(d, st, depth+t.depthOf(i))
+		}
 	}
 }
 
@@ -142,7 +151,7 @@ func mergeLink(list []Link, l Link) []Link {
 	return append(list, l)
 }
 
-func renderHead(b *strings.Builder, st *renderState) {
+func renderHead(b *bytes.Buffer, st *renderState) {
 	if st.head.Title != "" {
 		renderNode(b, El("title", nil, Text(st.head.Title)), st)
 	}

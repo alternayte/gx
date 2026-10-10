@@ -20,10 +20,16 @@ func X(p XProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line X.gx:11:1
-	_b.Add(gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M18 6L6 18M6 6l12 12\"/>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line X.gx:11:202
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tX0.With(
+//line X.gx:11:1
+		gx.Icon("<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M18 6L6 18M6 6l12 12\"/>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tX0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

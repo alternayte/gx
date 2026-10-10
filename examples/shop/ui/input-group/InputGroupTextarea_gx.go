@@ -28,10 +28,18 @@ func InputGroupTextarea(p InputGroupTextareaProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line InputGroupTextarea.gx:20:1
-	_b.Add(gx.El("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(textarea.Control, "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs()), gx.Text(p.Value)))
-//line InputGroupTextarea.gx:20:278
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tInputGroupTextarea0.With(
+//line InputGroupTextarea.gx:20:1
+		gx.Open("textarea", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx(textarea.Control, "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: p.Placeholder, Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "input-group-control", Kind: gx.AttrText}}, p.attrs())),
+//line InputGroupTextarea.gx:20:258
+		gx.Text(p.Value),
+	)
 }
+
+var _tInputGroupTextarea0 = gx.NewTemplate(
+	[]string{"<textarea", ">", "</textarea>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 11}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

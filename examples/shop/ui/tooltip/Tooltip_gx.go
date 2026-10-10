@@ -29,24 +29,58 @@ func Tooltip(p TooltipProps) gx.Node {
 //line Tooltip.gx:16:1
 	var _b1 gx.Builder
 //line Tooltip.gx:16:81
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tTooltip0.With(
 //line Tooltip.gx:17:3
-	_b1.Add(p.Children)
-//line Tooltip.gx:17:15
-	_b1.Add(gx.Text("\n  "))
+		p.Children,
+	))
 //line Tooltip.gx:18:3
 	if p.Content != "" {
 //line Tooltip.gx:18:23
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tTooltip1.With(
 //line Tooltip.gx:19:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none invisible absolute z-50 w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background opacity-0 scale-95 transition-[opacity,scale,translate,visibility] duration-150 motion-reduce:transition-none group-hover/tooltip:visible group-hover/tooltip:opacity-100 group-hover/tooltip:scale-100 group-has-[:focus-visible]/tooltip:visible group-has-[:focus-visible]/tooltip:opacity-100 group-has-[:focus-visible]/tooltip:scale-100", sideClass[p.side()]), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tooltip", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n      "), gx.Text(p.Content), gx.Text("\n      "), gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute size-2.5 rotate-45 rounded-[2px] bg-foreground", arrowClass[p.side()]), Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}), gx.Text("\n    "))))
-//line Tooltip.gx:22:12
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("pointer-events-none invisible absolute z-50 w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background opacity-0 scale-95 transition-[opacity,scale,translate,visibility] duration-150 motion-reduce:transition-none group-hover/tooltip:visible group-hover/tooltip:opacity-100 group-hover/tooltip:scale-100 group-has-[:focus-visible]/tooltip:visible group-has-[:focus-visible]/tooltip:opacity-100 group-has-[:focus-visible]/tooltip:scale-100", sideClass[p.side()]), Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "tooltip", Kind: gx.AttrText}}),
+//line Tooltip.gx:20:7
+			gx.Text(p.Content),
+//line Tooltip.gx:21:7
+			gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("absolute size-2.5 rotate-45 rounded-[2px] bg-foreground", arrowClass[p.side()]), Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}),
+		))
 	}
 //line Tooltip.gx:23:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tooltip relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Tooltip.gx:24:8
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tTooltip2)
+//line Tooltip.gx:16:1
+	_b.Add(_tTooltip3.With(
+//line Tooltip.gx:16:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/tooltip relative inline-flex", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line Tooltip.gx:16:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tTooltip0 = gx.NewTemplate(
+	[]string{"\n  ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tTooltip1 = gx.NewTemplate(
+	[]string{"\n    <span", ">\n      ", "\n      <span", "></span>\n    </span>\n  "},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 20}, {Slot: 2, Start: 7, EndStatic: 3, End: 8}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tTooltip2 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tTooltip3 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

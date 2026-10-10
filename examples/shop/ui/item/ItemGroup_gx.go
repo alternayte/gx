@@ -21,10 +21,18 @@ func ItemGroup(p ItemGroupProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ItemGroup.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/item-group flex flex-col", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-group", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line ItemGroup.gx:12:117
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tItemGroup0.With(
+//line ItemGroup.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/item-group flex flex-col", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "item-group", Kind: gx.AttrText}}, p.Attrs)),
+//line ItemGroup.gx:12:99
+		p.Children,
+	)
 }
+
+var _tItemGroup0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

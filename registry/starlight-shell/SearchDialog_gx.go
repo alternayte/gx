@@ -15,10 +15,26 @@ func SearchDialog(p SearchDialogProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SearchDialog.gx:3:1
-	_b.Add(gx.El("dialog", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-dialog", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-search", Kind: gx.AttrText}, gx.Bool("data-gx-search", true), gx.Attr{Key: "data-gx-search-src", Value: "/pagefind/pagefind.js", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-frame", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), gx.El("form", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-form", Kind: gx.AttrText}, gx.Attr{Key: "method", Value: "get", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: "/search", Kind: gx.AttrURL}, gx.Bool("data-gx-search-form", true)}, gx.Frag(gx.Text("\n      "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-field", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n        "), icon("magnifier", ""), gx.Text("\n        "), gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-input", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "search", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: "q", Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: "Search", Kind: gx.AttrText}, gx.Bool("data-gx-search-input", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}), gx.Text("\n      "))), gx.Text("\n      "), gx.El("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-close", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-close", true)}, gx.Text("Cancel")), gx.Text("\n    "))), gx.Text("\n    "), gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-results", Kind: gx.AttrText}, gx.Bool("data-gx-search-results", true)}), gx.Text("\n  "))), gx.Text("\n"))))
-//line SearchDialog.gx:14:10
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSearchDialog0.With(
+//line SearchDialog.gx:3:1
+		gx.Open("dialog", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-dialog", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-search", Kind: gx.AttrText}, gx.Bool("data-gx-search", true), gx.Attr{Key: "data-gx-search-src", Value: "/pagefind/pagefind.js", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Search", Kind: gx.AttrText}}),
+//line SearchDialog.gx:5:5
+		gx.Open("form", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-form", Kind: gx.AttrText}, gx.Attr{Key: "method", Value: "get", Kind: gx.AttrText}, gx.Attr{Key: "action", Value: "/search", Kind: gx.AttrURL}, gx.Bool("data-gx-search-form", true)}),
+//line SearchDialog.gx:7:9
+		icon("magnifier", ""),
+//line SearchDialog.gx:8:9
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-input", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "search", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: "q", Kind: gx.AttrText}, gx.Attr{Key: "placeholder", Value: "Search", Kind: gx.AttrText}, gx.Bool("data-gx-search-input", true), gx.Attr{Key: "autocomplete", Value: "off", Kind: gx.AttrText}}),
+//line SearchDialog.gx:10:7
+		gx.Open("button", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-close", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Bool("data-gx-search-close", true)}),
+//line SearchDialog.gx:12:5
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "sl-search-results", Kind: gx.AttrText}, gx.Bool("data-gx-search-results", true)}),
+	)
 }
+
+var _tSearchDialog0 = gx.NewTemplate(
+	[]string{"<dialog", ">\n  <div class=\"sl-search-frame\">\n    <form", ">\n      <div class=\"sl-search-field\">\n        ", "\n        <input", ">\n      </div>\n      <button", ">Cancel</button>\n    </form>\n    <div", "></div>\n  </div>\n</dialog>\n"},
+	[]int{0, 2, 4, 4, 3, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 6, End: 26}, {Slot: 1, Start: 38, EndStatic: 5, End: 28}, {Slot: 3, Start: 9, EndStatic: 4, End: 1}, {Slot: 4, Start: 21, EndStatic: 5, End: 16}, {Slot: 5, Start: 33, EndStatic: 6, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

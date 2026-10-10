@@ -22,10 +22,18 @@ func BreadcrumbItem(p BreadcrumbItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line BreadcrumbItem.gx:13:1
-	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-item", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line BreadcrumbItem.gx:13:122
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tBreadcrumbItem0.With(
+//line BreadcrumbItem.gx:13:1
+		gx.Open("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-flex items-center gap-1.5", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "breadcrumb-item", Kind: gx.AttrText}}, p.Attrs)),
+//line BreadcrumbItem.gx:13:105
+		p.Children,
+	)
 }
+
+var _tBreadcrumbItem0 = gx.NewTemplate(
+	[]string{"<li", ">", "</li>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

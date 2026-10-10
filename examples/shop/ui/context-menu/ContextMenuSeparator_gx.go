@@ -19,10 +19,16 @@ func ContextMenuSeparator(p ContextMenuSeparatorProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line ContextMenuSeparator.gx:10:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("-mx-1 my-1 h-px bg-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}}, p.Attrs)))
-//line ContextMenuSeparator.gx:10:94
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tContextMenuSeparator0.With(
+//line ContextMenuSeparator.gx:10:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("-mx-1 my-1 h-px bg-border", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "role", Value: "separator", Kind: gx.AttrText}}, p.Attrs)),
+	)
 }
+
+var _tContextMenuSeparator0 = gx.NewTemplate(
+	[]string{"<div", "></div>\n"},
+	[]int{0},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

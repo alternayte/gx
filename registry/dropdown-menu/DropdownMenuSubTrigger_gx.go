@@ -26,10 +26,20 @@ func DropdownMenuSubTrigger(p DropdownMenuSubTriggerProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line DropdownMenuSubTrigger.gx:18:1
-	_b.Add(gx.El("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled), p.Attrs), gx.Frag(gx.Text("\n  "), p.Children, gx.Text("\n  "), icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: "ml-auto size-4"}), gx.Text("\n"))))
-//line DropdownMenuSubTrigger.gx:21:10
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tDropdownMenuSubTrigger0.With(
+//line DropdownMenuSubTrigger.gx:18:1
+		gx.Open("button", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground", insetClass[p.Inset], p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "type", Value: "button", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "menuitem", Kind: gx.AttrText}, gx.Attr{Key: "tabindex", Value: "-1", Kind: gx.AttrText}, gx.Attr{Key: "aria-haspopup", Value: "menu", Kind: gx.AttrText}, gx.Attr{Key: "aria-expanded", Value: "false", Kind: gx.AttrText}, gx.Bool("disabled", p.Disabled)}, rovingItem(p.Disabled), p.Attrs)),
+//line DropdownMenuSubTrigger.gx:19:3
+		p.Children,
+//line DropdownMenuSubTrigger.gx:20:3
+		icons.ChevronRight(icons.ChevronRightProps{Label: "", Class: "ml-auto size-4"}),
+	)
 }
+
+var _tDropdownMenuSubTrigger0 = gx.NewTemplate(
+	[]string{"<button", ">\n  ", "\n  ", "\n</button>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 10}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -1908,6 +1908,14 @@ func Icon(body string, p IconProps) Node
 
 Icon renders one icon as an inline svg with currentColor. body is the inner markup of a pinned icon pack, not user input.
 
+#### func Int
+
+```go
+func Int(v int64) Node
+```
+
+Int returns a text node for an integer. Generated code uses it for an expression of an integer type: the render writes the digits with no string.
+
 #### func Island
 
 ```go
@@ -1915,6 +1923,14 @@ func Island(name, props string, opts ...IslandOption) Node
 ```
 
 Island returns the element of a TypeScript island. name is the import path of the package and the component name. props is the JSON of the props. The generated component function of an island calls it.
+
+#### func Open
+
+```go
+func Open(name string, attrs Attrs) Node
+```
+
+Open returns the attributes of one element as a dynamic value. The static string before it ends with the name of the element.
 
 #### func Raw
 
@@ -2263,6 +2279,54 @@ func TransitionStyle(t TransitionName) Style
 ```
 
 TransitionStyle renders the sanitized view-transition-name and view-transition-class of a transition.
+
+### type Template
+
+```go
+type Template struct {
+    // contains filtered or unexported fields
+}
+```
+
+Template is the constant part of a template value: the static strings of one piece of generated markup, and the facts that a pass over a page needs. Generated code makes each Template one time, in a package variable. Code that a person writes uses gx.El.
+
+#### func NewTemplate
+
+```go
+func NewTemplate(static []string, depth []int, els []TemplateEl, roots []TemplateRoot) *Template
+```
+
+NewTemplate returns the constant part of a template value. Generated code calls it; the compiler gives the facts.
+
+#### func (Template) With
+
+```go
+func (t *Template) With(dyn ...Node) Node
+```
+
+With returns the template value of one render: the template and its dynamic values, in the order of the document.
+
+### type TemplateEl
+
+```go
+type TemplateEl struct {
+    Slot, Start, EndStatic, End int
+}
+```
+
+TemplateEl is one element of a template whose attributes are a dynamic value. Slot is the index of that value. The element starts at the byte Start of the static string before the value, and ends at the byte End of the static string EndStatic.
+
+### type TemplateRoot
+
+```go
+type TemplateRoot struct {
+    El   int
+    Slot int
+    Name string
+}
+```
+
+TemplateRoot is one top-level part of a template: an element of els (El, or -1) , an element with no dynamic attribute (Name) , a dynamic value (Slot, or -1) or text.
 
 ### type ToastControl
 

@@ -26,10 +26,18 @@ func Sidebar(p SidebarProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Sidebar.gx:17:1
-	_b.Add(gx.El("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true), gx.Attr{Key: "data-slot", Value: "sidebar", Kind: gx.AttrText}, gx.Attr{Key: "data-side", Value: p.side(), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line Sidebar.gx:17:250
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebar0.With(
+//line Sidebar.gx:17:1
+		gx.Open("aside", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground data-[side=left]:border-r data-[side=right]:border-l", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "id", Value: p.Id, Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true), gx.Attr{Key: "data-slot", Value: "sidebar", Kind: gx.AttrText}, gx.Attr{Key: "data-side", Value: p.side(), Kind: gx.AttrText}}, p.Attrs)),
+//line Sidebar.gx:17:230
+		p.Children,
+	)
 }
+
+var _tSidebar0 = gx.NewTemplate(
+	[]string{"<aside", ">", "</aside>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

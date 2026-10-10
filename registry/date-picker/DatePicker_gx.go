@@ -40,10 +40,32 @@ func DatePicker(p DatePickerProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line DatePicker.gx:31:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-block", p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "date-picker", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), popover.PopoverTrigger(popover.PopoverTriggerProps{Id: p.popoverID(), Variant: button.Outline, Size: button.Md, Class: triggerClass, Children: gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: displayClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.displayID(), Kind: gx.AttrText}, gx.Attr{Key: "data-empty", Value: p.empty(), Kind: gx.AttrText}}, gx.Text(p.text())), Attrs: nil}), gx.Text("\n  "), popover.Popover(popover.PopoverProps{Id: p.popoverID(), Align: popover.Start, Class: "w-auto p-0", Children: calendar.Calendar(calendar.CalendarProps{Id: p.Id, Name: p.Name, Value: p.Value, Month: "", Min: p.Min, Max: p.Max, Label: p.Label, WeekStart: p.WeekStart, Locale: p.Locale, Display: p.displayID(), Popover: p.popoverID(), Class: "border-0", Attrs: p.Attrs}), Attrs: nil}), gx.Text("\n"))))
-//line DatePicker.gx:38:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tDatePicker1.With(
+//line DatePicker.gx:31:1
+		gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("inline-block", p.Class), Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "date-picker", Kind: gx.AttrText}}),
+//line DatePicker.gx:32:3
+		popover.PopoverTrigger(popover.PopoverTriggerProps{Id: p.popoverID(), Variant: button.Outline, Size: button.Md, Class: triggerClass, Children: _tDatePicker0.With(
+//line DatePicker.gx:33:5
+			gx.Open("span", gx.Attrs{gx.Attr{Key: "class", Value: displayClass, Kind: gx.AttrText}, gx.Attr{Key: "id", Value: p.displayID(), Kind: gx.AttrText}, gx.Attr{Key: "data-empty", Value: p.empty(), Kind: gx.AttrText}}),
+//line DatePicker.gx:33:74
+			gx.Text(p.text()),
+		), Attrs: nil}),
+//line DatePicker.gx:35:3
+		popover.Popover(popover.PopoverProps{Id: p.popoverID(), Align: popover.Start, Class: "w-auto p-0", Children: calendar.Calendar(calendar.CalendarProps{Id: p.Id, Name: p.Name, Value: p.Value, Month: "", Min: p.Min, Max: p.Max, Label: p.Label, WeekStart: p.WeekStart, Locale: p.Locale, Display: p.displayID(), Popover: p.popoverID(), Class: "border-0", Attrs: p.Attrs}), Attrs: nil}),
+	)
 }
+
+var _tDatePicker0 = gx.NewTemplate(
+	[]string{"<span", ">", "</span>"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
+)
+
+var _tDatePicker1 = gx.NewTemplate(
+	[]string{"<div", ">\n  ", "\n  ", "\n</div>\n"},
+	[]int{0, 1, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

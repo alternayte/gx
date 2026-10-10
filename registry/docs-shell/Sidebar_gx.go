@@ -24,27 +24,67 @@ func Sidebar(p SidebarProps) gx.Node {
 //line Sidebar.gx:11:1
 	var _b1 gx.Builder
 //line Sidebar.gx:11:96
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tSidebar0)
 //line Sidebar.gx:12:3
 	var _b2 gx.Builder
 //line Sidebar.gx:12:99
-	_b2.Add(gx.Text("\n    "))
+	_b2.Add(_tSidebar1)
 //line Sidebar.gx:13:5
 	for _, g := range p.Nav.Groups {
 //line Sidebar.gx:13:37
-		_b2.Add(gx.Text("\n      "))
+		_b2.Add(_tSidebar2.With(
 //line Sidebar.gx:14:7
-		_b2.Add(SidebarGroup(SidebarGroupProps{Group: g, Path: p.Path}))
-//line Sidebar.gx:14:47
-		_b2.Add(gx.Text("\n    "))
+			SidebarGroup(SidebarGroupProps{Group: g, Path: p.Path}),
+		))
 	}
 //line Sidebar.gx:15:6
-	_b2.Add(gx.Text("\n  "))
-	_b1.Add(gx.El("nav", gx.Attrs{gx.Attr{Key: "class", Value: "sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-6 pr-4", Kind: gx.AttrText}, gx.Attr{Key: "aria-label", Value: "Docs", Kind: gx.AttrText}}, _b2.Node()))
-//line Sidebar.gx:16:9
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("aside", gx.Attrs{gx.Attr{Key: "class", Value: "gx-sidebar w-64 shrink-0 border-r border-border", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-sidebar", Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true)}, _b1.Node()))
-//line Sidebar.gx:17:9
-	_b.Add(gx.Text("\n"))
+	_b2.Add(_tSidebar0)
+//line Sidebar.gx:12:3
+	_b1.Add(_tSidebar3.With(
+//line Sidebar.gx:12:3
+		_b2.Node(),
+	))
+//line Sidebar.gx:11:1
+	_b.Add(_tSidebar4.With(
+//line Sidebar.gx:11:1
+		gx.Open("aside", gx.Attrs{gx.Attr{Key: "class", Value: "gx-sidebar w-64 shrink-0 border-r border-border", Kind: gx.AttrText}, gx.Attr{Key: "id", Value: "gx-sidebar", Kind: gx.AttrText}, gx.Bool("data-gx-sidebar", true)}),
+//line Sidebar.gx:11:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tSidebar0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebar1 = gx.NewTemplate(
+	[]string{"\n    "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tSidebar2 = gx.NewTemplate(
+	[]string{"\n      ", "\n    "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tSidebar3 = gx.NewTemplate(
+	[]string{"<nav class=\"sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-6 pr-4\" aria-label=\"Docs\">", "</nav>\n"},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "nav"}, {El: -1, Slot: -1}},
+)
+
+var _tSidebar4 = gx.NewTemplate(
+	[]string{"<aside", ">", "</aside>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

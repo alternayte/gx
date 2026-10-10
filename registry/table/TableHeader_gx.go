@@ -21,10 +21,18 @@ func TableHeader(p TableHeaderProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TableHeader.gx:12:1
-	_b.Add(gx.El("thead", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr]:border-b", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-header", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableHeader.gx:12:108
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTableHeader0.With(
+//line TableHeader.gx:12:1
+		gx.Open("thead", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("[&_tr]:border-b", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-header", Kind: gx.AttrText}}, p.Attrs)),
+//line TableHeader.gx:12:88
+		p.Children,
+	)
 }
+
+var _tTableHeader0 = gx.NewTemplate(
+	[]string{"<thead", ">", "</thead>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -21,10 +21,18 @@ func PaginationContent(p PaginationContentProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PaginationContent.gx:12:1
-	_b.Add(gx.El("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-row items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-content", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line PaginationContent.gx:12:125
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPaginationContent0.With(
+//line PaginationContent.gx:12:1
+		gx.Open("ul", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex flex-row items-center gap-1", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "pagination-content", Kind: gx.AttrText}}, p.Attrs)),
+//line PaginationContent.gx:12:108
+		p.Children,
+	)
 }
+
+var _tPaginationContent0 = gx.NewTemplate(
+	[]string{"<ul", ">", "</ul>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -21,10 +21,18 @@ func NavigationMenuItem(p NavigationMenuItemProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line NavigationMenuItem.gx:12:1
-	_b.Add(gx.El("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/navigation-menu-item relative", p.Class), Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line NavigationMenuItem.gx:12:97
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tNavigationMenuItem0.With(
+//line NavigationMenuItem.gx:12:1
+		gx.Open("li", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("group/navigation-menu-item relative", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line NavigationMenuItem.gx:12:80
+		p.Children,
+	)
 }
+
+var _tNavigationMenuItem0 = gx.NewTemplate(
+	[]string{"<li", ">", "</li>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

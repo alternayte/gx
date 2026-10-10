@@ -21,10 +21,18 @@ func SidebarInset(p SidebarInsetProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line SidebarInset.gx:12:1
-	_b.Add(gx.El("main", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full flex-1 flex-col bg-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-inset", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line SidebarInset.gx:12:142
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tSidebarInset0.With(
+//line SidebarInset.gx:12:1
+		gx.Open("main", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("relative flex w-full flex-1 flex-col bg-background", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "sidebar-inset", Kind: gx.AttrText}}, p.Attrs)),
+//line SidebarInset.gx:12:123
+		p.Children,
+	)
 }
+
+var _tSidebarInset0 = gx.NewTemplate(
+	[]string{"<main", ">", "</main>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -20,10 +20,18 @@ func PaginationEllipsis(p PaginationEllipsisProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PaginationEllipsis.gx:12:1
-	_b.Add(gx.El("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex size-9 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination-ellipsis", Kind: gx.AttrText}}, p.Attrs), gx.Frag(gx.Text("\n  "), icons.Ellipsis(icons.EllipsisProps{Label: "", Class: "size-4"}), gx.Raw(gx.SafeHTML("\n  <span class=\"sr-only\">More pages</span>\n")))))
-//line PaginationEllipsis.gx:15:8
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPaginationEllipsis0.With(
+//line PaginationEllipsis.gx:12:1
+		gx.Open("span", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex size-9 items-center justify-center", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "pagination-ellipsis", Kind: gx.AttrText}}, p.Attrs)),
+//line PaginationEllipsis.gx:13:3
+		icons.Ellipsis(icons.EllipsisProps{Label: "", Class: "size-4"}),
+	)
 }
+
+var _tPaginationEllipsis0 = gx.NewTemplate(
+	[]string{"<span", ">\n  ", "\n  <span class=\"sr-only\">More pages</span>\n</span>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 50}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

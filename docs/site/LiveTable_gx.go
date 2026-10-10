@@ -17,16 +17,20 @@ func LiveTable(p LiveTableProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line LiveTable.gx:9:44
-	_b.Add(gx.Text("\n"))
-//line LiveTable.gx:10:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "gx-frame gx-frame-block resize-y overflow-hidden rounded-lg border border-border bg-background", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("iframe", gx.Attrs{gx.Attr{Key: "class", Value: "block size-full", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: tableDemoStart(p.Item).URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "title", Value: "Data table: live example", Kind: gx.AttrText}, gx.Attr{Key: "loading", Value: "lazy", Kind: gx.AttrText}}), gx.Text("\n"))))
-//line LiveTable.gx:12:7
-	_b.Add(gx.Text("\n"))
+	return _tLiveTable0.With(
+//line LiveTable.gx:11:3
+		gx.Open("iframe", gx.Attrs{gx.Attr{Key: "class", Value: "block size-full", Kind: gx.AttrText}, gx.Attr{Key: "src", Value: tableDemoStart(p.Item).URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "title", Value: "Data table: live example", Kind: gx.AttrText}, gx.Attr{Key: "loading", Value: "lazy", Kind: gx.AttrText}}),
 //line LiveTable.gx:13:1
-	_b.Add(gx.El("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-frame-link mt-2 text-right text-xs", Kind: gx.AttrText}, gx.Bool("data-pagefind-ignore", true)}, gx.Frag(gx.Text("\n  "), gx.El("a", gx.Attrs{gx.Attr{Key: "href", Value: tableDemoStart(p.Item).URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "target", Value: "_blank", Kind: gx.AttrText}, gx.Attr{Key: "rel", Value: "noopener", Kind: gx.AttrText}}, gx.Text("Open the preview in a new tab")), gx.Text("\n"))))
-//line LiveTable.gx:15:5
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "class", Value: "gx-frame-link mt-2 text-right text-xs", Kind: gx.AttrText}, gx.Bool("data-pagefind-ignore", true)}),
+//line LiveTable.gx:14:3
+		gx.Open("a", gx.Attrs{gx.Attr{Key: "href", Value: tableDemoStart(p.Item).URL(), Kind: gx.AttrURL, Active: "page"}, gx.Attr{Key: "target", Value: "_blank", Kind: gx.AttrText}, gx.Attr{Key: "rel", Value: "noopener", Kind: gx.AttrText}}),
+	)
 }
+
+var _tLiveTable0 = gx.NewTemplate(
+	[]string{"\n<div class=\"gx-frame gx-frame-block resize-y overflow-hidden rounded-lg border border-border bg-background\">\n  <iframe", "></iframe>\n</div>\n<p", ">\n  <a", ">Open the preview in a new tab</a>\n</p>\n"},
+	[]int{1, 0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 112, EndStatic: 1, End: 10}, {Slot: 1, Start: 18, EndStatic: 3, End: 39}, {Slot: 2, Start: 4, EndStatic: 3, End: 34}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}},
+)

@@ -21,10 +21,18 @@ func FieldTitle(p FieldTitleProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line FieldTitle.gx:12:1
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-label", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line FieldTitle.gx:12:194
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tFieldTitle0.With(
+//line FieldTitle.gx:12:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "field-label", Kind: gx.AttrText}}, p.Attrs)),
+//line FieldTitle.gx:12:176
+		p.Children,
+	)
 }
+
+var _tFieldTitle0 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

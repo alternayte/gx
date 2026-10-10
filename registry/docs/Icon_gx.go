@@ -22,10 +22,16 @@ func Icon(p IconProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Icon.gx:13:1
-	_b.Add(gx.Icon(string(p.Body), gx.IconProps{Label: p.Label, Class: gx.Cx("inline-block size-5", p.Class)}))
-//line Icon.gx:13:102
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tIcon0.With(
+//line Icon.gx:13:1
+		gx.Icon(string(p.Body), gx.IconProps{Label: p.Label, Class: gx.Cx("inline-block size-5", p.Class)}),
+	)
 }
+
+var _tIcon0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

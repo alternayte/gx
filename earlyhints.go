@@ -29,12 +29,12 @@ func (a *App) pageLinks(needs *runtimeNeeds) []string {
 			if t.name != "script" {
 				return
 			}
-			src := attrValue(t, "src")
+			src := attrValue(t.attrs, "src")
 			if !strings.HasPrefix(src, "/") || strings.HasPrefix(src, "//") {
 				// An inline script, or a file of a different origin.
 				return
 			}
-			if attrValue(t, "type") == "module" {
+			if attrValue(t.attrs, "type") == "module" {
 				links = append(links, "<"+src+">; rel=modulepreload")
 			} else {
 				links = append(links, "<"+src+">; rel=preload; as=script")

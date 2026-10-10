@@ -38,39 +38,73 @@ func RadioGroupItem(p RadioGroupItemProps) gx.Node {
 //line RadioGroupItem.gx:26:1
 	var _b1 gx.Builder
 //line RadioGroupItem.gx:26:116
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tRadioGroupItem0.With(
 //line RadioGroupItem.gx:27:3
-	_b1.Add(gx.El("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "radio", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}))
-//line RadioGroupItem.gx:27:145
-	_b1.Add(gx.Text("\n  "))
-//line RadioGroupItem.gx:28:3
-	_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "relative aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 motion-reduce:transition-none [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100", Kind: gx.AttrText}, gx.Attr{Key: "aria-hidden", Value: "true", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n    "), icons.Circle(icons.CircleProps{Label: "", Class: "absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 [&>circle]:fill-primary"}), gx.Text("\n  "))))
-//line RadioGroupItem.gx:30:10
-	_b1.Add(gx.Text("\n  "))
+		gx.Open("input", gx.Attrs{gx.Attr{Key: "class", Value: "peer sr-only", Kind: gx.AttrText}, gx.Attr{Key: "type", Value: "radio", Kind: gx.AttrText}, gx.Attr{Key: "name", Value: p.Name, Kind: gx.AttrText}, gx.Attr{Key: "value", Value: p.Value, Kind: gx.AttrText}, gx.Bool("checked", p.Checked), gx.Bool("disabled", p.Disabled), gx.Attr{Key: "aria-invalid", Value: p.invalid(), Kind: gx.AttrText}}),
+//line RadioGroupItem.gx:29:5
+		icons.Circle(icons.CircleProps{Label: "", Class: "absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 [&>circle]:fill-primary"}),
+	))
 //line RadioGroupItem.gx:31:3
 	if p.Label != "" {
 //line RadioGroupItem.gx:31:21
-		_b1.Add(gx.Text("\n    "))
-//line RadioGroupItem.gx:32:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "peer-disabled:cursor-not-allowed peer-disabled:opacity-50", Kind: gx.AttrText}}, gx.Text(p.Label)))
-//line RadioGroupItem.gx:32:93
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tRadioGroupItem1.With(
+//line RadioGroupItem.gx:32:77
+			gx.Text(p.Label),
+		))
 	}
 //line RadioGroupItem.gx:33:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tRadioGroupItem2)
 //line RadioGroupItem.gx:34:3
 	if p.Children != nil {
 //line RadioGroupItem.gx:34:25
-		_b1.Add(gx.Text("\n    "))
-//line RadioGroupItem.gx:35:5
-		_b1.Add(gx.El("span", gx.Attrs{gx.Attr{Key: "class", Value: "peer-disabled:cursor-not-allowed peer-disabled:opacity-50", Kind: gx.AttrText}}, p.Children))
-//line RadioGroupItem.gx:35:96
-		_b1.Add(gx.Text("\n  "))
+		_b1.Add(_tRadioGroupItem1.With(
+//line RadioGroupItem.gx:35:77
+			p.Children,
+		))
 	}
 //line RadioGroupItem.gx:36:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class), Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line RadioGroupItem.gx:37:9
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tRadioGroupItem3)
+//line RadioGroupItem.gx:26:1
+	_b.Add(_tRadioGroupItem4.With(
+//line RadioGroupItem.gx:26:1
+		gx.Open("label", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("flex items-center gap-2 text-sm leading-none font-medium select-none", p.Class), Kind: gx.AttrText}}, p.Attrs)),
+//line RadioGroupItem.gx:26:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tRadioGroupItem0 = gx.NewTemplate(
+	[]string{"\n  <input", ">\n  <span class=\"relative aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:ring-destructive/40 motion-reduce:transition-none [&amp;&gt;svg]:opacity-0 peer-checked:[&amp;&gt;svg]:opacity-100\" aria-hidden=\"true\">\n    ", "\n  </span>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 1, End: 1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tRadioGroupItem1 = gx.NewTemplate(
+	[]string{"\n    <span class=\"peer-disabled:cursor-not-allowed peer-disabled:opacity-50\">", "</span>\n  "},
+	[]int{1},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+)
+
+var _tRadioGroupItem2 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tRadioGroupItem3 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tRadioGroupItem4 = gx.NewTemplate(
+	[]string{"<label", ">", "</label>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

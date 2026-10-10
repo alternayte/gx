@@ -31,42 +31,82 @@ func Alert(p AlertProps) gx.Node {
 //line Alert.gx:18:1
 	var _b1 gx.Builder
 //line Alert.gx:18:68
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAlert0)
 //line Alert.gx:19:3
 	if p.Icon != nil {
 //line Alert.gx:19:21
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tAlert1.With(
 //line Alert.gx:20:5
-		_b1.Add(p.Icon)
-//line Alert.gx:20:13
-		_b1.Add(gx.Text("\n  "))
+			p.Icon,
+		))
 	}
 //line Alert.gx:21:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAlert0)
 //line Alert.gx:22:3
 	if p.Title != "" {
 //line Alert.gx:22:21
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tAlert2.With(
 //line Alert.gx:23:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-title", Kind: gx.AttrText}}, gx.Text(p.Title)))
-//line Alert.gx:23:117
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-title", Kind: gx.AttrText}}),
+//line Alert.gx:23:102
+			gx.Text(p.Title),
+		))
 	}
 //line Alert.gx:24:4
-	_b1.Add(gx.Text("\n  "))
+	_b1.Add(_tAlert0)
 //line Alert.gx:25:3
 	if p.Children != nil {
 //line Alert.gx:25:25
-		_b1.Add(gx.Text("\n    "))
+		_b1.Add(_tAlert2.With(
 //line Alert.gx:26:5
-		_b1.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-description", Kind: gx.AttrText}}, p.Children))
-//line Alert.gx:26:161
-		_b1.Add(gx.Text("\n  "))
+			gx.Open("div", gx.Attrs{gx.Attr{Key: "class", Value: "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed", Kind: gx.AttrText}, gx.Attr{Key: "data-slot", Value: "alert-description", Kind: gx.AttrText}}),
+//line Alert.gx:26:143
+			p.Children,
+		))
 	}
 //line Alert.gx:27:4
-	_b1.Add(gx.Text("\n"))
-	_b.Add(gx.El("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs), _b1.Node()))
-//line Alert.gx:28:7
-	_b.Add(gx.Text("\n"))
+	_b1.Add(_tAlert3)
+//line Alert.gx:18:1
+	_b.Add(_tAlert4.With(
+//line Alert.gx:18:1
+		gx.Open("div", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: p.class(), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "alert", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, p.Attrs)),
+//line Alert.gx:18:1
+		_b1.Node(),
+	))
 	return _b.Node()
 }
+
+var _tAlert0 = gx.NewTemplate(
+	[]string{"\n  "},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAlert1 = gx.NewTemplate(
+	[]string{"\n    ", "\n  "},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)
+
+var _tAlert2 = gx.NewTemplate(
+	[]string{"\n    <div", ">", "</div>\n  "},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
+
+var _tAlert3 = gx.NewTemplate(
+	[]string{"\n"},
+	[]int{},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+).With()
+
+var _tAlert4 = gx.NewTemplate(
+	[]string{"<div", ">", "</div>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)

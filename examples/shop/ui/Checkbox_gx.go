@@ -17,10 +17,22 @@ func Checkbox(p CheckboxProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line Checkbox.gx:8:1
-	_b.Add(gx.El("div", gx.Attrs{gx.Attr{Key: "class", Value: "field", Kind: gx.AttrText}}, gx.Frag(gx.Text("\n  "), gx.El("label", nil, gx.Frag(gx.Text("\n    "), gx.El("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}})), gx.Text("\n    "), p.Children, gx.Text("\n  "))), gx.Text("\n  "), gx.El("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}, gx.Text(p.Field.FieldError())), gx.Text("\n"))))
-//line Checkbox.gx:14:7
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tCheckbox0.With(
+//line Checkbox.gx:10:5
+		gx.Open("input", gx.JoinAttrs(p.Field.Attrs(), gx.Attrs{gx.Attr{Key: "type", Value: "checkbox", Kind: gx.AttrText}})),
+//line Checkbox.gx:11:5
+		p.Children,
+//line Checkbox.gx:13:3
+		gx.Open("p", gx.Attrs{gx.Attr{Key: "id", Value: p.Field.FieldID() + "-error", Kind: gx.AttrText}, gx.Attr{Key: "role", Value: "alert", Kind: gx.AttrText}}),
+//line Checkbox.gx:13:53
+		gx.Text(p.Field.FieldError()),
+	)
 }
+
+var _tCheckbox0 = gx.NewTemplate(
+	[]string{"<div class=\"field\">\n  <label>\n    <input", ">\n    ", "\n  </label>\n  <p", ">", "</p>\n</div>\n"},
+	[]int{2, 2, 1, 2},
+	[]gx.TemplateEl{{Slot: 0, Start: 34, EndStatic: 1, End: 1}, {Slot: 2, Start: 14, EndStatic: 4, End: 4}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+)

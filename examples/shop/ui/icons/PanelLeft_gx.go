@@ -20,10 +20,16 @@ func PanelLeft(p PanelLeftProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line PanelLeft.gx:11:1
-	_b.Add(gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\"/><path d=\"M9 3v18\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}))
-//line PanelLeft.gx:11:255
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tPanelLeft0.With(
+//line PanelLeft.gx:11:1
+		gx.Icon("<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\"/><path d=\"M9 3v18\"/></g>", gx.IconProps{Label: p.Label, Class: p.Class}),
+	)
 }
+
+var _tPanelLeft0 = gx.NewTemplate(
+	[]string{"", "\n"},
+	[]int{0},
+	nil,
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+)

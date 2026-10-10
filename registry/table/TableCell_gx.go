@@ -21,10 +21,18 @@ func TableCell(p TableCellProps) gx.Node {
 			return _n
 		}
 	}
-	var _b gx.Builder
 //line TableCell.gx:12:1
-	_b.Add(gx.El("td", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("p-2 align-middle whitespace-nowrap [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-cell", Kind: gx.AttrText}}, p.Attrs), p.Children))
-//line TableCell.gx:12:305
-	_b.Add(gx.Text("\n"))
-	return _b.Node()
+	return _tTableCell0.With(
+//line TableCell.gx:12:1
+		gx.Open("td", gx.JoinAttrs(gx.Attrs{gx.Attr{Key: "class", Value: gx.Cx("p-2 align-middle whitespace-nowrap [&:has(:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox])))]:pr-0 [&>:is([role=checkbox],input[type=checkbox],label:has(>input[type=checkbox]))]:translate-y-[2px]", p.Class), Kind: gx.AttrText}}, gx.Attrs{gx.Attr{Key: "data-slot", Value: "table-cell", Kind: gx.AttrText}}, p.Attrs)),
+//line TableCell.gx:12:288
+		p.Children,
+	)
 }
+
+var _tTableCell0 = gx.NewTemplate(
+	[]string{"<td", ">", "</td>\n"},
+	[]int{0, 1},
+	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+)
