@@ -115,8 +115,10 @@ func DevSwapped() int {
 
 // DevRender runs the interpreted form of a generated function, when a swap
 // installed one. A generated component or fragment function calls it first
-// in a dev build.
+// in a dev build. The call also keeps the props of a component for the
+// capture of a fixture (REQ-AI-12).
 func DevRender(pkgPath, name string, args ...any) (Node, bool) {
+	devKeepProps(pkgPath, name, args)
 	devState.mu.RLock()
 	fn := devState.funcs[pkgPath][name]
 	devState.mu.RUnlock()

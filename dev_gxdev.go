@@ -120,6 +120,7 @@ func (a *App) devRoutes() {
 	}))
 	a.mux.Handle("GET /_gx/export", http.HandlerFunc(a.serveExportList))
 	a.fuzzRoutes()
+	a.propsRoutes()
 }
 
 // devReloadHeader marks the request that the dev client sends after a

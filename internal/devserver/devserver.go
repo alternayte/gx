@@ -184,6 +184,7 @@ func (s *server) run(ctx context.Context) error {
 		_, _ = w.Write(devClientJS)
 	})
 	mux.HandleFunc("GET /pagefind/", s.serveSearch)
+	mux.HandleFunc("POST /_gx/dev/capture", s.serveCapture)
 	// The dev host pages of the widgets (REQ-ISL-23).
 	mux.HandleFunc("GET /_gx/widgets", s.serveWidgets(proxy))
 	mux.HandleFunc("GET /_gx/widgets/{name}", s.serveWidgets(proxy))

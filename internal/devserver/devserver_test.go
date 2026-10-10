@@ -346,12 +346,16 @@ var (
 		"github.com/alternayte/gx.DevSwap",
 		"github.com/alternayte/gx.devSwapAllowed",
 		"github.com/alternayte/gx.watchParent",
+		"github.com/alternayte/gx.devKeepProps",
+		"github.com/alternayte/gx/internal/propgen.",
 	}
 	devStrings = []string{
 		"/_gx/dev/swap",
 		"/_gx/dev/info",
 		"/_gx/gallery",
 		"/_gx/export",
+		"/_gx/fuzz",
+		"/_gx/dev/props",
 	}
 )
 
@@ -472,6 +476,8 @@ func TestSI_08_ProdBinary(t *testing.T) {
 		{http.MethodGet, "/_gx/dev/info"},
 		{http.MethodGet, "/_gx/gallery"},
 		{http.MethodGet, "/_gx/export"},
+		{http.MethodGet, "/_gx/fuzz?seed=1&n=1"},
+		{http.MethodGet, "/_gx/dev/props"},
 	} {
 		if got := status(route.method, prodApp+route.path); got != http.StatusNotFound {
 			t.Errorf("%s %s of the production build = %d, want 404", route.method, route.path, got)
@@ -479,5 +485,37 @@ func TestSI_08_ProdBinary(t *testing.T) {
 		if got := status(route.method, devApp+route.path); got == http.StatusNotFound || got == http.StatusMethodNotAllowed {
 			t.Errorf("%s %s of the dev build = %d, want the route", route.method, route.path, got)
 		}
+	}
+}
+
+// TestREQ_AI_12_ProdBuildKeepsNoProps covers the SI-08 part of REQ-AI-12: a
+// production build has no route of the capture and keeps no props. The
+// function that keeps the props and the package that writes them as Go
+// source are not in the binary; the dev build has both.
+func TestREQ_AI_12_ProdBuildKeepsNoProps(t *testing.T) {
+	parts := []string{"github.com/alternayte/gx.devKeepProps", "github.com/alternayte/gx.devProps", "github.com/alternayte/gx/internal/propgen."}
+	scan := func(tags string) (symbols []string, route bool) {
+		t.Helper()
+		bin := buildShop(t, tags)
+		out, err := exec.Command("go", "tool", "nm", bin).Output()
+		if err != nil {
+			t.Fatalf("go tool nm: %v", err)
+		}
+		for _, part := range parts {
+			if bytes.Contains(out, []byte(part)) {
+				symbols = append(symbols, part)
+			}
+		}
+		data, err := os.ReadFile(bin)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return symbols, bytes.Contains(data, []byte("/_gx/dev/props"))
+	}
+	if symbols, route := scan(""); len(symbols) != 0 || route {
+		t.Errorf("the production binary holds %q, route of the capture: %v", symbols, route)
+	}
+	if symbols, route := scan("gxdev"); len(symbols) != len(parts) || !route {
+		t.Errorf("the scan of the dev binary finds %q and route %v, want each of %q and the route", symbols, route, parts)
 	}
 }

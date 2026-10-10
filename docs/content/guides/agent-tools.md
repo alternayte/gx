@@ -53,6 +53,29 @@ var CounterFixtures = gx.Fixtures[CounterProps]{
 
 The gallery is in a dev build only. A production binary has no `/_gx/gallery` route.
 
+### Save a fixture from a page
+
+Under `gx dev`, each page has a small `fixture` button in the bottom left corner. The button saves the props of a component of the page as a fixture.
+
+1. Open the page that shows the component.
+2. Click `fixture`. A dialog lists the components that the page renders.
+3. Select a component and type a name. The name has letters and digits and starts with a letter.
+4. Click `Save`.
+
+The dev server writes the entry into `<Name>.fixtures.go` of the component and builds the app again. The gallery then shows the fixture with the same HTML as the page. When the component has no fixtures file, the dev server makes one.
+
+The app keeps the props of the last render of each component. When a page shows a component two times, the fixture has the props of the last one.
+
+A slot value (`gx.Node`) becomes a `gx.Raw` call with the HTML that the slot rendered. A time becomes the same instant in UTC.
+
+Go source cannot hold some values: a function, a channel, and a field of a different package that is not exported. For a prop with such a value, the dialog shows the name of the prop and the dev server writes nothing.
+
+A production build keeps no props and has no route for this.
+
+### Find defects with random props
+
+`gx fuzz` renders each component with random props and prints each prop set that fails as a fixture. See the [CLI reference](/reference/cli/).
+
 ## The dev MCP server
 
 ```sh
