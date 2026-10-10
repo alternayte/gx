@@ -58,7 +58,7 @@ func loadWidgetSet(ctx context.Context, cmd, dir, server, base string) *widgetSe
 	if err != nil {
 		return fail("%v", err)
 	}
-	if diags := compiler.CheckApp(root, compiler.CheckOptions{}); len(diags) > 0 {
+	if diags := compiler.CheckApp(root, compiler.CheckOptions{}); compiler.Failed(diags) {
 		printDiags(diags)
 		return nil
 	}

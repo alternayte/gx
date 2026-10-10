@@ -342,34 +342,43 @@ func runCheck(args []string) int {
 	if *asJSON {
 		return printJSON(diags)
 	}
-	if len(diags) == 0 {
+	// A hint is printed and does not fail the check (REQ-ACT-17).
+	printDiags(diags)
+	if !compiler.Failed(diags) {
 		return 0
 	}
-	printDiags(diags)
 	return 1
 }
 
 type jsonDiagnostic struct {
-	Code    string `json:"code"`
-	File    string `json:"file"`
-	Line    int    `json:"line"`
-	Column  int    `json:"column"`
-	Message string `json:"message"`
-	Fix     string `json:"fix,omitempty"`
-	Doc     string `json:"doc"`
+	// Severity is "hint" for a diagnostic that does not fail the check
+	// (REQ-ACT-17). An error has no severity field.
+	Severity string `json:"severity,omitempty"`
+	Code     string `json:"code"`
+	File     string `json:"file"`
+	Line     int    `json:"line"`
+	Column   int    `json:"column"`
+	Message  string `json:"message"`
+	Fix      string `json:"fix,omitempty"`
+	Doc      string `json:"doc"`
 }
 
 func printJSON(diags []compiler.Diagnostic) int {
 	out := make([]jsonDiagnostic, 0, len(diags))
 	for _, d := range diags {
+		severity := ""
+		if d.Hint {
+			severity = "hint"
+		}
 		out = append(out, jsonDiagnostic{
-			Code:    d.Code,
-			File:    d.File,
-			Line:    d.Line,
-			Column:  d.Col,
-			Message: d.Msg,
-			Fix:     d.Fix,
-			Doc:     d.Doc(),
+			Severity: severity,
+			Code:     d.Code,
+			File:     d.File,
+			Line:     d.Line,
+			Column:   d.Col,
+			Message:  d.Msg,
+			Fix:      d.Fix,
+			Doc:      d.Doc(),
 		})
 	}
 	data, err := json.MarshalIndent(out, "", "  ")
@@ -378,7 +387,7 @@ func printJSON(diags []compiler.Diagnostic) int {
 		return 1
 	}
 	fmt.Println(string(data))
-	if len(diags) > 0 {
+	if compiler.Failed(diags) {
 		return 1
 	}
 	return 0

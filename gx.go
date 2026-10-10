@@ -291,7 +291,7 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error {
 	}
 	// The app writes the document shell around this fragment, and the
 	// gx.Head output moves into its head.
-	st := &renderState{request: r, requestURI: activeURI(r), headWritten: true, nonce: needs.nonce, keepSignals: devKeepSignals(r)}
+	st := &renderState{request: r, requestURI: activeURI(r), headWritten: true, nonce: needs.nonce, keepSignals: devKeepSignals(r), hashes: true}
 	collectHead(n, st, 1)
 	b := getBuffer()
 	defer putBuffer(b)
@@ -333,12 +333,18 @@ func writeRequest(w io.Writer, r *http.Request, n Node) error {
 
 // renderRequest renders n with the request in scope.
 func renderRequest(b *bytes.Buffer, r *http.Request, n Node) {
-	st := &renderState{request: r, nonce: Nonce(r), keepSignals: devKeepSignals(r)}
+	st := newRenderState(r)
+	collectHead(n, st, 1)
+	renderNode(b, n, st)
+}
+
+// newRenderState returns the state of a render with the request in scope.
+func newRenderState(r *http.Request) *renderState {
+	st := &renderState{request: r, nonce: Nonce(r), keepSignals: devKeepSignals(r), hashes: r != nil}
 	if r != nil && r.URL != nil {
 		st.requestURI = activeURI(r)
 	}
-	collectHead(n, st, 1)
-	renderNode(b, n, st)
+	return st
 }
 
 // String returns the HTML of n with no request in scope.

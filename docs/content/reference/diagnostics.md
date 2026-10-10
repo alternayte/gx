@@ -64,6 +64,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX4009](/errors/GX4009/) | Action method cannot be invoked from the client. |
 | [GX4010](/errors/GX4010/) | Unknown event modifier or special event. |
 | [GX4011](/errors/GX4011/) | Tool has no description, or an input with no JSON form. |
+| [GX4012](/errors/GX4012/) | Hint: `c.Update` takes a component with no fragment. |
 
 ## Styles and transitions
 

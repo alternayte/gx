@@ -76,6 +76,7 @@ func Fixtures() []gx.Fixture {
 		{Component: "About", Package: "github.com/alternayte/gx/examples/shop", Missing: true},
 		{Component: "Home", Package: "github.com/alternayte/gx/examples/shop", Missing: true},
 		{Component: "Shell", Package: "github.com/alternayte/gx/examples/shop", Missing: true},
+		{Component: "Basket", Package: "github.com/alternayte/gx/examples/shop/basket", Missing: true},
 		{Component: "Cart", Package: "github.com/alternayte/gx/examples/shop/cart", Name: "Default", Node: func() gx.Node { return cart.Cart(cart.Fixtures["Default"]) }},
 		{Component: "Cart", Package: "github.com/alternayte/gx/examples/shop/cart", Name: "Empty", Node: func() gx.Node { return cart.Cart(cart.Fixtures["Empty"]) }},
 		{Component: "Toasts", Package: "github.com/alternayte/gx/examples/shop/cart", Name: "Default", Node: func() gx.Node { return cart.Toasts(cart.ToastsFixtures["Default"]) }},

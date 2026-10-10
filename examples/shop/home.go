@@ -3,6 +3,7 @@ package shop
 
 import (
 	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/examples/shop/basket"
 	"github.com/alternayte/gx/examples/shop/cart"
 	"github.com/alternayte/gx/examples/shop/dashboard"
 	"github.com/alternayte/gx/examples/shop/datatable"
@@ -28,4 +29,4 @@ var AboutPage = gx.Page(
 	About)
 
 // Routes collects every page and action of the shop.
-var Routes = append(append(append(append(gx.Collect(HomePage, AboutPage), cart.Routes...), signup.Routes...), datatable.Routes...), dashboard.Routes...)
+var Routes = append(append(append(append(append(gx.Collect(HomePage, AboutPage), cart.Routes...), signup.Routes...), datatable.Routes...), dashboard.Routes...), basket.Routes...)

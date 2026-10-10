@@ -63,6 +63,13 @@ type renderState struct {
 	// is then data and not the text of the adapter (SI-15).
 	widget    bool
 	widgetSet bool
+	// hashes is true for a render with a request: each fragment element
+	// gets the hash of its content (REQ-ACT-15).
+	hashes bool
+	// frags holds the fragments whose content the render writes now.
+	frags []*openFragmentState
+	// record, when set, gets each fragment of the render (c.Update).
+	record *[]fragmentRecord
 }
 
 // HeadOf returns the merged head of a node tree (REQ-RTE-11, REQ-RTE-12).

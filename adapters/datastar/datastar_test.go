@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -345,5 +346,55 @@ func TestREQ_ISL_17_DatastarEvent(t *testing.T) {
 	body = serve(t, h, httptest.NewRequest("POST", "/act", nil)).Body.String()
 	if !strings.Contains(body, `data-init="document.dispatchEvent(new CustomEvent(`) {
 		t.Errorf("the answer with no scope:\n%s", body)
+	}
+}
+
+// updatePair is what the compiler writes for two fragments:
+//
+//	<p #a>{a}</p><p #b>{b}</p>
+var updatePair = gx.NewTemplate(
+	[]string{"<p", ">", "</p><p", ">", "</p>"},
+	[]int{0, 1, 0, 1},
+	[]gx.TemplateEl{
+		{Slot: 0, Start: 0, EndStatic: 2, End: len("</p>")},
+		{Slot: 2, Start: len("</p>"), EndStatic: 4, End: len("</p>")},
+	},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: 1, Slot: -1}},
+)
+
+func updateNode(a, b string) gx.Node {
+	return updatePair.With(
+		gx.OpenFragment("p", gx.Attrs{{Key: "id", Value: "pair-a"}}), gx.Text(a),
+		gx.OpenFragment("p", gx.Attrs{{Key: "id", Value: "pair-b"}}), gx.Text(b),
+	)
+}
+
+// TestREQ_ACT_16_UpdateContract checks c.Update on the wire of this adapter:
+// the answer holds the fragment whose hash differs from the hash of the
+// request, and a request with no hashes gets each fragment (REQ-ACT-16).
+func TestREQ_ACT_16_UpdateContract(t *testing.T) {
+	page := gx.StringRequest(httptest.NewRequest("GET", "/page", nil), updateNode("one", "two"))
+	var have []string
+	for _, m := range regexp.MustCompile(`id="([^"]+)" data-gx-h="([0-9a-f]{8})"`).FindAllStringSubmatch(page, -1) {
+		have = append(have, m[1]+"="+m[2])
+	}
+	if len(have) != 2 {
+		t.Fatalf("the fixture is wrong: the page has the hashes %v:\n%s", have, page)
+	}
+	h := gx.Action(func(c *gx.Ctx, in actRoute) error { return c.Update(updateNode("one", "three")) })
+
+	req := httptest.NewRequest("POST", "/act", nil)
+	req.Header.Set("Gx-Fragments", strings.Join(have, ","))
+	body := serve(t, h, req).Body.String()
+	if !strings.Contains(body, `id="pair-b"`) || !strings.Contains(body, "three") {
+		t.Errorf("the answer lacks the changed fragment:\n%s", body)
+	}
+	if strings.Contains(body, `id="pair-a"`) {
+		t.Errorf("the answer holds a fragment that did not change:\n%s", body)
+	}
+
+	body = serve(t, h, httptest.NewRequest("POST", "/act", nil)).Body.String()
+	if !strings.Contains(body, `id="pair-a"`) || !strings.Contains(body, `id="pair-b"`) {
+		t.Errorf("a request with no hashes did not get each fragment:\n%s", body)
 	}
 }

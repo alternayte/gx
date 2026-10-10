@@ -205,6 +205,7 @@ func Packages() []gx.DevPackage {
 				"On":                    reflect.ValueOf(gx.On),
 				"OneOf":                 reflect.ValueOf(gx.OneOf),
 				"Open":                  reflect.ValueOf(gx.Open),
+				"OpenFragment":          reflect.ValueOf(gx.OpenFragment),
 				"Params":                reflect.ValueOf(gx.Params),
 				"ParseBool":             reflect.ValueOf(gx.ParseBool),
 				"ParseOn":               reflect.ValueOf(gx.ParseOn),

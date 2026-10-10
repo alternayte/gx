@@ -63,6 +63,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX4009 | action method cannot be invoked from the client",
 		"GX4010 | unknown event modifier or special event",
 		"GX4011 | tool has no description or an input with no JSON form",
+		"GX4012 | c.Update takes a component with no fragment",
 		"GX5001 | gx.Enum misses a constant of its type",
 		"GX5002 | duplicate view-transition-name in one template",
 		"GX5003 | class string is built at runtime",

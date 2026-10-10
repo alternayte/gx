@@ -1,0 +1,24 @@
+package basket
+
+import "github.com/alternayte/gx/examples/shop/basket/route"
+
+props {
+  Lines []Line
+}
+
+<gx.Head title="Gx shop basket" />
+<section class="my-4 rounded-xl border border-border bg-card p-4 text-card-foreground">
+  <h1 class="text-2xl font-semibold">Basket</h1>
+  <ul #lines class="my-2">
+    for _, l := range p.Lines {
+      key := l.SKU
+      <li #line(key string, l Line) key={key} class="flex items-center gap-2 py-1">
+        <span>{l.Name}</span>
+        <b>{l.Qty}</b>
+        <button class="rounded-md border border-border px-2 text-sm" on:click={route.Bump{SKU: l.SKU}}>Add one</button>
+      </li>
+    }
+  </ul>
+  <p>Items: <span #count>{count(p.Lines)}</span></p>
+  <button class="rounded-md border border-border px-3 py-1.5 text-sm" on:click={route.Reset{}}>Reset</button>
+</section>

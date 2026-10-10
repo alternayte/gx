@@ -24,6 +24,9 @@ type Template struct {
 	// roots holds the top-level parts of the template, for a patch
 	// (REQ-ACT-04).
 	roots []TemplateRoot
+	// elOf holds, for each dynamic value, the index in els of the
+	// element whose open tag it is, or -1.
+	elOf []int
 }
 
 // TemplateEl is one element of a template whose attributes are a dynamic
@@ -49,7 +52,17 @@ func NewTemplate(static []string, depth []int, els []TemplateEl, roots []Templat
 	if len(static) != len(depth)+1 {
 		panic("gx: a template has one static string more than it has dynamic values")
 	}
-	return &Template{static: static, depth: depth, els: els, roots: roots}
+	t := &Template{static: static, depth: depth, els: els, roots: roots}
+	if len(els) > 0 {
+		t.elOf = make([]int, len(depth))
+		for i := range t.elOf {
+			t.elOf[i] = -1
+		}
+		for i, el := range els {
+			t.elOf[el.Slot] = i
+		}
+	}
+	return t
 }
 
 // With returns the template value of one render: the template and its
@@ -71,6 +84,13 @@ func (t *Template) With(dyn ...Node) Node {
 // string before it ends with the name of the element.
 func Open(name string, attrs Attrs) Node { return &openNode{name: name, attrs: attrs} }
 
+// OpenFragment returns the attributes of a fragment element as a dynamic
+// value. A render with a request in scope gives the element a hash of its
+// content (REQ-ACT-15).
+func OpenFragment(name string, attrs Attrs) Node {
+	return &openNode{name: name, attrs: attrs, frag: true}
+}
+
 // tmplNode is a template value. A value with few dynamic values holds them
 // in itself, so it is one allocation.
 type tmplNode struct {
@@ -84,6 +104,8 @@ type tmplNode struct {
 type openNode struct {
 	name  string
 	attrs Attrs
+	// frag is true for the element of a fragment.
+	frag bool
 }
 
 // tmplElNode is one element of a template value: the target of a patch
@@ -106,12 +128,56 @@ func (n *tmplNode) dyn() []Node {
 }
 
 func (n *tmplNode) render(b *bytes.Buffer, st *renderState) {
-	dyn := n.dyn()
-	for i, s := range n.t.static {
-		b.WriteString(s)
-		if i < len(dyn) {
-			renderNode(b, dyn[i], st)
+	last := len(n.t.static) - 1
+	n.renderRange(b, st, 0, 0, last, len(n.t.static[last]))
+}
+
+// renderRange writes the template value from the byte start of the static
+// string first to the byte end of the static string last. A fragment
+// element gets its hash when the render has a request (REQ-ACT-15).
+func (n *tmplNode) renderRange(b *bytes.Buffer, st *renderState, first, start, last, end int) {
+	t, dyn := n.t, n.dyn()
+	hashes := st != nil && st.hashes
+	opened := 0
+	for i := first; i <= last; i++ {
+		s := t.static[i]
+		from, to := 0, len(s)
+		if i == first {
+			from = start
 		}
+		if i == last {
+			to = end
+		}
+		// A fragment that ends in this string gets its hash at the
+		// byte of its end. The inner fragment ends first.
+		for opened > 0 {
+			f := st.frags[len(st.frags)-1]
+			if f.el.EndStatic != i || f.el.End > to {
+				break
+			}
+			b.WriteString(s[from:f.el.End])
+			from = f.el.End
+			st.closeFragment(b)
+			opened--
+		}
+		b.WriteString(s[from:to])
+		if i == last {
+			break
+		}
+		if o, ok := dyn[i].(*openNode); ok && o.frag && hashes && t.elOf != nil && t.elOf[i] >= 0 {
+			el := t.els[t.elOf[i]]
+			// The element starts in the static string before its
+			// open tag, which the buffer holds now.
+			begin := b.Len() - (len(s) - el.Start)
+			if i == first && el.Start < start {
+				begin = b.Len()
+			}
+			writeAttrs(b, o.name, o.attrs, st)
+			st.openFragment(b, begin, el, attrValue(o.attrs, "id"), &tmplElNode{n: n, el: t.elOf[i]})
+			opened++
+			continue
+		}
+		renderNode(b, dyn[i], st)
 	}
 }
 
@@ -135,16 +201,8 @@ func (e *tmplElNode) depthOf(i int) int {
 }
 
 func (e *tmplElNode) render(b *bytes.Buffer, st *renderState) {
-	t, el, dyn := e.n.t, e.n.t.els[e.el], e.n.dyn()
-	b.WriteString(t.static[el.Slot][el.Start:])
-	for j := el.Slot; j < el.EndStatic; j++ {
-		renderNode(b, dyn[j], st)
-		if j+1 < el.EndStatic {
-			b.WriteString(t.static[j+1])
-		} else {
-			b.WriteString(t.static[el.EndStatic][:el.End])
-		}
-	}
+	el := e.n.t.els[e.el]
+	e.n.renderRange(b, st, el.Slot, el.Start, el.EndStatic, el.End)
 }
 
 // patchRoot is one top-level element of a patch node.

@@ -64,9 +64,10 @@ const (
 	CodeEventMod            = "GX4010"
 	// CodeTool is a tool with no description, or with an input field that
 	// a JSON value cannot fill (REQ-AI-06, REQ-AI-09).
-	CodeTool         = "GX4011"
-	CodeActionMethod = "GX4009"
-	CodeSignalRules  = "GX4008"
+	CodeTool             = "GX4011"
+	CodeUpdateNoFragment = "GX4012"
+	CodeActionMethod     = "GX4009"
+	CodeSignalRules      = "GX4008"
 
 	CodeIslandProps = "GX6001"
 	CodeIslandType  = "GX6002"
@@ -100,6 +101,20 @@ type Diagnostic struct {
 	Col  int
 	Msg  string
 	Fix  string
+	// Hint is true for a diagnostic that does not fail a check
+	// (REQ-ACT-17). Only CheckApp gives hints.
+	Hint bool
+}
+
+// Failed reports whether a list of diagnostics fails a check: it holds one
+// that is not a hint.
+func Failed(diags []Diagnostic) bool {
+	for _, d := range diags {
+		if !d.Hint {
+			return true
+		}
+	}
+	return false
 }
 
 // Info describes one diagnostic code.
@@ -147,6 +162,7 @@ var Catalog = []Info{
 	{CodeActionMethod, "action method cannot be invoked from the client"},
 	{CodeEventMod, "unknown event modifier or special event"},
 	{CodeTool, "tool has no description or an input with no JSON form"},
+	{CodeUpdateNoFragment, "c.Update takes a component with no fragment"},
 	{CodeEnum, "gx.Enum misses a constant of its type"},
 	{CodeTransition, "duplicate view-transition-name in one template"},
 	{CodeRuntimeClass, "class string is built at runtime"},
@@ -174,6 +190,9 @@ func (d Diagnostic) String() string {
 	where := d.File
 	if where == "" {
 		where = "<input>"
+	}
+	if d.Hint {
+		return fmt.Sprintf("%s:%d:%d: %s: hint: %s", where, d.Line, d.Col, d.Code, d.Msg)
 	}
 	return fmt.Sprintf("%s:%d:%d: %s: %s", where, d.Line, d.Col, d.Code, d.Msg)
 }

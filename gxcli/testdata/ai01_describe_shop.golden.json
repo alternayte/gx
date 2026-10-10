@@ -35,6 +35,59 @@
       "fixtures": []
     },
     {
+      "name": "Basket",
+      "package": "github.com/alternayte/gx/examples/shop/basket",
+      "file": "basket/Basket.gx",
+      "props": [
+        {
+          "name": "Lines",
+          "type": "[]Line",
+          "required": true
+        }
+      ],
+      "signals": [],
+      "fragments": [
+        {
+          "name": "lines",
+          "func": "BasketLines",
+          "params": [
+            {
+              "name": "p",
+              "type": "BasketProps"
+            }
+          ],
+          "keyed": false
+        },
+        {
+          "name": "line",
+          "func": "BasketLine",
+          "params": [
+            {
+              "name": "key",
+              "type": "string"
+            },
+            {
+              "name": "l",
+              "type": "Line"
+            }
+          ],
+          "keyed": true
+        },
+        {
+          "name": "count",
+          "func": "BasketCount",
+          "params": [
+            {
+              "name": "p",
+              "type": "BasketProps"
+            }
+          ],
+          "keyed": false
+        }
+      ],
+      "fixtures": []
+    },
+    {
       "name": "Cart",
       "package": "github.com/alternayte/gx/examples/shop/cart",
       "file": "cart/Cart.gx",
@@ -8912,6 +8965,49 @@
   ],
   "routes": [
     {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.Bump",
+      "method": "POST",
+      "pattern": "POST /basket/bump/{sku}",
+      "fields": [
+        {
+          "name": "SKU",
+          "type": "string",
+          "source": "path",
+          "key": "sku"
+        }
+      ],
+      "kind": "action",
+      "handler": "basket.Bump",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.Page",
+      "method": "GET",
+      "pattern": "GET /basket",
+      "fields": [],
+      "kind": "page",
+      "handler": "basket.BasketPage",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.Reset",
+      "method": "POST",
+      "pattern": "POST /basket/reset",
+      "fields": [],
+      "kind": "action",
+      "handler": "basket.Reset",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
       "type": "github.com/alternayte/gx/examples/shop/cart/route.Add",
       "method": "POST",
       "pattern": "POST /cart/add",
@@ -9331,6 +9427,22 @@
     }
   ],
   "actions": [
+    {
+      "handler": "basket.Bump",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.Bump",
+      "method": "POST",
+      "pattern": "POST /basket/bump/{sku}",
+      "signals": [],
+      "external": false
+    },
+    {
+      "handler": "basket.Reset",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.Reset",
+      "method": "POST",
+      "pattern": "POST /basket/reset",
+      "signals": [],
+      "external": false
+    },
     {
       "handler": "cart.Add",
       "route": "github.com/alternayte/gx/examples/shop/cart/route.Add",

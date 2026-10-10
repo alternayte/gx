@@ -79,6 +79,9 @@ func CheckApp(root string, opt CheckOptions) []Diagnostic {
 	if files != nil {
 		add(staleFiles(files))
 	}
+	if res != nil {
+		add(res.hints)
+	}
 	sortDiags(out)
 	return out
 }

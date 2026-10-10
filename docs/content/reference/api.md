@@ -1147,6 +1147,14 @@ func (c *Ctx) Toast(text string, opts ...ToastOption) error
 
 Toast adds a toast to the toaster region. A kind is an option: c.Toast("Saved", gx.ToastSuccess).
 
+#### func (Ctx) Update
+
+```go
+func (c *Ctx) Update(n Node) error
+```
+
+Update sends the fragments of the node that differ from the fragments of the browser. n is the node of the invoking component from new props. The request holds the hash of each fragment that the browser has; the server keeps no render state for a viewer. A node with no fragment goes as its root elements, as c.Patch sends it.
+
 ### type ElementPatch
 
 ```go
@@ -1931,6 +1939,14 @@ func Open(name string, attrs Attrs) Node
 ```
 
 Open returns the attributes of one element as a dynamic value. The static string before it ends with the name of the element.
+
+#### func OpenFragment
+
+```go
+func OpenFragment(name string, attrs Attrs) Node
+```
+
+OpenFragment returns the attributes of a fragment element as a dynamic value. A render with a request in scope gives the element a hash of its content.
 
 #### func Raw
 

@@ -187,7 +187,16 @@ func (g *gen) tmplElement(tb *tmplBuilder, el *Element, children string, built b
 	} else {
 		start := len(tb.static[len(tb.static)-1])
 		tb.text("<" + el.Name)
-		slot := tb.slot("gx.Open("+strconv.Quote(el.Name)+", "+g.attrsExpr(el)+")", posOf(el))
+		// A fragment element gets a hash of its content at render
+		// (REQ-ACT-15).
+		open := "gx.Open("
+		for i := range el.Attrs {
+			if el.Attrs[i].Kind == AttrFragment {
+				open = "gx.OpenFragment("
+				break
+			}
+		}
+		slot := tb.slot(open+strconv.Quote(el.Name)+", "+g.attrsExpr(el)+")", posOf(el))
 		elIndex = len(tb.els)
 		// A void element ends after the ">" of its open tag.
 		tb.els = append(tb.els, gx.TemplateEl{Slot: slot, Start: start, EndStatic: slot + 1, End: 1})

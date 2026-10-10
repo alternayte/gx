@@ -17,6 +17,9 @@ import (
 
 // typesResult holds the Go types of .gx expressions from one analysis pass.
 type typesResult struct {
+	// hints holds the diagnostics that do not fail a check
+	// (REQ-ACT-17). Only CheckApp reports them.
+	hints []Diagnostic
 	// adapter is the adapter name of the app (REQ-ACT-09).
 	adapter string
 	types   map[any]types.Type
@@ -236,6 +239,7 @@ func (l *loader) analyze(root string, dirs []string) (*typesResult, []Diagnostic
 	}
 	res.routeFiles = renderRouteFiles(routes)
 	diags = append(diags, res.checkMounted(pkgs)...)
+	res.hints = l.updateHints(pkgs)
 	diags = append(diags, checkDuplicatePatterns(routes)...)
 	diags = append(diags, checkTools(routes)...)
 	diags = append(diags, l.checkAttributes(res, dirs)...)

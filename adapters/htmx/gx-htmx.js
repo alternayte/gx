@@ -63,6 +63,23 @@
     if (m && e.detail.verb !== 'get') e.detail.headers['Gx-CSRF'] = decodeURIComponent(m[1])
   })
 
+  // A write of htmx carries the hash of each fragment of the page, so the
+  // server sends only the fragments that differ (REQ-ACT-15, REQ-ACT-16). A
+  // page with too many fragments for one header sends none.
+  document.addEventListener('htmx:configRequest', function (e) {
+    if (e.detail.verb === 'get') return
+    var parts = []
+    var size = 0
+    var els = document.querySelectorAll('[data-gx-h][id]')
+    for (var i = 0; i < els.length; i++) {
+      var part = els[i].id + '=' + (els[i].getAttribute('data-gx-h') || '')
+      size += part.length + 1
+      if (size > 4096) return
+      parts.push(part)
+    }
+    if (parts.length > 0) e.detail.headers['Gx-Fragments'] = parts.join(',')
+  })
+
   // The Gx runtime calls apply with the answer of a request that it made.
   window.__gxAdapter = {
     apply: function (res) {

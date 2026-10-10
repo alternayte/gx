@@ -108,6 +108,7 @@ items := p.Items
 | Answer | Effect |
 | --- | --- |
 | `c.Patch(nodes...)` | Sends fragments. The browser morphs each one into the element with the same id. |
+| `c.Update(node)` | Takes a component from new data and sends only the fragments that changed. |
 | `c.SetSignals(v)` | Sets the signals of the instance that invoked the action. |
 | `c.Redirect(route)` | Goes to a page. |
 | `c.Toast(text)` | Shows a toast in the toaster region. |
@@ -182,6 +183,21 @@ var Routes = gx.Collect(IndexPage, Add, Clear, Count)
 data-signals
 Counting
 -->
+
+## Automatic updates
+
+`c.Update(node)` takes the component of the action, made from new data. You write no list of fragments.
+
+1. The page gives each fragment a hash of its content, in the attribute `data-gx-h`.
+2. The browser sends the hashes with each action request.
+3. The server renders the component and compares the hash of each fragment.
+4. Only a fragment with a different hash goes to the browser.
+
+The server keeps no state for a user between two requests.
+
+A fragment is the unit of an update. A change inside an inner fragment sends only the inner fragment. A new or a removed inner fragment sends the fragment around it. A component with no fragment goes as a whole, and `gx check` gives the hint [GX4012](/errors/GX4012/) for a large one.
+
+A fragment that holds a link to the current page has a different hash in an action answer, so it always goes. Use `c.Patch` when you know the exact fragment.
 
 ## Events and modifiers
 

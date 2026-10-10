@@ -21,7 +21,7 @@ func Charts(p ChartsProps) gx.Node {
 //line Charts.gx:11:1
 	return _tCharts0.With(
 //line Charts.gx:11:1
-		gx.Open("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}),
+		gx.OpenFragment("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}),
 //line Charts.gx:13:3
 		gx.Open("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}),
 //line Charts.gx:13:42
@@ -47,7 +47,7 @@ func ChartsPanel(p ChartsProps) gx.Node {
 //line Charts.gx:11:1
 	return _tCharts1.With(
 //line Charts.gx:11:1
-		gx.Open("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}),
+		gx.OpenFragment("div", gx.Attrs{gx.Attr{Key: "id", Value: "charts-panel", Kind: gx.AttrText}, gx.Attr{Key: "class", Value: "rounded-xl border border-border bg-card p-4 text-card-foreground", Kind: gx.AttrText}, gx.Attr{Key: "data-round", Value: gx.TextValue(p.Round), Kind: gx.AttrText}}),
 //line Charts.gx:13:3
 		gx.Open("sl-badge", gx.Attrs{gx.Attr{Key: "variant", Value: "primary", Kind: gx.AttrText}, gx.Bool("pill", true), gx.ElementModule("@shoelace-style/shoelace/dist/components/badge/badge.js"), gx.Attr{Key: "data-preserve-attr", Value: "pulse", Kind: gx.AttrText}}),
 //line Charts.gx:13:42

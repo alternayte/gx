@@ -37,7 +37,7 @@ func Cart(p CartProps) gx.Node {
 //line Cart.gx:19:6
 		gx.Text(p.Label),
 //line Cart.gx:19:23
-		gx.Open("span", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("cart", "total", p.GxKey), Kind: gx.AttrText}}),
+		gx.OpenFragment("span", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("cart", "total", p.GxKey), Kind: gx.AttrText}}),
 //line Cart.gx:19:47
 		gx.Int(int64(total)),
 //line Cart.gx:20:3
@@ -75,7 +75,7 @@ func CartTotal(key gx.Key, total int) gx.Node {
 //line Cart.gx:19:23
 	return _tCart4.With(
 //line Cart.gx:19:23
-		gx.Open("span", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("cart", "total", key), Kind: gx.AttrText}}),
+		gx.OpenFragment("span", gx.Attrs{gx.Attr{Key: "id", Value: gx.FragmentID("cart", "total", key), Kind: gx.AttrText}}),
 //line Cart.gx:19:47
 		gx.Int(int64(total)),
 	)

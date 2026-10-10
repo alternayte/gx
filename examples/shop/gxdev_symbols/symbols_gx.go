@@ -10,82 +10,85 @@ import (
 	"go/constant"
 	"reflect"
 
-	p67 "errors"
+	p68 "errors"
 	gx "github.com/alternayte/gx"
 	p1 "github.com/alternayte/gx/examples/shop"
-	p2 "github.com/alternayte/gx/examples/shop/cart"
-	p68 "github.com/alternayte/gx/examples/shop/cart/route"
-	p3 "github.com/alternayte/gx/examples/shop/composer"
-	p69 "github.com/alternayte/gx/examples/shop/composer/route"
-	p4 "github.com/alternayte/gx/examples/shop/dashboard"
-	p70 "github.com/alternayte/gx/examples/shop/dashboard/route"
-	p71 "github.com/alternayte/gx/examples/shop/datatable"
-	p72 "github.com/alternayte/gx/examples/shop/route"
-	p5 "github.com/alternayte/gx/examples/shop/signup"
-	p73 "github.com/alternayte/gx/examples/shop/signup/route"
-	p6 "github.com/alternayte/gx/examples/shop/ui"
-	p7 "github.com/alternayte/gx/examples/shop/ui/accordion"
-	p8 "github.com/alternayte/gx/examples/shop/ui/alert"
-	p9 "github.com/alternayte/gx/examples/shop/ui/alert-dialog"
-	p10 "github.com/alternayte/gx/examples/shop/ui/app-shell"
-	p11 "github.com/alternayte/gx/examples/shop/ui/aspect-ratio"
-	p12 "github.com/alternayte/gx/examples/shop/ui/avatar"
-	p13 "github.com/alternayte/gx/examples/shop/ui/badge"
-	p14 "github.com/alternayte/gx/examples/shop/ui/breadcrumb"
-	p15 "github.com/alternayte/gx/examples/shop/ui/button"
-	p16 "github.com/alternayte/gx/examples/shop/ui/button-group"
-	p17 "github.com/alternayte/gx/examples/shop/ui/calendar"
-	p18 "github.com/alternayte/gx/examples/shop/ui/card"
-	p19 "github.com/alternayte/gx/examples/shop/ui/carousel"
-	p20 "github.com/alternayte/gx/examples/shop/ui/chart"
-	p21 "github.com/alternayte/gx/examples/shop/ui/checkbox"
-	p22 "github.com/alternayte/gx/examples/shop/ui/collapsible"
-	p23 "github.com/alternayte/gx/examples/shop/ui/combobox"
-	p24 "github.com/alternayte/gx/examples/shop/ui/command"
-	p25 "github.com/alternayte/gx/examples/shop/ui/context-menu"
-	p26 "github.com/alternayte/gx/examples/shop/ui/data-table-page"
-	p27 "github.com/alternayte/gx/examples/shop/ui/date-picker"
-	p28 "github.com/alternayte/gx/examples/shop/ui/dialog"
-	p29 "github.com/alternayte/gx/examples/shop/ui/drawer"
-	p30 "github.com/alternayte/gx/examples/shop/ui/dropdown-menu"
-	p31 "github.com/alternayte/gx/examples/shop/ui/empty"
-	p32 "github.com/alternayte/gx/examples/shop/ui/field"
-	p33 "github.com/alternayte/gx/examples/shop/ui/hover-card"
-	p34 "github.com/alternayte/gx/examples/shop/ui/icons"
-	p35 "github.com/alternayte/gx/examples/shop/ui/input"
-	p36 "github.com/alternayte/gx/examples/shop/ui/input-group"
-	p37 "github.com/alternayte/gx/examples/shop/ui/input-otp"
-	p38 "github.com/alternayte/gx/examples/shop/ui/item"
-	p39 "github.com/alternayte/gx/examples/shop/ui/kbd"
-	p40 "github.com/alternayte/gx/examples/shop/ui/label"
-	p41 "github.com/alternayte/gx/examples/shop/ui/login"
-	p42 "github.com/alternayte/gx/examples/shop/ui/menubar"
-	p43 "github.com/alternayte/gx/examples/shop/ui/navigation-menu"
-	p44 "github.com/alternayte/gx/examples/shop/ui/pagination"
-	p45 "github.com/alternayte/gx/examples/shop/ui/popover"
-	p46 "github.com/alternayte/gx/examples/shop/ui/progress"
-	p47 "github.com/alternayte/gx/examples/shop/ui/radio-group"
-	p48 "github.com/alternayte/gx/examples/shop/ui/resizable"
-	p49 "github.com/alternayte/gx/examples/shop/ui/scroll-area"
-	p50 "github.com/alternayte/gx/examples/shop/ui/select"
-	p51 "github.com/alternayte/gx/examples/shop/ui/separator"
-	p52 "github.com/alternayte/gx/examples/shop/ui/settings-form"
-	p53 "github.com/alternayte/gx/examples/shop/ui/sheet"
-	p54 "github.com/alternayte/gx/examples/shop/ui/sidebar"
-	p55 "github.com/alternayte/gx/examples/shop/ui/signup"
-	p56 "github.com/alternayte/gx/examples/shop/ui/skeleton"
-	p57 "github.com/alternayte/gx/examples/shop/ui/slider"
-	p58 "github.com/alternayte/gx/examples/shop/ui/spinner"
-	p59 "github.com/alternayte/gx/examples/shop/ui/switch"
-	p60 "github.com/alternayte/gx/examples/shop/ui/table"
-	p61 "github.com/alternayte/gx/examples/shop/ui/tabs"
-	p62 "github.com/alternayte/gx/examples/shop/ui/textarea"
-	p63 "github.com/alternayte/gx/examples/shop/ui/toast"
-	p64 "github.com/alternayte/gx/examples/shop/ui/toggle"
-	p65 "github.com/alternayte/gx/examples/shop/ui/toggle-group"
-	p66 "github.com/alternayte/gx/examples/shop/ui/tooltip"
-	p75 "strconv"
-	p76 "strings"
+	p2 "github.com/alternayte/gx/examples/shop/basket"
+	p69 "github.com/alternayte/gx/examples/shop/basket/route"
+	p3 "github.com/alternayte/gx/examples/shop/cart"
+	p70 "github.com/alternayte/gx/examples/shop/cart/route"
+	p4 "github.com/alternayte/gx/examples/shop/composer"
+	p71 "github.com/alternayte/gx/examples/shop/composer/route"
+	p5 "github.com/alternayte/gx/examples/shop/dashboard"
+	p72 "github.com/alternayte/gx/examples/shop/dashboard/route"
+	p73 "github.com/alternayte/gx/examples/shop/datatable"
+	p74 "github.com/alternayte/gx/examples/shop/route"
+	p6 "github.com/alternayte/gx/examples/shop/signup"
+	p75 "github.com/alternayte/gx/examples/shop/signup/route"
+	p7 "github.com/alternayte/gx/examples/shop/ui"
+	p8 "github.com/alternayte/gx/examples/shop/ui/accordion"
+	p9 "github.com/alternayte/gx/examples/shop/ui/alert"
+	p10 "github.com/alternayte/gx/examples/shop/ui/alert-dialog"
+	p11 "github.com/alternayte/gx/examples/shop/ui/app-shell"
+	p12 "github.com/alternayte/gx/examples/shop/ui/aspect-ratio"
+	p13 "github.com/alternayte/gx/examples/shop/ui/avatar"
+	p14 "github.com/alternayte/gx/examples/shop/ui/badge"
+	p15 "github.com/alternayte/gx/examples/shop/ui/breadcrumb"
+	p16 "github.com/alternayte/gx/examples/shop/ui/button"
+	p17 "github.com/alternayte/gx/examples/shop/ui/button-group"
+	p18 "github.com/alternayte/gx/examples/shop/ui/calendar"
+	p19 "github.com/alternayte/gx/examples/shop/ui/card"
+	p20 "github.com/alternayte/gx/examples/shop/ui/carousel"
+	p21 "github.com/alternayte/gx/examples/shop/ui/chart"
+	p22 "github.com/alternayte/gx/examples/shop/ui/checkbox"
+	p23 "github.com/alternayte/gx/examples/shop/ui/collapsible"
+	p24 "github.com/alternayte/gx/examples/shop/ui/combobox"
+	p25 "github.com/alternayte/gx/examples/shop/ui/command"
+	p26 "github.com/alternayte/gx/examples/shop/ui/context-menu"
+	p27 "github.com/alternayte/gx/examples/shop/ui/data-table-page"
+	p28 "github.com/alternayte/gx/examples/shop/ui/date-picker"
+	p29 "github.com/alternayte/gx/examples/shop/ui/dialog"
+	p30 "github.com/alternayte/gx/examples/shop/ui/drawer"
+	p31 "github.com/alternayte/gx/examples/shop/ui/dropdown-menu"
+	p32 "github.com/alternayte/gx/examples/shop/ui/empty"
+	p33 "github.com/alternayte/gx/examples/shop/ui/field"
+	p34 "github.com/alternayte/gx/examples/shop/ui/hover-card"
+	p35 "github.com/alternayte/gx/examples/shop/ui/icons"
+	p36 "github.com/alternayte/gx/examples/shop/ui/input"
+	p37 "github.com/alternayte/gx/examples/shop/ui/input-group"
+	p38 "github.com/alternayte/gx/examples/shop/ui/input-otp"
+	p39 "github.com/alternayte/gx/examples/shop/ui/item"
+	p40 "github.com/alternayte/gx/examples/shop/ui/kbd"
+	p41 "github.com/alternayte/gx/examples/shop/ui/label"
+	p42 "github.com/alternayte/gx/examples/shop/ui/login"
+	p43 "github.com/alternayte/gx/examples/shop/ui/menubar"
+	p44 "github.com/alternayte/gx/examples/shop/ui/navigation-menu"
+	p45 "github.com/alternayte/gx/examples/shop/ui/pagination"
+	p46 "github.com/alternayte/gx/examples/shop/ui/popover"
+	p47 "github.com/alternayte/gx/examples/shop/ui/progress"
+	p48 "github.com/alternayte/gx/examples/shop/ui/radio-group"
+	p49 "github.com/alternayte/gx/examples/shop/ui/resizable"
+	p50 "github.com/alternayte/gx/examples/shop/ui/scroll-area"
+	p51 "github.com/alternayte/gx/examples/shop/ui/select"
+	p52 "github.com/alternayte/gx/examples/shop/ui/separator"
+	p53 "github.com/alternayte/gx/examples/shop/ui/settings-form"
+	p54 "github.com/alternayte/gx/examples/shop/ui/sheet"
+	p55 "github.com/alternayte/gx/examples/shop/ui/sidebar"
+	p56 "github.com/alternayte/gx/examples/shop/ui/signup"
+	p57 "github.com/alternayte/gx/examples/shop/ui/skeleton"
+	p58 "github.com/alternayte/gx/examples/shop/ui/slider"
+	p59 "github.com/alternayte/gx/examples/shop/ui/spinner"
+	p60 "github.com/alternayte/gx/examples/shop/ui/switch"
+	p61 "github.com/alternayte/gx/examples/shop/ui/table"
+	p62 "github.com/alternayte/gx/examples/shop/ui/tabs"
+	p63 "github.com/alternayte/gx/examples/shop/ui/textarea"
+	p64 "github.com/alternayte/gx/examples/shop/ui/toast"
+	p65 "github.com/alternayte/gx/examples/shop/ui/toggle"
+	p66 "github.com/alternayte/gx/examples/shop/ui/toggle-group"
+	p67 "github.com/alternayte/gx/examples/shop/ui/tooltip"
+	p77 "strconv"
+	p78 "strings"
+	p79 "sync"
 )
 
 // Packages returns the symbol table. The dev main of the app gives it to
@@ -158,16 +161,17 @@ func Packages() []gx.DevPackage {
 		p64.GxDevSymbols(),
 		p65.GxDevSymbols(),
 		p66.GxDevSymbols(),
+		p67.GxDevSymbols(),
 		gx.DevPackage{
 			Path: "errors",
 			Name: "errors",
 			Values: map[string]reflect.Value{
-				"As":             reflect.ValueOf(p67.As),
-				"ErrUnsupported": reflect.ValueOf(&p67.ErrUnsupported).Elem(),
-				"Is":             reflect.ValueOf(p67.Is),
-				"Join":           reflect.ValueOf(p67.Join),
-				"New":            reflect.ValueOf(p67.New),
-				"Unwrap":         reflect.ValueOf(p67.Unwrap),
+				"As":             reflect.ValueOf(p68.As),
+				"ErrUnsupported": reflect.ValueOf(&p68.ErrUnsupported).Elem(),
+				"Is":             reflect.ValueOf(p68.Is),
+				"Join":           reflect.ValueOf(p68.Join),
+				"New":            reflect.ValueOf(p68.New),
+				"Unwrap":         reflect.ValueOf(p68.Unwrap),
 			},
 		},
 		gx.DevPackage{
@@ -264,6 +268,7 @@ func Packages() []gx.DevPackage {
 				"On":                    reflect.ValueOf(gx.On),
 				"OneOf":                 reflect.ValueOf(gx.OneOf),
 				"Open":                  reflect.ValueOf(gx.Open),
+				"OpenFragment":          reflect.ValueOf(gx.OpenFragment),
 				"Params":                reflect.ValueOf(gx.Params),
 				"ParseBool":             reflect.ValueOf(gx.ParseBool),
 				"ParseOn":               reflect.ValueOf(gx.ParseOn),
@@ -407,196 +412,223 @@ func Packages() []gx.DevPackage {
 			},
 		},
 		gx.DevPackage{
+			Path: "github.com/alternayte/gx/examples/shop/basket/route",
+			Name: "route",
+			Types: map[string]reflect.Type{
+				"Bump":  reflect.TypeFor[p69.Bump](),
+				"Page":  reflect.TypeFor[p69.Page](),
+				"Reset": reflect.TypeFor[p69.Reset](),
+			},
+		},
+		gx.DevPackage{
 			Path: "github.com/alternayte/gx/examples/shop/cart/route",
 			Name: "route",
 			Types: map[string]reflect.Type{
-				"Add":        reflect.TypeFor[p68.Add](),
-				"Error":      reflect.TypeFor[p68.Error](),
-				"Lazy":       reflect.TypeFor[p68.Lazy](),
-				"Noop":       reflect.TypeFor[p68.Noop](),
-				"Redirect":   reflect.TypeFor[p68.Redirect](),
-				"Set":        reflect.TypeFor[p68.Set](),
-				"Toast":      reflect.TypeFor[p68.Toast](),
-				"ToastDemo":  reflect.TypeFor[p68.ToastDemo](),
-				"Transition": reflect.TypeFor[p68.Transition](),
-				"Undo":       reflect.TypeFor[p68.Undo](),
-				"Widget":     reflect.TypeFor[p68.Widget](),
+				"Add":        reflect.TypeFor[p70.Add](),
+				"Error":      reflect.TypeFor[p70.Error](),
+				"Lazy":       reflect.TypeFor[p70.Lazy](),
+				"Noop":       reflect.TypeFor[p70.Noop](),
+				"Redirect":   reflect.TypeFor[p70.Redirect](),
+				"Set":        reflect.TypeFor[p70.Set](),
+				"Toast":      reflect.TypeFor[p70.Toast](),
+				"ToastDemo":  reflect.TypeFor[p70.ToastDemo](),
+				"Transition": reflect.TypeFor[p70.Transition](),
+				"Undo":       reflect.TypeFor[p70.Undo](),
+				"Widget":     reflect.TypeFor[p70.Widget](),
 			},
 		},
 		gx.DevPackage{
 			Path: "github.com/alternayte/gx/examples/shop/composer/route",
 			Name: "route",
 			Types: map[string]reflect.Type{
-				"Discard":  reflect.TypeFor[p69.Discard](),
-				"Send":     reflect.TypeFor[p69.Send](),
-				"SendForm": reflect.TypeFor[p69.SendForm](),
-				"Widget":   reflect.TypeFor[p69.Widget](),
+				"Discard":  reflect.TypeFor[p71.Discard](),
+				"Send":     reflect.TypeFor[p71.Send](),
+				"SendForm": reflect.TypeFor[p71.SendForm](),
+				"Widget":   reflect.TypeFor[p71.Widget](),
 			},
 		},
 		gx.DevPackage{
 			Path: "github.com/alternayte/gx/examples/shop/dashboard/route",
 			Name: "route",
 			Types: map[string]reflect.Type{
-				"Page":    reflect.TypeFor[p70.Page](),
-				"Refresh": reflect.TypeFor[p70.Refresh](),
+				"Page":    reflect.TypeFor[p72.Page](),
+				"Refresh": reflect.TypeFor[p72.Refresh](),
 			},
 		},
 		gx.DevPackage{
 			Path: "github.com/alternayte/gx/examples/shop/datatable",
 			Name: "datatable",
 			Values: map[string]reflect.Value{
-				"Columns":  reflect.ValueOf(&p71.Columns).Elem(),
-				"ListPage": reflect.ValueOf(&p71.ListPage).Elem(),
-				"Routes":   reflect.ValueOf(&p71.Routes).Elem(),
-				"Rows":     reflect.ValueOf(&p71.Rows).Elem(),
+				"Columns":  reflect.ValueOf(&p73.Columns).Elem(),
+				"ListPage": reflect.ValueOf(&p73.ListPage).Elem(),
+				"Routes":   reflect.ValueOf(&p73.Routes).Elem(),
+				"Rows":     reflect.ValueOf(&p73.Rows).Elem(),
 			},
 			Consts: map[string]constant.Value{
 				"PageSize": gx.DevInt("25"),
 				"RowCount": gx.DevInt("10000"),
 			},
 			Types: map[string]reflect.Type{
-				"Row": reflect.TypeFor[p71.Row](),
+				"Row": reflect.TypeFor[p73.Row](),
 			},
 		},
 		gx.DevPackage{
 			Path: "github.com/alternayte/gx/examples/shop/route",
 			Name: "route",
 			Types: map[string]reflect.Type{
-				"About": reflect.TypeFor[p72.About](),
-				"Home":  reflect.TypeFor[p72.Home](),
+				"About": reflect.TypeFor[p74.About](),
+				"Home":  reflect.TypeFor[p74.Home](),
 			},
 		},
 		gx.DevPackage{
 			Path: "github.com/alternayte/gx/examples/shop/signup/route",
 			Name: "route",
 			Values: map[string]reflect.Value{
-				"SignupAddressesFieldValue": reflect.ValueOf(p73.SignupAddressesFieldValue),
+				"SignupAddressesFieldValue": reflect.ValueOf(p75.SignupAddressesFieldValue),
 			},
 			Types: map[string]reflect.Type{
-				"AddAddress":           reflect.TypeFor[p73.AddAddress](),
-				"Address":              reflect.TypeFor[p73.Address](),
-				"AddressForm":          reflect.TypeFor[p73.AddressForm](),
-				"Page":                 reflect.TypeFor[p73.Page](),
-				"RemoveAddress":        reflect.TypeFor[p73.RemoveAddress](),
-				"Signup":               reflect.TypeFor[p73.Signup](),
-				"SignupAddressesField": reflect.TypeFor[p73.SignupAddressesField](),
-				"SignupForm":           reflect.TypeFor[p73.SignupForm](),
+				"AddAddress":           reflect.TypeFor[p75.AddAddress](),
+				"Address":              reflect.TypeFor[p75.Address](),
+				"AddressForm":          reflect.TypeFor[p75.AddressForm](),
+				"Page":                 reflect.TypeFor[p75.Page](),
+				"RemoveAddress":        reflect.TypeFor[p75.RemoveAddress](),
+				"Signup":               reflect.TypeFor[p75.Signup](),
+				"SignupAddressesField": reflect.TypeFor[p75.SignupAddressesField](),
+				"SignupForm":           reflect.TypeFor[p75.SignupForm](),
 			},
 		},
 		gx.DevPackage{
 			Path: "strconv",
 			Name: "strconv",
 			Values: map[string]reflect.Value{
-				"AppendBool":               reflect.ValueOf(p75.AppendBool),
-				"AppendFloat":              reflect.ValueOf(p75.AppendFloat),
-				"AppendInt":                reflect.ValueOf(p75.AppendInt),
-				"AppendQuote":              reflect.ValueOf(p75.AppendQuote),
-				"AppendQuoteRune":          reflect.ValueOf(p75.AppendQuoteRune),
-				"AppendQuoteRuneToASCII":   reflect.ValueOf(p75.AppendQuoteRuneToASCII),
-				"AppendQuoteRuneToGraphic": reflect.ValueOf(p75.AppendQuoteRuneToGraphic),
-				"AppendQuoteToASCII":       reflect.ValueOf(p75.AppendQuoteToASCII),
-				"AppendQuoteToGraphic":     reflect.ValueOf(p75.AppendQuoteToGraphic),
-				"AppendUint":               reflect.ValueOf(p75.AppendUint),
-				"Atoi":                     reflect.ValueOf(p75.Atoi),
-				"CanBackquote":             reflect.ValueOf(p75.CanBackquote),
-				"ErrRange":                 reflect.ValueOf(&p75.ErrRange).Elem(),
-				"ErrSyntax":                reflect.ValueOf(&p75.ErrSyntax).Elem(),
-				"FormatBool":               reflect.ValueOf(p75.FormatBool),
-				"FormatComplex":            reflect.ValueOf(p75.FormatComplex),
-				"FormatFloat":              reflect.ValueOf(p75.FormatFloat),
-				"FormatInt":                reflect.ValueOf(p75.FormatInt),
-				"FormatUint":               reflect.ValueOf(p75.FormatUint),
-				"IsGraphic":                reflect.ValueOf(p75.IsGraphic),
-				"IsPrint":                  reflect.ValueOf(p75.IsPrint),
-				"Itoa":                     reflect.ValueOf(p75.Itoa),
-				"ParseBool":                reflect.ValueOf(p75.ParseBool),
-				"ParseComplex":             reflect.ValueOf(p75.ParseComplex),
-				"ParseFloat":               reflect.ValueOf(p75.ParseFloat),
-				"ParseInt":                 reflect.ValueOf(p75.ParseInt),
-				"ParseUint":                reflect.ValueOf(p75.ParseUint),
-				"Quote":                    reflect.ValueOf(p75.Quote),
-				"QuoteRune":                reflect.ValueOf(p75.QuoteRune),
-				"QuoteRuneToASCII":         reflect.ValueOf(p75.QuoteRuneToASCII),
-				"QuoteRuneToGraphic":       reflect.ValueOf(p75.QuoteRuneToGraphic),
-				"QuoteToASCII":             reflect.ValueOf(p75.QuoteToASCII),
-				"QuoteToGraphic":           reflect.ValueOf(p75.QuoteToGraphic),
-				"QuotedPrefix":             reflect.ValueOf(p75.QuotedPrefix),
-				"Unquote":                  reflect.ValueOf(p75.Unquote),
-				"UnquoteChar":              reflect.ValueOf(p75.UnquoteChar),
+				"AppendBool":               reflect.ValueOf(p77.AppendBool),
+				"AppendFloat":              reflect.ValueOf(p77.AppendFloat),
+				"AppendInt":                reflect.ValueOf(p77.AppendInt),
+				"AppendQuote":              reflect.ValueOf(p77.AppendQuote),
+				"AppendQuoteRune":          reflect.ValueOf(p77.AppendQuoteRune),
+				"AppendQuoteRuneToASCII":   reflect.ValueOf(p77.AppendQuoteRuneToASCII),
+				"AppendQuoteRuneToGraphic": reflect.ValueOf(p77.AppendQuoteRuneToGraphic),
+				"AppendQuoteToASCII":       reflect.ValueOf(p77.AppendQuoteToASCII),
+				"AppendQuoteToGraphic":     reflect.ValueOf(p77.AppendQuoteToGraphic),
+				"AppendUint":               reflect.ValueOf(p77.AppendUint),
+				"Atoi":                     reflect.ValueOf(p77.Atoi),
+				"CanBackquote":             reflect.ValueOf(p77.CanBackquote),
+				"ErrRange":                 reflect.ValueOf(&p77.ErrRange).Elem(),
+				"ErrSyntax":                reflect.ValueOf(&p77.ErrSyntax).Elem(),
+				"FormatBool":               reflect.ValueOf(p77.FormatBool),
+				"FormatComplex":            reflect.ValueOf(p77.FormatComplex),
+				"FormatFloat":              reflect.ValueOf(p77.FormatFloat),
+				"FormatInt":                reflect.ValueOf(p77.FormatInt),
+				"FormatUint":               reflect.ValueOf(p77.FormatUint),
+				"IsGraphic":                reflect.ValueOf(p77.IsGraphic),
+				"IsPrint":                  reflect.ValueOf(p77.IsPrint),
+				"Itoa":                     reflect.ValueOf(p77.Itoa),
+				"ParseBool":                reflect.ValueOf(p77.ParseBool),
+				"ParseComplex":             reflect.ValueOf(p77.ParseComplex),
+				"ParseFloat":               reflect.ValueOf(p77.ParseFloat),
+				"ParseInt":                 reflect.ValueOf(p77.ParseInt),
+				"ParseUint":                reflect.ValueOf(p77.ParseUint),
+				"Quote":                    reflect.ValueOf(p77.Quote),
+				"QuoteRune":                reflect.ValueOf(p77.QuoteRune),
+				"QuoteRuneToASCII":         reflect.ValueOf(p77.QuoteRuneToASCII),
+				"QuoteRuneToGraphic":       reflect.ValueOf(p77.QuoteRuneToGraphic),
+				"QuoteToASCII":             reflect.ValueOf(p77.QuoteToASCII),
+				"QuoteToGraphic":           reflect.ValueOf(p77.QuoteToGraphic),
+				"QuotedPrefix":             reflect.ValueOf(p77.QuotedPrefix),
+				"Unquote":                  reflect.ValueOf(p77.Unquote),
+				"UnquoteChar":              reflect.ValueOf(p77.UnquoteChar),
 			},
 			Consts: map[string]constant.Value{
 				"IntSize": gx.DevInt("64"),
 			},
 			Types: map[string]reflect.Type{
-				"NumError": reflect.TypeFor[p75.NumError](),
+				"NumError": reflect.TypeFor[p77.NumError](),
 			},
 		},
 		gx.DevPackage{
 			Path: "strings",
 			Name: "strings",
 			Values: map[string]reflect.Value{
-				"Clone":          reflect.ValueOf(p76.Clone),
-				"Compare":        reflect.ValueOf(p76.Compare),
-				"Contains":       reflect.ValueOf(p76.Contains),
-				"ContainsAny":    reflect.ValueOf(p76.ContainsAny),
-				"ContainsFunc":   reflect.ValueOf(p76.ContainsFunc),
-				"ContainsRune":   reflect.ValueOf(p76.ContainsRune),
-				"Count":          reflect.ValueOf(p76.Count),
-				"Cut":            reflect.ValueOf(p76.Cut),
-				"CutPrefix":      reflect.ValueOf(p76.CutPrefix),
-				"CutSuffix":      reflect.ValueOf(p76.CutSuffix),
-				"EqualFold":      reflect.ValueOf(p76.EqualFold),
-				"Fields":         reflect.ValueOf(p76.Fields),
-				"FieldsFunc":     reflect.ValueOf(p76.FieldsFunc),
-				"FieldsFuncSeq":  reflect.ValueOf(p76.FieldsFuncSeq),
-				"FieldsSeq":      reflect.ValueOf(p76.FieldsSeq),
-				"HasPrefix":      reflect.ValueOf(p76.HasPrefix),
-				"HasSuffix":      reflect.ValueOf(p76.HasSuffix),
-				"Index":          reflect.ValueOf(p76.Index),
-				"IndexAny":       reflect.ValueOf(p76.IndexAny),
-				"IndexByte":      reflect.ValueOf(p76.IndexByte),
-				"IndexFunc":      reflect.ValueOf(p76.IndexFunc),
-				"IndexRune":      reflect.ValueOf(p76.IndexRune),
-				"Join":           reflect.ValueOf(p76.Join),
-				"LastIndex":      reflect.ValueOf(p76.LastIndex),
-				"LastIndexAny":   reflect.ValueOf(p76.LastIndexAny),
-				"LastIndexByte":  reflect.ValueOf(p76.LastIndexByte),
-				"LastIndexFunc":  reflect.ValueOf(p76.LastIndexFunc),
-				"Lines":          reflect.ValueOf(p76.Lines),
-				"Map":            reflect.ValueOf(p76.Map),
-				"NewReader":      reflect.ValueOf(p76.NewReader),
-				"NewReplacer":    reflect.ValueOf(p76.NewReplacer),
-				"Repeat":         reflect.ValueOf(p76.Repeat),
-				"Replace":        reflect.ValueOf(p76.Replace),
-				"ReplaceAll":     reflect.ValueOf(p76.ReplaceAll),
-				"Split":          reflect.ValueOf(p76.Split),
-				"SplitAfter":     reflect.ValueOf(p76.SplitAfter),
-				"SplitAfterN":    reflect.ValueOf(p76.SplitAfterN),
-				"SplitAfterSeq":  reflect.ValueOf(p76.SplitAfterSeq),
-				"SplitN":         reflect.ValueOf(p76.SplitN),
-				"SplitSeq":       reflect.ValueOf(p76.SplitSeq),
-				"Title":          reflect.ValueOf(p76.Title),
-				"ToLower":        reflect.ValueOf(p76.ToLower),
-				"ToLowerSpecial": reflect.ValueOf(p76.ToLowerSpecial),
-				"ToTitle":        reflect.ValueOf(p76.ToTitle),
-				"ToTitleSpecial": reflect.ValueOf(p76.ToTitleSpecial),
-				"ToUpper":        reflect.ValueOf(p76.ToUpper),
-				"ToUpperSpecial": reflect.ValueOf(p76.ToUpperSpecial),
-				"ToValidUTF8":    reflect.ValueOf(p76.ToValidUTF8),
-				"Trim":           reflect.ValueOf(p76.Trim),
-				"TrimFunc":       reflect.ValueOf(p76.TrimFunc),
-				"TrimLeft":       reflect.ValueOf(p76.TrimLeft),
-				"TrimLeftFunc":   reflect.ValueOf(p76.TrimLeftFunc),
-				"TrimPrefix":     reflect.ValueOf(p76.TrimPrefix),
-				"TrimRight":      reflect.ValueOf(p76.TrimRight),
-				"TrimRightFunc":  reflect.ValueOf(p76.TrimRightFunc),
-				"TrimSpace":      reflect.ValueOf(p76.TrimSpace),
-				"TrimSuffix":     reflect.ValueOf(p76.TrimSuffix),
+				"Clone":          reflect.ValueOf(p78.Clone),
+				"Compare":        reflect.ValueOf(p78.Compare),
+				"Contains":       reflect.ValueOf(p78.Contains),
+				"ContainsAny":    reflect.ValueOf(p78.ContainsAny),
+				"ContainsFunc":   reflect.ValueOf(p78.ContainsFunc),
+				"ContainsRune":   reflect.ValueOf(p78.ContainsRune),
+				"Count":          reflect.ValueOf(p78.Count),
+				"Cut":            reflect.ValueOf(p78.Cut),
+				"CutPrefix":      reflect.ValueOf(p78.CutPrefix),
+				"CutSuffix":      reflect.ValueOf(p78.CutSuffix),
+				"EqualFold":      reflect.ValueOf(p78.EqualFold),
+				"Fields":         reflect.ValueOf(p78.Fields),
+				"FieldsFunc":     reflect.ValueOf(p78.FieldsFunc),
+				"FieldsFuncSeq":  reflect.ValueOf(p78.FieldsFuncSeq),
+				"FieldsSeq":      reflect.ValueOf(p78.FieldsSeq),
+				"HasPrefix":      reflect.ValueOf(p78.HasPrefix),
+				"HasSuffix":      reflect.ValueOf(p78.HasSuffix),
+				"Index":          reflect.ValueOf(p78.Index),
+				"IndexAny":       reflect.ValueOf(p78.IndexAny),
+				"IndexByte":      reflect.ValueOf(p78.IndexByte),
+				"IndexFunc":      reflect.ValueOf(p78.IndexFunc),
+				"IndexRune":      reflect.ValueOf(p78.IndexRune),
+				"Join":           reflect.ValueOf(p78.Join),
+				"LastIndex":      reflect.ValueOf(p78.LastIndex),
+				"LastIndexAny":   reflect.ValueOf(p78.LastIndexAny),
+				"LastIndexByte":  reflect.ValueOf(p78.LastIndexByte),
+				"LastIndexFunc":  reflect.ValueOf(p78.LastIndexFunc),
+				"Lines":          reflect.ValueOf(p78.Lines),
+				"Map":            reflect.ValueOf(p78.Map),
+				"NewReader":      reflect.ValueOf(p78.NewReader),
+				"NewReplacer":    reflect.ValueOf(p78.NewReplacer),
+				"Repeat":         reflect.ValueOf(p78.Repeat),
+				"Replace":        reflect.ValueOf(p78.Replace),
+				"ReplaceAll":     reflect.ValueOf(p78.ReplaceAll),
+				"Split":          reflect.ValueOf(p78.Split),
+				"SplitAfter":     reflect.ValueOf(p78.SplitAfter),
+				"SplitAfterN":    reflect.ValueOf(p78.SplitAfterN),
+				"SplitAfterSeq":  reflect.ValueOf(p78.SplitAfterSeq),
+				"SplitN":         reflect.ValueOf(p78.SplitN),
+				"SplitSeq":       reflect.ValueOf(p78.SplitSeq),
+				"Title":          reflect.ValueOf(p78.Title),
+				"ToLower":        reflect.ValueOf(p78.ToLower),
+				"ToLowerSpecial": reflect.ValueOf(p78.ToLowerSpecial),
+				"ToTitle":        reflect.ValueOf(p78.ToTitle),
+				"ToTitleSpecial": reflect.ValueOf(p78.ToTitleSpecial),
+				"ToUpper":        reflect.ValueOf(p78.ToUpper),
+				"ToUpperSpecial": reflect.ValueOf(p78.ToUpperSpecial),
+				"ToValidUTF8":    reflect.ValueOf(p78.ToValidUTF8),
+				"Trim":           reflect.ValueOf(p78.Trim),
+				"TrimFunc":       reflect.ValueOf(p78.TrimFunc),
+				"TrimLeft":       reflect.ValueOf(p78.TrimLeft),
+				"TrimLeftFunc":   reflect.ValueOf(p78.TrimLeftFunc),
+				"TrimPrefix":     reflect.ValueOf(p78.TrimPrefix),
+				"TrimRight":      reflect.ValueOf(p78.TrimRight),
+				"TrimRightFunc":  reflect.ValueOf(p78.TrimRightFunc),
+				"TrimSpace":      reflect.ValueOf(p78.TrimSpace),
+				"TrimSuffix":     reflect.ValueOf(p78.TrimSuffix),
 			},
 			Types: map[string]reflect.Type{
-				"Builder":  reflect.TypeFor[p76.Builder](),
-				"Reader":   reflect.TypeFor[p76.Reader](),
-				"Replacer": reflect.TypeFor[p76.Replacer](),
+				"Builder":  reflect.TypeFor[p78.Builder](),
+				"Reader":   reflect.TypeFor[p78.Reader](),
+				"Replacer": reflect.TypeFor[p78.Replacer](),
+			},
+		},
+		gx.DevPackage{
+			Path: "sync",
+			Name: "sync",
+			Values: map[string]reflect.Value{
+				"NewCond":  reflect.ValueOf(p79.NewCond),
+				"OnceFunc": reflect.ValueOf(p79.OnceFunc),
+			},
+			Types: map[string]reflect.Type{
+				"Cond":      reflect.TypeFor[p79.Cond](),
+				"Locker":    reflect.TypeFor[p79.Locker](),
+				"Map":       reflect.TypeFor[p79.Map](),
+				"Mutex":     reflect.TypeFor[p79.Mutex](),
+				"Once":      reflect.TypeFor[p79.Once](),
+				"Pool":      reflect.TypeFor[p79.Pool](),
+				"RWMutex":   reflect.TypeFor[p79.RWMutex](),
+				"WaitGroup": reflect.TypeFor[p79.WaitGroup](),
 			},
 		},
 	}

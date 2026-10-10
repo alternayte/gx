@@ -223,7 +223,7 @@ func (s *Server) check(ctx context.Context, _ *mcp.CallToolRequest, _ noInput) (
 	if err != nil {
 		return nil, CheckOutput{}, err
 	}
-	out := CheckOutput{OK: len(diags) == 0, Diagnostics: []Diagnostic{}}
+	out := CheckOutput{OK: !compiler.Failed(diags), Diagnostics: []Diagnostic{}}
 	for _, d := range diags {
 		out.Diagnostics = append(out.Diagnostics, Diagnostic{
 			Code: d.Code, File: d.File, Line: d.Line, Column: d.Col, Message: d.Msg, Fix: d.Fix, Doc: d.Doc(),
