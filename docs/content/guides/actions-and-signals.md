@@ -215,6 +215,18 @@ The request of an optimistic update goes one time. The adapter does not send it 
 
 An action with `.debounce` or `.throttle` sends its request later, so its optimistic directive has no rollback. `gx check` reports [GX4013](/errors/GX4013/) for a directive with no action.
 
+## The JSON wire
+
+`.API()` on an action gives it a JSON answer for a client that is not a page: a mobile app or a script. The page still gets its patches from the same action.
+
+- A request to the address of the action with `Accept: application/json` gets JSON.
+- The input comes from the path, the query and a JSON body. It passes `Rules()`.
+- The answer is the value that the handler gives to `gx.ToolResult(c, v)`. With no value, the status is 204.
+- A rule failure is status 422 with the field and the key of each error.
+- An action with no `.API()` answers 406 to such a request.
+
+`gx api` writes an OpenAPI 3.1 file and a TypeScript client for the marked actions. The client has one function for each action, with the types of its input and of its result.
+
 ## Events and modifiers
 
 An `on:` directive takes a browser event name.

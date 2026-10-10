@@ -64,6 +64,54 @@ var Bump = gx.Action(func(c *gx.Ctx, in route.Bump) error {
 	return c.Update(Basket(BasketProps{Lines: lines()}))
 })
 
+// Totals is the JSON result of the basket actions for a client that is not
+// a page (REQ-ACT-19).
+type Totals struct {
+	// Items is the number of items of the basket.
+	Items int `json:"items"`
+	// Lines holds the quantity of each line, by SKU.
+	Lines []LineQty `json:"lines"`
+}
+
+// LineQty is the quantity of one line.
+type LineQty struct {
+	SKU string `json:"sku"`
+	Qty int    `json:"qty"`
+}
+
+func totals() Totals {
+	ls := lines()
+	out := Totals{Items: count(ls), Lines: make([]LineQty, len(ls))}
+	for i, l := range ls {
+		out.Lines[i] = LineQty{SKU: l.SKU, Qty: l.Qty}
+	}
+	return out
+}
+
+// Sets the quantity of one line of the basket. A page gets the fragments
+// that changed, and a JSON client gets the totals.
+var SetQty = gx.Action(func(c *gx.Ctx, in route.SetQty) error {
+	found := false
+	store.Lock()
+	for i := range store.lines {
+		if store.lines[i].SKU == in.SKU {
+			store.lines[i].Qty, found = in.Qty, true
+		}
+	}
+	store.Unlock()
+	if !found {
+		return gx.NotFound()
+	}
+	gx.ToolResult(c, totals())
+	return c.Update(Basket(BasketProps{Lines: lines()}))
+}).API()
+
+// Reads the totals of the basket.
+var Count = gx.Action(func(c *gx.Ctx, in route.Count) error {
+	gx.ToolResult(c, totals())
+	return nil
+}).API()
+
 // Reset puts the first lines back.
 var Reset = gx.Action(func(c *gx.Ctx, in route.Reset) error {
 	store.Lock()
@@ -89,4 +137,4 @@ var StarSet = gx.Action(func(c *gx.Ctx, in route.StarSet) error {
 })
 
 // Routes collects the basket page and its actions.
-var Routes = gx.Collect(BasketPage, Bump, Reset, Star, StarFail, StarSet)
+var Routes = gx.Collect(BasketPage, Bump, Reset, Star, StarFail, StarSet, SetQty, Count)

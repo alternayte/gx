@@ -56,6 +56,14 @@ gx generate [app]
 
 Writes the generated Go files. Commit them.
 
+## gx api
+
+```sh
+gx api [app]
+```
+
+Writes `api/openapi.json` and `api/client.ts` for the actions with `.API()`. Commit them. `gx check` fails when one of them is stale, and it type-checks the client.
+
 ## gx fmt
 
 ```sh

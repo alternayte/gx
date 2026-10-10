@@ -1329,7 +1329,7 @@ func (g *gen) toolMarks(a *Attr, site *clientSite) []string {
 			return true
 		}
 		def := g.res.routeDefs[namedTypeKey(g.res.exprTypes[expr])]
-		if def == nil || def.tool == nil {
+		if def == nil || def.tool == nil || !def.tool.tool {
 			return true
 		}
 		out = append(out, fmt.Sprintf("gx.Attr{Key: %s, Value: %s, Kind: gx.AttrText}", strconv.Quote("data-gx-tool"), strconv.Quote(toolName(def))))

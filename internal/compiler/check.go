@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"bytes"
 	"io/fs"
 	"net/http"
 	"os"
@@ -81,8 +82,27 @@ func CheckApp(root string, opt CheckOptions) []Diagnostic {
 	}
 	if res != nil {
 		add(res.hints)
+		if len(out) == 0 || !Failed(out) {
+			add(staleAPIFiles(absoluteRoot(root), res.apiFiles()))
+		}
 	}
 	sortDiags(out)
+	return out
+}
+
+// staleAPIFiles reports a file of gx api that the module has and that
+// differs from the actions of the module (REQ-ACT-20). A module that never
+// ran gx api has no such file and no finding.
+func staleAPIFiles(root string, files map[string][]byte) []Diagnostic {
+	var out []Diagnostic
+	for _, name := range []string{"client.ts", "openapi.json"} {
+		path := filepath.Join(root, APIDir, name)
+		onDisk, err := os.ReadFile(path)
+		if err != nil || bytes.Equal(onDisk, files[name]) {
+			continue
+		}
+		out = append(out, Diagnostic{Code: CodeStale, File: path, Line: 1, Col: 1, Msg: "the file of the JSON wire is stale; run gx api"})
+	}
 	return out
 }
 

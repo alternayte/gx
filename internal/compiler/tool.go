@@ -15,7 +15,9 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-// toolDecl is one .Tool() call on a gx.Action or a gx.Form (REQ-AI-06).
+// toolDecl is one gx.Action or gx.Form with a .Tool() call (REQ-AI-06) or a
+// .API() call (REQ-ACT-19). The two need the generated description of the
+// input type.
 type toolDecl struct {
 	// route is the key of the input type: package path and name.
 	route string
@@ -23,29 +25,77 @@ type toolDecl struct {
 	// description of the tool.
 	doc string
 	at  token.Position
+	// tool is true for a chain with .Tool(), and api for one with .API().
+	tool, api bool
+	// result is the type of the value that the handler gives to
+	// gx.ToolResult, when the handler is a function literal with such
+	// calls of one type. It is nil for a handler with no result, and for
+	// one whose result the compiler cannot see; unknownResult is then
+	// true for the second case.
+	result        types.Type
+	unknownResult bool
+}
+
+// findResult reads the gx.ToolResult calls of the handler of an action.
+func (d *toolDecl) findResult(pkg *packages.Package, handler ast.Expr) {
+	lit, ok := ast.Unparen(handler).(*ast.FuncLit)
+	if !ok {
+		// A named function: its body can be in a different package.
+		d.unknownResult = true
+		return
+	}
+	ast.Inspect(lit.Body, func(n ast.Node) bool {
+		call, ok := n.(*ast.CallExpr)
+		if !ok || len(call.Args) != 2 || !isGxFunc(pkg, call.Fun, "ToolResult") {
+			return true
+		}
+		t := pkg.TypesInfo.TypeOf(call.Args[1])
+		switch {
+		case t == nil:
+			d.unknownResult = true
+		case d.result == nil:
+			d.result = t
+		case !types.Identical(d.result, t):
+			d.unknownResult = true
+		}
+		return true
+	})
+	if d.unknownResult {
+		d.result = nil
+	}
 }
 
 // toolRoot returns the gx.Action or gx.Form call at the root of a call
-// chain that has a .Tool() call, such as gx.Action(fn).Tool(gx.Confirm).
+// chain that has a .Tool() or an .API() call, such as
+// gx.Action(fn).Tool(gx.Confirm).
 func toolRoot(pkg *packages.Package, expr ast.Expr) *ast.CallExpr {
-	hasTool := false
+	root, _, _ := toolChain(pkg, expr)
+	return root
+}
+
+// toolChain returns the root of such a chain, and which of the two calls
+// the chain has.
+func toolChain(pkg *packages.Package, expr ast.Expr) (root *ast.CallExpr, tool, api bool) {
 	for {
 		call, ok := ast.Unparen(expr).(*ast.CallExpr)
 		if !ok {
-			return nil
+			return nil, false, false
 		}
 		if isGxFuncExpr(pkg, call.Fun, "Action") || isGxFuncExpr(pkg, call.Fun, "Form") {
-			if hasTool {
-				return call
+			if tool || api {
+				return call, tool, api
 			}
-			return nil
+			return nil, false, false
 		}
 		sel, ok := call.Fun.(*ast.SelectorExpr)
 		if !ok {
-			return nil
+			return nil, false, false
 		}
-		if sel.Sel.Name == "Tool" {
-			hasTool = true
+		switch sel.Sel.Name {
+		case "Tool":
+			tool = true
+		case "API":
+			api = true
 		}
 		expr = sel.X
 	}
@@ -83,7 +133,7 @@ func collectTools(pkgs []*packages.Package) map[string]*toolDecl {
 			if !ok {
 				return true
 			}
-			root := toolRoot(pkg, call)
+			root, isTool, isAPI := toolChain(pkg, call)
 			if root == nil || len(root.Args) == 0 {
 				return true
 			}
@@ -101,10 +151,18 @@ func collectTools(pkgs []*packages.Package) map[string]*toolDecl {
 				in = ptr.Elem()
 			}
 			key := namedTypeKey(in)
-			if key == "" || out[key] != nil {
+			if key == "" {
 				return true
 			}
-			out[key] = &toolDecl{route: key, doc: docs[root], at: pkg.Fset.Position(root.Pos())}
+			if have := out[key]; have != nil {
+				// The walk reaches each call of the chain: the outer
+				// call has each mark of the chain.
+				have.tool, have.api = have.tool || isTool, have.api || isAPI
+				return true
+			}
+			decl := &toolDecl{route: key, doc: docs[root], at: pkg.Fset.Position(root.Pos()), tool: isTool, api: isAPI}
+			decl.findResult(pkg, root.Args[0])
+			out[key] = decl
 			return true
 		})
 	})
@@ -424,7 +482,7 @@ func checkTools(defs []*routeDef) []Diagnostic {
 			continue
 		}
 		at := d.tool.at
-		if d.tool.doc == "" {
+		if d.tool.tool && d.tool.doc == "" {
 			out = append(out, Diagnostic{
 				Code: CodeTool, File: at.Filename, Line: at.Line, Col: at.Column,
 				Msg: "the tool of " + Quoted(d.name) + " has no description; a tool takes it from the doc comment of the variable of its action",

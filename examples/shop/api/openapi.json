@@ -1,0 +1,205 @@
+{
+  "components": {
+    "schemas": {
+      "Errors": {
+        "properties": {
+          "errors": {
+            "items": {
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "errors"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "shop",
+    "version": "1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/basket/count": {
+      "get": {
+        "description": "Reads the totals of the basket.",
+        "operationId": "basket_count",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "lines": {
+                      "items": {
+                        "properties": {
+                          "qty": {
+                            "type": "integer"
+                          },
+                          "sku": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "sku",
+                          "qty"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "lines"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "The result of the action."
+          },
+          "204": {
+            "description": "The action ran and has no result."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "A rule of the input failed."
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "The call failed."
+          }
+        }
+      }
+    },
+    "/basket/qty/{sku}": {
+      "post": {
+        "description": "Sets the quantity of one line of the basket. A page gets the fragments that changed, and a JSON client gets the totals.",
+        "operationId": "basket_set_qty",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sku",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "qty": {
+                    "maximum": 99,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "lines": {
+                      "items": {
+                        "properties": {
+                          "qty": {
+                            "type": "integer"
+                          },
+                          "sku": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "sku",
+                          "qty"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "lines"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "The result of the action."
+          },
+          "204": {
+            "description": "The action ran and has no result."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "A rule of the input failed."
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "The call failed."
+          }
+        }
+      }
+    }
+  }
+}

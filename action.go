@@ -14,6 +14,8 @@ type action[In any] struct {
 	external string
 	// tool is set by Tool: the action is a tool for an agent (REQ-AI-06).
 	tool *toolDef
+	// api is set by API: the action answers JSON (REQ-ACT-19).
+	api *toolDef
 }
 
 // Action registers a handler for a route type of any method. The handler
@@ -58,6 +60,12 @@ func (a *action[In]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	tc := toolCallOf(r)
+	if tc == nil && wantsJSON(r) {
+		// The JSON wire: an action with API answers JSON, and each other
+		// action answers 406 (REQ-ACT-19).
+		a.serveJSON(w, r)
+		return
+	}
 	if tc != nil {
 		tc.done = true
 	}

@@ -3,9 +3,11 @@
 package route
 
 import (
+	"fmt"
 	gx "github.com/alternayte/gx"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -30,6 +32,34 @@ func (in Bump) URL() string {
 	b.WriteString("/")
 	b.WriteString(url.PathEscape(in.SKU))
 	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of Count.
+func (Count) Pattern() string { return "GET /basket/count" }
+
+// Bind fills Count from the request.
+func (in *Count) Bind(r *http.Request) error {
+	return nil
+}
+
+// URL returns the path of Count.
+func (in Count) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("basket")
+	b.WriteString("/")
+	b.WriteString("count")
+	return gx.BasePath() + b.String()
+}
+
+// GxTool describes Count as a tool.
+func (Count) GxTool() gx.ToolInfo {
+	return gx.ToolInfo{
+		Name:        "basket_count",
+		Description: "Reads the totals of the basket.",
+		Schema:      "{\"additionalProperties\":false,\"properties\":{},\"type\":\"object\"}",
+		Fields:      []gx.ToolField{},
+	}
 }
 
 // Pattern returns the method and pattern of Page.
@@ -64,6 +94,97 @@ func (in Reset) URL() string {
 	b.WriteString("/")
 	b.WriteString("reset")
 	return gx.BasePath() + b.String()
+}
+
+// Pattern returns the method and pattern of SetQty.
+func (SetQty) Pattern() string { return "POST /basket/qty/{sku}" }
+
+// GxBindForm fills SetQty and returns one message key per field
+// that did not convert (REQ-FRM-07).
+func (in *SetQty) GxBindForm(r *http.Request) (map[string]string, error) {
+	errs := map[string]string{}
+	if v := gx.PathValue(r, "sku"); v != "" {
+		in.SKU = string(v)
+	}
+	{
+		if v := gx.FormText(r, "qty"); v != "" {
+			x, err := strconv.ParseInt(v, 10, 0)
+			if err != nil {
+				errs["qty"] = "invalid"
+			} else {
+				in.Qty = int(x)
+			}
+		}
+	}
+	return errs, nil
+}
+
+// Bind fills SetQty from the request.
+func (in *SetQty) Bind(r *http.Request) error {
+	errs, err := in.GxBindForm(r)
+	if err != nil {
+		return err
+	}
+	for _, name := range gx.FieldNames(errs) {
+		return fmt.Errorf("gx: %s: %s", name, errs[name])
+	}
+	return nil
+}
+
+// URL returns the path of SetQty.
+func (in SetQty) URL() string {
+	var b strings.Builder
+	b.WriteString("/")
+	b.WriteString("basket")
+	b.WriteString("/")
+	b.WriteString("qty")
+	b.WriteString("/")
+	b.WriteString(url.PathEscape(in.SKU))
+	return gx.BasePath() + b.String()
+}
+
+// SetQtyForm is the generated form value of SetQty (REQ-FRM-03).
+type SetQtyForm struct {
+	gx.FormMeta
+	SKU gx.FormField[string]
+	Qty gx.FormField[int]
+}
+
+// GxFormValue fills the form value of SetQty (REQ-FRM-03).
+func (in *SetQty) GxFormValue(errs map[string]string) gx.FormValue {
+	f := SetQtyForm{FormMeta: gx.FormMeta{Name: "setQty", ID: "setQty-form", Action: in.URL(), Method: "POST", Enctype: ""}}
+	f.SKU = gx.FormField[string]{Name: "", ID: gx.FieldID("setQty", ""), Value: in.SKU, ErrorKey: errs[""], Error: gx.Translate(errs[""], gx.DefaultMessage(errs[""])), Constraints: nil, ValidateURL: gx.ValidateURL(in.URL(), "")}
+	f.Qty = gx.FormField[int]{Name: "qty", ID: gx.FieldID("setQty", "qty"), Value: in.Qty, ErrorKey: errs["qty"], Error: gx.Translate(errs["qty"], gx.DefaultMessage(errs["qty"])), Constraints: gx.Attrs{gx.Attr{Key: "min", Value: "1", Kind: gx.AttrText}, gx.Attr{Key: "max", Value: "99", Kind: gx.AttrText}}, ValidateURL: gx.ValidateURL(in.URL(), "qty")}
+	return f
+}
+
+// GxFieldName returns the form field name of a field pointer (REQ-FRM-02).
+func (in *SetQty) GxFieldName(ptr any) string {
+	switch ptr {
+	case any(&in.SKU):
+		return ""
+	case any(&in.Qty):
+		return "qty"
+	}
+	return ""
+}
+
+// GxNewForm returns a fresh SetQty (REQ-FRM-02).
+func (in *SetQty) GxNewForm() gx.FormInput { return &SetQty{} }
+
+// GxRunForm calls the form handler with the concrete input type (REQ-FRM-02).
+func (in *SetQty) GxRunForm(ctx *gx.Ctx, fn any) error {
+	return fn.(func(*gx.Ctx, *SetQty) error)(ctx, in)
+}
+
+// GxTool describes SetQty as a tool.
+func (SetQty) GxTool() gx.ToolInfo {
+	return gx.ToolInfo{
+		Name:        "basket_set_qty",
+		Description: "Sets the quantity of one line of the basket. A page gets the fragments that changed, and a JSON client gets the totals.",
+		Schema:      "{\"additionalProperties\":false,\"properties\":{\"qty\":{\"maximum\":99,\"minimum\":1,\"type\":\"integer\"},\"sku\":{\"type\":\"string\"}},\"required\":[\"sku\"],\"type\":\"object\"}",
+		Fields:      []gx.ToolField{{Name: "sku", In: "path"}, {Name: "qty", In: "form"}},
+	}
 }
 
 // Pattern returns the method and pattern of Star.

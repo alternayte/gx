@@ -1263,7 +1263,7 @@ func renderFormValue(b *bytes.Buffer, d *routeDef) {
 		enctype = "multipart/form-data"
 	}
 	toolField := ""
-	if d.tool != nil {
+	if d.tool != nil && d.tool.tool {
 		toolField = ", Tool: " + strconv.Quote(toolName(d))
 	}
 	b.WriteString("\tf := " + d.name + "Form{FormMeta: gx.FormMeta{Name: " + strconv.Quote(name) +

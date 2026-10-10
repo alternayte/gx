@@ -73,6 +73,8 @@ func Main(args []string, opts ...Option) int {
 		return runCheck(args[1:])
 	case "generate":
 		return runGenerate(args[1:])
+	case "api":
+		return runAPI(args[1:])
 	case "build":
 		return runBuild(args[1:])
 	case "dev":
@@ -128,6 +130,7 @@ Commands:
   fmt       format .gx files in place, or stdin when no path is given
   check     check a module and fail on stale generated code, with --json
   generate  write the generated Go files of a module
+  api       write the OpenAPI file and the TypeScript client of the actions with .API()
   build     generate the module and build its app binary
   dev       run the app with rebuild, restart, morph and the error overlay
   routes    print the routes of a module, with --json for machine output
@@ -1325,6 +1328,36 @@ func runDev(args []string) int {
 	if err := devserver.Run(ctx, devserver.Options{Dir: dir, Main: *main, Addr: *addr, Log: os.Stdout}); err != nil {
 		fmt.Fprintf(os.Stderr, "gx dev: %v\n", err)
 		return 1
+	}
+	return 0
+}
+
+// runAPI writes the files of the JSON wire of a module into its api
+// directory (REQ-ACT-20).
+func runAPI(args []string) int {
+	dir := "."
+	if len(args) > 0 {
+		dir = args[0]
+	}
+	files, diags := compiler.APIFiles(dir)
+	if len(diags) > 0 {
+		printDiags(diags)
+		return 1
+	}
+	if len(files) == 0 {
+		fmt.Fprintln(os.Stderr, "gx api: the module has no action with .API()")
+		return 1
+	}
+	out := filepath.Join(dir, compiler.APIDir)
+	if err := os.MkdirAll(out, 0o755); err != nil {
+		fmt.Fprintf(os.Stderr, "gx api: %v\n", err)
+		return 1
+	}
+	for _, name := range []string{"openapi.json", "client.ts"} {
+		if err := os.WriteFile(filepath.Join(out, name), files[name], 0o644); err != nil {
+			fmt.Fprintf(os.Stderr, "gx api: %v\n", err)
+			return 1
+		}
 	}
 	return 0
 }

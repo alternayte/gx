@@ -44,6 +44,8 @@ An HTML event attribute such as `onclick` cannot take an expression. That is [GX
 
 Each request that is not a `GET` passes the cross-origin check of Go `net/http`. A browser that sends no Fetch Metadata needs a token. The Gx runtime adds the token to each request.
 
+A call of the JSON wire with no `Cookie` header needs no token. With no cookie, a page of a different site has no credential of the user to send. A JSON call with a cookie needs the token, as each other request. Gx does not issue or check a bearer token; your middleware reads the `Authorization` header.
+
 `gx.App` applies the check to each route. An action or a form on a different router applies the cross-origin check to itself. The token needs a cookie, so put `gx.CSRF` around that router as middleware to protect a browser that sends no Fetch Metadata.
 
 ## Input

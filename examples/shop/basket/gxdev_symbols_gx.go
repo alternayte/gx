@@ -25,8 +25,10 @@ func GxDevSymbols() gx.DevPackage {
 			"BasketPage":  reflect.ValueOf(&BasketPage).Elem(),
 			"BasketView":  reflect.ValueOf(BasketView),
 			"Bump":        reflect.ValueOf(&Bump).Elem(),
+			"Count":       reflect.ValueOf(&Count).Elem(),
 			"Reset":       reflect.ValueOf(&Reset).Elem(),
 			"Routes":      reflect.ValueOf(&Routes).Elem(),
+			"SetQty":      reflect.ValueOf(&SetQty).Elem(),
 			"Star":        reflect.ValueOf(&Star).Elem(),
 			"StarFail":    reflect.ValueOf(&StarFail).Elem(),
 			"StarSet":     reflect.ValueOf(&StarSet).Elem(),
@@ -35,13 +37,16 @@ func GxDevSymbols() gx.DevPackage {
 			"firstLines":  reflect.ValueOf(firstLines),
 			"lines":       reflect.ValueOf(lines),
 			"store":       reflect.ValueOf(&store).Elem(),
+			"totals":      reflect.ValueOf(totals),
 		},
 		Types: map[string]reflect.Type{
 			"BasketProps":     reflect.TypeFor[BasketProps](),
 			"BasketViewProps": reflect.TypeFor[BasketViewProps](),
 			"Line":            reflect.TypeFor[Line](),
+			"LineQty":         reflect.TypeFor[LineQty](),
 			"StarsProps":      reflect.TypeFor[StarsProps](),
 			"StarsSignals":    reflect.TypeFor[StarsSignals](),
+			"Totals":          reflect.TypeFor[Totals](),
 		},
 	}
 }

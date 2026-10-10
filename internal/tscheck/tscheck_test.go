@@ -319,3 +319,39 @@ func TestREQ_ISL_08_BuiltInPinCoversEachPlatform(t *testing.T) {
 		t.Error("plan9/386 has a compiler")
 	}
 }
+
+// TestREQ_ACT_20_ClientTypeChecks checks that the pinned TypeScript compiler
+// reads the client of gx api with the islands: the client of the shop has no
+// error, and an error in a client fails the check (REQ-ACT-20).
+func TestREQ_ACT_20_ClientTypeChecks(t *testing.T) {
+	shop := filepath.Join(repoRoot(t), "examples", "shop")
+	src, err := os.ReadFile(filepath.Join(shop, compiler.APIDir, "client.ts"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	// The client alone, in a module with no island.
+	dir := t.TempDir()
+	path := filepath.Join(dir, compiler.APIDir, "client.ts")
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, src, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	diags, err := (&tscheck.Manager{Root: dir}).Check(context.Background())
+	if err != nil || len(diags) != 0 {
+		t.Fatalf("the client of the shop: %v, %v", diags, err)
+	}
+	// A use of the client with a field of the wrong type is an error.
+	use := "\nexport const wrong = createClient().basketSetQty({ sku: 'milk', qty: 'two' })\n"
+	if err := os.WriteFile(path, append(src, use...), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	diags, err = (&tscheck.Manager{Root: dir}).Check(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(diags) != 1 || diags[0].Code != compiler.CodeIslandTypeScript || !strings.Contains(diags[0].Msg, "string") {
+		t.Fatalf("a wrong argument type: %v, want one TypeScript error", diags)
+	}
+}

@@ -9014,6 +9014,18 @@
       ]
     },
     {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.Count",
+      "method": "GET",
+      "pattern": "GET /basket/count",
+      "fields": [],
+      "kind": "action",
+      "handler": "basket.Count",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
       "type": "github.com/alternayte/gx/examples/shop/basket/route.Page",
       "method": "GET",
       "pattern": "GET /basket",
@@ -9032,6 +9044,31 @@
       "fields": [],
       "kind": "action",
       "handler": "basket.Reset",
+      "prefix": "/",
+      "layouts": [
+        "ShellLayout"
+      ]
+    },
+    {
+      "type": "github.com/alternayte/gx/examples/shop/basket/route.SetQty",
+      "method": "POST",
+      "pattern": "POST /basket/qty/{sku}",
+      "fields": [
+        {
+          "name": "SKU",
+          "type": "string",
+          "source": "path",
+          "key": "sku"
+        },
+        {
+          "name": "Qty",
+          "type": "int",
+          "source": "form",
+          "key": "qty"
+        }
+      ],
+      "kind": "action",
+      "handler": "basket.SetQty",
       "prefix": "/",
       "layouts": [
         "ShellLayout"
@@ -9502,10 +9539,26 @@
       "external": false
     },
     {
+      "handler": "basket.Count",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.Count",
+      "method": "GET",
+      "pattern": "GET /basket/count",
+      "signals": [],
+      "external": false
+    },
+    {
       "handler": "basket.Reset",
       "route": "github.com/alternayte/gx/examples/shop/basket/route.Reset",
       "method": "POST",
       "pattern": "POST /basket/reset",
+      "signals": [],
+      "external": false
+    },
+    {
+      "handler": "basket.SetQty",
+      "route": "github.com/alternayte/gx/examples/shop/basket/route.SetQty",
+      "method": "POST",
+      "pattern": "POST /basket/qty/{sku}",
       "signals": [],
       "external": false
     },

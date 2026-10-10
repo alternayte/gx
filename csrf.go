@@ -36,13 +36,21 @@ func CSRF(next http.Handler) http.Handler {
 			// header. Its request needs the token.
 			if r.Method != http.MethodGet && r.Method != http.MethodHead && r.Method != http.MethodOptions &&
 				r.Header.Get("Sec-Fetch-Site") == "" && r.Header.Get("Sec-Fetch-Mode") == "" && browserShaped(r) &&
-				!csrfTokenOK(r) {
+				!cookielessJSON(r) && !csrfTokenOK(r) {
 				http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 				return
 			}
 			next.ServeHTTP(w, r)
 		})).ServeHTTP(w, r)
 	})
+}
+
+// cookielessJSON reports whether a request is a call of the JSON wire with
+// no cookie. It needs no token: with no cookie, a page of a different site
+// has no credential of the user to send (SI-16). The middleware of the app
+// reads the Authorization header of such a call.
+func cookielessJSON(r *http.Request) bool {
+	return wantsJSON(r) && len(r.Header.Values("Cookie")) == 0
 }
 
 // browserShaped reports whether a request looks like a browser request: it

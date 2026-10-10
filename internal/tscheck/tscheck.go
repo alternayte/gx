@@ -447,7 +447,13 @@ func (m *Manager) Check(ctx context.Context) ([]compiler.Diagnostic, error) {
 		return nil, err
 	}
 	refs := compiler.Islands(root)
-	if len(refs) == 0 {
+	// The TypeScript client of gx api is checked with the islands
+	// (REQ-ACT-20).
+	client := filepath.Join(root, compiler.APIDir, "client.ts")
+	if !fileExists(client) {
+		client = ""
+	}
+	if len(refs) == 0 && client == "" {
 		return nil, nil
 	}
 	bin, err := m.Ensure(ctx)
@@ -461,6 +467,9 @@ func (m *Manager) Check(ctx context.Context) ([]compiler.Diagnostic, error) {
 		args = append(args, options...)
 		for _, ref := range refs {
 			args = append(args, ref.File)
+		}
+		if client != "" {
+			args = append(args, client)
 		}
 		// The declarations of the pinned packages (REQ-ISL-07).
 		if types := filepath.Join(root, filepath.FromSlash(jspin.TypesFile)); fileExists(types) {
