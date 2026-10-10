@@ -78,10 +78,14 @@ func (a *action[In]) serveJSON(w http.ResponseWriter, r *http.Request) {
 	for _, f := range a.api.info.Fields {
 		v, ok := args[f.Name]
 		if !ok && f.In == "signal" && r.URL.Query().Has(f.Name) {
-			// A method with no body has each argument in the query. A
-			// signal value is JSON there: 3, true or "text".
+			// A method with no body has each argument in the query,
+			// as the client of gx api writes it: the text of the
+			// value. The schema of the input gives the type. A string
+			// stays the text: the term "123" is not the number 123.
 			text := r.URL.Query().Get(f.Name)
-			if err := json.Unmarshal([]byte(text), &v); err != nil {
+			if schemaType(a.api.info.Schema, f.Name) == "string" {
+				v = text
+			} else if err := json.Unmarshal([]byte(text), &v); err != nil {
 				v = text
 			}
 			ok = true
@@ -161,4 +165,19 @@ func (a *action[In]) serveJSON(w http.ResponseWriter, r *http.Request) {
 	default:
 		w.WriteHeader(http.StatusNoContent)
 	}
+}
+
+// schemaType returns the JSON type of one property of an input schema, or
+// "" when the schema does not give one type.
+func schemaType(schema, name string) string {
+	var doc struct {
+		Properties map[string]struct {
+			Type any `json:"type"`
+		} `json:"properties"`
+	}
+	if json.Unmarshal([]byte(schema), &doc) != nil {
+		return ""
+	}
+	t, _ := doc.Properties[name].Type.(string)
+	return t
 }

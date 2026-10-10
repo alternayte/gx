@@ -398,6 +398,8 @@ func renderNode(b *bytes.Buffer, n Node, st *renderState) {
 		t.render(b, st)
 	case *openNode:
 		writeAttrs(b, t.name, t.attrs, st)
+	case goneNode:
+		st.goneFragment(string(t))
 	}
 }
 

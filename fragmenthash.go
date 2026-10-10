@@ -6,6 +6,7 @@ import (
 	"errors"
 	"hash/fnv"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -45,6 +46,21 @@ type fragmentRecord struct {
 	hash   string
 	node   Node
 	parent int
+	// gone is true for a fragment that the render does not have
+	// (gx.NoFragment).
+	gone bool
+}
+
+// goneFragment records a fragment that this render does not have.
+func (st *renderState) goneFragment(id string) {
+	if st.record == nil || id == "" {
+		return
+	}
+	parent := -1
+	if len(st.frags) > 0 {
+		parent = st.frags[len(st.frags)-1].rec
+	}
+	*st.record = append(*st.record, fragmentRecord{id: id, parent: parent, gone: true})
 }
 
 // openFragment writes the hash attribute of a fragment element, with a place
@@ -121,6 +137,12 @@ func (c *Ctx) Update(n Node) error {
 	var records []fragmentRecord
 	st := newRenderState(c.R)
 	st.hashes, st.record = true, &records
+	// The hashes of the browser are from the render of its page. A typed
+	// link has the active mark for the address of that page, and not for
+	// the address of the action, so the comparison renders for the page.
+	if uri := pageURI(c.R); uri != "" {
+		st.requestURI = uri
+	}
 	b := getBuffer()
 	collectHead(n, st, 1)
 	renderNode(b, n, st)
@@ -136,6 +158,15 @@ func (c *Ctx) Update(n Node) error {
 			sent[i] = true
 			continue
 		}
+		if rec.gone {
+			// The browser has a fragment that the new props do not
+			// give: the patch removes it.
+			if _, ok := have[rec.id]; ok {
+				sent[i] = true
+				c.res.Patches = append(c.res.Patches, ElementPatch{Mode: ModeRemove, Target: idSelector(rec.id)})
+			}
+			continue
+		}
 		if rec.id == "" || have[rec.id] == rec.hash {
 			continue
 		}
@@ -143,4 +174,18 @@ func (c *Ctx) Update(n Node) error {
 		c.res.Patches = append(c.res.Patches, ElementPatch{Mode: ModeMorph, Target: idSelector(rec.id), Node: rec.node})
 	}
 	return nil
+}
+
+// pageURI returns the address of the page that sent an action request: the
+// path and the query of its Referer, when the page is of this host. It
+// returns "" when the request does not name the page.
+func pageURI(r *http.Request) string {
+	if r == nil {
+		return ""
+	}
+	u, err := url.Parse(r.Referer())
+	if err != nil || u.Host == "" || u.Host != r.Host {
+		return ""
+	}
+	return u.RequestURI()
 }

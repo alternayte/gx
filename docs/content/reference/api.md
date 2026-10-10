@@ -2060,6 +2060,14 @@ func Island(name, props string, opts ...IslandOption) Node
 
 Island returns the element of a TypeScript island. name is the import path of the package and the component name. props is the JSON of the props. The generated component function of an island calls it.
 
+#### func NoFragment
+
+```go
+func NoFragment(id string) Node
+```
+
+NoFragment returns the mark of a fragment that this render does not have. The fragment is in a branch of an if or a switch that the render did not take. The mark writes nothing. c.Update sends a patch that removes the fragment when the browser has it. The compiler writes the call.
+
 #### func Open
 
 ```go

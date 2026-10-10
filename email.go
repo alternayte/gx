@@ -189,8 +189,13 @@ func (w *emailWriter) start(src string, i int) (int, error) {
 		w.text.WriteByte('<')
 		return i + 1, nil
 	}
-	if name == "script" {
+	switch name {
+	case "script":
 		return 0, emailError("a script element")
+	case islandElement:
+		// The walk reads what the email holds, so it finds an island in
+		// trusted raw HTML too.
+		return 0, emailError("an island")
 	}
 	if name == "html" {
 		w.ownDocument = true
@@ -236,6 +241,12 @@ func (w *emailWriter) start(src string, i int) (int, error) {
 		switch {
 		case lower == "class":
 			return 0, emailError("a class attribute on <" + name + ">")
+		case lower == "data-signals" || lower == "data-bind" || strings.HasPrefix(lower, "data-signals:") || strings.HasPrefix(lower, "data-bind:"):
+			return 0, emailError("a signal on <" + name + ">")
+		case lower == "data-gx-module":
+			return 0, emailError("an island")
+		case adapterMarker(lower) || strings.HasPrefix(lower, "hx-"):
+			return 0, emailError("a client expression or an action invocation on <" + name + ">")
 		case strings.HasPrefix(lower, "data-gx-"):
 			// A marker for the runtime of a page, such as the marker of
 			// a typed link.

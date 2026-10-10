@@ -91,6 +91,18 @@ func OpenFragment(name string, attrs Attrs) Node {
 	return &openNode{name: name, attrs: attrs, frag: true}
 }
 
+// NoFragment returns the mark of a fragment that this render does not
+// have. The fragment is in a branch of an if or a switch that the render
+// did not take. The mark writes nothing. c.Update sends a patch that
+// removes the fragment when the browser has it (REQ-ACT-16). The compiler
+// writes the call.
+func NoFragment(id string) Node { return goneNode(id) }
+
+// goneNode is the mark of NoFragment: the id of the fragment.
+type goneNode string
+
+func (goneNode) node() {}
+
 // tmplNode is a template value. A value with few dynamic values holds them
 // in itself, so it is one allocation.
 type tmplNode struct {
@@ -215,6 +227,9 @@ type patchRoot struct {
 // patchRoots returns the top-level elements of a patch node.
 func patchRoots(n Node) ([]patchRoot, error) {
 	switch t := n.(type) {
+	case goneNode:
+		// The mark of a fragment that is not there has no element.
+		return nil, nil
 	case *elNode:
 		return []patchRoot{{name: t.name, id: attrValue(t.attrs, "id"), node: t}}, nil
 	case *tmplElNode:

@@ -470,13 +470,19 @@ func (g *gen) emitControl(c *Control, builder string) {
 		if header == "" {
 			header = "true"
 		}
+		// Each branch names the fragments of the other branch: the
+		// render then knows the fragments that it does not have
+		// (REQ-ACT-16).
+		inBody, inElse := g.branchFragments(c.Body), g.branchFragments(c.Else)
 		g.write("if %s {", header)
 		g.ind++
+		g.noFragments(builder, inElse, inBody)
 		g.emitStmts(c.Body, builder)
 		g.ind--
-		if len(c.Else) > 0 {
+		if len(c.Else) > 0 || len(missing(inBody, inElse)) > 0 {
 			g.write("} else {")
 			g.ind++
+			g.noFragments(builder, inBody, inElse)
 			g.emitStmts(c.Else, builder)
 			g.ind--
 		}
@@ -500,19 +506,102 @@ func (g *gen) emitControl(c *Control, builder string) {
 			g.write("switch %s {", header)
 		}
 		g.ind++
-		for _, cs := range c.Cases {
+		var all []fragmentRef
+		own := make([][]fragmentRef, len(c.Cases))
+		hasDefault := false
+		for i, cs := range c.Cases {
+			own[i] = g.branchFragments(cs.Body)
+			all = append(all, missing(own[i], all)...)
+			hasDefault = hasDefault || cs.IsDefault
+		}
+		for i, cs := range c.Cases {
 			if cs.IsDefault {
 				g.write("default:")
 			} else {
 				g.write("case %s:", cs.Header)
 			}
 			g.ind++
+			g.noFragments(builder, all, own[i])
 			g.emitStmts(cs.Body, builder)
+			g.ind--
+		}
+		if !hasDefault && len(all) > 0 {
+			g.write("default:")
+			g.ind++
+			g.noFragments(builder, all, nil)
 			g.ind--
 		}
 		g.ind--
 		g.write("}")
 	}
+}
+
+// fragmentRef is one fragment of a branch: its name and the Go expression
+// of its id.
+type fragmentRef struct {
+	name, id string
+}
+
+// missing returns the fragments of list that have is without.
+func missing(list, have []fragmentRef) []fragmentRef {
+	var out []fragmentRef
+	for _, f := range list {
+		found := false
+		for _, h := range have {
+			found = found || h.id == f.id
+		}
+		if !found {
+			out = append(out, f)
+		}
+	}
+	return out
+}
+
+// noFragments writes the mark of each fragment of other that the branch
+// with the fragments own does not have.
+func (g *gen) noFragments(builder string, other, own []fragmentRef) {
+	for _, f := range missing(other, own) {
+		g.add(builder, "gx.NoFragment("+f.id+")")
+	}
+}
+
+// branchFragments returns the fragments of one branch of an if or a switch
+// whose id has the same expression outside the branch: the fragment has no
+// key of its own and no element with a key around it in the branch, and it
+// is not in a loop, where each turn has its own id.
+func (g *gen) branchFragments(ns []Node) []fragmentRef {
+	var out []fragmentRef
+	var walk func(ns []Node)
+	walk = func(ns []Node) {
+		for _, n := range ns {
+			switch t := n.(type) {
+			case *Control:
+				if t.Kind == "for" {
+					continue
+				}
+				walk(t.Body)
+				walk(t.Else)
+				for _, cs := range t.Cases {
+					walk(cs.Body)
+				}
+			case *Element:
+				if g.keyAttrExpr(t) != "" {
+					continue
+				}
+				for i := range t.Attrs {
+					if t.Attrs[i].Kind == AttrFragment {
+						ref := fragmentRef{name: t.Attrs[i].Name, id: g.fragmentID(t, t.Attrs[i].Name)}
+						if len(missing([]fragmentRef{ref}, out)) > 0 {
+							out = append(out, ref)
+						}
+					}
+				}
+				walk(t.Children)
+			}
+		}
+	}
+	walk(ns)
+	return out
 }
 
 // intTypes are the signed integer types of Go. A named type is not in the

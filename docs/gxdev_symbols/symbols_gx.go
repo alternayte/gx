@@ -203,6 +203,7 @@ func Packages() []gx.DevPackage {
 				"New":                   reflect.ValueOf(gx.New),
 				"NewMemoryBus":          reflect.ValueOf(gx.NewMemoryBus),
 				"NewTemplate":           reflect.ValueOf(gx.NewTemplate),
+				"NoFragment":            reflect.ValueOf(gx.NoFragment),
 				"Nonce":                 reflect.ValueOf(gx.Nonce),
 				"NotFound":              reflect.ValueOf(gx.NotFound),
 				"On":                    reflect.ValueOf(gx.On),

@@ -44,17 +44,32 @@ export const take = (): Kept | undefined => {
 export const failed = (res: { ok: boolean; headers: { get(name: string): string | null } }): boolean =>
   !res.ok || res.headers.get('Gx-Error') !== null
 
+// flying holds the saved values of the requests with no answer yet: for
+// each signal, its value before the first of them. open counts them.
+let flying: Kept = {}
+let open = 0
+
 // watch gives restore the saved values when the request fails: no answer,
-// or an answer that failed says is a failure.
+// or an answer that failed says is a failure. With two requests and no
+// answer yet, the value to put back is the value before the first one. An
+// answer of the server wins, so it removes the saved values of each open
+// request.
 export const watch = (request: Promise<Response>, kept: Kept | undefined, restore: (kept: Kept) => void): Promise<Response> => {
   if (kept === undefined) return request
+  const all = mergeKept(flying, kept)
+  open++
+  const done = (bad: boolean): void => {
+    if (bad) restore(all)
+    else for (const key in all) delete all[key]
+    if (!--open) flying = {}
+  }
   return request.then(
     (res) => {
-      if (failed(res)) restore(kept)
+      done(failed(res))
       return res
     },
     (err) => {
-      restore(kept)
+      done(true)
       throw err
     },
   )

@@ -109,6 +109,19 @@ func (l *loader) routeClasses(res *typesResult, root string) map[string][]string
 		for path := range pkg.Imports {
 			closure(into, path)
 		}
+		// An action that a template of the package invokes can patch a
+		// component of its own slice. The template imports only the
+		// route package of that slice (DR-01), so the slice comes in by
+		// the route type of the invocation.
+		if dir, ok := moduleDir(module, pkgPath); ok {
+			for _, f := range l.load(dir).Files {
+				for _, routePkg := range invokedRoutePackages(f) {
+					if slice, ok := strings.CutSuffix(routePkg, "/route"); ok {
+						closure(into, slice)
+					}
+				}
+			}
+		}
 	}
 	// component returns the generated component that an expression names,
 	// or nil.
@@ -248,4 +261,43 @@ func routeClassesBytes(lists map[string][]string) []byte {
 		return []byte("{}\n")
 	}
 	return append(b, '\n')
+}
+
+// invokedRoutePackages returns the import path of each route package whose
+// type a template of the file gives to an on: directive or to the action of
+// a form.
+func invokedRoutePackages(f *File) []string {
+	imports := map[string]string{}
+	for _, imp := range f.Imports {
+		fields := strings.Fields(imp.Raw)
+		if len(fields) == 0 {
+			continue
+		}
+		path, ok := unquoteGo(fields[len(fields)-1])
+		if !ok {
+			continue
+		}
+		name := path[strings.LastIndex(path, "/")+1:]
+		if len(fields) > 1 {
+			name = fields[0]
+		}
+		imports[name] = path
+	}
+	var out []string
+	walkElements(f.Body, func(el *Element) {
+		for i := range el.Attrs {
+			a := &el.Attrs[i]
+			if a.Kind != AttrExpr || !(strings.HasPrefix(a.Name, "on:") || a.Name == "action" || a.Name == "formaction") {
+				continue
+			}
+			// The value starts with the route type: cartroute.Add{...}.
+			value := strings.TrimSpace(a.Value)
+			if dot := strings.IndexByte(value, '.'); dot > 0 {
+				if path, ok := imports[value[:dot]]; ok {
+					out = append(out, path)
+				}
+			}
+		}
+	})
+	return out
 }

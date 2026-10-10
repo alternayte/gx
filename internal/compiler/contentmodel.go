@@ -49,6 +49,20 @@ var parentsOf = map[string][]string{
 	"legend":   {"fieldset"},
 }
 
+// childrenOf holds, for a part of a table, the elements that it can hold. A
+// browser moves each other element to the place before the table.
+var childrenOf = map[string][]string{
+	"table": {"caption", "colgroup", "thead", "tbody", "tfoot", "tr"},
+	"thead": {"tr"},
+	"tbody": {"tr"},
+	"tfoot": {"tr"},
+	"tr":    {"td", "th"},
+}
+
+// anywhere are the elements that each parent can hold: the parser of a
+// browser leaves them where they are.
+var anywhere = map[string]bool{"script": true, "template": true, "style": true}
+
 // checkContentModel returns the content model findings of one file.
 func checkContentModel(f *File) []Diagnostic {
 	c := &contentCheck{file: f, labelFor: map[string]bool{}, ids: map[string][]idUse{}}
@@ -106,6 +120,10 @@ type contentCheck struct {
 	labelFor map[string]bool
 	ids      map[string][]idUse
 	out      []Diagnostic
+	// slot counts the component tags around the node: the content of a
+	// component goes where the component puts it, for example inside its
+	// label.
+	slot int
 }
 
 func (c *contentCheck) report(code string, el *Element, msg, fix string) {
@@ -158,7 +176,9 @@ func (c *contentCheck) walk(ns []Node, parents []*Element, branch []branchStep) 
 			if _, _, comp := componentTag(t.Name); comp || strings.HasPrefix(t.Name, ":") {
 				// The parent of the content of a component is in the
 				// file of the component.
+				c.slot++
 				c.walk(t.Children, nil, branch)
+				c.slot--
 				continue
 			}
 			c.element(t, parents, branch)
@@ -196,6 +216,25 @@ func (c *contentCheck) element(el *Element, parents []*Element, branch []branchS
 			}
 		}
 	}
+	if el.Name == "form" {
+		for _, p := range parents {
+			if p.Name == "form" {
+				c.report(CodeBadParent, el, "the <form> is inside a <form>: a browser drops the inner form",
+					"put the second <form> after the first one, or give a control of the first one the form attribute")
+				break
+			}
+		}
+	}
+	if allowed, ok := childrenOf[parent.Name]; ok && !anywhere[el.Name] && !strings.Contains(el.Name, "-") {
+		good := false
+		for _, name := range allowed {
+			good = good || el.Name == name
+		}
+		if _, hasRule := parentsOf[el.Name]; !good && !hasRule {
+			c.report(CodeBadParent, el, "the <"+el.Name+"> is inside a <"+parent.Name+">: a browser moves it to the place before the table",
+				"put the <"+el.Name+"> inside a <td> or a <th>")
+		}
+	}
 	// An element that the parser of a browser moves or drops.
 	if allowed, ok := parentsOf[el.Name]; ok {
 		good := false
@@ -220,7 +259,7 @@ func (c *contentCheck) element(el *Element, parents []*Element, branch []branchS
 				break
 			}
 			// These elements start a new place for block content.
-			if p == "button" || p == "td" || p == "th" || p == "li" || p == "div" || p == "object" || p == "blockquote" || p == "a" {
+			if p == "button" || p == "td" || p == "th" || p == "li" || p == "div" || p == "object" || p == "blockquote" {
 				break
 			}
 		}
@@ -235,7 +274,9 @@ func attrIs(el *Element, name, value string) bool {
 
 // control checks that a form control has a label that the file shows.
 func (c *contentCheck) control(el *Element, parents []*Element) {
-	if hasSpread(el) {
+	if hasSpread(el) || c.slot > 0 {
+		// In the content of a component, the component can write the
+		// label around its children.
 		return
 	}
 	if el.Name == "input" {
@@ -269,6 +310,17 @@ func (c *contentCheck) control(el *Element, parents []*Element) {
 // hold: they are not in two branches of one if or switch.
 func (c *contentCheck) duplicateIDs() {
 	for id, uses := range c.ids {
+		// One element with a static id in the body of a loop is the id on
+		// each element that the loop writes.
+		for _, use := range uses {
+			for _, step := range use.branch {
+				if step.loop {
+					c.report(CodeDuplicateID, use.el, "the id "+Quoted(id)+" is on an element in a loop: each turn of the loop writes an element with that id",
+						"make the id from a value of the loop, for example id={\"row-\" + it.ID}")
+					break
+				}
+			}
+		}
 		for i := 1; i < len(uses); i++ {
 			for j := 0; j < i; j++ {
 				if exclusive(uses[i].branch, uses[j].branch) {
