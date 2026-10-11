@@ -110,7 +110,9 @@ test('REQ-EXP-03 a link on the static host is a full load of a working page', as
   // The page holds no layout slot, so the runtime leaves the click alone.
   expect(await page.locator('[data-gx-slot]').count()).toBe(0)
   await page.evaluate(() => ((window as unknown as { marker?: number }).marker = 1))
-  await page.click('a[href="/components/"]')
+  // The link of the content: on a wide screen the home page hides its
+  // sidebar, which has the same link.
+  await page.click('#gx-main a[href="/components/"]')
   await page.waitForURL(url + '/components/')
   await page.waitForLoadState('load')
   expect(await page.evaluate(() => (window as unknown as { marker?: number }).marker)).toBeUndefined()
