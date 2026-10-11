@@ -28,7 +28,7 @@ func roomProp(f *File) string {
 }
 
 // sharedAttrs returns the attributes of the root of a component with shared
-// signals: the signed room key, the address of the routes of the room, and
+// signals: the token of the room, the address of the routes of the room, and
 // the effect that gives each change of a shared signal to the runtime.
 func (g *gen) sharedAttrs() []string {
 	names := sharedSignals(g.file)
@@ -57,7 +57,7 @@ func (g *gen) sharedAttrs() []string {
 		quoted[i] = strconv.Quote(name)
 	}
 	return []string{
-		"gx.Attr{Key: \"data-gx-room\", Value: string(p." + room + "), Kind: gx.AttrText}",
+		"gx.Attr{Key: \"data-gx-room\", Value: gx.RoomToken(" + base + ", p." + room + "), Kind: gx.AttrText}",
 		"gx.Attr{Key: \"data-gx-room-url\", Value: gx.RoomURL(" + base + "), Kind: gx.AttrURL}",
 		"gx.Attr{Key: \"data-effect\", Value: gx.ShareEffect(" + base + ", p.GxKey, " + strings.Join(quoted, ", ") + "), Kind: gx.AttrText}",
 	}

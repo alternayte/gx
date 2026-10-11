@@ -15,6 +15,7 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
+	"time"
 )
 
 // Room is the key of a room with the signature of the server (SI-17). A
@@ -62,9 +63,20 @@ func secret() []byte {
 	return *roomSecret.Load()
 }
 
-func signRoom(key string) string {
+// The two signatures of a room have a different first part, so one is not
+// valid in the place of the other.
+const (
+	roomKeyDomain   = "gx.room.key"
+	roomTokenDomain = "gx.room.token"
+)
+
+func signRoom(parts ...string) string {
 	mac := hmac.New(sha256.New, secret())
-	mac.Write([]byte(key))
+	for _, part := range parts {
+		// The length is in the signature: two lists of parts with one
+		// joined text have different signatures.
+		mac.Write([]byte(strconv.Itoa(len(part)) + ":" + part))
+	}
 	return base64.RawURLEncoding.EncodeToString(mac.Sum(nil))
 }
 
@@ -72,22 +84,67 @@ func signRoom(key string) string {
 // (SI-17). A loader calls it for a viewer that can be in the room: the
 // middleware of the group of the page ran before the loader. The key is what
 // the viewers share, for example the id of a document.
+//
+// The value is for a prop of a component. The page does not carry it: the
+// component writes a token of its own from it (RoomToken).
 func RoomKey(c *Ctx, key string) Room {
-	return Room(base64.RawURLEncoding.EncodeToString([]byte(key)) + "." + signRoom(key))
+	return Room(base64.RawURLEncoding.EncodeToString([]byte(key)) + "." + signRoom(roomKeyDomain, key))
 }
 
-// roomKeyOf returns the key of a signed room, or false for a value that the
-// server did not sign.
-func roomKeyOf(room string) (string, bool) {
-	enc, sig, ok := strings.Cut(room, ".")
+// roomKeyLife is the shortest time for which a new token of a room is
+// valid. The stream of the room gives the page a new token before the end
+// of that time.
+var roomKeyLife = time.Hour
+
+// RoomToken returns the token that the page carries for the room of one
+// component: the key, the time of its expiry and a signature of the server
+// over the component, the key and that time (SI-17). The token of one
+// component is not valid at the routes of a different component. Generated
+// code calls it with the signal namespace of the component. A room that
+// RoomKey did not make gives an empty token, and the page joins no room.
+func RoomToken(base string, room Room) string {
+	enc, sig, ok := strings.Cut(string(room), ".")
 	if !ok {
-		return "", false
+		return ""
 	}
 	key, err := base64.RawURLEncoding.DecodeString(enc)
-	if err != nil || !hmac.Equal([]byte(sig), []byte(signRoom(string(key)))) {
-		return "", false
+	if err != nil || !hmac.Equal([]byte(sig), []byte(signRoom(roomKeyDomain, string(key)))) {
+		return ""
 	}
-	return string(key), true
+	return roomToken(base, string(key))
+}
+
+func roomToken(base, key string) string {
+	// The expiry is on a step of half of the life. Two renders in one
+	// step then write one token, so the hash of a fragment with the
+	// token does not change with each render.
+	step := int64(roomKeyLife/2/time.Second) + 1
+	return roomTokenAt(base, key, (time.Now().Unix()/step+3)*step)
+}
+
+func roomTokenAt(base, key string, unix int64) string {
+	expiry := strconv.FormatInt(unix, 10)
+	return base64.RawURLEncoding.EncodeToString([]byte(key)) + "." + expiry + "." + signRoom(roomTokenDomain, base, expiry, key)
+}
+
+// roomKeyOf returns the key and the expiry of a token of the room of the
+// component base. It returns false for a value that the server did not sign
+// for that component, and for a token after its expiry.
+func roomKeyOf(base, token string) (string, time.Time, bool) {
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		return "", time.Time{}, false
+	}
+	key, err := base64.RawURLEncoding.DecodeString(parts[0])
+	if err != nil || !hmac.Equal([]byte(parts[2]), []byte(signRoom(roomTokenDomain, base, parts[1], string(key)))) {
+		return "", time.Time{}, false
+	}
+	unix, err := strconv.ParseInt(parts[1], 10, 64)
+	expiry := time.Unix(unix, 0)
+	if err != nil || !time.Now().Before(expiry) {
+		return "", time.Time{}, false
+	}
+	return string(key), expiry, true
 }
 
 // roomPath is the path of the routes of the shared signals of a component.
@@ -179,7 +236,7 @@ func (h *sharedSignals[S]) topic(key string) string { return "gx.room:" + h.base
 // subscribe streams the values of the room to one viewer. The first frame
 // holds the last values that this replica knows.
 func (h *sharedSignals[S]) subscribe(rooms *roomHub, w http.ResponseWriter, r *http.Request) {
-	key, ok := roomKeyOf(r.URL.Query().Get("room"))
+	key, expiry, ok := roomKeyOf(h.base, r.URL.Query().Get("room"))
 	if !ok {
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 		return
@@ -201,6 +258,11 @@ func (h *sharedSignals[S]) subscribe(rooms *roomHub, w http.ResponseWriter, r *h
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.WriteString(w, ": gx room\n\n")
 	flusher.Flush()
+	// The viewer gets a new token at half of the life of its token, and
+	// opens the stream again with it. The stream of a token ends at the
+	// expiry of that token.
+	renew := time.NewTimer(time.Until(expiry) - roomKeyLife/2)
+	defer renew.Stop()
 	for {
 		if state := rooms.state(topic); state != nil {
 			if _, err := io.WriteString(w, "event: gx-room\ndata: "+string(state)+"\n\n"); err != nil {
@@ -211,6 +273,15 @@ func (h *sharedSignals[S]) subscribe(rooms *roomHub, w http.ResponseWriter, r *h
 		select {
 		case <-r.Context().Done():
 			return
+		case <-renew.C:
+			if !time.Now().Before(expiry) {
+				return
+			}
+			if _, err := io.WriteString(w, "event: gx-room-key\ndata: "+roomToken(h.base, key)+"\n\n"); err != nil {
+				return
+			}
+			flusher.Flush()
+			renew.Reset(time.Until(expiry))
 		case <-sub:
 		}
 	}
@@ -231,7 +302,7 @@ func (h *sharedSignals[S]) write(rooms *roomHub, w http.ResponseWriter, r *http.
 		writeAPIErrors(w, http.StatusBadRequest, apiError{Key: "gx.bad_input"})
 		return
 	}
-	key, ok := roomKeyOf(body.Room)
+	key, _, ok := roomKeyOf(h.base, body.Room)
 	if !ok {
 		writeAPIErrors(w, http.StatusForbidden, apiError{Key: "gx.forbidden"})
 		return
@@ -252,7 +323,12 @@ func (h *sharedSignals[S]) write(rooms *roomHub, w http.ResponseWriter, r *http.
 	sort.Strings(names)
 	// The value has the type of the signal, and passes the rules of the
 	// Signals struct (DR-07).
+	// A rule with no field reads more than one signal: the signals that
+	// this write does not hold have the last values of the room.
 	var signals S
+	if state := rooms.state(h.topic(key)); state != nil {
+		_ = json.Unmarshal(state, &signals)
+	}
 	raw, _ := json.Marshal(body.Signals)
 	if err := json.Unmarshal(raw, &signals); err != nil {
 		writeAPIErrors(w, http.StatusBadRequest, apiError{Key: "gx.bad_input"})

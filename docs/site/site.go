@@ -103,8 +103,9 @@ var Routes = gx.Collect(PreviewPage, TableDemoPage, ResultPage, gx.ContentEntrie
 	Description: func(m Meta) string { return m.Description },
 }))
 
-// View renders one entry inside the docs shell. The home page is a splash
-// without the sidebar.
+// View renders one entry inside the docs shell. The home page is a splash:
+// it shows the sidebar only on a narrow screen, when the reader opens it with
+// the menu button of the header.
 func View(e gx.Entry[Meta]) gx.Node {
 	body := PagesBody(e)
 	head := gx.Head(gx.HeadProps{Title: e.Meta.Title})
@@ -112,16 +113,24 @@ func View(e gx.Entry[Meta]) gx.Node {
 		return gx.Frag(
 			head,
 			shell.Header(shell.HeaderProps{Site: Site}),
-			gx.El("main", gx.Attrs{{Key: "id", Value: "gx-main"}, {Key: "class", Value: "mx-auto max-w-3xl px-4"}},
-				shell.Splash(shell.SplashProps{
-					Title:   e.Meta.Title,
-					Tagline: e.Meta.Description,
-					Actions: gx.Frag(
-						docs.LinkButton(docs.LinkButtonProps{Href: entryHref("start/quick-start"), Children: gx.Text("Get started")}),
-						docs.LinkButton(docs.LinkButtonProps{Href: entryHref(indexSlug), Variant: docs.ButtonSecondary, Children: gx.Text("Browse the components")}),
-					),
-				}),
-				gx.El("article", gx.Attrs{{Key: "class", Value: "gx-content"}, {Key: "data-pagefind-body", Value: ""}}, body),
+			gx.El("div", gx.Attrs{{Key: "class", Value: "mx-auto flex max-w-3xl gap-8 px-4"}},
+				// The menu button needs the sidebar in the page. The
+				// runtime shows it from 1024px, where the button is not
+				// in the header: there the parent hides it.
+				gx.El("div", gx.Attrs{{Key: "class", Value: "contents lg:hidden"}},
+					shell.Sidebar(shell.SidebarProps{Nav: Nav(), Path: "/"}),
+				),
+				gx.El("main", gx.Attrs{{Key: "id", Value: "gx-main"}, {Key: "class", Value: "min-w-0 flex-1"}},
+					shell.Splash(shell.SplashProps{
+						Title:   e.Meta.Title,
+						Tagline: e.Meta.Description,
+						Actions: gx.Frag(
+							docs.LinkButton(docs.LinkButtonProps{Href: entryHref("start/quick-start"), Children: gx.Text("Get started")}),
+							docs.LinkButton(docs.LinkButtonProps{Href: entryHref(indexSlug), Variant: docs.ButtonSecondary, Children: gx.Text("Browse the components")}),
+						),
+					}),
+					gx.El("article", gx.Attrs{{Key: "class", Value: "gx-content"}, {Key: "data-pagefind-body", Value: ""}}, body),
+				),
 			),
 			shell.SearchDialog(shell.SearchDialogProps{}),
 		)

@@ -56,6 +56,11 @@ func TestREQ_DOC_02_Sections(t *testing.T) {
 			t.Errorf("the home page does not link to %s", href)
 		}
 	}
+	// The menu button of the header opens the sidebar: a page with the
+	// button has the sidebar.
+	if strings.Contains(home, "data-gx-menu") && !strings.Contains(home, `id="gx-sidebar"`) {
+		t.Error("the home page has the menu button and no sidebar for it")
+	}
 	// The steps of the tutorial follow each other.
 	step := get(t, app, "/tutorial/a-page/")
 	if !strings.Contains(step, `href="/tutorial/a-parameter/"`) {

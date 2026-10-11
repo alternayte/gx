@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -34,6 +35,12 @@ func (s *noteSignals) GxFieldName(ptr any) string {
 		return "title"
 	}
 	return ""
+}
+
+// noteRoom returns the token that a page carries for a room of the
+// component notes.Note.
+func noteRoom(key string) gx.Room {
+	return gx.Room(gx.RoomToken("notes.Note", gx.RoomKey(nil, key)))
 }
 
 // roomApp mounts the routes of the shared signals behind a middleware that
@@ -135,7 +142,7 @@ func quiet(t *testing.T, ch <-chan map[string]any) {
 // gets nothing, and that a new viewer gets the last value (REQ-ACT-21).
 func TestREQ_ACT_21_RoomSharesAValue(t *testing.T) {
 	srv := roomApp(t, nil)
-	doc1, doc2 := gx.RoomKey(nil, "doc-1"), gx.RoomKey(nil, "doc-2")
+	doc1, doc2 := noteRoom("doc-1"), noteRoom("doc-2")
 	writer, _ := roomViewer(t, srv, doc1)
 	reader, _ := roomViewer(t, srv, doc1)
 	other, _ := roomViewer(t, srv, doc2)
@@ -169,7 +176,7 @@ func TestREQ_ACT_21_RoomSharesAValue(t *testing.T) {
 // (SI-17).
 func TestSI_17_RoomKeyIsSigned(t *testing.T) {
 	srv := roomApp(t, nil)
-	room := gx.RoomKey(nil, "doc-1")
+	room := noteRoom("doc-1")
 	viewer, status := roomViewer(t, srv, room)
 	if status != http.StatusOK {
 		t.Fatalf("a signed key: status %d", status)
@@ -178,7 +185,7 @@ func TestSI_17_RoomKeyIsSigned(t *testing.T) {
 	// A different key with the signature of this one, and a key with no
 	// signature.
 	enc, sig, _ := strings.Cut(string(room), ".")
-	other, _, _ := strings.Cut(string(gx.RoomKey(nil, "doc-2")), ".")
+	other, _, _ := strings.Cut(string(noteRoom("doc-2")), ".")
 	for name, forged := range map[string]gx.Room{"an edited key": gx.Room(other + "." + sig), "no signature": gx.Room(enc), "an empty key": ""} {
 		if _, status := roomViewer(t, srv, forged); status != http.StatusForbidden {
 			t.Errorf("subscribe with %s: status %d, want 403", name, status)
@@ -220,11 +227,120 @@ func TestSI_17_RoomKeyIsSigned(t *testing.T) {
 	// A different secret signs a different key: a page of an app with a
 	// different secret has no valid key here.
 	gx.SetSecret([]byte("a different secret"))
-	foreign := gx.RoomKey(nil, "doc-1")
+	foreign := noteRoom("doc-1")
 	gx.SetSecret([]byte("test-secret"))
 	if res := roomWrite(t, srv, foreign, `{"typing":true}`, true); res.StatusCode != http.StatusForbidden {
 		t.Errorf("a key of a different secret: status %d, want 403", res.StatusCode)
 	}
+}
+
+// TestSI_17_RoomTokenIsForOneComponent checks that the token of a room is
+// valid only at the routes of its component and only before its expiry, and
+// that the value of the loader is not a token (SI-17).
+func TestSI_17_RoomTokenIsForOneComponent(t *testing.T) {
+	srv := roomApp(t, nil)
+	key := gx.RoomKey(nil, "doc-1")
+	for name, bad := range map[string]gx.Room{
+		"the token of a different component": gx.Room(gx.RoomToken("notes.Other", key)),
+		"the value of the loader":            key,
+		"a token after its expiry":           gx.RoomTokenAt("notes.Note", "doc-1", time.Now().Add(-time.Second)),
+	} {
+		if bad == "" {
+			t.Fatalf("%s: no token", name)
+		}
+		if _, status := roomViewer(t, srv, bad); status != http.StatusForbidden {
+			t.Errorf("subscribe with %s: status %d, want 403", name, status)
+		}
+		if res := roomWrite(t, srv, bad, `{"typing":true}`, true); res.StatusCode != http.StatusForbidden {
+			t.Errorf("write with %s: status %d, want 403", name, res.StatusCode)
+		}
+	}
+	if token := gx.RoomToken("notes.Note", "bm8.c2ln"); token != "" {
+		t.Errorf("a room that RoomKey did not make gives the token %q", token)
+	}
+}
+
+// TestSI_17_RoomStreamRenewsTheToken checks that the stream gives a viewer a
+// new token before the expiry of its token, and ends at that expiry
+// (SI-17).
+func TestSI_17_RoomStreamRenewsTheToken(t *testing.T) {
+	srv := roomApp(t, nil)
+	// The token is at less than half of its life.
+	old := gx.RoomTokenAt("notes.Note", "doc-1", time.Now().Add(2*time.Second))
+	req, _ := http.NewRequest("GET", srv.URL+"/_gx/room/notes.Note?pass=1&room="+string(old), nil)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil || res.StatusCode != http.StatusOK {
+		t.Fatalf("subscribe: %v, %v", res, err)
+	}
+	defer res.Body.Close()
+	done := make(chan string, 1)
+	go func() {
+		var renewed string
+		reader := bufio.NewReader(res.Body)
+		for {
+			line, err := reader.ReadString('\n')
+			if err != nil {
+				// The stream ended.
+				done <- renewed
+				return
+			}
+			if strings.HasPrefix(line, "event: gx-room-key") {
+				data, _ := reader.ReadString('\n')
+				renewed = strings.TrimSpace(strings.TrimPrefix(data, "data: "))
+			}
+		}
+	}()
+	select {
+	case renewed := <-done:
+		if renewed == "" || renewed == string(old) {
+			t.Fatalf("the stream gave the token %q, want a new token", renewed)
+		}
+		if res := roomWrite(t, srv, gx.Room(renewed), `{"typing":true}`, true); res.StatusCode != http.StatusNoContent {
+			t.Errorf("a write with the new token: status %d, want 204", res.StatusCode)
+		}
+	case <-time.After(10 * time.Second):
+		t.Fatal("the stream did not end at the expiry of its token")
+	}
+}
+
+// crossSignals has a rule that reads two signals and names no field.
+type crossSignals struct {
+	Low  int `json:"low"`
+	High int `json:"high"`
+}
+
+func (s *crossSignals) Rules() gx.Rules {
+	return gx.Rules{gx.Check(func(any) error {
+		if s.Low > s.High {
+			return errors.New("low is above high")
+		}
+		return nil
+	})}
+}
+
+// TestSI_17_RuleWithNoFieldReadsTheRoom checks that a rule with no field
+// reads the last values of the room for the signals that a write does not
+// hold (SI-17).
+func TestSI_17_RuleWithNoFieldReadsTheRoom(t *testing.T) {
+	app := gx.New(gx.Config{Secret: []byte("test-secret")})
+	app.Group("/", gx.SharedSignals[crossSignals]("notes.Note", "low", "high"))
+	srv := httptest.NewServer(app)
+	t.Cleanup(srv.Close)
+	room := noteRoom("range-1")
+	viewer, _ := roomViewer(t, srv, room)
+	if res := roomWrite(t, srv, room, `{"high":10}`, true); res.StatusCode != http.StatusNoContent {
+		t.Fatalf("write of high: status %d", res.StatusCode)
+	}
+	next(t, viewer)
+	// The write holds only low: the rule reads the high of the room.
+	if res := roomWrite(t, srv, room, `{"low":5}`, true); res.StatusCode != http.StatusNoContent {
+		t.Errorf("a low below the high of the room: status %d, want 204", res.StatusCode)
+	}
+	next(t, viewer)
+	if res := roomWrite(t, srv, room, `{"low":20}`, true); res.StatusCode != http.StatusUnprocessableEntity {
+		t.Errorf("a low above the high of the room: status %d, want 422", res.StatusCode)
+	}
+	quiet(t, viewer)
 }
 
 // relayBus is a bus of an app: it gives each message to each subscriber of
@@ -330,7 +446,7 @@ func TestREQ_ACT_22_BusContract(t *testing.T) {
 func TestREQ_ACT_22_TwoAppsShareABus(t *testing.T) {
 	bus := &relayBus{}
 	first, second := roomApp(t, bus), roomApp(t, bus)
-	room := gx.RoomKey(nil, "doc-9")
+	room := noteRoom("doc-9")
 	viewer, _ := roomViewer(t, first, room)
 	roomWrite(t, second, room, `{"title":"Hi"}`, true)
 	if state := next(t, viewer); state["title"] != "Hi" {

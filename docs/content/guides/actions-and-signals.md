@@ -227,8 +227,11 @@ A signal with the word `shared` has one value for each viewer of a room. Use it 
 A change of a viewer goes to the server, and then to each viewer of the room. The writer gets it back too.
 
 - **The key has a signature.** A viewer cannot change the key in the page to enter a different room. The server answers 403 to a key that it did not sign.
+- **The page carries a token for one component.** The token of the room of one component is not valid at the room of a different component.
+- **The token has an expiry.** A new token is valid for one hour or more. The stream gives the page a new token before the expiry. A page that has no connection for longer than the life of its token must load again.
 - **The middleware of the group runs.** The stream and each write are requests to the routes that you mounted.
 - **The value passes rules.** Write a `Rules()` method on the generated `<Component>Signals` struct. A value that fails a rule reaches no viewer, and the page of the writer shows the value of the room again.
+- **A rule with no field reads the room.** For a signal that a write does not hold, the rule gets the last value of the room.
 - **A shared signal is not durable.** The room holds the last values while it has a viewer. Keep data that must stay in your database.
 
 An app with one replica needs no setup. For more than one replica, give `gx.Config` two values:

@@ -452,6 +452,14 @@ func RenderRequest(w io.Writer, r *http.Request, n Node) error
 
 RenderRequest renders n with the request in scope, so typed links mark the active page. The rendered markers feed the runtime script decision of the app.
 
+### func RoomToken
+
+```go
+func RoomToken(base string, room Room) string
+```
+
+RoomToken returns the token that the page carries for the room of one component: the key, the time of its expiry and a signature of the server over the component, the key and that time. The token of one component is not valid at the routes of a different component. Generated code calls it with the signal namespace of the component. A room that RoomKey did not make gives an empty token, and the page joins no room.
+
 ### func RoomURL
 
 ```go

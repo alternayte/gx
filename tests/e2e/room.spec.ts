@@ -98,7 +98,7 @@ test('SI-17 a room key that the server did not sign gets 403', async () => {
   const key = (await a.getAttribute('[data-gx-room]', 'data-gx-room')) ?? ''
   expect(key).toContain('.')
   // The key of a different room with the signature of this one.
-  const forged = btoa(room + '-other').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_') + '.' + key.split('.')[1]
+  const forged = btoa(room + '-other').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_') + '.' + key.split('.').slice(1).join('.')
   const status = await a.evaluate(async (room) => {
     const write = await fetch('/_gx/room/basket.Note', {
       method: 'POST',

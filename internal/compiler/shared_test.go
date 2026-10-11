@@ -41,7 +41,7 @@ func TestREQ_ACT_21_SharedSignalCodegen(t *testing.T) {
 	for _, want := range []string{
 		"Draft string `json:\"draft\"`",
 		"Typing bool   `json:\"typing\"`",
-		`gx.Attr{Key: "data-gx-room", Value: string(p.Room), Kind: gx.AttrText}`,
+		`gx.Attr{Key: "data-gx-room", Value: gx.RoomToken("notes.Note", p.Room), Kind: gx.AttrText}`,
 		`gx.Attr{Key: "data-gx-room-url", Value: gx.RoomURL("notes.Note"), Kind: gx.AttrURL}`,
 		`gx.Attr{Key: "data-effect", Value: gx.ShareEffect("notes.Note", p.GxKey, "typing", "title"), Kind: gx.AttrText}`,
 		`var NoteRoom = gx.SharedSignals[NoteSignals]("notes.Note", "typing", "title")`,

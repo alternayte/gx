@@ -12,11 +12,14 @@ function harness(accept = true) {
   let receive: (values: Values) => void = () => {}
   let closed = false
   let opened = ''
+  let renew: (room: string) => void = () => {}
   const timers: (() => void)[] = []
   const deps: Deps = {
-    open: (url, fn) => {
+    open: (url, fn, next) => {
       opened = url
       receive = fn
+      renew = next
+      closed = false
       return () => (closed = true)
     },
     post: (url, room, signals) => {
@@ -31,7 +34,7 @@ function harness(accept = true) {
     await Promise.resolve()
     await Promise.resolve()
   }
-  return { deps, posts, patches, flush, receive: (v: Values) => receive(v), closed: () => closed, opened: () => opened }
+  return { deps, posts, patches, flush, receive: (v: Values) => receive(v), closed: () => closed, opened: () => opened, renew: (room: string) => renew(room) }
 }
 
 const el = () => element({ 'data-gx-room-url': '/_gx/room/notes.Note', 'data-gx-room': 'a b', 'data-gx-instance': 'notes.Note.k1' })
@@ -91,4 +94,16 @@ test('REQ-ACT-21 a component that left the page leaves the room', () => {
   h.receive({ typing: true })
   expect(h.closed()).toBe(true)
   expect(h.patches).toEqual([])
+})
+
+test('SI-17 a new token of the stream opens the stream again and goes with the next write', async () => {
+  const h = harness()
+  const root = el()
+  share(root, { typing: false }, h.deps)
+  h.renew('new')
+  expect(h.opened()).toBe('/_gx/room/notes.Note?room=new')
+  expect(h.closed()).toBe(false)
+  share(root, { typing: true }, h.deps)
+  await h.flush()
+  expect(h.posts).toEqual([{ url: '/_gx/room/notes.Note', room: 'new', signals: { typing: true } }])
 })

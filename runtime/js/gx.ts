@@ -543,9 +543,10 @@ const patchSignals = (signals: Record<string, unknown>): void => {
 
 // roomDeps connects a room to the browser (REQ-ACT-21).
 const roomDeps: Deps = {
-  open: (url, receive) => {
+  open: (url, receive, renew) => {
     const source = new EventSource(url)
     source.addEventListener('gx-room', (e) => receive(JSON.parse((e as MessageEvent<string>).data) as Values))
+    source.addEventListener('gx-room-key', (e) => renew((e as MessageEvent<string>).data))
     return () => source.close()
   },
   post: (url, room, signals) =>

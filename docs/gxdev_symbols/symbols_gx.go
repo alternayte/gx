@@ -227,6 +227,7 @@ func Packages() []gx.DevPackage {
 				"Replace":               reflect.ValueOf(&gx.Replace).Elem(),
 				"Required":              reflect.ValueOf(&gx.Required).Elem(),
 				"RoomKey":               reflect.ValueOf(gx.RoomKey),
+				"RoomToken":             reflect.ValueOf(gx.RoomToken),
 				"RoomURL":               reflect.ValueOf(gx.RoomURL),
 				"RunAllRulesContext":    reflect.ValueOf(gx.RunAllRulesContext),
 				"RunRules":              reflect.ValueOf(gx.RunRules),

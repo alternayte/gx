@@ -9,7 +9,8 @@ export type Values = Record<string, unknown>
 // Deps are the parts of the browser that a room uses. A test gives its own.
 export interface Deps {
   // open reads the stream of a room and returns the function that ends it.
-  open: (url: string, receive: (values: Values) => void) => () => void
+  // renew gets each new token of the room that the stream gives.
+  open: (url: string, receive: (values: Values) => void, renew: (room: string) => void) => () => void
   // post writes values to the room; it resolves to false for a refusal.
   post: (url: string, room: string, signals: Values) => Promise<boolean>
   // patch puts values into the signals of the page, under a scope.
@@ -52,7 +53,7 @@ export const share = (el: Element, values: Values, deps: Deps): void => {
       queue: undefined,
       close: () => {},
     }
-    joined.close = deps.open(url + '?room=' + encodeURIComponent(room), (incoming) => {
+    const receive = (incoming: Values): void => {
       if (!el.isConnected) {
         // The component left the page: the viewer leaves the room.
         joined.close()
@@ -69,7 +70,17 @@ export const share = (el: Element, values: Values, deps: Deps): void => {
         }
       }
       if (Object.keys(changed).length > 0) deps.patch(joined.scope, changed)
-    })
+    }
+    // The token of a room has an expiry: the stream gives a new token, and
+    // the viewer reads the stream again with it.
+    const join = (): void => {
+      joined.close = deps.open(url + '?room=' + encodeURIComponent(joined.room), receive, (next) => {
+        joined.close()
+        joined.room = next
+        join()
+      })
+    }
+    join()
     rooms.set(el, joined)
     return
   }
