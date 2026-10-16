@@ -394,6 +394,11 @@ test('REQ-ISL-20 the composer widget has no serious axe violation, with its dial
   expect(await audit()).toEqual([])
   await page.locator('shop-composer button', { hasText: /^Discard$/ }).click()
   await waitComposer(page, `root.querySelector('#composer-discard').open`)
+  // The dialog fades in over 200ms. The style above is in the document and
+  // cannot reach the shadow root, so an audit at once catches the transition
+  // and axe blends its opacity into the colors. Wait for the open state to
+  // settle, then audit the dialog the user sees.
+  await waitComposer(page, `getComputedStyle(root.querySelector('#composer-discard')).opacity === '1'`)
   expect(await audit()).toEqual([])
   await page.close()
 })
