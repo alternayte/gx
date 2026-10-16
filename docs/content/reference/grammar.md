@@ -47,6 +47,7 @@ props {
   comment with no field below it and a `/* ... */` comment give `GX1000`.
 - Inside markup, `p` is the props value.
 - `$Name` reads a signal. It is valid only in client expressions.
+- The first value of a signal can read `p`: `Q string = p.Q`.
 - In the `signals` block, the word `shared` before a name makes a shared
   signal: `shared Typing bool = false`. The component then needs a prop of
   type `gx.Room`.

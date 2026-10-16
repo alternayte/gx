@@ -255,6 +255,17 @@ test('REQ-RTE-13 the active link moves after a partial navigation', async () => 
   expect(await page.getAttribute('a:text-is("Home")', 'aria-current')).toBeNull()
 })
 
+// A same-origin link that redirects to a different origin makes fetch throw
+// (CORS). The abort of the Gx-Nav request makes fetch throw the same way.
+test('REQ-RTE-12 a navigation whose fetch throws falls back to a full load', async () => {
+  await page.route('**/about', (route) =>
+    route.request().headers()['gx-nav'] ? route.abort() : route.continue(),
+  )
+  await page.click('a:text-is("About")')
+  await page.waitForFunction(() => document.title === 'Gx shop about', undefined, { timeout: 5000 })
+  expect(await page.evaluate(() => new URL(location.href).pathname)).toBe('/about')
+})
+
 test('REQ-RTE-12 JS off keeps navigation links plain', async () => {
   const context = await browser.newContext({ javaScriptEnabled: false })
   const plain = await context.newPage()

@@ -698,9 +698,11 @@ const navigate = async (url: string, push: boolean, keep = false): Promise<void>
     Accept: 'text/event-stream',
   }
   if (keep) headers['Gx-Dev-Reload'] = '1'
-  const res = await fetch(url, { headers, credentials: 'same-origin' })
+  // fetch throws when a same-origin link redirects to a different origin
+  // (CORS): the browser loads that link in full too.
+  const res = await fetch(url, { headers, credentials: 'same-origin' }).catch(() => undefined)
   // A page with no layout slot answers HTML, not patches: load it in full.
-  if (!res.ok || !res.body || !hasPatches(res) || res.headers.get('Gx-Nav') === 'full') {
+  if (!res || !res.ok || !res.body || !hasPatches(res) || res.headers.get('Gx-Nav') === 'full') {
     if (keep) location.reload()
     else location.href = url
     return
