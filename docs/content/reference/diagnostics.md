@@ -54,6 +54,7 @@ Each page shows the cause, an example that gives the diagnostic, and the fix.
 | [GX3003](/errors/GX3003/) | Route value is not held by any gx.Collect. |
 | [GX3004](/errors/GX3004/) | Duplicate route pattern. |
 | [GX3005](/errors/GX3005/) | Route package contents. |
+| [GX3006](/errors/GX3006/) | Route field has the name of a generated method. |
 
 ## Actions, signals and client expressions
 

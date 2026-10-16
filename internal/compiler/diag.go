@@ -17,6 +17,7 @@ const (
 	CodeUnmounted  = "GX3003"
 	CodeDuplicate  = "GX3004"
 	CodeRoutePkg   = "GX3005"
+	CodeRouteMethod = "GX3006"
 
 	CodeRequiredProp     = "GX2001"
 	CodeUnknownComponent = "GX2002"
@@ -171,6 +172,7 @@ var Catalog = []Info{
 	{CodeUnmounted, "route value is not held by any gx.Collect"},
 	{CodeDuplicate, "duplicate route pattern"},
 	{CodeRoutePkg, "route package contents"},
+	{CodeRouteMethod, "route field has the name of a generated method"},
 	{CodeActionMissing, "no action is registered for a route type"},
 	{CodeActionTwice, "more than one action is registered for a route type"},
 	{CodeActionMissingSignal, "no signal is declared for a signal-bound field"},

@@ -106,6 +106,25 @@ func TestREQ_RTE_02_PathMismatch(t *testing.T) {
 	}
 }
 
+func TestREQ_RTE_01_GeneratedMethodFieldName(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":             moduleWithGx(t),
+		"products/routes.go": "package products\n\nimport \"github.com/alternayte/gx\"\n\ntype AddRSS struct {\n\tgx.Route `POST /sources/add`\n\tURL      string\n\tPattern  string\n\tBind     string\n}\n",
+	})
+	diags := checkDir(t, dir)
+	for _, name := range []string{"URL", "Pattern", "Bind"} {
+		found := false
+		for _, d := range diags {
+			if d.Code == compiler.CodeRouteMethod && strings.Contains(d.Msg, `"`+name+`"`) {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatalf("field %s: diagnostics = %v, want GX3006", name, diags)
+		}
+	}
+}
+
 func TestREQ_RTE_03_QueryDecode(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":             moduleWithGx(t),

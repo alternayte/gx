@@ -474,6 +474,7 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 		def.fields = append(def.fields, field)
 	}
 	def.hasFile = treeHasFile(def.fields)
+	diags = append(diags, reservedRouteFields(def, stype)...)
 	for name := range vars {
 		if !bound[name] {
 			diags = append(diags, Diagnostic{
@@ -487,6 +488,58 @@ func routeFields(def *routeDef, stype *types.Struct) []Diagnostic {
 	}
 	sort.SliceStable(diags, func(i, j int) bool { return diags[i].Msg < diags[j].Msg })
 	return diags
+}
+
+// reservedRouteFields reports a field whose name is the name of a method
+// that the generated file of the route gives the type. The field and the
+// method cannot live on one type, so the check names the field instead of
+// letting the generated code fail (REQ-RTE-01).
+func reservedRouteFields(def *routeDef, stype *types.Struct) []Diagnostic {
+	methods := generatedMethods(def)
+	var diags []Diagnostic
+	for i := 0; i < stype.NumFields(); i++ {
+		f := stype.Field(i)
+		if f.Embedded() || !f.Exported() {
+			continue
+		}
+		if reflect.StructTag(stype.Tag(i)).Get("bind") == "-" {
+			continue
+		}
+		if !containsString(methods, f.Name()) {
+			continue
+		}
+		pos := def.pkg.Fset.Position(f.Pos())
+		diags = append(diags, Diagnostic{
+			Code: CodeRouteMethod,
+			File: def.file,
+			Line: pos.Line,
+			Col:  pos.Column,
+			Msg:  "field " + Quoted(f.Name()) + " has the name of a method that gx generates for " + Quoted(def.name),
+			Fix:  "rename the field",
+		})
+	}
+	return diags
+}
+
+// generatedMethods returns the methods that the generated file gives one
+// route type.
+func generatedMethods(d *routeDef) []string {
+	methods := []string{"Pattern", "URL"}
+	if d.form {
+		methods = append(methods, "GxBindForm", "GxFormValue", "GxFieldName", "GxNewForm", "GxRunForm")
+		if d.hasFile {
+			methods = append(methods, "GxMaxUpload")
+		}
+	} else {
+		methods = append(methods, "Bind")
+	}
+	if d.widget {
+		methods = append(methods, "GxWidgetAttrs")
+	}
+	if d.tool != nil {
+		methods = append(methods, "GxTool")
+	}
+	return methods
 }
 
 // bindFormField builds the binding tree of one form-bound field. Leaves are

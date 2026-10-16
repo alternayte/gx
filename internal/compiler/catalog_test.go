@@ -58,6 +58,7 @@ func TestREQ_AUT_19_DiagnosticCatalog(t *testing.T) {
 		"GX3003 | route value is not held by any gx.Collect",
 		"GX3004 | duplicate route pattern",
 		"GX3005 | route package contents",
+		"GX3006 | route field has the name of a generated method",
 		"GX4001 | no action is registered for a route type",
 		"GX4002 | more than one action is registered for a route type",
 		"GX4003 | no signal is declared for a signal-bound field",
