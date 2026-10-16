@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"sort"
@@ -96,7 +97,12 @@ func GenerateAll(css []byte, widgets, routes map[string][]byte) []byte {
 	for i, sheet := range sheets {
 		b.WriteString("\nconst routeSheet" + strconv.Itoa(i) + " = " + strconv.Quote(sheet) + "\n")
 	}
-	return []byte(b.String())
+	src := []byte(b.String())
+	out, err := format.Source(src)
+	if err != nil {
+		return src
+	}
+	return out
 }
 
 // RouteClassesPath returns the file with the class list of each page route,

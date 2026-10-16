@@ -57,6 +57,27 @@ func TestREQ_AUT_17_FmtCommand(t *testing.T) {
 	}
 }
 
+// TestGenerateHelpWritesNothing covers `gx generate --help`: it prints the
+// usage of the command and writes no file.
+func TestGenerateHelpWritesNothing(t *testing.T) {
+	dir := t.TempDir()
+	out := captureStderr(t, func() {
+		if code := gxcli.Main([]string{"generate", "--help", dir}); code == 0 {
+			t.Error("generate --help exited zero")
+		}
+	})
+	if !strings.Contains(out, "gx generate") {
+		t.Fatalf("generate --help output = %q, want the usage", out)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 0 {
+		t.Fatalf("generate --help wrote %d entries into the module", len(entries))
+	}
+}
+
 func TestREQ_AUT_18_StaleCheck(t *testing.T) {
 	_, file, _, ok := runtime.Caller(0)
 	if !ok {

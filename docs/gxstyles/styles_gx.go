@@ -17,7 +17,7 @@ func Widgets() map[string][]byte {
 func Routes() map[string][]byte {
 	return map[string][]byte{
 		"GET /preview/{item}/live/{status}/{sort}/{dir}/{page}/": []byte(routeSheet0),
-		"GET /preview/{item}/{example}/": []byte(routeSheet0),
+		"GET /preview/{item}/{example}/":                         []byte(routeSheet0),
 	}
 }
 

@@ -1467,9 +1467,14 @@ func runAPI(args []string) int {
 }
 
 func runGenerate(args []string) int {
+	fs := flag.NewFlagSet("gx generate", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
 	dir := "."
-	if len(args) > 0 {
-		dir = args[0]
+	if rest := fs.Args(); len(rest) > 0 {
+		dir = rest[0]
 	}
 	files, diags := compiler.Generate(dir)
 	if len(diags) > 0 {

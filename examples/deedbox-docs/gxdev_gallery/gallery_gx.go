@@ -11,6 +11,5 @@ import (
 // Fixtures returns every component fixture for the dev gallery
 // (REQ-AI-03).
 func Fixtures() []gx.Fixture {
-	return []gx.Fixture{
-	}
+	return []gx.Fixture{}
 }

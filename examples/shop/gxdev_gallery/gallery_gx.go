@@ -111,7 +111,9 @@ func Fixtures() []gx.Fixture {
 		{Component: "Avatar", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Large", Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Large"]) }},
 		{Component: "Avatar", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "LargeBadge", Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["LargeBadge"]) }},
 		{Component: "Avatar", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Small", Node: func() gx.Node { return avatar.Avatar(avatar.AvatarFixtures["Small"]) }},
-		{Component: "AvatarBadge", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Default", Node: func() gx.Node { return avatar.AvatarBadgeWrap(avatar.AvatarBadge(avatar.AvatarBadgeFixtures["Default"])) }},
+		{Component: "AvatarBadge", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Default", Node: func() gx.Node {
+			return avatar.AvatarBadgeWrap(avatar.AvatarBadge(avatar.AvatarBadgeFixtures["Default"]))
+		}},
 		{Component: "AvatarGroup", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Small", Node: func() gx.Node { return avatar.AvatarGroup(avatar.AvatarGroupFixtures["Small"]) }},
 		{Component: "AvatarGroup", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Three", Node: func() gx.Node { return avatar.AvatarGroup(avatar.AvatarGroupFixtures["Three"]) }},
 		{Component: "AvatarGroupCount", Package: "github.com/alternayte/gx/examples/shop/ui/avatar", Name: "Count", Node: func() gx.Node { return avatar.AvatarGroupCount(avatar.AvatarGroupCountFixtures["Count"]) }},
@@ -127,11 +129,15 @@ func Fixtures() []gx.Fixture {
 		{Component: "Breadcrumb", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Ellipsis", Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["Ellipsis"]) }},
 		{Component: "Breadcrumb", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Trail", Node: func() gx.Node { return breadcrumb.Breadcrumb(breadcrumb.BreadcrumbFixtures["Trail"]) }},
 		{Component: "BreadcrumbEllipsis", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Default", Node: func() gx.Node { return breadcrumb.BreadcrumbEllipsis(breadcrumb.BreadcrumbEllipsisFixtures["Default"]) }},
-		{Component: "BreadcrumbItem", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Empty", Node: func() gx.Node { return breadcrumb.BreadcrumbItemWrap(breadcrumb.BreadcrumbItem(breadcrumb.BreadcrumbItemFixtures["Empty"])) }},
+		{Component: "BreadcrumbItem", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Empty", Node: func() gx.Node {
+			return breadcrumb.BreadcrumbItemWrap(breadcrumb.BreadcrumbItem(breadcrumb.BreadcrumbItemFixtures["Empty"]))
+		}},
 		{Component: "BreadcrumbLink", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Link", Node: func() gx.Node { return breadcrumb.BreadcrumbLink(breadcrumb.BreadcrumbLinkFixtures["Link"]) }},
 		{Component: "BreadcrumbList", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Empty", Node: func() gx.Node { return breadcrumb.BreadcrumbList(breadcrumb.BreadcrumbListFixtures["Empty"]) }},
 		{Component: "BreadcrumbPage", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Page", Node: func() gx.Node { return breadcrumb.BreadcrumbPage(breadcrumb.BreadcrumbPageFixtures["Page"]) }},
-		{Component: "BreadcrumbSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Default", Node: func() gx.Node { return breadcrumb.BreadcrumbSeparatorWrap(breadcrumb.BreadcrumbSeparator(breadcrumb.BreadcrumbSeparatorFixtures["Default"])) }},
+		{Component: "BreadcrumbSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/breadcrumb", Name: "Default", Node: func() gx.Node {
+			return breadcrumb.BreadcrumbSeparatorWrap(breadcrumb.BreadcrumbSeparator(breadcrumb.BreadcrumbSeparatorFixtures["Default"]))
+		}},
 		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/button", Name: "Default", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Default"]) }},
 		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/button", Name: "Destructive", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Destructive"]) }},
 		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/button", Name: "Disabled", Node: func() gx.Node { return button.Button(button.ButtonFixtures["Disabled"]) }},
@@ -152,7 +158,9 @@ func Fixtures() []gx.Fixture {
 		{Component: "ButtonGroup", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Text", Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Text"]) }},
 		{Component: "ButtonGroup", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Three", Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Three"]) }},
 		{Component: "ButtonGroup", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Vertical", Node: func() gx.Node { return buttongroup.ButtonGroup(buttongroup.ButtonGroupFixtures["Vertical"]) }},
-		{Component: "ButtonGroupSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Default", Node: func() gx.Node { return buttongroup.ButtonGroupSeparatorWrap(buttongroup.ButtonGroupSeparator(buttongroup.ButtonGroupSeparatorFixtures["Default"])) }},
+		{Component: "ButtonGroupSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Default", Node: func() gx.Node {
+			return buttongroup.ButtonGroupSeparatorWrap(buttongroup.ButtonGroupSeparator(buttongroup.ButtonGroupSeparatorFixtures["Default"]))
+		}},
 		{Component: "ButtonGroupText", Package: "github.com/alternayte/gx/examples/shop/ui/button-group", Name: "Text", Node: func() gx.Node { return buttongroup.ButtonGroupText(buttongroup.ButtonGroupTextFixtures["Text"]) }},
 		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "Chosen", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Chosen"]) }},
 		{Component: "Calendar", Package: "github.com/alternayte/gx/examples/shop/ui/calendar", Name: "Empty", Node: func() gx.Node { return calendar.Calendar(calendar.CalendarFixtures["Empty"]) }},
@@ -183,28 +191,68 @@ func Fixtures() []gx.Fixture {
 		{Component: "Command", Package: "github.com/alternayte/gx/examples/shop/ui/command", Name: "OneGroup", Node: func() gx.Node { return command.Command(command.CommandFixtures["OneGroup"]) }},
 		{Component: "ContextMenu", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Menu", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Menu"]) }},
 		{Component: "ContextMenu", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Sub", Node: func() gx.Node { return contextmenu.ContextMenu(contextmenu.ContextMenuFixtures["Sub"]) }},
-		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Checked", Node: func() gx.Node { return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Checked"])) }},
-		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Disabled", Node: func() gx.Node { return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Disabled"])) }},
-		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Unchecked", Node: func() gx.Node { return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Unchecked"])) }},
-		{Component: "ContextMenuGroup", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuGroupWrap(contextmenu.ContextMenuGroup(contextmenu.ContextMenuGroupFixtures["Default"])) }},
-		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Destructive", Node: func() gx.Node { return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Destructive"])) }},
-		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Disabled", Node: func() gx.Node { return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Disabled"])) }},
-		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Inset", Node: func() gx.Node { return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Inset"])) }},
-		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Item", Node: func() gx.Node { return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Item"])) }},
+		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Checked", Node: func() gx.Node {
+			return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Checked"]))
+		}},
+		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Disabled", Node: func() gx.Node {
+			return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Disabled"]))
+		}},
+		{Component: "ContextMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Unchecked", Node: func() gx.Node {
+			return contextmenu.ContextMenuCheckboxItemWrap(contextmenu.ContextMenuCheckboxItem(contextmenu.ContextMenuCheckboxItemFixtures["Unchecked"]))
+		}},
+		{Component: "ContextMenuGroup", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node {
+			return contextmenu.ContextMenuGroupWrap(contextmenu.ContextMenuGroup(contextmenu.ContextMenuGroupFixtures["Default"]))
+		}},
+		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Destructive", Node: func() gx.Node {
+			return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Destructive"]))
+		}},
+		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Disabled", Node: func() gx.Node {
+			return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Disabled"]))
+		}},
+		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Inset", Node: func() gx.Node {
+			return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Inset"]))
+		}},
+		{Component: "ContextMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Item", Node: func() gx.Node {
+			return contextmenu.ContextMenuItemWrap(contextmenu.ContextMenuItem(contextmenu.ContextMenuItemFixtures["Item"]))
+		}},
 		{Component: "ContextMenuLabel", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Inset", Node: func() gx.Node { return contextmenu.ContextMenuLabel(contextmenu.ContextMenuLabelFixtures["Inset"]) }},
 		{Component: "ContextMenuLabel", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Label", Node: func() gx.Node { return contextmenu.ContextMenuLabel(contextmenu.ContextMenuLabelFixtures["Label"]) }},
-		{Component: "ContextMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Link", Node: func() gx.Node { return contextmenu.ContextMenuLinkWrap(contextmenu.ContextMenuLink(contextmenu.ContextMenuLinkFixtures["Link"])) }},
-		{Component: "ContextMenuRadioGroup", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuRadioGroupWrap(contextmenu.ContextMenuRadioGroup(contextmenu.ContextMenuRadioGroupFixtures["Default"])) }},
-		{Component: "ContextMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Checked", Node: func() gx.Node { return contextmenu.ContextMenuRadioItemWrap(contextmenu.ContextMenuRadioItem(contextmenu.ContextMenuRadioItemFixtures["Checked"])) }},
-		{Component: "ContextMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Unchecked", Node: func() gx.Node { return contextmenu.ContextMenuRadioItemWrap(contextmenu.ContextMenuRadioItem(contextmenu.ContextMenuRadioItemFixtures["Unchecked"])) }},
-		{Component: "ContextMenuSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuSeparator(contextmenu.ContextMenuSeparatorFixtures["Default"]) }},
-		{Component: "ContextMenuShortcut", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuShortcut(contextmenu.ContextMenuShortcutFixtures["Default"]) }},
-		{Component: "ContextMenuSub", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuSubWrap(contextmenu.ContextMenuSub(contextmenu.ContextMenuSubFixtures["Default"])) }},
-		{Component: "ContextMenuSubContent", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Content", Node: func() gx.Node { return contextmenu.ContextMenuSubContentWrap(contextmenu.ContextMenuSubContent(contextmenu.ContextMenuSubContentFixtures["Content"])) }},
-		{Component: "ContextMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Disabled", Node: func() gx.Node { return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Disabled"])) }},
-		{Component: "ContextMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Inset", Node: func() gx.Node { return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Inset"])) }},
-		{Component: "ContextMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Trigger", Node: func() gx.Node { return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Trigger"])) }},
-		{Component: "ContextMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node { return contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Default"]) }},
+		{Component: "ContextMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Link", Node: func() gx.Node {
+			return contextmenu.ContextMenuLinkWrap(contextmenu.ContextMenuLink(contextmenu.ContextMenuLinkFixtures["Link"]))
+		}},
+		{Component: "ContextMenuRadioGroup", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node {
+			return contextmenu.ContextMenuRadioGroupWrap(contextmenu.ContextMenuRadioGroup(contextmenu.ContextMenuRadioGroupFixtures["Default"]))
+		}},
+		{Component: "ContextMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Checked", Node: func() gx.Node {
+			return contextmenu.ContextMenuRadioItemWrap(contextmenu.ContextMenuRadioItem(contextmenu.ContextMenuRadioItemFixtures["Checked"]))
+		}},
+		{Component: "ContextMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Unchecked", Node: func() gx.Node {
+			return contextmenu.ContextMenuRadioItemWrap(contextmenu.ContextMenuRadioItem(contextmenu.ContextMenuRadioItemFixtures["Unchecked"]))
+		}},
+		{Component: "ContextMenuSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node {
+			return contextmenu.ContextMenuSeparator(contextmenu.ContextMenuSeparatorFixtures["Default"])
+		}},
+		{Component: "ContextMenuShortcut", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node {
+			return contextmenu.ContextMenuShortcut(contextmenu.ContextMenuShortcutFixtures["Default"])
+		}},
+		{Component: "ContextMenuSub", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node {
+			return contextmenu.ContextMenuSubWrap(contextmenu.ContextMenuSub(contextmenu.ContextMenuSubFixtures["Default"]))
+		}},
+		{Component: "ContextMenuSubContent", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Content", Node: func() gx.Node {
+			return contextmenu.ContextMenuSubContentWrap(contextmenu.ContextMenuSubContent(contextmenu.ContextMenuSubContentFixtures["Content"]))
+		}},
+		{Component: "ContextMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Disabled", Node: func() gx.Node {
+			return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Disabled"]))
+		}},
+		{Component: "ContextMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Inset", Node: func() gx.Node {
+			return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Inset"]))
+		}},
+		{Component: "ContextMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Trigger", Node: func() gx.Node {
+			return contextmenu.ContextMenuSubTriggerWrap(contextmenu.ContextMenuSubTrigger(contextmenu.ContextMenuSubTriggerFixtures["Trigger"]))
+		}},
+		{Component: "ContextMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Default", Node: func() gx.Node {
+			return contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Default"])
+		}},
 		{Component: "ContextMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/context-menu", Name: "Sub", Node: func() gx.Node { return contextmenu.ContextMenuTrigger(contextmenu.ContextMenuTriggerFixtures["Sub"]) }},
 		{Component: "DataTablePage", Package: "github.com/alternayte/gx/examples/shop/ui/data-table-page", Name: "Default", Node: func() gx.Node { return datatablepage.DataTablePage(datatablepage.DataTablePageFixtures["Default"]) }},
 		{Component: "DatePicker", Package: "github.com/alternayte/gx/examples/shop/ui/date-picker", Name: "Chosen", Node: func() gx.Node { return datepicker.DatePicker(datepicker.DatePickerFixtures["Chosen"]) }},
@@ -216,31 +264,77 @@ func Fixtures() []gx.Fixture {
 		{Component: "DropdownMenu", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Menu", Node: func() gx.Node { return dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Menu"]) }},
 		{Component: "DropdownMenu", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Start", Node: func() gx.Node { return dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Start"]) }},
 		{Component: "DropdownMenu", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Sub", Node: func() gx.Node { return dropdownmenu.DropdownMenu(dropdownmenu.DropdownMenuFixtures["Sub"]) }},
-		{Component: "DropdownMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Checked", Node: func() gx.Node { return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Checked"])) }},
-		{Component: "DropdownMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Disabled", Node: func() gx.Node { return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Disabled"])) }},
-		{Component: "DropdownMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Unchecked", Node: func() gx.Node { return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Unchecked"])) }},
-		{Component: "DropdownMenuGroup", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuGroupWrap(dropdownmenu.DropdownMenuGroup(dropdownmenu.DropdownMenuGroupFixtures["Default"])) }},
-		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Destructive", Node: func() gx.Node { return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Destructive"])) }},
-		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Disabled", Node: func() gx.Node { return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Disabled"])) }},
-		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Inset", Node: func() gx.Node { return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Inset"])) }},
-		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Item", Node: func() gx.Node { return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Item"])) }},
+		{Component: "DropdownMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Checked", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Checked"]))
+		}},
+		{Component: "DropdownMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Disabled", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Disabled"]))
+		}},
+		{Component: "DropdownMenuCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Unchecked", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuCheckboxItemWrap(dropdownmenu.DropdownMenuCheckboxItem(dropdownmenu.DropdownMenuCheckboxItemFixtures["Unchecked"]))
+		}},
+		{Component: "DropdownMenuGroup", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuGroupWrap(dropdownmenu.DropdownMenuGroup(dropdownmenu.DropdownMenuGroupFixtures["Default"]))
+		}},
+		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Destructive", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Destructive"]))
+		}},
+		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Disabled", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Disabled"]))
+		}},
+		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Inset", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Inset"]))
+		}},
+		{Component: "DropdownMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Item", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuItemWrap(dropdownmenu.DropdownMenuItem(dropdownmenu.DropdownMenuItemFixtures["Item"]))
+		}},
 		{Component: "DropdownMenuLabel", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Inset", Node: func() gx.Node { return dropdownmenu.DropdownMenuLabel(dropdownmenu.DropdownMenuLabelFixtures["Inset"]) }},
 		{Component: "DropdownMenuLabel", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Label", Node: func() gx.Node { return dropdownmenu.DropdownMenuLabel(dropdownmenu.DropdownMenuLabelFixtures["Label"]) }},
-		{Component: "DropdownMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Link", Node: func() gx.Node { return dropdownmenu.DropdownMenuLinkWrap(dropdownmenu.DropdownMenuLink(dropdownmenu.DropdownMenuLinkFixtures["Link"])) }},
-		{Component: "DropdownMenuRadioGroup", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuRadioGroupWrap(dropdownmenu.DropdownMenuRadioGroup(dropdownmenu.DropdownMenuRadioGroupFixtures["Default"])) }},
-		{Component: "DropdownMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Checked", Node: func() gx.Node { return dropdownmenu.DropdownMenuRadioItemWrap(dropdownmenu.DropdownMenuRadioItem(dropdownmenu.DropdownMenuRadioItemFixtures["Checked"])) }},
-		{Component: "DropdownMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Unchecked", Node: func() gx.Node { return dropdownmenu.DropdownMenuRadioItemWrap(dropdownmenu.DropdownMenuRadioItem(dropdownmenu.DropdownMenuRadioItemFixtures["Unchecked"])) }},
-		{Component: "DropdownMenuSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuSeparator(dropdownmenu.DropdownMenuSeparatorFixtures["Default"]) }},
-		{Component: "DropdownMenuShortcut", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuShortcut(dropdownmenu.DropdownMenuShortcutFixtures["Default"]) }},
-		{Component: "DropdownMenuSub", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuSubWrap(dropdownmenu.DropdownMenuSub(dropdownmenu.DropdownMenuSubFixtures["Default"])) }},
-		{Component: "DropdownMenuSubContent", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Content", Node: func() gx.Node { return dropdownmenu.DropdownMenuSubContentWrap(dropdownmenu.DropdownMenuSubContent(dropdownmenu.DropdownMenuSubContentFixtures["Content"])) }},
-		{Component: "DropdownMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Disabled", Node: func() gx.Node { return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Disabled"])) }},
-		{Component: "DropdownMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Inset", Node: func() gx.Node { return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Inset"])) }},
-		{Component: "DropdownMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Trigger", Node: func() gx.Node { return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Trigger"])) }},
-		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Default"]) }},
-		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Ghost", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Ghost"]) }},
-		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Start", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Start"]) }},
-		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Sub", Node: func() gx.Node { return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Sub"]) }},
+		{Component: "DropdownMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Link", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuLinkWrap(dropdownmenu.DropdownMenuLink(dropdownmenu.DropdownMenuLinkFixtures["Link"]))
+		}},
+		{Component: "DropdownMenuRadioGroup", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuRadioGroupWrap(dropdownmenu.DropdownMenuRadioGroup(dropdownmenu.DropdownMenuRadioGroupFixtures["Default"]))
+		}},
+		{Component: "DropdownMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Checked", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuRadioItemWrap(dropdownmenu.DropdownMenuRadioItem(dropdownmenu.DropdownMenuRadioItemFixtures["Checked"]))
+		}},
+		{Component: "DropdownMenuRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Unchecked", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuRadioItemWrap(dropdownmenu.DropdownMenuRadioItem(dropdownmenu.DropdownMenuRadioItemFixtures["Unchecked"]))
+		}},
+		{Component: "DropdownMenuSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuSeparator(dropdownmenu.DropdownMenuSeparatorFixtures["Default"])
+		}},
+		{Component: "DropdownMenuShortcut", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuShortcut(dropdownmenu.DropdownMenuShortcutFixtures["Default"])
+		}},
+		{Component: "DropdownMenuSub", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuSubWrap(dropdownmenu.DropdownMenuSub(dropdownmenu.DropdownMenuSubFixtures["Default"]))
+		}},
+		{Component: "DropdownMenuSubContent", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Content", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuSubContentWrap(dropdownmenu.DropdownMenuSubContent(dropdownmenu.DropdownMenuSubContentFixtures["Content"]))
+		}},
+		{Component: "DropdownMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Disabled", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Disabled"]))
+		}},
+		{Component: "DropdownMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Inset", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Inset"]))
+		}},
+		{Component: "DropdownMenuSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Trigger", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuSubTriggerWrap(dropdownmenu.DropdownMenuSubTrigger(dropdownmenu.DropdownMenuSubTriggerFixtures["Trigger"]))
+		}},
+		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Default", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Default"])
+		}},
+		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Ghost", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Ghost"])
+		}},
+		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Start", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Start"])
+		}},
+		{Component: "DropdownMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/dropdown-menu", Name: "Sub", Node: func() gx.Node {
+			return dropdownmenu.DropdownMenuTrigger(dropdownmenu.DropdownMenuTriggerFixtures["Sub"])
+		}},
 		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Center", Node: func() gx.Node { return email80.Button(email80.ButtonFixtures["Center"]) }},
 		{Component: "Button", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.Button(email80.ButtonFixtures["Default"]) }},
 		{Component: "Column", Package: "github.com/alternayte/gx/examples/shop/ui/email", Name: "Default", Node: func() gx.Node { return email80.ColumnWrap(email80.Column(email80.ColumnFixtures["Default"])) }},
@@ -319,9 +413,13 @@ func Fixtures() []gx.Fixture {
 		{Component: "InputGroupButton", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "IconSm", Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconSm"]) }},
 		{Component: "InputGroupButton", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "IconXs", Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["IconXs"]) }},
 		{Component: "InputGroupButton", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "Small", Node: func() gx.Node { return inputgroup.InputGroupButton(inputgroup.InputGroupButtonFixtures["Small"]) }},
-		{Component: "InputGroupInput", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "Placeholder", Node: func() gx.Node { return inputgroup.InputGroupInputWrap(inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"])) }},
+		{Component: "InputGroupInput", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "Placeholder", Node: func() gx.Node {
+			return inputgroup.InputGroupInputWrap(inputgroup.InputGroupInput(inputgroup.InputGroupInputFixtures["Placeholder"]))
+		}},
 		{Component: "InputGroupText", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "Text", Node: func() gx.Node { return inputgroup.InputGroupText(inputgroup.InputGroupTextFixtures["Text"]) }},
-		{Component: "InputGroupTextarea", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "Placeholder", Node: func() gx.Node { return inputgroup.InputGroupTextareaWrap(inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"])) }},
+		{Component: "InputGroupTextarea", Package: "github.com/alternayte/gx/examples/shop/ui/input-group", Name: "Placeholder", Node: func() gx.Node {
+			return inputgroup.InputGroupTextareaWrap(inputgroup.InputGroupTextarea(inputgroup.InputGroupTextareaFixtures["Placeholder"]))
+		}},
 		{Component: "InputOTP", Package: "github.com/alternayte/gx/examples/shop/ui/input-otp", Name: "Disabled", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Disabled"]) }},
 		{Component: "InputOTP", Package: "github.com/alternayte/gx/examples/shop/ui/input-otp", Name: "Empty", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Empty"]) }},
 		{Component: "InputOTP", Package: "github.com/alternayte/gx/examples/shop/ui/input-otp", Name: "Filled", Node: func() gx.Node { return inputotp.InputOTP(inputotp.InputOTPFixtures["Filled"]) }},
@@ -351,40 +449,92 @@ func Fixtures() []gx.Fixture {
 		{Component: "Login", Package: "github.com/alternayte/gx/examples/shop/ui/login", Name: "Default", Node: func() gx.Node { return login.Login(login.LoginFixtures["Default"]) }},
 		{Component: "Menubar", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node { return menubar.Menubar(menubar.MenubarFixtures["Default"]) }},
 		{Component: "Menubar", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Sub", Node: func() gx.Node { return menubar.Menubar(menubar.MenubarFixtures["Sub"]) }},
-		{Component: "MenubarCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Checked", Node: func() gx.Node { return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Checked"])) }},
-		{Component: "MenubarCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Disabled", Node: func() gx.Node { return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Disabled"])) }},
-		{Component: "MenubarCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Unchecked", Node: func() gx.Node { return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Unchecked"])) }},
-		{Component: "MenubarGroup", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node { return menubar.MenubarGroupWrap(menubar.MenubarGroup(menubar.MenubarGroupFixtures["Default"])) }},
-		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Destructive", Node: func() gx.Node { return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Destructive"])) }},
-		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Disabled", Node: func() gx.Node { return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Disabled"])) }},
-		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Inset", Node: func() gx.Node { return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Inset"])) }},
-		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Item", Node: func() gx.Node { return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Item"])) }},
+		{Component: "MenubarCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Checked", Node: func() gx.Node {
+			return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Checked"]))
+		}},
+		{Component: "MenubarCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Disabled", Node: func() gx.Node {
+			return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Disabled"]))
+		}},
+		{Component: "MenubarCheckboxItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Unchecked", Node: func() gx.Node {
+			return menubar.MenubarCheckboxItemWrap(menubar.MenubarCheckboxItem(menubar.MenubarCheckboxItemFixtures["Unchecked"]))
+		}},
+		{Component: "MenubarGroup", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node {
+			return menubar.MenubarGroupWrap(menubar.MenubarGroup(menubar.MenubarGroupFixtures["Default"]))
+		}},
+		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Destructive", Node: func() gx.Node {
+			return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Destructive"]))
+		}},
+		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Disabled", Node: func() gx.Node {
+			return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Disabled"]))
+		}},
+		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Inset", Node: func() gx.Node {
+			return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Inset"]))
+		}},
+		{Component: "MenubarItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Item", Node: func() gx.Node {
+			return menubar.MenubarItemWrap(menubar.MenubarItem(menubar.MenubarItemFixtures["Item"]))
+		}},
 		{Component: "MenubarLabel", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Inset", Node: func() gx.Node { return menubar.MenubarLabel(menubar.MenubarLabelFixtures["Inset"]) }},
 		{Component: "MenubarLabel", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Label", Node: func() gx.Node { return menubar.MenubarLabel(menubar.MenubarLabelFixtures["Label"]) }},
-		{Component: "MenubarLink", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Link", Node: func() gx.Node { return menubar.MenubarLinkWrap(menubar.MenubarLink(menubar.MenubarLinkFixtures["Link"])) }},
-		{Component: "MenubarMenu", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Menu", Node: func() gx.Node { return menubar.MenubarMenuWrap(menubar.MenubarMenu(menubar.MenubarMenuFixtures["Menu"])) }},
-		{Component: "MenubarRadioGroup", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node { return menubar.MenubarRadioGroupWrap(menubar.MenubarRadioGroup(menubar.MenubarRadioGroupFixtures["Default"])) }},
-		{Component: "MenubarRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Checked", Node: func() gx.Node { return menubar.MenubarRadioItemWrap(menubar.MenubarRadioItem(menubar.MenubarRadioItemFixtures["Checked"])) }},
-		{Component: "MenubarRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Unchecked", Node: func() gx.Node { return menubar.MenubarRadioItemWrap(menubar.MenubarRadioItem(menubar.MenubarRadioItemFixtures["Unchecked"])) }},
+		{Component: "MenubarLink", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Link", Node: func() gx.Node {
+			return menubar.MenubarLinkWrap(menubar.MenubarLink(menubar.MenubarLinkFixtures["Link"]))
+		}},
+		{Component: "MenubarMenu", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Menu", Node: func() gx.Node {
+			return menubar.MenubarMenuWrap(menubar.MenubarMenu(menubar.MenubarMenuFixtures["Menu"]))
+		}},
+		{Component: "MenubarRadioGroup", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node {
+			return menubar.MenubarRadioGroupWrap(menubar.MenubarRadioGroup(menubar.MenubarRadioGroupFixtures["Default"]))
+		}},
+		{Component: "MenubarRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Checked", Node: func() gx.Node {
+			return menubar.MenubarRadioItemWrap(menubar.MenubarRadioItem(menubar.MenubarRadioItemFixtures["Checked"]))
+		}},
+		{Component: "MenubarRadioItem", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Unchecked", Node: func() gx.Node {
+			return menubar.MenubarRadioItemWrap(menubar.MenubarRadioItem(menubar.MenubarRadioItemFixtures["Unchecked"]))
+		}},
 		{Component: "MenubarSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node { return menubar.MenubarSeparator(menubar.MenubarSeparatorFixtures["Default"]) }},
 		{Component: "MenubarShortcut", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node { return menubar.MenubarShortcut(menubar.MenubarShortcutFixtures["Default"]) }},
-		{Component: "MenubarSub", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node { return menubar.MenubarSubWrap(menubar.MenubarSub(menubar.MenubarSubFixtures["Default"])) }},
-		{Component: "MenubarSubContent", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Content", Node: func() gx.Node { return menubar.MenubarSubContentWrap(menubar.MenubarSubContent(menubar.MenubarSubContentFixtures["Content"])) }},
-		{Component: "MenubarSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Disabled", Node: func() gx.Node { return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Disabled"])) }},
-		{Component: "MenubarSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Inset", Node: func() gx.Node { return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Inset"])) }},
-		{Component: "MenubarSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Trigger", Node: func() gx.Node { return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Trigger"])) }},
+		{Component: "MenubarSub", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Default", Node: func() gx.Node {
+			return menubar.MenubarSubWrap(menubar.MenubarSub(menubar.MenubarSubFixtures["Default"]))
+		}},
+		{Component: "MenubarSubContent", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Content", Node: func() gx.Node {
+			return menubar.MenubarSubContentWrap(menubar.MenubarSubContent(menubar.MenubarSubContentFixtures["Content"]))
+		}},
+		{Component: "MenubarSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Disabled", Node: func() gx.Node {
+			return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Disabled"]))
+		}},
+		{Component: "MenubarSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Inset", Node: func() gx.Node {
+			return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Inset"]))
+		}},
+		{Component: "MenubarSubTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/menubar", Name: "Trigger", Node: func() gx.Node {
+			return menubar.MenubarSubTriggerWrap(menubar.MenubarSubTrigger(menubar.MenubarSubTriggerFixtures["Trigger"]))
+		}},
 		{Component: "NavigationMenu", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Default", Node: func() gx.Node { return navigationmenu.NavigationMenu(navigationmenu.NavigationMenuFixtures["Default"]) }},
-		{Component: "NavigationMenuContent", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Default", Node: func() gx.Node { return navigationmenu.NavigationMenuContentWrap(navigationmenu.NavigationMenuContent(navigationmenu.NavigationMenuContentFixtures["Default"])) }},
-		{Component: "NavigationMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Link", Node: func() gx.Node { return navigationmenu.NavigationMenuItemWrap(navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Link"])) }},
-		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Active", Node: func() gx.Node { return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Active"]) }},
-		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Link", Node: func() gx.Node { return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Link"]) }},
-		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Trigger", Node: func() gx.Node { return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Trigger"]) }},
-		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "TriggerActive", Node: func() gx.Node { return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["TriggerActive"]) }},
-		{Component: "NavigationMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Default", Node: func() gx.Node { return navigationmenu.NavigationMenuTrigger(navigationmenu.NavigationMenuTriggerFixtures["Default"]) }},
+		{Component: "NavigationMenuContent", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Default", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuContentWrap(navigationmenu.NavigationMenuContent(navigationmenu.NavigationMenuContentFixtures["Default"]))
+		}},
+		{Component: "NavigationMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Link", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuItemWrap(navigationmenu.NavigationMenuItem(navigationmenu.NavigationMenuItemFixtures["Link"]))
+		}},
+		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Active", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Active"])
+		}},
+		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Link", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Link"])
+		}},
+		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Trigger", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["Trigger"])
+		}},
+		{Component: "NavigationMenuLink", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "TriggerActive", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuLink(navigationmenu.NavigationMenuLinkFixtures["TriggerActive"])
+		}},
+		{Component: "NavigationMenuTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/navigation-menu", Name: "Default", Node: func() gx.Node {
+			return navigationmenu.NavigationMenuTrigger(navigationmenu.NavigationMenuTriggerFixtures["Default"])
+		}},
 		{Component: "Pagination", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Trail", Node: func() gx.Node { return pagination.Pagination(pagination.PaginationFixtures["Trail"]) }},
 		{Component: "PaginationContent", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Empty", Node: func() gx.Node { return pagination.PaginationContent(pagination.PaginationContentFixtures["Empty"]) }},
 		{Component: "PaginationEllipsis", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Default", Node: func() gx.Node { return pagination.PaginationEllipsis(pagination.PaginationEllipsisFixtures["Default"]) }},
-		{Component: "PaginationItem", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Empty", Node: func() gx.Node { return pagination.PaginationItemWrap(pagination.PaginationItem(pagination.PaginationItemFixtures["Empty"])) }},
+		{Component: "PaginationItem", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Empty", Node: func() gx.Node {
+			return pagination.PaginationItemWrap(pagination.PaginationItem(pagination.PaginationItemFixtures["Empty"]))
+		}},
 		{Component: "PaginationLink", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Active", Node: func() gx.Node { return pagination.PaginationLink(pagination.PaginationLinkFixtures["Active"]) }},
 		{Component: "PaginationLink", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Inactive", Node: func() gx.Node { return pagination.PaginationLink(pagination.PaginationLinkFixtures["Inactive"]) }},
 		{Component: "PaginationNext", Package: "github.com/alternayte/gx/examples/shop/ui/pagination", Name: "Default", Node: func() gx.Node { return pagination.PaginationNext(pagination.PaginationNextFixtures["Default"]) }},
@@ -407,10 +557,16 @@ func Fixtures() []gx.Fixture {
 		{Component: "RadioGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/radio-group", Name: "Disabled", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Disabled"]) }},
 		{Component: "RadioGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/radio-group", Name: "Invalid", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Invalid"]) }},
 		{Component: "RadioGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/radio-group", Name: "Unchecked", Node: func() gx.Node { return radiogroup.RadioGroupItem(radiogroup.RadioGroupItemFixtures["Unchecked"]) }},
-		{Component: "ResizableHandle", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Between", Node: func() gx.Node { return resizable.ResizableHandleWrap(resizable.ResizableHandle(resizable.ResizableHandleFixtures["Between"])) }},
+		{Component: "ResizableHandle", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Between", Node: func() gx.Node {
+			return resizable.ResizableHandleWrap(resizable.ResizableHandle(resizable.ResizableHandleFixtures["Between"]))
+		}},
 		{Component: "ResizablePanel", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Default", Node: func() gx.Node { return resizable.ResizablePanel(resizable.ResizablePanelFixtures["Default"]) }},
-		{Component: "ResizablePanelGroup", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Horizontal", Node: func() gx.Node { return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Horizontal"])) }},
-		{Component: "ResizablePanelGroup", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Vertical", Node: func() gx.Node { return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Vertical"])) }},
+		{Component: "ResizablePanelGroup", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Horizontal", Node: func() gx.Node {
+			return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Horizontal"]))
+		}},
+		{Component: "ResizablePanelGroup", Package: "github.com/alternayte/gx/examples/shop/ui/resizable", Name: "Vertical", Node: func() gx.Node {
+			return resizable.ResizablePanelGroupWrap(resizable.ResizablePanelGroup(resizable.ResizablePanelGroupFixtures["Vertical"]))
+		}},
 		{Component: "ScrollArea", Package: "github.com/alternayte/gx/examples/shop/ui/scroll-area", Name: "Horizontal", Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Horizontal"]) }},
 		{Component: "ScrollArea", Package: "github.com/alternayte/gx/examples/shop/ui/scroll-area", Name: "Vertical", Node: func() gx.Node { return scrollarea.ScrollArea(scrollarea.ScrollAreaFixtures["Vertical"]) }},
 		{Component: "Select", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Disabled", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Disabled"]) }},
@@ -419,9 +575,15 @@ func Fixtures() []gx.Fixture {
 		{Component: "Select", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Placeholder", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Placeholder"]) }},
 		{Component: "Select", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Plan", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Plan"]) }},
 		{Component: "Select", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Small", Node: func() gx.Node { return selectbox.Select(selectbox.SelectFixtures["Small"]) }},
-		{Component: "SelectGroup", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Group", Node: func() gx.Node { return selectbox.SelectGroupWrap(selectbox.SelectGroup(selectbox.SelectGroupFixtures["Group"])) }},
-		{Component: "SelectOption", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Option", Node: func() gx.Node { return selectbox.SelectOptionWrap(selectbox.SelectOption(selectbox.SelectOptionFixtures["Option"])) }},
-		{Component: "SelectSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Default", Node: func() gx.Node { return selectbox.SelectSeparatorWrap(selectbox.SelectSeparator(selectbox.SelectSeparatorFixtures["Default"])) }},
+		{Component: "SelectGroup", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Group", Node: func() gx.Node {
+			return selectbox.SelectGroupWrap(selectbox.SelectGroup(selectbox.SelectGroupFixtures["Group"]))
+		}},
+		{Component: "SelectOption", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Option", Node: func() gx.Node {
+			return selectbox.SelectOptionWrap(selectbox.SelectOption(selectbox.SelectOptionFixtures["Option"]))
+		}},
+		{Component: "SelectSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/select", Name: "Default", Node: func() gx.Node {
+			return selectbox.SelectSeparatorWrap(selectbox.SelectSeparator(selectbox.SelectSeparatorFixtures["Default"]))
+		}},
 		{Component: "Separator", Package: "github.com/alternayte/gx/examples/shop/ui/separator", Name: "Horizontal", Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Horizontal"]) }},
 		{Component: "Separator", Package: "github.com/alternayte/gx/examples/shop/ui/separator", Name: "Semantic", Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Semantic"]) }},
 		{Component: "Separator", Package: "github.com/alternayte/gx/examples/shop/ui/separator", Name: "Vertical", Node: func() gx.Node { return separator.Separator(separator.SeparatorFixtures["Vertical"]) }},
@@ -434,7 +596,9 @@ func Fixtures() []gx.Fixture {
 		{Component: "SidebarContent", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarContent(sidebar.SidebarContentFixtures["Empty"]) }},
 		{Component: "SidebarFooter", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarFooter(sidebar.SidebarFooterFixtures["Empty"]) }},
 		{Component: "SidebarGroup", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Labelled", Node: func() gx.Node { return sidebar.SidebarGroup(sidebar.SidebarGroupFixtures["Labelled"]) }},
-		{Component: "SidebarGroupAction", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Add", Node: func() gx.Node { return sidebar.SidebarGroupActionWrap(sidebar.SidebarGroupAction(sidebar.SidebarGroupActionFixtures["Add"])) }},
+		{Component: "SidebarGroupAction", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Add", Node: func() gx.Node {
+			return sidebar.SidebarGroupActionWrap(sidebar.SidebarGroupAction(sidebar.SidebarGroupActionFixtures["Add"]))
+		}},
 		{Component: "SidebarGroupContent", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarGroupContent(sidebar.SidebarGroupContentFixtures["Empty"]) }},
 		{Component: "SidebarGroupLabel", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Label", Node: func() gx.Node { return sidebar.SidebarGroupLabel(sidebar.SidebarGroupLabelFixtures["Label"]) }},
 		{Component: "SidebarHeader", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarHeader(sidebar.SidebarHeaderFixtures["Empty"]) }},
@@ -442,23 +606,57 @@ func Fixtures() []gx.Fixture {
 		{Component: "SidebarInset", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Page", Node: func() gx.Node { return sidebar.SidebarInset(sidebar.SidebarInsetFixtures["Page"]) }},
 		{Component: "SidebarMenu", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Loading", Node: func() gx.Node { return sidebar.SidebarMenu(sidebar.SidebarMenuFixtures["Loading"]) }},
 		{Component: "SidebarMenu", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Nested", Node: func() gx.Node { return sidebar.SidebarMenu(sidebar.SidebarMenuFixtures["Nested"]) }},
-		{Component: "SidebarMenuAction", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Add", Node: func() gx.Node { return sidebar.SidebarMenuActionWrap(sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Add"])) }},
-		{Component: "SidebarMenuAction", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Hover", Node: func() gx.Node { return sidebar.SidebarMenuActionWrap(sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Hover"])) }},
-		{Component: "SidebarMenuBadge", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Count", Node: func() gx.Node { return sidebar.SidebarMenuBadgeWrap(sidebar.SidebarMenuBadge(sidebar.SidebarMenuBadgeFixtures["Count"])) }},
-		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Active", Node: func() gx.Node { return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Active"])) }},
-		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Button", Node: func() gx.Node { return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Button"])) }},
-		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Large", Node: func() gx.Node { return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Large"])) }},
-		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Link", Node: func() gx.Node { return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Link"])) }},
-		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Outline", Node: func() gx.Node { return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Outline"])) }},
-		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Small", Node: func() gx.Node { return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Small"])) }},
-		{Component: "SidebarMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarMenuItemWrap(sidebar.SidebarMenuItem(sidebar.SidebarMenuItemFixtures["Empty"])) }},
-		{Component: "SidebarMenuSkeleton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Icon", Node: func() gx.Node { return sidebar.SidebarMenuSkeletonWrap(sidebar.SidebarMenuSkeleton(sidebar.SidebarMenuSkeletonFixtures["Icon"])) }},
-		{Component: "SidebarMenuSkeleton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Text", Node: func() gx.Node { return sidebar.SidebarMenuSkeletonWrap(sidebar.SidebarMenuSkeleton(sidebar.SidebarMenuSkeletonFixtures["Text"])) }},
-		{Component: "SidebarMenuSub", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Two", Node: func() gx.Node { return sidebar.SidebarMenuSubWrap(sidebar.SidebarMenuSub(sidebar.SidebarMenuSubFixtures["Two"])) }},
-		{Component: "SidebarMenuSubButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Active", Node: func() gx.Node { return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Active"])) }},
-		{Component: "SidebarMenuSubButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Link", Node: func() gx.Node { return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Link"])) }},
-		{Component: "SidebarMenuSubButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Small", Node: func() gx.Node { return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Small"])) }},
-		{Component: "SidebarMenuSubItem", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node { return sidebar.SidebarMenuSubItemWrap(sidebar.SidebarMenuSubItem(sidebar.SidebarMenuSubItemFixtures["Empty"])) }},
+		{Component: "SidebarMenuAction", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Add", Node: func() gx.Node {
+			return sidebar.SidebarMenuActionWrap(sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Add"]))
+		}},
+		{Component: "SidebarMenuAction", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Hover", Node: func() gx.Node {
+			return sidebar.SidebarMenuActionWrap(sidebar.SidebarMenuAction(sidebar.SidebarMenuActionFixtures["Hover"]))
+		}},
+		{Component: "SidebarMenuBadge", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Count", Node: func() gx.Node {
+			return sidebar.SidebarMenuBadgeWrap(sidebar.SidebarMenuBadge(sidebar.SidebarMenuBadgeFixtures["Count"]))
+		}},
+		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Active", Node: func() gx.Node {
+			return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Active"]))
+		}},
+		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Button", Node: func() gx.Node {
+			return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Button"]))
+		}},
+		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Large", Node: func() gx.Node {
+			return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Large"]))
+		}},
+		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Link", Node: func() gx.Node {
+			return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Link"]))
+		}},
+		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Outline", Node: func() gx.Node {
+			return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Outline"]))
+		}},
+		{Component: "SidebarMenuButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Small", Node: func() gx.Node {
+			return sidebar.SidebarMenuButtonWrap(sidebar.SidebarMenuButton(sidebar.SidebarMenuButtonFixtures["Small"]))
+		}},
+		{Component: "SidebarMenuItem", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node {
+			return sidebar.SidebarMenuItemWrap(sidebar.SidebarMenuItem(sidebar.SidebarMenuItemFixtures["Empty"]))
+		}},
+		{Component: "SidebarMenuSkeleton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Icon", Node: func() gx.Node {
+			return sidebar.SidebarMenuSkeletonWrap(sidebar.SidebarMenuSkeleton(sidebar.SidebarMenuSkeletonFixtures["Icon"]))
+		}},
+		{Component: "SidebarMenuSkeleton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Text", Node: func() gx.Node {
+			return sidebar.SidebarMenuSkeletonWrap(sidebar.SidebarMenuSkeleton(sidebar.SidebarMenuSkeletonFixtures["Text"]))
+		}},
+		{Component: "SidebarMenuSub", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Two", Node: func() gx.Node {
+			return sidebar.SidebarMenuSubWrap(sidebar.SidebarMenuSub(sidebar.SidebarMenuSubFixtures["Two"]))
+		}},
+		{Component: "SidebarMenuSubButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Active", Node: func() gx.Node {
+			return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Active"]))
+		}},
+		{Component: "SidebarMenuSubButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Link", Node: func() gx.Node {
+			return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Link"]))
+		}},
+		{Component: "SidebarMenuSubButton", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Small", Node: func() gx.Node {
+			return sidebar.SidebarMenuSubButtonWrap(sidebar.SidebarMenuSubButton(sidebar.SidebarMenuSubButtonFixtures["Small"]))
+		}},
+		{Component: "SidebarMenuSubItem", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Empty", Node: func() gx.Node {
+			return sidebar.SidebarMenuSubItemWrap(sidebar.SidebarMenuSubItem(sidebar.SidebarMenuSubItemFixtures["Empty"]))
+		}},
 		{Component: "SidebarSeparator", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Default", Node: func() gx.Node { return sidebar.SidebarSeparator(sidebar.SidebarSeparatorFixtures["Default"]) }},
 		{Component: "SidebarTrigger", Package: "github.com/alternayte/gx/examples/shop/ui/sidebar", Name: "Default", Node: func() gx.Node { return sidebar.SidebarTrigger(sidebar.SidebarTriggerFixtures["Default"]) }},
 		{Component: "Signup", Package: "github.com/alternayte/gx/examples/shop/ui/signup", Name: "Default", Node: func() gx.Node { return signup.Signup(signup.SignupFixtures["Default"]) }},
@@ -531,8 +729,12 @@ func Fixtures() []gx.Fixture {
 		{Component: "ToggleGroup", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Small", Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Small"]) }},
 		{Component: "ToggleGroup", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Spaced", Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Spaced"]) }},
 		{Component: "ToggleGroup", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Three", Node: func() gx.Node { return togglegroup.ToggleGroup(togglegroup.ToggleGroupFixtures["Three"]) }},
-		{Component: "ToggleGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Checked", Node: func() gx.Node { return togglegroup.ToggleGroupItemWrap(togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Checked"])) }},
-		{Component: "ToggleGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Disabled", Node: func() gx.Node { return togglegroup.ToggleGroupItemWrap(togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Disabled"])) }},
+		{Component: "ToggleGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Checked", Node: func() gx.Node {
+			return togglegroup.ToggleGroupItemWrap(togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Checked"]))
+		}},
+		{Component: "ToggleGroupItem", Package: "github.com/alternayte/gx/examples/shop/ui/toggle-group", Name: "Disabled", Node: func() gx.Node {
+			return togglegroup.ToggleGroupItemWrap(togglegroup.ToggleGroupItem(togglegroup.ToggleGroupItemFixtures["Disabled"]))
+		}},
 		{Component: "Tooltip", Package: "github.com/alternayte/gx/examples/shop/ui/tooltip", Name: "Bottom", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Bottom"]) }},
 		{Component: "Tooltip", Package: "github.com/alternayte/gx/examples/shop/ui/tooltip", Name: "Left", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Left"]) }},
 		{Component: "Tooltip", Package: "github.com/alternayte/gx/examples/shop/ui/tooltip", Name: "Right", Node: func() gx.Node { return tooltip.Tooltip(tooltip.TooltipFixtures["Right"]) }},

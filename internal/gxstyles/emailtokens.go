@@ -3,6 +3,7 @@ package gxstyles
 import (
 	"bytes"
 	"fmt"
+	"go/format"
 	"math"
 	"path/filepath"
 	"sort"
@@ -310,5 +311,9 @@ func GenerateTokens(theme []byte) []byte {
 	write("LightTokens", "light", light)
 	b.WriteString("\n")
 	write("DarkTokens", "dark", dark)
-	return b.Bytes()
+	src := b.Bytes()
+	if formatted, err := format.Source(src); err == nil {
+		return formatted
+	}
+	return src
 }

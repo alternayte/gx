@@ -6,14 +6,12 @@ package gxstyles
 // that an email client reads: hex colours and pixel sizes (REQ-STY-14).
 // Give it to gx.EmailOptions.
 func LightTokens() map[string]string {
-	return map[string]string{
-	}
+	return map[string]string{}
 }
 
 // DarkTokens returns the tokens of app/theme.css for the dark theme as values
 // that an email client reads: hex colours and pixel sizes (REQ-STY-14).
 // Give it to gx.EmailOptions.
 func DarkTokens() map[string]string {
-	return map[string]string{
-	}
+	return map[string]string{}
 }

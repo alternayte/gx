@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"go/ast"
+	"go/format"
 	"go/token"
 	"path/filepath"
 	"sort"
@@ -120,7 +121,11 @@ func renderGallery(root string, dirs []string, l *loader, pkgs []*packages.Packa
 		}
 	}
 	b.WriteString("\t}\n}\n")
-	return b.Bytes()
+	src := b.Bytes()
+	if formatted, err := format.Source(src); err == nil {
+		return formatted
+	}
+	return src
 }
 
 // modulePathOf returns the import path of a package directory.

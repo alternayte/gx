@@ -2,6 +2,7 @@ package gxstyles_test
 
 import (
 	"context"
+	"go/format"
 	"strings"
 	"testing"
 
@@ -34,6 +35,13 @@ func TestREQ_STY_13_GeneratedRoutes(t *testing.T) {
 	}
 	if empty := string(gxstyles.Generate(nil)); !strings.Contains(empty, "func Routes() map[string][]byte {\n\treturn map[string][]byte{}\n}") {
 		t.Errorf("an app with no route stylesheet has no empty Routes:\n%s", empty)
+	}
+	formatted, err := format.Source([]byte(src))
+	if err != nil {
+		t.Fatalf("the generated package does not parse: %v", err)
+	}
+	if string(formatted) != src {
+		t.Errorf("the generated package is not gofmt-clean:\n%s", src)
 	}
 }
 
