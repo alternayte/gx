@@ -127,7 +127,7 @@ func (s *Server) handleRequest(msg *message) error {
 				},
 				"inlayHintProvider": true,
 			},
-			"serverInfo": map[string]any{"name": "gx", "version": "0.4.2"},
+			"serverInfo": map[string]any{"name": "gx", "version": "0.4.3"},
 		})
 	case "shutdown":
 		return s.reply(msg, nil)
