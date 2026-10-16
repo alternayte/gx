@@ -28,4 +28,8 @@
   <extensions defaultExtensionNs="com.intellij.textmate">
     <bundleProvider implementation="dev.alternayte.gx.GxTextMateBundleProvider"/>
   </extensions>
+
+  <applicationListeners>
+    <listener class="dev.alternayte.gx.GxTextMateReload" topic="com.intellij.ide.plugins.DynamicPluginListener"/>
+  </applicationListeners>
 </idea-plugin>

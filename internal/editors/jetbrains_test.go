@@ -92,6 +92,10 @@ func TestREQ_TLS_07_JetBrainsPlugin(t *testing.T) {
 	if extensions["com.intellij.textmate.bundleProvider"] == "" {
 		t.Fatalf("no TextMate bundle provider: %v", extensions)
 	}
+	// An IDE that loads the plugin with no restart reloads the bundles.
+	if descriptor := readBody(t, filepath.Join(dir, "src/main/resources/META-INF/plugin.xml")); !strings.Contains(descriptor, `<listener class="dev.alternayte.gx.GxTextMateReload" topic="com.intellij.ide.plugins.DynamicPluginListener"/>`) {
+		t.Fatalf("plugin.xml registers no listener for a load with no restart")
+	}
 	if extensions["com.intellij.configurationType"] != "dev.alternayte.gx.GxDevConfigurationType" {
 		t.Fatalf("no Gx dev run configuration type: %v", extensions)
 	}
@@ -100,7 +104,7 @@ func TestREQ_TLS_07_JetBrainsPlugin(t *testing.T) {
 	for file, wants := range map[string][]string{
 		"GxLsp.kt":      {"LspServerSupportProvider", `GxSettings.commandLine(project, "lsp")`, "shouldFormatThisFileExclusivelyByServer"},
 		"GxDevRun.kt":   {`arrayOf("dev")`, "SimpleConfigurationType"},
-		"GxTextMate.kt": {"TextMateBundleProvider", "syntaxes/gx.tmLanguage.json"},
+		"GxTextMate.kt": {"TextMateBundleProvider", "syntaxes/gx.tmLanguage.json", "DynamicPluginListener", "reloadEnabledBundles()"},
 		"GxSettings.kt": {`"go", "run", "./cmd/gx"`, "GX_SERVER_PATH"},
 	} {
 		body := readBody(t, filepath.Join(kotlin, file))

@@ -1,6 +1,9 @@
 package dev.alternayte.gx
 
+import com.intellij.ide.plugins.DynamicPluginListener
+import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.openapi.application.PathManager
+import org.jetbrains.plugins.textmate.TextMateService
 import org.jetbrains.plugins.textmate.api.TextMateBundleProvider
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -29,5 +32,18 @@ class GxTextMateBundleProvider : TextMateBundleProvider {
 
     companion object {
         val FILES = listOf("package.json", "language-configuration.json", "syntaxes/gx.tmLanguage.json")
+    }
+}
+
+/**
+ * The TextMate plugin reads the bundle providers only when it loads its
+ * bundles. An IDE that loads this plugin with no restart has loaded them
+ * before, so the plugin asks for a reload.
+ */
+class GxTextMateReload : DynamicPluginListener {
+    override fun pluginLoaded(pluginDescriptor: IdeaPluginDescriptor) {
+        if (pluginDescriptor.pluginId.idString == "dev.alternayte.gx") {
+            TextMateService.getInstance().reloadEnabledBundles()
+        }
     }
 }
