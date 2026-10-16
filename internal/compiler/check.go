@@ -261,7 +261,19 @@ func (l *loader) checkElement(p *Package, file *File, el *Element, diags []Diagn
 			})
 			continue
 		}
-		if a.Kind == AttrFragment || isDirective(a.Name) {
+		if a.Kind == AttrFragment {
+			continue
+		}
+		if isDirective(a.Name) {
+			if isClientDirective(a.Name) {
+				diags = append(diags, Diagnostic{
+					Code: CodeUnknownAttr,
+					File: file.File,
+					Line: a.At.Line,
+					Col:  a.At.Col,
+					Msg:  "a client directive cannot address the root of another component",
+				})
+			}
 			continue
 		}
 		if comp.Island != nil && a.Name == islandLoadAttr {

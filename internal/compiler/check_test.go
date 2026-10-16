@@ -50,6 +50,23 @@ props {
 <article>{p.Title}</article>
 `
 
+func TestREQ_ACT_07_ClientDirectiveOnComponent(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":         moduleWithGx(t),
+		"ui/in/Inner.gx": "package in\n\nprops {\n  Name string = \"\"\n}\n\n<input name={p.Name} />\n",
+		"ui/in/Other.gx": "package in\n\nsignals {\n  Text string = \"\"\n}\n\n<div>\n  <Inner bind:value={$Text} />\n  <Inner on:click={$Text = \"x\"} />\n</div>\n",
+	})
+	var n int
+	for _, d := range checkDir(t, dir) {
+		if d.Code == compiler.CodeUnknownAttr && strings.Contains(d.Msg, "client directive") {
+			n++
+		}
+	}
+	if n != 2 {
+		t.Fatalf("client directives on a component: %d diagnostics, want 2", n)
+	}
+}
+
 func TestREQ_AUT_02_MissingRequiredProp(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":          moduleWithGx(t),
