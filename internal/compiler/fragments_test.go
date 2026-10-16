@@ -77,6 +77,16 @@ func TestREQ_AUT_13_FragmentUsesProps(t *testing.T) {
 	}
 }
 
+func TestREQ_AUT_13_FragmentParamIsInScope(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod":            moduleWithGx(t),
+		"ui/thing/Thing.gx": "package thing\n\nprops {\n  Label string\n}\n\n<p #note(text string)>{text + \"!\"}</p>\n<p #note2(text string)>{text}</p>\n",
+	})
+	if diags := checkDir(t, dir); len(diags) != 0 {
+		t.Fatalf("a fragment that reads its param: %v", diags)
+	}
+}
+
 func TestREQ_AUT_13_FreeVariable(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"go.mod":          moduleWithGx(t),

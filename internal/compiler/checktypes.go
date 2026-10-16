@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alternayte/gx/internal/goload"
 	"go/ast"
+	goparser "go/parser"
 	"go/token"
 	"go/types"
 	"os"
@@ -998,7 +999,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 	}
 	b.WriteString("}\n\n")
 	fmt.Fprintf(&b, "func %s(p %sProps) gx.Node { return nil }\n\n", name, name)
-	w := &probeWriter{l: l, pkg: pkg, file: f, synth: synth, pr: pr, b: &b, record: true}
+	w := &probeWriter{l: l, pkg: pkg, file: f, synth: synth, pr: pr, b: &b, record: true, scopes: newProbeScopes()}
 	fmt.Fprintf(&b, "func _gxProbe%s(p %sProps) {\n", name, name)
 	writeSignalDecls(&b, synth, f, true)
 	writeRefDecls(&b, f)
@@ -1024,7 +1025,7 @@ func buildProbe(l *loader, pkg *Package, f *File, synth string) (*probe, []byte)
 				fmt.Fprintf(&b, "//line %s:%d:1\nvar %s\nvar _ = %s\n", fragSynth, el.At.Line, param, ident)
 			}
 		}
-		fw := &probeWriter{l: l, pkg: pkg, file: f, synth: fragSynth, pr: pr, b: &b}
+		fw := &probeWriter{l: l, pkg: pkg, file: f, synth: fragSynth, pr: pr, b: &b, scopes: newProbeScopes()}
 		fw.fragmentBody(el)
 		b.WriteString("}\n")
 	}
@@ -1066,6 +1067,10 @@ type probeWriter struct {
 	pr     *probe
 	b      *bytes.Buffer
 	record bool
+	// scopes holds the names that the probe has declared in the
+	// surrounding blocks. A fragment param that a scope already has is
+	// not declared again (REQ-AUT-13).
+	scopes []map[string]bool
 }
 
 // fragmentBody probes the body of a fragment element. It does not record
@@ -1135,36 +1140,141 @@ func (w *probeWriter) nodes(ns []Node) {
 		case *Expr:
 			writeProbeExpr(w.b, t.Data, t.DataAt, w.synth, w.pr, t, w.record)
 		case *Element:
-			for i := range t.Attrs {
-				a := &t.Attrs[i]
-				switch a.Kind {
-				case AttrExpr:
-					if needsClient(a.Name, a.Value) {
-						w.client(a)
-						continue
-					}
-					writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a, w.record)
-				case AttrSpread:
-					writeProbeSpread(w.b, a.Value, a.ValueAt, w.synth)
-				}
-			}
-			if t.HasRaw {
-				continue
-			}
-			if w.slots(t) {
-				continue
-			}
-			w.nodes(t.Children)
+			w.fragmentElement(t)
 		case *Let:
 			if strings.Contains(t.Expr, "$") {
 				continue
 			}
 			lineDirective(w.b, w.synth, t.At)
 			fmt.Fprintf(w.b, "%s := %s\n", t.Name, t.Expr)
+			w.declare(t.Name)
 		case *Control:
 			w.control(t)
 		}
 	}
+}
+
+// fragmentElement probes one element. A fragment element with parameters
+// opens a block and declares each parameter that the surrounding scope does
+// not already hold. The scope probe of the fragment checks the body with
+// only the params in scope, to find free variables (GX2008); the component
+// probe checks the body with the same params, so an expression that reads
+// one type-checks with the type of the param (REQ-AUT-13). A param that
+// shares the name of an outer value is not declared again: the call site of
+// the fragment passes that value, so the probe keeps it used.
+func (w *probeWriter) fragmentElement(t *Element) {
+	var declared []string
+	for _, param := range splitParams(fragmentParams(t)) {
+		if ident := firstIdent(param); ident != "" && ident != "_" && !w.inScope(ident) {
+			declared = append(declared, param)
+		}
+	}
+	if len(declared) == 0 {
+		w.element(t)
+		return
+	}
+	fmt.Fprintf(w.b, "{\n")
+	w.push()
+	for _, param := range declared {
+		ident := firstIdent(param)
+		fmt.Fprintf(w.b, "var %s\nvar _ = %s\n", param, ident)
+		w.declare(ident)
+	}
+	w.element(t)
+	w.pop()
+	w.b.WriteString("}\n")
+}
+
+// newProbeScopes returns the scope stack of one probe. The probe function
+// always has p in scope (REQ-AUT-13).
+func newProbeScopes() []map[string]bool {
+	return []map[string]bool{{"p": true}}
+}
+
+func (w *probeWriter) push() { w.scopes = append(w.scopes, map[string]bool{}) }
+func (w *probeWriter) pop()  { w.scopes = w.scopes[:len(w.scopes)-1] }
+
+func (w *probeWriter) declare(name string) {
+	w.scopes[len(w.scopes)-1][name] = true
+}
+
+func (w *probeWriter) inScope(name string) bool {
+	for i := len(w.scopes) - 1; i >= 0; i-- {
+		if w.scopes[i][name] {
+			return true
+		}
+	}
+	return false
+}
+
+// controlHeaderNames returns the names that a control header declares with
+// := or range, so the probe keeps them in scope in the body (REQ-AUT-13).
+func controlHeaderNames(kind, header string) []string {
+	var src string
+	switch kind {
+	case "if":
+		src = "package p\nfunc _() { if " + header + " {} }"
+	case "for":
+		src = "package p\nfunc _() { for " + header + " {} }"
+	case "switch":
+		src = "package p\nfunc _() { switch " + header + " {} }"
+	default:
+		return nil
+	}
+	file, err := goparser.ParseFile(token.NewFileSet(), "", src, 0)
+	if err != nil {
+		return nil
+	}
+	var names []string
+	ast.Inspect(file, func(n ast.Node) bool {
+		switch t := n.(type) {
+		case *ast.AssignStmt:
+			if t.Tok != token.DEFINE {
+				return true
+			}
+			for _, lhs := range t.Lhs {
+				if id, ok := lhs.(*ast.Ident); ok && id.Name != "_" {
+					names = append(names, id.Name)
+				}
+			}
+		case *ast.RangeStmt:
+			if t.Tok != token.DEFINE {
+				return true
+			}
+			for _, e := range []ast.Expr{t.Key, t.Value} {
+				if id, ok := e.(*ast.Ident); ok && id.Name != "_" {
+					names = append(names, id.Name)
+				}
+			}
+		}
+		return true
+	})
+	return names
+}
+
+// element probes the attributes and children of one element in the scope
+// that surrounds it.
+func (w *probeWriter) element(t *Element) {
+	for i := range t.Attrs {
+		a := &t.Attrs[i]
+		switch a.Kind {
+		case AttrExpr:
+			if needsClient(a.Name, a.Value) {
+				w.client(a)
+				continue
+			}
+			writeProbeExpr(w.b, a.Value, a.ValueAt, w.synth, w.pr, a, w.record)
+		case AttrSpread:
+			writeProbeSpread(w.b, a.Value, a.ValueAt, w.synth)
+		}
+	}
+	if t.HasRaw {
+		return
+	}
+	if w.slots(t) {
+		return
+	}
+	w.nodes(t.Children)
 }
 
 // slots probes the children of a component element. A gx.Slot[T] slot binds
@@ -1185,7 +1295,10 @@ func (w *probeWriter) slots(el *Element) bool {
 			if prop, found := findProp(comp, strings.TrimPrefix(slotEl.Name, ":")); found {
 				if elem, ok := slotTypeArg(prop.Type); ok {
 					fmt.Fprintf(w.b, "var _ = func(%s %s) {\n", slotLetName(slotEl), elem)
+					w.push()
+					w.declare(slotLetName(slotEl))
 					w.nodes(slotEl.Children)
+					w.pop()
 					fmt.Fprintf(w.b, "}\n")
 					continue
 				}
@@ -1202,6 +1315,10 @@ func (w *probeWriter) control(c *Control) {
 	switch c.Kind {
 	case "if":
 		fmt.Fprintf(w.b, "if %s {\n", c.Header)
+		w.push()
+		for _, name := range controlHeaderNames(c.Kind, c.Header) {
+			w.declare(name)
+		}
 		w.nodes(c.Body)
 		w.b.WriteString("}")
 		if len(c.Else) > 0 {
@@ -1210,12 +1327,22 @@ func (w *probeWriter) control(c *Control) {
 			w.b.WriteString("}")
 		}
 		w.b.WriteString("\n")
+		w.pop()
 	case "for":
 		fmt.Fprintf(w.b, "for %s {\n", c.Header)
+		w.push()
+		for _, name := range controlHeaderNames(c.Kind, c.Header) {
+			w.declare(name)
+		}
 		w.nodes(c.Body)
 		w.b.WriteString("}\n")
+		w.pop()
 	case "switch":
 		fmt.Fprintf(w.b, "switch %s {\n", c.Header)
+		w.push()
+		for _, name := range controlHeaderNames(c.Kind, c.Header) {
+			w.declare(name)
+		}
 		for _, cs := range c.Cases {
 			if cs.IsDefault {
 				w.b.WriteString("default:\n")
@@ -1225,6 +1352,7 @@ func (w *probeWriter) control(c *Control) {
 			w.nodes(cs.Body)
 		}
 		w.b.WriteString("}\n")
+		w.pop()
 	}
 }
 
