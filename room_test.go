@@ -343,6 +343,36 @@ func TestSI_17_RuleWithNoFieldReadsTheRoom(t *testing.T) {
 	quiet(t, viewer)
 }
 
+// primeBus primes each new room with one message when a viewer subscribes.
+// It makes the race between the join and the first read of the stream loop
+// deterministic (REQ-ACT-21).
+type primeBus struct{ message []byte }
+
+func (b *primeBus) Publish(context.Context, string, []byte) error { return nil }
+
+func (b *primeBus) Subscribe(_ context.Context, _ string, receive func([]byte)) (func(), error) {
+	receive(b.message)
+	return func() {}, nil
+}
+
+// TestREQ_ACT_21_RoomStateReachesAViewerOneTime checks that a state that
+// arrives before the stream loop reads the room reaches the viewer one
+// time. A write between the join and the first read used to send the same
+// state two times: once from the join and once more from the signal of the
+// write.
+func TestREQ_ACT_21_RoomStateReachesAViewerOneTime(t *testing.T) {
+	bus := &primeBus{message: []byte(`{"high":10}`)}
+	app := gx.New(gx.Config{Bus: bus, Secret: []byte("test-secret")})
+	app.Group("/", gx.SharedSignals[crossSignals]("notes.Note", "low", "high"))
+	srv := httptest.NewServer(app)
+	t.Cleanup(srv.Close)
+	viewer, _ := roomViewer(t, srv, noteRoom("once-1"))
+	if state := next(t, viewer); state["high"] != float64(10) {
+		t.Fatalf("the first frame = %v, want high 10", state)
+	}
+	quiet(t, viewer)
+}
+
 // relayBus is a bus of an app: it gives each message to each subscriber of
 // each replica. It counts its messages, so a test can see that it carried
 // them.

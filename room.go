@@ -1,6 +1,7 @@
 package gx
 
 import (
+	"bytes"
 	"context"
 	"crypto/hmac"
 	"crypto/rand"
@@ -263,11 +264,16 @@ func (h *sharedSignals[S]) subscribe(rooms *roomHub, w http.ResponseWriter, r *h
 	// expiry of that token.
 	renew := time.NewTimer(time.Until(expiry) - roomKeyLife/2)
 	defer renew.Stop()
+	// Each state reaches the viewer one time. A write that lands between the
+	// comment above and the first read of the loop signals the subscription,
+	// and the state of that write would go out a second time (REQ-ACT-21).
+	var last []byte
 	for {
-		if state := rooms.state(topic); state != nil {
+		if state := rooms.state(topic); state != nil && !bytes.Equal(state, last) {
 			if _, err := io.WriteString(w, "event: gx-room\ndata: "+string(state)+"\n\n"); err != nil {
 				return
 			}
+			last = state
 			flusher.Flush()
 		}
 		select {
