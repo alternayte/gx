@@ -266,6 +266,20 @@ test('REQ-RTE-12 a navigation whose fetch throws falls back to a full load', asy
   expect(await page.evaluate(() => new URL(location.href).pathname)).toBe('/about')
 })
 
+// A slow navigation marks the link and the document busy until the new page
+// is in.
+test('REQ-RTE-12 a navigation in flight marks the link and the document busy', async () => {
+  await page.route('**/about', async (route) => {
+    if (route.request().headers()['gx-nav']) await Bun.sleep(800)
+    await route.continue()
+  })
+  await page.click('a:text-is("About")')
+  await page.waitForSelector('html[aria-busy="true"]', { timeout: 2000 })
+  expect(await page.getAttribute('a:text-is("About")', 'aria-busy')).toBe('true')
+  await page.waitForFunction(() => document.title === 'Gx shop about', undefined, { timeout: 5000 })
+  await page.waitForFunction(() => !document.querySelector('[aria-busy]'), undefined, { timeout: 2000 })
+})
+
 test('REQ-RTE-12 JS off keeps navigation links plain', async () => {
   const context = await browser.newContext({ javaScriptEnabled: false })
   const plain = await context.newPage()

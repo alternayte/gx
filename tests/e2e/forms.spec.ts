@@ -127,6 +127,27 @@ test('REQ-FRM-05 JS off: an invalid submit answers 422 with values and errors', 
   await context.close()
 })
 
+// A slow answer: the form and its submitter are busy, a second click sends
+// no second request, and the mark goes when the answer lands.
+test('REQ-FRM-05 a submit in flight marks the form busy and sends one request', async () => {
+  await page.goto(shop.url + '/signup')
+  let posts = 0
+  await page.route('**/signup', async (route) => {
+    if (route.request().method() !== 'POST') return route.continue()
+    posts++
+    await Bun.sleep(800)
+    await route.continue()
+  })
+  await fillSignup('taken@example.com', '20')
+  await page.click('button:text-is("Create account")')
+  await page.waitForSelector('form[data-gx-form][aria-busy="true"]', { timeout: 2000 })
+  expect(await page.getAttribute('button:text-is("Create account")', 'aria-busy')).toBe('true')
+  await page.click('button:text-is("Create account")')
+  await waitForText('#signup-email-error', 'email.taken')
+  await page.waitForFunction(() => !document.querySelector('[aria-busy]'), undefined, { timeout: 2000 })
+  expect(posts).toBe(1)
+})
+
 test('REQ-FRM-11 a field error wires aria and the summary takes focus', async () => {
   await page.goto(shop.url + '/signup')
   await fillSignup('taken@example.com', '20')

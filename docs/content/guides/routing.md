@@ -209,6 +209,8 @@ With `gx.Nav(gx.MorphNavigation)`, a click between two pages with a shared layou
 
 With no JavaScript, or between two different layouts, a link is a full load.
 
+A navigation that takes more than 100 ms sets `aria-busy="true"` on the clicked link and on the `html` element. The mark goes when the new page is in, or when the navigation fails. A new click takes the mark of the earlier one. Use the mark to show progress with CSS, for example `html[aria-busy="true"] { cursor: progress; }`.
+
 ## Error pages
 
 `server.Errors(notFound, forbidden, serverError)` sets a component for each status. Each one is `func(*gx.Ctx) gx.Node`.

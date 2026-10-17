@@ -182,6 +182,16 @@ A form with a file field gets `enctype="multipart/form-data"`. Gx checks the siz
 
 A value of the wrong type, such as text in the age field, is a field error with the key `invalid`. It is not a 400.
 
+## A submit in flight
+
+With JavaScript, a submit that takes more than 100 ms sets `aria-busy="true"` on the form and on the button that submitted it. The mark goes when the answer arrives or fails. A second submit of the same form before the answer arrives sends no request, so a double click sends one request. Style the pending state with CSS:
+
+```css
+button[aria-busy="true"] { opacity: 0.6; cursor: progress; }
+```
+
+A request of an `on:` directive, such as `on:interval`, sets no mark.
+
 ## Messages
 
 A message is a key with an English default. `gx.SetTranslator` replaces the text for each key.

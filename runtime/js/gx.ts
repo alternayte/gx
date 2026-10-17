@@ -642,7 +642,48 @@ const watchValidation = (): void => {
 // submitForm posts a Gx form through the adapter and applies the patches
 // (REQ-FRM-05). Native validation has already run; this path skips only the
 // browser's own form post.
+// busy marks elements with aria-busy while a request of a click is in
+// flight, so an app can style the pending state with CSS. The mark comes
+// after 100 ms: a fast answer shows no flash. The returned function clears
+// it.
+const busy = (...els: (Element | null)[]): (() => void) => {
+  const t = setTimeout(() => els.forEach((el) => el?.setAttribute('aria-busy', 'true')), 100)
+  return () => {
+    clearTimeout(t)
+    els.forEach((el) => el?.removeAttribute('aria-busy'))
+  }
+}
+
+// submitting holds the forms with a submit in flight. A second submit of
+// such a form is ignored, so a double click sends one request.
+const submitting = new WeakSet<HTMLFormElement>()
+
 const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null): Promise<void> => {
+  if (submitting.has(form)) return
+  submitting.add(form)
+  const done = busy(form, submitter)
+  try {
+    if (!(await sendForm(form, submitter))) return
+  } finally {
+    submitting.delete(form)
+    done()
+  }
+  // Datastar morphs the patched form a moment later. Focus the error
+  // summary once it lands (REQ-FRM-11).
+  for (let i = 0; i < 20; i++) {
+    const summary = document.querySelector<HTMLElement>('[data-gx-error-summary]')
+    if (summary) {
+      summary.focus()
+      break
+    }
+    await new Promise((resolve) => setTimeout(resolve, 16))
+  }
+  updateActive()
+}
+
+// sendForm posts the form and applies the answer. It reports false when the
+// form went to a full submit.
+const sendForm = async (form: HTMLFormElement, submitter: HTMLElement | null): Promise<boolean> => {
   const data = new FormData(form)
   const token = cookie('gx_csrf')
   if (token !== '' && !data.has('gx_csrf')) data.set('gx_csrf', token)
@@ -668,23 +709,13 @@ const submitForm = async (form: HTMLFormElement, submitter: HTMLElement | null):
     headers,
     credentials: 'same-origin',
     body,
-  })
-  if (!res.ok || !res.body) {
+  }).catch(() => undefined)
+  if (!res || !res.ok || !res.body) {
     form.submit()
-    return
+    return false
   }
   await applyAnswer(res)
-  // Datastar morphs the patched form a moment later. Focus the error
-  // summary once it lands (REQ-FRM-11).
-  for (let i = 0; i < 20; i++) {
-    const summary = document.querySelector<HTMLElement>('[data-gx-error-summary]')
-    if (summary) {
-      summary.focus()
-      break
-    }
-    await new Promise((resolve) => setTimeout(resolve, 16))
-  }
-  updateActive()
+  return true
 }
 
 // navigate fetches the patch of a page and applies it. keep is for the
@@ -769,17 +800,30 @@ if (typeof document !== 'undefined') {
     if (url.origin !== location.origin) return
     if (url.pathname === location.pathname && url.search === location.search) return
     e.preventDefault()
-    void navigate(url.pathname + url.search + url.hash, true)
+    go(url.pathname + url.search + url.hash, true, anchor)
   })
   // The browser sends popstate for a link to a fragment of the same page
   // too. Only a change of the path or of the query is a navigation: a
   // fragment link must not load the page again.
+  // go navigates and marks the link and the document as busy. A new
+  // navigation takes the mark of the pending one.
+  let pending: (() => void) | undefined
+  const go = (url: string, push: boolean, link: Element | null) => {
+    pending?.()
+    const done = (pending = busy(link, document.documentElement))
+    void navigate(url, push).finally(() => {
+      if (pending === done) {
+        done()
+        pending = undefined
+      }
+    })
+  }
   let shown = location.pathname + location.search
   window.addEventListener('popstate', () => {
     const next = location.pathname + location.search
     if (next === shown) return
     shown = next
-    void navigate(next, false)
+    go(next, false, null)
   })
   ;(gx as typeof gx & { shownPage?: (url: string) => void }).shownPage = (url: string) => {
     const u = new URL(url, location.href)
