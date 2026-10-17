@@ -76,40 +76,40 @@ var _tSelect0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSelect1 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSelect2 = gx.NewTemplate(
 	[]string{"\n      <option value=\"\" disabled selected hidden>", "</option>\n    "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "option"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "option"}},
 )
 
 var _tSelect3 = gx.NewTemplate(
 	[]string{"\n    ", "\n  "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tSelect4 = gx.NewTemplate(
 	[]string{"<select", ">", "</select>\n  ", "\n"},
 	[]int{0, 1, 0},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: 2}},
 )
 
 var _tSelect5 = gx.NewTemplate(
 	[]string{"<span", ">", "</span>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

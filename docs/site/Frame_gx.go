@@ -37,5 +37,5 @@ var _tFrame0 = gx.NewTemplate(
 	[]string{"\n<div", ">\n  <iframe", "></iframe>\n</div>\n<p", ">\n  <a", ">Open the preview in a new tab</a>\n</p>\n"},
 	[]int{0, 1, 0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 1, EndStatic: 2, End: 17}, {Slot: 1, Start: 4, EndStatic: 2, End: 10}, {Slot: 2, Start: 18, EndStatic: 4, End: 39}, {Slot: 3, Start: 4, EndStatic: 4, End: 34}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: 2, Slot: -1}},
 )

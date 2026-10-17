@@ -85,28 +85,28 @@ var _tCart0 = gx.NewTemplate(
 	[]string{"\n\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tCart1 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tCart2 = gx.NewTemplate(
 	[]string{"\n  <p>", " total: <span", ">", "</span></p>\n  <input", ">\n  <button", ">Add</button>\n  <button", ">Set 2</button>\n  <button", ">Go</button>\n  <button", ">Toast</button>\n  <button", ">Nothing</button>\n  <button", ">Fail</button>\n"},
 	[]int{1, 1, 2, 0, 0, 0, 0, 0, 0, 0},
 	[]gx.TemplateEl{{Slot: 1, Start: 8, EndStatic: 3, End: 7}, {Slot: 3, Start: 14, EndStatic: 4, End: 1}, {Slot: 4, Start: 4, EndStatic: 5, End: 13}, {Slot: 5, Start: 16, EndStatic: 6, End: 15}, {Slot: 6, Start: 18, EndStatic: 7, End: 12}, {Slot: 7, Start: 15, EndStatic: 8, End: 15}, {Slot: 8, Start: 18, EndStatic: 9, End: 17}, {Slot: 9, Start: 20, EndStatic: 10, End: 14}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}, {El: 3, Slot: -1}, {El: -1, Slot: -1}, {El: 4, Slot: -1}, {El: -1, Slot: -1}, {El: 5, Slot: -1}, {El: -1, Slot: -1}, {El: 6, Slot: -1}, {El: -1, Slot: -1}, {El: 7, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "p"}, {El: 1, Slot: -1}, {El: 2, Slot: -1}, {El: 3, Slot: -1}, {El: 4, Slot: -1}, {El: 5, Slot: -1}, {El: 6, Slot: -1}, {El: 7, Slot: -1}},
 )
 
 var _tCart3 = gx.NewTemplate(
 	[]string{"<div", ">", "</div>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tCart4 = gx.NewTemplate(

@@ -61,26 +61,26 @@ var _tTextField0 = gx.NewTemplate(
 	[]string{"\n  <label", ">", "</label>\n  <input", ">\n  "},
 	[]int{0, 1, 0},
 	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 8}, {Slot: 2, Start: 11, EndStatic: 3, End: 1}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: 1, Slot: -1}},
 )
 
 var _tTextField1 = gx.NewTemplate(
 	[]string{"\n    <p", ">", "</p>\n  "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 4}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tTextField2 = gx.NewTemplate(
 	[]string{"\n  <p", ">", "</p>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 4}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tTextField3 = gx.NewTemplate(
 	[]string{"<div class=\"field\">", "</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

@@ -143,96 +143,96 @@ var _tChart0 = gx.NewTemplate(
 	[]string{"\n  <figcaption", ">", "</figcaption>\n  ", "\n  "},
 	[]int{0, 1, 0},
 	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 2, End: 13}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: 2}},
 )
 
 var _tChart1 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tChart2 = gx.NewTemplate(
 	[]string{"\n      "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tChart3 = gx.NewTemplate(
 	[]string{"\n        <th", ">", "</th>\n        "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 9, EndStatic: 2, End: 5}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tChart4 = gx.NewTemplate(
 	[]string{"\n          <th", ">", "</th>\n        "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 2, End: 5}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tChart5 = gx.NewTemplate(
 	[]string{"<tr>", "</tr>\n    "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tr"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tr"}},
 )
 
 var _tChart6 = gx.NewTemplate(
 	[]string{"<thead>", "</thead>\n    "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "thead"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "thead"}},
 )
 
 var _tChart7 = gx.NewTemplate(
 	[]string{"\n        "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tChart8 = gx.NewTemplate(
 	[]string{"\n          <th", ">", "</th>\n          "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 2, End: 5}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tChart9 = gx.NewTemplate(
 	[]string{"\n            <td", ">", "</td>\n          "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 13, EndStatic: 2, End: 5}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tChart10 = gx.NewTemplate(
 	[]string{"<tr>", "</tr>\n      "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tr"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tr"}},
 )
 
 var _tChart11 = gx.NewTemplate(
 	[]string{"<tbody>", "</tbody>\n  "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tbody"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "tbody"}},
 )
 
 var _tChart12 = gx.NewTemplate(
 	[]string{"<table", ">", "</table>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 8}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tChart13 = gx.NewTemplate(
 	[]string{"<figure", ">", "</figure>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 9}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

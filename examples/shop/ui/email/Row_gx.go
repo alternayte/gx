@@ -28,5 +28,5 @@ var _tRow0 = gx.NewTemplate(
 	[]string{"<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n  <tbody>\n    <tr>", "</tr>\n  </tbody>\n</table>\n"},
 	[]int{3},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "table"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "table"}},
 )

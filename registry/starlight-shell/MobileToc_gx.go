@@ -97,75 +97,75 @@ var _tMobileToc0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tMobileToc1 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tMobileToc2 = gx.NewTemplate(
 	[]string{"\n      <summary", ">\n        <span class=\"sl-toggle\">\n          On this page\n          ", "\n        </span>\n        <span", "></span>\n      </summary>\n      "},
 	[]int{0, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 3, End: 25}, {Slot: 2, Start: 25, EndStatic: 3, End: 8}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tMobileToc3 = gx.NewTemplate(
 	[]string{"\n        "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tMobileToc4 = gx.NewTemplate(
 	[]string{"\n          <li>\n            <a", "><span>Overview</span></a>\n          </li>\n          "},
 	[]int{1},
 	[]gx.TemplateEl{{Slot: 0, Start: 28, EndStatic: 1, End: 26}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}},
 )
 
 var _tMobileToc5 = gx.NewTemplate(
 	[]string{"\n            <li>\n              <a", "><span>", "</span></a>\n            </li>\n          "},
 	[]int{1, 3},
 	[]gx.TemplateEl{{Slot: 0, Start: 32, EndStatic: 2, End: 11}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}},
 )
 
 var _tMobileToc6 = gx.NewTemplate(
 	[]string{"<ul class=\"sl-toc-list\">", "</ul>\n      "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}},
 )
 
 var _tMobileToc7 = gx.NewTemplate(
 	[]string{"<div class=\"sl-dropdown\">", "</div>\n    "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tMobileToc8 = gx.NewTemplate(
 	[]string{"<details", ">", "</details>\n  "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tMobileToc9 = gx.NewTemplate(
 	[]string{"<nav", ">", "</nav>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tMobileToc10 = gx.NewTemplate(
 	[]string{"<div class=\"sl-mobile-toc\">", "</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

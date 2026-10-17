@@ -34,5 +34,5 @@ var _tSearchDialog0 = gx.NewTemplate(
 	[]string{"<dialog", ">\n  <form", ">\n    <input", ">\n    <button class=\"rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground\" type=\"submit\">Search</button>\n    <button", ">Close</button>\n  </form>\n  <div", "></div>\n</dialog>\n"},
 	[]int{0, 1, 2, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 5, End: 17}, {Slot: 1, Start: 4, EndStatic: 4, End: 25}, {Slot: 2, Start: 6, EndStatic: 3, End: 1}, {Slot: 3, Start: 120, EndStatic: 4, End: 15}, {Slot: 4, Start: 28, EndStatic: 5, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

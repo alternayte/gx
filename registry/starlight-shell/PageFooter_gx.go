@@ -72,40 +72,40 @@ var _tPageFooter0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tPageFooter1 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tPageFooter2 = gx.NewTemplate(
 	[]string{"\n      <a", ">\n        ", "\n        Edit page\n      </a>\n    "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 29}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tPageFooter3 = gx.NewTemplate(
 	[]string{"\n      <p", ">Last updated: <time>", "</time></p>\n    "},
 	[]int{0, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 2, End: 11}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tPageFooter4 = gx.NewTemplate(
 	[]string{"<div class=\"sl-meta\">", "</div>\n  ", "\n"},
 	[]int{1, 0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: 1}},
 )
 
 var _tPageFooter5 = gx.NewTemplate(
 	[]string{"<footer class=\"sl-footer\">", "</footer>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "footer"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "footer"}},
 )

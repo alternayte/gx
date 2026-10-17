@@ -45,26 +45,26 @@ var _tIconGrid0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tIconGrid1 = gx.NewTemplate(
 	[]string{"\n    <li class=\"m-0 flex flex-col items-center gap-3 rounded-lg border border-border p-4 text-center\">\n      <span class=\"flex size-10 items-center justify-center [&amp;&gt;svg]:size-6\">", "</span>\n      <code class=\"text-xs text-muted-foreground\">", "</code>\n    </li>\n  "},
 	[]int{2, 2},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}},
 )
 
 var _tIconGrid2 = gx.NewTemplate(
 	[]string{"\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tIconGrid3 = gx.NewTemplate(
 	[]string{"<ul class=\"gx-icon-grid my-6 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 md:grid-cols-4\">", "</ul>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}},
 )

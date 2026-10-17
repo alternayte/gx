@@ -61,26 +61,26 @@ var _tTooltip0 = gx.NewTemplate(
 	[]string{"\n  ", "\n  "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tTooltip1 = gx.NewTemplate(
 	[]string{"\n    <span", ">\n      ", "\n      <span", "></span>\n    </span>\n  "},
 	[]int{0, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 20}, {Slot: 2, Start: 7, EndStatic: 3, End: 8}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tTooltip2 = gx.NewTemplate(
 	[]string{"\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tTooltip3 = gx.NewTemplate(
 	[]string{"<span", ">", "</span>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

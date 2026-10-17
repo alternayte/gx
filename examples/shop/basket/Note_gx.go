@@ -58,5 +58,5 @@ var _tNote0 = gx.NewTemplate(
 	[]string{"\n\n<div", ">\n  <label for=\"note-input\">Shared note</label>\n  <input", ">\n  <span", "></span>\n  <button", ">Busy</button>\n  <span", ">A viewer is busy</span>\n</div>\n"},
 	[]int{0, 1, 1, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 2, EndStatic: 5, End: 31}, {Slot: 1, Start: 50, EndStatic: 2, End: 1}, {Slot: 2, Start: 4, EndStatic: 3, End: 8}, {Slot: 3, Start: 11, EndStatic: 4, End: 14}, {Slot: 4, Start: 17, EndStatic: 5, End: 24}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

@@ -46,5 +46,5 @@ var _tDashboard0 = gx.NewTemplate(
 	[]string{"\n\n", "\n<section", ">\n  <h1 class=\"text-xl font-semibold\">Dashboard</h1>\n  ", "\n  <div class=\"flex items-center gap-3\">\n    <input", ">\n    ", "\n  </div>\n  \n  <sl-details", ">Open me.</sl-details>\n  \n  <div class=\"h-[2400px]\"></div>\n  ", "\n  ", "\n</section>\n"},
 	[]int{0, 0, 1, 2, 2, 1, 1, 1},
 	[]gx.TemplateEl{{Slot: 1, Start: 1, EndStatic: 8, End: 11}, {Slot: 3, Start: 45, EndStatic: 4, End: 1}, {Slot: 5, Start: 15, EndStatic: 6, End: 22}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: 0, Slot: -1}},
 )

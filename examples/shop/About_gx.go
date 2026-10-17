@@ -33,5 +33,5 @@ var _tAbout0 = gx.NewTemplate(
 	[]string{"", "\n<h1 class=\"text-2xl font-semibold\">About</h1>\n<p class=\"text-muted-foreground\">A shop built with Gx.</p>\n<div", "></div>\n<img", ">\n<span", ">waiting</span>\n"},
 	[]int{0, 0, 0, 0},
 	[]gx.TemplateEl{{Slot: 1, Start: 106, EndStatic: 2, End: 7}, {Slot: 2, Start: 8, EndStatic: 3, End: 1}, {Slot: 3, Start: 2, EndStatic: 4, End: 15}},
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1, Name: "p"}, {El: 0, Slot: -1}, {El: 1, Slot: -1}, {El: 2, Slot: -1}},
 )

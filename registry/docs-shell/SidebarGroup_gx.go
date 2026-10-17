@@ -81,54 +81,54 @@ var _tSidebarGroup0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSidebarGroup1 = gx.NewTemplate(
 	[]string{"\n    ", "\n    "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tSidebarGroup2 = gx.NewTemplate(
 	[]string{"\n      <span class=\"gx-nav-badge rounded-full border border-border px-1.5 text-[10px]\">", "</span>\n    "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}},
 )
 
 var _tSidebarGroup3 = gx.NewTemplate(
 	[]string{"<summary class=\"gx-nav-group-label flex cursor-pointer items-center gap-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground\">", "</summary>\n  "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "summary"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "summary"}},
 )
 
 var _tSidebarGroup4 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSidebarGroup5 = gx.NewTemplate(
 	[]string{"\n      ", "\n    "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tSidebarGroup6 = gx.NewTemplate(
 	[]string{"<ul class=\"mt-1 list-none space-y-0.5 p-0\">", "</ul>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}},
 )
 
 var _tSidebarGroup7 = gx.NewTemplate(
 	[]string{"<details", ">", "</details>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

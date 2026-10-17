@@ -37,5 +37,5 @@ var _tToastDemo0 = gx.NewTemplate(
 	[]string{"\n", "\n<template", ">", "</template>\n", "\n", "\n"},
 	[]int{0, 0, 1, 0, 0},
 	[]gx.TemplateEl{{Slot: 1, Start: 1, EndStatic: 3, End: 11}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: -1, Slot: 4}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: 0, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: 4}},
 )

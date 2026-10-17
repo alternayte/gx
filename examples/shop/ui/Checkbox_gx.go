@@ -34,5 +34,5 @@ var _tCheckbox0 = gx.NewTemplate(
 	[]string{"<div class=\"field\">\n  <label>\n    <input", ">\n    ", "\n  </label>\n  <p", ">", "</p>\n</div>\n"},
 	[]int{2, 2, 1, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 34, EndStatic: 1, End: 1}, {Slot: 2, Start: 14, EndStatic: 4, End: 4}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

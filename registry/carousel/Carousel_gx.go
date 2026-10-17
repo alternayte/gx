@@ -44,5 +44,5 @@ var _tCarousel0 = gx.NewTemplate(
 	[]string{"<section", ">\n  <div", ">", "</div>\n  ", "\n</section>\n"},
 	[]int{0, 1, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 11}, {Slot: 1, Start: 4, EndStatic: 3, End: 6}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

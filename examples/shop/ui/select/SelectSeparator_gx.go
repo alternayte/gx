@@ -28,5 +28,5 @@ var _tSelectSeparator0 = gx.NewTemplate(
 	[]string{"<hr", ">\n"},
 	[]int{0},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 1}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

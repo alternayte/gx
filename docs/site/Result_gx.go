@@ -36,5 +36,5 @@ var _tResult0 = gx.NewTemplate(
 	[]string{"\n<figure", ">\n  <figcaption class=\"flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border bg-muted/50 px-3 py-2 text-xs\">\n    <span class=\"font-medium text-foreground\">", "</span>\n    <code class=\"rounded bg-background px-2 py-0.5 font-mono text-muted-foreground\">", "</code>\n    <span class=\"ml-auto text-muted-foreground\">The page of the sample app</span>\n  </figcaption>\n  <iframe", "></iframe>\n</figure>\n"},
 	[]int{0, 3, 3, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 1, EndStatic: 4, End: 20}, {Slot: 3, Start: 108, EndStatic: 4, End: 10}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

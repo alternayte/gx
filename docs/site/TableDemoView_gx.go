@@ -50,26 +50,26 @@ var _tTableDemoView0 = gx.NewTemplate(
 	[]string{"\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tTableDemoView1 = gx.NewTemplate(
 	[]string{"\n  <span class=\"text-muted-foreground\">Status</span>\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "span"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "span"}},
 ).With()
 
 var _tTableDemoView2 = gx.NewTemplate(
 	[]string{"\n    <a", ">", "</a>\n  "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 2, End: 4}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tTableDemoView3 = gx.NewTemplate(
 	[]string{"<nav class=\"flex flex-wrap items-center gap-2 p-3 text-sm\" aria-label=\"Status\">", "</nav>\n", "\n"},
 	[]int{1, 0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "nav"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "nav"}, {El: -1, Slot: 1}},
 )

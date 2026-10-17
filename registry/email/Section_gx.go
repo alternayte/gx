@@ -32,5 +32,5 @@ var _tSection0 = gx.NewTemplate(
 	[]string{"<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n  <tbody>\n    <tr>\n      <td", ">", "</td>\n    </tr>\n  </tbody>\n</table>\n"},
 	[]int{3, 4},
 	[]gx.TemplateEl{{Slot: 0, Start: 109, EndStatic: 2, End: 5}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "table"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "table"}},
 )

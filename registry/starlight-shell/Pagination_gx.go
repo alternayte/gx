@@ -64,33 +64,33 @@ var _tPagination0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tPagination1 = gx.NewTemplate(
 	[]string{"\n    <a", ">\n      ", "\n      <span>Previous<br><span class=\"sl-link-title\">", "</span></span>\n    </a>\n  "},
 	[]int{0, 1, 3},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 23}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tPagination2 = gx.NewTemplate(
 	[]string{"\n    <a", ">\n      ", "\n      <span>Next<br><span class=\"sl-link-title\">", "</span></span>\n    </a>\n  "},
 	[]int{0, 1, 3},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 23}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tPagination3 = gx.NewTemplate(
 	[]string{"\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tPagination4 = gx.NewTemplate(
 	[]string{"<div class=\"sl-pagination\">", "</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

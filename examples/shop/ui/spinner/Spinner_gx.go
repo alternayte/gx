@@ -32,5 +32,5 @@ var _tSpinner0 = gx.NewTemplate(
 	[]string{"<svg", ">\n  <path d=\"M21 12a9 9 0 1 1-6.219-8.56\"></path>\n</svg>\n"},
 	[]int{0},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 1, End: 56}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

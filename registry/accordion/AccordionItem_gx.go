@@ -50,5 +50,5 @@ var _tAccordionItem0 = gx.NewTemplate(
 	[]string{"<details", ">\n  <summary", ">\n    ", "\n    ", "\n  </summary>\n  <div class=\"pt-0 pb-4 text-sm\">", "</div>\n</details>\n"},
 	[]int{0, 1, 2, 2, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 5, End: 17}, {Slot: 1, Start: 4, EndStatic: 4, End: 13}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

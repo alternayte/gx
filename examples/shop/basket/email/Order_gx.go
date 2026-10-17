@@ -144,7 +144,7 @@ var _tOrder5 = gx.NewTemplate(
 	[]string{"\n      ", "\n    "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tOrder6 = gx.NewTemplate(
@@ -179,5 +179,5 @@ var _tOrder10 = gx.NewTemplate(
 	[]string{"", "\n"},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )

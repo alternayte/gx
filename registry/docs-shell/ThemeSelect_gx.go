@@ -30,5 +30,5 @@ var _tThemeSelect0 = gx.NewTemplate(
 	[]string{"<div class=\"gx-theme inline-flex gap-1 rounded-md border border-border p-0.5\" role=\"group\" aria-label=\"Theme\">\n  <button", ">Light</button>\n  <button", ">Dark</button>\n  <button", ">Auto</button>\n</div>\n"},
 	[]int{1, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 113, EndStatic: 1, End: 15}, {Slot: 1, Start: 18, EndStatic: 2, End: 14}, {Slot: 2, Start: 17, EndStatic: 3, End: 14}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

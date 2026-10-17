@@ -100,5 +100,5 @@ var _tLogin6 = gx.NewTemplate(
 	[]string{"<div class=\"grid min-h-screen lg:grid-cols-2\">\n  <div class=\"flex items-center justify-center p-6\">\n    ", "\n  </div>\n  <div class=\"hidden flex-col justify-between bg-muted p-10 lg:flex\">\n    <a class=\"font-semibold no-underline\" href=\"/\">Gx</a>\n    <p class=\"max-w-sm text-sm text-foreground/80\">A typed Go framework for server-rendered web apps.</p>\n  </div>\n</div>\n"},
 	[]int{2},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

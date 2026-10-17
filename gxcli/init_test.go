@@ -483,3 +483,27 @@ func TestREQ_CNT_06_InitDocsTemplate(t *testing.T) {
 		t.Fatalf("the refusal = %q", stderr)
 	}
 }
+
+// TestREQ_DEV_10_NewSliceKeepsComments checks that gx new slice adds the
+// routes of the slice to the Group call of main.go and leaves each comment of
+// the file in its place (REQ-DEV-10).
+func TestREQ_DEV_10_NewSliceKeepsComments(t *testing.T) {
+	dir := initApp(t)
+	if out, code := captureStdout(t, func() int { return gxcli.Main([]string{"new", "slice", "shop", dir}) }); code != 0 {
+		t.Fatalf("gx new slice exit = %d\n%s", code, out)
+	}
+	data, err := os.ReadFile(filepath.Join(dir, "cmd", "app", "main.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	src := string(data)
+	for _, want := range []string{
+		"\tserver.Group(\"/\", app.Layout, gx.Nav(gx.MorphNavigation), home.Routes, shop.Routes)\n",
+		"\n\n\t// gx dev sets GX_DEV_ADDR.\n\taddr := os.Getenv(\"GX_DEV_ADDR\")\n",
+		"\t\"example.com/acme/shop\"\n",
+	} {
+		if !strings.Contains(src, want) {
+			t.Fatalf("main.go lacks %q:\n%s", want, src)
+		}
+	}
+}

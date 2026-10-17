@@ -139,7 +139,11 @@ func (g *gen) tmplNodes(tb *tmplBuilder, ns []Node) {
 	for _, n := range ns {
 		switch t := n.(type) {
 		case *Text:
-			tb.root(gx.TemplateRoot{El: -1, Slot: -1})
+			// Whitespace around an element, such as the newline at the
+			// end of a file, is not a part that a patch can address.
+			if strings.TrimSpace(t.Data) != "" {
+				tb.root(gx.TemplateRoot{El: -1, Slot: -1})
+			}
 			tb.text(gx.String(gx.Text(t.Data)))
 		case *HTMLComment:
 			tb.root(gx.TemplateRoot{El: -1, Slot: -1})

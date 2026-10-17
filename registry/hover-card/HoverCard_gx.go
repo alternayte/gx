@@ -42,5 +42,5 @@ var _tHoverCard0 = gx.NewTemplate(
 	[]string{"<span", ">\n  ", "\n  <span", ">", "</span>\n</span>\n"},
 	[]int{0, 1, 1, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 15}, {Slot: 2, Start: 3, EndStatic: 4, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

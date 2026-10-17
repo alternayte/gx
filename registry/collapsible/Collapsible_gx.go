@@ -40,5 +40,5 @@ var _tCollapsible0 = gx.NewTemplate(
 	[]string{"<details", ">\n  <summary class=\"inline-flex cursor-pointer list-none items-center gap-2 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] [&amp;::-webkit-details-marker]:hidden\">", "</summary>\n  ", "\n</details>\n"},
 	[]int{0, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 11}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

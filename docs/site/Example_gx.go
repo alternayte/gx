@@ -32,5 +32,5 @@ var _tExample0 = gx.NewTemplate(
 	[]string{"<div class=\"gx-example my-6\">\n  ", "\n</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

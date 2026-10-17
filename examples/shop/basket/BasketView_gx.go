@@ -35,5 +35,5 @@ var _tBasketView0 = gx.NewTemplate(
 	[]string{"", "\n", "\n", "\n", "\n"},
 	[]int{0, 0, 0, 0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}, {El: -1, Slot: 3}},
 )

@@ -67,5 +67,5 @@ var _tDatePicker1 = gx.NewTemplate(
 	[]string{"<div", ">\n  ", "\n  ", "\n</div>\n"},
 	[]int{0, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

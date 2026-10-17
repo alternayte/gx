@@ -310,7 +310,24 @@ func mountSlice(mainFile, importPath, pkg string) (bool, error) {
 	if len(groups) != 1 {
 		return false, nil
 	}
-	groups[0].Args = append(groups[0].Args, &ast.SelectorExpr{X: ast.NewIdent(pkg), Sel: ast.NewIdent("Routes")})
+	// The argument goes in as text after the last argument. A new AST node
+	// has no position, and the printer then moves the next comment of the
+	// file into the call.
+	src, err := os.ReadFile(mainFile)
+	if err != nil {
+		return false, err
+	}
+	call := groups[0]
+	at, arg := fset.Position(call.Rparen).Offset, pkg+".Routes"
+	if n := len(call.Args); n > 0 {
+		at, arg = fset.Position(call.Args[n-1].End()).Offset, ", "+arg
+	}
+	src = append(src[:at:at], append([]byte(arg), src[at:]...)...)
+	fset = token.NewFileSet()
+	file, err = parser.ParseFile(fset, mainFile, src, parser.ParseComments)
+	if err != nil {
+		return false, err
+	}
 	astutil.AddImport(fset, file, importPath)
 	var b bytes.Buffer
 	if err := format.Node(&b, fset, file); err != nil {

@@ -72,7 +72,7 @@ var _tAppShell0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tAppShell1 = gx.NewTemplate(
@@ -93,19 +93,19 @@ var _tAppShell3 = gx.NewTemplate(
 	[]string{"\n      ", "\n    "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tAppShell4 = gx.NewTemplate(
 	[]string{"", "\n  <div class=\"flex min-w-0 flex-1 flex-col\">\n    <header class=\"flex h-14 items-center gap-2 border-b border-border px-4\">\n      ", "\n      <h1 class=\"text-sm font-semibold\">", "</h1>\n    </header>\n    <main class=\"flex-1 p-6\">", "</main>\n  </div>\n"},
 	[]int{0, 2, 3, 2},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tAppShell5 = gx.NewTemplate(
 	[]string{"<div class=\"flex min-h-screen\">", "</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

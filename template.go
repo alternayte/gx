@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 // Template is the constant part of a template value (DR-11): the static
@@ -226,10 +227,28 @@ type patchRoot struct {
 
 // patchRoots returns the top-level elements of a patch node.
 func patchRoots(n Node) ([]patchRoot, error) {
+	roots, err := collectRoots(n)
+	if err != nil {
+		return nil, err
+	}
+	if _, gone := n.(goneNode); !gone && len(roots) == 0 {
+		return nil, errors.New("gx: patch node is empty")
+	}
+	return roots, nil
+}
+
+// collectRoots returns the top-level elements of a node. Whitespace text
+// between them has no element and is not an error.
+func collectRoots(n Node) ([]patchRoot, error) {
 	switch t := n.(type) {
 	case goneNode:
 		// The mark of a fragment that is not there has no element.
 		return nil, nil
+	case textNode:
+		if strings.TrimSpace(string(t)) == "" {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("gx: patch node %T is not an element", n)
 	case *elNode:
 		return []patchRoot{{name: t.name, id: attrValue(t.attrs, "id"), node: t}}, nil
 	case *tmplElNode:
@@ -238,14 +257,11 @@ func patchRoots(n Node) ([]patchRoot, error) {
 	case fragNode:
 		var out []patchRoot
 		for _, child := range t {
-			roots, err := patchRoots(child)
+			roots, err := collectRoots(child)
 			if err != nil {
 				return nil, err
 			}
 			out = append(out, roots...)
-		}
-		if len(out) == 0 {
-			return nil, errors.New("gx: patch node is empty")
 		}
 		return out, nil
 	case *tmplNode:
@@ -254,10 +270,10 @@ func patchRoots(n Node) ([]patchRoot, error) {
 		for _, r := range t.t.roots {
 			switch {
 			case r.El >= 0:
-				roots, _ := patchRoots(&tmplElNode{n: t, el: r.El})
+				roots, _ := collectRoots(&tmplElNode{n: t, el: r.El})
 				out = append(out, roots...)
 			case r.Slot >= 0:
-				roots, err := patchRoots(dyn[r.Slot])
+				roots, err := collectRoots(dyn[r.Slot])
 				if err != nil {
 					return nil, err
 				}
@@ -268,9 +284,6 @@ func patchRoots(n Node) ([]patchRoot, error) {
 			default:
 				return nil, fmt.Errorf("gx: patch node %T is not an element", textNode(""))
 			}
-		}
-		if len(out) == 0 {
-			return nil, errors.New("gx: patch node is empty")
 		}
 		return out, nil
 	default:

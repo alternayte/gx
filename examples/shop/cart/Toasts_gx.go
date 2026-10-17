@@ -50,5 +50,5 @@ var _tToasts0 = gx.NewTemplate(
 	[]string{"<section", ">\n  <h2 class=\"text-sm font-medium\">Toasts</h2>\n  <div class=\"mt-3 flex flex-wrap gap-2\">\n    <button", ">Default</button>\n    <button", ">Success</button>\n    <button", ">Info</button>\n    <button", ">Warning</button>\n    <button", ">Error</button>\n    <button", ">Description</button>\n    <button", ">Action</button>\n    <button", ">Undo</button>\n    <button", ">Sticky</button>\n    <button", ">Start upload</button>\n    <button", ">Finish upload</button>\n  </div>\n</section>\n"},
 	[]int{0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 12, End: 43}, {Slot: 1, Start: 94, EndStatic: 2, End: 17}, {Slot: 2, Start: 22, EndStatic: 3, End: 17}, {Slot: 3, Start: 22, EndStatic: 4, End: 14}, {Slot: 4, Start: 19, EndStatic: 5, End: 17}, {Slot: 5, Start: 22, EndStatic: 6, End: 15}, {Slot: 6, Start: 20, EndStatic: 7, End: 21}, {Slot: 7, Start: 26, EndStatic: 8, End: 16}, {Slot: 8, Start: 21, EndStatic: 9, End: 14}, {Slot: 9, Start: 19, EndStatic: 10, End: 16}, {Slot: 10, Start: 21, EndStatic: 11, End: 22}, {Slot: 11, Start: 27, EndStatic: 12, End: 23}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

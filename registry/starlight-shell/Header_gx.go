@@ -38,5 +38,5 @@ var _tHeader0 = gx.NewTemplate(
 	[]string{"<header class=\"sl-header\">\n  <div class=\"sl-header-inner\">\n    <div class=\"sl-title-wrapper\">\n      ", "\n    </div>\n    <div class=\"sl-header-search\">\n      <button", ">\n        ", "\n        <span aria-hidden=\"true\">Search</span>\n        <kbd><kbd", ">Ctrl</kbd><kbd>K</kbd></kbd>\n      </button>\n    </div>\n    <div class=\"sl-right-group\">\n      ", "\n      ", "\n    </div>\n  </div>\n</header>\n"},
 	[]int{3, 3, 4, 5, 3, 3},
 	[]gx.TemplateEl{{Slot: 1, Start: 53, EndStatic: 4, End: 45}, {Slot: 3, Start: 61, EndStatic: 4, End: 11}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}},
 )

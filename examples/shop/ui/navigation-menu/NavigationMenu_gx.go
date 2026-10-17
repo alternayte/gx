@@ -36,5 +36,5 @@ var _tNavigationMenu0 = gx.NewTemplate(
 	[]string{"<nav", ">\n  <ul class=\"flex flex-1 list-none items-center justify-center gap-1\">", "</ul>\n</nav>\n"},
 	[]int{0, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 12}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

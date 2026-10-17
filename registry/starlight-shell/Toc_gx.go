@@ -64,40 +64,40 @@ var _tToc0 = gx.NewTemplate(
 	[]string{"\n  <h2", ">On this page</h2>\n  "},
 	[]int{0},
 	[]gx.TemplateEl{{Slot: 0, Start: 3, EndStatic: 1, End: 18}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tToc1 = gx.NewTemplate(
 	[]string{"\n    <li>\n      <a", "><span>Overview</span></a>\n    </li>\n    "},
 	[]int{1},
 	[]gx.TemplateEl{{Slot: 0, Start: 16, EndStatic: 1, End: 26}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}},
 )
 
 var _tToc2 = gx.NewTemplate(
 	[]string{"\n      <li>\n        <a", "><span>", "</span></a>\n      </li>\n    "},
 	[]int{1, 3},
 	[]gx.TemplateEl{{Slot: 0, Start: 20, EndStatic: 2, End: 11}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "li"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "li"}},
 )
 
 var _tToc3 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tToc4 = gx.NewTemplate(
 	[]string{"<ul class=\"sl-toc-list\">", "</ul>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "ul"}},
 )
 
 var _tToc5 = gx.NewTemplate(
 	[]string{"<nav", ">", "</nav>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 6}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

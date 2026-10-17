@@ -38,5 +38,5 @@ var _tButton0 = gx.NewTemplate(
 	[]string{"<table", ">\n  <tbody>\n    <tr>\n      <td", ">\n        <a", ">", "</a>\n      </td>\n    </tr>\n  </tbody>\n</table>\n"},
 	[]int{0, 3, 4, 5},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 46}, {Slot: 1, Start: 27, EndStatic: 4, End: 16}, {Slot: 2, Start: 10, EndStatic: 4, End: 4}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

@@ -48,5 +48,5 @@ var _tContextMenuRadioItem0 = gx.NewTemplate(
 	[]string{"<label", ">\n  <input", ">\n  <span class=\"pointer-events-none invisible absolute left-2 flex size-3.5 items-center justify-center peer-checked:visible\">", "</span>\n  ", "\n</label>\n"},
 	[]int{0, 1, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 9}, {Slot: 1, Start: 4, EndStatic: 2, End: 1}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

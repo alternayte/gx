@@ -72,21 +72,21 @@ var _tSignupView0 = gx.NewTemplate(
 	[]string{"", "\n<h1>Sign up</h1>\n"},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "h1"}},
 )
 
 var _tSignupView1 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSignupView2 = gx.NewTemplate(
 	[]string{"\n    <div", ">\n      <p>Fix the errors below.</p>\n    </div>\n  "},
 	[]int{0},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 1, End: 47}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tSignupView3 = gx.NewTemplate(
@@ -100,12 +100,12 @@ var _tSignupView4 = gx.NewTemplate(
 	[]string{"\n  ", "\n  ", "\n  ", "\n  ", "\n  ", "\n  <fieldset>\n    <legend>Shipping addresses</legend>\n    ", "\n    ", "\n  </fieldset>\n  <button type=\"submit\">Create account</button>\n"},
 	[]int{0, 0, 0, 0, 0, 1, 1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: -1, Slot: 4}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "fieldset"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "button"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}, {El: -1, Slot: 3}, {El: -1, Slot: 4}, {El: -1, Slot: -1, Name: "fieldset"}, {El: -1, Slot: -1, Name: "button"}},
 )
 
 var _tSignupView5 = gx.NewTemplate(
 	[]string{"<form", ">", "</form>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

@@ -43,5 +43,5 @@ var _tShell0 = gx.NewTemplate(
 	[]string{"", "\n<header class=\"border-b border-border\">\n  <nav class=\"mx-auto flex max-w-3xl items-center gap-4 p-4 text-sm\">\n    <a", ">Home</a>\n    <a", ">About</a>\n    <a", ">Sign up</a>\n    <a", ">Dashboard</a>\n  </nav>\n</header>\n<main class=\"mx-auto max-w-3xl p-4\">", "</main>\n", "\n"},
 	[]int{0, 2, 2, 2, 2, 1, 0},
 	[]gx.TemplateEl{{Slot: 1, Start: 115, EndStatic: 2, End: 9}, {Slot: 2, Start: 14, EndStatic: 3, End: 10}, {Slot: 3, Start: 15, EndStatic: 4, End: 12}, {Slot: 4, Start: 17, EndStatic: 5, End: 14}},
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "main"}, {El: -1, Slot: -1}, {El: -1, Slot: 6}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1, Name: "main"}, {El: -1, Slot: 6}},
 )

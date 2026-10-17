@@ -36,5 +36,5 @@ var _tNotFound0 = gx.NewTemplate(
 	[]string{"<div class=\"gx-not-found mx-auto my-16 max-w-lg text-center\">\n  <p class=\"text-5xl font-bold\">404</p>\n  <h1 class=\"mt-4 text-2xl font-semibold\">", "</h1>\n  <p class=\"mt-2 text-muted-foreground\">", "</p>\n  <a", ">Go home</a>\n</div>\n"},
 	[]int{2, 2, 1},
 	[]gx.TemplateEl{{Slot: 2, Start: 7, EndStatic: 3, End: 12}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

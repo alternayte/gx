@@ -36,5 +36,5 @@ var _tFileField0 = gx.NewTemplate(
 	[]string{"<div class=\"field\">\n  <label", ">", "</label>\n  <input", ">\n  <p", ">", "</p>\n</div>\n"},
 	[]int{1, 2, 1, 1, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 22, EndStatic: 2, End: 8}, {Slot: 2, Start: 11, EndStatic: 3, End: 1}, {Slot: 3, Start: 4, EndStatic: 5, End: 4}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

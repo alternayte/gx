@@ -48,26 +48,26 @@ var _tSocialIcons0 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSocialIcons1 = gx.NewTemplate(
 	[]string{"\n    <a", ">\n      <span class=\"sr-only\">", "</span>\n      ", "\n    </a>\n  "},
 	[]int{0, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 5, EndStatic: 3, End: 9}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tSocialIcons2 = gx.NewTemplate(
 	[]string{"\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tSocialIcons3 = gx.NewTemplate(
 	[]string{"<div class=\"sl-social-icons\">", "</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

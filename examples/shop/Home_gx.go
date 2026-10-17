@@ -45,5 +45,5 @@ var _tHome0 = gx.NewTemplate(
 	[]string{"", "\n<h1 class=\"text-2xl font-semibold\">Two carts</h1>\n", "\n", "\n", "\n<div", ">\n  <span", ">waiting</span>\n</div>\n<img", ">\n<button", ">Transition</button>\n<span", ">idle</span>\n"},
 	[]int{0, 0, 0, 0, 0, 1, 0, 0, 0},
 	[]gx.TemplateEl{{Slot: 4, Start: 1, EndStatic: 6, End: 22}, {Slot: 5, Start: 4, EndStatic: 6, End: 15}, {Slot: 6, Start: 23, EndStatic: 7, End: 1}, {Slot: 7, Start: 2, EndStatic: 8, End: 20}, {Slot: 8, Start: 21, EndStatic: 9, End: 12}},
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}, {El: 3, Slot: -1}, {El: -1, Slot: -1}, {El: 4, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: 1}, {El: -1, Slot: 2}, {El: -1, Slot: 3}, {El: 0, Slot: -1}, {El: 2, Slot: -1}, {El: 3, Slot: -1}, {El: 4, Slot: -1}},
 )

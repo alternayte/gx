@@ -40,5 +40,5 @@ var _tStars0 = gx.NewTemplate(
 	[]string{"\n\n<div", ">\n  <span>Stars: <b", ">0</b></span>\n  <button", ">Star</button>\n  <button", ">Star, and the server fails</button>\n  <button", ">Star, and the server sets 100</button>\n</div>\n"},
 	[]int{0, 2, 1, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 2, EndStatic: 5, End: 46}, {Slot: 1, Start: 17, EndStatic: 2, End: 6}, {Slot: 2, Start: 16, EndStatic: 3, End: 14}, {Slot: 3, Start: 17, EndStatic: 4, End: 36}, {Slot: 4, Start: 39, EndStatic: 5, End: 39}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

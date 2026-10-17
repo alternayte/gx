@@ -149,49 +149,49 @@ var _tBasket0 = gx.NewTemplate(
 	[]string{"\n  <h1 class=\"text-2xl font-semibold\">Basket</h1>\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "h1"}},
 ).With()
 
 var _tBasket1 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tBasket2 = gx.NewTemplate(
 	[]string{"\n      "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tBasket3 = gx.NewTemplate(
 	[]string{"\n      <li", ">\n        <span>", "</span>\n        <b>", "</b>\n        <button", ">Add one</button>\n      </li>\n    "},
 	[]int{0, 2, 2, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 4, End: 29}, {Slot: 3, Start: 13, EndStatic: 4, End: 17}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tBasket4 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tBasket5 = gx.NewTemplate(
 	[]string{"<ul", ">", "</ul>\n  <p>Items: <span", ">", "</span></p>\n  <button", ">Reset</button>\n"},
 	[]int{0, 1, 1, 2, 0},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 5}, {Slot: 2, Start: 18, EndStatic: 4, End: 7}, {Slot: 4, Start: 14, EndStatic: 5, End: 15}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: 2, Slot: -1}},
 )
 
 var _tBasket6 = gx.NewTemplate(
 	[]string{"<section class=\"my-4 rounded-xl border border-border bg-card p-4 text-card-foreground\">", "</section>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "section"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "section"}},
 )
 
 var _tBasket7 = gx.NewTemplate(

@@ -34,5 +34,5 @@ var _tNavigationMenuContent0 = gx.NewTemplate(
 	[]string{"<div class=\"invisible absolute top-full left-0 z-50 w-max origin-top-left scale-95 pt-1.5 opacity-0 transition-[opacity,scale,visibility] delay-150 duration-200 motion-reduce:transition-none group-hover/navigation-menu-item:visible group-hover/navigation-menu-item:scale-100 group-hover/navigation-menu-item:opacity-100 group-focus-within/navigation-menu-item:visible group-focus-within/navigation-menu-item:scale-100 group-focus-within/navigation-menu-item:opacity-100\">\n  <div", ">", "</div>\n</div>\n"},
 	[]int{1, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 474, EndStatic: 2, End: 6}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

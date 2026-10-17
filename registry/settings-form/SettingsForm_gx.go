@@ -144,5 +144,5 @@ var _tSettingsForm9 = gx.NewTemplate(
 	[]string{"<div class=\"mx-auto flex w-full max-w-2xl flex-col gap-6\">\n  <form", ">\n    ", "\n    ", "\n    <div class=\"flex justify-end\">\n      ", "\n    </div>\n  </form>\n</div>\n"},
 	[]int{1, 2, 2, 3},
 	[]gx.TemplateEl{{Slot: 0, Start: 61, EndStatic: 4, End: 21}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )

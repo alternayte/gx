@@ -53,5 +53,5 @@ var _tShell0 = gx.NewTemplate(
 	[]string{"", "\n<a class=\"gx-skip-link sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground\" href=\"#gx-main\">Skip to content</a>\n<div class=\"gx-shell min-h-screen\">\n  ", "\n  <div class=\"mx-auto flex max-w-7xl gap-8 px-4\">\n    ", "\n    <main", ">\n      <article", ">", "</article>\n      ", "\n      ", "\n    </main>\n    ", "\n  </div>\n</div>\n", "\n"},
 	[]int{0, 1, 2, 2, 3, 4, 3, 3, 2, 0},
 	[]gx.TemplateEl{{Slot: 3, Start: 5, EndStatic: 8, End: 12}, {Slot: 4, Start: 8, EndStatic: 6, End: 10}},
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "a"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 9}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "a"}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: 9}},
 )

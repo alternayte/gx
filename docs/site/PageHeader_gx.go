@@ -47,26 +47,26 @@ var _tPageHeader0 = gx.NewTemplate(
 	[]string{"\n  <h1 class=\"text-3xl font-bold tracking-tight\">", "</h1>\n  "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h1"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "h1"}},
 )
 
 var _tPageHeader1 = gx.NewTemplate(
 	[]string{"\n    <p class=\"mt-2 text-lg text-muted-foreground\">", "</p>\n  "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "p"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "p"}},
 )
 
 var _tPageHeader2 = gx.NewTemplate(
 	[]string{"\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tPageHeader3 = gx.NewTemplate(
 	[]string{"<header class=\"gx-page-header mb-8\">", "</header>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "header"}},
 )

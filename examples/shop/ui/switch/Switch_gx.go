@@ -46,5 +46,5 @@ var _tSwitch0 = gx.NewTemplate(
 	[]string{"<label", ">\n  <input", ">\n  <span", "></span>\n</label>\n"},
 	[]int{0, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 3, End: 17}, {Slot: 1, Start: 4, EndStatic: 2, End: 1}, {Slot: 2, Start: 4, EndStatic: 3, End: 8}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

@@ -96,3 +96,57 @@ func TestREQ_ACT_15_FragmentElementIsMarked(t *testing.T) {
 		t.Errorf("an element that is not a fragment is a fragment value:\n%s", src)
 	}
 }
+
+// TestREQ_ACT_04_PatchComponentWithTrailingNewline patches a component
+// whose .gx file ends with a newline, as gx fmt writes it. The newline is
+// text after the root element, not a part to patch: c.Patch sends the root
+// element, in a body with no statement and in a body with one.
+func TestREQ_ACT_04_PatchComponentWithTrailingNewline(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"go.mod": moduleWithGx(t),
+		"ui/card/Card.gx": "package card\n\nprops {\n  ID string\n}\n\n" +
+			"<article id={p.ID}>card</article>\n",
+		"ui/card/Note.gx": "package card\n\nprops {\n  ID string\n}\n\n" +
+			"label := \"note\"\n<p id={p.ID}>{label}</p>\n",
+		"main.go": `package main
+
+import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+
+	"app/ui/card"
+	"github.com/alternayte/gx"
+	"github.com/alternayte/gx/adapters/datastar"
+)
+
+type save struct{}
+
+func (save) Pattern() string          { return "POST /save" }
+func (save) Bind(*http.Request) error { return nil }
+
+func main() {
+	a := gx.Action(func(c *gx.Ctx, in save) error {
+		return c.Patch(card.Card(card.CardProps{ID: "c1"}), card.Note(card.NoteProps{ID: "n1"}))
+	})
+	app := gx.New(gx.Config{Adapter: datastar.Adapter()})
+	app.Group("/", gx.Collect(a))
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest("POST", "/save", nil)
+	req.Header.Set("Datastar-Request", "true")
+	app.ServeHTTP(rec, req)
+	fmt.Printf("status %d\n%s", rec.Code, rec.Body.String())
+}
+`,
+	})
+	_ = writeGenerated(t, dir)
+	out := runModule(t, dir, "run", ".")
+	for _, want := range []string{"status 200", `<article id="c1">card</article>`, `<p id="n1">note</p>`} {
+		if !strings.Contains(out, want) {
+			t.Errorf("answer lacks %q:\n%s", want, out)
+		}
+	}
+	if strings.Contains(out, "not an element") {
+		t.Errorf("the trailing newline is a patch root:\n%s", out)
+	}
+}

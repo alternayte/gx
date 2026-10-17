@@ -32,5 +32,5 @@ var _tLiveTable0 = gx.NewTemplate(
 	[]string{"\n<div class=\"gx-frame gx-frame-block resize-y overflow-hidden rounded-lg border border-border bg-background\">\n  <iframe", "></iframe>\n</div>\n<p", ">\n  <a", ">Open the preview in a new tab</a>\n</p>\n"},
 	[]int{1, 0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 112, EndStatic: 1, End: 10}, {Slot: 1, Start: 18, EndStatic: 3, End: 39}, {Slot: 2, Start: 4, EndStatic: 3, End: 34}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: 1, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: 1, Slot: -1}},
 )

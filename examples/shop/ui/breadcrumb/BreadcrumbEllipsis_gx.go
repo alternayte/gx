@@ -33,5 +33,5 @@ var _tBreadcrumbEllipsis0 = gx.NewTemplate(
 	[]string{"<span", ">\n  ", "\n  <span class=\"sr-only\">More</span>\n</span>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 44}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

@@ -67,7 +67,7 @@ var _tCharts0 = gx.NewTemplate(
 	[]string{"<div", ">\n  \n  <sl-badge", ">Round ", "</sl-badge>\n  <sl-details", ">The numbers follow the round.</sl-details>\n  ", "\n  ", "\n  <button", ">Refresh</button>\n</div>\n"},
 	[]int{0, 1, 2, 1, 1, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 7, End: 24}, {Slot: 1, Start: 7, EndStatic: 3, End: 11}, {Slot: 3, Start: 14, EndStatic: 4, End: 43}, {Slot: 6, Start: 3, EndStatic: 7, End: 17}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tCharts1 = gx.NewTemplate(

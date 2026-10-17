@@ -139,110 +139,110 @@ var _tShell0 = gx.NewTemplate(
 	[]string{"", "\n<a class=\"sl-skip-link\" href=\"#_top\">Skip to content</a>\n"},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "a"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: -1, Name: "a"}},
 )
 
 var _tShell1 = gx.NewTemplate(
 	[]string{"\n  ", "\n  "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tShell2 = gx.NewTemplate(
 	[]string{"\n    ", "\n  "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tShell3 = gx.NewTemplate(
 	[]string{"\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tShell4 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tShell5 = gx.NewTemplate(
 	[]string{"\n      "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tShell6 = gx.NewTemplate(
 	[]string{"\n        <aside class=\"sl-right-sidebar-container\">\n          <div class=\"sl-right-sidebar\">\n            ", "\n            <div class=\"sl-right-sidebar-panel\">\n              <div class=\"sl-toc-container\">\n                ", "\n              </div>\n            </div>\n          </div>\n        </aside>\n      "},
 	[]int{2, 4},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "aside"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "aside"}},
 )
 
 var _tShell7 = gx.NewTemplate(
 	[]string{"\n        "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tShell8 = gx.NewTemplate(
 	[]string{"\n          "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tShell9 = gx.NewTemplate(
 	[]string{"\n            <div class=\"sl-content-panel\">\n              <div class=\"sl-container\">\n                ", "\n                <div class=\"sl-markdown-content gx-content\">", "</div>\n                ", "\n              </div>\n            </div>\n          "},
 	[]int{2, 3, 2},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tShell10 = gx.NewTemplate(
 	[]string{"\n            <div class=\"sl-content-panel\">\n              <div class=\"sl-container\">\n                <h1", ">", "</h1>\n              </div>\n            </div>\n            <div class=\"sl-content-panel\">\n              <div class=\"sl-container\">\n                <div class=\"sl-markdown-content gx-content\">", "</div>\n                ", "\n              </div>\n            </div>\n          "},
 	[]int{2, 3, 3, 2},
 	[]gx.TemplateEl{{Slot: 0, Start: 101, EndStatic: 2, End: 5}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tShell11 = gx.NewTemplate(
 	[]string{"<main", ">", "</main>\n      "},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tShell12 = gx.NewTemplate(
 	[]string{"<div class=\"sl-main-pane\">", "</div>\n    "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tShell13 = gx.NewTemplate(
 	[]string{"<div class=\"sl-two-column\">", "</div>\n  "},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tShell14 = gx.NewTemplate(
 	[]string{"<div class=\"sl-main-frame\">", "</div>\n"},
 	[]int{1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tShell15 = gx.NewTemplate(
 	[]string{"<div class=\"sl-page\">", "</div>\n", "\n"},
 	[]int{1, 0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: 1}},
 )

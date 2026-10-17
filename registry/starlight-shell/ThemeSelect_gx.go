@@ -30,5 +30,5 @@ var _tThemeSelect0 = gx.NewTemplate(
 	[]string{"<label class=\"sl-select\">\n  <span class=\"sr-only\">Select theme</span>\n  ", "\n  <select", ">\n    <option value=\"dark\">Dark</option>\n    <option value=\"light\">Light</option>\n    <option value=\"auto\" selected>Auto</option>\n  </select>\n  ", "\n</label>\n"},
 	[]int{1, 1, 1},
 	[]gx.TemplateEl{{Slot: 1, Start: 3, EndStatic: 2, End: 141}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "label"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "label"}},
 )

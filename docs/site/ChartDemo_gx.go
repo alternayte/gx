@@ -32,5 +32,5 @@ var _tChartDemo0 = gx.NewTemplate(
 	[]string{"<div", ">\n  ", "\n  <button", ">Load new numbers</button>\n  ", "\n</div>\n"},
 	[]int{0, 1, 1, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 4, End: 7}, {Slot: 2, Start: 3, EndStatic: 3, End: 26}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )

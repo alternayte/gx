@@ -111,28 +111,28 @@ var _tComposer0 = gx.NewTemplate(
 	[]string{"\n\n"},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tComposer1 = gx.NewTemplate(
 	[]string{"\n  <h2 class=\"text-lg font-semibold\">New message</h2>\n  "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "h2"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: -1, Name: "h2"}},
 ).With()
 
 var _tComposer2 = gx.NewTemplate(
 	[]string{"\n    "},
 	[]int{},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}},
+	[]gx.TemplateRoot{},
 ).With()
 
 var _tComposer3 = gx.NewTemplate(
 	[]string{"\n      <div", ">\n        <p>Fix the errors below.</p>\n      </div>\n    "},
 	[]int{0},
 	[]gx.TemplateEl{{Slot: 0, Start: 7, EndStatic: 1, End: 51}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tComposer4 = gx.NewTemplate(
@@ -181,33 +181,33 @@ var _tComposer10 = gx.NewTemplate(
 	[]string{"\n          ", "\n        "},
 	[]int{0},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}},
 )
 
 var _tComposer11 = gx.NewTemplate(
 	[]string{"\n          <button", ">Discard the draft</button>\n        "},
 	[]int{0},
 	[]gx.TemplateEl{{Slot: 0, Start: 11, EndStatic: 1, End: 27}},
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
 
 var _tComposer12 = gx.NewTemplate(
 	[]string{"\n    ", "\n    ", "\n    ", "\n    ", "\n    ", "\n    <div class=\"flex gap-2\">\n      ", "\n      ", "\n    </div>\n  "},
 	[]int{0, 0, 0, 0, 0, 1, 1},
 	nil,
-	[]gx.TemplateRoot{{El: -1, Slot: -1}, {El: -1, Slot: 0}, {El: -1, Slot: -1}, {El: -1, Slot: 1}, {El: -1, Slot: -1}, {El: -1, Slot: 2}, {El: -1, Slot: -1}, {El: -1, Slot: 3}, {El: -1, Slot: -1}, {El: -1, Slot: 4}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: -1, Slot: 0}, {El: -1, Slot: 1}, {El: -1, Slot: 2}, {El: -1, Slot: 3}, {El: -1, Slot: 4}, {El: -1, Slot: -1, Name: "div"}},
 )
 
 var _tComposer13 = gx.NewTemplate(
 	[]string{"<form", ">", "</form>\n  <div class=\"flex items-center gap-2 text-sm\">\n    <label for=\"composer-note\">Note to self</label>\n    <input", ">\n    ", "\n  </div>\n  <a", ">How the shop works</a>\n  ", "\n"},
 	[]int{0, 1, 1, 1, 0, 0},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 7}, {Slot: 2, Start: 112, EndStatic: 3, End: 1}, {Slot: 4, Start: 12, EndStatic: 5, End: 23}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: -1, Slot: -1}, {El: 2, Slot: -1}, {El: -1, Slot: -1}, {El: -1, Slot: 5}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1, Name: "div"}, {El: 2, Slot: -1}, {El: -1, Slot: 5}},
 )
 
 var _tComposer14 = gx.NewTemplate(
 	[]string{"<section", ">", "</section>\n"},
 	[]int{0, 1},
 	[]gx.TemplateEl{{Slot: 0, Start: 0, EndStatic: 2, End: 10}},
-	[]gx.TemplateRoot{{El: 0, Slot: -1}, {El: -1, Slot: -1}},
+	[]gx.TemplateRoot{{El: 0, Slot: -1}},
 )
